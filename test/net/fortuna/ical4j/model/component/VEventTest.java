@@ -55,4 +55,38 @@ public class VEventTest extends TestCase {
         log.info(christmas);
     }
 
+    public final void test2() {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
+        cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
+
+        VEvent christmas = new VEvent(cal.getTime(), "Christmas Day");
+
+        // initialise as an all-day event..
+        christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(new Value(Value.DATE));
+
+        // add timezone information..
+        VTimeZone tz = VTimeZone.getDefault();
+        TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
+        christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+
+        log.info(christmas);
+    }
+    
+    public final void test3() {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        // tomorrow..
+        cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 9);
+        cal.set(java.util.Calendar.MINUTE, 30);
+
+        VEvent meeting = new VEvent(cal.getTime(), 1000 * 60 * 60, "Progress Meeting");
+
+        // add timezone information..
+        VTimeZone tz = VTimeZone.getDefault();
+        TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
+        meeting.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);       
+
+        log.info(meeting);
+    }
 }
