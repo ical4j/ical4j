@@ -6,6 +6,14 @@
 
  - Model classes are now Serializable
  
+ - Bug fixes related to VALARMs in VTODOs (thanks twinkle!)
+ 
+ - Added explicit serialVersionUID for Serializable implementors.
+ 
+ - Added use of Log.isDebugEnabled() for performance reasons.
+ 
+ - Added WeekDay class to better represent day patterns in recurrence rules.
+
  
 0.9.9:
 
@@ -13,6 +21,7 @@
  parser implementations to be used with iCal4j.
  
  - All properties are now mutable with default constructors.
+
 
 0.9.8:
 
