@@ -37,32 +37,57 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.StreamTokenizer;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
-import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentFactory;
+import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VTimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
  * Parses and builds an iCalendar model from an input stream.
+ * Note that this class is not thread-safe.
  *
  * @author benf
+ * @version 2.0
  */
-public class CalendarBuilder {
-
-    private static final int WORD_CHAR_START = 32;
-
-    private static final int WORD_CHAR_END = 126;
-
-    private static final int WHITESPACE_CHAR_START = 0;
-
-    private static final int WHITESPACE_CHAR_END = 20;
+public class CalendarBuilder implements ContentHandler {
 
     private static Log log = LogFactory.getLog(CalendarBuilder.class);
+    
+    private CalendarParser parser;
+    
+    private Calendar calendar;
+    
+    private Component component;
+    
+    private Component subComponent;
+    
+    private Property property;
+    
+    /**
+     * Default constructor.
+     */
+    public CalendarBuilder() {
+        this(new CalendarParserImpl());
+    }
+    
+    /**
+     * Constructs a new calendar builder using the specified
+     * calendar parser.
+     * @param parser a calendar parser used to parse calendar files
+     */
+    public CalendarBuilder(final CalendarParser parser) {
+        this.parser = parser;
+    }
 
     /**
      * Builds an iCalendar model from the specified input stream.
@@ -72,11 +97,10 @@ public class CalendarBuilder {
      * @throws IOException
      * @throws ParseException
      * @throws URISyntaxException
-     * @throws BuilderException
+     * @throws ParserException
      */
     public final Calendar build(final InputStream in) throws IOException,
-            BuilderException {
-
+            ParserException {
         return build(new InputStreamReader(in));
     }
 
@@ -91,324 +115,107 @@ public class CalendarBuilder {
      * @throws IOException
      * @throws ParseException
      * @throws URISyntaxException
-     * @throws BuilderException
+     * @throws ParserException
      */
-    public final Calendar build(final Reader in) throws IOException,
-            BuilderException {
+    public final Calendar build(final Reader in) throws IOException, ParserException {
+        UnfoldingReader uin = new UnfoldingReader(in);
 
-        try {
-            UnfoldingReader uin = new UnfoldingReader(in);
-
-            StreamTokenizer tokeniser = new StreamTokenizer(uin);
-            tokeniser.resetSyntax();
-            tokeniser.wordChars(WORD_CHAR_START, WORD_CHAR_END);
-            tokeniser.whitespaceChars(WHITESPACE_CHAR_START,
-                    WHITESPACE_CHAR_END);
-            tokeniser.ordinaryChar(':');
-            tokeniser.ordinaryChar(';');
-            tokeniser.ordinaryChar('=');
-            tokeniser.eolIsSignificant(true);
-            tokeniser.whitespaceChars(0, 0);
-            tokeniser.quoteChar('"');
-
-            PropertyList properties = null;
-            ComponentList components = null;
-
-            // BEGIN:VCALENDAR
-            assertToken(tokeniser, Calendar.BEGIN);
-
-            assertToken(tokeniser, ':');
-
-            assertToken(tokeniser, Calendar.VCALENDAR);
-
-            assertToken(tokeniser, StreamTokenizer.TT_EOL);
-
-            // build calendar properties..
-            properties = buildPropertyList(tokeniser);
-
-            // build components..
-            components = buildComponentList(tokeniser);
-
-            // END:VCALENDAR
-            //assertToken(tokeniser,Calendar.END);
-
-            assertToken(tokeniser, ':');
-
-            assertToken(tokeniser, Calendar.VCALENDAR);
-
-            // construct calendar instance..
-            return new Calendar(properties, components);
-        }
-        catch (Exception e) {
-
-            if (e instanceof IOException) { throw (IOException) e; }
-            if (e instanceof BuilderException) {
-                throw (BuilderException) e;
+        // re-initialise..
+        calendar = null;
+        component = null;
+        subComponent = null;
+        property = null;
+        
+        parser.parse(uin, this);
+        
+        return calendar;
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.data.ContentHandler#endCalendar()
+     */
+    public void endCalendar() {
+        // do nothing..
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.data.ContentHandler#endComponent(java.lang.String)
+     */
+    public void endComponent(String name) {
+        if (component != null) {
+            if (subComponent != null) {
+                if (component instanceof VTimeZone) {
+                    ((VTimeZone) component).getTypes().add(subComponent);
+                }
+                else if (component instanceof VEvent) {
+                    ((VEvent) component).getAlarms().add(subComponent);
+                }
+                subComponent = null;
             }
             else {
-                throw new BuilderException("An error ocurred during parsing", e);
+                calendar.getComponents().add(component);
+                component = null;
             }
         }
     }
-
-    /**
-     * Builds am iCalendar property list from the specified stream tokeniser.
-     *
-     * @param tokeniser
-     * @return a property list
-     * @throws IOException
-     * @throws ParseException
-     * @throws URISyntaxException
-     * @throws URISyntaxException
-     * @throws BuilderException
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.data.ContentHandler#endProperty(java.lang.String)
      */
-    private PropertyList buildPropertyList(final StreamTokenizer tokeniser)
-            throws IOException, ParseException, URISyntaxException,
-            BuilderException {
-
-        PropertyList list = new PropertyList();
-
-        assertToken(tokeniser, StreamTokenizer.TT_WORD);
-
-        while (!Component.BEGIN.equals(tokeniser.sval)
-                && !Component.END.equals(tokeniser.sval)) {
-
-            list.add(buildProperty(tokeniser));
-
-            assertToken(tokeniser, StreamTokenizer.TT_WORD);
+    public void endProperty(String name) {
+        if (property != null) {
+            if (component != null) {
+                component.getProperties().add(property);
+            }
+            else if (calendar != null) {
+                calendar.getProperties().add(property);
+            }
+            
+            property = null;
         }
-
-        return list;
     }
-
-    /**
-     * Builds an iCalendar property from the specified stream tokeniser.
-     *
-     * @param tokeniser
-     * @return a property
-     * @throws IOException
-     * @throws BuilderException
-     * @throws URISyntaxException
-     * @throws ParseException
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.data.ContentHandler#parameter(java.lang.String, java.lang.String)
      */
-    private Property buildProperty(final StreamTokenizer tokeniser)
-            throws IOException, BuilderException, URISyntaxException,
-            ParseException {
-
-        String name = tokeniser.sval;
-
-        // debugging..
-        log.debug("Property [" + name + "]");
-
-        ParameterList parameters = buildParameterList(tokeniser);
-
-        // it appears that control tokens (ie. ':') are allowed
-        // after the first instance on a line is used.. as such
-        // we must continue appending to value until EOL is
-        // reached..
-        //assertToken(tokeniser, StreamTokenizer.TT_WORD);
-
-        //String value = tokeniser.sval;
-        StringBuffer value = new StringBuffer();
-
-        //assertToken(tokeniser,StreamTokenizer.TT_EOL);
-
-        while (tokeniser.nextToken() != StreamTokenizer.TT_EOL) {
-
-            if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
-                value.append(tokeniser.sval);
-            }
-            else if (tokeniser.ttype == '"') {
-                value.append((char) tokeniser.ttype);
-                value.append(tokeniser.sval);
-//                value.append((char) tokeniser.ttype);
-            }
-            else {
-                value.append((char) tokeniser.ttype);
-            }
+    public void parameter(String name, String value) throws URISyntaxException {
+        if (property != null) {
+            property.getParameters().add(ParameterFactory.getInstance().createParameter(name, value));
         }
-
-        return PropertyFactory.getInstance().createProperty(name, parameters,
-                StringUtils.unescape(value.toString()));
     }
-
-    /**
-     * Build a list of iCalendar parameters by parsing the specified stream
-     * tokeniser.
-     *
-     * @param tokeniser
-     * @return @throws
-     *         IOException
-     * @throws BuilderException
-     * @throws URISyntaxException
-     * @throws ParseException
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.data.ContentHandler#propertyValue(java.lang.String)
      */
-    private ParameterList buildParameterList(final StreamTokenizer tokeniser)
-            throws IOException, BuilderException, URISyntaxException,
-            ParseException {
-
-        ParameterList parameters = new ParameterList();
-
-        while (tokeniser.nextToken() == ';') {
-            parameters.add(buildParameter(tokeniser));
+    public void propertyValue(String value) throws URISyntaxException, ParseException, IOException {
+        if (property != null) {
+            property.setValue(value);
         }
-
-        return parameters;
     }
-
-    private Parameter buildParameter(final StreamTokenizer tokeniser)
-            throws IOException, BuilderException, URISyntaxException,
-            ParseException {
-
-        assertToken(tokeniser, StreamTokenizer.TT_WORD);
-
-        String paramName = tokeniser.sval;
-
-        // debugging..
-        log.debug("Parameter [" + paramName + "]");
-
-        assertToken(tokeniser, '=');
-
-        StringBuffer paramValue = new StringBuffer();
-
-        // preserve quote chars..
-        if (tokeniser.nextToken() == '"') {
-            paramValue.append('"');
-            paramValue.append(tokeniser.sval);
-            paramValue.append('"');
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.data.ContentHandler#startCalendar()
+     */
+    public void startCalendar() {
+        calendar = new Calendar();
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.data.ContentHandler#startComponent(java.lang.String)
+     */
+    public void startComponent(String name) {
+        if (component != null) {
+            subComponent = ComponentFactory.getInstance().createComponent(name);
         }
         else {
-            paramValue.append(tokeniser.sval);
+            component = ComponentFactory.getInstance().createComponent(name);
         }
-
-        return ParameterFactory.getInstance().createParameter(paramName,
-                StringUtils.unescape(paramValue.toString()));
     }
-
-    /**
-     * Builds an iCalendar component list from the specified stream tokeniser.
-     *
-     * @param tokeniser
-     * @return a component list
-     * @throws IOException
-     * @throws ParseException
-     * @throws URISyntaxException
-     * @throws BuilderException
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.data.ContentHandler#startProperty(java.lang.String)
      */
-    private ComponentList buildComponentList(final StreamTokenizer tokeniser)
-            throws IOException, ParseException, URISyntaxException,
-            BuilderException {
-
-        ComponentList list = new ComponentList();
-
-        while (Component.BEGIN.equals(tokeniser.sval)) {
-
-            list.add(buildComponent(tokeniser));
-
-            assertToken(tokeniser, StreamTokenizer.TT_WORD);
-        }
-
-        return list;
-    }
-
-    /**
-     * Builds an iCalendar component from the specified stream tokeniser.
-     *
-     * @param tokeniser
-     * @return a component
-     * @throws IOException
-     * @throws ParseException
-     * @throws URISyntaxException
-     * @throws BuilderException
-     */
-    private Component buildComponent(final StreamTokenizer tokeniser)
-            throws IOException, ParseException, URISyntaxException,
-            BuilderException {
-
-        assertToken(tokeniser, ':');
-
-        assertToken(tokeniser, StreamTokenizer.TT_WORD);
-
-        String name = tokeniser.sval;
-
-        assertToken(tokeniser, StreamTokenizer.TT_EOL);
-
-        PropertyList properties = buildPropertyList(tokeniser);
-
-        ComponentList subComponents = null;
-
-        // a special case for VTIMEZONE component which contains
-        // sub-components..
-        if (Component.VTIMEZONE.equals(name)) {
-
-            subComponents = buildComponentList(tokeniser);
-        }
-        // VEVENT components may optionally have embedded VALARM
-        // components..
-        else if (Component.VEVENT.equals(name)
-                && Component.BEGIN.equals(tokeniser.sval)) {
-
-            subComponents = buildComponentList(tokeniser);
-        }
-
-        assertToken(tokeniser, ':');
-
-        assertToken(tokeniser, name);
-
-        assertToken(tokeniser, StreamTokenizer.TT_EOL);
-
-        return ComponentFactory.getInstance().createComponent(name, properties,
-                subComponents);
-    }
-
-    /**
-     * Asserts that the next token in the stream matches the specified token.
-     *
-     * @param tokeniser
-     *            stream tokeniser to perform assertion on
-     * @param token
-     *            expected token
-     * @throws IOException
-     *             when unable to read from stream
-     * @throws ParseException
-     *             when next token in the stream does not match the expected
-     *             token
-     */
-    private void assertToken(final StreamTokenizer tokeniser, final int token)
-            throws IOException, BuilderException, ParseException {
-
-        if (tokeniser.nextToken() != token) {
-
-        throw new BuilderException("Expected [" + token + "], read ["
-                + tokeniser.ttype + "] at line " + tokeniser.lineno()); }
-
-        log.debug("[" + token + "]");
-    }
-
-    /**
-     * Asserts that the next token in the stream matches the specified token.
-     *
-     * @param tokeniser
-     *            stream tokeniser to perform assertion on
-     * @param token
-     *            expected token
-     * @throws IOException
-     *             when unable to read from stream
-     * @throws ParseException
-     *             when next token in the stream does not match the expected
-     *             token
-     */
-    private void assertToken(final StreamTokenizer tokeniser, final String token)
-            throws IOException, ParseException, BuilderException {
-
-        // ensure next token is a word token..
-        assertToken(tokeniser, StreamTokenizer.TT_WORD);
-
-        if (!token.equals(tokeniser.sval)) {
-
-        throw new BuilderException("Expected [" + token + "], read ["
-                + tokeniser.sval + "] at line " + tokeniser.lineno()); }
-
-        log.debug("[" + token + "]");
+    public void startProperty(String name) {
+        property = PropertyFactory.getInstance().createProperty(name);
     }
 }
