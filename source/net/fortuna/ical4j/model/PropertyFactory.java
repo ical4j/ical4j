@@ -118,6 +118,9 @@ public final class PropertyFactory {
         else if (Property.SUMMARY.equals(name)) {
             return new Summary();
         }
+        else if (Property.TRANSP.equals(name)) {
+            return new Transp();
+        }
         else if (Property.COMPLETED.equals(name)) {
             return new Completed();
         }
@@ -281,6 +284,9 @@ public final class PropertyFactory {
         }
         else if (Property.SUMMARY.equals(name)) {
             return new Summary(parameters, value);
+        }
+        else if (Property.TRANSP.equals(name)) {
+            return new Transp(parameters, value);
         }
         else if (Property.COMPLETED.equals(name)) {
             return new Completed(parameters, value);
