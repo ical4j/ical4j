@@ -39,21 +39,33 @@ import java.io.Reader;
 
 public interface CalendarParser {
 
-	/**
+    /**
      * Parse the iCalendar data from the specified input stream.
-	 * @param in an input stream from which to read iCalendar data
-	 * @param handler the content handler to notify during parsing
-	 * @throws IOException thrown when unable to read from the specified stream
-	 * @throws ParserException thrown if an error occurs during parsing
-	 */
-	void parse(InputStream in, ContentHandler handler) throws IOException, ParserException;
+     * 
+     * @param in
+     *            an input stream from which to read iCalendar data
+     * @param handler
+     *            the content handler to notify during parsing
+     * @throws IOException
+     *             thrown when unable to read from the specified stream
+     * @throws ParserException
+     *             thrown if an error occurs during parsing
+     */
+    void parse(InputStream in, ContentHandler handler) throws IOException,
+            ParserException;
 
     /**
      * Parse the iCalendar data from the specified reader.
-     * @param in a reader from which to read iCalendar data
-     * @param handler the content handler to notify during parsing
-     * @throws IOException thrown when unable to read from the specified reader
-     * @throws ParserException thrown if an error occurs during parsing
+     * 
+     * @param in
+     *            a reader from which to read iCalendar data
+     * @param handler
+     *            the content handler to notify during parsing
+     * @throws IOException
+     *             thrown when unable to read from the specified reader
+     * @throws ParserException
+     *             thrown if an error occurs during parsing
      */
-	void parse(Reader in, ContentHandler handler) throws IOException, ParserException;
+    void parse(Reader in, ContentHandler handler) throws IOException,
+            ParserException;
 }

@@ -9,6 +9,8 @@ To-do List:
  
  - include maven support
  
+ - provide more constructors for Period type.
+ 
  
  ===========
   RFC 2446:

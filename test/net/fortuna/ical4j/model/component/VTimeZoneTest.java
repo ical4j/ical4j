@@ -12,17 +12,21 @@ import junit.framework.TestCase;
 
 /**
  * A test case for VTimeZone.
+ * 
  * @author benfortuna
  */
 public class VTimeZoneTest extends TestCase {
 
     private static Log log = LogFactory.getLog(VTimeZoneTest.class);
-    
-    public void testGetDefault() {
+
+    /**
+     *  
+     */
+    public final void testGetDefault() {
         VTimeZone timezone = VTimeZone.getDefault();
-        
+
         assertNotNull(timezone);
-        
+
         log.info(timezone);
     }
 

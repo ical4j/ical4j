@@ -39,43 +39,44 @@ import java.text.ParseException;
 
 public interface ContentHandler {
 
-	/**
-	 * Triggers the start of handling a calendar.
-	 */
-	void startCalendar();
+    /**
+     * Triggers the start of handling a calendar.
+     */
+    void startCalendar();
 
     /**
      * Triggers the end of handling a calendar.
      */
-	void endCalendar();
+    void endCalendar();
 
     /**
      * Triggers the start of handling a component.
      */
-	void startComponent(String name);
+    void startComponent(String name);
 
     /**
      * Triggers the end of handling a component.
      */
-	void endComponent(String name);
+    void endComponent(String name);
 
     /**
      * Triggers the start of handling a property.
      */
-	void startProperty(String name);
-    
+    void startProperty(String name);
+
     /**
      * Triggers the handling of a property value.
      */
-    void propertyValue(String value) throws URISyntaxException, ParseException, IOException;
+    void propertyValue(String value) throws URISyntaxException, ParseException,
+            IOException;
 
     /**
      * Triggers the end of handling a property.
      */
-	void endProperty(String name);
+    void endProperty(String name);
 
     /**
      * Triggers the handling of a parameter.
      */
-	void parameter(String name, String value) throws URISyntaxException;
+    void parameter(String name, String value) throws URISyntaxException;
 }

@@ -45,7 +45,7 @@ public class CalendarBuilderTest extends TestCase {
      * @param file
      *            an iCalendar filename
      */
-    public CalendarBuilderTest(String method, String file) {
+    public CalendarBuilderTest(final String method, final String file) {
 
         super(method);
 
@@ -54,8 +54,12 @@ public class CalendarBuilderTest extends TestCase {
         builder = new CalendarBuilder();
     }
 
-    /*
+    /**
      * Class to test for Calendar build(InputStream)
+     * @throws IOException
+     * @throws ParserException
+     * @throws URISyntaxException
+     * @throws ParseException
      */
     public final void testBuildInputStream() throws IOException,
             ParserException, URISyntaxException, ParseException {
@@ -79,21 +83,24 @@ public class CalendarBuilderTest extends TestCase {
         }
     }
 
+    /**
+     * Test suite.
+     * @return
+     */
     public static Test suite() {
 
         TestSuite suite = new TestSuite();
 
         File[] samples = new File("f:/development/workspace/ical4j/etc/samples").listFiles(new FileFilter() {
 			public boolean accept(File file) {
-				return file.getName().endsWith("tmeher.ics");
+				return file.getName().endsWith("eli_test.ics");
 			}
 		});
 
         for (int i = 0; i < samples.length; i++) {
-			log.info("Sample [" + samples[i] + "]");
-
+            log.info("Sample [" + samples[i] + "]");
 			suite.addTest(new CalendarBuilderTest("testBuildInputStream", samples[i].getPath()));
-		}
+        }
 
         return suite;
     }

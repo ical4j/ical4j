@@ -8,14 +8,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -35,7 +35,27 @@ package net.fortuna.ical4j.model;
 
 import java.net.URISyntaxException;
 
-import net.fortuna.ical4j.model.parameter.*;
+import net.fortuna.ical4j.model.parameter.AltRep;
+import net.fortuna.ical4j.model.parameter.Cn;
+import net.fortuna.ical4j.model.parameter.CuType;
+import net.fortuna.ical4j.model.parameter.DelegatedFrom;
+import net.fortuna.ical4j.model.parameter.DelegatedTo;
+import net.fortuna.ical4j.model.parameter.Dir;
+import net.fortuna.ical4j.model.parameter.Encoding;
+import net.fortuna.ical4j.model.parameter.FbType;
+import net.fortuna.ical4j.model.parameter.FmtType;
+import net.fortuna.ical4j.model.parameter.Language;
+import net.fortuna.ical4j.model.parameter.Member;
+import net.fortuna.ical4j.model.parameter.PartStat;
+import net.fortuna.ical4j.model.parameter.Range;
+import net.fortuna.ical4j.model.parameter.RelType;
+import net.fortuna.ical4j.model.parameter.Related;
+import net.fortuna.ical4j.model.parameter.Role;
+import net.fortuna.ical4j.model.parameter.Rsvp;
+import net.fortuna.ical4j.model.parameter.SentBy;
+import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.parameter.XParameter;
 
 /**
  * A factory for creating iCalendar parameters.

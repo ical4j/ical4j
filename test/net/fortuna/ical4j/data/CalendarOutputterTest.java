@@ -34,23 +34,23 @@ public class CalendarOutputterTest extends TestCase {
 
     private String filename;
 
+    /**
+     * @param method
+     * @param file
+     */
     public CalendarOutputterTest(String method, String file) {
-
         super(method);
-
         this.filename = file;
     }
 
+    /**
+     * @throws Exception
+     */
     public void testOutput() throws Exception {
-
         CalendarBuilder builder = new CalendarBuilder();
-
         FileInputStream fin = new FileInputStream(filename);
-
         Calendar calendar = builder.build(fin);
-
         CalendarOutputter outputter = new CalendarOutputter();
-
         OutputStream out = new ByteArrayOutputStream();
 
         outputter.output(calendar, out);
@@ -58,13 +58,10 @@ public class CalendarOutputterTest extends TestCase {
         log.info(out.toString());
 
         BufferedReader bin = new BufferedReader(new UnfoldingReader(new FileReader(filename)));
-
         StringWriter rout = new StringWriter();
-
         BufferedWriter bout = new BufferedWriter(rout);
 
         String line = null;
-
         while ((line = bin.readLine()) != null) {
             bout.write(line);
             bout.write('\n');
@@ -78,6 +75,9 @@ public class CalendarOutputterTest extends TestCase {
         assertEquals(rawData, out.toString());
     }
 
+    /**
+     * @return
+     */
     public static Test suite() {
 
         TestSuite suite = new TestSuite();

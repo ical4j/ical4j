@@ -8,14 +8,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -142,7 +142,7 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#endComponent(java.lang.String)
      */
-    public void endComponent(String name) {
+    public void endComponent(final String name) {
         if (component != null) {
             if (subComponent != null) {
                 if (component instanceof VTimeZone) {
@@ -166,7 +166,7 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#endProperty(java.lang.String)
      */
-    public void endProperty(String name) {
+    public void endProperty(final String name) {
         if (property != null) {
             if (component != null) {
                 if (subComponent != null) {
@@ -187,7 +187,7 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#parameter(java.lang.String, java.lang.String)
      */
-    public void parameter(String name, String value) throws URISyntaxException {
+    public void parameter(final String name, final String value) throws URISyntaxException {
         if (property != null) {
             property.getParameters().add(ParameterFactory.getInstance().createParameter(name, value));
         }
@@ -196,7 +196,7 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#propertyValue(java.lang.String)
      */
-    public void propertyValue(String value) throws URISyntaxException, ParseException, IOException {
+    public void propertyValue(final String value) throws URISyntaxException, ParseException, IOException {
         if (property != null) {
             property.setValue(value);
         }
@@ -212,7 +212,7 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#startComponent(java.lang.String)
      */
-    public void startComponent(String name) {
+    public void startComponent(final String name) {
         if (component != null) {
             subComponent = ComponentFactory.getInstance().createComponent(name);
         }
@@ -224,7 +224,7 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#startProperty(java.lang.String)
      */
-    public void startProperty(String name) {
+    public void startProperty(final String name) {
         property = PropertyFactory.getInstance().createProperty(name);
     }
 }
