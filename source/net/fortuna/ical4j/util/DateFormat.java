@@ -47,13 +47,10 @@ public final class DateFormat {
 
     private static DateFormat instance = new DateFormat();
 
-    private java.text.DateFormat format;
-
     /**
      * Constructor made private to enforce singleton.
      */
     private DateFormat() {
-        format = new SimpleDateFormat(DATE_FORMAT);
     }
 
     /**
@@ -68,7 +65,7 @@ public final class DateFormat {
      * @return a string representation of the specified date
      */
     public String format(final Date date) {
-        return format.format(date);
+        return getDateFormat().format(date);
     }
 
     /**
@@ -78,6 +75,10 @@ public final class DateFormat {
      * is not a valid representation of a date
      */
     public Date parse(final String string) throws ParseException {
-        return format.parse(string);
+        return getDateFormat().parse(string);
+    }
+    
+    private java.text.DateFormat getDateFormat() {
+        return new SimpleDateFormat(DATE_FORMAT);
     }
 }

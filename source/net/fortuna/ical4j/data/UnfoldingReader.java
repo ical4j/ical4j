@@ -36,6 +36,7 @@ package net.fortuna.ical4j.data;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
+import java.util.Arrays;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,6 +59,8 @@ public class UnfoldingReader extends PushbackReader {
     private static final String FOLD_PATTERN = ("true".equals(System
             .getProperty("ical4j.unfolding.relaxed"))) ? "\n " : "\r\n ";
 
+    private static final char[] CHAR_FOLD_PATTERN = FOLD_PATTERN.toCharArray();
+
     private static final int BUFFER_SIZE = FOLD_PATTERN.length();
 
     private char[] buffer = new char[BUFFER_SIZE];
@@ -78,8 +81,9 @@ public class UnfoldingReader extends PushbackReader {
 
         int read = super.read(buffer);
 
-        if (read >= 0) {
-            if (!FOLD_PATTERN.equals(new String(buffer, 0, read))) {
+        if (read > 0) {
+            //if (!FOLD_PATTERN.equals(new String(buffer, 0, read))) {
+            if (!Arrays.equals(CHAR_FOLD_PATTERN, buffer)) {
                 unread(buffer, 0, read);
             }
             else {

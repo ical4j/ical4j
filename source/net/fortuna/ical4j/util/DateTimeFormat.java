@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,18 +56,10 @@ public final class DateTimeFormat {
 
     private static DateTimeFormat instance = new DateTimeFormat();
 
-    private java.text.DateFormat defaultFormat;
-
-    private java.text.DateFormat utcFormat;
-
     /**
      * Constructor made private to enforce singleton.
      */
     private DateTimeFormat() {
-        defaultFormat = new SimpleDateFormat(DEFAULT_PATTERN);
-
-        utcFormat = new SimpleDateFormat(UTC_PATTERN);
-        utcFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     /**
@@ -95,10 +88,10 @@ public final class DateTimeFormat {
      */
     public String format(final Date date, final boolean utc) {
         if (utc) {
-            return utcFormat.format(date);
+            return getUtcFormat().format(date);
         }
 
-        return defaultFormat.format(date);
+        return getDefaultFormat().format(date);
     }
 
     /**
@@ -109,10 +102,20 @@ public final class DateTimeFormat {
      */
     public Date parse(final String string) throws ParseException {
         try {
-            return utcFormat.parse(string);
+            return getUtcFormat().parse(string);
         }
         catch (ParseException pe) {
-            return defaultFormat.parse(string);
+            return getDefaultFormat().parse(string);
         }
+    }
+    
+    private DateFormat getDefaultFormat() {
+        return new SimpleDateFormat(DEFAULT_PATTERN);
+    }
+    
+    private DateFormat getUtcFormat() {
+        DateFormat utcFormat = new SimpleDateFormat(UTC_PATTERN);
+        utcFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return utcFormat;
     }
 }

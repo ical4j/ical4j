@@ -33,11 +33,35 @@
  */
 package net.fortuna.ical4j.util;
 
+import java.util.regex.Pattern;
+
 /**
  * Utility methods for working with parameters.
  * @author benfortuna
  */
 public final class StringUtils {
+
+    private final static Pattern CHECK_ESCAPE = Pattern.compile("[,;\"\n\\\\]");
+
+    private final static Pattern CHECK_UNESCAPE = Pattern.compile("\\\\");
+
+    private final static Pattern ESCAPE_PATTERN_1 =
+        Pattern.compile("([,;\"])");
+
+    private final static Pattern ESCAPE_PATTERN_2 =
+        Pattern.compile("\n");
+
+    private final static Pattern ESCAPE_PATTERN_3 =
+        Pattern.compile("\\\\");
+
+    private final static Pattern UNESCAPE_PATTERN_1 =
+        Pattern.compile("\\\\([,;\"])");
+
+    private final static Pattern UNESCAPE_PATTERN_2 =
+        Pattern.compile("\\\\n", Pattern.CASE_INSENSITIVE);
+
+    private final static Pattern UNESCAPE_PATTERN_3 =
+        Pattern.compile("\\\\\\\\");
 
     /**
      * Constructor made private to prevent instantiation.
@@ -81,12 +105,19 @@ public final class StringUtils {
      * string
      */
     public static String escape(final String aValue) {
-        if (aValue != null) {
+        if (aValue != null && CHECK_ESCAPE.matcher(aValue).find()) {
+            return ESCAPE_PATTERN_1.matcher(
+                    ESCAPE_PATTERN_2.matcher(
+                            ESCAPE_PATTERN_3.matcher(aValue).replaceAll("\\\\\\\\"))
+                        .replaceAll("\\\\n"))
+                .replaceAll("\\\\$1");
+/*
             return aValue.replaceAll("\\\\", "\\\\\\\\")
                             .replaceAll(";", "\\\\;")
                             .replaceAll(",", "\\\\,")
                             .replaceAll("\n", "\\\\n")
                             .replaceAll("\"", "\\\\\"");
+*/
         }
 
         return aValue;
@@ -101,13 +132,20 @@ public final class StringUtils {
      * original form
      */
     public static String unescape(final String aValue) {
-        if (aValue != null) {
+        if (aValue != null && CHECK_UNESCAPE.matcher(aValue).find()) {
+            return UNESCAPE_PATTERN_3.matcher(
+                    UNESCAPE_PATTERN_2.matcher(
+                            UNESCAPE_PATTERN_1.matcher(aValue).replaceAll("$1"))
+                        .replaceAll("\n"))
+                .replaceAll("\\\\");
+/*
             return aValue.replaceAll("\\\\\"", "\"")
                             .replaceAll("\\\\N", "\n")
                             .replaceAll("\\\\n", "\n")
                             .replaceAll("\\\\,", ",")
                             .replaceAll("\\\\;", ";")
                             .replaceAll("\\\\\\\\", "\\\\");
+*/
         }
 
         return aValue;
