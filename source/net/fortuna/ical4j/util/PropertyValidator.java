@@ -108,6 +108,20 @@ public final class PropertyValidator {
                 "Property [" + propertyName + "] must be specified once");
         }
     }
+    
+    /**
+     * Ensure a property doesn't occur in the specified list.
+     * @param propertyName the name of a property
+     * @param properties a list of properties
+     * @throws ValidationException thrown when the specified property
+     * is found in the list of properties
+     */
+    public void validateNone(final String propertyName, final PropertyList properties) throws ValidationException {
+        if (properties.getProperties(propertyName).size() > 0) {
+            throw new ValidationException(
+                "Property [" + propertyName + "] is not applicable");
+        }
+    }
 
     /**
      * @return Returns the instance.
