@@ -8,21 +8,21 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -33,11 +33,14 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.util.Date;
+
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.Action;
+import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
@@ -160,6 +163,31 @@ import net.fortuna.ical4j.util.PropertyValidator;
  *                   )
  * </pre>
  * 
+ * Example 1 - Creating an alarm to trigger at a specific time:
+ * 
+ * <pre><code>
+ * java.util.Calendar cal = java.util.Calendar.getInstance();
+ * cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
+ * cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
+ * 
+ * VAlarm christmas = new VAlarm(cal.getTime());
+ * </code></pre>
+ * 
+ * Example 2 - Creating an alarm to trigger one (1) hour before the
+ * scheduled start of the parent event/the parent todo is due:
+ * 
+ * <pre><code>
+ * VAlarm reminder = new VAlarm(-1000 * 60 * 60);
+ * 
+ * // repeat reminder four (4) more times every fifteen (15) minutes..
+ * reminder.getProperties().add(new Repeat(4));
+ * reminder.getProperties().add(new Duration(1000 * 60 * 15));
+ * 
+ * // display a message..
+ * reminder.getProperties().add(new Action(Action.DISPLAY));
+ * reminder.getProperties().add(new Description("Progress Meeting at 9:30am"));
+ * </code></pre>
+ * 
  * @author Ben Fortuna
  */
 public class VAlarm extends Component {
@@ -179,6 +207,27 @@ public class VAlarm extends Component {
      */
     public VAlarm(final PropertyList properties) {
         super(VALARM, properties);
+    }
+    
+    /**
+     * Constructs a new VALARM instance that will trigger at
+     * the specified time.
+     * @param trigger the time the alarm will trigger
+     */
+    public VAlarm(final Date trigger) {
+        this();
+        getProperties().add(new Trigger(trigger));
+    }
+    
+    /**
+     * Constructs a new VALARM instance that will trigger at
+     * the specified time relative to the event/todo component.
+     * @param trigger a duration of time relative to the parent
+     * component that the alarm will trigger at
+     */
+    public VAlarm(final long trigger) {
+        this();
+        getProperties().add(new Trigger(trigger));
     }
 
     /*
@@ -244,6 +293,9 @@ public class VAlarm extends Component {
         }
     }
 
+    /**
+     * @throws ValidationException
+     */
     private void validateAudio() throws ValidationException {
         /*
          * ; the following is optional, ; but MUST NOT occur more than once
@@ -254,6 +306,9 @@ public class VAlarm extends Component {
                 getProperties());
     }
 
+    /**
+     * @throws ValidationException
+     */
     private void validateDisplay() throws ValidationException {
         /*
          * ; the following are all REQUIRED, ; but MUST NOT occur more than once
@@ -264,6 +319,9 @@ public class VAlarm extends Component {
                 getProperties());
     }
 
+    /**
+     * @throws ValidationException
+     */
     private void validateEmail() throws ValidationException {
         /*
          * ; the following are all REQUIRED, ; but MUST NOT occur more than once
@@ -289,6 +347,9 @@ public class VAlarm extends Component {
                 getProperties());
     }
 
+    /**
+     * @throws ValidationException
+     */
     private void validateProcedure() throws ValidationException {
         /*
          * ; the following are all REQUIRED, ; but MUST NOT occur more than once

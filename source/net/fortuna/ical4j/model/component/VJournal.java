@@ -8,21 +8,21 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -33,10 +33,15 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.util.Date;
+
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.property.DtStamp;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
@@ -76,6 +81,21 @@ import net.fortuna.ical4j.util.PropertyValidator;
  *                   )
  * </pre>
  * 
+ * Example 1 - Creating a journal associated with an event:
+ * 
+ * <pre><code>
+ * DtStart meetingDate = (DtStart) meeting.getProperties().getProperty(Property.DTSTART);
+ * 
+ * VJournal minutes = new VJournal(meetingDate.getTime(), "Progress Meeting - Minutes");
+ * 
+ * // add timezone information..
+ * TzId tzParam = meetingDate.getParameters().getParmaeter(Parameter.TZID);
+ * minutes.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+ * 
+ * // add description..
+ * minutes.getProperties().add(new Description("1. Agenda.., 2. Action Items.."));
+ * </code></pre>
+ * 
  * @author Ben Fortuna
  */
 public class VJournal extends Component {
@@ -95,6 +115,19 @@ public class VJournal extends Component {
      */
     public VJournal(final PropertyList properties) {
         super(VJOURNAL, properties);
+    }
+    
+    /**
+     * Constructs a new VJOURNAL instance associated with the specified
+     * time with the specified summary.
+     * @param start the date the journal entry is associated with
+     * @param summary the journal summary
+     */
+    public VJournal(final Date start, final String summary) {
+        this();
+        getProperties().add(new DtStamp(new Date()));
+        getProperties().add(new DtStart(start));
+        getProperties().add(new Summary(summary));
     }
 
     /*

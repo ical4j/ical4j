@@ -33,25 +33,29 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Period;
+import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.ExDate;
 import net.fortuna.ical4j.model.property.FreeBusy;
+import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.util.PropertyValidator;
@@ -60,65 +64,69 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * Defines an iCalendar VFREEBUSY component.
  * 
  * <pre>
- *   4.6.4 Free/Busy Component
- *   
- *      Component Name: VFREEBUSY
- *   
- *      Purpose: Provide a grouping of component properties that describe
- *      either a request for free/busy time, describe a response to a request
- *      for free/busy time or describe a published set of busy time.
- *   
- *      Formal Definition: A "VFREEBUSY" calendar component is defined by the
- *      following notation:
- *   
- *        freebusyc  = "BEGIN" ":" "VFREEBUSY" CRLF
- *                     fbprop
- *                     "END" ":" "VFREEBUSY" CRLF
- *   
- *        fbprop     = *(
- *   
- *                   ; the following are optional,
- *                   ; but MUST NOT occur more than once
- *   
- *                   contact / dtstart / dtend / duration / dtstamp /
- *                   organizer / uid / url /
- *   
- *                   ; the following are optional,
- *                   ; and MAY occur more than once
- *   
- *                   attendee / comment / freebusy / rstatus / x-prop
- *   
- *                   )
+ *         4.6.4 Free/Busy Component
+ *         
+ *            Component Name: VFREEBUSY
+ *         
+ *            Purpose: Provide a grouping of component properties that describe
+ *            either a request for free/busy time, describe a response to a request
+ *            for free/busy time or describe a published set of busy time.
+ *         
+ *            Formal Definition: A &quot;VFREEBUSY&quot; calendar component is defined by the
+ *            following notation:
+ *         
+ *              freebusyc  = &quot;BEGIN&quot; &quot;:&quot; &quot;VFREEBUSY&quot; CRLF
+ *                           fbprop
+ *                           &quot;END&quot; &quot;:&quot; &quot;VFREEBUSY&quot; CRLF
+ *         
+ *              fbprop     = *(
+ *         
+ *                         ; the following are optional,
+ *                         ; but MUST NOT occur more than once
+ *         
+ *                         contact / dtstart / dtend / duration / dtstamp /
+ *                         organizer / uid / url /
+ *         
+ *                         ; the following are optional,
+ *                         ; and MAY occur more than once
+ *         
+ *                         attendee / comment / freebusy / rstatus / x-prop
+ *         
+ *                         )
  * </pre>
- *
- * If you want to check that a time slot (identified by startDate and endDate)
- * is not marked as busy in a calendar you could do something like this:
- *
+ * 
+ * Example 1 - Requesting all busy time slots for a given period:
+ * 
  * <pre><code>
- *  for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
- *      Component component = (Component) i.next();
- *      if (component instanceof VFreeBusy) {
- *          for (Iterator j = component.getProperties().iterator(); j.hasNext();) {
- *              Property property = (Property) j.next();
- *              if (property instanceof FreeBusy
- *                  && FbType.BUSY.equals(property.getParameters().getParameter(Parameter.FBTYPE)) {
- *                      for (Iterator k = ((FreeBusy) property).getPeriods().iterator(); k.hasNext();) {
- *                          Period period = (Period) k.next();
- *                          if (startDate.after(period.getStart()) && startDate.before(period.getEnd())) {
- *                              // conflict..
- *                              return false;
- *                          }
- *                          else if (endDate.after(period.getStart()) && endDate.before(period.getEnd())) {
- *                              // conflict..
- *                              return false;
- *                          }
- *                      }
- *              }
- *          }
- *      }
- *  }
+ * // request all busy time between today and 1 week from now..
+ * java.util.Calendar cal = java.util.Calendar.getInstance();
+ * Date start = cal.getTime();
+ * cal.add(java.util.Calendar.WEEK_OF_YEAR, 1);
+ * Date end = cal.getTime();
+ * 
+ * VFreeBusy request = new VFreeBusy(start, end);
  * </code></pre>
- *
+ * 
+ * Example 2 - Publishing all busy time slots for the period requested:
+ * 
+ * <pre><code>
+ * VFreeBusy reply = new VFreeBusy(request, calendar.getComponents());
+ * </code></pre>
+ * 
+ * Example 3 - Requesting all free time slots for a given period of at least the
+ * specified duration:
+ * 
+ * <pre><code>
+ * // request all free time between today and 1 week from now of
+ * // duration 2 hours or more..
+ * java.util.Calendar cal = java.util.Calendar.getInstance();
+ * Date start = cal.getTime();
+ * cal.add(java.util.Calendar.WEEK_OF_YEAR, 1);
+ * Date end = cal.getTime();
+ * 
+ * VFreeBusy request = new VFreeBusy(start, end, 2 * 60 * 60 * 1000);
+ * </code></pre>
+ * 
  * @author Ben Fortuna
  */
 public class VFreeBusy extends Component {
@@ -132,85 +140,167 @@ public class VFreeBusy extends Component {
 
     /**
      * Constructor.
-     * @param properties a list of properties
+     * 
+     * @param properties
+     *            a list of properties
      */
     public VFreeBusy(final PropertyList properties) {
         super(VFREEBUSY, properties);
     }
-    
+
     /**
-     * Constructs a new VFreeBusy instance with the specified
-     * start and end boundaries. This constructor should be used
-     * for requesting Free/Busy time for a specified period.
-     * @param startDate the starting boundary for the VFreeBusy
-     * @param endDate the ending boundary for the VFreeBusy
+     * Constructs a new VFreeBusy instance with the specified start and end
+     * boundaries. This constructor should be used for requesting Free/Busy time
+     * for a specified period.
+     * 
+     * @param startDate
+     *            the starting boundary for the VFreeBusy
+     * @param endDate
+     *            the ending boundary for the VFreeBusy
      */
     public VFreeBusy(final Date startDate, final Date endDate) {
         this();
-        getProperties().add(createFbStart(startDate));
-        getProperties().add(createFbEnd(endDate));
+        // dtstart MUST be specified in UTC..
+        getProperties().add(new DtStart(startDate, true));
+        // dtend MUST be specified in UTC..
+        getProperties().add(new DtEnd(endDate, true));
         getProperties().add(new DtStamp(new Date()));
     }
-    
+
     /**
-     * Constructs a new VFREEBUSY instance initialising busy
-     * time according to the specified list of components. This constructor
-     * should be used for publishing busy time for a set period based on the
-     * specified list of components.
-     * @param components a component list used to initialise busy time
+     * Constructs a new VFreeBusy instance with the specified start and end
+     * boundaries. This constructor should be used for requesting Free/Busy time
+     * for a specified duration in given period defined by the start date and
+     * end date.
+     * 
+     * @param startDate
+     *            the starting boundary for the VFreeBusy
+     * @param endDate
+     *            the ending boundary for the VFreeBusy
+     * @param duration
+     *            the length of the period being requested
      */
-    public VFreeBusy(final Date startDate, final Date endDate, final ComponentList components) {
-        this(startDate, endDate);
-        for (Iterator i = components.iterator(); i.hasNext();) {
-            Component component = (Component) i.next();
-            FreeBusy fb = createFreeBusy(startDate, endDate, component);
+    public VFreeBusy(final Date startDate, final Date endDate, final long duration) {
+        this();
+        // dtstart MUST be specified in UTC..
+        getProperties().add(new DtStart(startDate, true));
+        // dtend MUST be specified in UTC..
+        getProperties().add(new DtEnd(endDate, true));
+        getProperties().add(new Duration(duration));
+        getProperties().add(new DtStamp(new Date()));
+    }
+
+    /**
+     * Constructs a new VFreeBusy instance represeting a reply to the specified
+     * VFREEBUSY request according to the specified list of components.
+     * 
+     * @param request
+     *            a VFREEBUSY request
+     * @param components
+     *            a component list used to initialise busy time
+     */
+    public VFreeBusy(final VFreeBusy request, final ComponentList components) {
+        this();
+        DtStart start = (DtStart) request.getProperties().getProperty(Property.DTSTART);
+        DtEnd end = (DtEnd) request.getProperties().getProperty(Property.DTEND);
+        Duration duration = (Duration) request.getProperties().getProperty(Property.DURATION);
+        // dtstart MUST be specified in UTC..
+        getProperties().add(new DtStart(start.getTime(), true));
+        // dtend MUST be specified in UTC..
+        getProperties().add(new DtEnd(end.getTime(), true));
+        getProperties().add(new DtStamp(new Date()));
+        if (duration != null) {
+            getProperties().add(new Duration(duration.getDuration()));
+            // Initialise with all free time of at least the specified
+            // duration..
+            FreeBusy fb = createFreeTime(start.getTime(), end.getTime(), duration.getDuration(), components);
+            if (fb != null && !fb.getPeriods().isEmpty()) {
+                getProperties().add(fb);
+            }
+        } else {
+            // initialise with all busy time for the specified period..
+            FreeBusy fb = createBusyTime(start.getTime(), end.getTime(), components);
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
         }
     }
-    
-    /**
-     * Create a new DTSTART instance in accordance with VFREEBUSY requirements.
-     * @param start
-     * @return
-     * @throws IOException
-     * @throws URISyntaxException
-     * @throws ParseException
-     */
-    private DtStart createFbStart(final Date startDate) {
-        DtStart fbStart = new DtStart(startDate);
-        // dtstart MUST be specified in UTC..
-        fbStart.setUtc(true);
-        return fbStart;
-    }
-    
-    /**
-     * Create a new DTEND instance in accordance with VFREEBUSY requirements.
-     * @param end
-     * @return
-     * @throws IOException
-     * @throws URISyntaxException
-     * @throws ParseException
-     */
-    private DtEnd createFbEnd(final Date endDate) {
-        DtEnd fbEnd = new DtEnd(endDate);
-        // dtend MUST be specified in UTC..
-        fbEnd.setUtc(true);
-        return fbEnd;
-    }
-    
+
     /**
      * Create a FREEBUSY property representing the busy time for the specified
      * component. If the component is not applicable to FREEBUSY time, or if the
      * component is outside the bounds of the start and end dates, null is
      * returned. If no valid busy periods are identified in the component an
      * empty FREEBUSY property is returned (i.e. empty period list).
-     * @param component a component to base the FREEBUSY property on
+     * 
+     * @param component
+     *            a component to base the FREEBUSY property on
      * @return a FreeBusy instance or null if the component is not applicable
      */
-    private FreeBusy createFreeBusy(final Date startDate, final Date endDate, final Component component) {
-        // if transparent don't specify as busy time..
+    private FreeBusy createBusyTime(final Date startDate, final Date endDate, final ComponentList components) {
+        PeriodList periods = createPeriodList(components, endDate);
+        Collections.sort(periods);
+        for (Iterator i = periods.iterator(); i.hasNext();) {
+            Period period = (Period) i.next();
+            // check if period outside bounds..
+            if (period.getStart().after(endDate) || (period.getEnd() != null && period.getEnd().before(startDate))) {
+                periods.remove(period);
+            }
+        }
+        return new FreeBusy(periods);
+    }
+
+    private FreeBusy createFreeTime(final Date start, final Date end, final long duration, final ComponentList components) {
+        FreeBusy fb = new FreeBusy();
+        fb.getParameters().add(new FbType(FbType.FREE));
+        PeriodList periods = createPeriodList(components, end);
+        Collections.sort(periods);
+        Period lastPeriod = null;
+        for (Iterator i = periods.iterator(); i.hasNext();) {
+            Period period = (Period) i.next();
+            // check if period outside bounds..
+            if (period.getStart().after(end) || period.getEnd().before(start)) {
+                continue;
+            }
+            // calculate duration between this and last period..
+            if (lastPeriod != null) {
+                Duration freeDuration = new Duration(lastPeriod.getStart(), period.getStart());
+                if (freeDuration.getDuration() >= duration) {
+                    fb.getPeriods().add(new Period(lastPeriod.getStart(), freeDuration.getDuration()));
+                }
+            }
+            lastPeriod = period;
+        }
+        return fb;
+    }
+
+    /**
+     * Creates a list of periods representing the time taken for the specified
+     * list of components.
+     * @param components
+     * @return
+     */
+    private PeriodList createPeriodList(final ComponentList components, final Date recurEnd) {
+        PeriodList periods = new PeriodList();
+        for (Iterator i = components.iterator(); i.hasNext();) {
+            Component component = (Component) i.next();
+            periods.addAll(createPeriodList(component, recurEnd));
+        }
+        return periods;
+    }
+
+    /**
+     * Creates a list of periods representing the time taken for the specified
+     * component. Note that the returned list may contain a single period for
+     * non-recurring components or multiple periods for recurring components.
+     * 
+     * @param component
+     *            a component to construct a period list for
+     * @return a list of periods
+     */
+    private PeriodList createPeriodList(final Component component, final Date recurEnd) {
+        PeriodList periods = new PeriodList();
+        // if transparent component is not applicable..
         Transp transparent = (Transp) component.getProperties().getProperty(Property.TRANSP);
         if (transparent != null && Transp.TRANSPARENT.equals(transparent.getValue())) {
             return null;
@@ -222,80 +312,125 @@ public class VFreeBusy extends Component {
         if (start == null) {
             return null;
         }
-        // if outside bounds of start/end dates return..
-        if (start.getTime().after(endDate) || (end != null && end.getTime().before(startDate))) {
-            return null;
-        }
-        // if start/end specified as anniversary-type (i.e. uses DATE values rather
-        // than DATE-TIME), don't specify as busy time..
+        // if start/end specified as anniversary-type (i.e. uses DATE values
+        // rather than DATE-TIME), return..
         if (start.getParameters().getParameter(Parameter.VALUE) != null
                 && Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE).getValue())) {
             return null;
         }
-        // populate busy time..
-        FreeBusy fb = new FreeBusy();
-        PropertyList rrules = component.getProperties().getProperties(Property.RRULE);
-        if (!rrules.isEmpty()) {
-            for (Iterator i = rrules.iterator(); i.hasNext();) {
-                RRule rrule = (RRule) i.next();
-                // TODO: create periods representing all rrules..
+        // recurrence dates..
+        PropertyList rDates = component.getProperties().getProperties(Property.RDATE);
+        for (Iterator i = rDates.iterator(); i.hasNext();) {
+            RDate rdate = (RDate) i.next();
+            // only period rdates are applicable..
+            Value value = (Value) rdate.getParameters().getParameter(Parameter.VALUE);
+            if (value != null && Value.PERIOD.equals(value.getValue())) {
+                periods.addAll(rdate.getPeriods());
             }
         }
-        else {
-            // create default busy time from dtstart/dtend..
-            if (end != null) {
-                fb.getPeriods().add(new Period(start.getTime(), end.getTime()));
+        // recurrence rules..
+        PropertyList rRules = component.getProperties().getProperties(Property.RRULE);
+        for (Iterator i = rRules.iterator(); i.hasNext();) {
+            RRule rrule = (RRule) i.next();
+            DateList startDates = rrule.getRecur().getDates(start.getTime(), recurEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
+            DateList endDates = null;
+            if (end == null && duration == null) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(start.getTime());
+                if (start.getParameters().getParameter(Parameter.VALUE) != null
+                        && Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE).getValue())) {
+                    cal.set(Calendar.HOUR_OF_DAY, 23);
+                    cal.set(Calendar.MINUTE, 59);
+                }
+                cal.set(Calendar.SECOND, 59);
+                endDates = rrule.getRecur().getDates(cal.getTime(), recurEnd, (Value) end.getParameters().getParameter(Parameter.VALUE));
             }
-            else if (duration != null) {
-                fb.getPeriods().add(new Period(start.getTime(), duration.getDuration()));
+            else if (end != null) {
+                endDates = rrule.getRecur().getDates(end.getTime(), recurEnd, (Value) end.getParameters().getParameter(Parameter.VALUE));
+            }
+            for (int j = 0; j < startDates.size(); j++) {
+                Date startDate = (Date) startDates.get(j);
+                if (endDates != null) {
+                    Date endDate = (Date) endDates.get(j);
+                    periods.add(new Period(startDate, endDate));
+                }
+                else if (duration != null) {
+                    periods.add(new Period(startDate, duration.getDuration()));
+                }
             }
         }
-        return fb;
+        // exception dates..
+        PropertyList exDates = component.getProperties().getProperties(Property.EXDATE);
+        for (Iterator i = exDates.iterator(); i.hasNext();) {
+            ExDate exDate = (ExDate) i.next();
+            for (Iterator j = periods.iterator(); j.hasNext();) {
+                Period period = (Period) j.next();
+                if (exDate.getDates().contains(period.getStart())) {
+                    periods.remove(period);
+                }
+            }
+        }
+        // exception rules..
+        // TODO
+        // if periods already specified through recurrence, return..
+        if (!periods.isEmpty()) {
+            return periods;
+        }
+        else if (end != null) {
+            periods.add(new Period(start.getTime(), end.getTime()));
+        }
+        else if (duration != null) {
+            periods.add(new Period(start.getTime(), duration.getDuration()));
+        }
+        return periods;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
     public final void validate(final boolean recurse) throws ValidationException {
+        PropertyValidator validator = PropertyValidator.getInstance();
 
         /*
-                ; the following are optional,
-                ; but MUST NOT occur more than once
-
-                contact / dtstart / dtend / duration / dtstamp /
-                organizer / uid / url /
+         * ; the following are optional, ; but MUST NOT occur more than once
+         * 
+         * contact / dtstart / dtend / duration / dtstamp / organizer / uid /
+         * url /
          */
-        PropertyValidator.getInstance().validateOneOrLess(Property.CONTACT,
-                getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.DTSTART,
-                getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.DTEND,
-                getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.DURATION,
-                getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.DTSTAMP,
-                getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.ORGANIZER,
-                getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.UID,
-                getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.URL,
-                getProperties());
+        validator.validateOneOrLess(Property.CONTACT, getProperties());
+        validator.validateOneOrLess(Property.DTSTART, getProperties());
+        validator.validateOneOrLess(Property.DTEND, getProperties());
+        validator.validateOneOrLess(Property.DURATION, getProperties());
+        validator.validateOneOrLess(Property.DTSTAMP, getProperties());
+        validator.validateOneOrLess(Property.ORGANIZER, getProperties());
+        validator.validateOneOrLess(Property.UID, getProperties());
+        validator.validateOneOrLess(Property.URL, getProperties());
 
         /*
-
-                ; the following are optional,
-                ; and MAY occur more than once
-
-                attendee / comment / freebusy / rstatus / x-prop
+         * ; the following are optional, ; and MAY occur more than once
+         * 
+         * attendee / comment / freebusy / rstatus / x-prop
          */
-        
+
+        /*
+         * The recurrence properties ("RRULE", "EXRULE", "RDATE", "EXDATE") are
+         * not permitted within a "VFREEBUSY" calendar component. Any recurring
+         * events are resolved into their individual busy time periods using the
+         * "FREEBUSY" property.
+         */
+        validator.validateNone(Property.RRULE, getProperties());
+        validator.validateNone(Property.EXRULE, getProperties());
+        validator.validateNone(Property.RDATE, getProperties());
+        validator.validateNone(Property.EXDATE, getProperties());
+
         // DtEnd value must be later in time that DtStart..
         DtStart dtStart = (DtStart) getProperties().getProperty(Property.DTSTART);
         DtEnd dtEnd = (DtEnd) getProperties().getProperty(Property.DTEND);
         if (dtStart != null && dtEnd != null && !dtStart.getTime().before(dtEnd.getTime())) {
-            throw new ValidationException("Property [" + Property.DTEND
-                            + "] must be later in time than [" + Property.DTSTART + "]");
+            throw new ValidationException("Property [" + Property.DTEND + "] must be later in time than ["
+                    + Property.DTSTART + "]");
         }
 
         if (recurse) {
