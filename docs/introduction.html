@@ -111,6 +111,34 @@ Calendar calendar = builder.build(fin);
 						<tbody>
 							<tr>
 								<th>
+									Iterating over a Calendar
+								</th>
+							</tr>
+							<tr><td><pre><code>
+for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
+
+    Component component = (Component) i.next();
+
+    System.out.println("Component [" + component.getName() + "]");
+
+    for (Iterator j = component.getProperties().iterator; j.hasNext();) {
+
+        Property property = (Property) j.next();
+
+        System.out.println("Property [" + property.getName() + ", " + property.getValue() + "]");
+    }
+}
+							</code></pre></td></tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table style="border: 1px solid black; background: silver">
+						<tbody>
+							<tr>
+								<th>
 									Working with VTimeZones
 								</th>
 							</tr>
@@ -218,5 +246,15 @@ outputter.output(calendar, fout);
 		</tbody>
 	</table>
 
+	<table style="width:80%;text-align:center">
+		<tbody>
+			<tr>
+				<td colspan="3" style="font-size:xx-small;text-align:center">
+					Copyright 2004 &#169;,
+					<a href="mailto:fortuna@users.sourceforge.net">Ben Fortun<span style="background:red">a</span></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </body>
 </html>
