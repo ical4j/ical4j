@@ -44,17 +44,17 @@ import java.util.StringTokenizer;
  * Defines a list of iCalendar periods.
  * @author benfortuna
  */
-public class PeriodList implements Serializable {
+public class PeriodList extends ArrayList implements Serializable {
     
     private static final long serialVersionUID = -6319585959747194724L;
 
-    private List periods;
+//    private List periods;
 
     /**
      * Default constructor.
      */
     public PeriodList() {
-        periods = new ArrayList();
+//        periods = new ArrayList();
     }
 
     /**
@@ -66,11 +66,11 @@ public class PeriodList implements Serializable {
      * representation of a period list is specified
      */
     public PeriodList(final String aValue) throws ParseException {
-        periods = new ArrayList();
+//        periods = new ArrayList();
 
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {
-            periods.add(new Period(t.nextToken()));
+            add(new Period(t.nextToken()));
         }
     }
 
@@ -78,18 +78,13 @@ public class PeriodList implements Serializable {
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-
         StringBuffer b = new StringBuffer();
-
-        for (Iterator i = periods.iterator(); i.hasNext();) {
-
+        for (Iterator i = iterator(); i.hasNext();) {
             b.append(((Period) i.next()).toString());
-
             if (i.hasNext()) {
                 b.append(',');
             }
         }
-
         return b.toString();
     }
 
@@ -100,24 +95,24 @@ public class PeriodList implements Serializable {
      * @see List#add(java.lang.Object)
      */
     public final boolean add(final Period period) {
-        return periods.add(period);
+        return add((Object) period);
     }
 
     /**
      * @return boolean indicates if the list is empty
      * @see List#isEmpty()
      */
-    public final boolean isEmpty() {
-        return periods.isEmpty();
-    }
+//    public final boolean isEmpty() {
+//        return periods.isEmpty();
+//    }
 
     /**
      * @return an iterator
      * @see List#iterator()
      */
-    public final Iterator iterator() {
-        return periods.iterator();
-    }
+//    public final Iterator iterator() {
+//        return periods.iterator();
+//    }
 
     /**
      * Remove a period from the list
@@ -126,14 +121,14 @@ public class PeriodList implements Serializable {
      * @see List#remove(java.lang.Object)
      */
     public final boolean remove(final Period period) {
-        return periods.remove(period);
+        return remove((Object) period);
     }
 
     /**
      * @return the number of periods in the list
      * @see List#size()
      */
-    public final int size() {
-        return periods.size();
-    }
+//    public final int size() {
+//        return periods.size();
+//    }
 }

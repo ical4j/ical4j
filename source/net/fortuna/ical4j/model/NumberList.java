@@ -36,24 +36,20 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.StringTokenizer;
 
 /**
  * Defines a list of numbers.
  * @author benfortuna
  */
-public class NumberList implements Serializable {
+public class NumberList extends ArrayList implements Serializable {
     
     private static final long serialVersionUID = -1667481795613729889L;
-
-    private List numbers;
 
     /**
      * Constructor.
      */
     public NumberList() {
-        numbers = new ArrayList();
     }
 
     /**
@@ -61,11 +57,9 @@ public class NumberList implements Serializable {
      * @param aString a string representation of a number list
      */
     public NumberList(final String aString) {
-        numbers = new ArrayList();
-
         for (StringTokenizer t = new StringTokenizer(aString, ","); t
                 .hasMoreTokens();) {
-            numbers.add(new Integer(t.nextToken()));
+            add(new Integer(t.nextToken()));
         }
     }
 
@@ -74,21 +68,7 @@ public class NumberList implements Serializable {
      * @return
      */
     public final boolean add(final Integer aNumber) {
-        return numbers.add(aNumber);
-    }
-
-    /**
-     * @return
-     */
-    public final boolean isEmpty() {
-        return numbers.isEmpty();
-    }
-
-    /**
-     * @return
-     */
-    public final Iterator iterator() {
-        return numbers.iterator();
+        return add((Object) aNumber);
     }
 
     /**
@@ -96,31 +76,20 @@ public class NumberList implements Serializable {
      * @return
      */
     public final boolean remove(final Integer aNumber) {
-        return numbers.remove(aNumber);
+        return remove((Object) aNumber);
     }
-
-    /**
-     * @return
-     */
-    public final int size() {
-        return numbers.size();
-    }
-
 
     /**
      * @see java.lang.Object#toString()
      */
     public final String toString() {
         StringBuffer b = new StringBuffer();
-
         for (Iterator i = iterator(); i.hasNext();) {
             b.append(i.next());
-
             if (i.hasNext()) {
                 b.append(',');
             }
         }
-
         return b.toString();
     }
 }

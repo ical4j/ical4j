@@ -45,7 +45,7 @@ import net.fortuna.ical4j.util.DurationFormat;
  *
  * @author benf
  */
-public class Period implements Serializable {
+public class Period implements Serializable, Comparable {
     
     private static final long serialVersionUID = 7321090422911676490L;
 
@@ -137,5 +137,39 @@ public class Period implements Serializable {
         }
 
         return b.toString();
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    public final int compareTo(final Object arg0) {
+        return compareTo((Period) arg0);
+    }
+    
+    /**
+     * Compares the specified period with this period.
+     * @param arg0
+     * @return
+     */
+    public final int compareTo(final Period arg0) {
+        int startCompare = getStart().compareTo(arg0.getStart());
+        if (startCompare != 0) {
+            return startCompare;
+        }
+        else if (getEnd() != null) {
+            if (arg0.getEnd() != null) {
+                int endCompare = getEnd().compareTo(arg0.getEnd());
+                if (endCompare != 0) {
+                    return endCompare;
+                }
+            }
+            else {
+                return Integer.MAX_VALUE;
+            }
+        }
+        else if (arg0.getEnd() != null) {
+            return Integer.MIN_VALUE;
+        }
+        return new Long(getDuration() - arg0.getDuration()).intValue();
     }
 }

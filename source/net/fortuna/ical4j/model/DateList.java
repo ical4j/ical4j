@@ -49,13 +49,11 @@ import net.fortuna.ical4j.util.DateTimeFormat;
  * Defines a list of iCalendar dates.
  * @author benfortuna
  */
-public class DateList implements Serializable {
+public class DateList extends ArrayList implements Serializable {
     
     private static final long serialVersionUID = 5925108767897130313L;
 
     private Value type;
-    
-    private List dates;
 
     /**
      * Default constructor.
@@ -63,8 +61,6 @@ public class DateList implements Serializable {
      * date-time)
      */
     public DateList(final Value aType) {
-        dates = new ArrayList();
-
         this.type = aType;
     }
 
@@ -80,17 +76,15 @@ public class DateList implements Serializable {
      */
     public DateList(final String aValue, final Value aType)
         throws ParseException {
-        dates = new ArrayList();
-
         this.type = aType;
 
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {
             if (type != null && Value.DATE.equals(type.getValue())) {
-                dates.add(DateFormat.getInstance().parse(t.nextToken()));
+                add(DateFormat.getInstance().parse(t.nextToken()));
             }
             else {
-                dates.add(DateTimeFormat.getInstance().parse(t.nextToken()));
+                add(DateTimeFormat.getInstance().parse(t.nextToken()));
             }
         }
     }
@@ -99,23 +93,18 @@ public class DateList implements Serializable {
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-
         StringBuffer b = new StringBuffer();
-
-        for (Iterator i = dates.iterator(); i.hasNext();) {
-
+        for (Iterator i = iterator(); i.hasNext();) {
             if (type != null && Value.DATE.equals(type.getValue())) {
                 b.append(DateFormat.getInstance().format((Date) i.next()));
             }
             else {
                 b.append(DateTimeFormat.getInstance().format((Date) i.next()));
             }
-
             if (i.hasNext()) {
                 b.append(',');
             }
         }
-
         return b.toString();
     }
 
@@ -126,23 +115,7 @@ public class DateList implements Serializable {
      * @see List#add(java.lang.Object)
      */
     public final boolean add(final Date date) {
-        return dates.add(date);
-    }
-
-    /**
-     * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
-     */
-    public final boolean isEmpty() {
-        return dates.isEmpty();
-    }
-
-    /**
-     * @return an iterator
-     * @see List#iterator()
-     */
-    public final Iterator iterator() {
-        return dates.iterator();
+        return add((Object) date);
     }
 
     /**
@@ -152,15 +125,7 @@ public class DateList implements Serializable {
      * @see List#remove(java.lang.Object)
      */
     public final boolean remove(final Date date) {
-        return dates.remove(date);
-    }
-
-    /**
-     * @return the number of dates in the list
-     * @see List#size()
-     */
-    public final int size() {
-        return dates.size();
+        return remove((Object) date);
     }
 
     /**

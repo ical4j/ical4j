@@ -36,6 +36,7 @@
 package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 /**
  * Defines a day of the week with a possible offset related to
@@ -99,8 +100,7 @@ public class WeekDay implements Serializable {
     public final int getOffset() {
         return offset;
     }
-    
-    
+        
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
@@ -111,5 +111,85 @@ public class WeekDay implements Serializable {
         }
         b.append(getDay());
         return b.toString();
+    }
+    
+    /**
+     * Returns a weekday representation of the specified calendar.
+     * @param cal a calendar (java.util)
+     * @return a weekday instance representing the specified calendar
+     */
+    public static final WeekDay getWeekDay(final Calendar cal) {
+        return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), 0);
+    }
+    
+    /**
+     * Returns a weekday/offset representation of the specified calendar.
+     * @param cal a calendar (java.util)
+     * @return a weekday instance representing the specified calendar
+     */
+    public static final WeekDay getMonthlyOffset(final Calendar cal) {
+        return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), cal.get(Calendar.DAY_OF_WEEK_IN_MONTH));
+    }
+    
+    /**
+     * Returns a weekday/negative offset representation of the specified calendar.
+     * @param cal a calendar (java.util)
+     * @return a weekday instance representing the specified calendar
+     */
+    public static final WeekDay getNegativeMonthlyOffset(final Calendar cal) {
+        return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), cal.get(Calendar.DAY_OF_WEEK_IN_MONTH) - 6);
+    }
+    
+    /**
+     * Returns the corresponding day constant to the specified
+     * java.util.Calendar.DAY_OF_WEEK property.
+     * @param calDay a property value of java.util.Calendar.DAY_OF_WEEK
+     * @return a string, or null if an invalid DAY_OF_WEEK property is
+     * specified
+     */
+    private static String getDay(int calDay) {
+        if (calDay == Calendar.SUNDAY) {
+            return SU;
+        }
+        else if (calDay == Calendar.MONDAY) {
+            return MO;
+        }
+        else if (calDay == Calendar.TUESDAY) {
+            return TU;
+        }
+        else if (calDay == Calendar.WEDNESDAY) {
+            return WE;
+        }
+        else if (calDay == Calendar.THURSDAY) {
+            return TH;
+        }
+        else if (calDay == Calendar.FRIDAY) {
+            return FR;
+        }
+        else if (calDay == Calendar.SATURDAY) {
+            return SA;
+        }
+        return null;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public final boolean equals(final Object arg0) {
+        if (arg0 == null) {
+            return false;
+        }
+        if (!(arg0 instanceof WeekDay)) {
+            return false;
+        }
+        WeekDay wd = (WeekDay) arg0;
+        return wd.getDay().equals(getDay()) && wd.getOffset() == getOffset();
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    public final int hashCode() {
+        return getDay().hashCode() + getOffset();
     }
 }

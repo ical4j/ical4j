@@ -43,17 +43,14 @@ import java.util.StringTokenizer;
  * Defines a list of days.
  * @author benfortuna
  */
-public class WeekDayList implements Serializable {
+public class WeekDayList extends ArrayList implements Serializable {
     
     private static final long serialVersionUID = 1243262497035300445L;
-
-    private List days;
 
     /**
      * Constructor.
      */
     public WeekDayList() {
-        days = new ArrayList();
     }
 
     /**
@@ -61,11 +58,9 @@ public class WeekDayList implements Serializable {
      * @param aString a string representation of a day list
      */
     public WeekDayList(final String aString) {
-        days = new ArrayList();
-
         for (StringTokenizer t = new StringTokenizer(aString, ","); t
                 .hasMoreTokens();) {
-            days.add(new WeekDay(t.nextToken()));
+            add(new WeekDay(t.nextToken()));
         }
     }
 
@@ -74,21 +69,7 @@ public class WeekDayList implements Serializable {
      * @return
      */
     public final boolean add(final WeekDay weekDay) {
-        return days.add(weekDay);
-    }
-
-    /**
-     * @return
-     */
-    public final boolean isEmpty() {
-        return days.isEmpty();
-    }
-
-    /**
-     * @return
-     */
-    public final Iterator iterator() {
-        return days.iterator();
+        return add((Object) weekDay);
     }
 
     /**
@@ -96,16 +77,8 @@ public class WeekDayList implements Serializable {
      * @return
      */
     public final boolean remove(final WeekDay weekDay) {
-        return days.remove(weekDay);
+        return remove((Object) weekDay);
     }
-
-    /**
-     * @return
-     */
-    public final int size() {
-        return days.size();
-    }
-
 
     /**
      * @see java.lang.Object#toString()
