@@ -6,6 +6,9 @@ To-do List:
  - inspect date-based properties and default local time where TZID parameter
  is identified
  
+ - ensure that parameter lists for constant property instances (Version, CalScale)
+ are immutable.
+ 
  
  ===========
   RFC 2446:

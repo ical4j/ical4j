@@ -2,6 +2,13 @@
  iCal4j - Changes
 ==================
 
+0.9.12:
+
+ - Redefined parameter and property constants to class instances rather
+ than strings. This is done for efficiency where class instances are immutable
+ once created. Note: this may cause incompatibilities with existing code!
+ 
+ 
 0.9.11:
 
  - Better support and usability for recurrence rules. (see

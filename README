@@ -32,6 +32,30 @@
  problem). This is, however, still incorrect as by definition long lines are folded
  using a (CRLF) combination.
  
+ I've obtained a couple of samples of non-standard iCalendar files that I've included
+ in the latest release (0.9.11). There is a Sunbird, phpicalendar, and a KOrganizer
+ sample there (open them in Notepad on Windows to see what I mean).
+
+ It seems that phpicalendar and KOrganizer always use LF instead of CRLF, and in
+ addition KOrganizer seems to fold all property parameters and values (similar to
+ Mozilla Calendar/Sunbird).
+
+ Mozilla Calendar/Sunbird uses CRLF to fold all property parameter/values, however it
+ uses just LF to fold long lines (i.e. longer than 75 characters).
+
+ The latest release of iCal4j includes changes to UnfoldingReader that should work
+ correctly with Mozilla Calendar/Sunbird, as long as the ical4j.unfolding.relaxed
+ system property is set to true.
+
+ KOrganizer/phpicalendar files should also work with the relaxed property, although
+ because ALL lines are separated with just LF it also relies on the StreamTokenizer to
+ correctly identify LF as a newline on Windows, and CRLF as a newline on UNIX/Linux. The
+ API documentation for Java 1.5 says that it does do this, so if you still see problems
+ with parsing it could be a bug in the Java implementation.
+
+ Its a shame everyone can't just agree to one
+ standard as it would make life much simpler. :)
+
  
 =================
  Redistribution:
