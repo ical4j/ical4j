@@ -10,14 +10,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -41,7 +41,14 @@ import net.fortuna.ical4j.model.Property;
 /**
  * Defines a VERSION iCalendar property.
  *
- * @author benf
+ * When creating a new calendar you should always add a version property with value "2.0".
+ * There is actually a constant defined in the Version class for this. Note: if you use the
+ * default constructor for Version it will automatically set the maxVersion = "2.0". e.g:
+ *
+ * <code>    Calendar calendar = new Calendar();</code>
+ * <code>    calendar.getProperties().add(new Version());</code>
+ *
+ * @author Ben Fortuna
  */
 public class Version extends Property {
 
@@ -58,7 +65,7 @@ public class Version extends Property {
         super(VERSION);
         maxVersion = VERSION_2_0;
     }
-    
+
     /**
      * @param aList
      *            a list of parameters for this component
@@ -110,7 +117,7 @@ public class Version extends Property {
     public final String getMinVersion() {
         return minVersion;
     }
-    
+
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
@@ -146,14 +153,14 @@ public class Version extends Property {
 
         return b.toString();
     }
-    
+
     /**
      * @param maxVersion The maxVersion to set.
      */
     public final void setMaxVersion(final String maxVersion) {
         this.maxVersion = maxVersion;
     }
-    
+
     /**
      * @param minVersion The minVersion to set.
      */

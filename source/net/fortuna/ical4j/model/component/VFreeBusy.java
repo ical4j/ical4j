@@ -8,14 +8,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -42,7 +42,35 @@ import net.fortuna.ical4j.util.PropertyValidator;
 /**
  * Defines an iCalendar VFREEBUSY component.
  *
- * @author benf
+ * If you want to check that a time slot (identified by startDate and endDate)
+ * is not marked as busy in a calendar you could do something like this:
+ *
+ * <code>
+ *  for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
+ *      Component component = (Component) i.next();
+ *      if (component instanceof VFreeBusy) {
+ *          for (Iterator j = component.getProperties().iterator(); j.hasNext();) {
+ *              Property property = (Property) j.next();
+ *              if (property instanceof FreeBusy
+ *                  && FbType.BUSY.equals(property.getParameters().getParameter(Parameter.FBTYPE)) {
+ *                      for (Iterator k = ((FreeBusy) property).getPeriods().iterator(); k.hasNext();) {
+ *                          Period period = (Period) k.next();
+ *                          if (startDate.after(period.getStart()) && startDate.before(period.getEnd())) {
+ *                              // conflict..
+ *                              return false;
+ *                          }
+ *                          else if (endDate.after(period.getStart()) && endDate.before(period.getEnd())) {
+ *                              // conflict..
+ *                              return false;
+ *                          }
+ *                      }
+ *              }
+ *          }
+ *      }
+ *  }
+ * </code>
+ *
+ * @author Ben Fortuna
  */
 public class VFreeBusy extends Component {
 
