@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -927,25 +927,25 @@ public class Recur implements Serializable {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int calDay = -1;
-        if (weekDay.getDay() == WeekDay.SU) {
+        if (WeekDay.SU.equals(weekDay)) {
             calDay = Calendar.SUNDAY;
         }
-        else if (weekDay.getDay() == WeekDay.MO) {
+        else if (WeekDay.MO.equals(weekDay)) {
             calDay = Calendar.MONDAY;
         }
-        else if (weekDay.getDay() == WeekDay.TU) {
+        else if (WeekDay.TU.equals(weekDay)) {
             calDay = Calendar.TUESDAY;
         }
-        else if (weekDay.getDay() == WeekDay.WE) {
+        else if (WeekDay.WE.equals(weekDay)) {
             calDay = Calendar.WEDNESDAY;
         }
-        else if (weekDay.getDay() == WeekDay.TH) {
+        else if (WeekDay.TH.equals(weekDay)) {
             calDay = Calendar.THURSDAY;
         }
-        else if (weekDay.getDay() == WeekDay.FR) {
+        else if (WeekDay.FR.equals(weekDay)) {
             calDay = Calendar.FRIDAY;
         }
-        else if (weekDay.getDay() == WeekDay.SA) {
+        else if (WeekDay.SA.equals(weekDay)) {
             calDay = Calendar.SATURDAY;
         }
         List days = new ArrayList();
