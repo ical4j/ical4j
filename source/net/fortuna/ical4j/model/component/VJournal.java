@@ -135,7 +135,7 @@ public class VJournal extends Component {
      *
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
-    public final void validate(boolean recurse) throws ValidationException {
+    public final void validate(final boolean recurse) throws ValidationException {
         /*
          *  ; the following are optional, ; but MUST NOT occur more than once
          *

@@ -186,7 +186,7 @@ public class VFreeBusyTest extends TestCase {
             start.add(java.util.Calendar.DATE, -1); 
             VEvent dteStartOnly = new VEvent(start.getTime(), "DATE START ONLY"); 
             VEvent dteEnd = new VEvent(start.getTime(), end.getTime(), "DATE END INCLUDED"); 
-            VEvent duration = new VEvent(start.getTime(), 60*60*1000, "DURATION"); 
+            VEvent duration = new VEvent(start.getTime(), 60 * 60 * 1000, "DURATION"); 
             FreeBusyTest.getComponents().add(dteEnd); 
             FreeBusyTest.getComponents().add(duration); 
              
@@ -194,10 +194,10 @@ public class VFreeBusyTest extends TestCase {
             java.util.Calendar dtend = java.util.Calendar.getInstance(); 
             dtstart.add(java.util.Calendar.DATE, -2); 
             VFreeBusy getBusy = new VFreeBusy(dtstart.getTime(), dtend.getTime()); 
-            VFreeBusy requestFree = new VFreeBusy(dtstart.getTime(), dtend.getTime(), 30*60*1000); 
+            VFreeBusy requestFree = new VFreeBusy(dtstart.getTime(), dtend.getTime(), 30 * 60 * 1000); 
              
-            System.out.println("GET BUSY: \n"+getBusy.toString()); 
-            System.out.println("REQUEST FREE: \n"+requestFree.toString()); 
+            System.out.println("GET BUSY: \n" + getBusy.toString()); 
+            System.out.println("REQUEST FREE: \n" + requestFree.toString()); 
              
             net.fortuna.ical4j.model.Calendar FreeBusyTest2 =  
             new net.fortuna.ical4j.model.Calendar(); 
@@ -206,14 +206,14 @@ public class VFreeBusyTest extends TestCase {
             VFreeBusy replyBusy = new VFreeBusy(getBusy, FreeBusyTest.getComponents()); 
             VFreeBusy replyFree = new VFreeBusy(requestFree, FreeBusyTest.getComponents()); 
              
-            System.out.println("REPLY BUSY: \n" +replyBusy.toString()); 
-            System.out.println("REPLY FREE: \n"+replyFree.toString()); 
+            System.out.println("REPLY BUSY: \n" + replyBusy.toString()); 
+            System.out.println("REPLY FREE: \n" + replyFree.toString()); 
              
             FreeBusyTest2.getComponents().add(replyBusy); 
             VFreeBusy replyBusy2 = new VFreeBusy(getBusy, FreeBusyTest2.getComponents()); 
             VFreeBusy replyFree2 = new VFreeBusy(requestFree, FreeBusyTest2.getComponents()); 
              
-            System.out.println("REPLY BUSY2: \n" +replyBusy2.toString()); 
-            System.out.println("REPLY FREE2: \n"+replyFree2.toString()); 
+            System.out.println("REPLY BUSY2: \n" + replyBusy2.toString()); 
+            System.out.println("REPLY FREE2: \n" + replyFree2.toString()); 
     }
 }

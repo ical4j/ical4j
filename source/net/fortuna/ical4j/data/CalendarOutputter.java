@@ -120,7 +120,7 @@ public class CalendarOutputter {
     /**
      * @param validating The validating to set.
      */
-    public void setValidating(boolean validating) {
+    public void setValidating(final boolean validating) {
         this.validating = validating;
     }
 }

@@ -125,7 +125,7 @@ public class DtStamp extends Property {
     /**
      * @param dateTime The dateTime to set.
      */
-    public final void setDateTime(Date dateTime) {
+    public final void setDateTime(final Date dateTime) {
         this.dateTime = dateTime;
     }
 }

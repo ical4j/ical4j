@@ -47,7 +47,7 @@ public class XParameter extends Parameter {
 	 * @param aName parameter name
 	 * @param aValue parameter value
 	 */
-	public XParameter(String aName, String aValue) {
+	public XParameter(final String aName, final String aValue) {
 		super(aName);
 
 		this.value = aValue;

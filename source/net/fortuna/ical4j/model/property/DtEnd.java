@@ -205,7 +205,7 @@ public class DtEnd extends Property {
     /**
      * @param time The time to set.
      */
-    public final void setTime(Date time) {
+    public final void setTime(final Date time) {
         this.time = time;
     }
 }

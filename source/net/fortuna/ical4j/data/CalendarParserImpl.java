@@ -122,7 +122,6 @@ public class CalendarParserImpl implements CalendarParser {
      * Parses an iCalendar property list from the specified stream tokeniser.
      * 
      * @param tokeniser
-     * @return a property list
      * @throws IOException
      * @throws ParseException
      * @throws URISyntaxException
@@ -148,7 +147,6 @@ public class CalendarParserImpl implements CalendarParser {
      * Parses an iCalendar property from the specified stream tokeniser.
      * 
      * @param tokeniser
-     * @return a property
      * @throws IOException
      * @throws ParserException
      * @throws URISyntaxException
@@ -251,7 +249,6 @@ public class CalendarParserImpl implements CalendarParser {
      * Parses an iCalendar component list from the specified stream tokeniser.
      * 
      * @param tokeniser
-     * @return a component list
      * @throws IOException
      * @throws ParseException
      * @throws URISyntaxException
@@ -280,7 +277,6 @@ public class CalendarParserImpl implements CalendarParser {
      * Parses an iCalendar component from the specified stream tokeniser.
      * 
      * @param tokeniser
-     * @return a component
      * @throws IOException
      * @throws ParseException
      * @throws URISyntaxException

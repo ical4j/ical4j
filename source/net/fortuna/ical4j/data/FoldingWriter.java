@@ -95,7 +95,7 @@ public class FoldingWriter extends FilterWriter {
     /* (non-Javadoc)
      * @see java.io.FilterWriter#write(char[], int, int)
      */
-    public void write(char[] buffer, int offset, int length) throws IOException {
+    public void write(final char[] buffer, final int offset, final int length) throws IOException {
         for (int i = offset; i < length; i++) {
 
             // debugging..
@@ -127,7 +127,7 @@ public class FoldingWriter extends FilterWriter {
     /* (non-Javadoc)
      * @see java.io.FilterWriter#write(java.lang.String, int, int)
      */
-    public void write(String str, int off, int len) throws IOException {
+    public void write(final String str, final int off, final int len) throws IOException {
         write(str.toCharArray(), off, len);
     }
 

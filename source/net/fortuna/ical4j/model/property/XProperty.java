@@ -68,7 +68,7 @@ public class XProperty extends Property {
      * @param aName
      * @param aList
      */
-    public XProperty(String aName, ParameterList aList, final String aValue) {
+    public XProperty(final String aName, final ParameterList aList, final String aValue) {
         super(aName, aList);
         setValue(aValue);
         setEscapable(true);

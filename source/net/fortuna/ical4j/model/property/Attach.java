@@ -87,7 +87,7 @@ public class Attach extends Property {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public void setValue(String aValue) throws IOException, URISyntaxException {
+    public void setValue(final String aValue) throws IOException, URISyntaxException {
 
         // determine if ATTACH is a URI or an embedded
         // binary..

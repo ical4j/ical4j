@@ -121,7 +121,7 @@ public class TzOffsetFrom extends Property {
     /**
      * @param offset The offset to set.
      */
-    public final void setOffset(long offset) {
+    public final void setOffset(final long offset) {
         this.offset = offset;
     }
 }

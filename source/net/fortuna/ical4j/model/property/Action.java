@@ -86,7 +86,7 @@ public class Action extends Property {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public void setValue(String aValue) {
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 

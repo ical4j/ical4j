@@ -38,7 +38,7 @@ public class CalendarOutputterTest extends TestCase {
      * @param method
      * @param file
      */
-    public CalendarOutputterTest(String method, String file) {
+    public CalendarOutputterTest(final String method, final String file) {
         super(method);
         this.filename = file;
     }
@@ -82,8 +82,8 @@ public class CalendarOutputterTest extends TestCase {
 
         TestSuite suite = new TestSuite();
 
-        File[] samples = new File("c:/Development/workspace/ical4j/etc/samples").listFiles(new FileFilter() {
-			public boolean accept(File file) {
+        File[] samples = new File("c:/Development/workspace/iCal4j/ical4j/etc/samples").listFiles(new FileFilter() {
+			public final boolean accept(final File file) {
 				return file.getName().endsWith("OZMovies.ics");
 			}
 		});
