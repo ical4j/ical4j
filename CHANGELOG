@@ -2,6 +2,21 @@
  iCal4j - Changes
 ==================
 
+0.9.11:
+
+ - Better support and usability for recurrence rules. (see
+ extensive changes to Recur class)
+ 
+ - Convenience constructors for components VAlarm, VEvent, VFreeBusy, VJournal,
+ and VToDo should make it easier to construct standard components.
+ 
+ - Further validation fine-tuning to ensure some properties don't occur where
+ not applicable.
+ 
+ - Fixed support for TRANSP property, which was previously being ignored by the
+ CalendarBuilder.
+ 
+ 
 0.9.10:
 
  - Model classes are now Serializable

@@ -1,0 +1,17 @@
+=======================
+ iCal4j - Contributors
+=======================
+
+ Many thanks to the following people for their contributions and feedback:
+ 
+  - Heladito, Darkwave, twinkle, Outmyth, Ralph Schaer, Chris Borrill,
+  Meher Tendjoukian, John Casey, Harrie Hazewinkel, Markus Rahlff,
+  Marcus Hauer..
+ 
+ 
+ Thanks also to the developers of the following applications/libraries:
+ 
+  - eclipse [http://eclipse.org/]
+  - eclipse checkstyle plugin [http://eclipse-cs.sourceforge.net/]
+  - Apache Commons Logging/Log4j [http://jakarta.apache.org/commons/logging/]
+  - Apache Ant [http://ant.apache.org/] 

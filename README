@@ -5,7 +5,8 @@
  - For a concise description of the goals and directions of iCal4j please
  take a look at docs/index.html.
 
- - You will find examples of how to use iCal4j at docs/introduction.html.
+ - You will find examples of how to use iCal4j at docs/introduction.html
+ and throughout the API documentation.
 
  - Detailed descriptions of changes included in each release may be found
  in the CHANGELOG.
@@ -14,9 +15,23 @@
  Note that the project metadata included in the source version of iCal4j may not
  be compatible with prior versions of eclipse.
 
- - The checkstyle plugin [http://checkstyle.sourceforge.net/] also provided assistance in maintaing good
- coding discipline. (highly recommended!)
 
+=================
+ Relaxed Parsing
+=================
+
+ iCal4j now has the capability to "relax" its parsing rules to enable parsing of
+ *.ics files that don't properly conform to the iCalendar specification (RFC2445)
+ 
+ - By specifying the system property "ical4j.unfolding.relaxed=true", iCalendar
+ files created with Mozilla Calendar/Sunbird may be correctly unfolded.
+ 
+ Note that I believe this problem is not restricted to Mozilla calendaring
+ products, but rather may be caused by UNIX/Linux-based applications relying on the
+ default newline character (LF) to fold long lines (KOrganizer also seems to have this
+ problem). This is, however, still incorrect as by definition long lines are folded
+ using a (CRLF) combination.
+ 
  
 =================
  Redistribution:
@@ -28,19 +43,7 @@ follow these very simple guidelines:
  - Make a copy of the LICENSE, rename it to LICENSE.iCal4j, and save
  it to the directory where you are re-distributing the iCal4j JAR.
  
- - Please don't extract the iCal4j classes from its JAR and package
- in another JAR along with other classes. I've noticed that a number
- of people do this and they are just causing themselves and their
- users no end of trouble.
- 
- As a quick example, Google included JavaMail, Apache Crimson and
- other libraries within their googleapi.jar. Now that's fine if you
- intend to use the Google API in isolation, but what if you want to
- include it in a program that uses a different version of JavaMail
- or Crimson elsewhere (including bug fix releases!)? You basically
- have to hack apart the provided JAR to take out all the conflicting
- classes, which may not even be legal.
-
- Java software is meant to have multiple JARs - I would be very
- surprised these days to see any "application" of merit that doesn't
- contain multiple JARs.
+ - I don't recommend extracting the iCal4j classes from its JAR and package
+ in another JAR along with other classes. It may lead to version incompatibilites
+ in the future. Rather I would suggest to include the ical4j.jar in your classpath
+ as required.

@@ -3,9 +3,8 @@ To-do List:
 
  - Add "relaxed" option for parsing dates (ie. attempt both date and date-time regardless of value type)
  
- - add better constructors, etc. to Recur
- 
- - add convenience constructor to create VFreeBusy from a VEvent instance
+ - inspect date-based properties and default local time where TZID parameter
+ is identified
  
  
  ===========

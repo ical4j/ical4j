@@ -116,15 +116,11 @@ Calendar calendar = builder.build(fin);
                             </tr>
                             <tr><td><pre><code>
 for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-
     Component component = (Component) i.next();
-
     System.out.println("Component [" + component.getName() + "]");
 
     for (Iterator j = component.getProperties().iterator; j.hasNext();) {
-
         Property property = (Property) j.next();
-
         System.out.println("Property [" + property.getName() + ", " + property.getValue() + "]");
     }
 }
@@ -184,29 +180,19 @@ VTimeZone tz = VTimeZone.getVTimeZone(java.util.TimeZone.getTimeZone("Australia/
                                 </th>
                             </tr>
                             <tr><td><pre><code>
-// create timezone property..
+java.util.Calendar cal = java.util.Calendar.getInstance();
+cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
+cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
+
+VEvent christmas = new VEvent(cal.getTime(), "Christmas Day");
+
+// initialise as an all-day event..
+christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(new Value(Value.DATE));
+
+// add timezone information..
 VTimeZone tz = VTimeZone.getDefault();
-
-// create tzid parameter..
 TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
-
-// create value parameter..
-Value type = new Value(Value.DATE);
-
-// create event start date..
-java.util.Calendar calendar = java.util.Calendar.getInstance();
-calendar.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
-calendar.set(java.util.Calendar.DAY_OF_MONTH, 25);
-
-DtStart start = new DtStart(calendar.getTime());
-start.getParameters().add(tzParam);
-start.getParameters().add(type);
-
-Summary summary = new Summary("Christmas Day");
-
-VEvent christmas = new VEvent();
-christmas.getProperties().add(start);
-christmas.getProperties().add(summary);
+christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
                             </code></pre></td></tr>
                             <tr>
                                 <th>
@@ -215,7 +201,8 @@ christmas.getProperties().add(summary);
                             </tr>
                             <tr><td><pre><code>
 BEGIN:VEVENT
-DTSTART;TZID=Australia/Sydney;VALUE=DATE:20041225
+DTSTAMP:20050222T044240Z
+DTSTART;VALUE=DATE;TZID=Australia/Sydney:20051225
 SUMMARY:Christmas Day
 END:VEVENT
                             </code></pre></td></tr>
@@ -242,6 +229,9 @@ outputter.output(calendar, fout);
                         </tbody>
                     </table>
                 </td>
+            </tr>
+            <tr>
+            	<td>More examples may be found in the <a href="api/index.html">API Documentation</a>.</td>
             </tr>
         </tbody>
     </table>

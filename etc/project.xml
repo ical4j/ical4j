@@ -3,7 +3,7 @@
     <id>ical4j</id>
     <artifactId>ical4j</artifactId>
     <name>iCal4j</name>
-    <currentVersion>0.9.10</currentVersion>
+    <currentVersion>0.9.11</currentVersion>
 
     <organization>
         <name>Ben Fortuna</name>
@@ -15,7 +15,7 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
