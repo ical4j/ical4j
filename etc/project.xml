@@ -1,8 +1,15 @@
 <project>
-    <groupId>ical4j</groupId>
+    <groupId>fortuna</groupId>
+    <id>ical4j</id>
     <artifactId>ical4j</artifactId>
-    <currentVersion>0.9.7</currentVersion>
     <name>iCal4j</name>
+    <currentVersion>0.9.10</currentVersion>
+
+    <organization>
+        <name>Ben Fortuna</name>
+        <url>http://sourceforge.net/users/fortuna</url>
+        <logo/>
+    </organization>
     
     <dependencies>
         <dependency>
@@ -10,7 +17,6 @@
             <artifactId>commons-logging</artifactId>
             <version>1.0.3</version>
         </dependency>
-        
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -30,7 +36,7 @@
                 <exclude>**/*Abstract*Test.java</exclude>
             </excludes>
             <resources>
-                <resource>			
+                <resource>          
                     <directory>test</directory>
                     <excludes>
                         <exclude>**/*.java</exclude>
