@@ -54,6 +54,7 @@ public class TzId extends Property {
      */
     public TzId() {
         super(TZID);
+        setEscapable(true);
     }
     
     /**
@@ -63,6 +64,7 @@ public class TzId extends Property {
     public TzId(final String aValue) {
         super(TZID);
         setValue(aValue);
+        setEscapable(true);
     }
 
     /**
@@ -74,6 +76,7 @@ public class TzId extends Property {
     public TzId(final ParameterList aList, final String aValue) {
         super(TZID, aList);
         setValue(aValue);
+        setEscapable(true);
     }
     
     /* (non-Javadoc)
