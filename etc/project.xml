@@ -1,5 +1,5 @@
 <project>
-    <groupId>fortuna</groupId>
+    <groupId>ical4j</groupId>
     <id>ical4j</id>
     <artifactId>ical4j</artifactId>
     <name>iCal4j</name>
