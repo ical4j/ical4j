@@ -25,7 +25,7 @@
   -->
 <project name="iCal4j" basedir="." default="package">
 
-    <property name="project.version" value="0.9.10"/>
+    <property name="project.version" value="0.9.11"/>
     <property name="source.dir" location="source"/>
     <property name="test.source.dir" location="test"/>
     <property name="output.dir" location="bin"/>
@@ -46,7 +46,7 @@
     </target>
     
     <target name="compile">
-        <javac srcdir="${source.dir}" destdir="${output.dir}" classpath="lib/commons-logging.jar" debug="false" deprecation="true"/>
+        <javac source="1.4" srcdir="${source.dir}" destdir="${output.dir}" classpath="lib/commons-logging.jar" debug="false" deprecation="true"/>
     </target>
     
     <target name="compile-tests">
@@ -92,7 +92,7 @@
         </zip>
     </target>
 
-    <target name="dist" depends="package, javadoc">
+    <target name="dist" depends="clean-compile, package, javadoc">
         <zip zipfile="${dist.dir}/${dist.name}-${project.version}.zip">
             <zipfileset dir="." prefix="${dist.name}-${project.version}" includes="LICENSE,CHANGELOG,README"/>
             <zipfileset dir="docs" prefix="${dist.name}-${project.version}/docs"/>
@@ -112,7 +112,7 @@
         </zip>
     </target>
 
-    <target name="dist-maven" depends="package">
+    <target name="dist-maven" depends="clean-compile, package">
         <jar jarfile="${dist.dir}/${dist.maven.file}">
             <zipfileset dir="." includes="LICENSE" fullpath="LICENSE.txt"/>
             <zipfileset dir="etc" includes="project.xml"/>
@@ -121,7 +121,7 @@
     </target>
     
     <target name="changelog">
-        <cvschangelog destfile="CHANGES"/>
+    	<cvschangelog destfile="CHANGES"/>
     </target>
     
     <target name="run-tests" depends="compile, compile-tests">
