@@ -5,28 +5,23 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Test case for iCalendarOutputter.
@@ -89,7 +84,7 @@ public class CalendarOutputterTest extends TestCase {
 
         File[] samples = new File("f:/development/workspace/ical4j/etc/samples").listFiles(new FileFilter() {
 			public boolean accept(File file) {
-				return file.getName().endsWith("OZMovies.ics");
+				return file.getName().endsWith("tmeher.ics");
 			}
 		});
 
