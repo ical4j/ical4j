@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -47,19 +47,19 @@ public class WeekDay implements Serializable {
     
     private static final long serialVersionUID = -4412000990022011469L;
 
-    public static final String SU = "SU";
+    public static final WeekDay SU = new WeekDay("SU", 0);
 
-    public static final String MO = "MO";
+    public static final WeekDay MO = new WeekDay("MO", 0);
 
-    public static final String TU = "TU";
+    public static final WeekDay TU = new WeekDay("TU", 0);
 
-    public static final String WE = "WE";
+    public static final WeekDay WE = new WeekDay("WE", 0);
 
-    public static final String TH = "TH";
+    public static final WeekDay TH = new WeekDay("TH", 0);
 
-    public static final String FR = "FR";
+    public static final WeekDay FR = new WeekDay("FR", 0);
 
-    public static final String SA = "SA";
+    public static final WeekDay SA = new WeekDay("SA", 0);
 
     private String day;
     
@@ -85,6 +85,17 @@ public class WeekDay implements Serializable {
     public WeekDay(final String day, final int offset) {
         this.day = day;
         this.offset = offset;
+    }
+    
+    /**
+     * Constructs a new weekday instance based on the specified
+     * instance and offset.
+     * @param weekDay
+     * @param offset
+     */
+    public WeekDay(final WeekDay weekDay, final int offset) {
+    	this.day = weekDay.getDay();
+    	this.offset = offset;
     }
     
     /**
@@ -147,7 +158,7 @@ public class WeekDay implements Serializable {
      * @return a string, or null if an invalid DAY_OF_WEEK property is
      * specified
      */
-    private static String getDay(int calDay) {
+    private static WeekDay getDay(final int calDay) {
         if (calDay == Calendar.SUNDAY) {
             return SU;
         }
