@@ -1,7 +1,7 @@
 To-do List:
 ==========
 
- * Add "relaxed" option for parsing dates (ie. attempt both date and date-time regardless of value type)
+ - Add "relaxed" option for parsing dates (ie. attempt both date and date-time regardless of value type)
  
  
  RFC 2446:
@@ -48,3 +48,11 @@ To-do List:
  			
  				- Calendar transform(Calendar calendar); // decline a counter to a published calendar
  
+ 
+ ==========
+  RFC2447:
+ ==========
+ 
+ 	* When implementing the creation of a MIME message incorporate a human-readable text summary in case
+ 	iCalendar is not supported by the recipient. Add Calendar/Component formatting into human-readable
+ 	text/html.
