@@ -51,12 +51,19 @@ public class CalScale extends Property {
     private String value;
 
     /**
+     * Default constructor.
+     */
+    public CalScale() {
+       super(CALSCALE); 
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public CalScale(final String aValue) {
         super(CALSCALE);
-        this.value = aValue;
+        setValue(aValue);
     }
 
     /**
@@ -67,6 +74,14 @@ public class CalScale extends Property {
      */
     public CalScale(final ParameterList aList, final String aValue) {
         super(CALSCALE, aList);
+        setValue(aValue);
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
         this.value = aValue;
     }
 
@@ -75,7 +90,7 @@ public class CalScale extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 

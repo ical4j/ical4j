@@ -51,6 +51,14 @@ public class ExRule extends Property {
     private Recur recur;
 
     /**
+     * Default constructor.
+     */
+    public ExRule() {
+        super(EXRULE);
+        recur = new Recur(Recur.DAILY, 1);
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -62,7 +70,8 @@ public class ExRule extends Property {
      */
     public ExRule(final ParameterList aList, final String aValue)
             throws ParseException {
-        this(aList, new Recur(aValue));
+        super(EXRULE, aList);
+        setValue(aValue);
     }
 
     /**
@@ -92,12 +101,27 @@ public class ExRule extends Property {
         return recur;
     }
 
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+        recur = new Recur(aValue);
+    }
+    
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return getRecur().toString();
+    }
+    
+    /**
+     * @param recur The recur to set.
+     */
+    public final void setRecur(final Recur recur) {
+        this.recur = recur;
     }
 }

@@ -54,6 +54,13 @@ public class Attendee extends Property {
     private URI calAddress;
 
     /**
+     * Default constructor.
+     */
+    public Attendee() {
+        super(ATTENDEE);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      * @throws URISyntaxException
@@ -62,7 +69,7 @@ public class Attendee extends Property {
     public Attendee(final String aValue)
             throws URISyntaxException {
         super(ATTENDEE);
-        calAddress = new URI(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -76,7 +83,7 @@ public class Attendee extends Property {
     public Attendee(final ParameterList aList, final String aValue)
             throws URISyntaxException {
         super(ATTENDEE, aList);
-        calAddress = new URI(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -96,8 +103,15 @@ public class Attendee extends Property {
      */
     public Attendee(final ParameterList aList, final URI aUri) {
         super(ATTENDEE, aList);
-
         calAddress = aUri;
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public void setValue(String aValue) throws URISyntaxException {
+        calAddress = new URI(aValue);
     }
 
     /**
@@ -155,7 +169,14 @@ public class Attendee extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return getCalAddress().toString();
+    }
+    
+    /**
+     * @param calAddress The calAddress to set.
+     */
+    public final void setCalAddress(final URI calAddress) {
+        this.calAddress = calAddress;
     }
 }

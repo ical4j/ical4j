@@ -51,12 +51,20 @@ public class RelatedTo extends Property {
     private String value;
 
     /**
+     * Default constructor.
+     */
+    public RelatedTo() {
+        super(RELATED_TO);
+        setEscapable(true);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public RelatedTo(final String aValue) {
         super(RELATED_TO);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -68,7 +76,7 @@ public class RelatedTo extends Property {
      */
     public RelatedTo(final ParameterList aList, final String aValue) {
         super(RELATED_TO, aList);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -91,12 +99,18 @@ public class RelatedTo extends Property {
          * (";" xparm)
          */
     }
-
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        this.value = aValue;
+    }
 
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 }

@@ -54,6 +54,14 @@ public class FreeBusy extends Property {
     private PeriodList periods;
 
     /**
+     * Default constructor.
+     */
+    public FreeBusy() {
+        super(FREEBUSY);
+        periods = new PeriodList();
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -63,7 +71,8 @@ public class FreeBusy extends Property {
      */
     public FreeBusy(final ParameterList aList, final String aValue)
             throws ParseException {
-        this(aList, new PeriodList(aValue));
+        super(FREEBUSY, aList);
+        setValue(aValue);
     }
 
     /**
@@ -112,13 +121,21 @@ public class FreeBusy extends Property {
     public final PeriodList getPeriods() {
         return periods;
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+        periods = new PeriodList(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return getPeriods().toString();
     }
 }

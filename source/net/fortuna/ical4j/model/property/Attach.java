@@ -61,6 +61,13 @@ public class Attach extends Property {
     private byte[] binary;
 
     /**
+     * Default constructor.
+     */
+    public Attach() {
+        super(ATTACH);
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -73,6 +80,14 @@ public class Attach extends Property {
     public Attach(final ParameterList aList, final String aValue)
             throws IOException, URISyntaxException {
         super(ATTACH, aList);
+        setValue(aValue);
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public void setValue(String aValue) throws IOException, URISyntaxException {
 
         // determine if ATTACH is a URI or an embedded
         // binary..
@@ -180,7 +195,7 @@ public class Attach extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
 
         if (getUri() != null) {
             return getUri().toString();
@@ -188,5 +203,23 @@ public class Attach extends Property {
         else if (getBinary() != null) { return String.valueOf(getBinary()); }
 
         return null;
+    }
+    
+    /**
+     * @param binary The binary to set.
+     */
+    public final void setBinary(final byte[] binary) {
+        this.binary = binary;
+        // unset uri..
+        this.uri = null;
+    }
+    
+    /**
+     * @param uri The uri to set.
+     */
+    public final void setUri(final URI uri) {
+        this.uri = uri;
+        // unset binary..
+        this.binary = null;
     }
 }

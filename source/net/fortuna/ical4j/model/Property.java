@@ -33,6 +33,10 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
 import net.fortuna.ical4j.util.StringUtils;
 
 /**
@@ -171,7 +175,7 @@ public abstract class Property extends Content {
      * @param aValue
      *            property value
      */
-    public Property(final String aName) {
+    protected Property(final String aName) {
         this(aName, new ParameterList());
     }
 
@@ -182,8 +186,6 @@ public abstract class Property extends Content {
      *            property name
      * @param aList
      *            a list of parameters
-     * @param aValue
-     *            property value
      */
     protected Property(final String aName, final ParameterList aList) {
         this.name = aName;
@@ -243,6 +245,19 @@ public abstract class Property extends Content {
     public final ParameterList getParameters() {
         return parameters;
     }
+    
+    /**
+     * Sets the current value of the property.
+     * @param aValue a string representation of the property
+     * value
+     * @throws IOException possibly thrown by setting the value
+     * of certain properties
+     * @throws URISyntaxException possibly thrown by setting the value
+     * of certain properties
+     * @throws ParseException possibly thrown by setting the value
+     * of certain properties
+     */
+    public abstract void setValue(String aValue) throws IOException, URISyntaxException, ParseException;
 
     /**
      * @return Returns the value.

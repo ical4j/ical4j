@@ -55,6 +55,14 @@ public class Completed extends Property {
     private Date time;
 
     /**
+     * Default constructor.
+     */
+    public Completed() {
+        super(COMPLETED);
+        time = new Date();
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      * @throws ParseException
@@ -64,7 +72,7 @@ public class Completed extends Property {
     public Completed(final String aValue)
             throws ParseException {
         super(COMPLETED);
-        time = DateTimeFormat.getInstance().parse(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -79,7 +87,7 @@ public class Completed extends Property {
     public Completed(final ParameterList aList, final String aValue)
             throws ParseException {
         super(COMPLETED, aList);
-        time = DateTimeFormat.getInstance().parse(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -99,7 +107,6 @@ public class Completed extends Property {
      */
     public Completed(final ParameterList aList, final Date aDate) {
         super(COMPLETED, aList);
-
         time = aDate;
     }
 
@@ -109,13 +116,21 @@ public class Completed extends Property {
     public final Date getTime() {
         return time;
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+        time = DateTimeFormat.getInstance().parse(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return DateTimeFormat.getInstance().format(getTime());
     }
 }

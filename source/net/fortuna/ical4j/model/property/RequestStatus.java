@@ -65,6 +65,13 @@ public class RequestStatus extends Property {
     private String exData;
 
     /**
+     * Default constructor.
+     */
+    public RequestStatus() {
+        super(REQUEST_STATUS);
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -72,20 +79,7 @@ public class RequestStatus extends Property {
      */
     public RequestStatus(final ParameterList aList, final String aValue) {
         super(REQUEST_STATUS, aList);
-
-        StringTokenizer t = new StringTokenizer(aValue, ";");
-
-        if (t.hasMoreTokens()) {
-            statusCode = t.nextToken();
-        }
-
-        if (t.hasMoreTokens()) {
-            description = t.nextToken();
-        }
-
-        if (t.hasMoreTokens()) {
-            exData = t.nextToken();
-        }
+        setValue(aValue);
     }
 
     /**
@@ -116,7 +110,6 @@ public class RequestStatus extends Property {
     public RequestStatus(final ParameterList aList, final String aStatusCode,
             final String aDescription, final String data) {
         super(REQUEST_STATUS, aList);
-
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
@@ -162,13 +155,32 @@ public class RequestStatus extends Property {
     public final String getStatusCode() {
         return statusCode;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        StringTokenizer t = new StringTokenizer(aValue, ";");
+
+        if (t.hasMoreTokens()) {
+            statusCode = t.nextToken();
+        }
+
+        if (t.hasMoreTokens()) {
+            description = t.nextToken();
+        }
+
+        if (t.hasMoreTokens()) {
+            exData = t.nextToken();
+        }
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         StringBuffer b = new StringBuffer();
 
         if ((getStatusCode() != null)) {
@@ -186,5 +198,26 @@ public class RequestStatus extends Property {
         }
 
         return b.toString();
+    }
+    
+    /**
+     * @param description The description to set.
+     */
+    public final void setDescription(final String description) {
+        this.description = description;
+    }
+    
+    /**
+     * @param exData The exData to set.
+     */
+    public final void setExData(final String exData) {
+        this.exData = exData;
+    }
+    
+    /**
+     * @param statusCode The statusCode to set.
+     */
+    public final void setStatusCode(final String statusCode) {
+        this.statusCode = statusCode;
     }
 }

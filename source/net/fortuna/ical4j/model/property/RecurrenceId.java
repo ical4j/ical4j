@@ -61,6 +61,14 @@ public class RecurrenceId extends Property {
     private boolean utc = false;
 
     /**
+     * Default constructor.
+     */
+    public RecurrenceId() {
+        super(RECURRENCE_ID);
+        time = new Date();
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -72,16 +80,7 @@ public class RecurrenceId extends Property {
     public RecurrenceId(final ParameterList aList, final String aValue)
             throws ParseException {
         super(RECURRENCE_ID, aList);
-
-        // value can be either a date-time or a date..
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
-
-        if (valueParam != null && Value.DATE.equals(valueParam.getValue())) {
-            time = DateFormat.getInstance().parse(aValue);
-        }
-        else {
-            time = DateTimeFormat.getInstance().parse(aValue);
-        }
+        setValue(aValue);
     }
 
     /**
@@ -149,12 +148,26 @@ public class RecurrenceId extends Property {
          * (";" xparam)
          */
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+        // value can be either a date-time or a date..
+        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
+        if (valueParam != null && Value.DATE.equals(valueParam.getValue())) {
+            time = DateFormat.getInstance().parse(aValue);
+        }
+        else {
+            time = DateTimeFormat.getInstance().parse(aValue);
+        }
+    }
 
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
         if (valueParam != null && Value.DATE.equals(valueParam.getValue())) {
@@ -168,14 +181,21 @@ public class RecurrenceId extends Property {
     /**
      * @return Returns the utc.
      */
-    public boolean isUtc() {
+    public final boolean isUtc() {
         return utc;
     }
 
     /**
      * @param utc The utc to set.
      */
-    public void setUtc(boolean utc) {
+    public final void setUtc(final boolean utc) {
         this.utc = utc;
+    }
+    
+    /**
+     * @param time The time to set.
+     */
+    public final void setTime(final Date time) {
+        this.time = time;
     }
 }

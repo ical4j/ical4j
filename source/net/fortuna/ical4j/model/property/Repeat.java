@@ -48,13 +48,21 @@ public class Repeat extends Property {
     private int count;
 
     /**
+     * Default constructor.
+     */
+    public Repeat() {
+        super(REPEAT);
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
      *            a value string for this component
      */
     public Repeat(final ParameterList aList, final String aValue) {
-        this(aList, Integer.parseInt(aValue));
+        super(REPEAT, aList);
+        setValue(aValue);
     }
 
     /**
@@ -83,13 +91,27 @@ public class Repeat extends Property {
     public final int getCount() {
         return count;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        count = Integer.parseInt(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return String.valueOf(getCount());
+    }
+    
+    /**
+     * @param count The count to set.
+     */
+    public final void setCount(final int count) {
+        this.count = count;
     }
 }

@@ -56,13 +56,22 @@ public class Priority extends Property {
     private int level;
 
     /**
+     * Default constructor.
+     */
+    public Priority() {
+        super(PRIORITY);
+        level = UNDEFINED;
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
      *            a value string for this component
      */
     public Priority(final ParameterList aList, final String aValue) {
-        this(aList, Integer.parseInt(aValue));
+        super(PRIORITY, aList);
+        setValue(aValue);
     }
 
     /**
@@ -90,6 +99,13 @@ public class Priority extends Property {
      */
     public final int getLevel() {
         return level;
+    }    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        level = Integer.parseInt(aValue);
     }
 
     /*
@@ -97,7 +113,14 @@ public class Priority extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return String.valueOf(getLevel());
+    }
+    
+    /**
+     * @param level The level to set.
+     */
+    public final void setLevel(final int level) {
+        this.level = level;
     }
 }

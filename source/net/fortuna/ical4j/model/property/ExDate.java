@@ -55,6 +55,14 @@ public class ExDate extends Property {
     private DateList dates;
 
     /**
+     * Default constructor.
+     */
+    public ExDate() {
+        super(EXDATE);
+        dates = new DateList(new Value(Value.DATE_TIME));
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -65,8 +73,8 @@ public class ExDate extends Property {
      */
     public ExDate(final ParameterList aList, final String aValue)
             throws ParseException {
-        this(aList, new DateList(aValue, (Value) aList
-                .getParameter(Parameter.VALUE)));
+        super(EXDATE, aList);
+        setValue(aValue);
     }
 
     /**
@@ -86,7 +94,6 @@ public class ExDate extends Property {
      */
     public ExDate(final ParameterList aList, final DateList dList) {
         super(EXDATE, aList);
-
         dates = dList;
     }
 
@@ -126,13 +133,21 @@ public class ExDate extends Property {
          * (";" xparam)
          */
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+        dates = new DateList(aValue, (Value) getParameters().getParameter(Parameter.VALUE));
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return getDates().toString();
     }
 }

@@ -51,6 +51,13 @@ public class TzUrl extends Property {
     private URI uri;
 
     /**
+     * Default constructor.
+     */
+    public TzUrl() {
+        super(TZURL);
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -60,7 +67,8 @@ public class TzUrl extends Property {
      */
     public TzUrl(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        this(aList, new URI(aValue));
+        super(TZURL, aList);
+        setValue(aValue);
     }
 
     /**
@@ -89,13 +97,27 @@ public class TzUrl extends Property {
     public final URI getUri() {
         return uri;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws URISyntaxException {
+        uri = new URI(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return getUri().toString();
+    }
+    
+    /**
+     * @param uri The uri to set.
+     */
+    public final void setUri(final URI uri) {
+        this.uri = uri;
     }
 }

@@ -51,12 +51,20 @@ public class Summary extends Property {
     private String value;
 
     /**
+     * Default constructor.
+     */
+    public Summary() {
+        super(SUMMARY);
+        setEscapable(true);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public Summary(final String aValue) {
         super(SUMMARY);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -68,7 +76,7 @@ public class Summary extends Property {
      */
     public Summary(final ParameterList aList, final String aValue) {
         super(SUMMARY, aList);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -93,13 +101,21 @@ public class Summary extends Property {
          * (";" xparam)
          */
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        this.value = aValue;
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 }

@@ -48,12 +48,20 @@ public class Uid extends Property {
     private String value;
 
     /**
+     * Default constructor.
+     */
+    public Uid() {
+        super(UID);
+        setEscapable(true);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public Uid(final String aValue) {
         super(UID);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -65,8 +73,15 @@ public class Uid extends Property {
      */
     public Uid(final ParameterList aList, final String aValue) {
         super(UID, aList);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
+    }    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        this.value = aValue;
     }
 
     /*
@@ -74,7 +89,7 @@ public class Uid extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 }

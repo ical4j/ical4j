@@ -51,12 +51,20 @@ public class Contact extends Property {
     private String value;
 
     /**
+     * Default constructor.
+     */
+    public Contact() {
+        super(CONTACT);
+        setEscapable(true);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public Contact(final String aValue) {
         super(CONTACT);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -68,7 +76,7 @@ public class Contact extends Property {
      */
     public Contact(final ParameterList aList, final String aValue) {
         super(CONTACT, aList);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -93,13 +101,21 @@ public class Contact extends Property {
          * (";" xparam)
          */
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        this.value = aValue;
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 }

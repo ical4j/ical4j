@@ -10,14 +10,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -49,13 +49,21 @@ public class Duration extends Property {
     private long duration;
 
     /**
+     * Default constructor.
+     */
+    public Duration() {
+        super(DURATION);
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
      *            a value string for this component
      */
     public Duration(final ParameterList aList, final String aValue) {
-        this(aList, DurationFormat.getInstance().parse(aValue));
+        super(DURATION, aList);
+        setValue(aValue);
     }
 
     /**
@@ -84,13 +92,28 @@ public class Duration extends Property {
     public final long getDuration() {
         return duration;
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        duration = DurationFormat.getInstance().parse(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return DurationFormat.getInstance().format(getDuration());
+    }
+    
+    /**
+     * @param duration The duration to set.
+     */
+    public final void setDuration(final long duration) {
+        this.duration = duration;
     }
 }

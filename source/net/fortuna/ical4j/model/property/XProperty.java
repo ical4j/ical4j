@@ -48,11 +48,19 @@ public class XProperty extends Property {
     private String value;
 
     /**
+     * Constructs an uninitialised non-standard property.
+     */
+    public XProperty(final String name) {
+        super(name);
+        setEscapable(true);
+    }
+    
+    /**
      * @param aName
      */
     public XProperty(final String aName, final String aValue) {
         super(aName);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -62,8 +70,15 @@ public class XProperty extends Property {
      */
     public XProperty(String aName, ParameterList aList, final String aValue) {
         super(aName, aList);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        this.value = aValue;
     }
 
     /*
@@ -71,7 +86,7 @@ public class XProperty extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 

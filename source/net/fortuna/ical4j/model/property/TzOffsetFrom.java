@@ -49,11 +49,19 @@ public class TzOffsetFrom extends Property {
     private long offset;
 
     /**
+     * Default constructor.
+     */
+    public TzOffsetFrom() {
+        super(TZOFFSETFROM);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public TzOffsetFrom(final String aValue) {
-        this(UtcOffsetFormat.getInstance().parse(aValue));
+        super(TZOFFSETFROM);
+        setValue(aValue);
     }
 
     /**
@@ -63,7 +71,8 @@ public class TzOffsetFrom extends Property {
      *            a value string for this component
      */
     public TzOffsetFrom(final ParameterList aList, final String aValue) {
-        this(aList, UtcOffsetFormat.getInstance().parse(aValue));
+        super(TZOFFSETFROM, aList);
+        setValue(aValue);
     }
 
     /**
@@ -72,7 +81,6 @@ public class TzOffsetFrom extends Property {
      */
     public TzOffsetFrom(final long anOffset) {
         super(TZOFFSETFROM);
-
         offset = anOffset;
     }
 
@@ -84,7 +92,6 @@ public class TzOffsetFrom extends Property {
      */
     public TzOffsetFrom(final ParameterList aList, final long anOffset) {
         super(TZOFFSETFROM, aList);
-
         offset = anOffset;
     }
 
@@ -94,13 +101,27 @@ public class TzOffsetFrom extends Property {
     public final long getOffset() {
         return offset;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        offset = UtcOffsetFormat.getInstance().parse(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return UtcOffsetFormat.getInstance().format(getOffset());
+    }
+    
+    /**
+     * @param offset The offset to set.
+     */
+    public final void setOffset(long offset) {
+        this.offset = offset;
     }
 }

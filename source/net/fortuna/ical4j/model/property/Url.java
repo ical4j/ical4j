@@ -51,6 +51,13 @@ public class Url extends Property {
     private URI uri;
 
     /**
+     * Default constructor.
+     */
+    public Url() {
+        super(URL);
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -61,7 +68,7 @@ public class Url extends Property {
     public Url(final ParameterList aList, final String aValue)
             throws URISyntaxException {
         super(URL, aList);
-        uri = new URI(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -90,13 +97,27 @@ public class Url extends Property {
     public final URI getUri() {
         return uri;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws URISyntaxException {
+        uri = new URI(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return getUri().toString();
+    }
+    
+    /**
+     * @param uri The uri to set.
+     */
+    public final void setUri(final URI uri) {
+        this.uri = uri;
     }
 }

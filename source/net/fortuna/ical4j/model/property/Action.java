@@ -56,12 +56,19 @@ public class Action extends Property {
     private String value;
 
     /**
+     * Default constructor.
+     */
+    public Action() {
+        super(ACTION);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public Action(final String aValue) {
         super(ACTION);
-        this.value = aValue;
+        setValue(aValue);
     }
 
     /**
@@ -72,6 +79,14 @@ public class Action extends Property {
      */
     public Action(final ParameterList aList, final String aValue) {
         super(ACTION, aList);
+        setValue(aValue);
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public void setValue(String aValue) {
         this.value = aValue;
     }
 

@@ -56,6 +56,10 @@ public final class ComponentFactory {
     public static ComponentFactory getInstance() {
         return instance;
     }
+    
+    public Component createComponent(final String name) {
+        return createComponent(name, new PropertyList());
+    }
 
     /**
      * Creates a component.
@@ -70,35 +74,30 @@ public final class ComponentFactory {
             final PropertyList properties) {
 
         if (Component.VALARM.equals(name)) {
-
             return new VAlarm(properties);
         }
         else if (Component.VEVENT.equals(name)) {
-
             return new VEvent(properties);
         }
         else if (Component.VFREEBUSY.equals(name)) {
-
             return new VFreeBusy(properties);
         }
         else if (Component.VJOURNAL.equals(name)) {
-
             return new VJournal(properties);
         }
         else if (Component.VTODO.equals(name)) {
-
             return new VToDo(properties);
         }
         else if (Time.STANDARD.equals(name)) {
-
             return new Standard(properties);
         }
         else if (Time.DAYLIGHT.equals(name)) {
-
             return new Daylight(properties);
         }
+        else if (Component.VTIMEZONE.equals(name)) {
+            return new VTimeZone(properties);
+        }
         else {
-
             throw new IllegalArgumentException("Unkown component [" + name
                     + "]");
         }

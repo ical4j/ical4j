@@ -61,6 +61,14 @@ public class DtStart extends Property {
     private boolean utc = false;
 
     /**
+     * Default constructor.
+     */
+    public DtStart() {
+        super(DTSTART);
+        time = new Date();
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      * @throws ParseException
@@ -70,7 +78,7 @@ public class DtStart extends Property {
     public DtStart(final String aValue)
             throws ParseException {
         super(DTSTART);
-		time = parseValue(aValue);
+		setValue(aValue);
     }
 
     /**
@@ -85,7 +93,7 @@ public class DtStart extends Property {
     public DtStart(final ParameterList aList, final String aValue)
             throws ParseException {
         super(DTSTART, aList);
-		time = parseValue(aValue);
+		setValue(aValue);
     }
 
     /**
@@ -111,27 +119,6 @@ public class DtStart extends Property {
         super(DTSTART, aList);
         time = aDate;
     }
-
-    /**
-     * Internal parse method that determines the value type through
-     * checking the parameters.
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             where the specified value string is not a valid
-     *             date-time/date representation
-     */
-    private Date parseValue(final String aValue) throws ParseException {
-        // value can be either a date-time or a date..
-        if (getParameters().getParameter(Parameter.VALUE) != null
-                && Value.DATE.equals(getParameters().getParameter(Parameter.VALUE).getValue())) {
-
-            return DateFormat.getInstance().parse(aValue);
-        }
-        else {
-            return DateTimeFormat.getInstance().parse(aValue);
-        }
-	}
 
     /**
      * @return Returns the time.
@@ -171,11 +158,27 @@ public class DtStart extends Property {
          * (";" xparam)
          */
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+        // value can be either a date-time or a date..
+        if (getParameters().getParameter(Parameter.VALUE) != null
+                && Value.DATE.equals(getParameters().getParameter(Parameter.VALUE).getValue())) {
+
+            time = DateFormat.getInstance().parse(aValue);
+        }
+        else {
+            time = DateTimeFormat.getInstance().parse(aValue);
+        }
+    }
 
     /* (non-Javadoc)
 	 * @see net.fortuna.ical4j.model.Property#getValue()
 	 */
-	public String getValue() {
+	public final String getValue() {
 		if (getParameters().getParameter(Parameter.VALUE) != null
           && Value.DATE.equals(getParameters().getParameter(Parameter.VALUE).getValue())) {
             return DateFormat.getInstance().format(getTime());
@@ -188,14 +191,21 @@ public class DtStart extends Property {
     /**
      * @return Returns the utc.
      */
-    public boolean isUtc() {
+    public final boolean isUtc() {
         return utc;
     }
 
     /**
      * @param utc The utc to set.
      */
-    public void setUtc(boolean utc) {
+    public final void setUtc(final boolean utc) {
         this.utc = utc;
+    }
+    
+    /**
+     * @param time The time to set.
+     */
+    public final void setTime(final Date time) {
+        this.time = time;
     }
 }

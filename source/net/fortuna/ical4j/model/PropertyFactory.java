@@ -62,6 +62,162 @@ public final class PropertyFactory {
     }
 
     /**
+     * Creates an uninitialised property.
+     * @param name
+     *            name of the property
+     * @return a property
+     */
+    public Property createProperty(final String name) {
+        // calendar properties..
+        if (Property.CALSCALE.equals(name)) {
+            return new CalScale();
+        }
+        else if (Property.METHOD.equals(name)) {
+            return new Method();
+        }
+        else if (Property.PRODID.equals(name)) {
+            return new ProdId();
+        }
+        else if (Property.VERSION.equals(name)) {
+            return new Version();
+        }
+        // component properties..
+        else if (Property.ATTACH.equals(name)) {
+            return new Attach();
+        }
+        else if (Property.CATEGORIES.equals(name)) {
+            return new Categories();
+        }
+        else if (Property.CLASS.equals(name)) {
+            return new Clazz();
+        }
+        else if (Property.COMMENT.equals(name)) {
+            return new Comment();
+        }
+        else if (Property.DESCRIPTION.equals(name)) {
+            return new Description();
+        }
+        else if (Property.GEO.equals(name)) {
+            return new Geo();
+        }
+        else if (Property.LOCATION.equals(name)) {
+            return new Location();
+        }
+        else if (Property.PERCENT_COMPLETE.equals(name)) {
+            return new PercentComplete();
+        }
+        else if (Property.PRIORITY.equals(name)) {
+            return new Priority();
+        }
+        else if (Property.RESOURCES.equals(name)) {
+            return new Resources();
+        }
+        else if (Property.STATUS.equals(name)) {
+            return new Status();
+        }
+        else if (Property.SUMMARY.equals(name)) {
+            return new Summary();
+        }
+        else if (Property.COMPLETED.equals(name)) {
+            return new Completed();
+        }
+        else if (Property.DTEND.equals(name)) {
+            return new DtEnd();
+        }
+        else if (Property.DUE.equals(name)) {
+            return new Due();
+        }
+        else if (Property.DTSTART.equals(name)) {
+            return new DtStart();
+        }
+        else if (Property.DURATION.equals(name)) {
+            return new Duration();
+        }
+        // 4.8.3 Time Zone Component Properties
+        else if (Property.TZID.equals(name)) {
+            return new TzId();
+        }
+        else if (Property.TZNAME.equals(name)) {
+            return new TzName();
+        }
+        else if (Property.TZOFFSETFROM.equals(name)) {
+            return new TzOffsetFrom();
+        }
+        else if (Property.TZOFFSETTO.equals(name)) {
+            return new TzOffsetTo();
+        }
+        else if (Property.TZURL.equals(name)) {
+            return new TzUrl();
+        }
+        // 4.8.4 Relationship Component Properties
+        else if (Property.ATTENDEE.equals(name)) {
+            return new Attendee();
+        }
+        else if (Property.CONTACT.equals(name)) {
+            return new Contact();
+        }
+        else if (Property.ORGANIZER.equals(name)) {
+            return new Organizer();
+        }
+        else if (Property.RECURRENCE_ID.equals(name)) {
+            return new RecurrenceId();
+        }
+        else if (Property.RELATED_TO.equals(name)) {
+            return new RelatedTo();
+        }
+        else if (Property.URL.equals(name)) {
+            return new Url();
+        }
+        else if (Property.UID.equals(name)) {
+            return new Uid();
+        }
+        // 4.8.5 Recurrence Component Properties
+        else if (Property.EXDATE.equals(name)) {
+            return new ExDate();
+        }
+        else if (Property.EXRULE.equals(name)) {
+            return new ExRule();
+        }
+        else if (Property.RDATE.equals(name)) {
+            return new RDate();
+        }
+        else if (Property.RRULE.equals(name)) {
+            return new RRule();
+        }
+        // 4.8.6 Alarm Component Properties
+        else if (Property.ACTION.equals(name)) {
+            return new Action();
+        }
+        else if (Property.REPEAT.equals(name)) {
+            return new Repeat();
+        }
+        else if (Property.TRIGGER.equals(name)) {
+            return new Trigger();
+        }
+        // 4.8.7 Change Management Component Properties
+        else if (Property.CREATED.equals(name)) {
+            return new Created();
+        }
+        else if (Property.DTSTAMP.equals(name)) {
+            return new DtStamp();
+        }
+        else if (Property.LAST_MODIFIED.equals(name)) {
+            return new LastModified();
+        }
+        else if (Property.SEQUENCE.equals(name)) {
+            return new Sequence();
+        }
+        // 4.8.8 Miscellaneous Component Properties
+        else if (Property.REQUEST_STATUS.equals(name)) {
+            return new RequestStatus();
+        }
+        // 4.8.8.1 Non-standard Properties
+        else {
+            return new XProperty(name);
+        }
+    }    
+
+    /**
      * Creates a property.
      *
      * @param name

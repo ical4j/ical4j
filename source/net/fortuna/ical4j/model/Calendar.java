@@ -54,6 +54,13 @@ public class Calendar {
     private PropertyList properties;
 
     private ComponentList components;
+    
+    /**
+     * Default constructor.
+     */
+    public Calendar() {
+        this(new PropertyList(), new ComponentList());
+    }
 
     /**
      * Constructs a new calendar with no properties and

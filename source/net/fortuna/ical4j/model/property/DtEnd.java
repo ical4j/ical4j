@@ -61,6 +61,14 @@ public class DtEnd extends Property {
     private boolean utc = false;
 
     /**
+     * Default constructor.
+     */
+    public DtEnd() {
+        super(DTEND);
+        time = new Date();
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -72,17 +80,7 @@ public class DtEnd extends Property {
     public DtEnd(final ParameterList aList, final String aValue)
             throws ParseException {
         super(DTEND, aList);
-
-        // value can be either a date-time or a date..
-        if (getParameters().getParameter(Parameter.VALUE) != null
-                && Value.DATE.equals(getParameters().getParameter(Parameter.VALUE)
-                        .getValue())) {
-
-            time = DateFormat.getInstance().parse(aValue);
-        }
-        else {
-            time = DateTimeFormat.getInstance().parse(aValue);
-        }
+        setValue(aValue);
     }
 
     /**
@@ -146,13 +144,31 @@ public class DtEnd extends Property {
     public final Date getTime() {
         return time;
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+
+        // value can be either a date-time or a date..
+        if (getParameters().getParameter(Parameter.VALUE) != null
+                && Value.DATE.equals(getParameters().getParameter(Parameter.VALUE)
+                        .getValue())) {
+
+            time = DateFormat.getInstance().parse(aValue);
+        }
+        else {
+            time = DateTimeFormat.getInstance().parse(aValue);
+        }
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         if (getParameters().getParameter(Parameter.VALUE) != null
                 && Value.DATE.equals(getParameters().getParameter(
                         Parameter.VALUE).getValue())) { return DateFormat
@@ -165,7 +181,7 @@ public class DtEnd extends Property {
     /**
      * @return Returns the utc.
      */
-    public boolean isUtc() {
+    public final boolean isUtc() {
         return utc;
     }
 
@@ -173,7 +189,13 @@ public class DtEnd extends Property {
      * @param utc
      *            The utc to set.
      */
-    public void setUtc(boolean utc) {
+    public final void setUtc(final boolean utc) {
         this.utc = utc;
+    }
+    /**
+     * @param time The time to set.
+     */
+    public final void setTime(Date time) {
+        this.time = time;
     }
 }

@@ -63,6 +63,14 @@ public class Trigger extends Property {
     private Date dateTime;
 
     /**
+     * Default constructor.
+     */
+    public Trigger() {
+        super(TRIGGER);
+        dateTime = new Date();
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -74,13 +82,7 @@ public class Trigger extends Property {
     public Trigger(final ParameterList aList, final String aValue)
             throws ParseException {
         super(TRIGGER, aList);
-
-        try {
-            duration = DurationFormat.getInstance().parse(aValue);
-        }
-        catch (Exception e) {
-            dateTime = DateTimeFormat.getInstance().parse(aValue);
-        }
+        setValue(aValue);
     }
 
     /**
@@ -193,18 +195,44 @@ public class Trigger extends Property {
     public final long getDuration() {
         return duration;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+        try {
+            duration = DurationFormat.getInstance().parse(aValue);
+        }
+        catch (Exception e) {
+            dateTime = DateTimeFormat.getInstance().parse(aValue);
+        }
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         if (getDateTime() != null) {
             return DateTimeFormat.getInstance().format(getDateTime());
         }
         else {
             return DurationFormat.getInstance().format(getDuration());
         }
+    }
+    
+    /**
+     * @param dateTime The dateTime to set.
+     */
+    public final void setDateTime(final Date dateTime) {
+        this.dateTime = dateTime;
+    }
+    
+    /**
+     * @param duration The duration to set.
+     */
+    public final void setDuration(final long duration) {
+        this.duration = duration;
     }
 }

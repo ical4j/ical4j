@@ -53,15 +53,23 @@ public class Geo extends Property {
     private float longitude;
 
     /**
+     * Default constructor.
+     */
+    public Geo() {
+        super(GEO);
+        lattitude = 0;
+        longitude = 0;
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
      *            a value string for this component
      */
     public Geo(final ParameterList aList, final String aValue) {
-        this(aList, Float.parseFloat(aValue.substring(0,
-                aValue.indexOf(';') - 1)), Float.parseFloat(aValue
-                .substring(aValue.indexOf(';'))));
+        super(GEO, aList);
+        setValue(aValue);
     }
 
     /**
@@ -72,9 +80,7 @@ public class Geo extends Property {
      */
     public Geo(final float aLattitude, final float aLongitude) {
         super(GEO);
-
         lattitude = aLattitude;
-
         longitude = aLongitude;
     }
 
@@ -89,9 +95,7 @@ public class Geo extends Property {
     public Geo(final ParameterList aList, final float aLattitude,
             final float aLongitude) {
         super(GEO, aList);
-
         lattitude = aLattitude;
-
         longitude = aLongitude;
     }
 
@@ -108,6 +112,15 @@ public class Geo extends Property {
     public final float getLongitude() {
         return longitude;
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        lattitude = Float.parseFloat(aValue.substring(0, aValue.indexOf(';') - 1));
+        longitude =  Float.parseFloat(aValue.substring(aValue.indexOf(';')));
+    }
 
     /*
      * (non-Javadoc)
@@ -117,5 +130,19 @@ public class Geo extends Property {
     public final String getValue() {
         return String.valueOf(getLattitude()) + ";"
                 + String.valueOf(getLongitude());
+    }
+    
+    /**
+     * @param lattitude The lattitude to set.
+     */
+    public final void setLattitude(final float lattitude) {
+        this.lattitude = lattitude;
+    }
+    
+    /**
+     * @param longitude The longitude to set.
+     */
+    public final void setLongitude(final float longitude) {
+        this.longitude = longitude;
     }
 }

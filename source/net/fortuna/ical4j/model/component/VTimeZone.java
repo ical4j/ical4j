@@ -39,7 +39,7 @@ import java.util.TimeZone;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import net.fortuna.ical4j.data.BuilderException;
+import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -70,8 +70,8 @@ public class VTimeZone extends Component {
     /**
      * Default constructor.
      */
-    public VTimeZone() {
-        super(VTIMEZONE);
+    public VTimeZone(final PropertyList properties) {
+        super(VTIMEZONE, properties);
         this.types = new ComponentList();
     }
 
@@ -188,7 +188,7 @@ public class VTimeZone extends Component {
      * specified Java timezone.
      */
     private static VTimeZone loadVTimeZone(final TimeZone timezone)
-            throws IOException, BuilderException {
+            throws IOException, ParserException {
         String resource = "/" + timezone.getID() + ".ics";
 
         CalendarBuilder builder = new CalendarBuilder();

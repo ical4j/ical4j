@@ -64,6 +64,14 @@ public class RDate extends Property {
     private boolean utc = true;
 
     /**
+     * Default constructor.
+     */
+    public RDate() {
+        super(RDATE);
+        time = new Date();
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -75,19 +83,7 @@ public class RDate extends Property {
     public RDate(final ParameterList aList, final String aValue)
             throws ParseException {
         super(RDATE, aList);
-
-        // value can be either a date-time or a date..
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
-
-        if (valueParam != null && Value.DATE.equals(valueParam.getValue())) {
-            time = DateFormat.getInstance().parse(aValue);
-        }
-        else if (valueParam != null && Value.PERIOD.equals(valueParam)) {
-            period = new Period(aValue);
-        }
-        else {
-            time = DateTimeFormat.getInstance().parse(aValue);
-        }
+        setValue(aValue);
     }
 
     /**
@@ -181,13 +177,32 @@ public class RDate extends Property {
     public final Date getTime() {
         return time;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+
+        // value can be either a date-time or a date..
+        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
+
+        if (valueParam != null && Value.DATE.equals(valueParam.getValue())) {
+            time = DateFormat.getInstance().parse(aValue);
+        }
+        else if (valueParam != null && Value.PERIOD.equals(valueParam)) {
+            period = new Period(aValue);
+        }
+        else {
+            time = DateTimeFormat.getInstance().parse(aValue);
+        }
+    }    
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         if (getTime() != null) {
 
             Parameter valueParam = getParameters()
@@ -208,7 +223,7 @@ public class RDate extends Property {
     /**
      * @return Returns the utc.
      */
-    public boolean isUtc() {
+    public final boolean isUtc() {
         return utc;
     }
 
@@ -216,7 +231,25 @@ public class RDate extends Property {
      * @param utc
      *            The utc to set.
      */
-    public void setUtc(boolean utc) {
+    public final void setUtc(final boolean utc) {
         this.utc = utc;
+    }
+    
+    /**
+     * @param period The period to set.
+     */
+    public final void setPeriod(final Period period) {
+        this.period = period;
+        // unset time..
+        time = null;
+    }
+    
+    /**
+     * @param time The time to set.
+     */
+    public final void setTime(final Date time) {
+        this.time = time;
+        // unset period..
+        period = null;
     }
 }

@@ -52,6 +52,14 @@ public class Version extends Property {
     private String maxVersion;
 
     /**
+     * Default constructor.
+     */
+    public Version() {
+        super(VERSION);
+        maxVersion = VERSION_2_0;
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -59,14 +67,7 @@ public class Version extends Property {
      */
     public Version(final ParameterList aList, final String aValue) {
         super(VERSION, aList);
-
-        if (aValue.indexOf(';') >= 0) {
-            this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
-            this.maxVersion = aValue.substring(aValue.indexOf(';'));
-        }
-        else {
-            this.maxVersion = aValue;
-        }
+        setValue(aValue);
     }
 
     /**
@@ -109,13 +110,26 @@ public class Version extends Property {
     public final String getMinVersion() {
         return minVersion;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        if (aValue.indexOf(';') >= 0) {
+            this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
+            this.maxVersion = aValue.substring(aValue.indexOf(';'));
+        }
+        else {
+            this.maxVersion = aValue;
+        }
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         StringBuffer b = new StringBuffer();
 
         if (getMinVersion() != null) {
@@ -131,5 +145,19 @@ public class Version extends Property {
         }
 
         return b.toString();
+    }
+    
+    /**
+     * @param maxVersion The maxVersion to set.
+     */
+    public final void setMaxVersion(final String maxVersion) {
+        this.maxVersion = maxVersion;
+    }
+    
+    /**
+     * @param minVersion The minVersion to set.
+     */
+    public final void setMinVersion(final String minVersion) {
+        this.minVersion = minVersion;
     }
 }

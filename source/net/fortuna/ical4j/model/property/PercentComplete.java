@@ -48,13 +48,21 @@ public class PercentComplete extends Property {
     private int percentage;
 
     /**
+     * Default constructor.
+     */
+    public PercentComplete() {
+        super(PERCENT_COMPLETE);
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
      *            a value string for this component
      */
     public PercentComplete(final ParameterList aList, final String aValue) {
-        this(aList, Integer.parseInt(aValue));
+        super(PERCENT_COMPLETE, aList);
+        setValue(aValue);
     }
 
     /**
@@ -83,13 +91,28 @@ public class PercentComplete extends Property {
     public final int getPercentage() {
         return percentage;
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        percentage = Integer.parseInt(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return String.valueOf(getPercentage());
+    }
+    
+    /**
+     * @param percentage The percentage to set.
+     */
+    public final void setPercentage(final int percentage) {
+        this.percentage = percentage;
     }
 }

@@ -54,6 +54,13 @@ public class Organizer extends Property {
     private URI calAddress;
 
     /**
+     * Default constructor.
+     */
+    public Organizer() {
+        super(ORGANIZER);
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -63,7 +70,8 @@ public class Organizer extends Property {
      */
     public Organizer(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        this(aList, new URI(aValue));
+        super(ORGANIZER, aList);
+        setValue(aValue);
     }
 
     /**
@@ -119,13 +127,27 @@ public class Organizer extends Property {
     public final URI getCalAddress() {
         return calAddress;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws URISyntaxException {
+        calAddress = new URI(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return getCalAddress().toString();
+    }
+    
+    /**
+     * @param calAddress The calAddress to set.
+     */
+    public final void setCalAddress(final URI calAddress) {
+        this.calAddress = calAddress;
     }
 }

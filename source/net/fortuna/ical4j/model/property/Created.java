@@ -55,6 +55,14 @@ public class Created extends Property {
     private Date dateTime;
 
     /**
+     * Default constructor.
+     */
+    public Created() {
+        super(CREATED);
+        dateTime = new Date();
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      * @throws ParseException
@@ -64,7 +72,7 @@ public class Created extends Property {
     public Created(final String aValue)
             throws ParseException {
         super(CREATED);
-        dateTime = DateTimeFormat.getInstance().parse(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -79,7 +87,7 @@ public class Created extends Property {
     public Created(final ParameterList aList, final String aValue)
             throws ParseException {
         super(CREATED, aList);
-        dateTime = DateTimeFormat.getInstance().parse(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -108,13 +116,21 @@ public class Created extends Property {
     public final Date getDateTime() {
         return dateTime;
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+        dateTime = DateTimeFormat.getInstance().parse(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return DateTimeFormat.getInstance().format(getDateTime());
     }
 }

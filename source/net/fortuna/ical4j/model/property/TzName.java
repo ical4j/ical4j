@@ -51,12 +51,20 @@ public class TzName extends Property {
     private String value;
 
     /**
+     * Default constructor.
+     */
+    public TzName() {
+        super(TZNAME);
+        setEscapable(true);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public TzName(final String aValue) {
         super(TZNAME);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -68,7 +76,7 @@ public class TzName extends Property {
      */
     public TzName(final ParameterList aList, final String aValue) {
         super(TZNAME, aList);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -91,13 +99,20 @@ public class TzName extends Property {
          * (";" xparam)
          */
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        this.value = aValue;
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 }

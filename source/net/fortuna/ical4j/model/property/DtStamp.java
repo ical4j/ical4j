@@ -55,6 +55,14 @@ public class DtStamp extends Property {
     private Date dateTime;
 
     /**
+     * Default constructor.
+     */
+    public DtStamp() {
+        super(DTSTAMP);
+        dateTime = new Date();
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
@@ -66,7 +74,7 @@ public class DtStamp extends Property {
     public DtStamp(final ParameterList aList, final String aValue)
             throws ParseException {
         super(DTSTAMP, aList);
-        dateTime = DateTimeFormat.getInstance().parse(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -95,13 +103,28 @@ public class DtStamp extends Property {
     public final Date getDateTime() {
         return dateTime;
     }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) throws ParseException {
+        dateTime = DateTimeFormat.getInstance().parse(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return DateTimeFormat.getInstance().format(getDateTime());
+    }
+    
+    /**
+     * @param dateTime The dateTime to set.
+     */
+    public final void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
 }

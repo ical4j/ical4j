@@ -48,12 +48,20 @@ public class ProdId extends Property {
     private String value;
 
     /**
+     * Default constructor.
+     */
+    public ProdId() {
+        super(PRODID);
+        setEscapable(true);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public ProdId(final String aValue) {
         super(PRODID);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
     }
 
@@ -65,8 +73,15 @@ public class ProdId extends Property {
      */
     public ProdId(final ParameterList aList, final String aValue) {
         super(PRODID, aList);
-        this.value = aValue;
+        setValue(aValue);
         setEscapable(true);
+    }    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        this.value = aValue;
     }
 
     /*
@@ -74,7 +89,7 @@ public class ProdId extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 }

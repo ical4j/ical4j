@@ -71,12 +71,19 @@ public class Status extends Property {
     private String value;
 
     /**
+     * Default constructor.
+     */
+    public Status() {
+        super(STATUS);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public Status(final String aValue) {
         super(STATUS);
-        this.value = aValue;
+        setValue(aValue);
     }
 
     /**
@@ -87,6 +94,13 @@ public class Status extends Property {
      */
     public Status(final ParameterList aList, final String aValue) {
         super(STATUS, aList);
+        setValue(aValue);
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
         this.value = aValue;
     }
 
@@ -95,7 +109,7 @@ public class Status extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 }

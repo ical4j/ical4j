@@ -52,13 +52,22 @@ public class Resources extends Property {
     private ResourceList resources;
 
     /**
+     * Default constructor.
+     */
+    public Resources() {
+        super(RESOURCES);
+        resources = new ResourceList();
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
      *            a value string for this component
      */
     public Resources(final ParameterList aList, final String aValue) {
-        this(aList, new ResourceList(aValue));
+        super(RESOURCES, aList);
+        setValue(aValue);
     }
 
     /**
@@ -109,13 +118,20 @@ public class Resources extends Property {
     public final ResourceList getResources() {
         return resources;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        resources = new ResourceList(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return getResources().toString();
     }
 }

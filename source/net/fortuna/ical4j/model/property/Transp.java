@@ -52,12 +52,19 @@ public class Transp extends Property {
     private String value;
 
     /**
+     * Default constructor.
+     */
+    public Transp() {
+        super(TRANSP);
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public Transp(final String aValue) {
         super(TRANSP);
-        this.value = aValue;
+        setValue(aValue);
     }
 
     /**
@@ -68,6 +75,13 @@ public class Transp extends Property {
      */
     public Transp(final ParameterList aList, final String aValue) {
         super(TRANSP, aList);
+        setValue(aValue);
+    }
+        
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
         this.value = aValue;
     }
 
@@ -76,7 +90,7 @@ public class Transp extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 }

@@ -48,11 +48,20 @@ public class Sequence extends Property {
     private int sequenceNo;
 
     /**
+     * Default constructor.
+     */
+    public Sequence() {
+        super(SEQUENCE);
+        sequenceNo = 0;
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public Sequence(final String aValue) {
-        this(Integer.parseInt(aValue));
+        super(SEQUENCE);
+        setValue(aValue);
     }
 
     /**
@@ -62,7 +71,8 @@ public class Sequence extends Property {
      *            a value string for this component
      */
     public Sequence(final ParameterList aList, final String aValue) {
-        this(aList, Integer.parseInt(aValue));
+        super(SEQUENCE, aList);
+        setValue(aValue);
     }
 
     /**
@@ -82,7 +92,6 @@ public class Sequence extends Property {
      */
     public Sequence(final ParameterList aList, final int aSequenceNo) {
         super(SEQUENCE, aList);
-
         sequenceNo = aSequenceNo;
     }
 
@@ -92,13 +101,20 @@ public class Sequence extends Property {
     public final int getSequenceNo() {
         return sequenceNo;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        sequenceNo = Integer.parseInt(aValue);
+    }
 
     /*
      * (non-Javadoc)
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return String.valueOf(getSequenceNo());
     }
 }

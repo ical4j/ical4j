@@ -52,12 +52,20 @@ public class Categories extends Property {
     private CategoryList categories;
 
     /**
+     * Default constructor.
+     */
+    public Categories() {
+        super(CATEGORIES);
+        categories = new CategoryList();
+    }
+    
+    /**
      * @param aValue
      *            a value string for this component
      */
     public Categories(final String aValue) {
         super(CATEGORIES);
-        categories = new CategoryList(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -68,7 +76,7 @@ public class Categories extends Property {
      */
     public Categories(final ParameterList aList, final String aValue) {
         super(CATEGORIES, aList);
-        categories = new CategoryList(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -89,6 +97,14 @@ public class Categories extends Property {
     public Categories(final ParameterList aList, final CategoryList cList) {
         super(CATEGORIES, aList);
         categories = cList;
+    }
+    
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public final void setValue(final String aValue) {
+        categories = new CategoryList(aValue);
     }
 
     /**
@@ -123,7 +139,7 @@ public class Categories extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return getCategories().toString();
     }
 }
