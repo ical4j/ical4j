@@ -77,6 +77,27 @@ public class Period implements Serializable {
             duration = DurationFormat.getInstance().parse(aValue);
         }
     }
+    
+    /**
+     * Constructs a new period with the specied start and end date.
+     * @param start the start date of the period
+     * @param end the end date of the period
+     */
+    public Period(final Date start, final Date end) {
+        this.start = start;
+        this.end = end;
+    }
+    
+    /**
+     * Constructs a new period with the specified start date and
+     * duration.
+     * @param start the start date of the period
+     * @param duration the duration of the period
+     */
+    public Period(final Date start, final long duration) {
+        this.start = start;
+        this.duration = duration;
+    }
 
     /**
      * @return Returns the duration.

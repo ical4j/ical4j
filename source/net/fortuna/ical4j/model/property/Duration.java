@@ -35,6 +35,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.DurationFormat;
@@ -84,6 +88,17 @@ public class Duration extends Property {
     public Duration(final ParameterList aList, final long aDuration) {
         super(DURATION, aList);
         duration = aDuration;
+    }
+    
+    /**
+     * Copy-constructor.
+     * @param duration
+     * @throws IOException
+     * @throws URISyntaxException
+     * @throws ParseException
+     */
+    public Duration(final Duration duration) throws IOException, URISyntaxException, ParseException {
+        super(duration);
     }
 
     /**

@@ -200,6 +200,10 @@ public class DtStart extends Property {
      */
     public final void setUtc(final boolean utc) {
         this.utc = utc;
+        // remove TZID parameter if necessary..
+        if (utc) {
+            getParameters().remove(getParameters().getParameter(Parameter.TZID));
+        }
     }
     
     /**

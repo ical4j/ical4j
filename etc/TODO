@@ -5,11 +5,7 @@ To-do List:
  
  - add better constructors, etc. to Recur
  
- - make DateFormat, etc. thread-safe
- 
- - include maven support
- 
- - provide more constructors for Period type.
+ - add convenience constructor to create VFreeBusy from a VEvent instance
  
  
  ===========

@@ -43,7 +43,47 @@ import net.fortuna.ical4j.util.PropertyValidator;
 /**
  * Defines an iCalendar VTODO component.
  *
- * @author benf
+ * <pre>
+ *   4.6.2 To-do Component
+ *   
+ *      Component Name: VTODO
+ *   
+ *      Purpose: Provide a grouping of calendar properties that describe a
+ *      to-do.
+ *   
+ *      Formal Definition: A "VTODO" calendar component is defined by the
+ *      following notation:
+ *    
+ *        todoc      = "BEGIN" ":" "VTODO" CRLF
+ *                     todoprop *alarmc
+ *                     "END" ":" "VTODO" CRLF
+ *    
+ *        todoprop   = *(
+ *    
+ *                   ; the following are optional,
+ *                   ; but MUST NOT occur more than once
+ *    
+ *                   class / completed / created / description / dtstamp /
+ *                   dtstart / geo / last-mod / location / organizer /
+ *                   percent / priority / recurid / seq / status /
+ *                   summary / uid / url /
+ *    
+ *                   ; either 'due' or 'duration' may appear in
+ *                   ; a 'todoprop', but 'due' and 'duration'
+ *                   ; MUST NOT occur in the same 'todoprop'
+ *    
+ *                   due / duration /
+ *    
+ *                   ; the following are optional,
+ *                   ; and MAY occur more than once
+ *                   attach / attendee / categories / comment / contact /
+ *                   exdate / exrule / rstatus / related / resources /
+ *                   rdate / rrule / x-prop
+ *    
+ *                   )
+ * </pre>
+ * 
+ * @author Ben Fortuna
  */
 public class VToDo extends Component {
 

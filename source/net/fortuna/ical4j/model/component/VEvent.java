@@ -35,15 +35,59 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
  * Defines an iCalendar VEVENT component.
  *
- * @author benf
+ * <pre>
+ *   4.6.1 Event Component
+ *   
+ *      Component Name: "VEVENT"
+ *   
+ *      Purpose: Provide a grouping of component properties that describe an
+ *      event.
+ *   
+ *      Format Definition: A "VEVENT" calendar component is defined by the
+ *      following notation:
+ *   
+ *        eventc     = "BEGIN" ":" "VEVENT" CRLF
+ *                     eventprop *alarmc
+ *                     "END" ":" "VEVENT" CRLF
+ *   
+ *        eventprop  = *(
+ *   
+ *                   ; the following are optional,
+ *                   ; but MUST NOT occur more than once
+ *   
+ *                   class / created / description / dtstart / geo /
+ *                   last-mod / location / organizer / priority /
+ *                   dtstamp / seq / status / summary / transp /
+ *                   uid / url / recurid /
+ *   
+ *                   ; either 'dtend' or 'duration' may appear in
+ *                   ; a 'eventprop', but 'dtend' and 'duration'
+ *                   ; MUST NOT occur in the same 'eventprop'
+ *   
+ *                   dtend / duration /
+ *   
+ *                   ; the following are optional,
+ *                   ; and MAY occur more than once
+ *   
+ *                   attach / attendee / categories / comment /
+ *                   contact / exdate / exrule / rstatus / related /
+ *                   resources / rdate / rrule / x-prop
+ *   
+ *                   )
+ * </pre>
+ * 
+ * @author Ben Fortuna
  */
 public class VEvent extends Component {
 
@@ -147,10 +191,30 @@ public class VEvent extends Component {
          *
          * dtend / duration /
          */
-        if (getProperties().getProperty(Property.DTEND) != null
-                && getProperties().getProperty(Property.DURATION) != null) { throw new ValidationException(
-                "Properties [" + Property.DTEND + "," + Property.DURATION
-                        + "] may not occur in the same VEVENT"); }
+        if (getProperties().getProperty(Property.DTEND) != null) {
+            if (getProperties().getProperty(Property.DURATION) != null) {
+                throw new ValidationException(
+                    "Properties [" + Property.DTEND + "," + Property.DURATION
+                            + "] may not occur in the same VEVENT");
+                }
+            
+            /*
+             *  The "VEVENT" is also the calendar component used to specify an
+             *  anniversary or daily reminder within a calendar. These events have a
+             *  DATE value type for the "DTSTART" property instead of the default
+             *  data type of DATE-TIME. If such a "VEVENT" has a "DTEND" property, it
+             *  MUST be specified as a DATE value also. The anniversary type of
+             *  "VEVENT" can span more than one date (i.e, "DTEND" property value is
+             *  set to a calendar date after the "DTSTART" property value).
+             */
+            DtStart start = (DtStart) getProperties().getProperty(Property.DTSTART);
+            DtEnd end = (DtEnd) getProperties().getProperty(Property.DTEND);
+            if (!start.getParameters().getParameter(Parameter.VALUE).equals(end.getParameters().getParameter(Parameter.VALUE))) {
+                throw new ValidationException("Property ["
+                            + Property.DTEND + "] must have the same ["
+                            + Parameter.VALUE + "] as [" + Property.DTSTART + "]");
+            }
+        }
 
         /*
          * ; the following are optional, ; and MAY occur more than once

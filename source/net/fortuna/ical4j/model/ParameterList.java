@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,6 +55,21 @@ public class ParameterList implements Serializable {
      */
     public ParameterList() {
         parameters = new ArrayList();
+    }
+    
+    /**
+     * Creates a deep copy of the specified parameter list. That is,
+     * copies of all parameters in the specified list are added to
+     * this list.
+     * @param list a parameter list to copy parameters from
+     * @throws URISyntaxException
+     */
+    public ParameterList(final ParameterList list) throws URISyntaxException {
+        parameters = new ArrayList();
+        for (Iterator i = list.iterator(); i.hasNext();) {
+            Parameter parameter = (Parameter) i.next();
+            parameters.add(ParameterFactory.getInstance().createParameter(parameter.getName(), parameter.getValue()));
+        }
     }
 
     /**

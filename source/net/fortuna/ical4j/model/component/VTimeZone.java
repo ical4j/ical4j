@@ -59,7 +59,73 @@ import net.fortuna.ical4j.util.TimeZoneUtils;
 /**
  * Defines an iCalendar VTIMEZONE component.
  *
- * @author benf
+ * <pre>
+ *   4.6.5 Time Zone Component
+ *   
+ *      Component Name: VTIMEZONE
+ *   
+ *      Purpose: Provide a grouping of component properties that defines a
+ *      time zone.
+ *   
+ *      Formal Definition: A "VTIMEZONE" calendar component is defined by the
+ *      following notation:
+ *   
+ *        timezonec  = "BEGIN" ":" "VTIMEZONE" CRLF
+ *   
+ *                     2*(
+ *   
+ *                     ; 'tzid' is required, but MUST NOT occur more
+ *                     ; than once
+ *   
+ *                   tzid /
+ *   
+ *                     ; 'last-mod' and 'tzurl' are optional,
+ *                   but MUST NOT occur more than once
+ *   
+ *                   last-mod / tzurl /
+ *   
+ *                     ; one of 'standardc' or 'daylightc' MUST occur
+ *                   ..; and each MAY occur more than once.
+ *   
+ *                   standardc / daylightc /
+ *   
+ *                   ; the following is optional,
+ *                   ; and MAY occur more than once
+ *   
+ *                     x-prop
+ *   
+ *                     )
+ *   
+ *                     "END" ":" "VTIMEZONE" CRLF
+ *   
+ *        standardc  = "BEGIN" ":" "STANDARD" CRLF
+ *   
+ *                     tzprop
+ *   
+ *                     "END" ":" "STANDARD" CRLF
+ *   
+ *        daylightc  = "BEGIN" ":" "DAYLIGHT" CRLF
+ *   
+ *                     tzprop
+ *   
+ *                     "END" ":" "DAYLIGHT" CRLF
+ *   
+ *        tzprop     = 3*(
+ *   
+ *                   ; the following are each REQUIRED,
+ *                   ; but MUST NOT occur more than once
+ *   
+ *                   dtstart / tzoffsetto / tzoffsetfrom /
+ *   
+ *                   ; the following are optional,
+ *                   ; and MAY occur more than once
+ *   
+ *                   comment / rdate / rrule / tzname / x-prop
+ *   
+ *                   )
+ * </pre>
+ * 
+ * @author Ben Fortuna
  */
 public class VTimeZone extends Component {
 

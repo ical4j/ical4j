@@ -42,7 +42,41 @@ import net.fortuna.ical4j.util.PropertyValidator;
 /**
  * Defines an iCalendar VJOURNAL component.
  *
- * @author benf
+ * <pre>
+ *   4.6.3 Journal Component
+ *   
+ *      Component Name: VJOURNAL
+ *   
+ *      Purpose: Provide a grouping of component properties that describe a
+ *      journal entry.
+ *   
+ *      Formal Definition: A "VJOURNAL" calendar component is defined by the
+ *      following notation:
+ *   
+ *        journalc   = "BEGIN" ":" "VJOURNAL" CRLF
+ *                     jourprop
+ *                     "END" ":" "VJOURNAL" CRLF
+ *   
+ *        jourprop   = *(
+ *   
+ *                   ; the following are optional,
+ *                   ; but MUST NOT occur more than once
+ *   
+ *                   class / created / description / dtstart / dtstamp /
+ *                   last-mod / organizer / recurid / seq / status /
+ *                   summary / uid / url /
+ *   
+ *                   ; the following are optional,
+ *                   ; and MAY occur more than once
+ *   
+ *                   attach / attendee / categories / comment /
+ *                   contact / exdate / exrule / related / rdate /
+ *                   rrule / rstatus / x-prop
+ *   
+ *                   )
+ * </pre>
+ * 
+ * @author Ben Fortuna
  */
 public class VJournal extends Component {
 

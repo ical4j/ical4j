@@ -43,7 +43,124 @@ import net.fortuna.ical4j.util.PropertyValidator;
 /**
  * Defines an iCalendar VALARM component.
  *
- * @author benf
+ * <pre>
+ *   4.6.6 Alarm Component
+ *   
+ *      Component Name: VALARM
+ *   
+ *      Purpose: Provide a grouping of component properties that define an
+ *      alarm.
+ *   
+ *      Formal Definition: A "VALARM" calendar component is defined by the
+ *      following notation:
+ *   
+ *             alarmc     = "BEGIN" ":" "VALARM" CRLF
+ *                          (audioprop / dispprop / emailprop / procprop)
+ *                          "END" ":" "VALARM" CRLF
+ *   
+ *        audioprop  = 2*(
+ *   
+ *                   ; 'action' and 'trigger' are both REQUIRED,
+ *                   ; but MUST NOT occur more than once
+ *   
+ *                   action / trigger /
+ *   
+ *                   ; 'duration' and 'repeat' are both optional,
+ *                   ; and MUST NOT occur more than once each,
+ *                   ; but if one occurs, so MUST the other
+ *   
+ *                   duration / repeat /
+ *   
+ *                   ; the following is optional,
+ *                   ; but MUST NOT occur more than once
+ *   
+ *                   attach /
+ *   
+ *                   ; the following is optional,
+ *                   ; and MAY occur more than once
+ *   
+ *                   x-prop
+ *   
+ *                   )
+ *   
+ *   
+ *   
+ *        dispprop   = 3*(
+ *   
+ *                   ; the following are all REQUIRED,
+ *                   ; but MUST NOT occur more than once
+ *   
+ *                   action / description / trigger /
+ *   
+ *                   ; 'duration' and 'repeat' are both optional,
+ *                   ; and MUST NOT occur more than once each,
+ *                   ; but if one occurs, so MUST the other
+ *   
+ *                   duration / repeat /
+ *   
+ *                   ; the following is optional,
+ *                   ; and MAY occur more than once
+ *   
+ *                   *x-prop
+ *   
+ *                   )
+ *   
+ *   
+ *   
+ *        emailprop  = 5*(
+ *   
+ *                   ; the following are all REQUIRED,
+ *                   ; but MUST NOT occur more than once
+ *   
+ *                   action / description / trigger / summary
+ *   
+ *                   ; the following is REQUIRED,
+ *                   ; and MAY occur more than once
+ *   
+ *                   attendee /
+ *   
+ *                   ; 'duration' and 'repeat' are both optional,
+ *                   ; and MUST NOT occur more than once each,
+ *                   ; but if one occurs, so MUST the other
+ *   
+ *                   duration / repeat /
+ *   
+ *                   ; the following are optional,
+ *                   ; and MAY occur more than once
+ *   
+ *                   attach / x-prop
+ *   
+ *                   )
+ *   
+ *   
+ *   
+ *        procprop   = 3*(
+ *   
+ *                   ; the following are all REQUIRED,
+ *                   ; but MUST NOT occur more than once
+ *   
+ *                   action / attach / trigger /
+ *   
+ *                   ; 'duration' and 'repeat' are both optional,
+ *                   ; and MUST NOT occur more than once each,
+ *                   ; but if one occurs, so MUST the other
+ *   
+ *                   duration / repeat /
+ *   
+ *                   ; 'description' is optional,
+ *                   ; and MUST NOT occur more than once
+ *   
+ *                   description /
+ *   
+ *                   ; the following is optional,
+ *                   ; and MAY occur more than once
+ *   
+ *                   x-prop
+ *   
+ *                   )
+ * </pre>
+ * 
+ * @author Ben Fortuna
  */
 public class VAlarm extends Component {
 

@@ -191,6 +191,20 @@ public abstract class Property extends Content {
         this.name = aName;
         this.parameters = aList;
     }
+    
+    /**
+     * Creates a deep copy of the specified property. That is, the name,
+     * parameter list, and value are duplicated from the specified property.
+     * This constructor should only be called from sub-classes to ensure
+     * type integrity is maintained.
+     * @param property a property to copy
+     * @throws URISyntaxException
+     */
+    protected Property(final Property property) throws IOException, URISyntaxException, ParseException {
+        this.name = property.getName();
+        this.parameters = new ParameterList(property.getParameters());
+        setValue(property.getValue());
+    }
 
     /**
      * @see java.lang.Object#toString()
