@@ -2,6 +2,12 @@
  iCal4j - Changes
 ==================
 
+0.9.9:
+
+ - Separated the calendar parser from the builder to allow different
+ parser implementations to be used with iCal4j.
+ 
+ - All properties are now mutable with default constructors.
 
 0.9.8:
 
