@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin name="%pluginName" id="net.fortuna.ical4j" version="0.9.6" provider-name="%providerName">
+	<runtime>
+		<library name="lib/ical4j.jar">
+			<export name="*"/>
+		</library>
+	</runtime>
+</plugin>

@@ -1,0 +1,59 @@
+// create timezone property..
+java.util.TimeZone timezone = java.util.TimeZone.getDefault();
+
+net.fortuna.ical4j.model.property.TzName standardTzName = new net.fortuna.ical4j.model.property.TzName(new net.fortuna.ical4j.model.ParameterList(), timezone.getDisplayName());
+net.fortuna.ical4j.model.property.DtStart standardTzStart = new net.fortuna.ical4j.model.property.DtStart(new net.fortuna.ical4j.model.ParameterList(), new java.util.Date());
+net.fortuna.ical4j.model.property.TzOffsetTo standardTzOffsetTo = new net.fortuna.ical4j.model.property.TzOffsetTo(new net.fortuna.ical4j.model.ParameterList(), timezone.getRawOffset());
+// "offset to" plus one (1) hour??
+long millisPerHour = 1000 * 60 * 60;
+
+net.fortuna.ical4j.model.property.TzOffsetFrom standardTzOffsetFrom = new net.fortuna.ical4j.model.property.TzOffsetFrom(null, timezone.getRawOffset() + millisPerHour);
+
+net.fortuna.ical4j.model.PropertyList standardTzProps = new net.fortuna.ical4j.model.PropertyList();
+standardTzProps.add(standardTzName);
+standardTzProps.add(standardTzStart);
+standardTzProps.add(standardTzOffsetTo);
+standardTzProps.add(standardTzOffsetFrom);
+
+net.fortuna.ical4j.model.component.Standard standardTz = new net.fortuna.ical4j.model.component.Standard(standardTzProps);
+
+net.fortuna.ical4j.model.property.TzId tzId = new net.fortuna.ical4j.model.property.TzId(null, timezone.getID());
+
+net.fortuna.ical4j.model.PropertyList tzProps = new net.fortuna.ical4j.model.PropertyList();
+tzProps.add(tzId);
+
+net.fortuna.ical4j.model.ComponentList tzComponents = new net.fortuna.ical4j.model.ComponentList();
+tzComponents.add(standardTz);
+
+net.fortuna.ical4j.model.component.VTimeZone tz = new net.fortuna.ical4j.model.component.VTimeZone(tzProps, tzComponents);
+
+net.fortuna.ical4j.model.component.VTimeZone tz = net.fortuna.ical4j.model.component.VTimeZone.getDefault();
+tz.validate();
+
+net.fortuna.ical4j.util.TimeZoneUtils.getDaylightStart(java.util.TimeZone.getDefault());
+net.fortuna.ical4j.util.TimeZoneUtils.getDaylightEnd(java.util.TimeZone.getDefault());
+
+// create tzid parameter..
+net.fortuna.ical4j.model.parameter.TzId tzParam = new net.fortuna.ical4j.model.parameter.TzId(timezone.getID());
+
+// create value parameter..
+net.fortuna.ical4j.model.parameter.Value type = new net.fortuna.ical4j.model.parameter.Value(net.fortuna.ical4j.model.parameter.Value.DATE);
+
+net.fortuna.ical4j.model.ParameterList params = new net.fortuna.ical4j.model.ParameterList();
+params.add(tzParam);
+params.add(type);
+
+// create event start date..
+java.util.Calendar calendar = java.util.Calendar.getInstance();
+calendar.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
+calendar.set(java.util.Calendar.DAY_OF_MONTH, 25);
+
+net.fortuna.ical4j.model.property.DtStart start = new net.fortuna.ical4j.model.property.DtStart(params, calendar.getTime());
+
+net.fortuna.ical4j.model.property.Summary summary = new net.fortuna.ical4j.model.property.Summary(null, "Christmas Day");
+
+net.fortuna.ical4j.model.PropertyList properties = new net.fortuna.ical4j.model.PropertyList();
+properties.add(start);
+properties.add(summary);
+
+net.fortuna.ical4j.model.component.VEvent christmas = new net.fortuna.ical4j.model.component.VEvent(properties);

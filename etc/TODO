@@ -1,0 +1,50 @@
+To-do List:
+==========
+
+ * Add "relaxed" option for parsing dates (ie. attempt both date and date-time regardless of value type)
+ 
+ 
+ RFC 2446:
+ 
+ 	* net.fortuna.ical4j.transform
+ 	
+ 		* Transformer
+ 		
+ 			- Calendar wrap(Component component); // wraps the specified component in a calendar
+
+			- Calendar transform(Component component); // wraps a component in a calendar and transforms
+
+			- abstract Calendar transform(Calendar calendar); // abstract calendar transform
+ 			
+ 			* PublishTransformer (Organizer)
+ 			
+ 				- Calendar transform(Calendar calendar); // publish/republish a calendar
+ 			
+ 			* RequestTransformer (Organizer | Attendee)
+ 			
+ 				- Calendar transform(Calendar calendar); // creates a request for reply to a calendar
+ 			
+ 			* ReplyTransformer (Attendee)
+ 			
+ 				- Calendar transform(Calendar calendar); // creates a reply to a request for this calendar
+ 				
+ 			* AddTransformer (Organizer)
+ 			
+ 				- Calendar transform(Calendar calendar); // add a published calendar
+ 				
+ 			* CancelTransformer (Organizer)
+ 			
+ 				- Calendar transform(Calendar calendar); // cancel a published calendar
+ 				
+ 			* RefreshTransformer (Attendee)
+ 			
+ 				- Calendar transform(Calendar calendar); // refresh a published calendar
+ 				
+ 			* CounterTransformer (Attendee)
+ 			
+ 				- Calendar transform(Calendar calendar); // counter a published calendar
+ 				
+ 			* DeclineCounterTransformer (Organizer)
+ 			
+ 				- Calendar transform(Calendar calendar); // decline a counter to a published calendar
+ 

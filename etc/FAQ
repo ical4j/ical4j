@@ -1,0 +1,35 @@
+Q. Why choose a modified BSD License?
+
+A. I have chosen to distribute iCal4j under a modified BSD license for the following reasons:
+
+    - Initially it was an "eeny, meeny, miny, mo" (EMMM) process of picking an open source license.
+    The modified BSD license seemed to be the least restrictive of the popular licenses, and also
+    the simplest to understand.
+
+    - Since then I've tried to understand a bit more about the available licenses, and I think the
+    best way to approach choosing a license is to rule out licenses you DON'T want, thus being left
+    with a collection of licenses to apply the EMMM process to. :)
+
+    - If I had chosen the GPL (as I understand it) as the copyright owner I would still be able to
+    use this library in proprietary software (as the license I provide to others does not impose
+    restrictions on me), but others would not. A side effect of that is that if anyone was to contribute
+    back to the project I would not be allowed to use their contributions in my proprietary software
+    without their permission. As I may incorporate this library into proprietary software in the future,
+    I had no desire to impose restrictions on others with regard to proprietary software (I believe in
+    an even playing field).
+
+    - I could probably have chosen the LGPL, which I believe has the benefit of being linkable in
+    proprietary software, but derivative works must remain LGPL. However I don't think there's much
+    danger of anyone being able to sell a derivative of this library (I certainly wouldn't pay money
+    for such a small library!).
+
+
+Q. Why did you start your versioning at 0.9 (rather than 0.1)?
+
+A. I think pragrmatism is a rare gift for software developers. When working in a discipline that requires
+   such a logical approach, its quite easy to be analytical about everything. Obviously the logical place
+   to start versioning is at 0.1, however I think if you are clear about what you are implementing (e.g
+   implementing a specification) then there is no need to distinguish between different "partial"
+   implementations of that specification (i.e. it is either implemented or it is not). For this reason
+   iCal4j uses only a single pre-release major-dot version (0.9) to indicate the implemented specification
+   is not yet complete (1.0 will indicate a complete specification).

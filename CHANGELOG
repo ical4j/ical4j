@@ -1,0 +1,85 @@
+==================
+ iCal4j - Changes
+==================
+
+
+0.9.8:
+
+ - Added special character escaping and parsing. NOTE: I've provided the ability
+ to escape parameter values although I am unsure it is necessary (or allowed) by
+ RFC2445.
+ 
+ - Fixed bug whereby CalendarBuilder wasn't reading quoted text correctly in all
+ cases.
+ 
+
+0.9.7:
+ 
+ - Added convenience constructors to model classes (Calendar, Component, Property)
+ 
+ - Initial design of support for RFC 2446 (transform) - NOTE: Not yet functional!
+ 
+ - Fixed bug where builder would hang if calendar streams didn't
+ contain an extra whitespace char at EOF
+
+
+0.9.6:
+
+ - Fixed bug found in some property constructors where was not checking
+ VALUE parameter correctly to identify DATE type for date-time values
+ 
+ - Added validating option to CalendarOutputter to indicate whether to
+ validate the Calendar before outputting
+ 
+ - Added recurse parameter to calendar and component validate methods
+ to indicate whether to validate children
+ 
+ - Added license header to all source files (hence the increase in size
+ of the distribution!)
+
+
+0.9.5:
+
+ - Added UTC flag to date-time properties indicating how date-time values are formatted
+	NOTE: This is not provided for all properties as some must be in UTC format.
+
+ - Added convenience methods for creating VTimeZone instances.
+ 
+ 
+0.9.4:
+
+ - Property and Parameter made abstract classes
+ 
+ - Added getValue() implementation to all Property and Parameter sub-classes
+ 
+ - Fixed FoldingWriter
+ 
+ - Other fixes regarding string representations
+ 
+ 
+0.9.3:
+
+ - Added commons logging support
+ 
+ - Fixed problem with parsing quoted parameters
+
+ - Finished implementation of Period, Recur types
+
+ - Fix date/date-time parsing to check for VALUE parameter
+ 
+ - Added format method to DurationFormat and UtcOffsetFormat
+
+
+0.9.2:
+
+ - Interim Release
+
+
+0.9.1:
+
+ - Interim Release
+
+
+0.9
+
+ - Initial Release
