@@ -99,7 +99,9 @@ public class FoldingWriter extends FilterWriter {
         for (int i = offset; i < length; i++) {
 
             // debugging..
-            log.debug("char [" + buffer[i] + "], line length [" + lineLength + "]");
+            if (log.isDebugEnabled()) {
+                log.debug("char [" + buffer[i] + "], line length [" + lineLength + "]");
+            }
 
             // check for fold first so we don't unnecessarily fold after
             // no more data..

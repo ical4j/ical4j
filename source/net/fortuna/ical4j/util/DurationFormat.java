@@ -103,7 +103,9 @@ public final class DurationFormat {
             }
             else if ("P".equals(token)) {
                 // does nothing..
-                log.debug("Redundant [P] token ignored.");
+                if (log.isDebugEnabled()) {
+                    log.debug("Redundant [P] token ignored.");
+                }
             }
             else if ("W".equals(token)) {
 
@@ -119,7 +121,9 @@ public final class DurationFormat {
             }
             else if ("T".equals(token)) {
                 // does nothing..
-                log.debug("Redundant [T] token ignored.");
+                if (log.isDebugEnabled()) {
+                    log.debug("Redundant [T] token ignored.");
+                }
             }
             else if ("H".equals(token)) {
 

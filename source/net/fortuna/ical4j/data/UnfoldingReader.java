@@ -83,7 +83,9 @@ public class UnfoldingReader extends PushbackReader {
                 unread(buffer, 0, read);
             }
             else {
-                log.debug("Unfolding..");
+                if (log.isDebugEnabled()) {
+                    log.debug("Unfolding..");
+                }
             }
 
             return super.read();

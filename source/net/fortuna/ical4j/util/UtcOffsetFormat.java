@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Defines the format used by all iCalendar UTC offsets.
- *
+ * 
  * @author benfortuna
  */
 public final class UtcOffsetFormat {
@@ -89,15 +89,17 @@ public final class UtcOffsetFormat {
 
     /**
      * Parses an iCalendar utc-offset string.
-     *
+     * 
      * @param aString
      *            the utc-offset string to parse
      * @return the timezone offset in milliseconds
      */
     public long parse(final String aString) {
 
-		// debugging..
-		log.debug("Parsing string [" + aString + "]");
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Parsing string [" + aString + "]");
+        }
 
         long offset = 0;
 
@@ -122,16 +124,16 @@ public final class UtcOffsetFormat {
             log.debug("Seconds not specified", e);
         }
 
-        if (negative) {
-			return -offset;
-		}
+        if (negative) { return -offset; }
 
         return offset;
     }
 
     /**
      * Returns a string representation of an UTC offset.
-     * @param offset an UTC offset in milliseconds
+     * 
+     * @param offset
+     *            an UTC offset in milliseconds
      * @return a string
      */
     public String format(final long offset) {
