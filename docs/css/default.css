@@ -39,3 +39,9 @@ th {
 .title {
 	font-size: 36pt;
 }
+
+#footer {
+	text-align: center;
+	margin: 10px auto 10px auto;
+	font-size: xx-small;
+}
