@@ -62,16 +62,18 @@ public final class TimeZoneUtils {
         Calendar calendar = Calendar.getInstance(timezone);
         calendar.setTime(new Date(0));
 
-        // first find the start of standard time..
-        while (timezone.inDaylightTime(calendar.getTime())) {
-            calendar.set(Calendar.DAY_OF_YEAR, calendar
-                    .get(Calendar.DAY_OF_YEAR) + 1);
-        }
+        if (timezone.useDaylightTime()) {
+            // first find the start of standard time..
+            while (timezone.inDaylightTime(calendar.getTime())) {
+                calendar.set(Calendar.DAY_OF_YEAR, calendar
+                        .get(Calendar.DAY_OF_YEAR) + 1);
+            }
 
-        // then find the first daylight time after that..
-        while (!timezone.inDaylightTime(calendar.getTime())) {
-            calendar.set(Calendar.DAY_OF_YEAR, calendar
-                    .get(Calendar.DAY_OF_YEAR) + 1);
+            // then find the first daylight time after that..
+            while (!timezone.inDaylightTime(calendar.getTime())) {
+                calendar.set(Calendar.DAY_OF_YEAR, calendar
+                        .get(Calendar.DAY_OF_YEAR) + 1);
+            }
         }
 
         return calendar.getTime();
@@ -89,16 +91,18 @@ public final class TimeZoneUtils {
         Calendar calendar = Calendar.getInstance(timezone);
         calendar.setTime(new Date(0));
 
-        // first find the start of daylight time..
-        while (!timezone.inDaylightTime(calendar.getTime())) {
-            calendar.set(Calendar.DAY_OF_YEAR, calendar
-                    .get(Calendar.DAY_OF_YEAR) + 1);
-        }
+        if (timezone.useDaylightTime()) {
+            // first find the start of daylight time..
+            while (!timezone.inDaylightTime(calendar.getTime())) {
+                calendar.set(Calendar.DAY_OF_YEAR, calendar
+                        .get(Calendar.DAY_OF_YEAR) + 1);
+            }
 
-        // then find the first standard time after that..
-        while (timezone.inDaylightTime(calendar.getTime())) {
-            calendar.set(Calendar.DAY_OF_YEAR, calendar
-                    .get(Calendar.DAY_OF_YEAR) + 1);
+            // then find the first standard time after that..
+            while (timezone.inDaylightTime(calendar.getTime())) {
+                calendar.set(Calendar.DAY_OF_YEAR, calendar
+                        .get(Calendar.DAY_OF_YEAR) + 1);
+            }
         }
 
         return calendar.getTime();
