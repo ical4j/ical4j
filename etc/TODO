@@ -6,8 +6,6 @@ To-do List:
  - inspect date-based properties and default local time where TZID parameter
  is identified
  
- - convert weekday constants to instances
- 
  
  ===========
   RFC 2446:

@@ -17,6 +17,13 @@
  
  - fixed bug in parsing free time where durations are specified
  
+ - Various constants reimplemented as typed instances (as opposed to strings)
+ 
+ - Applied patch #1170060 by calibre. Provides improvements to retrieval of
+ date ranges represented by recurring VEvents.
+ 
+ - documentation updated to conform to XHTML 1.0
+ 
  
 0.9.11:
 
