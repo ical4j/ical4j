@@ -48,6 +48,7 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.component.VToDo;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -150,6 +151,9 @@ public class CalendarBuilder implements ContentHandler {
                 else if (component instanceof VEvent) {
                     ((VEvent) component).getAlarms().add(subComponent);
                 }
+                else if (component instanceof VToDo) {
+                    ((VToDo) component).getAlarms().add(subComponent);
+                }
                 subComponent = null;
             }
             else {
@@ -165,7 +169,12 @@ public class CalendarBuilder implements ContentHandler {
     public void endProperty(String name) {
         if (property != null) {
             if (component != null) {
-                component.getProperties().add(property);
+                if (subComponent != null) {
+                    subComponent.getProperties().add(property);
+                }
+                else {
+                    component.getProperties().add(property);
+                }
             }
             else if (calendar != null) {
                 calendar.getProperties().add(property);

@@ -159,7 +159,9 @@ public class CalendarParserImpl implements CalendarParser {
         String name = tokeniser.sval;
 
         // debugging..
-        log.debug("Property [" + name + "]");
+        if (log.isDebugEnabled()) {
+            log.debug("Property [" + name + "]");
+        }
         
         handler.startProperty(name);
 
@@ -224,7 +226,9 @@ public class CalendarParserImpl implements CalendarParser {
         String paramName = tokeniser.sval;
 
         // debugging..
-        log.debug("Parameter [" + paramName + "]");
+        if (log.isDebugEnabled()) {
+            log.debug("Parameter [" + paramName + "]");
+        }
 
         assertToken(tokeniser, '=');
 
@@ -296,9 +300,9 @@ public class CalendarParserImpl implements CalendarParser {
         if (Component.VTIMEZONE.equals(name)) {
             parseComponentList(tokeniser, handler);
         }
-        // VEVENT components may optionally have embedded VALARM
+        // VEVENT/VTODO components may optionally have embedded VALARM
         // components..
-        else if (Component.VEVENT.equals(name)
+        else if ((Component.VEVENT.equals(name) || Component.VTODO.equals(name))
                 && Component.BEGIN.equals(tokeniser.sval)) {
             parseComponentList(tokeniser, handler);
         }
@@ -333,7 +337,9 @@ public class CalendarParserImpl implements CalendarParser {
         throw new ParserException("Expected [" + token + "], read ["
                 + tokeniser.ttype + "] at line " + tokeniser.lineno()); }
 
-        log.debug("[" + token + "]");
+        if (log.isDebugEnabled()) {
+            log.debug("[" + token + "]");
+        }
     }
 
     /**
@@ -360,6 +366,8 @@ public class CalendarParserImpl implements CalendarParser {
         throw new ParserException("Expected [" + token + "], read ["
                 + tokeniser.sval + "] at line " + tokeniser.lineno()); }
 
-        log.debug("[" + token + "]");
+        if (log.isDebugEnabled()) {
+            log.debug("[" + token + "]");
+        }
     }
 }

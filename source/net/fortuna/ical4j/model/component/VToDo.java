@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
@@ -45,6 +46,8 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * @author benf
  */
 public class VToDo extends Component {
+
+    private ComponentList alarms = new ComponentList();
 
     /**
      * Default constructor.
@@ -61,6 +64,28 @@ public class VToDo extends Component {
      */
     public VToDo(final PropertyList properties) {
         super(VTODO, properties);
+    }
+
+    public final ComponentList getAlarms() {
+        return alarms;
+    }
+
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(BEGIN);
+        buffer.append(':');
+        buffer.append(getName());
+        buffer.append("\r\n");
+        buffer.append(getProperties());
+        buffer.append(getAlarms());
+        buffer.append(END);
+        buffer.append(':');
+        buffer.append(getName());
+        buffer.append("\r\n");
+        return buffer.toString();
     }
 
     /*
