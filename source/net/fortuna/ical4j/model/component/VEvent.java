@@ -33,20 +33,14 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Date;
+import java.util.*;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.util.DateRangeNormalizer;
+
 
 /**
  * Defines an iCalendar VEVENT component.
@@ -316,5 +310,150 @@ public class VEvent extends Component {
         if (recurse) {
             validateProperties();
         }
+    }
+
+
+    /**
+     * Retrieve the Date Ranges (Time Segments) that this VEvent represents if
+     * this is a recurring event.  This method will also remove any excluded
+     * Date Ranges.
+     *
+     * @param startDate
+     *           The query start date to start searching for date ranges.
+     * @param endDate
+     *           The query end date to stop searching for date ranges.
+     * @return
+     *           Sorted Set of DateRange objects that fall on or between the
+     *           given query dates.
+     */
+    public final SortedSet getDateRanges(Date startDate, Date endDate) {
+
+        if ((startDate == null) || (endDate == null)) {
+            throw new RuntimeException("Can't search on null date(s)");
+        }
+
+        DateRangeNormalizer normalizer = DateRangeNormalizer.getInstance();
+        DateList exDateList = new DateList(Value.DATE_TIME);
+        DtStart eventStartDate = getStartDate();
+        DtEnd eventDtEnd = getEndDate();
+
+        if (eventDtEnd == null) {
+            throw new RuntimeException("No end to the VEVENT!  " +
+                                       "Please specify DTEND or DURATION.");
+        }
+
+        PropertyList exRules = getProperties().getProperties(Property.EXRULE);
+        PropertyList exDates = getProperties().getProperties(Property.EXDATE);
+
+        long duration = (eventDtEnd.getTime().getTime() -
+                         eventStartDate.getTime().getTime());
+
+        DateList currDateList = getRecurringStartDates(startDate, endDate);
+
+        // Subtract the EXDATEs from the list of start dates
+        for (Iterator exDateIter = exDates.iterator(); exDateIter.hasNext();) {
+
+            ExDate nextExDate = (ExDate) exDateIter.next();
+            DateList nextExDates = nextExDate.getDates();
+
+            // Remove any dates that clash with the list of Start
+            // Dates retrieved.
+            for (Iterator nextExDatesIter = nextExDates.iterator();
+                                                nextExDatesIter.hasNext();) {
+                currDateList.remove(nextExDatesIter.next());
+            }
+        }
+
+        // Look at all the ExRules to subtract later on.
+        for (Iterator propertyIter = exRules.iterator();
+                                            propertyIter.hasNext();) {
+
+            ExRule nextExRule = (ExRule) propertyIter.next();
+            Recur recur = nextExRule.getRecur();
+            exDateList.addAll(recur.getDates(eventStartDate, startDate, endDate,
+                                             Value.DATE_TIME));
+        }
+
+        // Turn the excluded dates into DateRange objects and subtract
+        // the set from the entire set.
+        SortedSet exDateRangeSet =
+                        normalizer.createDateRangeSet(exDateList, duration);
+
+        // Turn the dates into DateRange objects and merge the
+        // set with the entire set.
+        SortedSet currDateRangeSet =
+                        normalizer.createDateRangeSet(currDateList, duration);
+
+        // Return the normalized list of Date Ranges, that is a list of
+        // Date Ranges that are current and do not contain the excluded
+        // Date Ranges.
+        return normalizer.subtractDateRanges(currDateRangeSet, exDateRangeSet);
+    }
+
+    /**
+     * Convenience method to retreive all the Start dates of a recurring event.
+     *
+     * @param startDate
+     *           Date to start querying for Start Dates
+     * @param endDate
+     *           Date to stop querying for Start Dates
+     * @return
+     *           DateList of unordered Start java.util.Date objects.
+     */
+    public DateList getRecurringStartDates(Date startDate, Date endDate) {
+
+        if ((startDate == null) || (endDate == null)) {
+            throw new RuntimeException("Can't search on null date(s)");
+        }        
+
+        PropertyList rrules = getProperties().getProperties(Property.RRULE);
+        DateList currDateList = new DateList(Value.DATE_TIME);
+        DtStart eventStartDate = getStartDate();
+
+        for (Iterator propertyIter = rrules.iterator();
+                                                propertyIter.hasNext();) {
+
+            RRule nextRRule = (RRule) propertyIter.next();
+            Recur recur = nextRRule.getRecur();
+            currDateList.addAll(recur.getDates(eventStartDate, startDate,
+                                               endDate,
+                                               Value.DATE_TIME));
+        }
+
+        return currDateList;
+    }
+
+    /**
+     * Convenience method to pull the DTSTART out of the property list.
+     *
+     * @return
+     *      The DtStart object representation of the start Date
+     */
+    public DtStart getStartDate() {
+        return (DtStart) getProperties().getProperty(Property.DTSTART);
+    }
+
+    /**
+     * Convenience method to pull the DTEND out of the property list.  If
+     * DTEND was not specified, use the DTSTART + DURATION to calculate it.
+     *
+     * @return
+     *       The end for this VEVENT.
+     */
+    public DtEnd getEndDate() {
+
+        DtEnd dtEnd = (DtEnd) getProperties().getProperty(Property.DTEND);
+
+        // No DTEND?  No problem, we'll use the DURATION.
+        if (dtEnd == null) {
+
+            DtStart dtStart = getStartDate();
+            Duration vEventDuration =
+                      (Duration) getProperties().getProperty(Property.DURATION);
+            dtEnd = new DtEnd(new Date(dtStart.getTime().getTime() +
+                                       vEventDuration.getDuration()));
+        }
+
+        return dtEnd;
     }
 }

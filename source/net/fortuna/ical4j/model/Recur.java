@@ -45,19 +45,21 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.DateFormat;
 import net.fortuna.ical4j.util.DateTimeFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+
 /**
  * Defines a recurrence.
- * 
+ *
  * @author benfortuna
  */
 public class Recur implements Serializable {
-    
+
     private static final long serialVersionUID = -7333226591784095142L;
 
     private static final String FREQ = "FREQ";
@@ -102,7 +104,7 @@ public class Recur implements Serializable {
     public static final String MONTHLY = "MONTHLY";
 
     public static final String YEARLY = "YEARLY";
-    
+
     private static Log log = LogFactory.getLog(Recur.class);
 
     private String frequency;
@@ -135,9 +137,15 @@ public class Recur implements Serializable {
 
     private Map experimentalValues = new HashMap();
 
+    // The order, or layout, of the date as it appears in a string
+    // e.g. 20050415T093000 (April 15th, 9:30:00am)
+    private static final int[] DATE_ORDER =
+            {Calendar.YEAR, Calendar.MONTH, Calendar.DAY_OF_MONTH,
+             Calendar.HOUR_OF_DAY, Calendar.MINUTE, Calendar.SECOND};
+
     /**
      * Constructor.
-     * 
+     *
      * @param aValue
      *            a string representation of a recurrence.
      * @throws ParseException
@@ -359,7 +367,7 @@ public class Recur implements Serializable {
     public final void setWeekStartDay(final String weekStartDay) {
         this.weekStartDay = weekStartDay;
     }
-    
+
     /**
      * @see java.lang.Object#toString()
      */
@@ -452,7 +460,244 @@ public class Recur implements Serializable {
         }
         return b.toString();
     }
-    
+
+    /**
+     * Returns a list of start dates in the specified period represented
+     * by this recur.  This method includes a DTSTART object as parameter, which
+     * indicates the start of the fist occurrence of this recurrence.
+     *
+     * The DTSTART is used to inject default values to return a set of dates in
+     * the correct format.  For example, if the search start date (strt) is
+     * Wed, Mar 23, 12:19PM, but the recurrence is Mon - Fri, 9:00AM - 5:00PM,
+     * the start dates returned should all be at 9:00AM, and not 12:19PM.
+     *
+     * @return a list of dates represented by this recur instance
+     * @param dtStart
+     *              The Start date of this Recurrence's first instance
+     * @param strt the start of the period
+     * @param end the end of the period
+     * @param value the type of dates to generate (i.e. date/date-time)
+     */
+    public final DateList getDates(final DtStart dtStart, final Date strt,
+                                   final Date end, final Value value) {
+
+        DateList dates = new DateList(value);
+        Date start = (Date) strt.clone();
+
+        // Should never happen!  DTSTART is always required!
+        if (dtStart == null) {
+            return dates;
+        }
+
+        // We don't want to see or search any dates that occurr before the
+        // first instance of this recurrence.
+        if (start.before(dtStart.getTime())) {
+            start = dtStart.getTime();
+        }
+
+        int lowestVariableField = 9999;
+        String frequency = getFrequency();
+
+        if (YEARLY.equals(frequency)) {
+            lowestVariableField = Calendar.YEAR;
+        } else if (MONTHLY.equals(frequency)) {
+            lowestVariableField = Calendar.MONTH;
+        } else if (WEEKLY.equals(frequency)) {
+            lowestVariableField = Calendar.DAY_OF_MONTH;
+        } else if (DAILY.equals(frequency)) {
+            lowestVariableField = Calendar.DAY_OF_MONTH;
+        } else if (HOURLY.equals(frequency)) {
+            lowestVariableField = Calendar.HOUR_OF_DAY;
+        } else if (MINUTELY.equals(frequency)) {
+            lowestVariableField = Calendar.MINUTE;
+        } else if (SECONDLY.equals(frequency)) {
+            lowestVariableField = Calendar.SECOND;
+        }
+
+        Calendar dtStartCalendar = Calendar.getInstance();
+        dtStartCalendar.setTime(dtStart.getTime());
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        cal.set(Calendar.MILLISECOND, 0);
+        // reset fields where BY* rules apply..
+        if (!getMonthList().isEmpty()) {
+            //cal.set(Calendar.MONTH, 0);
+            lowestVariableField = Calendar.MONTH < lowestVariableField ?
+                                  Calendar.MONTH : lowestVariableField;
+        }
+        if (!getWeekNoList().isEmpty()) {
+            //cal.set(Calendar.WEEK_OF_YEAR, 1);
+            lowestVariableField = Calendar.DAY_OF_MONTH < lowestVariableField ?
+                                  Calendar.DAY_OF_MONTH : lowestVariableField;
+        }
+        if (!getYearDayList().isEmpty()) {
+            //cal.set(Calendar.DAY_OF_YEAR, 1);
+            lowestVariableField = Calendar.DAY_OF_MONTH < lowestVariableField ?
+                                  Calendar.DAY_OF_MONTH : lowestVariableField;
+        }
+        if (!getMonthDayList().isEmpty()) {
+            //cal.set(Calendar.DAY_OF_MONTH, 1);
+            lowestVariableField = Calendar.DAY_OF_MONTH < lowestVariableField ?
+                                  Calendar.DAY_OF_MONTH : lowestVariableField;
+        }
+        if (!getDayList().isEmpty()) {
+            //cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+            lowestVariableField = Calendar.DAY_OF_MONTH < lowestVariableField ?
+                                  Calendar.DAY_OF_MONTH : lowestVariableField;
+        }
+        if (!getHourList().isEmpty()) {
+            //cal.set(Calendar.HOUR_OF_DAY, 0);
+            lowestVariableField = Calendar.HOUR_OF_DAY < lowestVariableField ?
+                                  Calendar.HOUR_OF_DAY : lowestVariableField;
+        }
+        if (!getMinuteList().isEmpty()) {
+            //cal.set(Calendar.MINUTE, 0);
+            lowestVariableField = Calendar.MINUTE < lowestVariableField ?
+                                  Calendar.MINUTE : lowestVariableField;
+        }
+        if (!getSecondList().isEmpty()) {
+            //cal.set(Calendar.SECOND, 0);
+            lowestVariableField = Calendar.SECOND < lowestVariableField ?
+                                  Calendar.SECOND : lowestVariableField;
+        }
+
+        // Set everything to the right of the LVF to match the DTSTART.
+        // Everything else comes from the query start date.
+        int[] matchFields = getMatchFields(lowestVariableField);
+        for (int i = 0; i < matchFields.length; i++) {
+            cal.set(matchFields[i], dtStartCalendar.get(matchFields[i]));
+        }
+
+        // Deal with rolling over to the next time period if necessary.
+        if (cal.getTime().getTime() < strt.getTime()) {
+            cal.add(lowestVariableField, 1);
+        }
+
+        // Weekly frequencies need to match up the week day. (i.e. if it's
+        // Friday, and that's not part of our criteria, keep adding a day
+        // until they match).
+        /*if (getFrequency().equals(WEEKLY)) {
+
+            while (cal.get(Calendar.DAY_OF_WEEK) !=
+
+                   dtStartCalendar.get(Calendar.DAY_OF_WEEK)) {
+                cal.add(Calendar.DAY_OF_MONTH, 1);
+            }
+        }*/
+
+        // apply frequency/interval rules..
+        if (getUntil() != null) {
+            while (!cal.getTime().after(getUntil())
+                    && !(end != null && cal.getTime().after(end))) {
+                dates.add(cal.getTime());
+                increment(cal);
+            }
+        }
+        else if (getCount() >= 1) {
+            for (int i = 0;
+                i < getCount() && !(end != null && cal.getTime().after(end));
+                i++) {
+                dates.add(cal.getTime());
+                increment(cal);
+            }
+        }
+        else if (end != null) {
+            while (!cal.getTime().after(end)) {
+                dates.add(cal.getTime());
+                increment(cal);
+            }
+        }
+        else {
+            // if no end-point specified we can't calculate a finite
+            // set of dates..
+            return dates;
+        }
+
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Dates after FREQUENCY/INTERVAL processing: " + dates);
+        }
+
+        dates = getMonthVariants(dates);
+
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Dates after BYMONTH processing: " + dates);
+        }
+
+        dates = getWeekNoVariants(dates);
+
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Dates after BYWEEKNO processing: " + dates);
+        }
+
+        dates = getYearDayVariants(dates);
+
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Dates after BYYEARDAY processing: " + dates);
+        }
+
+        dates = getMonthDayVariants(dates);
+
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Dates after BYMONTHDAY processing: " + dates);
+        }
+
+        dates = getDayVariants(dates);
+
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Dates after BYDAY processing: " + dates);
+        }
+
+        dates = getHourVariants(dates);
+
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Dates after BYHOUR processing: " + dates);
+        }
+
+        dates = getMinuteVariants(dates);
+
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Dates after BYMINUTE processing: " + dates);
+        }
+
+        dates = getSecondVariants(dates);
+
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Dates after BYSECOND processing: " + dates);
+        }
+
+        // final processing..
+        for (int i = 0; i < dates.size(); i++) {
+            Date date = (Date) dates.get(i);
+            if (date.before(start)) {
+                dates.remove(date);
+                i--;
+            }
+            else if (end != null && date.after(end)) {
+                dates.remove(date);
+                i--;
+            }
+            else if (getUntil() != null && date.after(getUntil())) {
+                dates.remove(date);
+                i--;
+            }
+            else if (getCount() >= 1 && i >= getCount()) {
+                dates.remove(date);
+                i--;
+            }
+        }
+
+        return dates;
+    }
+
     /**
      * Returns a list of dates in the specified period represented
      * by this recur.
@@ -517,63 +762,63 @@ public class Recur implements Serializable {
             // set of dates..
             return dates;
         }
-        
+
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Dates after FREQUENCY/INTERVAL processing: " + dates);
         }
-        
+
         dates = getMonthVariants(dates);
-        
+
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYMONTH processing: " + dates);
         }
 
         dates = getWeekNoVariants(dates);
-        
+
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYWEEKNO processing: " + dates);
         }
 
         dates = getYearDayVariants(dates);
-        
+
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYYEARDAY processing: " + dates);
         }
 
         dates = getMonthDayVariants(dates);
-        
+
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYMONTHDAY processing: " + dates);
         }
 
         dates = getDayVariants(dates);
-        
+
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYDAY processing: " + dates);
         }
 
         dates = getHourVariants(dates);
-        
+
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYHOUR processing: " + dates);
         }
 
         dates = getMinuteVariants(dates);
-        
+
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYMINUTE processing: " + dates);
         }
 
         dates = getSecondVariants(dates);
-        
+
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYSECOND processing: " + dates);
@@ -602,7 +847,57 @@ public class Recur implements Serializable {
 
         return dates;
     }
-    
+
+    /**
+     * Return all the items to the right of LVF in a date string.
+     *
+     * @param lowestVariableField
+     * @return
+     */
+    private int[] getMatchFields(int lowestVariableField) {
+
+        int[] matchFields = new int[0];
+        int lvfIndex = getDateOrderIndex(lowestVariableField);
+
+        for (int i = 0; i < DATE_ORDER.length; i++) {
+
+            int nextItem = DATE_ORDER[i];
+
+            if (i > lvfIndex) {
+
+                int[] tmpArray = matchFields;
+                matchFields = new int[tmpArray.length + 1];
+
+                for (int j = 0; j < tmpArray.length; j++) {
+                    matchFields[j] = tmpArray[j];
+                }
+
+                matchFields[matchFields.length - 1] = nextItem;
+            }
+        }
+
+        return matchFields;
+    }
+
+    /**
+     * Return the index of this item in the DATE_ORDER array.
+     *
+     * @param val
+     * @return
+     */
+    private int getDateOrderIndex(int val) {
+
+        for (int i = 0; i < DATE_ORDER.length; i++) {
+
+            int nextVal = DATE_ORDER[i];
+            if (nextVal == val) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     /**
      * Increments the specified calendar according to the
      * frequency and interval specified in this recurrence
@@ -630,11 +925,12 @@ public class Recur implements Serializable {
         else if (MONTHLY.equals(getFrequency())) {
             cal.add(Calendar.MONTH, calInterval);
         }
+
         else if (YEARLY.equals(getFrequency())) {
             cal.add(Calendar.YEAR, calInterval);
         }
     }
-    
+
     /**
      * Applies BYMONTH rules specified in this Recur instance to the
      * specified date list. If no BYMONTH rules are specified the
@@ -674,7 +970,7 @@ public class Recur implements Serializable {
         }
         return monthlyDates;
     }
-    
+
     /**
      * Applies BYWEEKNO rules specified in this Recur instance to the
      * specified date list. If no BYWEEKNO rules are specified the
@@ -713,7 +1009,7 @@ public class Recur implements Serializable {
         }
         return weekNoDates;
     }
-    
+
     /**
      * Returns the absolute week number for the year specified by the
      * supplied date. Note that a value of zero (0) is invalid for the
@@ -742,7 +1038,7 @@ public class Recur implements Serializable {
         }
         return ((Integer) weeks.get(weeks.size() + weekNo)).intValue();
     }
-    
+
     /**
      * Applies BYYEARDAY rules specified in this Recur instance to the
      * specified date list. If no BYYEARDAY rules are specified the
@@ -781,7 +1077,7 @@ public class Recur implements Serializable {
         }
         return yearDayDates;
     }
-    
+
     /**
      * Returns the absolute year day for the year specified by the
      * supplied date. Note that a value of zero (0) is invalid for the
@@ -810,7 +1106,7 @@ public class Recur implements Serializable {
         }
         return ((Integer) days.get(days.size() + yearDay)).intValue();
     }
-    
+
     /**
      * Applies BYMONTHDAY rules specified in this Recur instance to the
      * specified date list. If no BYMONTHDAY rules are specified the
@@ -849,7 +1145,7 @@ public class Recur implements Serializable {
         }
         return monthDayDates;
     }
-    
+
     /**
      * Returns the absolute month day for the month specified by the
      * supplied date. Note that a value of zero (0) is invalid for the
@@ -878,7 +1174,7 @@ public class Recur implements Serializable {
         }
         return ((Integer) days.get(days.size() + monthDay)).intValue();
     }
-    
+
     /**
      * Applies BYDAY rules specified in this Recur instance to the
      * specified date list. If no BYDAY rules are specified the
@@ -914,7 +1210,7 @@ public class Recur implements Serializable {
         }
         return weekDayDates;
     }
-    
+
     /**
      * Returns a list of applicable dates corresponding to the specified
      * week day in accordance with the frequency specified by this recurrence
@@ -950,12 +1246,15 @@ public class Recur implements Serializable {
         }
         List days = new ArrayList();
         if (WEEKLY.equals(getFrequency())  || !getWeekNoList().isEmpty()) {
-            int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
+            //int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
             // construct a list of possible week days..
 //            cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, 1);
             while (cal.get(Calendar.DAY_OF_WEEK) != calDay) {
                 cal.add(Calendar.DAY_OF_WEEK, 1);
             }
+
+            int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
+
             while (cal.get(Calendar.WEEK_OF_YEAR) == weekNo) {
                 days.add(cal.getTime());
                 cal.add(Calendar.DAY_OF_WEEK, 7);

@@ -91,9 +91,9 @@ public class CalendarBuilderTest extends TestCase {
 
         TestSuite suite = new TestSuite();
 
-        File[] samples = new File("c:/Development/workspace/ical4j/etc/samples").listFiles(new FileFilter() {
-			public boolean accept(File file) {
-				return file.getName().endsWith("sunbird_sample.ics");
+        File[] samples = new File("c:/Development/workspace/iCal4j/ical4j/etc/samples").listFiles(new FileFilter() {
+			public final boolean accept(final File file) {
+				return file.getName().endsWith("ArgentinaHolidays.ics");
 			}
 		});
 

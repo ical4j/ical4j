@@ -352,7 +352,7 @@ public class VFreeBusy extends Component {
         PropertyList rRules = component.getProperties().getProperties(Property.RRULE);
         for (Iterator i = rRules.iterator(); i.hasNext();) {
             RRule rrule = (RRule) i.next();
-            DateList startDates = rrule.getRecur().getDates(start.getTime(), recurEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
+            DateList startDates = rrule.getRecur().getDates(null, start.getTime(), recurEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
             DateList endDates = null;
             if (end == null && duration == null) {
                 Calendar cal = Calendar.getInstance();
@@ -362,10 +362,10 @@ public class VFreeBusy extends Component {
                     cal.set(Calendar.MINUTE, 59);
                 }
                 cal.set(Calendar.SECOND, 59);
-                endDates = rrule.getRecur().getDates(cal.getTime(), recurEnd, (Value) end.getParameters().getParameter(Parameter.VALUE));
+                endDates = rrule.getRecur().getDates(null, cal.getTime(), recurEnd, (Value) end.getParameters().getParameter(Parameter.VALUE));
             }
             else if (end != null) {
-                endDates = rrule.getRecur().getDates(end.getTime(), recurEnd, (Value) end.getParameters().getParameter(Parameter.VALUE));
+                endDates = rrule.getRecur().getDates(null, end.getTime(), recurEnd, (Value) end.getParameters().getParameter(Parameter.VALUE));
             }
             for (int j = 0; j < startDates.size(); j++) {
                 Date startDate = (Date) startDates.get(j);

@@ -35,6 +35,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.util.SortedSet;
+
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -132,5 +134,93 @@ public class CalendarTest extends TestCase {
         
         log.info(calendar);
     }
+    
+    public void testGetEventDateRanges() throws ValidationException {
 
+        Calendar calendar = new Calendar();
+        calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
+        calendar.getProperties().add(Version.VERSION_2_0);
+        calendar.getProperties().add(CalScale.GREGORIAN);
+
+        // Add events, etc..
+        VTimeZone tz = VTimeZone.getDefault();
+        TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
+
+        java.util.Calendar calStart = java.util.Calendar.getInstance();
+        calStart.set(java.util.Calendar.YEAR, 2006);
+        calStart.set(java.util.Calendar.MONTH, java.util.Calendar.JANUARY);
+        calStart.set(java.util.Calendar.DAY_OF_MONTH, 1);
+        calStart.set(java.util.Calendar.HOUR_OF_DAY, 9);
+        calStart.clear(java.util.Calendar.MINUTE);
+        calStart.clear(java.util.Calendar.SECOND);
+
+        java.util.Calendar calEnd = java.util.Calendar.getInstance();
+        calEnd.setTime(calStart.getTime());
+        calEnd.add(java.util.Calendar.YEAR, 1);
+
+        VEvent week1UserA = new VEvent(calStart.getTime(), 1000 * 60 * 60 * 8, "Week 1 - User A");
+        week1UserA.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+
+        Recur week1UserARecur = new Recur(Recur.WEEKLY, calEnd.getTime());
+        week1UserARecur.setInterval(3);
+        week1UserARecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
+        week1UserARecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
+        week1UserARecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
+        week1UserARecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
+        week1UserARecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
+        week1UserARecur.getHourList().add(new Integer(9));
+        week1UserA.getProperties().add(new RRule(week1UserARecur));
+
+        calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
+        calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
+
+        VEvent week2UserB = new VEvent(calStart.getTime(), 1000 * 60 * 60 * 8, "Week 2 - User B");
+        week2UserB.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+
+        Recur week2UserBRecur = new Recur(Recur.WEEKLY, calEnd.getTime());
+        week2UserBRecur.setInterval(3);
+        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
+        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
+        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
+        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
+        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
+        week2UserBRecur.getHourList().add(new Integer(9));
+        week2UserB.getProperties().add(new RRule(week2UserBRecur));
+
+        calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
+        calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
+
+        VEvent week3UserC = new VEvent(calStart.getTime(), 1000 * 60 * 60 * 8, "Week 3 - User C");
+        week3UserC.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+
+        Recur week3UserCRecur = new Recur(Recur.WEEKLY, calEnd.getTime());
+        week3UserCRecur.setInterval(3);
+        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
+        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
+        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
+        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
+        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
+        week3UserCRecur.getHourList().add(new Integer(9));
+        week3UserC.getProperties().add(new RRule(week3UserCRecur));
+
+        calendar.getComponents().add(week1UserA);
+        calendar.getComponents().add(week2UserB);
+        calendar.getComponents().add(week3UserC);
+
+        calendar.validate();
+
+
+        // Start the logic testing.
+        java.util.Calendar queryStartCal = java.util.Calendar.getInstance();
+        java.util.Calendar queryEndCal = java.util.Calendar.getInstance();
+
+        queryStartCal.set(2006, java.util.Calendar.JULY, 1, 9, 0, 0);
+        queryEndCal.set(2006, java.util.Calendar.AUGUST, 1, 9, 0, 0);
+
+        SortedSet dateRangeSet =
+                        calendar.getEventDateRanges(queryStartCal.getTime(),
+                                                    queryEndCal.getTime());
+
+        log.info(dateRangeSet);
+    }
 }

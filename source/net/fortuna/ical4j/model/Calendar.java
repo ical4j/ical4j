@@ -35,9 +35,14 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.util.Iterator;
+import java.util.TreeSet;
+import java.util.SortedSet;
+import java.util.Date;
 
 import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.util.DateRangeNormalizer;
 
 /**
  * Defines an iCalendar calendar.
@@ -214,5 +219,37 @@ public class Calendar implements Serializable {
             Component component = (Component) i.next();
             component.validate();
         }
+    }
+
+    /**
+     * Retreive all the date ranges for each VEVENT in this iCalendar.
+     *
+     * @param startDate
+     *              The query start date to start searching for date ranges.
+     * @param endDate
+     *              The query end date to stop searching for date ranges.
+     * @return
+     *              A Sorted Set of DateRange objects.
+     * @throws ValidationException
+     */
+    public SortedSet getEventDateRanges(Date startDate, Date endDate)
+                                                   throws ValidationException {
+        DateRangeNormalizer normalizer = DateRangeNormalizer.getInstance();
+        SortedSet results = new TreeSet();
+        // must contain at least one component
+        if (getComponents().isEmpty()) {
+            throw new ValidationException(
+                    "Calendar must contain at least one component");
+        }
+        for (Iterator i = getComponents().iterator(); i.hasNext();) {
+            Component component = (Component) i.next();
+            if (Component.VEVENT.equals(component.getName())) {
+                VEvent event = (VEvent)component;
+                results = normalizer.addDateRanges(results,
+                        event.getDateRanges(startDate, endDate));
+            }
+        }
+        
+        return results;
     }
 }
