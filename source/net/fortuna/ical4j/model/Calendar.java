@@ -232,7 +232,7 @@ public class Calendar implements Serializable {
      *              A Sorted Set of DateRange objects.
      * @throws ValidationException
      */
-    public SortedSet getEventDateRanges(Date startDate, Date endDate)
+    public final SortedSet getEventDateRanges(final Date startDate, final Date endDate)
                                                    throws ValidationException {
         DateRangeNormalizer normalizer = DateRangeNormalizer.getInstance();
         SortedSet results = new TreeSet();
@@ -244,7 +244,7 @@ public class Calendar implements Serializable {
         for (Iterator i = getComponents().iterator(); i.hasNext();) {
             Component component = (Component) i.next();
             if (Component.VEVENT.equals(component.getName())) {
-                VEvent event = (VEvent)component;
+                VEvent event = (VEvent) component;
                 results = normalizer.addDateRanges(results,
                         event.getDateRanges(startDate, endDate));
             }

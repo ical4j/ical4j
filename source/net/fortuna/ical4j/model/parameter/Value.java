@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.Parameter;
 
 /**
  * Defines a Value Data Type parameter.
+ * 
  * @author benfortuna
  */
 public class Value extends Parameter {
@@ -54,22 +55,26 @@ public class Value extends Parameter {
     private String value;
 
     /**
-     * @param aValue a string representation of a value data
-     * type
+     * @param aValue
+     *            a string representation of a value data type
      */
     public Value(final String aValue) {
         super(VALUE);
         this.value = aValue;
     }
 
-    /* (non-Javadoc)
-	 * @see net.fortuna.ical4j.model.Parameter#getValue()
-	 */
-	public String getValue() {
-		return value;
-	}
-    
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.fortuna.ical4j.model.Parameter#getValue()
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public final boolean equals(final Object arg0) {
@@ -78,8 +83,10 @@ public class Value extends Parameter {
         }
         return super.equals(arg0);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Object#hashCode()
      */
     public final int hashCode() {
