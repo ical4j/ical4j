@@ -87,7 +87,7 @@ public class CalendarOutputterTest extends TestCase {
 
         TestSuite suite = new TestSuite();
 
-        File[] samples = new File("e:/development/workspace/ical4j/etc/samples").listFiles(new FileFilter() {
+        File[] samples = new File("f:/development/workspace/ical4j/etc/samples").listFiles(new FileFilter() {
 			public boolean accept(File file) {
 				return file.getName().endsWith("OZMovies.ics");
 			}

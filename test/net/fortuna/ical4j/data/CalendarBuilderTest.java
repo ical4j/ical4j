@@ -58,7 +58,7 @@ public class CalendarBuilderTest extends TestCase {
      * Class to test for Calendar build(InputStream)
      */
     public final void testBuildInputStream() throws IOException,
-            BuilderException, URISyntaxException, ParseException {
+            ParserException, URISyntaxException, ParseException {
 
         FileInputStream fin = new FileInputStream(filename);
 
@@ -83,7 +83,7 @@ public class CalendarBuilderTest extends TestCase {
 
         TestSuite suite = new TestSuite();
 
-        File[] samples = new File("e:/development/workspace/ical4j/etc/samples").listFiles(new FileFilter() {
+        File[] samples = new File("f:/development/workspace/ical4j/etc/samples").listFiles(new FileFilter() {
 			public boolean accept(File file) {
 				return file.getName().endsWith("tmeher.ics");
 			}
