@@ -55,7 +55,8 @@ public class DtStamp extends Property {
     private Date dateTime;
 
     /**
-     * Default constructor.
+     * Default constructor. Initialises the dateTime value to the time
+     * of instantiation.
      */
     public DtStamp() {
         super(DTSTAMP);

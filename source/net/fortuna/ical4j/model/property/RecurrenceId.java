@@ -131,8 +131,8 @@ public class RecurrenceId extends Property {
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
         if (valueParam != null
-                && !Value.DATE_TIME.equals(valueParam.getValue())
-                && !Value.DATE.equals(valueParam.getValue())) {
+                && !Value.DATE_TIME.equals(valueParam)
+                && !Value.DATE.equals(valueParam)) {
             throw new ValidationException(
                 "Parameter [" + Parameter.VALUE + "] is invalid");
         }
@@ -156,7 +156,7 @@ public class RecurrenceId extends Property {
         // value can be either a date-time or a date..
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
-        if (valueParam != null && Value.DATE.equals(valueParam.getValue())) {
+        if (valueParam != null && Value.DATE.equals(valueParam)) {
             time = DateFormat.getInstance().parse(aValue);
         }
         else {
@@ -170,7 +170,7 @@ public class RecurrenceId extends Property {
     public final String getValue() {
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
-        if (valueParam != null && Value.DATE.equals(valueParam.getValue())) {
+        if (valueParam != null && Value.DATE.equals(valueParam)) {
             return DateFormat.getInstance().format(getTime());
         }
 

@@ -37,21 +37,19 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.DateFormat;
 import net.fortuna.ical4j.util.DateTimeFormat;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Defines a recurrence.
@@ -617,22 +615,22 @@ public class Recur implements Serializable {
         if (getFrequency() == SECONDLY) {
             cal.add(Calendar.SECOND, calInterval);
         }
-        else if (getFrequency() == MINUTELY) {
+        else if (MINUTELY.equals(getFrequency())) {
             cal.add(Calendar.MINUTE, calInterval);
         }
-        else if (getFrequency() == HOURLY) {
+        else if (HOURLY.equals(getFrequency())) {
             cal.add(Calendar.HOUR_OF_DAY, calInterval);
         }
-        else if (getFrequency() == DAILY) {
+        else if (DAILY.equals(getFrequency())) {
             cal.add(Calendar.DAY_OF_YEAR, calInterval);
         }
-        else if (getFrequency() == WEEKLY) {
+        else if (WEEKLY.equals(getFrequency())) {
             cal.add(Calendar.WEEK_OF_YEAR, calInterval);
         }
-        else if (getFrequency() == MONTHLY) {
+        else if (MONTHLY.equals(getFrequency())) {
             cal.add(Calendar.MONTH, calInterval);
         }
-        else if (getFrequency() == YEARLY) {
+        else if (YEARLY.equals(getFrequency())) {
             cal.add(Calendar.YEAR, calInterval);
         }
     }
@@ -951,7 +949,7 @@ public class Recur implements Serializable {
             calDay = Calendar.SATURDAY;
         }
         List days = new ArrayList();
-        if (getFrequency() == WEEKLY || !getWeekNoList().isEmpty()) {
+        if (WEEKLY.equals(getFrequency())  || !getWeekNoList().isEmpty()) {
             int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
             // construct a list of possible week days..
 //            cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, 1);
@@ -963,7 +961,7 @@ public class Recur implements Serializable {
                 cal.add(Calendar.DAY_OF_WEEK, 7);
             }
         }
-        else if (getFrequency() == MONTHLY || !getMonthList().isEmpty()) {
+        else if (MONTHLY.equals(getFrequency())  || !getMonthList().isEmpty()) {
             int month = cal.get(Calendar.MONTH);
             // construct a list of possible month days..
             cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -975,7 +973,7 @@ public class Recur implements Serializable {
                 cal.add(Calendar.DAY_OF_MONTH, 7);
             }
         }
-        else if (getFrequency() == YEARLY) {
+        else if (YEARLY.equals(getFrequency())) {
             int year = cal.get(Calendar.YEAR);
             // construct a list of possible year days..
             cal.set(Calendar.DAY_OF_YEAR, 1);

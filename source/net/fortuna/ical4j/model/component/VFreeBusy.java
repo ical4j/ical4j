@@ -1,7 +1,7 @@
 /*
  * $Id$ [Apr 5, 2004]
  *
- * Copyright (c) 2004, Ben Fortuna
+ * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,6 +37,9 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -130,6 +133,8 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * @author Ben Fortuna
  */
 public class VFreeBusy extends Component {
+    
+    private static Log log = LogFactory.getLog(VFreeBusy.class);
 
     /**
      * Default constructor.
@@ -252,24 +257,40 @@ public class VFreeBusy extends Component {
 
     private FreeBusy createFreeTime(final Date start, final Date end, final long duration, final ComponentList components) {
         FreeBusy fb = new FreeBusy();
-        fb.getParameters().add(new FbType(FbType.FREE));
+        fb.getParameters().add(FbType.FREE);
         PeriodList periods = createPeriodList(components, end);
         Collections.sort(periods);
-        Period lastPeriod = null;
+        
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Busy periods: " + periods);
+        }
+        
+        Date lastPeriodEnd = null;
         for (Iterator i = periods.iterator(); i.hasNext();) {
             Period period = (Period) i.next();
             // check if period outside bounds..
-            if (period.getStart().after(end) || period.getEnd().before(start)) {
+            if (period.getStart().after(end) || (period.getEnd() != null && period.getEnd().before(start))) {
                 continue;
             }
-            // calculate duration between this and last period..
-            if (lastPeriod != null) {
-                Duration freeDuration = new Duration(lastPeriod.getStart(), period.getStart());
+            // create a dummy last period end if first period starts after the start date
+            // (i.e. there is a free time gap between the start and the first period).
+            if (lastPeriodEnd == null && period.getStart().after(start)) {
+                lastPeriodEnd = start;
+            }
+            // calculate duration between this period start and last period end..
+            if (lastPeriodEnd != null) {
+                Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
                 if (freeDuration.getDuration() >= duration) {
-                    fb.getPeriods().add(new Period(lastPeriod.getStart(), freeDuration.getDuration()));
+                    fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
                 }
             }
-            lastPeriod = period;
+            if (period.getEnd() != null) {
+                lastPeriodEnd = period.getEnd();
+            }
+            else {
+                lastPeriodEnd = new Date(period.getStart().getTime() + period.getDuration());
+            }
         }
         return fb;
     }
@@ -314,8 +335,7 @@ public class VFreeBusy extends Component {
         }
         // if start/end specified as anniversary-type (i.e. uses DATE values
         // rather than DATE-TIME), return..
-        if (start.getParameters().getParameter(Parameter.VALUE) != null
-                && Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE).getValue())) {
+        if (Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE))) {
             return null;
         }
         // recurrence dates..
@@ -337,8 +357,7 @@ public class VFreeBusy extends Component {
             if (end == null && duration == null) {
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(start.getTime());
-                if (start.getParameters().getParameter(Parameter.VALUE) != null
-                        && Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE).getValue())) {
+                if (Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE))) {
                     cal.set(Calendar.HOUR_OF_DAY, 23);
                     cal.set(Calendar.MINUTE, 59);
                 }

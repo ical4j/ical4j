@@ -39,12 +39,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
-import net.fortuna.ical4j.model.component.VFreeBusyTest;
+import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
 
 /**
  * @author Ben Fortuna

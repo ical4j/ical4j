@@ -202,7 +202,7 @@ public abstract class Property extends Content {
      */
     protected Property(final Property property) throws IOException, URISyntaxException, ParseException {
         this.name = property.getName();
-        this.parameters = new ParameterList(property.getParameters());
+        this.parameters = new ParameterList(property.getParameters(), false);
         setValue(property.getValue());
     }
 

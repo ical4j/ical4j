@@ -61,7 +61,8 @@ public class DtEnd extends Property {
     private boolean utc = false;
 
     /**
-     * Default constructor.
+     * Default constructor. The time value is initialised to the
+     * time of instantiation.
      */
     public DtEnd() {
         super(DTEND);
@@ -134,10 +135,9 @@ public class DtEnd extends Property {
 
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
-        if (valueParam != null
-                && !Value.DATE_TIME.equals(valueParam.getValue())
-                && !Value.DATE.equals(valueParam.getValue())) { throw new ValidationException(
-                "Parameter [" + Parameter.VALUE + "] is invalid"); }
+        if (valueParam != null && !Value.DATE_TIME.equals(valueParam) && !Value.DATE.equals(valueParam)) {
+            throw new ValidationException("Parameter [" + Parameter.VALUE + "] is invalid");
+        }
 
         ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
                 getParameters());
@@ -163,10 +163,7 @@ public class DtEnd extends Property {
     public final void setValue(final String aValue) throws ParseException {
 
         // value can be either a date-time or a date..
-        if (getParameters().getParameter(Parameter.VALUE) != null
-                && Value.DATE.equals(getParameters().getParameter(Parameter.VALUE)
-                        .getValue())) {
-
+        if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
             time = DateFormat.getInstance().parse(aValue);
         }
         else {
@@ -180,11 +177,9 @@ public class DtEnd extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        if (getParameters().getParameter(Parameter.VALUE) != null
-                && Value.DATE.equals(getParameters().getParameter(
-                        Parameter.VALUE).getValue())) { return DateFormat
-                .getInstance().format(getTime()); }
-
+        if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
+            return DateFormat.getInstance().format(getTime());
+        }
         // return local time..
         return DateTimeFormat.getInstance().format(getTime(), isUtc());
     }

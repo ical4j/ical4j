@@ -41,15 +41,15 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class CuType extends Parameter {
 
-    public static final String INDIVIDUAL = "INDIVIDUAL";
+    public static final CuType INDIVIDUAL = new CuType("INDIVIDUAL");
 
-    public static final String GROUP = "GROUP";
+    public static final CuType GROUP = new CuType("GROUP");
 
-    public static final String RESOURCE = "RESOURCE";
+    public static final CuType RESOURCE = new CuType("RESOURCE");
 
-    public static final String ROOM = "ROOM";
+    public static final CuType ROOM = new CuType("ROOM");
 
-    public static final String UNKNOWN = "UNKNOWN";
+    public static final CuType UNKNOWN = new CuType("UNKNOWN");
 
     private String value;
 
@@ -59,7 +59,6 @@ public class CuType extends Parameter {
      */
     public CuType(final String aValue) {
         super(CUTYPE);
-
         this.value = aValue;
     }
 

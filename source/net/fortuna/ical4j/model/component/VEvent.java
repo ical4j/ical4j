@@ -102,7 +102,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * VEvent christmas = new VEvent(cal.getTime(), "Christmas Day");
  * 
  * // initialise as an all-day event..
- * christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(new Value(Value.DATE));
+ * christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(Value.DATE);
  * 
  * // add timezone information..
  * VTimeZone tz = VTimeZone.getDefault();

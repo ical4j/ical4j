@@ -61,7 +61,8 @@ public class DtStart extends Property {
     private boolean utc = false;
 
     /**
-     * Default constructor.
+     * Default constructor. The time value is initialised to the
+     * time of instantiation.
      */
     public DtStart() {
         super(DTSTART);
@@ -153,9 +154,7 @@ public class DtStart extends Property {
 
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
-        if (valueParam != null
-                && !Value.DATE_TIME.equals(valueParam.getValue())
-                && !Value.DATE.equals(valueParam.getValue())) {
+        if (valueParam != null && !Value.DATE_TIME.equals(valueParam) && !Value.DATE.equals(valueParam)) {
             throw new ValidationException(
                 "Parameter [" + Parameter.VALUE + "] is invalid");
         }
@@ -176,9 +175,7 @@ public class DtStart extends Property {
      */
     public final void setValue(final String aValue) throws ParseException {
         // value can be either a date-time or a date..
-        if (getParameters().getParameter(Parameter.VALUE) != null
-                && Value.DATE.equals(getParameters().getParameter(Parameter.VALUE).getValue())) {
-
+        if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
             time = DateFormat.getInstance().parse(aValue);
         }
         else {
@@ -190,11 +187,9 @@ public class DtStart extends Property {
 	 * @see net.fortuna.ical4j.model.Property#getValue()
 	 */
 	public final String getValue() {
-		if (getParameters().getParameter(Parameter.VALUE) != null
-          && Value.DATE.equals(getParameters().getParameter(Parameter.VALUE).getValue())) {
+		if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
             return DateFormat.getInstance().format(getTime());
 		}
-
         // return local time..
         return DateTimeFormat.getInstance().format(getTime(), isUtc());
 	}

@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  * Created: [Apr 6, 2004]
  *
  * Copyright (c) 2004, Ben Fortuna
@@ -42,17 +42,16 @@ import net.fortuna.ical4j.model.Property;
  * Defines a VERSION iCalendar property.
  *
  * When creating a new calendar you should always add a version property with value "2.0".
- * There is actually a constant defined in the Version class for this. Note: if you use the
- * default constructor for Version it will automatically set the maxVersion = "2.0". e.g:
+ * There is actually a constant defined in the Version class for this. e.g:
  *
  * <code>    Calendar calendar = new Calendar();</code>
- * <code>    calendar.getProperties().add(new Version());</code>
+ * <code>    calendar.getProperties().add(Version.VERSION_2_0);</code>
  *
  * @author Ben Fortuna
  */
 public class Version extends Property {
 
-    public static final String VERSION_2_0 = "2.0";
+    public static final Version VERSION_2_0 = new Version(new ParameterList(true), (String) null, "2.0");
 
     private String minVersion;
 
@@ -63,7 +62,6 @@ public class Version extends Property {
      */
     public Version() {
         super(VERSION);
-        maxVersion = VERSION_2_0;
     }
 
     /**
@@ -83,10 +81,10 @@ public class Version extends Property {
      * @param aVersion2
      *            a string representation of the maximum version
      */
-    public Version(final String aVersion1, final String aVersion2) {
+    public Version(final String minVersion, final String maxVersion) {
         super(VERSION);
-        minVersion = aVersion1;
-        maxVersion = aVersion2;
+        this.minVersion = minVersion;
+        this.maxVersion = maxVersion;
     }
 
     /**
@@ -122,6 +120,10 @@ public class Version extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
+        // can't modify constant instances..
+        if (this.equals(VERSION_2_0)) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
             this.maxVersion = aValue.substring(aValue.indexOf(';'));
@@ -138,19 +140,15 @@ public class Version extends Property {
      */
     public final String getValue() {
         StringBuffer b = new StringBuffer();
-
         if (getMinVersion() != null) {
             b.append(getMinVersion());
-
             if (getMaxVersion() != null) {
                 b.append(';');
             }
         }
-
         if (getMaxVersion() != null) {
             b.append(getMaxVersion());
         }
-
         return b.toString();
     }
 
@@ -158,6 +156,10 @@ public class Version extends Property {
      * @param maxVersion The maxVersion to set.
      */
     public final void setMaxVersion(final String maxVersion) {
+        // can't modify constant instances..
+        if (this.equals(VERSION_2_0)) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
         this.maxVersion = maxVersion;
     }
 
@@ -165,6 +167,10 @@ public class Version extends Property {
      * @param minVersion The minVersion to set.
      */
     public final void setMinVersion(final String minVersion) {
+        // can't modify constant instances..
+        if (this.equals(VERSION_2_0)) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
         this.minVersion = minVersion;
     }
 }

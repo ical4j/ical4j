@@ -135,6 +135,39 @@ for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
                         <tbody>
                             <tr>
                                 <th>
+                                    Creating a new calendar
+                                </th>
+                            </tr>
+                            <tr><td><pre><code>
+Calendar calendar = new Calendar();
+calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
+calendar.getProperties().add(Version.VERSION_2_0);
+calendar.getProperties().add(CalScale.GREGORIAN);
+
+// Add events, etc..
+                            </code></pre></td></tr>
+                            <tr>
+                                <th>
+                                    Output:
+                                </th>
+                            </tr>
+                            <tr><td><pre><code>
+BEGIN:VCALENDAR
+PRODID:-//Ben Fortuna//iCal4j 1.0//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+END:VCALENDAR
+                            </code></pre></td></tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="border: 1px solid black; background: silver">
+                        <tbody>
+                            <tr>
+                                <th>
                                     Working with VTimeZones
                                 </th>
                             </tr>
@@ -187,7 +220,7 @@ cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
 VEvent christmas = new VEvent(cal.getTime(), "Christmas Day");
 
 // initialise as an all-day event..
-christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(new Value(Value.DATE));
+christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
 // add timezone information..
 VTimeZone tz = VTimeZone.getDefault();

@@ -1,28 +1,28 @@
 /*
  * $Id$ [18-Apr-2004]
  *
- * Copyright (c) 2004, Ben Fortuna
+ * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -41,15 +41,15 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class Value extends Parameter {
 
-    public static final String DATE_TIME = "DATE-TIME";
+    public static final Value DATE_TIME = new Value("DATE-TIME");
 
-    public static final String DATE = "DATE";
+    public static final Value DATE = new Value("DATE");
 
-    public static final String DURATION = "DURATION";
+    public static final Value DURATION = new Value("DURATION");
 
-    public static final String BINARY = "BINARY";
+    public static final Value BINARY = new Value("BINARY");
 
-    public static final String PERIOD = "PERIOD";
+    public static final Value PERIOD = new Value("PERIOD");
 
     private String value;
 

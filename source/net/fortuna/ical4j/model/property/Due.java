@@ -61,7 +61,8 @@ public class Due extends Property {
     private boolean utc = true;
 
     /**
-     * Default constructor.
+     * Default constructor. The time value is initialised to
+     * the time of instantiation.
      */
     public Due() {
         super(DUE);
@@ -123,8 +124,8 @@ public class Due extends Property {
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
         if (valueParam != null
-                && !Value.DATE_TIME.equals(valueParam.getValue())
-                && !Value.DATE.equals(valueParam.getValue())) {
+                && !Value.DATE_TIME.equals(valueParam)
+                && !Value.DATE.equals(valueParam)) {
             throw new ValidationException(
                 "Parameter [" + Parameter.VALUE + "] is invalid");
         }
@@ -153,9 +154,7 @@ public class Due extends Property {
     public final void setValue(final String aValue) throws ParseException {
 
         // value can be either a date-time or a date..
-        if (getParameters().getParameter(Parameter.VALUE) != null
-                && Value.DATE.equals(getParameters().getParameter(Parameter.VALUE).getValue())) {
-
+        if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
             time = DateFormat.getInstance().parse(aValue);
         }
         else {
@@ -167,11 +166,9 @@ public class Due extends Property {
 	 * @see net.fortuna.ical4j.model.Property#getValue()
 	 */
 	public final String getValue() {
-		if (getParameters().getParameter(Parameter.VALUE) != null
-          && Value.DATE.equals(getParameters().getParameter(Parameter.VALUE).getValue())) {
+		if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
             return DateFormat.getInstance().format(getTime());
 		}
-
         return DateTimeFormat.getInstance().format(getTime(), isUtc());
 	}
 

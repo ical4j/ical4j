@@ -57,3 +57,13 @@ properties.add(start);
 properties.add(summary);
 
 net.fortuna.ical4j.model.component.VEvent christmas = new net.fortuna.ical4j.model.component.VEvent(properties);
+
+// create a period..
+net.fortuna.ical4j.model.property.RDate recDate = null; 
+net.fortuna.ical4j.model.Period period = null; 
+net.fortuna.ical4j.model.PeriodList periods = new net.fortuna.ical4j.model.PeriodList(); 
+ 
+period = new net.fortuna.ical4j.model.Period("20050303T090301Z/20050604T090301Z");
+periods.add(period); 
+recDate = new net.fortuna.ical4j.model.property.RDate(new net.fortuna.ical4j.model.ParameterList(),periods);
+recDate

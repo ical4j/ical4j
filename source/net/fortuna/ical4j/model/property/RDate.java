@@ -36,18 +36,14 @@
 package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
-import java.util.Date;
 
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.DateFormat;
-import net.fortuna.ical4j.util.DateTimeFormat;
 import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
@@ -66,7 +62,7 @@ public class RDate extends Property {
      */
     public RDate() {
         super(RDATE);
-        dates = new DateList(new Value(Value.DATE_TIME));
+        dates = new DateList(Value.DATE_TIME);
     }
     
     /**
@@ -148,8 +144,9 @@ public class RDate extends Property {
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
         if (valueParam != null
-                && !Value.DATE_TIME.equals(valueParam.getValue())
-                && !Value.DATE.equals(valueParam.getValue())) { throw new ValidationException(
+                && !Value.DATE_TIME.equals(valueParam)
+                && !Value.DATE.equals(valueParam)) {
+            throw new ValidationException(
                 "Parameter [" + Parameter.VALUE + "] is invalid"); }
 
         ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
@@ -189,7 +186,7 @@ public class RDate extends Property {
             dates = new DateList(aValue, valueParam);
         }
         else {
-            dates = new DateList(aValue, new Value(Value.DATE_TIME));
+            dates = new DateList(aValue, Value.DATE_TIME);
         }
     }    
 

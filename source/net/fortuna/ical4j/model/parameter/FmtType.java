@@ -48,7 +48,6 @@ public class FmtType extends Parameter {
      */
     public FmtType(final String aValue) {
         super(FMTTYPE);
-
         this.value = aValue;
     }
 

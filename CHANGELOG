@@ -8,6 +8,15 @@
  than strings. This is done for efficiency where class instances are immutable
  once created. Note: this may cause incompatibilities with existing code!
  
+ - fixed bug in parsing periods
+ 
+ - fixed bug in TimeZoneUtils for non-DST timezones
+ 
+ - added support for removal of extraneous newlines between components in the
+ default parser implementation (KOrganizer generates such files)
+ 
+ - fixed bug in parsing free time where durations are specified
+ 
  
 0.9.11:
 

@@ -46,7 +46,7 @@ import net.fortuna.ical4j.model.ValidationException;
  */
 public class CalScale extends Property {
 
-    public static final String GREGORIAN = "GREGORIAN";
+    public static final CalScale GREGORIAN = new CalScale(new ParameterList(true), "GREGORIAN");
 
     private String value;
 
@@ -82,6 +82,10 @@ public class CalScale extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
+        // can't modify constant instances..
+        if (this.equals(GREGORIAN)) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
         this.value = aValue;
     }
 
@@ -98,7 +102,7 @@ public class CalScale extends Property {
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
-        if (!GREGORIAN.equals(value)) {
+        if (!GREGORIAN.getValue().equals(value)) {
 			throw new ValidationException("Invalid value [" + value + "]");
 		}
 	}

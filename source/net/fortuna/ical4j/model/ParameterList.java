@@ -36,13 +36,16 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Defines a list of iCalendar parameters.
+ * Defines a list of iCalendar parameters. A parameter list may be specified as
+ * unmodifiable at instantiation - useful for constant properties that you don't
+ * want modified.
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public class ParameterList implements Serializable {
     
@@ -51,10 +54,22 @@ public class ParameterList implements Serializable {
     private List parameters;
 
     /**
-     * Constructor.
+     * Default constructor. Creates a modifiable parameter list.
      */
     public ParameterList() {
-        parameters = new ArrayList();
+        this(false);
+    }
+    
+    /**
+     * Constructor.
+     */
+    public ParameterList(final boolean unmodifiable) {
+        if (unmodifiable) {
+            parameters = Collections.unmodifiableList(new ArrayList());
+        }
+        else {
+            parameters = new ArrayList();
+        }
     }
     
     /**
@@ -64,11 +79,14 @@ public class ParameterList implements Serializable {
      * @param list a parameter list to copy parameters from
      * @throws URISyntaxException
      */
-    public ParameterList(final ParameterList list) throws URISyntaxException {
+    public ParameterList(final ParameterList list, final boolean unmodifiable) throws URISyntaxException {
         parameters = new ArrayList();
         for (Iterator i = list.iterator(); i.hasNext();) {
             Parameter parameter = (Parameter) i.next();
             parameters.add(ParameterFactory.getInstance().createParameter(parameter.getName(), parameter.getValue()));
+        }
+        if (unmodifiable) {
+            parameters = Collections.unmodifiableList(parameters);
         }
     }
 

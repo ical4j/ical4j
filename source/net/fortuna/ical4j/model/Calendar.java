@@ -41,8 +41,19 @@ import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
  * Defines an iCalendar calendar.
+ * 
+ * Example 1 - Creating a new calendar:
+ * 
+ * <pre><code>
+ * Calendar calendar = new Calendar();
+ * calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
+ * calendar.getProperties().add(Version.VERSION_2_0);
+ * calendar.getProperties().add(CalScale.GREGORIAN);
  *
- * @author benf
+ * // Add events, etc..
+ * </code></pre>
+ *
+ * @author Ben Fortuna
  */
 public class Calendar implements Serializable {
     

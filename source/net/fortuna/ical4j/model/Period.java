@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -62,18 +62,14 @@ public class Period implements Serializable, Comparable {
      * not a valid representation
      */
     public Period(final String aValue) throws ParseException {
-
-        start = DateTimeFormat.getInstance().parse(aValue.substring(0,
-                aValue.indexOf('/') - 1));
+        start = DateTimeFormat.getInstance().parse(aValue.substring(0, aValue.indexOf('/')));
 
         // period may end in either a date-time or a duration..
         try {
-
             end = DateTimeFormat.getInstance()
-                    .parse(aValue.substring(aValue.indexOf('/')));
+                    .parse(aValue.substring(aValue.indexOf('/') + 1));
         }
         catch (ParseException pe) {
-
             duration = DurationFormat.getInstance().parse(aValue);
         }
     }

@@ -8,21 +8,21 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -37,32 +37,34 @@ import net.fortuna.ical4j.model.Parameter;
 
 /**
  * Defines a Relationship Type parameter.
+ * 
  * @author benfortuna
  */
 public class RelType extends Parameter {
 
-    public static final String PARENT = "PARENT";
+    public static final RelType PARENT = new RelType("PARENT");
 
-    public static final String CHILD = "CHILD";
+    public static final RelType CHILD = new RelType("CHILD");
 
-    public static final String SIBLING = "SIBLING";
+    public static final RelType SIBLING = new RelType("SIBLING");
 
-	private String value;
+    private String value;
 
     /**
-     * @param aValue a string representation of a relationship
-     * type
+     * @param aValue
+     *            a string representation of a relationship type
      */
     public RelType(final String aValue) {
         super(RELTYPE);
-
         this.value = aValue;
     }
 
-    /* (non-Javadoc)
-	 * @see net.fortuna.ical4j.model.Parameter#getValue()
-	 */
-	public String getValue() {
-		return value;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.fortuna.ical4j.model.Parameter#getValue()
+     */
+    public String getValue() {
+        return value;
+    }
 }

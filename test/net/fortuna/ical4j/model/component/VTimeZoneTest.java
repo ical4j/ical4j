@@ -5,6 +5,8 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.util.TimeZone;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -24,6 +26,19 @@ public class VTimeZoneTest extends TestCase {
      */
     public final void testGetDefault() {
         VTimeZone timezone = VTimeZone.getDefault();
+
+        assertNotNull(timezone);
+
+        log.info(timezone);
+    }
+
+    /**
+     * Test creation of specific timezones.
+     */
+    public final void testGetVTimeZone() {
+        TimeZone tz = TimeZone.getTimeZone("Asia/Singapore");
+        
+        VTimeZone timezone = VTimeZone.getVTimeZone(tz);
 
         assertNotNull(timezone);
 

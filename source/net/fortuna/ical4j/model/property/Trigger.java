@@ -200,12 +200,12 @@ public class Trigger extends Property {
      */
     public final void setValue(final String aValue) throws ParseException {
         try {
-            duration = DurationFormat.getInstance().parse(aValue);
-            dateTime = null;
-        }
-        catch (Exception e) {
             dateTime = DateTimeFormat.getInstance().parse(aValue);
             duration = 0;
+        }
+        catch (Exception e) {
+            duration = DurationFormat.getInstance().parse(aValue);
+            dateTime = null;
         }
     }
 

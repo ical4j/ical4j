@@ -41,19 +41,19 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class PartStat extends Parameter {
 
-    public static final String NEEDS_ACTION = "NEEDS-ACTION";
+    public static final PartStat NEEDS_ACTION = new PartStat("NEEDS-ACTION");
 
-    public static final String ACCEPTED = "ACCEPTED";
+    public static final PartStat ACCEPTED = new PartStat("ACCEPTED");
 
-    public static final String DECLINED = "DECLINED";
+    public static final PartStat DECLINED = new PartStat("DECLINED");
 
-    public static final String TENTATIVE = "TENTATIVE";
+    public static final PartStat TENTATIVE = new PartStat("TENTATIVE");
 
-    public static final String DELEGATED = "DELEGATED";
+    public static final PartStat DELEGATED = new PartStat("DELEGATED");
 
-    public static final String COMPLETED = "COMPLETED";
+    public static final PartStat COMPLETED = new PartStat("COMPLETED");
 
-    private static final String IN_PROCESS = "IN-PROCESS";
+    private static final PartStat IN_PROCESS = new PartStat("IN-PROCESS");
 
     private String value;
 
@@ -63,7 +63,6 @@ public class PartStat extends Parameter {
      */
     public PartStat(final String aValue) {
         super(PARTSTAT);
-
         this.value = aValue;
     }
 

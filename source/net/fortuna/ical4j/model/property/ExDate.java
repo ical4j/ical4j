@@ -59,7 +59,7 @@ public class ExDate extends Property {
      */
     public ExDate() {
         super(EXDATE);
-        dates = new DateList(new Value(Value.DATE_TIME));
+        dates = new DateList(Value.DATE_TIME);
     }
     
     /**
@@ -120,9 +120,11 @@ public class ExDate extends Property {
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
         if (valueParam != null
-                && !Value.DATE_TIME.equals(valueParam.getValue())
-                && !Value.DATE.equals(valueParam.getValue())) { throw new ValidationException(
-                "Parameter [" + Parameter.VALUE + "] is invalid"); }
+                && !Value.DATE_TIME.equals(valueParam)
+                && !Value.DATE.equals(valueParam)) {
+            throw new ValidationException(
+                "Parameter [" + Parameter.VALUE + "] is invalid");
+        }
 
         ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
                 getParameters());

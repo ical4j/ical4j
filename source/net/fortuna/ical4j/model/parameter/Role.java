@@ -37,34 +37,36 @@ import net.fortuna.ical4j.model.Parameter;
 
 /**
  * Defines a Participation Role parameter.
+ * 
  * @author benfortuna
  */
 public class Role extends Parameter {
 
-    public static final String CHAIR = "CHAIR";
+    public static final Role CHAIR = new Role("CHAIR");
 
-    public static final String REQ_PARTICIPANT = "REQ-PARTICIPANT";
+    public static final Role REQ_PARTICIPANT = new Role("REQ-PARTICIPANT");
 
-    public static final String OPT_PARTICIPANT = "OPT-PARTICIPANT";
+    public static final Role OPT_PARTICIPANT = new Role("OPT-PARTICIPANT");
 
-    public static final String NON_PARTICIPANT = "NON-PARTICIPANT";
+    public static final Role NON_PARTICIPANT = new Role("NON-PARTICIPANT");
 
-	private String value;
+    private String value;
 
     /**
-     * @param aValue a string representation of a participation
-     * role
+     * @param aValue
+     *            a string representation of a participation role
      */
     public Role(final String aValue) {
         super(ROLE);
-
         this.value = aValue;
     }
 
-    /* (non-Javadoc)
-	 * @see net.fortuna.ical4j.model.Parameter#getValue()
-	 */
-	public String getValue() {
-		return value;
-	}
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.fortuna.ical4j.model.Parameter#getValue()
+     */
+    public String getValue() {
+        return value;
+    }
 }

@@ -55,6 +55,25 @@
 
  Its a shame everyone can't just agree to one
  standard as it would make life much simpler. :)
+ 
+
+============================
+ Pre-Java 1.4 Compatibility
+============================
+
+ Choosing Java 1.4 as the minimum required JVM was initially slightly arbitrary, and
+ probably based on the fact that most people were using 1.4 as a minimum.
+
+ Since then, however, there are two features of 1.4 I can think of that iCal4j requires:
+ 	- the URI class;
+ 	- and the java.util.regex.* package (used in StringUtils).
+
+ If you don't think you will be needing these features in your own code, you may want to
+ try compiling iCal4j with JDK 1.4 using the "-target 1.3" option but without specifying
+ an alternative "-bootclasspath" option. From what I can tell, this should generate 1.3
+ bytecode that you can run on a 1.3 JVM. Note however, that if your code does cause
+ iCal4j to load the URI or java.util.regex.* references then it will fail on a 1.3 JVM
+ (as these APIs aren't available).
 
  
 =================

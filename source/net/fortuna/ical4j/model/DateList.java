@@ -80,7 +80,7 @@ public class DateList extends ArrayList implements Serializable {
 
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {
-            if (type != null && Value.DATE.equals(type.getValue())) {
+            if (type != null && Value.DATE.equals(type)) {
                 add(DateFormat.getInstance().parse(t.nextToken()));
             }
             else {
@@ -95,7 +95,7 @@ public class DateList extends ArrayList implements Serializable {
     public final String toString() {
         StringBuffer b = new StringBuffer();
         for (Iterator i = iterator(); i.hasNext();) {
-            if (type != null && Value.DATE.equals(type.getValue())) {
+            if (type != null && Value.DATE.equals(type)) {
                 b.append(DateFormat.getInstance().format((Date) i.next()));
             }
             else {
