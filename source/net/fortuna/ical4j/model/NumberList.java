@@ -44,6 +44,8 @@ import java.util.StringTokenizer;
  * @author benfortuna
  */
 public class NumberList implements Serializable {
+    
+    private static final long serialVersionUID = -1667481795613729889L;
 
     private List numbers;
 

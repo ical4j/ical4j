@@ -45,10 +45,12 @@ import net.fortuna.ical4j.util.DateTimeFormat;
 
 /**
  * Defines a recurrence.
- *
+ * 
  * @author benfortuna
  */
 public class Recur implements Serializable {
+    
+    private static final long serialVersionUID = -7333226591784095142L;
 
     private static final String FREQ = "FREQ";
 
@@ -93,21 +95,6 @@ public class Recur implements Serializable {
 
     public static final String YEARLY = "YEARLY";
 
-    // weekdays..
-    public static final String SU = "SU";
-
-    public static final String MO = "MO";
-
-    public static final String TU = "TU";
-
-    public static final String WE = "WE";
-
-    public static final String TH = "TH";
-
-    public static final String FR = "FR";
-
-    public static final String SA = "SA";
-
     private String frequency;
 
     private Date until;
@@ -122,7 +109,7 @@ public class Recur implements Serializable {
 
     private NumberList hourList;
 
-    private DayList dayList;
+    private WeekDayList dayList;
 
     private NumberList monthDayList;
 
@@ -140,11 +127,12 @@ public class Recur implements Serializable {
 
     /**
      * Constructor.
-     *
+     * 
      * @param aValue
      *            a string representation of a recurrence.
-     * @throws ParseException thrown when the specified string
-     * contains an invalid representation of an UNTIL date value
+     * @throws ParseException
+     *             thrown when the specified string contains an invalid
+     *             representation of an UNTIL date value
      */
     public Recur(final String aValue) throws ParseException {
 
@@ -184,7 +172,7 @@ public class Recur implements Serializable {
                 hourList = new NumberList(t.nextToken());
             }
             else if (BYDAY.equals(token)) {
-                dayList = new DayList(t.nextToken());
+                dayList = new WeekDayList(t.nextToken());
             }
             else if (BYMONTHDAY.equals(token)) {
                 monthDayList = new NumberList(t.nextToken());
@@ -212,19 +200,19 @@ public class Recur implements Serializable {
     }
 
     public Recur(final String frequency, final Date until) {
-		this.frequency = frequency;
-		this.until = until;
-	}
+        this.frequency = frequency;
+        this.until = until;
+    }
 
     public Recur(final String frequency, final int count) {
-		this.frequency = frequency;
-		this.count = count;
-	}
+        this.frequency = frequency;
+        this.count = count;
+    }
 
     /**
      * @return Returns the dayList.
      */
-    public final DayList getDayList() {
+    public final WeekDayList getDayList() {
         return dayList;
     }
 

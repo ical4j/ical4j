@@ -45,6 +45,8 @@ import java.util.StringTokenizer;
  * @author benfortuna
  */
 public class PeriodList implements Serializable {
+    
+    private static final long serialVersionUID = -6319585959747194724L;
 
     private List periods;
 

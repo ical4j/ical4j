@@ -43,6 +43,8 @@ import java.util.Iterator;
  * @author benf
  */
 public abstract class Component implements Serializable {
+    
+    private static final long serialVersionUID = 3281723608785653401L;
 
     public static final String BEGIN = "BEGIN";
 

@@ -44,6 +44,8 @@ import java.util.List;
  * @author benf
  */
 public class ParameterList implements Serializable {
+    
+    private static final long serialVersionUID = -1913059830016450169L;
 
     private List parameters;
 

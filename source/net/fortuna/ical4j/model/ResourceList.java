@@ -44,6 +44,8 @@ import java.util.StringTokenizer;
  * @author benfortuna
  */
 public class ResourceList implements Serializable {
+    
+    private static final long serialVersionUID = 8119742218197533770L;
 
     private List resources;
 

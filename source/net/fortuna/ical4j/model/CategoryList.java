@@ -44,6 +44,8 @@ import java.util.StringTokenizer;
  * @author benfortuna
  */
 public class CategoryList implements Serializable {
+    
+    private static final long serialVersionUID = 4387692697196974638L;
 
     private List categories;
 

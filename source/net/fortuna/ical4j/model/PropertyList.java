@@ -44,6 +44,8 @@ import java.util.List;
  * @author benf
  */
 public class PropertyList implements Serializable {
+    
+    private static final long serialVersionUID = -8875923766224921031L;
 
     private List properties;
 

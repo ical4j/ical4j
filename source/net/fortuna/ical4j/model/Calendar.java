@@ -45,6 +45,8 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * @author benf
  */
 public class Calendar implements Serializable {
+    
+    private static final long serialVersionUID = -1654118204678581940L;
 
     public static final String BEGIN = "BEGIN";
 

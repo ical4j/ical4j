@@ -43,6 +43,8 @@ import java.io.Serializable;
  * @author Ben Fortuna
  */
 public abstract class Content implements Serializable {
+    
+    private static final long serialVersionUID = -7171009178537464842L;
 
     /**
      * Indicates whether the content may contain

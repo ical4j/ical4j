@@ -44,6 +44,8 @@ import java.util.List;
  * @author benf
  */
 public class ComponentList implements Serializable {
+    
+    private static final long serialVersionUID = 7308557606558767449L;
 
     private List components;
 

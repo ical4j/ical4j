@@ -49,7 +49,9 @@ import net.fortuna.ical4j.util.StringUtils;
  * @author benfortuna
  */
 public class AddressList implements Serializable {
-
+    
+    private static final long serialVersionUID = 81383256078213569L;
+    
     private List addresses;
 
     /**

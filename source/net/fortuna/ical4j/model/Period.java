@@ -46,6 +46,8 @@ import net.fortuna.ical4j.util.DurationFormat;
  * @author benf
  */
 public class Period implements Serializable {
+    
+    private static final long serialVersionUID = 7321090422911676490L;
 
     private Date start;
 

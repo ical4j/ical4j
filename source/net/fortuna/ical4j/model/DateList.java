@@ -50,8 +50,11 @@ import net.fortuna.ical4j.util.DateTimeFormat;
  * @author benfortuna
  */
 public class DateList implements Serializable {
+    
+    private static final long serialVersionUID = 5925108767897130313L;
 
     private Value type;
+    
     private List dates;
 
     /**
