@@ -25,7 +25,7 @@
   -->
 <project name="iCal4j" basedir="." default="package">
 
-	<property name="project.version" value="0.9.9"/>
+	<property name="project.version" value="0.9.10"/>
 	<property name="source.dir" location="source"/>
 	<property name="test.source.dir" location="test"/>
 	<property name="output.dir" location="bin"/>
