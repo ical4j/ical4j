@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 import net.fortuna.ical4j.model.property.XProperty;
@@ -43,7 +44,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  *
  * @author benf
  */
-public class Calendar {
+public class Calendar implements Serializable {
 
     public static final String BEGIN = "BEGIN";
 
@@ -54,7 +55,7 @@ public class Calendar {
     private PropertyList properties;
 
     private ComponentList components;
-    
+
     /**
      * Default constructor.
      */

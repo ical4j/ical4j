@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,7 +44,7 @@ import java.util.StringTokenizer;
  * Defines a list of iCalendar periods.
  * @author benfortuna
  */
-public class PeriodList {
+public class PeriodList implements Serializable {
 
     private List periods;
 

@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +43,7 @@ import java.util.StringTokenizer;
  * Defines a list of numbers.
  * @author benfortuna
  */
-public class NumberList {
+public class NumberList implements Serializable {
 
     private List numbers;
 

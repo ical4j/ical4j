@@ -35,13 +35,14 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 
 /**
  * Base class for calendar content in the form of
  * properties and parameters.
  * @author Ben Fortuna
  */
-public abstract class Content {
+public abstract class Content implements Serializable {
 
     /**
      * Indicates whether the content may contain
@@ -49,7 +50,7 @@ public abstract class Content {
      * should be escaped.
      */
     private boolean escapable = false;
-    
+
     /**
      * Indicates whether the content may contain
      * characters in the string representation that
@@ -60,7 +61,7 @@ public abstract class Content {
     protected final boolean isEscapable() {
         return escapable;
     }
-    
+
     /**
      * Sets whether the content may contain
      * characters in the string representation that

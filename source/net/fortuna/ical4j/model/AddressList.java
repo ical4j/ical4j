@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ import net.fortuna.ical4j.util.StringUtils;
  * Defines a list of iCalendar addresses.
  * @author benfortuna
  */
-public class AddressList {
+public class AddressList implements Serializable {
 
     private List addresses;
 

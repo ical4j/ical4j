@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,7 +49,7 @@ import net.fortuna.ical4j.util.DateTimeFormat;
  * Defines a list of iCalendar dates.
  * @author benfortuna
  */
-public class DateList {
+public class DateList implements Serializable {
 
     private Value type;
     private List dates;

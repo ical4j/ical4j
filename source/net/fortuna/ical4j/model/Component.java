@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 
 /**
@@ -41,7 +42,7 @@ import java.util.Iterator;
  *
  * @author benf
  */
-public abstract class Component {
+public abstract class Component implements Serializable {
 
     public static final String BEGIN = "BEGIN";
 

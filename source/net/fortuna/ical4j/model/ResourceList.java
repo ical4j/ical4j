@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +43,7 @@ import java.util.StringTokenizer;
  * Defines a list of iCalendar resouces.
  * @author benfortuna
  */
-public class ResourceList {
+public class ResourceList implements Serializable {
 
     private List resources;
 

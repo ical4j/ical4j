@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,7 +48,7 @@ import net.fortuna.ical4j.util.DateTimeFormat;
  *
  * @author benfortuna
  */
-public class Recur {
+public class Recur implements Serializable {
 
     private static final String FREQ = "FREQ";
 

@@ -2,6 +2,11 @@
  iCal4j - Changes
 ==================
 
+0.9.10:
+
+ - Model classes are now Serializable
+ 
+ 
 0.9.9:
 
  - Separated the calendar parser from the builder to allow different

@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -44,7 +45,7 @@ import net.fortuna.ical4j.util.DurationFormat;
  *
  * @author benf
  */
-public class Period {
+public class Period implements Serializable {
 
     private Date start;
 
