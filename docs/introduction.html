@@ -2,119 +2,119 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>iCal4j - Introduction</title>
-	<link rel="stylesheet" href="css/default.css" type="text/css" />
-	<link rel="alternate" href="http://sourceforge.net/export/rss2_projnews.php?group_id=107024&rss_fulltext=1" type="application/rss+xml" title="iCal4j - News"/>
-	<meta name="author" content="Ben Fortuna"/>
-	<meta name="description" content="A Java library for reading and writing iCalendar data streams"/>
-	<meta name="keywords" content="iCalendar, iCal, Parser, Java, Library, API"/>
+    <title>iCal4j - Introduction</title>
+    <link rel="stylesheet" href="css/default.css" type="text/css" />
+    <link rel="alternate" href="http://sourceforge.net/export/rss2_projnews.php?group_id=107024&rss_fulltext=1" type="application/rss+xml" title="iCal4j - News"/>
+    <meta name="author" content="Ben Fortuna"/>
+    <meta name="description" content="A Java library for reading and writing iCalendar data streams"/>
+    <meta name="keywords" content="iCalendar, iCal, Parser, Java, Library, API"/>
 </head>
 <body>
 
-	<table>
-		<thead>
-			<tr>
-				<td colspan="13" class="title">iCal4<span style="background:red">j</span></td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><a href="index.html">Home</a></td>
-				<td>|</td>
-				<td><a href="introduction.html">Introduction</a></td>
-				<td>|</td>
-				<td><a href="api/index.html">Documentation</a></td>
-				<td>|</td>
-				<td><a href="http://sourceforge.net/news/?group_id=107024">News</a></td>
-				<td>|</td>
-				<td><a href="http://sourceforge.net/forum/?group_id=107024">Support</a></td>
-				<td>|</td>
-				<td><a href="http://sourceforge.net/project/showfiles.php?group_id=107024">Download</a></td>
-				<td>|</td>
-				<td style="width:100%"><a href="license.html">License</a></td>
-			</tr>
-		</tbody>
-	</table>
+    <table>
+        <thead>
+            <tr>
+                <td colspan="13" class="title">iCal4<span style="background:red">j</span></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><a href="index.html">Home</a></td>
+                <td>|</td>
+                <td><a href="introduction.html">Introduction</a></td>
+                <td>|</td>
+                <td><a href="api/index.html">Documentation</a></td>
+                <td>|</td>
+                <td><a href="http://sourceforge.net/news/?group_id=107024">News</a></td>
+                <td>|</td>
+                <td><a href="http://sourceforge.net/forum/?group_id=107024">Support</a></td>
+                <td>|</td>
+                <td><a href="http://sourceforge.net/project/showfiles.php?group_id=107024">Download</a></td>
+                <td>|</td>
+                <td style="width:100%"><a href="license.html">License</a></td>
+            </tr>
+        </tbody>
+    </table>
 
-	<table id="intro">
-		<thead>
-			<tr>
-				<td>
-					Introduction
-					<a href="#intro">&raquo;</a>
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>
-					iCal4j may be used for modifying existing iCalendar data or creating new iCalendar
-					data from scratch. Here you will find a few examples indicating the recommended usage
-					of this library.
-				</td>
-			</tr>
-		</tbody>
-	</table>
+    <table id="intro">
+        <thead>
+            <tr>
+                <td>
+                    Introduction
+                    <a href="#intro">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    iCal4j may be used for modifying existing iCalendar data or creating new iCalendar
+                    data from scratch. Here you will find a few examples indicating the recommended usage
+                    of this library.
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-	<table id="usage">
-		<thead>
-			<tr>
-				<td>
-					Usage
-					<a href="#usage">&raquo;</a>
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>
-					Simply add the jar file (along with
-					the Commons Logging jar file) to your classpath.
-				</td>
-			</tr>
-		</tbody>
-	</table>
+    <table id="usage">
+        <thead>
+            <tr>
+                <td>
+                    Usage
+                    <a href="#usage">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Simply add the jar file (along with
+                    the Commons Logging jar file) to your classpath.
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-	<table id="examples">
-		<thead>
-			<tr>
-				<td>
-					Examples
-					<a href="#examples">&raquo;</a>
-				</td>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td>
-					<table style="border: 1px solid black; background: silver">
-						<tbody>
-							<tr>
-								<th>
-									Parsing an iCalendar file
-								</th>
-							</tr>
-							<tr><td><pre><code>
+    <table id="examples">
+        <thead>
+            <tr>
+                <td>
+                    Examples
+                    <a href="#examples">&raquo;</a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <table style="border: 1px solid black; background: silver">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Parsing an iCalendar file
+                                </th>
+                            </tr>
+                            <tr><td><pre><code>
 CalendarBuilder builder = new CalendarBuilder();
 
 FileInputStream fin = new FileInputStream("mycalendar.ics");
 
 Calendar calendar = builder.build(fin);
-							</code></pre></td></tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<table style="border: 1px solid black; background: silver">
-						<tbody>
-							<tr>
-								<th>
-									Iterating over a Calendar
-								</th>
-							</tr>
-							<tr><td><pre><code>
+                            </code></pre></td></tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="border: 1px solid black; background: silver">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Iterating over a Calendar
+                                </th>
+                            </tr>
+                            <tr><td><pre><code>
 for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
 
     Component component = (Component) i.next();
@@ -128,62 +128,62 @@ for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
         System.out.println("Property [" + property.getName() + ", " + property.getValue() + "]");
     }
 }
-							</code></pre></td></tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<table style="border: 1px solid black; background: silver">
-						<tbody>
-							<tr>
-								<th>
-									Working with VTimeZones
-								</th>
-							</tr>
-							<tr>
-								<td>
-									iCal4j now supports pre-defined VTimeZones by attempting to load
-									a corresponding iCalendar file for the required VTimeZone. You
-									can enable this feature by obtaining or creating a set of VTimeZone
-									iCalendar files for your required VTimeZones. A set of VTimeZone
-									definitions is included in the
-									<a href="http://sourceforge.net/projects/freeassociation/">libical</a> project.
-									Simply add &lt;LIBICAL_HOME&gt;/zoneinfo to your classpath and iCal4j will
-									automatically load the VTimeZones as required.
-									<p/>
-									If no pre-defined VTimeZones are found in the classpath iCal4j will
-									attempt to construct a VTimeZone from the specified Java TimeZone.
-									Otherwise you are still able to construct a complete VTimeZone
-									manually.
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<pre><code>
+                            </code></pre></td></tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="border: 1px solid black; background: silver">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Working with VTimeZones
+                                </th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    iCal4j now supports pre-defined VTimeZones by attempting to load
+                                    a corresponding iCalendar file for the required VTimeZone. You
+                                    can enable this feature by obtaining or creating a set of VTimeZone
+                                    iCalendar files for your required VTimeZones. A set of VTimeZone
+                                    definitions is included in the
+                                    <a href="http://sourceforge.net/projects/freeassociation/">libical</a> project.
+                                    Simply add &lt;LIBICAL_HOME&gt;/zoneinfo to your classpath and iCal4j will
+                                    automatically load the VTimeZones as required.
+                                    <p/>
+                                    If no pre-defined VTimeZones are found in the classpath iCal4j will
+                                    attempt to construct a VTimeZone from the specified Java TimeZone.
+                                    Otherwise you are still able to construct a complete VTimeZone
+                                    manually.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <pre><code>
 // obtain the VTimeZone corresponding to the default Java TimeZone
 VTimeZone tz = VTimeZone.getDefault();
 
 // obtain a VTimeZone corresponding to the specified Java TimeZone
 VTimeZone tz = VTimeZone.getVTimeZone(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
-									</code></pre>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<table style="border: 1px solid black; background: silver">
-						<tbody>
-							<tr>
-								<th>
-									Creating an event
-								</th>
-							</tr>
-							<tr><td><pre><code>
+                                    </code></pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="border: 1px solid black; background: silver">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Creating an event
+                                </th>
+                            </tr>
+                            <tr><td><pre><code>
 // create timezone property..
 VTimeZone tz = VTimeZone.getDefault();
 
@@ -207,54 +207,54 @@ Summary summary = new Summary("Christmas Day");
 VEvent christmas = new VEvent();
 christmas.getProperties().add(start);
 christmas.getProperties().add(summary);
-							</code></pre></td></tr>
-							<tr>
-								<th>
-									Output:
-								</th>
-							</tr>
-							<tr><td><pre><code>
+                            </code></pre></td></tr>
+                            <tr>
+                                <th>
+                                    Output:
+                                </th>
+                            </tr>
+                            <tr><td><pre><code>
 BEGIN:VEVENT
 DTSTART;TZID=Australia/Sydney;VALUE=DATE:20041225
 SUMMARY:Christmas Day
 END:VEVENT
-    						</code></pre></td></tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<table style="border: 1px solid black; background: silver">
-						<tbody>
-							<tr>
-								<th>
-									Saving an iCalendar file
-								</th>
-							</tr>
-							<tr><td><pre><code>
+                            </code></pre></td></tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table style="border: 1px solid black; background: silver">
+                        <tbody>
+                            <tr>
+                                <th>
+                                    Saving an iCalendar file
+                                </th>
+                            </tr>
+                            <tr><td><pre><code>
 FileOutputStream fout = new FileOutputStream("mycalendar.ics");
 
 CalendarOutputter outputter = new CalendarOutputter();
 
 outputter.output(calendar, fout);
-							</code></pre></td></tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+                            </code></pre></td></tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-	<table style="width:80%;text-align:center">
-		<tbody>
-			<tr>
-				<td colspan="3" style="font-size:xx-small;text-align:center">
-					Copyright 2004 &#169;,
-					<a href="mailto:fortuna@users.sourceforge.net">Ben Fortun<span style="background:red">a</span></a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+    <table style="width:80%;text-align:center">
+        <tbody>
+            <tr>
+                <td colspan="3" style="font-size:xx-small;text-align:center">
+                    Copyright 2005 &#169;,
+                    <a href="mailto:fortuna@users.sourceforge.net">Ben Fortun<span style="background:red">a</span></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

@@ -3,8 +3,16 @@ To-do List:
 
  - Add "relaxed" option for parsing dates (ie. attempt both date and date-time regardless of value type)
  
+ - add better constructors, etc. to Recur
  
- RFC 2446:
+ - make DateFormat, etc. thread-safe
+ 
+ - include maven support
+ 
+ 
+ ===========
+  RFC 2446:
+ ===========
  
  	* net.fortuna.ical4j.transform
  	
