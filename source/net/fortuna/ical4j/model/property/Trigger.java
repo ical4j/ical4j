@@ -130,7 +130,29 @@ public class Trigger extends Property {
      */
     public final void validate() throws ValidationException {
 
-        if (duration > 0) {
+        if (getDateTime() != null) {
+            /*
+             * ; the following is REQUIRED, ; but MUST NOT occur more than once
+             *
+             * (";" "VALUE" "=" "DATE-TIME") /
+             */
+            ParameterValidator.getInstance().validateOne(Parameter.VALUE,
+                    getParameters());
+
+            Parameter valueParam = getParameters()
+                    .getParameter(Parameter.VALUE);
+
+            if (valueParam == null
+                    || !Value.DATE_TIME.equals(valueParam.getValue())) { throw new ValidationException(
+                            "Parameter [" + Parameter.VALUE + "=" + valueParam.getValue() + "] is invalid"); }
+
+            /*
+             * ; the following is optional, ; and MAY occur more than once
+             *
+             * (";" xparam) ) ":" date-time
+             */
+        }
+        else { //if (duration > 0) {
 
             /*
              * ; the following are optional, ; but MUST NOT occur more than once
@@ -145,7 +167,7 @@ public class Trigger extends Property {
 
             if (valueParam != null
                     && !Value.DURATION.equals(valueParam.getValue())) { throw new ValidationException(
-                    "Parameter [" + Parameter.VALUE + "] is invalid"); }
+                    "Parameter [" + Parameter.VALUE + "=" + valueParam.getValue() + "] is invalid"); }
 
             ParameterValidator.getInstance().validateOneOrLess(
                     Parameter.RELATED, getParameters());
@@ -156,29 +178,6 @@ public class Trigger extends Property {
              * (";" xparam) ) ":" dur-value
              */
 
-        }
-        else {
-
-            /*
-             * ; the following is REQUIRED, ; but MUST NOT occur more than once
-             *
-             * (";" "VALUE" "=" "DATE-TIME") /
-             */
-            ParameterValidator.getInstance().validateOne(Parameter.VALUE,
-                    getParameters());
-
-            Parameter valueParam = getParameters()
-                    .getParameter(Parameter.VALUE);
-
-            if (valueParam == null
-                    || !Value.DATE_TIME.equals(valueParam.getValue())) { throw new ValidationException(
-                    "Parameter [" + Parameter.VALUE + "] is invalid"); }
-
-            /*
-             * ; the following is optional, ; and MAY occur more than once
-             *
-             * (";" xparam) ) ":" date-time
-             */
         }
     }
 
@@ -202,9 +201,11 @@ public class Trigger extends Property {
     public final void setValue(final String aValue) throws ParseException {
         try {
             duration = DurationFormat.getInstance().parse(aValue);
+            dateTime = null;
         }
         catch (Exception e) {
             dateTime = DateTimeFormat.getInstance().parse(aValue);
+            duration = 0;
         }
     }
 
@@ -227,6 +228,7 @@ public class Trigger extends Property {
      */
     public final void setDateTime(final Date dateTime) {
         this.dateTime = dateTime;
+        duration = 0;
     }
     
     /**
@@ -234,5 +236,6 @@ public class Trigger extends Property {
      */
     public final void setDuration(final long duration) {
         this.duration = duration;
+        dateTime = null;
     }
 }
