@@ -263,10 +263,17 @@ public class CalendarParserImpl implements CalendarParser {
             URISyntaxException, ParserException {
 
         while (Component.BEGIN.equals(tokeniser.sval)) {
-
             parseComponent(tokeniser, handler);
-
-            assertToken(tokeniser, StreamTokenizer.TT_WORD);
+            
+            // absorb extraneous whitespace between components..
+            try {
+                while (true) {
+                    assertToken(tokeniser, StreamTokenizer.TT_EOL);
+                }
+            }
+            catch (ParserException pe) {
+            }
+//            assertToken(tokeniser, StreamTokenizer.TT_WORD);
         }
     }
 
@@ -334,7 +341,6 @@ public class CalendarParserImpl implements CalendarParser {
             throws IOException, ParserException, ParseException {
 
         if (tokeniser.nextToken() != token) {
-
             throw new ParserException("Expected [" + token + "], read ["
                     + tokeniser.ttype + "] at line " + tokeniser.lineno());
         }
@@ -364,7 +370,6 @@ public class CalendarParserImpl implements CalendarParser {
         assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
         if (!token.equals(tokeniser.sval)) {
-
             throw new ParserException("Expected [" + token + "], read ["
                     + tokeniser.sval + "] at line " + tokeniser.lineno());
         }
