@@ -6,19 +6,32 @@
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ *  o Redistributions of source code must retain the above copyright
+ * notice, this list of conditions and the following disclaimer.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ *  o Redistributions in binary form must reproduce the above copyright
+ * notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution.
+ *
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package net.fortuna.ical4j.model;
 
@@ -71,11 +84,11 @@ public class CalendarTest extends TestCase {
         
         Recur week1UserARecur = new Recur(Recur.WEEKLY, calEnd.getTime());
         week1UserARecur.setInterval(3);
-        week1UserARecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
-        week1UserARecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
-        week1UserARecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
-        week1UserARecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
-        week1UserARecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
+        week1UserARecur.getDayList().add(WeekDay.MO);
+        week1UserARecur.getDayList().add(WeekDay.TU);
+        week1UserARecur.getDayList().add(WeekDay.WE);
+        week1UserARecur.getDayList().add(WeekDay.TH);
+        week1UserARecur.getDayList().add(WeekDay.FR);
         week1UserARecur.getHourList().add(new Integer(9));
         week1UserA.getProperties().add(new RRule(week1UserARecur));
 
@@ -87,11 +100,11 @@ public class CalendarTest extends TestCase {
         
         Recur week2UserBRecur = new Recur(Recur.WEEKLY, calEnd.getTime());
         week2UserBRecur.setInterval(3);
-        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
-        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
-        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
-        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
-        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
+        week2UserBRecur.getDayList().add(WeekDay.MO);
+        week2UserBRecur.getDayList().add(WeekDay.TU);
+        week2UserBRecur.getDayList().add(WeekDay.WE);
+        week2UserBRecur.getDayList().add(WeekDay.TH);
+        week2UserBRecur.getDayList().add(WeekDay.FR);
         week2UserBRecur.getHourList().add(new Integer(9));
         week2UserB.getProperties().add(new RRule(week2UserBRecur));
 
@@ -103,11 +116,11 @@ public class CalendarTest extends TestCase {
         
         Recur week3UserCRecur = new Recur(Recur.WEEKLY, calEnd.getTime());
         week3UserCRecur.setInterval(3);
-        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
-        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
-        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
-        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
-        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
+        week3UserCRecur.getDayList().add(WeekDay.MO);
+        week3UserCRecur.getDayList().add(WeekDay.TU);
+        week3UserCRecur.getDayList().add(WeekDay.WE);
+        week3UserCRecur.getDayList().add(WeekDay.TH);
+        week3UserCRecur.getDayList().add(WeekDay.FR);
         week3UserCRecur.getHourList().add(new Integer(9));
         week3UserC.getProperties().add(new RRule(week3UserCRecur));
         

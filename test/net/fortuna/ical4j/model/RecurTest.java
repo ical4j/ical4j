@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -67,7 +67,7 @@ public class RecurTest extends TestCase {
         log.info(recur.getDates(start, end, Value.DATE_TIME));
         
         recur.setFrequency(Recur.WEEKLY);
-        recur.getDayList().add(new WeekDay(WeekDay.MO));
+        recur.getDayList().add(WeekDay.MO);
         log.info(recur);
         log.info(recur.getDates(start, end, Value.DATE));
     }
@@ -83,7 +83,7 @@ public class RecurTest extends TestCase {
         Recur recur = new Recur(Recur.YEARLY, -1);
         recur.setInterval(2);
         recur.getMonthList().add(new Integer(1));
-        recur.getDayList().add(new WeekDay(WeekDay.SU, 0));
+        recur.getDayList().add(WeekDay.SU);
         recur.getHourList().add(new Integer(8));
         recur.getHourList().add(new Integer(9));
         recur.getMinuteList().add(new Integer(30));
