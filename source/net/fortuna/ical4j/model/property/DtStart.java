@@ -106,6 +106,17 @@ public class DtStart extends Property {
         super(DTSTART);
         time = aDate;
     }
+    
+    /**
+     * Constructs a new DtStart with the specified time.
+     * @param time the time of the DtStart
+     * @param utc specifies whether time is UTC
+     */
+    public DtStart(final Date time, final boolean utc) {
+        super(DTSTART);
+        setTime(time);
+        setUtc(utc);
+    }
 
     /**
      * Constructor. Date or Date-Time format is determined based

@@ -38,6 +38,7 @@ package net.fortuna.ical4j.model.property;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Date;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
@@ -76,7 +77,7 @@ public class Duration extends Property {
      */
     public Duration(final long aDuration) {
         super(DURATION);
-        duration = aDuration;
+        setDuration(aDuration);
     }
 
     /**
@@ -87,18 +88,18 @@ public class Duration extends Property {
      */
     public Duration(final ParameterList aList, final long aDuration) {
         super(DURATION, aList);
-        duration = aDuration;
+        setDuration(aDuration);
     }
     
     /**
-     * Copy-constructor.
-     * @param duration
-     * @throws IOException
-     * @throws URISyntaxException
-     * @throws ParseException
+     * Constructs a new duration representing the time
+     * between the specified start date and end date.
+     * @param start the starting time for the duration
+     * @param end the end time for the duration
      */
-    public Duration(final Duration duration) throws IOException, URISyntaxException, ParseException {
-        super(duration);
+    public Duration(final Date start, final Date end) {
+        super(DURATION);
+        setDuration(end.getTime() - start.getTime());
     }
 
     /**

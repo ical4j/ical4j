@@ -38,9 +38,11 @@ package net.fortuna.ical4j.model.property;
 import java.text.ParseException;
 import java.util.Date;
 
+import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Period;
+import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -55,20 +57,16 @@ import net.fortuna.ical4j.util.ParameterValidator;
  */
 public class RDate extends Property {
 
-    private Date time;
+    private DateList dates;
 
-    private Period period;
-
-    // default value determined through inspection
-    // of iCal-generated files..
-    private boolean utc = true;
+    private PeriodList periods;
 
     /**
      * Default constructor.
      */
     public RDate() {
         super(RDATE);
-        time = new Date();
+        dates = new DateList(new Value(Value.DATE_TIME));
     }
     
     /**
@@ -92,9 +90,9 @@ public class RDate extends Property {
      * @param aDate
      *            a date representation of a date or date-time
      */
-    public RDate(final Date aDate) {
+    public RDate(final DateList dates) {
         super(RDATE);
-        time = aDate;
+        this.dates = dates;
     }
 
     /**
@@ -106,9 +104,9 @@ public class RDate extends Property {
      * @param aDate
      *            a date representation of a date or date-time
      */
-    public RDate(final ParameterList aList, final Date aDate) {
+    public RDate(final ParameterList aList, final DateList dates) {
         super(RDATE, aList);
-        time = aDate;
+        this.dates = dates;
     }
 
     /**
@@ -116,9 +114,9 @@ public class RDate extends Property {
      * @param aPeriod
      *            a period
      */
-    public RDate(final Period aPeriod) {
+    public RDate(final PeriodList periods) {
         super(RDATE);
-        period = aPeriod;
+        this.periods = periods;
     }
 
     /**
@@ -129,9 +127,9 @@ public class RDate extends Property {
      * @param aPeriod
      *            a period
      */
-    public RDate(final ParameterList aList, final Period aPeriod) {
+    public RDate(final ParameterList aList, final PeriodList periods) {
         super(RDATE, aList);
-        period = aPeriod;
+        this.periods = periods;
     }
 
     /**
@@ -165,35 +163,33 @@ public class RDate extends Property {
     }
 
     /**
-     * @return Returns the period.
+     * @return Returns the period list.
      */
-    public final Period getPeriod() {
-        return period;
+    public final PeriodList getPeriods() {
+        return periods;
     }
 
     /**
-     * @return Returns the time.
+     * @return Returns the date list.
      */
-    public final Date getTime() {
-        return time;
+    public final DateList getDates() {
+        return dates;
     }
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-
         // value can be either a date-time or a date..
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
-
-        if (valueParam != null && Value.DATE.equals(valueParam.getValue())) {
-            time = DateFormat.getInstance().parse(aValue);
+        Value valueParam = (Value) getParameters().getParameter(Parameter.VALUE);
+        if (valueParam != null && Value.PERIOD.equals(valueParam)) {
+            periods = new PeriodList(aValue);
         }
-        else if (valueParam != null && Value.PERIOD.equals(valueParam)) {
-            period = new Period(aValue);
+        else if (valueParam != null) {
+            dates = new DateList(aValue, valueParam);
         }
         else {
-            time = DateTimeFormat.getInstance().parse(aValue);
+            dates = new DateList(aValue, new Value(Value.DATE_TIME));
         }
     }    
 
@@ -203,53 +199,12 @@ public class RDate extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        if (getTime() != null) {
-
-            Parameter valueParam = getParameters()
-                    .getParameter(Parameter.VALUE);
-
-            if (valueParam != null && Value.DATE.equals(valueParam.getValue())) {
-                return DateFormat.getInstance().format(getTime());
-            }
-            else {
-                return DateTimeFormat.getInstance().format(getTime(), isUtc());
-            }
+        if (getDates() != null) {
+            return getDates().toString();
         }
-        else if (getPeriod() != null) { return getPeriod().toString(); }
-
+        else if (getPeriods() != null) {
+            return getPeriods().toString();
+        }
         return null;
-    }
-
-    /**
-     * @return Returns the utc.
-     */
-    public final boolean isUtc() {
-        return utc;
-    }
-
-    /**
-     * @param utc
-     *            The utc to set.
-     */
-    public final void setUtc(final boolean utc) {
-        this.utc = utc;
-    }
-    
-    /**
-     * @param period The period to set.
-     */
-    public final void setPeriod(final Period period) {
-        this.period = period;
-        // unset time..
-        time = null;
-    }
-    
-    /**
-     * @param time The time to set.
-     */
-    public final void setTime(final Date time) {
-        this.time = time;
-        // unset period..
-        period = null;
     }
 }

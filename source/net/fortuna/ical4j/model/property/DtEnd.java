@@ -93,6 +93,17 @@ public class DtEnd extends Property {
         super(DTEND);
         time = aDate;
     }
+    
+    /**
+     * Constructs a new DtEnd with the specified time.
+     * @param time the time of the DtEnd
+     * @param utc specifies whether time is UTC
+     */
+    public DtEnd(final Date time, final boolean utc) {
+        super(DTEND);
+        setTime(time);
+        setUtc(utc);
+    }
 
     /**
      * Constructor. Date or Date-Time format is determined based on the presence
