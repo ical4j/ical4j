@@ -35,9 +35,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 

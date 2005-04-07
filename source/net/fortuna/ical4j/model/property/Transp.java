@@ -45,9 +45,9 @@ import net.fortuna.ical4j.model.Property;
  */
 public class Transp extends Property {
 
-    public static final String OPAQUE = "OPAQUE";
+    public static final Transp OPAQUE = new Transp(new ParameterList(true), "OPAQUE");
 
-    public static final String TRANSPARENT = "TRANSPARENT";
+    public static final Transp TRANSPARENT = new Transp(new ParameterList(true), "TRANSPARENT");
 
     private String value;
 
@@ -82,6 +82,11 @@ public class Transp extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
+        // can't modify constant instances..
+        if (this.equals(OPAQUE)
+                || this.equals(TRANSPARENT)) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
         this.value = aValue;
     }
 

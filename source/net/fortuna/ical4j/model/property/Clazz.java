@@ -45,11 +45,11 @@ import net.fortuna.ical4j.model.Property;
  */
 public class Clazz extends Property {
 
-    public static final String PUBLIC = "PUBLIC";
+    public static final Clazz PUBLIC = new Clazz(new ParameterList(true), "PUBLIC");
 
-    public static final String PRIVATE = "PRIVATE";
+    public static final Clazz PRIVATE = new Clazz(new ParameterList(true), "PRIVATE");
 
-    public static final String CONFIDENTIAL = "CONFIDENTIAL";
+    public static final Clazz CONFIDENTIAL = new Clazz(new ParameterList(true), "CONFIDENTIAL");
 
     private String value;
 
@@ -85,6 +85,12 @@ public class Clazz extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
+        // can't modify constant instances..
+        if (this.equals(PUBLIC)
+                || this.equals(PRIVATE)
+                || this.equals(CONFIDENTIAL)) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
         this.value = aValue;
     }
 

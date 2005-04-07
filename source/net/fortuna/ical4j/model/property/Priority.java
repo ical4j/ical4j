@@ -45,13 +45,13 @@ import net.fortuna.ical4j.model.Property;
  */
 public class Priority extends Property {
 
-    public static final int UNDEFINED = 0;
+    public static final Priority UNDEFINED = new Priority(new ParameterList(true), 0);
 
-    public static final int HIGH = 1;
+    public static final Priority HIGH = new Priority(new ParameterList(true), 1);
 
-    public static final int MEDIUM = 5;
+    public static final Priority MEDIUM = new Priority(new ParameterList(true), 5);
 
-    public static final int LOW = 9;
+    public static final Priority LOW = new Priority(new ParameterList(true), 9);
 
     private int level;
 
@@ -60,7 +60,7 @@ public class Priority extends Property {
      */
     public Priority() {
         super(PRIORITY);
-        level = UNDEFINED;
+        level = UNDEFINED.getLevel();
     }
     
     /**
@@ -105,6 +105,13 @@ public class Priority extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
+        // can't modify constant instances..
+        if (this.equals(UNDEFINED)
+                || this.equals(HIGH)
+                || this.equals(MEDIUM)
+                || this.equals(LOW)) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
         level = Integer.parseInt(aValue);
     }
 
@@ -121,6 +128,13 @@ public class Priority extends Property {
      * @param level The level to set.
      */
     public final void setLevel(final int level) {
+        // can't modify constant instances..
+        if (this.equals(UNDEFINED)
+                || this.equals(HIGH)
+                || this.equals(MEDIUM)
+                || this.equals(LOW)) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
         this.level = level;
     }
 }

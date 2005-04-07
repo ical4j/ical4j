@@ -19,10 +19,35 @@
  
  - Various constants reimplemented as typed instances (as opposed to strings)
  
+ NOTE: This may break existing code based on earlier releases! Please check
+ your usage of the following classes:
+ 
+ 	* net.fortuna.ical4j.model.WeekDay
+ 	* net.fortuna.ical4j.model.parameter.CuType
+ 	* net.fortuna.ical4j.model.parameter.Encoding
+ 	* net.fortuna.ical4j.model.parameter.FbType
+ 	* net.fortuna.ical4j.model.parameter.PartStat
+ 	* net.fortuna.ical4j.model.parameter.Range
+ 	* net.fortuna.ical4j.model.parameter.Related
+ 	* net.fortuna.ical4j.model.parameter.RelType
+ 	* net.fortuna.ical4j.model.parameter.Role
+ 	* net.fortuna.ical4j.model.parameter.Rsvp
+ 	* net.fortuna.ical4j.model.parameter.Value
+ 	* net.fortuna.ical4j.model.property.Action
+ 	* net.fortuna.ical4j.model.property.CalScale
+ 	* net.fortuna.ical4j.model.property.Clazz
+ 	* net.fortuna.ical4j.model.property.Method
+ 	* net.fortuna.ical4j.model.property.Priority
+ 	* net.fortuna.ical4j.model.property.Status
+ 	* net.fortuna.ical4j.model.property.Transp
+ 	
+ 
  - Applied patch #1170060 by calibre. Provides improvements to retrieval of
  date ranges represented by recurring VEvents.
  
  - documentation updated to conform to XHTML 1.0
+ 
+ - added Base64 encoding/decoding to Attach property
  
  
 0.9.11:

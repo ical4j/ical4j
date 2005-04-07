@@ -61,7 +61,7 @@ public class PublishTransformer extends Transformer {
 			calProps.remove(method);
 		}
 
-        calProps.add(new Method(Method.PUBLISH));
+        calProps.add(Method.PUBLISH);
 
 		// if a calendar component has already been published previously
 		// update the sequence number..

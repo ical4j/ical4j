@@ -46,27 +46,27 @@ import net.fortuna.ical4j.model.Property;
 public class Status extends Property {
 
     // Status values for a "VEVENT"
-    public static final String VEVENT_TENTATIVE = "TENTATIVE";
+    public static final Status VEVENT_TENTATIVE = new Status(new ParameterList(true), "TENTATIVE");
 
-    public static final String VEVENT_CONFIRMED = "CONFIRMED";
+    public static final Status VEVENT_CONFIRMED = new Status(new ParameterList(true), "CONFIRMED");
 
-    public static final String VEVENT_CANCELLED = "CANCELLED";
+    public static final Status VEVENT_CANCELLED = new Status(new ParameterList(true), "CANCELLED");
 
     // Status values for "VTODO"
-    public static final String VTODO_NEEDS_ACTION = "NEEDS-ACTION";
+    public static final Status VTODO_NEEDS_ACTION = new Status(new ParameterList(true), "NEEDS-ACTION");
 
-    public static final String VTODO_COMPLETED = "COMPLETED";
+    public static final Status VTODO_COMPLETED = new Status(new ParameterList(true), "COMPLETED");
 
-    public static final String VTODO_IN_PROCESS = "IN-PROCESS";
+    public static final Status VTODO_IN_PROCESS = new Status(new ParameterList(true), "IN-PROCESS");
 
-    public static final String VTODO_CANCELLED = "CANCELLED";
+    public static final Status VTODO_CANCELLED = new Status(new ParameterList(true), "CANCELLED");
 
     // Status values for "VJOURNAL"
-    public static final String VJOURNAL_DRAFT = "DRAFT";
+    public static final Status VJOURNAL_DRAFT = new Status(new ParameterList(true), "DRAFT");
 
-    public static final String VJOURNAL_FINAL = "FINAL";
+    public static final Status VJOURNAL_FINAL = new Status(new ParameterList(true), "FINAL");
 
-    public static final String VJOURNAL_CANCELLED = "CANCELLED";
+    public static final Status VJOURNAL_CANCELLED = new Status(new ParameterList(true), "CANCELLED");
 
     private String value;
 
@@ -101,6 +101,19 @@ public class Status extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
+        // can't modify constant instances..
+        if (this.equals(VEVENT_TENTATIVE)
+                || this.equals(VEVENT_CONFIRMED)
+                || this.equals(VEVENT_CANCELLED)
+                || this.equals(VTODO_NEEDS_ACTION)
+                || this.equals(VTODO_IN_PROCESS)
+                || this.equals(VTODO_CANCELLED)
+                || this.equals(VEVENT_CANCELLED)
+                || this.equals(VJOURNAL_DRAFT)
+                || this.equals(VJOURNAL_FINAL)
+                || this.equals(VJOURNAL_CANCELLED)) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
         this.value = aValue;
     }
 

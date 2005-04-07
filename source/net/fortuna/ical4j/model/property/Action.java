@@ -45,13 +45,13 @@ import net.fortuna.ical4j.model.Property;
  */
 public class Action extends Property {
 
-    public static final String AUDIO = "AUDIO";
+    public static final Action AUDIO = new Action(new ParameterList(true), "AUDIO");
 
-    public static final String DISPLAY = "DISPLAY";
+    public static final Action DISPLAY = new Action(new ParameterList(true), "DISPLAY");
 
-    public static final String EMAIL = "EMAIL";
+    public static final Action EMAIL = new Action(new ParameterList(true), "EMAIL");
 
-    public static final String PROCEDURE = "PROCEDURE";
+    public static final Action PROCEDURE = new Action(new ParameterList(true), "PROCEDURE");
 
     private String value;
 
@@ -87,6 +87,13 @@ public class Action extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) {
+        // can't modify constant instances..
+        if (this.equals(AUDIO)
+                || this.equals(DISPLAY)
+                || this.equals(EMAIL)
+                || this.equals(PROCEDURE)) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
         this.value = aValue;
     }
 
