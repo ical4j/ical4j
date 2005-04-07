@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2005, Ben Fortuna
+ * Copyright (c) 2005, Dustin Jenkins
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,8 +47,9 @@ import net.fortuna.ical4j.model.DateList;
  * overlaps, and creating one long date range out of two shorter ones.
  * Or it could mean subtracting one from the other, shortening one of the
  * ranges or even creating two ranges from one.
+ * @author Dustin Jenkins
  */
-public class DateRangeNormalizer {
+public final class DateRangeNormalizer {
 
     private static DateRangeNormalizer instance = new DateRangeNormalizer();
 

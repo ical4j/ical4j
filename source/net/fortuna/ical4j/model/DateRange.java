@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2004, Ben Fortuna
+ * Copyright (c) 2005, Dustin Jenkins
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,6 +38,7 @@ import java.util.Date;
 
 /**
  * This class represents a time period from a start date to an end date.
+ * @author Dustin Jenkins
  */
 public class DateRange implements Comparable {
 
