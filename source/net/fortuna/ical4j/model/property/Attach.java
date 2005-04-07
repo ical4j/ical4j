@@ -47,10 +47,56 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.Base64;
 import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines an ATTACH iCalendar component property.
+ * 
+ * <pre>
+ *   4.8.1.1 Attachment
+ *   
+ *      Property Name: ATTACH
+ *   
+ *      Purpose: The property provides the capability to associate a document
+ *      object with a calendar component.
+ *   
+ *      Value Type: The default value type for this property is URI. The
+ *      value type can also be set to BINARY to indicate inline binary
+ *      encoded content information.
+ *   
+ *      Property Parameters: Non-standard, inline encoding, format type and
+ *      value data type property parameters can be specified on this
+ *      property.
+ *    
+ *      Conformance: The property can be specified in a "VEVENT", "VTODO",
+ *      "VJOURNAL" or "VALARM" calendar components.
+ *   
+ *      Description: The property can be specified within "VEVENT", "VTODO",
+ *      "VJOURNAL", or "VALARM" calendar components. This property can be
+ *      specified multiple times within an iCalendar object.
+ *   
+ *      Format Definition: The property is defined by the following notation:
+ *   
+ *        attach     = "ATTACH" attparam ":" uri  CRLF
+ *   
+ *        attach     =/ "ATTACH" attparam ";" "ENCODING" "=" "BASE64"
+ *                      ";" "VALUE" "=" "BINARY" ":" binary
+ *   
+ *        attparam   = *(
+ *   
+ *                   ; the following is optional,
+ *                   ; but MUST NOT occur more than once
+ *   
+ *                   (";" fmttypeparam) /
+ *   
+ *                   ; the following is optional,
+ *                   ; and MAY occur more than once
+ *   
+ *                   (";" xparam)
+ *   
+ *                   )
+ * </pre>
  *
  * @author benf
  */
@@ -88,29 +134,20 @@ public class Attach extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) throws IOException, URISyntaxException {
-
         // determine if ATTACH is a URI or an embedded
         // binary..
-        Parameter encodingParam = getParameters().getParameter(
-                Parameter.ENCODING);
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
-
-        if (encodingParam != null
-                && Encoding.BASE64.equals(encodingParam.getValue())
-                && valueParam != null
-                && Value.BINARY.equals(valueParam.getValue())) {
-
-            ByteArrayOutputStream bout = new ByteArrayOutputStream(aValue
-                    .length());
-
+        if (Encoding.BASE64.equals(getParameters().getParameter(Parameter.ENCODING))
+                && Value.BINARY.equals(getParameters().getParameter(Parameter.VALUE))) {
+            /*
+            ByteArrayOutputStream bout = new ByteArrayOutputStream(aValue.length());
             OutputStreamWriter writer = new OutputStreamWriter(bout);
             writer.write(aValue);
-
             binary = bout.toByteArray();
+            */            
+            binary = Base64.decode(aValue);
         }
         // assume URI..
         else {
-
             uri = new URI(aValue);
         }
     }
@@ -121,6 +158,9 @@ public class Attach extends Property {
      */
     public Attach(final byte[] data) {
         super(ATTACH);
+        // add required parameters..
+        getParameters().add(Encoding.BASE64);
+        getParameters().add(Value.BINARY);
         this.binary = data;
     }
 
@@ -132,7 +172,6 @@ public class Attach extends Property {
      */
     public Attach(final ParameterList aList, final byte[] data) {
         super(ATTACH, aList);
-
         this.binary = data;
     }
 
@@ -196,12 +235,12 @@ public class Attach extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-
         if (getUri() != null) {
             return getUri().toString();
         }
-        else if (getBinary() != null) { return String.valueOf(getBinary()); }
-
+        else if (getBinary() != null) {
+            return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
+        }
         return null;
     }
     

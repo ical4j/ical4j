@@ -15,3 +15,4 @@
   - eclipse checkstyle plugin [http://eclipse-cs.sourceforge.net/]
   - Apache Commons Logging/Log4j [http://jakarta.apache.org/commons/logging/]
   - Apache Ant [http://ant.apache.org/]
+  - Base64 [http://iharder.sourceforge.net/base64/]
