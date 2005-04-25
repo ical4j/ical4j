@@ -42,9 +42,13 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class Related extends Parameter {
 
-    public static final Related START = new Related("START");
+    private static final String VALUE_START = "START";
 
-    public static final Related END = new Related("END");
+    private static final String VALUE_END = "END";
+    
+    public static final Related START = new Related(VALUE_START);
+
+    public static final Related END = new Related(VALUE_END);
 
     private String value;
 
@@ -57,15 +61,15 @@ public class Related extends Parameter {
         this.value = aValue;
 
         // value must be one of finite list..
-        if (!START.getValue().equals(value)
-                && !END.getValue().equals(value)) {
+        if (!VALUE_START.equals(value)
+                && !VALUE_END.equals(value)) {
             throw new IllegalArgumentException("Invalid value [" + value + "]");
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public String getValue() {

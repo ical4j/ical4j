@@ -42,9 +42,13 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class Range extends Parameter {
 
-    public static final Range THISANDPRIOR = new Range("THISANDPRIOR");
+    private static final String VALUE_THISANDPRIOR = "THISANDPRIOR";
 
-    public static final Range THISANDFUTURE = new Range("THISANDFUTURE");
+    private static final String VALUE_THISANDFUTURE = "THISANDFUTURE";
+
+    public static final Range THISANDPRIOR = new Range(VALUE_THISANDPRIOR);
+
+    public static final Range THISANDFUTURE = new Range(VALUE_THISANDFUTURE);
 
     private String value;
 
@@ -57,8 +61,8 @@ public class Range extends Parameter {
         this.value = aValue;
 
         // value must be one of finite list..
-        if (!THISANDPRIOR.getValue().equals(value)
-                && !THISANDFUTURE.getValue().equals(value)) {
+        if (!VALUE_THISANDPRIOR.equals(value)
+                && !VALUE_THISANDFUTURE.equals(value)) {
             throw new IllegalArgumentException("Invalid value [" + value + "]");
         }
     }
