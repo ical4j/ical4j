@@ -32,20 +32,15 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StreamTokenizer;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.util.StringUtils;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.*;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 public class CalendarParserImpl implements CalendarParser {
 
@@ -67,8 +62,10 @@ public class CalendarParserImpl implements CalendarParser {
     public final void parse(final Reader in, final ContentHandler handler)
             throws IOException, ParserException {
 
+        StreamTokenizer tokeniser = null;
+
         try {
-            StreamTokenizer tokeniser = new StreamTokenizer(in);
+            tokeniser = new StreamTokenizer(in);
             tokeniser.resetSyntax();
             tokeniser.wordChars(WORD_CHAR_START, WORD_CHAR_END);
             tokeniser.whitespaceChars(WHITESPACE_CHAR_START,
@@ -113,7 +110,13 @@ public class CalendarParserImpl implements CalendarParser {
             if (e instanceof ParserException) {
                 throw (ParserException) e;
             } else {
-                throw new ParserException("An error ocurred during parsing", e);
+                String error = "An error ocurred during parsing";
+
+                if (tokeniser != null) {
+                    error += " - line: " + tokeniser.lineno();
+                }
+
+                throw new ParserException(error, e);
             }
         }
     }
@@ -156,7 +159,8 @@ public class CalendarParserImpl implements CalendarParser {
             final ContentHandler handler) throws IOException, ParserException,
             URISyntaxException, ParseException {
 
-        String name = tokeniser.sval;
+        // property names are case-insensitive, but convert to upper case to simplify further processing
+        String name = tokeniser.sval.toUpperCase();
 
         // debugging..
         if (log.isDebugEnabled()) {
@@ -178,7 +182,10 @@ public class CalendarParserImpl implements CalendarParser {
 
         //assertToken(tokeniser,StreamTokenizer.TT_EOL);
 
-        while (tokeniser.nextToken() != StreamTokenizer.TT_EOL) {
+        int nextToken = tokeniser.nextToken();
+
+        while (nextToken != StreamTokenizer.TT_EOL &&
+                nextToken != StreamTokenizer.TT_EOF) {
 
             if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
                 value.append(tokeniser.sval);
@@ -189,6 +196,13 @@ public class CalendarParserImpl implements CalendarParser {
             } else {
                 value.append((char) tokeniser.ttype);
             }
+
+            nextToken = tokeniser.nextToken();
+        }
+
+        if (nextToken == StreamTokenizer.TT_EOF) {
+            throw new ParserException("Unexpected end of file at line " +
+                    tokeniser.lineno());
         }
 
         handler.propertyValue(StringUtils.unescape(value.toString()));
@@ -200,15 +214,13 @@ public class CalendarParserImpl implements CalendarParser {
      * tokeniser.
      * 
      * @param tokeniser
-     * @return
      * @throws IOException
      * @throws ParserException
      * @throws URISyntaxException
-     * @throws ParseException
      */
     private void parseParameterList(final StreamTokenizer tokeniser,
             final ContentHandler handler) throws IOException, ParserException,
-            URISyntaxException, ParseException {
+            URISyntaxException {
 
         while (tokeniser.nextToken() == ';') {
             parseParameter(tokeniser, handler);
@@ -217,11 +229,12 @@ public class CalendarParserImpl implements CalendarParser {
 
     private void parseParameter(final StreamTokenizer tokeniser,
             final ContentHandler handler) throws IOException, ParserException,
-            URISyntaxException, ParseException {
+            URISyntaxException {
 
         assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
-        String paramName = tokeniser.sval;
+        // parameter names are case-insensitive, but convert to upper case to simplify further processing
+        String paramName = tokeniser.sval.toUpperCase();
 
         // debugging..
         if (log.isDebugEnabled()) {
@@ -328,12 +341,12 @@ public class CalendarParserImpl implements CalendarParser {
      *            expected token
      * @throws IOException
      *             when unable to read from stream
-     * @throws ParseException
+     * @throws ParserException
      *             when next token in the stream does not match the expected
      *             token
      */
-    private void assertToken(final StreamTokenizer tokeniser, final int token)
-            throws IOException, ParserException, ParseException {
+    private static void assertToken(final StreamTokenizer tokeniser, final int token)
+            throws IOException, ParserException {
 
         if (tokeniser.nextToken() != token) {
             throw new ParserException("Expected [" + token + "], read ["
@@ -354,12 +367,12 @@ public class CalendarParserImpl implements CalendarParser {
      *            expected token
      * @throws IOException
      *             when unable to read from stream
-     * @throws ParseException
+     * @throws ParserException
      *             when next token in the stream does not match the expected
      *             token
      */
-    private void assertToken(final StreamTokenizer tokeniser, final String token)
-            throws IOException, ParseException, ParserException {
+    private static void assertToken(final StreamTokenizer tokeniser, final String token)
+            throws IOException, ParserException {
 
         // ensure next token is a word token..
         assertToken(tokeniser, StreamTokenizer.TT_WORD);
