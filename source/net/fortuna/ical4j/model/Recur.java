@@ -496,7 +496,6 @@ public class Recur implements Serializable {
         }
 
         int lowestVariableField = 9999;
-        String frequency = getFrequency();
 
         if (YEARLY.equals(frequency)) {
             lowestVariableField = Calendar.YEAR;
@@ -868,9 +867,7 @@ public class Recur implements Serializable {
                 int[] tmpArray = matchFields;
                 matchFields = new int[tmpArray.length + 1];
 
-                for (int j = 0; j < tmpArray.length; j++) {
-                    matchFields[j] = tmpArray[j];
-                }
+                System.arraycopy(tmpArray, 0, matchFields, 0, tmpArray.length);
 
                 matchFields[matchFields.length - 1] = nextItem;
             }

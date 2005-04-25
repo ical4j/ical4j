@@ -64,7 +64,7 @@ public class WeekDayList extends ArrayList implements Serializable {
     }
 
     /**
-     * @param aDay a day to add to the list
+     * @param weekDay a day to add to the list
      * @return
      */
     public final boolean add(final WeekDay weekDay) {
@@ -72,7 +72,7 @@ public class WeekDayList extends ArrayList implements Serializable {
     }
 
     /**
-     * @param aDay a day to remove from the list
+     * @param weekDay a day to remove from the list
      * @return
      */
     public final boolean remove(final WeekDay weekDay) {

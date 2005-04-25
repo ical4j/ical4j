@@ -35,9 +35,6 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-import java.util.Date;
-
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
@@ -46,6 +43,8 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.DateTimeFormat;
 import net.fortuna.ical4j.util.DurationFormat;
 import net.fortuna.ical4j.util.ParameterValidator;
+
+import java.util.Date;
 
 /**
  * Defines a TRIGGER iCalendar component property.
@@ -75,12 +74,8 @@ public class Trigger extends Property {
      *            a list of parameters for this component
      * @param aValue
      *            a value string for this component
-     * @throws ParseException
-     *             when the specified string is not a valid duration or
-     *             date-time representation
      */
-    public Trigger(final ParameterList aList, final String aValue)
-            throws ParseException {
+    public Trigger(final ParameterList aList, final String aValue) {
         super(TRIGGER, aList);
         setValue(aValue);
     }
@@ -198,7 +193,7 @@ public class Trigger extends Property {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public final void setValue(final String aValue) throws ParseException {
+    public final void setValue(final String aValue) {
         try {
             dateTime = DateTimeFormat.getInstance().parse(aValue);
             duration = 0;

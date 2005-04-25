@@ -205,8 +205,9 @@ public class VTimeZone extends Component {
          *
          * standardc / daylightc /
          */
-        if (types.getComponent(Time.STANDARD) == null
-                && types.getComponent(Time.DAYLIGHT) == null) { throw new ValidationException(
+        if (getTypes().getComponent(Time.STANDARD) == null
+                && getTypes().getComponent(Time.DAYLIGHT) == null) {
+            throw new ValidationException(
                 "Sub-components [" + Time.STANDARD + "," + Time.DAYLIGHT
                         + "] must be specified at least once"); }
 

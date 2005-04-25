@@ -79,7 +79,7 @@ public class PeriodList extends ArrayList implements Serializable {
     public final String toString() {
         StringBuffer b = new StringBuffer();
         for (Iterator i = iterator(); i.hasNext();) {
-            b.append(((Period) i.next()).toString());
+            b.append(i.next().toString());
             if (i.hasNext()) {
                 b.append(',');
             }
@@ -91,7 +91,7 @@ public class PeriodList extends ArrayList implements Serializable {
      * Add a period to the list.
      * @param period the period to add
      * @return true
-     * @see List#add(java.lang.Object)
+     * @see java.util.List#add(java.lang.Object)
      */
     public final boolean add(final Period period) {
         return add((Object) period);
@@ -99,7 +99,7 @@ public class PeriodList extends ArrayList implements Serializable {
 
     /**
      * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
+     * @see java.util.List#isEmpty()
      */
 //    public final boolean isEmpty() {
 //        return periods.isEmpty();
@@ -107,7 +107,7 @@ public class PeriodList extends ArrayList implements Serializable {
 
     /**
      * @return an iterator
-     * @see List#iterator()
+     * @see java.util.List#iterator()
      */
 //    public final Iterator iterator() {
 //        return periods.iterator();
@@ -117,7 +117,7 @@ public class PeriodList extends ArrayList implements Serializable {
      * Remove a period from the list
      * @param period the period to remove
      * @return true if the list contained the specified period
-     * @see List#remove(java.lang.Object)
+     * @see java.util.List#remove(java.lang.Object)
      */
     public final boolean remove(final Period period) {
         return remove((Object) period);
@@ -125,7 +125,7 @@ public class PeriodList extends ArrayList implements Serializable {
 
     /**
      * @return the number of periods in the list
-     * @see List#size()
+     * @see java.util.List#size()
      */
 //    public final int size() {
 //        return periods.size();

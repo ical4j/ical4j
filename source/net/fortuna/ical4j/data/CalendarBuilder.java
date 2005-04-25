@@ -52,9 +52,6 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * Parses and builds an iCalendar model from an input stream.
  * Note that this class is not thread-safe.
@@ -64,8 +61,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CalendarBuilder implements ContentHandler {
 
-    private static Log log = LogFactory.getLog(CalendarBuilder.class);
-    
     private CalendarParser parser;
     
     private Calendar calendar;
@@ -98,8 +93,6 @@ public class CalendarBuilder implements ContentHandler {
      * @param in
      * @return a calendar
      * @throws IOException
-     * @throws ParseException
-     * @throws URISyntaxException
      * @throws ParserException
      */
     public final Calendar build(final InputStream in) throws IOException,
@@ -116,8 +109,6 @@ public class CalendarBuilder implements ContentHandler {
      * @param in
      * @return a calendar
      * @throws IOException
-     * @throws ParseException
-     * @throws URISyntaxException
      * @throws ParserException
      */
     public final Calendar build(final Reader in) throws IOException, ParserException {

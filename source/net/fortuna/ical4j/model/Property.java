@@ -172,8 +172,6 @@ public abstract class Property extends Content {
      * Constructor.
      * @param aName
      *            property name
-     * @param aValue
-     *            property value
      */
     protected Property(final String aName) {
         this(aName, new ParameterList());

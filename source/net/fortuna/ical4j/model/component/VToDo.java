@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.component;
 
 import java.util.Date;
+import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -205,6 +206,19 @@ public class VToDo extends Component {
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
     public final void validate(final boolean recurse) throws ValidationException {
+
+        // validate that getAlarms() only contains VAlarm components
+        Iterator iterator = getAlarms().iterator();
+        while (iterator.hasNext()) {
+            Component component = (Component) iterator.next();
+
+            if (! (component instanceof VAlarm)) {
+                throw new ValidationException(
+                    "Component [" + component.getName() +
+                        "] may not occur in VTODO");
+            }
+        }
+
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once

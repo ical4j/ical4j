@@ -53,7 +53,7 @@ public class Rsvp extends Parameter {
      *            a string representation of an RSVP
      */
     public Rsvp(final String aValue) {
-        this(new Boolean(aValue));
+        this(Boolean.valueOf(aValue));
     }
 
     /**

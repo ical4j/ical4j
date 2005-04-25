@@ -51,7 +51,7 @@ import net.fortuna.ical4j.model.Property;
  */
 public class Version extends Property {
 
-    public static final Version VERSION_2_0 = new Version(new ParameterList(true), (String) null, "2.0");
+    public static final Version VERSION_2_0 = new Version(new ParameterList(true), null, "2.0");
 
     private String minVersion;
 
@@ -76,9 +76,9 @@ public class Version extends Property {
     }
 
     /**
-     * @param aVersion1
+     * @param minVersion
      *            a string representation of the minimum version
-     * @param aVersion2
+     * @param maxVersion
      *            a string representation of the maximum version
      */
     public Version(final String minVersion, final String maxVersion) {
