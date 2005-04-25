@@ -5,23 +5,19 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.OutputStream;
-import java.io.StringWriter;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Calendar;
-
+import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.FileOnlyFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Test case for iCalendarOutputter.
@@ -47,52 +43,74 @@ public class CalendarOutputterTest extends TestCase {
      * @throws Exception
      */
     public void testOutput() throws Exception {
-        CalendarBuilder builder = new CalendarBuilder();
-        FileInputStream fin = new FileInputStream(filename);
-        Calendar calendar = builder.build(fin);
-        CalendarOutputter outputter = new CalendarOutputter();
-        OutputStream out = new ByteArrayOutputStream();
+        System.setProperty("ical4j.unfolding.relaxed", "true");
 
-        outputter.output(calendar, out);
+        try {
+            CalendarBuilder builder = new CalendarBuilder();
+            FileInputStream fin = new FileInputStream(filename);
+            CalendarOutputter outputter = new CalendarOutputter(false, FoldingWriter.REDUCED_FOLD_LENGTH);
+            OutputStream out = new ByteArrayOutputStream();
 
-        log.info(out.toString());
+            Calendar calendar = null;
+            try {
+                calendar = builder.build(fin);
+            } catch (IOException e) {
+                log.error("Error while parsing: " + filename, e);
+            } catch (ParserException e) {
+                log.error("Error while parsing: " + filename, e);
+            }
 
-        BufferedReader bin = new BufferedReader(new UnfoldingReader(new FileReader(filename)));
-        StringWriter rout = new StringWriter();
-        BufferedWriter bout = new BufferedWriter(rout);
+            assertNotNull(calendar);
+            
+            outputter.setValidating(false);
+            outputter.output(calendar, out);
 
-        String line = null;
-        while ((line = bin.readLine()) != null) {
-            bout.write(line);
-            bout.write('\n');
+            if (log.isDebugEnabled()) {
+                log.debug(out.toString());
+            }
+
+            BufferedReader bin = new BufferedReader(new UnfoldingReader(new FileReader(filename)));
+            StringWriter rout = new StringWriter();
+            BufferedWriter bout = new BufferedWriter(rout);
+
+            try {
+                String line = null;
+                while ((line = bin.readLine()) != null) {
+                    bout.write(line);
+                    bout.write('\n');
+                }
+            } finally {
+                bout.close();
+                bin.close();
+            }
+
+            String rawData = rout.toString();
+
+            assertEquals("Output differed from expected: " + filename, rawData, out.toString());
+        } catch (IOException e) {
+            log.error("Error while parsing: " + filename, e);
+            throw e;
+        } catch (ValidationException e) {
+            log.error("Error while parsing: " + filename, e);
+            throw e;
         }
-
-        bout.close();
-        bin.close();
-
-        String rawData = rout.getBuffer().toString();
-
-        assertEquals(rawData, out.toString());
     }
 
     /**
      * @return
      */
     public static Test suite() {
-
         TestSuite suite = new TestSuite();
 
-        File[] samples = new File("c:/Development/workspace/iCal4j/ical4j/etc/samples").listFiles(new FileFilter() {
-			public final boolean accept(final File file) {
-				return file.getName().endsWith("OZMovies.ics");
-			}
-		});
+        List testFiles = new ArrayList();
 
-        for (int i = 0; i < samples.length; i++) {
-			log.info("Sample [" + samples[i] + "]");
+        testFiles.addAll(Arrays.asList(new File("etc/samples/valid").listFiles(new FileOnlyFilter())));
+        testFiles.addAll(Arrays.asList(new File("etc/samples/invalid").listFiles(new FileOnlyFilter())));
 
-			suite.addTest(new CalendarOutputterTest("testOutput", samples[i].getPath()));
-		}
+        for (int i = 0; i < testFiles.size(); i++) {
+            log.info("Sample [" + testFiles.get(i) + "]");
+			suite.addTest(new CalendarOutputterTest("testOutput", ((File)testFiles.get(i)).getPath()));
+        }
 
         return suite;
     }

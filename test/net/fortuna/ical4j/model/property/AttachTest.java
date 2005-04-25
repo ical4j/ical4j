@@ -35,26 +35,22 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URISyntaxException;
-
+import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarOutputter;
-import net.fortuna.ical4j.data.FoldingWriter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.Base64;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import junit.framework.TestCase;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URISyntaxException;
 
 /**
  * @author Ben Fortuna
@@ -72,19 +68,14 @@ public class AttachTest extends TestCase {
         FileInputStream fin = new FileInputStream("etc/FAQ");
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         int i;
-        while ((i = fin.read()) != -1) {
-            bout.write(i);
-        }
-        fin.close();
-        bout.close();
-        
+
         ParameterList params = new ParameterList();
         params.add(Encoding.BASE64);
         params.add(Value.BINARY);
-        
+
 //        Attach attach = new Attach(params, Base64.encodeBytes(bout.toByteArray(), Base64.DONT_BREAK_LINES));
         Attach attach = new Attach(bout.toByteArray());
-        
+
         log.info(attach);
         
         // create event start date..

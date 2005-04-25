@@ -30,9 +30,6 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.io.FileInputStream;
-import java.util.Date;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
@@ -44,9 +41,11 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.RRule;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.FileInputStream;
+import java.util.Date;
 
 /**
  * @author Ben Fortuna
@@ -81,15 +80,17 @@ public class VFreeBusyTest extends TestCase {
         VFreeBusy request = new VFreeBusy(startDate, endDate);
         
         VFreeBusy fb = new VFreeBusy(request, components);
-        
-        log.info("\n==\n" + fb.toString());
+
+        if (log.isDebugEnabled()) {
+            log.debug("\n==\n" + fb.toString());
+        }
     }
 
     /*
      * Class under test for void VFreeBusy(ComponentList)
      */
     public final void testVFreeBusyComponentList2() throws Exception {
-        FileInputStream fin = new FileInputStream("etc/samples/core.ics");
+        FileInputStream fin = new FileInputStream("etc/samples/valid/core.ics");
 
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(fin);
@@ -109,7 +110,7 @@ public class VFreeBusyTest extends TestCase {
         
         VFreeBusy fb2 = new VFreeBusy(requestFree, calendar.getComponents());
         
-        log.info("\n==\n" + fb2.toString());
+        log.debug("\n==\n" + fb2.toString());
     }
     
     public final void testVFreeBusyComponentList3() throws Exception {
@@ -138,7 +139,7 @@ public class VFreeBusyTest extends TestCase {
         recur.getMinuteList().add(new Integer(30));
         event.getProperties().add(new RRule(recur));
         
-        log.info("\n==\n" + event.toString());
+        log.debug("\n==\n" + event.toString());
         
         VFreeBusy request = new VFreeBusy(startDate, endDate);
         
@@ -171,14 +172,13 @@ public class VFreeBusyTest extends TestCase {
         
         VFreeBusy fb = new VFreeBusy(request, components);
         
-        log.info("\n==\n" + fb.toString());
+        log.debug("\n==\n" + fb.toString());
     }
     
     public final void testAngelites() {
         log.info("angelites test:\n================");
         
-        net.fortuna.ical4j.model.Calendar FreeBusyTest =  
-            new net.fortuna.ical4j.model.Calendar(); 
+        Calendar FreeBusyTest = new Calendar();
              
 //             add an event 
             java.util.Calendar start = java.util.Calendar.getInstance(); 
@@ -190,30 +190,29 @@ public class VFreeBusyTest extends TestCase {
             FreeBusyTest.getComponents().add(dteEnd); 
             FreeBusyTest.getComponents().add(duration); 
              
-            java.util.Calendar dtstart = java.util.Calendar.getInstance(); 
+            java.util.Calendar dtstart = java.util.Calendar.getInstance();
             java.util.Calendar dtend = java.util.Calendar.getInstance(); 
             dtstart.add(java.util.Calendar.DATE, -2); 
             VFreeBusy getBusy = new VFreeBusy(dtstart.getTime(), dtend.getTime()); 
             VFreeBusy requestFree = new VFreeBusy(dtstart.getTime(), dtend.getTime(), 30 * 60 * 1000); 
              
-            System.out.println("GET BUSY: \n" + getBusy.toString()); 
-            System.out.println("REQUEST FREE: \n" + requestFree.toString()); 
+            log.debug("GET BUSY: \n" + getBusy.toString());
+            log.debug("REQUEST FREE: \n" + requestFree.toString());
              
-            net.fortuna.ical4j.model.Calendar FreeBusyTest2 =  
-            new net.fortuna.ical4j.model.Calendar(); 
+            Calendar FreeBusyTest2 = new Calendar();
              
              
             VFreeBusy replyBusy = new VFreeBusy(getBusy, FreeBusyTest.getComponents()); 
             VFreeBusy replyFree = new VFreeBusy(requestFree, FreeBusyTest.getComponents()); 
              
-            System.out.println("REPLY BUSY: \n" + replyBusy.toString()); 
-            System.out.println("REPLY FREE: \n" + replyFree.toString()); 
+            log.debug("REPLY BUSY: \n" + replyBusy.toString());
+            log.debug("REPLY FREE: \n" + replyFree.toString());
              
             FreeBusyTest2.getComponents().add(replyBusy); 
             VFreeBusy replyBusy2 = new VFreeBusy(getBusy, FreeBusyTest2.getComponents()); 
             VFreeBusy replyFree2 = new VFreeBusy(requestFree, FreeBusyTest2.getComponents()); 
              
-            System.out.println("REPLY BUSY2: \n" + replyBusy2.toString()); 
-            System.out.println("REPLY FREE2: \n" + replyFree2.toString()); 
+            log.debug("REPLY BUSY2: \n" + replyBusy2.toString());
+            log.debug("REPLY FREE2: \n" + replyFree2.toString());
     }
 }

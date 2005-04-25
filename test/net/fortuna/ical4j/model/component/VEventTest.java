@@ -5,25 +5,20 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.SortedSet;
-
 import junit.framework.TestCase;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.DateRange;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.WeekDay;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.SortedSet;
 
 /**
  * A test case for VEvents.
@@ -37,7 +32,8 @@ public class VEventTest extends TestCase {
     private VEvent weekdayNineToFiveEvents = null;
 
 
-    public void setUp() {
+    public void setUp() throws Exception {
+        super.setUp();
 
         Calendar weekday9AM = Calendar.getInstance();
         weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);

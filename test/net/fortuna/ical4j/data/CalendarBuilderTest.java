@@ -5,24 +5,25 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.util.Iterator;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.FileOnlyFilter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.Description;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Test case for iCalendarBuilder.
@@ -55,51 +56,66 @@ public class CalendarBuilderTest extends TestCase {
     }
 
     /**
-     * Class to test for Calendar build(InputStream)
-     * @throws IOException
-     * @throws ParserException
-     * @throws URISyntaxException
-     * @throws ParseException
+     * Class to test for Calendar build(InputStream).
      */
-    public final void testBuildInputStream() throws IOException,
-            ParserException, URISyntaxException, ParseException {
+    public final void testBuildInputStream() throws Exception {
+
+        System.setProperty("ical4j.unfolding.relaxed", "true");
 
         FileInputStream fin = new FileInputStream(filename);
 
-        Calendar calendar = builder.build(fin);
+        Calendar calendar = null;
+
+        try {
+            calendar = builder.build(fin);
+        } catch (IOException e) {
+            log.warn("File: " + filename, e);
+        } catch (ParserException e) {
+            log.warn("File: " + filename, e);
+        }
 
         assertNotNull(calendar);
 
-        log.info("Calendar:\n=========\n" + calendar.toString());
+        try {
+            calendar.validate();
+        } catch (ValidationException e) {
+            assertTrue("Calendar file " + filename + " isn't valid:\n" + e.getMessage(), false);
+        }
 
-        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        if (log.isInfoEnabled()) {
+            log.info("File: " + filename);
 
-            Description description = (Description) c.getProperties().getProperty(Property.DESCRIPTION);
+            if (log.isDebugEnabled()) {
+                log.debug("Calendar:\n=========\n" + calendar.toString());
 
-            if (description != null) {
-                log.info("Description [" + description.getValue() + "]");
+                for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
+                    Component c = (Component) i.next();
+
+                    Description description = (Description) c.getProperties().getProperty(Property.DESCRIPTION);
+
+                    if (description != null) {
+                        log.debug("Description [" + description.getValue() + "]");
+                    }
+                }
             }
         }
     }
 
     /**
      * Test suite.
-     * @return
+     * @return test suite
      */
     public static Test suite() {
-
         TestSuite suite = new TestSuite();
 
-        File[] samples = new File("c:/Development/workspace/iCal4j/ical4j/etc/samples").listFiles(new FileFilter() {
-			public final boolean accept(final File file) {
-				return file.getName().endsWith("ArgentinaHolidays.ics");
-			}
-		});
+        List testFiles = new ArrayList();
 
-        for (int i = 0; i < samples.length; i++) {
-            log.info("Sample [" + samples[i] + "]");
-			suite.addTest(new CalendarBuilderTest("testBuildInputStream", samples[i].getPath()));
+        testFiles.addAll(Arrays.asList(new File("etc/samples/valid").listFiles(new FileOnlyFilter())));
+        testFiles.addAll(Arrays.asList(new File("etc/samples/invalid").listFiles(new FileOnlyFilter())));
+
+        for (int i = 0; i < testFiles.size(); i++) {
+            log.info("Sample [" + testFiles.get(i) + "]");
+			suite.addTest(new CalendarBuilderTest("testBuildInputStream", ((File)testFiles.get(i)).getPath()));
         }
 
         return suite;

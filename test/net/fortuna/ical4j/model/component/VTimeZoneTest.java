@@ -5,12 +5,11 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.TimeZone;
-
+import junit.framework.TestCase;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import junit.framework.TestCase;
+import java.util.TimeZone;
 
 /**
  * A test case for VTimeZone.
@@ -29,7 +28,7 @@ public class VTimeZoneTest extends TestCase {
 
         assertNotNull(timezone);
 
-        log.info(timezone);
+        log.debug(timezone);
     }
 
     /**
