@@ -48,8 +48,10 @@ import org.apache.commons.logging.LogFactory;
 public class FoldingWriter extends FilterWriter {
 
     // Lines of text SHOULD NOT be longer than 75 octets, excluding the line break.
-    // reduced to 73 to be consistent with iCal..
-    private static final int FOLD_LENGTH = 73;
+    // reduced to 73 to be consistent with Apple iCal..
+    public static final int REDUCED_FOLD_LENGTH = 73;
+
+    public static final int MAX_FOLD_LENGTH = 75;
 
     private static final char[] FOLD_PATTERN = {'\r', '\n', ' '};
 
@@ -57,13 +59,22 @@ public class FoldingWriter extends FilterWriter {
 
     private int lineLength;
 
-    /**
-     * @param arg0 a writer to write output to
-     */
-    public FoldingWriter(final Writer arg0) {
-        super(arg0);
+    private int foldLength;
 
-        lineLength = 0;
+    /**
+     * @param writer a writer to write output to
+     * @param foldLength
+     */
+    public FoldingWriter(final Writer writer, int foldLength) {
+        super(writer);
+        this.foldLength = Math.min(foldLength, MAX_FOLD_LENGTH);
+    }
+
+    /**
+     * @param writer a writer to write output to
+     */
+    public FoldingWriter(final Writer writer) {
+        this(writer, REDUCED_FOLD_LENGTH);
     }
 
     /*
@@ -72,7 +83,7 @@ public class FoldingWriter extends FilterWriter {
      * @see java.io.FilterWriter#write(int)
      *
      */
-    public final void write(final int c) throws IOException {
+    public void write(final int c) throws IOException {
 
         /*
         super.write(c);
@@ -96,7 +107,8 @@ public class FoldingWriter extends FilterWriter {
      * @see java.io.FilterWriter#write(char[], int, int)
      */
     public void write(final char[] buffer, final int offset, final int length) throws IOException {
-        for (int i = offset; i < length; i++) {
+        int maxIndex = offset + length - 1;
+        for (int i = offset; i <= maxIndex; i++) {
 
             // debugging..
             if (log.isDebugEnabled()) {
@@ -105,14 +117,14 @@ public class FoldingWriter extends FilterWriter {
 
             // check for fold first so we don't unnecessarily fold after
             // no more data..
-            if (lineLength > FOLD_LENGTH) {
+            if (lineLength >= foldLength) {
                 super.write(FOLD_PATTERN, 0, FOLD_PATTERN.length);
 
                 // re-initialise to 1 to account for the space in fold pattern..
                 lineLength = 1;
             }
 
-            super.write(new char[] {buffer[i]}, 0, 1);
+            super.write(buffer[i]);
 
             if (buffer[i] == '\n') {
                 lineLength = 0;

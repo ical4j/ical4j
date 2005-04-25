@@ -49,6 +49,7 @@ import net.fortuna.ical4j.model.ValidationException;
 public class CalendarOutputter {
 
     private boolean validating;
+    private int foldLength;
 
     /**
      * Default constructor.
@@ -62,7 +63,18 @@ public class CalendarOutputter {
      * calendar when outputting to stream
      */
     public CalendarOutputter(final boolean validating) {
+        this(validating, FoldingWriter.REDUCED_FOLD_LENGTH);
+    }
+
+    /**
+     * @param validating indicates whether to validate
+     * calendar when outputting to stream
+     * @param foldLength maximum number of characters before a line
+     * is folded
+     */
+    public CalendarOutputter(final boolean validating, final int foldLength) {
         this.validating = validating;
+        this.foldLength = foldLength;
     }
 
     /**
@@ -98,7 +110,7 @@ public class CalendarOutputter {
             calendar.validate();
         }
 
-        FoldingWriter writer = new FoldingWriter(out);
+        FoldingWriter writer = new FoldingWriter(out, foldLength);
 
         try {
 
