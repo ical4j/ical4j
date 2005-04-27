@@ -33,13 +33,30 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Period;
+import net.fortuna.ical4j.model.PeriodList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStamp;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.ExDate;
+import net.fortuna.ical4j.model.property.ExRule;
+import net.fortuna.ical4j.model.property.RDate;
+import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.util.PropertyValidator;
-import net.fortuna.ical4j.util.DateRangeNormalizer;
 
 
 /**
@@ -119,6 +136,61 @@ import net.fortuna.ical4j.util.DateRangeNormalizer;
  * VTimeZone tz = VTimeZone.getDefault();
  * TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
  * meeting.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+ * </code></pre>
+ * 
+ * Example 3 - Retrieve a list of periods representing a recurring event in a
+ * specified range:
+ * 
+ * <pre><code>
+ *       Calendar weekday9AM = Calendar.getInstance();
+ *       weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
+ *       weekday9AM.set(Calendar.MILLISECOND, 0);
+ *
+ *       Calendar weekday5PM = Calendar.getInstance();
+ *       weekday5PM.set(2005, Calendar.MARCH, 7, 17, 0, 0);
+ *       weekday5PM.set(Calendar.MILLISECOND, 0);
+ *
+ *       // Do the recurrence until December 31st.
+ *       Calendar untilCal = Calendar.getInstance();
+ *       untilCal.set(2005, Calendar.DECEMBER, 31);
+ *       untilCal.set(Calendar.MILLISECOND, 0);
+ *
+ *       // 9:00AM to 5:00PM Rule
+ *       Recur recur = new Recur(Recur.WEEKLY, untilCal.getTime());
+ *       recur.getDayList().add(WeekDay.MO);
+ *       recur.getDayList().add(WeekDay.TU);
+ *       recur.getDayList().add(WeekDay.WE);
+ *       recur.getDayList().add(WeekDay.TH);
+ *       recur.getDayList().add(WeekDay.FR);
+ *       recur.setInterval(3);
+ *       recur.setWeekStartDay(WeekDay.MO.getDay());
+ *       RRule rrule = new RRule(recur);
+ *
+ *       Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI");
+ *
+ *       weekdayNineToFiveEvents = new VEvent();
+ *       weekdayNineToFiveEvents.getProperties().add(rrule);
+ *       weekdayNineToFiveEvents.getProperties().add(summary);
+ *       weekdayNineToFiveEvents.getProperties().add(
+ *                                       new DtStart(weekday9AM.getTime()));
+ *       weekdayNineToFiveEvents.getProperties().add(
+ *                                       new DtEnd(weekday5PM.getTime()));
+ *
+ *       // Test Start 04/01/2005, End One month later.
+ *       // Query Calendar Start and End Dates.
+ *       Calendar queryStartDate = Calendar.getInstance();
+ *       queryStartDate.set(2005, Calendar.APRIL, 1, 14, 47, 0);
+ *       queryStartDate.set(Calendar.MILLISECOND, 0);
+ *       Calendar queryEndDate = Calendar.getInstance();
+ *       queryEndDate.set(2005, Calendar.MAY, 1, 11, 15, 0);
+ *       queryEndDate.set(Calendar.MILLISECOND, 0);
+ *
+ *       // This range is monday to friday every three weeks, starting from
+ *       // March 7th 2005, which means for our query dates we need
+ *       // April 18th through to the 22nd.
+ *       PeriodList periods =
+ *               weekdayNineToFiveEvents.getPeriods(queryStartDate.getTime(),
+ *                                                     queryEndDate.getTime());
  * </code></pre>
  * 
  * @author Ben Fortuna
@@ -324,115 +396,110 @@ public class VEvent extends Component {
         }
     }
 
-
     /**
-     * Retrieve the Date Ranges (Time Segments) that this VEvent represents if
-     * this is a recurring event.  This method will also remove any excluded
-     * Date Ranges.
-     *
-     * @param startDate
-     *           The query start date to start searching for date ranges.
-     * @param endDate
-     *           The query end date to stop searching for date ranges.
-     * @return
-     *           Sorted Set of DateRange objects that fall on or between the
-     *           given query dates.
+     * Returns a list of periods representing the consumed time for this event
+     * in the specified range. Note that the returned list may contain a single
+     * period for non-recurring components or multiple periods for recurring
+     * components. If no time is consumed by this event an empty list is returned.
+     * @param start the start of the range to check for consumed time
+     * @param end the end of the range to check for consumed time
+     * @return a list of periods representing consumed time for this event
      */
-    public final SortedSet getDateRanges(Date startDate, Date endDate) {
-
-        if ((startDate == null) || (endDate == null)) {
-            throw new RuntimeException("Can't search on null date(s)");
+    public final PeriodList getConsumedTime(final Date rangeStart, final Date rangeEnd) {
+        PeriodList periods = new PeriodList();
+        // if component is transparent return empty list..
+        if (Transp.TRANSPARENT.equals(getProperties().getProperty(Property.TRANSP))) {
+            return periods;
         }
-
-        DateRangeNormalizer normalizer = DateRangeNormalizer.getInstance();
-        DateList exDateList = new DateList(Value.DATE_TIME);
-        DtStart eventStartDate = getStartDate();
-        DtEnd eventDtEnd = getEndDate();
-
-        if (eventDtEnd == null) {
-            throw new RuntimeException("No end to the VEVENT!  " +
-                                       "Please specify DTEND or DURATION.");
+        DtStart start = (DtStart) getProperties().getProperty(Property.DTSTART);
+        DtEnd end = (DtEnd) getProperties().getProperty(Property.DTEND);
+        Duration duration = (Duration) getProperties().getProperty(Property.DURATION);
+        // if no start date specified return empty list..
+        if (start == null) {
+            return periods;
         }
-
-        PropertyList exRules = getProperties().getProperties(Property.EXRULE);
-        PropertyList exDates = getProperties().getProperties(Property.EXDATE);
-
-        long duration = (eventDtEnd.getTime().getTime() -
-                         eventStartDate.getTime().getTime());
-
-        DateList currDateList = getRecurringStartDates(startDate, endDate);
-
-        // Subtract the EXDATEs from the list of start dates
-        for (Iterator exDateIter = exDates.iterator(); exDateIter.hasNext();) {
-
-            ExDate nextExDate = (ExDate) exDateIter.next();
-            DateList nextExDates = nextExDate.getDates();
-
-            // Remove any dates that clash with the list of Start
-            // Dates retrieved.
-            for (Iterator nextExDatesIter = nextExDates.iterator();
-                                                nextExDatesIter.hasNext();) {
-                currDateList.remove(nextExDatesIter.next());
+        // if an explicit event duration is not specified, derive a value for recurring
+        // periods from the end date..
+        long rDuration;
+        if (duration == null) {
+            rDuration = end.getTime().getTime() - start.getTime().getTime();
+        }
+        else {
+            rDuration = duration.getDuration();
+        }
+        // if start/end specified as anniversary-type (i.e. uses DATE values
+        // rather than DATE-TIME), return empty list..
+        if (Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE))) {
+            return periods;
+        }
+        // recurrence dates..
+        PropertyList rDates = getProperties().getProperties(Property.RDATE);
+        for (Iterator i = rDates.iterator(); i.hasNext();) {
+            RDate rdate = (RDate) i.next();
+            // only period-based rdates are applicable..
+            if (Value.PERIOD.equals(rdate.getParameters().getParameter(Parameter.VALUE))) {
+                for (Iterator j = rdate.getPeriods().iterator(); j.hasNext();) {
+                    Period period = (Period) j.next();
+                    if (period.getStart().before(rangeEnd) && period.getEnd().after(rangeStart)) {
+                        periods.add(period);
+                    }
+                }
             }
         }
-
-        // Look at all the ExRules to subtract later on.
-        for (Iterator propertyIter = exRules.iterator();
-                                            propertyIter.hasNext();) {
-
-            ExRule nextExRule = (ExRule) propertyIter.next();
-            Recur recur = nextExRule.getRecur();
-            exDateList.addAll(recur.getDates(eventStartDate, startDate, endDate,
-                                             Value.DATE_TIME));
+        // exception dates..
+        PropertyList exDates = getProperties().getProperties(Property.EXDATE);
+        for (Iterator i = exDates.iterator(); i.hasNext();) {
+            ExDate exDate = (ExDate) i.next();
+            for (Iterator j = periods.iterator(); j.hasNext();) {
+                Period period = (Period) j.next();
+                if (exDate.getDates().contains(period.getStart())) {
+                    periods.remove(period);
+                }
+            }
         }
-
-        // Turn the excluded dates into DateRange objects and subtract
-        // the set from the entire set.
-        SortedSet exDateRangeSet =
-                        normalizer.createDateRangeSet(exDateList, duration);
-
-        // Turn the dates into DateRange objects and merge the
-        // set with the entire set.
-        SortedSet currDateRangeSet =
-                        normalizer.createDateRangeSet(currDateList, duration);
-
-        // Return the normalized list of Date Ranges, that is a list of
-        // Date Ranges that are current and do not contain the excluded
-        // Date Ranges.
-        return normalizer.subtractDateRanges(currDateRangeSet, exDateRangeSet);
-    }
-
-    /**
-     * Convenience method to retreive all the Start dates of a recurring event.
-     *
-     * @param startDate
-     *           Date to start querying for Start Dates
-     * @param endDate
-     *           Date to stop querying for Start Dates
-     * @return
-     *           DateList of unordered Start java.util.Date objects.
-     */
-    public DateList getRecurringStartDates(Date startDate, Date endDate) {
-
-        if ((startDate == null) || (endDate == null)) {
-            throw new RuntimeException("Can't search on null date(s)");
-        }        
-
-        PropertyList rrules = getProperties().getProperties(Property.RRULE);
-        DateList currDateList = new DateList(Value.DATE_TIME);
-        DtStart eventStartDate = getStartDate();
-
-        for (Iterator propertyIter = rrules.iterator();
-                                                propertyIter.hasNext();) {
-
-            RRule nextRRule = (RRule) propertyIter.next();
-            Recur recur = nextRRule.getRecur();
-            currDateList.addAll(recur.getDates(eventStartDate, startDate,
-                                               endDate,
-                                               Value.DATE_TIME));
+        // recurrence rules..
+        PropertyList rRules = getProperties().getProperties(Property.RRULE);
+        for (Iterator i = rRules.iterator(); i.hasNext();) {
+            RRule rrule = (RRule) i.next();
+            DateList startDates = rrule.getRecur().getDates(start.getTime(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
+            for (int j = 0; j < startDates.size(); j++) {
+                Date startDate = (Date) startDates.get(j);
+                periods.add(new Period(startDate, rDuration));
+            }
         }
-
-        return currDateList;
+        // exception rules..
+        PropertyList exRules = getProperties().getProperties(Property.EXRULE);
+        PeriodList exPeriods = new PeriodList();
+        for (Iterator i = exRules.iterator(); i.hasNext();) {
+            ExRule exrule = (ExRule) i.next();
+            DateList startDates = exrule.getRecur().getDates(start.getTime(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
+            for (Iterator j = startDates.iterator(); j.hasNext();) {
+                Date startDate = (Date) j.next();
+                exPeriods.add(new Period(startDate, rDuration));
+            }
+        }
+        // apply exceptions..
+        if (!exPeriods.isEmpty()) {
+            periods = periods.subtract(exPeriods);
+        }
+        // if periods already specified through recurrence, return..
+        // ..also normalise before returning.
+        if (!periods.isEmpty()) {
+            return periods.normalise();
+        }
+        // add first instance if included in range..
+        if (start.getTime().before(rangeEnd)) {
+            if (end != null && end.getTime().after(rangeStart)) {
+                periods.add(new Period(start.getTime(), end.getTime()));
+            }
+            else if (duration != null) {
+                Period period = new Period(start.getTime(), duration.getDuration());
+                if (period.getEnd().after(rangeStart)) {
+                    periods.add(period);
+                }
+            }
+        }
+        return periods;
     }
 
     /**
