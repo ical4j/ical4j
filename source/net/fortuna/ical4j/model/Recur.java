@@ -45,7 +45,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.DateFormat;
 import net.fortuna.ical4j.util.DateTimeFormat;
 
@@ -460,39 +459,52 @@ public class Recur implements Serializable {
         }
         return b.toString();
     }
+    
+    /**
+     * Returns a list of start dates in the specified period represented by this recur.
+     * Any date fields not specified by this recur are retained from the period start,
+     * and as such you should ensure the period start is initialised correctly.
+     * @param periodStart the start of the period
+     * @param periodEnd the end of the period
+     * @param value the type of dates to generate (i.e. date/date-time)
+     * @return a list of dates
+     */
+    public final DateList getDates(final Date periodStart, final Date periodEnd, final Value value) {
+    	return getDates(periodStart, periodStart, periodEnd, value);
+    }
 
     /**
      * Returns a list of start dates in the specified period represented
-     * by this recur.  This method includes a DTSTART object as parameter, which
+     * by this recur.  This method includes a base date argument, which
      * indicates the start of the fist occurrence of this recurrence.
      *
-     * The DTSTART is used to inject default values to return a set of dates in
-     * the correct format.  For example, if the search start date (strt) is
+     * The base date is used to inject default values to return a set of dates in
+     * the correct format.  For example, if the search start date (start) is
      * Wed, Mar 23, 12:19PM, but the recurrence is Mon - Fri, 9:00AM - 5:00PM,
      * the start dates returned should all be at 9:00AM, and not 12:19PM.
      *
      * @return a list of dates represented by this recur instance
-     * @param dtStart
-     *              The Start date of this Recurrence's first instance
-     * @param strt the start of the period
-     * @param end the end of the period
+     * @param base the start date of this Recurrence's first instance
+     * @param periodStart the start of the period
+     * @param periodEnd the end of the period
      * @param value the type of dates to generate (i.e. date/date-time)
      */
-    public final DateList getDates(final DtStart dtStart, final Date strt,
-                                   final Date end, final Value value) {
+    public final DateList getDates(final Date base, final Date periodStart,
+                                   final Date periodEnd, final Value value) {
 
         DateList dates = new DateList(value);
-        Date start = (Date) strt.clone();
+        
+        Date start = (Date) periodStart.clone();
 
-        // Should never happen!  DTSTART is always required!
-        if (dtStart == null) {
+        // Should never happen!  base is always required!
+        if (base == null) {
             return dates;
         }
 
         // We don't want to see or search any dates that occurr before the
         // first instance of this recurrence.
-        if (start.before(dtStart.getTime())) {
-            start = dtStart.getTime();
+        if (start.before(base)) {
+            start = base;
         }
 
         int lowestVariableField = 9999;
@@ -513,8 +525,9 @@ public class Recur implements Serializable {
             lowestVariableField = Calendar.SECOND;
         }
 
-        Calendar dtStartCalendar = Calendar.getInstance();
-        dtStartCalendar.setTime(dtStart.getTime());
+        Calendar baseCalendar = Calendar.getInstance();
+        baseCalendar.setTime(base);
+        
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         cal.set(Calendar.MILLISECOND, 0);
@@ -564,11 +577,11 @@ public class Recur implements Serializable {
         // Everything else comes from the query start date.
         int[] matchFields = getMatchFields(lowestVariableField);
         for (int i = 0; i < matchFields.length; i++) {
-            cal.set(matchFields[i], dtStartCalendar.get(matchFields[i]));
+            cal.set(matchFields[i], baseCalendar.get(matchFields[i]));
         }
 
         // Deal with rolling over to the next time period if necessary.
-        if (cal.getTime().getTime() < strt.getTime()) {
+        if (cal.getTime().before(periodStart)) {
             cal.add(lowestVariableField, 1);
         }
 
@@ -587,21 +600,21 @@ public class Recur implements Serializable {
         // apply frequency/interval rules..
         if (getUntil() != null) {
             while (!cal.getTime().after(getUntil())
-                    && !(end != null && cal.getTime().after(end))) {
+                    && !(periodEnd != null && cal.getTime().after(periodEnd))) {
                 dates.add(cal.getTime());
                 increment(cal);
             }
         }
         else if (getCount() >= 1) {
             for (int i = 0;
-                i < getCount() && !(end != null && cal.getTime().after(end));
+                i < getCount() && !(periodEnd != null && cal.getTime().after(periodEnd));
                 i++) {
                 dates.add(cal.getTime());
                 increment(cal);
             }
         }
-        else if (end != null) {
-            while (!cal.getTime().after(end)) {
+        else if (periodEnd != null) {
+            while (!cal.getTime().after(periodEnd)) {
                 dates.add(cal.getTime());
                 increment(cal);
             }
@@ -680,157 +693,7 @@ public class Recur implements Serializable {
                 dates.remove(date);
                 i--;
             }
-            else if (end != null && date.after(end)) {
-                dates.remove(date);
-                i--;
-            }
-            else if (getUntil() != null && date.after(getUntil())) {
-                dates.remove(date);
-                i--;
-            }
-            else if (getCount() >= 1 && i >= getCount()) {
-                dates.remove(date);
-                i--;
-            }
-        }
-
-        return dates;
-    }
-
-    /**
-     * Returns a list of dates in the specified period represented
-     * by this recur.
-     * @param start the start of the period
-     * @param end the end of the period
-     * @param value the type of dates to generate (i.e. date/date-time)
-     * @return a list of dates represented by this recur instance
-     */
-    public final DateList getDates(final Date start, final Date end, final Value value) {
-        DateList dates = new DateList(value);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(start);
-        // reset fields where BY* rules apply..
-        if (!getMonthList().isEmpty()) {
-            cal.set(Calendar.MONTH, 0);
-        }
-        if (!getWeekNoList().isEmpty()) {
-            cal.set(Calendar.WEEK_OF_YEAR, 1);
-        }
-        if (!getYearDayList().isEmpty()) {
-            cal.set(Calendar.DAY_OF_YEAR, 1);
-        }
-        if (!getMonthDayList().isEmpty()) {
-            cal.set(Calendar.DAY_OF_MONTH, 1);
-        }
-        if (!getDayList().isEmpty()) {
-            cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        }
-        if (!getHourList().isEmpty()) {
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-        }
-        if (!getMinuteList().isEmpty()) {
-            cal.set(Calendar.MINUTE, 0);
-        }
-        if (!getSecondList().isEmpty()) {
-            cal.set(Calendar.SECOND, 0);
-        }
-        // apply frequency/interval rules..
-        if (getUntil() != null) {
-            while (!cal.getTime().after(getUntil())
-                    && !(end != null && cal.getTime().after(end))) {
-                dates.add(cal.getTime());
-                increment(cal);
-            }
-        }
-        else if (getCount() >= 1) {
-            for (int i = 0;
-                i < getCount() && !(end != null && cal.getTime().after(end));
-                i++) {
-                dates.add(cal.getTime());
-                increment(cal);
-            }
-        }
-        else if (end != null) {
-            while (!cal.getTime().after(end)) {
-                dates.add(cal.getTime());
-                increment(cal);
-            }
-        }
-        else {
-            // if no end-point specified we can't calculate a finite
-            // set of dates..
-            return dates;
-        }
-
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after FREQUENCY/INTERVAL processing: " + dates);
-        }
-
-        dates = getMonthVariants(dates);
-
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYMONTH processing: " + dates);
-        }
-
-        dates = getWeekNoVariants(dates);
-
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYWEEKNO processing: " + dates);
-        }
-
-        dates = getYearDayVariants(dates);
-
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYYEARDAY processing: " + dates);
-        }
-
-        dates = getMonthDayVariants(dates);
-
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYMONTHDAY processing: " + dates);
-        }
-
-        dates = getDayVariants(dates);
-
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYDAY processing: " + dates);
-        }
-
-        dates = getHourVariants(dates);
-
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYHOUR processing: " + dates);
-        }
-
-        dates = getMinuteVariants(dates);
-
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYMINUTE processing: " + dates);
-        }
-
-        dates = getSecondVariants(dates);
-
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYSECOND processing: " + dates);
-        }
-
-        // final processing..
-        for (int i = 0; i < dates.size(); i++) {
-            Date date = (Date) dates.get(i);
-            if (date.before(start)) {
-                dates.remove(date);
-                i--;
-            }
-            else if (end != null && date.after(end)) {
+            else if (periodEnd != null && date.after(periodEnd)) {
                 dates.remove(date);
                 i--;
             }
