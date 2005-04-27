@@ -33,35 +33,26 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.FbType;
-import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.ExDate;
 import net.fortuna.ical4j.model.property.FreeBusy;
-import net.fortuna.ical4j.model.property.RDate;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.util.PropertyValidator;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Defines an iCalendar VFREEBUSY component.
@@ -233,7 +224,7 @@ public class VFreeBusy extends Component {
 
     /**
      * Create a FREEBUSY property representing the busy time for the specified
-     * component. If the component is not applicable to FREEBUSY time, or if the
+     * component list. If the component is not applicable to FREEBUSY time, or if the
      * component is outside the bounds of the start and end dates, null is
      * returned. If no valid busy periods are identified in the component an
      * empty FREEBUSY property is returned (i.e. empty period list).
@@ -243,34 +234,43 @@ public class VFreeBusy extends Component {
      * @return a FreeBusy instance or null if the component is not applicable
      */
     private FreeBusy createBusyTime(final Date startDate, final Date endDate, final ComponentList components) {
-        PeriodList periods = createPeriodList(components, endDate);
-        Collections.sort(periods);
+        PeriodList periods = getConsumedTime(components, startDate, endDate);
         for (Iterator i = periods.iterator(); i.hasNext();) {
             Period period = (Period) i.next();
             // check if period outside bounds..
-            if (period.getStart().after(endDate) || (period.getEnd() != null && period.getEnd().before(startDate))) {
+            if (period.getStart().after(endDate) || period.getEnd().before(startDate)) {
                 periods.remove(period);
             }
         }
         return new FreeBusy(periods);
     }
 
+    /**
+     * Create a FREEBUSY property representing the free time available of the specified
+     * duration for the given list of components.
+     * component. If the component is not applicable to FREEBUSY time, or if the
+     * component is outside the bounds of the start and end dates, null is
+     * returned. If no valid busy periods are identified in the component an
+     * empty FREEBUSY property is returned (i.e. empty period list).
+     * @param start
+     * @param end
+     * @param duration
+     * @param components
+     * @return
+     */
     private FreeBusy createFreeTime(final Date start, final Date end, final long duration, final ComponentList components) {
         FreeBusy fb = new FreeBusy();
         fb.getParameters().add(FbType.FREE);
-        PeriodList periods = createPeriodList(components, end);
-        Collections.sort(periods);
-        
+        PeriodList periods = getConsumedTime(components, start, end);
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Busy periods: " + periods);
         }
-        
         Date lastPeriodEnd = null;
         for (Iterator i = periods.iterator(); i.hasNext();) {
             Period period = (Period) i.next();
             // check if period outside bounds..
-            if (period.getStart().after(end) || (period.getEnd() != null && period.getEnd().before(start))) {
+            if (period.getStart().after(end) || period.getEnd().before(start)) {
                 continue;
             }
             // create a dummy last period end if first period starts after the start date
@@ -285,123 +285,27 @@ public class VFreeBusy extends Component {
                     fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
                 }
             }
-            if (period.getEnd() != null) {
-                lastPeriodEnd = period.getEnd();
-            }
-            else {
-                lastPeriodEnd = new Date(period.getStart().getTime() + period.getDuration());
-            }
+            lastPeriodEnd = period.getEnd();
         }
         return fb;
     }
 
     /**
-     * Creates a list of periods representing the time taken for the specified
+     * Creates a list of periods representing the time consumed by the specified
      * list of components.
      * @param components
      * @return
      */
-    private PeriodList createPeriodList(final ComponentList components, final Date recurEnd) {
+    private PeriodList getConsumedTime(final ComponentList components, final Date rangeStart, final Date rangeEnd) {
         PeriodList periods = new PeriodList();
         for (Iterator i = components.iterator(); i.hasNext();) {
             Component component = (Component) i.next();
-            periods.addAll(createPeriodList(component, recurEnd));
-        }
-        return periods;
-    }
-
-    /**
-     * Creates a list of periods representing the time taken for the specified
-     * component. Note that the returned list may contain a single period for
-     * non-recurring components or multiple periods for recurring components.
-     * 
-     * @param component
-     *            a component to construct a period list for
-     * @return a list of periods
-     */
-    private PeriodList createPeriodList(final Component component, final Date recurEnd) {
-        PeriodList periods = new PeriodList();
-        // if transparent component is not applicable..
-        Transp transparent = (Transp) component.getProperties().getProperty(Property.TRANSP);
-        if (transparent != null && Transp.TRANSPARENT.equals(transparent.getValue())) {
-            return null;
-        }
-        DtStart start = (DtStart) component.getProperties().getProperty(Property.DTSTART);
-        DtEnd end = (DtEnd) component.getProperties().getProperty(Property.DTEND);
-        Duration duration = (Duration) component.getProperties().getProperty(Property.DURATION);
-        // if no start date specified return..
-        if (start == null) {
-            return null;
-        }
-        // if start/end specified as anniversary-type (i.e. uses DATE values
-        // rather than DATE-TIME), return..
-        if (Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE))) {
-            return null;
-        }
-        // recurrence dates..
-        PropertyList rDates = component.getProperties().getProperties(Property.RDATE);
-        for (Iterator i = rDates.iterator(); i.hasNext();) {
-            RDate rdate = (RDate) i.next();
-            // only period rdates are applicable..
-            Value value = (Value) rdate.getParameters().getParameter(Parameter.VALUE);
-            if (value != null && Value.PERIOD.equals(value.getValue())) {
-                periods.addAll(rdate.getPeriods());
+            // only events consume time..
+            if (component instanceof VEvent) {
+                periods.addAll(((VEvent) component).getConsumedTime(rangeStart, rangeEnd));
             }
         }
-        // recurrence rules..
-        PropertyList rRules = component.getProperties().getProperties(Property.RRULE);
-        for (Iterator i = rRules.iterator(); i.hasNext();) {
-            RRule rrule = (RRule) i.next();
-            DateList startDates = rrule.getRecur().getDates(null, start.getTime(), recurEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
-            DateList endDates = null;
-            if (end == null && duration == null) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(start.getTime());
-                if (Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE))) {
-                    cal.set(Calendar.HOUR_OF_DAY, 23);
-                    cal.set(Calendar.MINUTE, 59);
-                }
-                cal.set(Calendar.SECOND, 59);
-                endDates = rrule.getRecur().getDates(null, cal.getTime(), recurEnd, (Value) end.getParameters().getParameter(Parameter.VALUE));
-            }
-            else if (end != null) {
-                endDates = rrule.getRecur().getDates(null, end.getTime(), recurEnd, (Value) end.getParameters().getParameter(Parameter.VALUE));
-            }
-            for (int j = 0; j < startDates.size(); j++) {
-                Date startDate = (Date) startDates.get(j);
-                if (endDates != null) {
-                    Date endDate = (Date) endDates.get(j);
-                    periods.add(new Period(startDate, endDate));
-                }
-                else if (duration != null) {
-                    periods.add(new Period(startDate, duration.getDuration()));
-                }
-            }
-        }
-        // exception dates..
-        PropertyList exDates = component.getProperties().getProperties(Property.EXDATE);
-        for (Iterator i = exDates.iterator(); i.hasNext();) {
-            ExDate exDate = (ExDate) i.next();
-            for (Iterator j = periods.iterator(); j.hasNext();) {
-                Period period = (Period) j.next();
-                if (exDate.getDates().contains(period.getStart())) {
-                    periods.remove(period);
-                }
-            }
-        }
-        // exception rules..
-        // TODO
-        // if periods already specified through recurrence, return..
-        if (!periods.isEmpty()) {
-            return periods;
-        }
-        else if (end != null) {
-            periods.add(new Period(start.getTime(), end.getTime()));
-        }
-        else if (duration != null) {
-            periods.add(new Period(start.getTime(), duration.getDuration()));
-        }
-        return periods;
+        return periods.normalise();
     }
 
     /*
