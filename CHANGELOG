@@ -2,6 +2,19 @@
  iCal4j - Changes
 ==================
 
+0.9.13:
+
+ - Merged DateRange functionality into Period
+ 
+ - Merged DateRangeNormalizer functionality into PeriodList
+ 
+ - Removed Calendar.getEventDateRanges() (use VFreeBusy request instead)
+ 
+ - Removed VEvent.getDateRanges() (use VEvent.getConsumedTime() instead)
+ 
+ - Removed VEvent.getRecurringStartDates() (use Recur.getDates() instead)
+ 
+ 
 0.9.12:
 
  - Redefined parameter and property constants to class instances rather
