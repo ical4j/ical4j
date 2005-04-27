@@ -5,20 +5,24 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import junit.framework.TestCase;
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Period;
+import net.fortuna.ical4j.model.PeriodList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.SortedSet;
 
 /**
  * A test case for VEvents.
@@ -135,6 +139,7 @@ public class VEventTest extends TestCase {
     }
     
 
+    /*
     public void testGetRecurringStartDates() {
 
         // Test Null Dates
@@ -169,6 +174,7 @@ public class VEventTest extends TestCase {
         assertEquals(expectedFirstStart.getTime(), firstStartDate.getTime());
 
     }
+    */
 
     /**
      * Test Null Dates
@@ -176,11 +182,11 @@ public class VEventTest extends TestCase {
      *
      * @throws Exception
      */
-   public final void testGetDateRanges() throws Exception {
+   public final void testGetConsumedTime() throws Exception {
 
         // Test Null Dates
         try {
-            weekdayNineToFiveEvents.getDateRanges(null, null);
+            weekdayNineToFiveEvents.getConsumedTime(null, null);
             fail("Should've thrown an exception.");
         } catch (RuntimeException re) {
             log.info("Expecting an exception here.");
@@ -198,8 +204,8 @@ public class VEventTest extends TestCase {
         // This range is monday to friday every three weeks, starting from
         // March 7th 2005, which means for our query dates we need
         // April 18th through to the 22nd.
-        SortedSet dateRangeSet =
-                weekdayNineToFiveEvents.getDateRanges(queryStartDate.getTime(),
+        PeriodList periods =
+                weekdayNineToFiveEvents.getConsumedTime(queryStartDate.getTime(),
                                                       queryEndDate.getTime());
         Calendar expectedCal = Calendar.getInstance();
         expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
@@ -208,11 +214,11 @@ public class VEventTest extends TestCase {
         expectedCal.set(2005, Calendar.APRIL, 4, 17, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
         Date expectedEndOfFirstRange = expectedCal.getTime();
-        assertNotNull(dateRangeSet);
-        assertTrue(dateRangeSet.size() > 0);
-        DateRange firstRange = (DateRange) dateRangeSet.toArray()[0];
-        assertEquals(expectedStartOfFirstRange, firstRange.getStartDate());
-        assertEquals(expectedEndOfFirstRange, firstRange.getEndDate());
+        assertNotNull(periods);
+        assertTrue(periods.size() > 0);
+        Period firstPeriod = (Period) periods.toArray()[0];
+        assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
+        assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
 
     }
 }

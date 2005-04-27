@@ -42,13 +42,13 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
- * <p>DateRange Tester.</p>
+ * <p>Period Tester.</p>
  *
- * </p>Tests the behaviour of the DateRange class to make sure it acts in
+ * </p>Tests the behaviour of the Period class to make sure it acts in
  * the expected way.</p>
- * @see DateRange
+ * @see net.fortuna.ical4j.model.Period
  */
-public class DateRangeTest extends TestCase
+public class PeriodTest extends TestCase
 {
     private Date today;
     private Date past;
@@ -60,19 +60,19 @@ public class DateRangeTest extends TestCase
     private Date may1994;
     private Date jun1994;
     private Date jul1994;
-    private DateRange year1994;
-    private DateRange monthMarch;
-    private DateRange monthApril;
-    private DateRange monthMay;
-    private DateRange firstHalf;
-    private DateRange lastHalf;
-    private DateRange winter;
-    private DateRange spring;
-    private DateRange marchToMay;
-    private DateRange marchToApril;
-    private DateRange duplicateRange;
+    private Period year1994;
+    private Period monthMarch;
+    private Period monthApril;
+    private Period monthMay;
+    private Period firstHalf;
+    private Period lastHalf;
+    private Period winter;
+    private Period spring;
+    private Period marchToMay;
+    private Period marchToApril;
+    private Period duplicateRange;
 
-    public DateRangeTest(String name)
+    public PeriodTest(String name)
     {
         super(name);
     }
@@ -99,39 +99,17 @@ public class DateRangeTest extends TestCase
         jun1994 = cal.getTime();
         cal.set(1994, java.util.Calendar.JULY, 29);
         jul1994 = cal.getTime();
-        year1994 = new DateRange();
-        year1994.setStartDate(begin1994);
-        year1994.setEndDate(end1994);
-        monthMarch = new DateRange();
-        monthMarch.setStartDate(mar1994);
-        monthMarch.setEndDate(apr1994);
-        monthApril = new DateRange();
-        monthApril.setStartDate(apr1994);
-        monthApril.setEndDate(may1994);
-        monthMay = new DateRange();
-        monthMay.setStartDate(may1994);
-        monthMay.setEndDate(jun1994);
-        firstHalf = new DateRange();
-        firstHalf.setStartDate(begin1994);
-        firstHalf.setEndDate(jun1994);
-        lastHalf = new DateRange();
-        lastHalf.setStartDate(may1994);
-        lastHalf.setEndDate(end1994);
-        winter = new DateRange();
-        winter.setStartDate(begin1994);
-        winter.setEndDate(apr1994);
-        spring = new DateRange();
-        spring.setStartDate(apr1994);
-        spring.setEndDate(jul1994);
-        marchToMay = new DateRange();
-        marchToMay.setStartDate(mar1994);
-        marchToMay.setEndDate(jun1994);
-        marchToApril = new DateRange();
-        marchToApril.setStartDate(mar1994);
-        marchToApril.setEndDate(may1994);
-        duplicateRange = new DateRange();
-        duplicateRange.setStartDate(begin1994);
-        duplicateRange.setEndDate(end1994);
+        year1994 = new Period(begin1994, end1994);
+        monthMarch = new Period(mar1994, apr1994);
+        monthApril = new Period(apr1994, may1994);
+        monthMay = new Period(may1994, jun1994);
+        firstHalf = new Period(begin1994, jun1994);
+        lastHalf = new Period(may1994, end1994);
+        winter = new Period(begin1994, apr1994);
+        spring = new Period(apr1994, jul1994);
+        marchToMay = new Period(mar1994, jun1994);
+        marchToApril = new Period(mar1994, may1994);
+        duplicateRange = new Period(begin1994, end1994);
         today = new Date();
     }
 
@@ -164,9 +142,10 @@ public class DateRangeTest extends TestCase
         long testMillis;
         long todayMillis;
         todayMillis = today.getTime();
-        DateRange testRange;
+        Period testPeriod;
 
-        testRange = new DateRange();
+        /*
+        testPeriod = new DateRange();
         testMillis = testRange.getStartDate().getTime();
         assertTrue("Uninitialized start date should have been set to NOW",
                 (todayMillis - testMillis) < 5000);
@@ -175,20 +154,23 @@ public class DateRangeTest extends TestCase
         testMillis = testRange.getEndDate().getTime();
         assertTrue("Uninitialized end date should have been set to NOW",
                 (todayMillis - testMillis) < 5000);
+        */
 
-        testRange = new DateRange();
-        testRange.setStartDate(past);
-        assertEquals(past, testRange.getStartDate());
+        testPeriod = new Period(past, null);
+        assertEquals(past, testPeriod.getStart());
 
-        testMillis = testRange.getEndDate().getTime();
+        /*
+        testMillis = testPeriod.getEnd().getTime();
         assertTrue("No end date with set start date should have been set to NOW",
                 (todayMillis - testMillis) < 5000);
+        */
 
-        testRange.setEndDate(future);
-        assertEquals(past, testRange.getStartDate());
+        testPeriod = new Period(past, future);
+        assertEquals(past, testPeriod.getStart());
 
-        assertEquals(future, testRange.getEndDate());
+        assertEquals(future, testPeriod.getEnd());
 
+        /*
         testRange = new DateRange();
         testRange.setEndDate(future);
         testMillis = testRange.getStartDate().getTime();
@@ -202,6 +184,7 @@ public class DateRangeTest extends TestCase
         testRange.setStartDate(future);
         assertEquals(past, testRange.getStartDate());
         assertEquals(future, testRange.getEndDate());
+        */
     }
 
     /**
@@ -233,6 +216,7 @@ public class DateRangeTest extends TestCase
      * test end of range
      * @throws Exception
      */
+    /*
     public void testBeforeWithDate() throws Exception
     {
         assertTrue("before() claims March isn't before May",
@@ -246,6 +230,7 @@ public class DateRangeTest extends TestCase
         assertTrue("before() claims March month isn't before its end",
                 monthMarch.before(apr1994));
     }
+    */
 
     /**
      * test range before range
@@ -258,7 +243,7 @@ public class DateRangeTest extends TestCase
      *
      * @throws Exception
      */
-    public void testBeforeWithRange() throws Exception
+    public void testBeforeWithPeriod() throws Exception
     {
         assertTrue("before() claims March month isn't before May month",
                 monthMarch.before(monthMay));
@@ -272,7 +257,9 @@ public class DateRangeTest extends TestCase
                 firstHalf.before(lastHalf));
         assertFalse("before() claims disordered halves are before each other",
                 lastHalf.before(firstHalf));
-        assertTrue("before() claims March month isn't before April month",
+        // because month march end is same as month april start, march is not
+        // before april..
+        assertFalse("before() claims March month isn't before April month",
                 monthMarch.before(monthApril));
         assertFalse("before() claims April month is before March month",
                 monthApril.before(monthMarch));
@@ -286,6 +273,7 @@ public class DateRangeTest extends TestCase
      * test end of range
      * @throws Exception
      */
+    /*
     public void testAfterWithDate() throws Exception
     {
         assertFalse("after() claims March is after May",
@@ -299,6 +287,7 @@ public class DateRangeTest extends TestCase
         assertFalse("after() claims March month is after its end",
                 monthMarch.after(apr1994));
     }
+    */
 
     /**
      * test range before range
@@ -310,7 +299,7 @@ public class DateRangeTest extends TestCase
      * test butted together at start ranges
      * @throws Exception
      */
-    public void testAfterWithRange() throws Exception
+    public void testAfterWithPeriod() throws Exception
     {
         assertFalse("after() claims March month is after May month",
                 monthMarch.after(monthMay));
@@ -326,7 +315,9 @@ public class DateRangeTest extends TestCase
                 lastHalf.after(firstHalf));
         assertFalse("after() claims March month is after April month",
                 monthMarch.after(monthApril));
-        assertTrue("after() claims April month isn't after March month",
+        // because month march end is same as month april start, april is not
+        // after march..
+        assertFalse("after() claims April month isn't after March month",
                 monthApril.after(monthMarch));
 
     }
@@ -343,24 +334,24 @@ public class DateRangeTest extends TestCase
      *
      * @throws Exception
      */
-    public void testOverlaps() throws Exception
+    public void testIntersects() throws Exception
     {
         assertFalse("overlaps() claims March month is overlapping May month",
-                monthMarch.overlaps(monthMay));
+                monthMarch.intersects(monthMay));
         assertFalse("overlaps() claims May month is overlapping March month",
-                monthMay.overlaps(monthMarch));
+                monthMay.intersects(monthMarch));
         assertFalse("overlaps() claims March month is overlapping April month",
-                monthMarch.overlaps(monthApril));
+                monthMarch.intersects(monthApril));
         assertFalse("overlaps() claims April month is overlapping March month",
-                monthApril.overlaps(monthMarch));
+                monthApril.intersects(monthMarch));
         assertTrue("overlaps() claims overlapping halves are not overlapping each other",
-                firstHalf.overlaps(lastHalf));
+                firstHalf.intersects(lastHalf));
         assertTrue("overlaps() claims disordered halves are not overlapping each other",
-                lastHalf.overlaps(firstHalf));
+                lastHalf.intersects(firstHalf));
         assertTrue("overlaps() claims Winter isn't overlapping March month",
-                winter.overlaps(monthMarch));
+                winter.intersects(monthMarch));
         assertTrue("overlaps() claims March month isn't overlapping Winter",
-                monthMarch.overlaps(winter));
+                monthMarch.intersects(winter));
     }
 
     /**
@@ -508,6 +499,6 @@ public class DateRangeTest extends TestCase
 
     public static Test suite()
     {
-        return new TestSuite(DateRangeTest.class);
+        return new TestSuite(PeriodTest.class);
     }
 }

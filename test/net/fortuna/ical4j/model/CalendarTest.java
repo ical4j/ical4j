@@ -35,10 +35,9 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.util.SortedSet;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.CalScale;
@@ -216,11 +215,16 @@ public class CalendarTest extends TestCase {
 
         queryStartCal.set(2006, java.util.Calendar.JULY, 1, 9, 0, 0);
         queryEndCal.set(2006, java.util.Calendar.AUGUST, 1, 9, 0, 0);
+        
+        VFreeBusy request = new VFreeBusy(queryStartCal.getTime(), queryEndCal.getTime());
 
+        VFreeBusy reply = new VFreeBusy(request, calendar.getComponents());
+        /*
         SortedSet dateRangeSet =
                         calendar.getEventDateRanges(queryStartCal.getTime(),
                                                     queryEndCal.getTime());
+                                                    */
 
-        log.info(dateRangeSet);
+        log.info(reply);
     }
 }

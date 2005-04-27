@@ -40,7 +40,6 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtStart;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -79,7 +78,7 @@ public class RecurTest extends TestCase {
     /**
      * 
      */
-    public void testGetDatesWithDtStart() {
+    public void testGetDatesWithBase() {
         /*
          *  Here is an example of evaluating multiple BYxxx rule parts.
          *
@@ -94,7 +93,6 @@ public class RecurTest extends TestCase {
         testCal.set(Calendar.HOUR, 8);
         testCal.set(Calendar.MINUTE, 30);
         testCal.set(Calendar.SECOND, 0);
-        DtStart dtStart = new DtStart(testCal.getTime());
         
         Recur recur = new Recur(Recur.YEARLY, -1);
         recur.setInterval(2);
@@ -109,6 +107,6 @@ public class RecurTest extends TestCase {
         cal.add(Calendar.YEAR, 2);
         Date end = cal.getTime();
         log.info(recur);
-        log.info(recur.getDates(dtStart, start, end, Value.DATE_TIME));
+        log.info(recur.getDates(testCal.getTime(), start, end, Value.DATE_TIME));
     }
 }
