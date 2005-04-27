@@ -35,15 +35,18 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 
 /**
  * Defines a list of iCalendar periods.
- * @author benfortuna
+ * NOTE: By implementing the <code>java.util.SortedSet</code> interface period
+ * lists will always be sorted according to natural ordering.
+ * @author Ben Fortuna
  */
-public class PeriodList extends ArrayList implements Serializable {
+public class PeriodList extends TreeSet implements Serializable {
     
     private static final long serialVersionUID = -6319585959747194724L;
 
@@ -130,4 +133,135 @@ public class PeriodList extends ArrayList implements Serializable {
 //    public final int size() {
 //        return periods.size();
 //    }
+    
+    /**
+     * Returns a normalised version of this period list. Normalisation includes
+     * combining overlapping periods, removing periods contained by other periods,
+     * and combining adjacent periods.
+     * NOTE: If the period list is already normalised then this period list is
+     * returned.
+     * @return a period list
+     */
+    public final PeriodList normalise() {
+    	Period prevPeriod = null;
+    	Period period = null;
+        PeriodList newList = new PeriodList();
+        boolean normalised = false;
+    	for (Iterator i = iterator(); i.hasNext();) {
+    		period = (Period) i.next();
+    		if (prevPeriod != null) {
+                // ignore periods contained by other periods..
+                if (prevPeriod.contains(period)) {
+                    period = prevPeriod;
+                    normalised = true;
+                }
+    			// combine intersecting periods..
+                else if (prevPeriod.intersects(period)) {
+                    period = prevPeriod.add(period);
+                    normalised = true;
+                }
+                // combine adjacent periods..
+                else if (prevPeriod.adjacent(period)) {
+                    period = prevPeriod.add(period);
+                    normalised = true;
+                }
+                else {
+                    // if current period is recognised as distinct
+                    // from previous period, add the previous period
+                    // to the list..
+                    newList.add(prevPeriod);
+                }
+    		}
+    		prevPeriod = period;
+    	}
+        // remember to add the last period to the list..
+        newList.add(prevPeriod);
+        // only return new list if normalisation
+        // has ocurred..
+        if (normalised) {
+            return newList;
+        }
+    	return this;
+    }
+    
+    /**
+     * A convenience method that adds all the periods in the specified list
+     * to this list. Normalisation is also performed automatically after all
+     * periods have been added.
+     * @param periods
+     */
+    public final PeriodList add(final PeriodList periods) {
+        if (periods != null) {
+            PeriodList newList = new PeriodList();
+            newList.addAll(this);
+            for (Iterator i = periods.iterator(); i.hasNext();) {
+                newList.add((Period) i.next());
+            }
+            return newList.normalise();
+        }
+        return this;
+    }
+    
+    /**
+     * Subtracts the intersection of this list with the specified list of periods
+     * from this list and returns the results as a new period list. If no
+     * intersection is identified this list is returned.
+     * @param periods a list of periods to subtract from this list
+     * @return a period list
+     */
+    public final PeriodList subtract(final PeriodList subtractions) {
+        if (subtractions != null) {
+            // intialise result list as identical to this..
+            PeriodList result = new PeriodList();
+            result.addAll(this);
+            boolean intersects = false;
+            // for each subtracted period update the resulting period
+            // list..
+            for (Iterator i = subtractions.iterator(); i.hasNext();) {
+                Period subtraction = (Period) i.next();
+                PeriodList tempResult = new PeriodList();
+                for (Iterator j = result.iterator(); j.hasNext();) {
+                    Period period = (Period) j.next();
+                    if (subtraction.contains(period)) {
+                        intersects = true;
+                        // period is consumed by subtraction..
+                        continue;
+                    }
+                    else if (subtraction.intersects(period)) {
+                        Date newPeriodStart;
+                        Date newPeriodEnd;
+                        if (subtraction.getStart().before(period.getStart())) {
+                            newPeriodStart = subtraction.getEnd();
+                            newPeriodEnd = period.getEnd();
+                        }
+                        else if (subtraction.getEnd().before(period.getEnd())) {
+                            newPeriodStart = period.getStart();
+                            newPeriodEnd = subtraction.getStart();
+                        }
+                        else {
+                            // subtraction consumed by period..
+                            // initialise head period..
+                            newPeriodStart = period.getStart();
+                            newPeriodEnd = subtraction.getStart();
+                            tempResult.add(new Period(newPeriodStart, newPeriodEnd));
+                            // initialise tail period..
+                            newPeriodStart = subtraction.getEnd();
+                            newPeriodEnd = period.getEnd();
+                        }
+                        tempResult.add(new Period(newPeriodStart, newPeriodEnd));
+                        intersects = true;
+                    }
+                    else {
+                        tempResult.add(period);
+                    }
+                }
+                result = tempResult;
+            }
+            // only return new list if intersection has ocurred..
+            if (intersects) {
+                return result;
+            }
+        }
+        return this;
+    }
 }
