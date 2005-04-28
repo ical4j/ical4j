@@ -1083,28 +1083,32 @@ public class Recur implements Serializable {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int calDay = -1;
-        if (WeekDay.SU.equals(weekDay)) {
+        List days = new ArrayList();
+        if (WeekDay.SU.getDay().equals(weekDay.getDay())) {
             calDay = Calendar.SUNDAY;
         }
-        else if (WeekDay.MO.equals(weekDay)) {
+        else if (WeekDay.MO.getDay().equals(weekDay.getDay())) {
             calDay = Calendar.MONDAY;
         }
-        else if (WeekDay.TU.equals(weekDay)) {
+        else if (WeekDay.TU.getDay().equals(weekDay.getDay())) {
             calDay = Calendar.TUESDAY;
         }
-        else if (WeekDay.WE.equals(weekDay)) {
+        else if (WeekDay.WE.getDay().equals(weekDay.getDay())) {
             calDay = Calendar.WEDNESDAY;
         }
-        else if (WeekDay.TH.equals(weekDay)) {
+        else if (WeekDay.TH.getDay().equals(weekDay.getDay())) {
             calDay = Calendar.THURSDAY;
         }
-        else if (WeekDay.FR.equals(weekDay)) {
+        else if (WeekDay.FR.getDay().equals(weekDay.getDay())) {
             calDay = Calendar.FRIDAY;
         }
-        else if (WeekDay.SA.equals(weekDay)) {
+        else if (WeekDay.SA.getDay().equals(weekDay.getDay())) {
             calDay = Calendar.SATURDAY;
         }
-        List days = new ArrayList();
+        else {
+            // a matching weekday cannot be identified..
+            return days;
+        }
         if (WEEKLY.equals(getFrequency())  || !getWeekNoList().isEmpty()) {
             //int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
             // construct a list of possible week days..
@@ -1148,7 +1152,8 @@ public class Recur implements Serializable {
         if (weekDay.getOffset() < 0) {
             weekDays.add(days.get(days.size() + weekDay.getOffset()));
         }
-        else if (weekDay.getOffset() > 0) {
+        // FIXME: Should this be [days.get(weekDay.getOffset() - 1)]??
+        else if (weekDay.getOffset() > 0 && days.size() > (weekDay.getOffset() + 2)) {
             weekDays.add(days.get(weekDay.getOffset() + 1));
         }
         else {
