@@ -5,17 +5,25 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 import junit.framework.TestCase;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
@@ -220,5 +228,53 @@ public class VEventTest extends TestCase {
         assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
         assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
 
+    }
+   
+    public final void testGetConsumedTime2() throws Exception {
+        String filename = "etc/samples/valid/derryn.ics";
+        
+        FileInputStream fin = new FileInputStream(filename);
+        
+        CalendarBuilder builder = new CalendarBuilder();
+
+        net.fortuna.ical4j.model.Calendar calendar = null;
+
+        try {
+            calendar = builder.build(fin);
+        } catch (IOException e) {
+            log.warn("File: " + filename, e);
+        } catch (ParserException e) {
+            log.warn("File: " + filename, e);
+        }
+
+        assertNotNull(calendar);
+
+        try {
+            calendar.validate();
+        } catch (ValidationException e) {
+            assertTrue("Calendar file " + filename + " isn't valid:\n" + e.getMessage(), false);
+        }
+
+        log.info("File: " + filename);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Calendar:\n=========\n" + calendar.toString());
+        }
+
+        Date start = new Date();
+        Calendar endCal = Calendar.getInstance();
+        endCal.setTime(start);
+        endCal.add(Calendar.WEEK_OF_YEAR, 4);
+//        Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
+        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
+            Component c = (Component) i.next();
+            
+            if (c instanceof VEvent) {
+                PeriodList consumed = ((VEvent) c).getConsumedTime(start, endCal.getTime());
+                
+                log.debug("Event [" + c + "]");
+                log.debug("Consumed time [" + consumed + "]");
+            }
+        }
     }
 }
