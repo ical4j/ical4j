@@ -32,16 +32,26 @@
  */
 package net.fortuna.ical4j.data;
 
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.util.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StreamTokenizer;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.util.StringUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+/**
+ * @author Ben Fortuna
+ *
+ * The default implementation of a calendar parser.
+ */
 public class CalendarParserImpl implements CalendarParser {
 
     private static final int WORD_CHAR_START = 32;
@@ -54,11 +64,17 @@ public class CalendarParserImpl implements CalendarParser {
 
     private static Log log = LogFactory.getLog(CalendarParserImpl.class);
 
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.data.CalendarParser#parse(java.io.InputStream, net.fortuna.ical4j.data.ContentHandler)
+     */
     public final void parse(final InputStream in, final ContentHandler handler)
             throws IOException, ParserException {
         parse(new InputStreamReader(in), handler);
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.data.CalendarParser#parse(java.io.Reader, net.fortuna.ical4j.data.ContentHandler)
+     */
     public final void parse(final Reader in, final ContentHandler handler)
             throws IOException, ParserException {
 
@@ -113,7 +129,14 @@ public class CalendarParserImpl implements CalendarParser {
                 String error = "An error ocurred during parsing";
 
                 if (tokeniser != null) {
-                    error += " - line: " + tokeniser.lineno();
+                    int line = tokeniser.lineno();
+
+                    if (in instanceof UnfoldingReader) {
+                        // need to take unfolded lines into account
+                        line += ((UnfoldingReader) in).getLinesUnfolded();
+                    }
+
+                    error += " - line: " + line;
                 }
 
                 throw new ParserException(error, e);
@@ -227,6 +250,13 @@ public class CalendarParserImpl implements CalendarParser {
         }
     }
 
+    /**
+     * @param tokeniser
+     * @param handler
+     * @throws IOException
+     * @throws ParserException
+     * @throws URISyntaxException
+     */
     private void parseParameter(final StreamTokenizer tokeniser,
             final ContentHandler handler) throws IOException, ParserException,
             URISyntaxException {

@@ -78,6 +78,8 @@ public class UnfoldingReader extends PushbackReader {
     }
 
     private List buffers;
+    
+    private int linesUnfolded;
 
     /**
      * @param in a reader to read from
@@ -89,6 +91,13 @@ public class UnfoldingReader extends PushbackReader {
             char[] pattern = (char[]) i.next();
             buffers.add(new char[pattern.length]);
         }
+    }
+
+    /**
+     * @return number of lines unfolded so far while reading
+     */
+    public final int getLinesUnfolded() {
+        return linesUnfolded;
     }
 
     /**
@@ -106,6 +115,7 @@ public class UnfoldingReader extends PushbackReader {
                     if (log.isDebugEnabled()) {
                         log.debug("Unfolding..");
                     }
+                    linesUnfolded++;
                     // return as soon as unfolding occurs..
                     return super.read();
                 }
