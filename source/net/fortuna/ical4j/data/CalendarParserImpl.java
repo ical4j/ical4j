@@ -182,8 +182,7 @@ public class CalendarParserImpl implements CalendarParser {
             final ContentHandler handler) throws IOException, ParserException,
             URISyntaxException, ParseException {
 
-        // property names are case-insensitive, but convert to upper case to simplify further processing
-        String name = tokeniser.sval.toUpperCase();
+        String name = tokeniser.sval;
 
         // debugging..
         if (log.isDebugEnabled()) {
@@ -263,8 +262,7 @@ public class CalendarParserImpl implements CalendarParser {
 
         assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
-        // parameter names are case-insensitive, but convert to upper case to simplify further processing
-        String paramName = tokeniser.sval.toUpperCase();
+        String paramName = tokeniser.sval;
 
         // debugging..
         if (log.isDebugEnabled()) {

@@ -182,7 +182,8 @@ public class CalendarBuilder implements ContentHandler {
      */
     public void parameter(final String name, final String value) throws URISyntaxException {
         if (property != null) {
-            property.getParameters().add(ParameterFactory.getInstance().createParameter(name, value));
+            // parameter names are case-insensitive, but convert to upper case to simplify further processing
+            property.getParameters().add(ParameterFactory.getInstance().createParameter(name.toUpperCase(), value));
         }
     }
     
@@ -218,6 +219,7 @@ public class CalendarBuilder implements ContentHandler {
      * @see net.fortuna.ical4j.data.ContentHandler#startProperty(java.lang.String)
      */
     public void startProperty(final String name) {
-        property = PropertyFactory.getInstance().createProperty(name);
+        // property names are case-insensitive, but convert to upper case to simplify further processing
+        property = PropertyFactory.getInstance().createProperty(name.toUpperCase());
     }
 }
