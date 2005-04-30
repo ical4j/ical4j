@@ -54,6 +54,7 @@ import net.fortuna.ical4j.model.property.ExDate;
 import net.fortuna.ical4j.model.property.ExRule;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.util.PropertyValidator;
@@ -325,8 +326,8 @@ public class VEvent extends Component {
                 getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.GEO,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(
-                Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().validateOneOrLess(Property.LAST_MODIFIED,
+                getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.LOCATION,
                 getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.ORGANIZER,
@@ -347,8 +348,25 @@ public class VEvent extends Component {
                 getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.URL,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(
-                Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().validateOneOrLess(Property.RECURRENCE_ID,
+                getProperties());
+
+        Status status = (Status) getProperties().getProperty(Property.STATUS);
+        if (status != null) {
+            // TODO should be status.equals(Status.TENTATIVE) etc. if
+            // Status had a factory method to guarantee that the shared, static
+            // instances are always used for these properties
+            //
+            // NOTE: equals() method should be overridden to ensure that status
+            // instances with the same value are declared equal.
+            // (see parameter Value for example)
+            if (! (status.getValue().equals(Status.VALUE_TENTATIVE) ||
+                    status.getValue().equals(Status.VALUE_CONFIRMED) ||
+                    status.getValue().equals(Status.VALUE_CANCELLED)))
+            throw new ValidationException(
+                "Status property [" + status.toString()
+                        + "] may not occur in VEVENT");
+        }
 
         /*
          * ; either 'dtend' or 'duration' may appear in ; a 'eventprop', but
@@ -401,8 +419,8 @@ public class VEvent extends Component {
      * in the specified range. Note that the returned list may contain a single
      * period for non-recurring components or multiple periods for recurring
      * components. If no time is consumed by this event an empty list is returned.
-     * @param start the start of the range to check for consumed time
-     * @param end the end of the range to check for consumed time
+     * @param rangeStart the start of the range to check for consumed time
+     * @param rangeEnd the end of the range to check for consumed time
      * @return a list of periods representing consumed time for this event
      */
     public final PeriodList getConsumedTime(final Date rangeStart, final Date rangeEnd) {

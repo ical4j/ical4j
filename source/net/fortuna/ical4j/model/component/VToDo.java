@@ -45,6 +45,7 @@ import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.util.PropertyValidator;
 
@@ -241,18 +242,18 @@ public class VToDo extends Component {
                 getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.GEO,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(
-                Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().validateOneOrLess(Property.LAST_MODIFIED,
+                getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.LOCATION,
                 getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.ORGANIZER,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(
-                Property.PERCENT_COMPLETE, getProperties());
+        PropertyValidator.getInstance().validateOneOrLess(Property.PERCENT_COMPLETE,
+                getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.PRIORITY,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(
-                Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().validateOneOrLess(Property.RECURRENCE_ID,
+                getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.SEQUENCE,
                 getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.STATUS,
@@ -264,6 +265,23 @@ public class VToDo extends Component {
         PropertyValidator.getInstance().validateOneOrLess(Property.URL,
                 getProperties());
 
+        Status status = (Status) getProperties().getProperty(Property.STATUS);
+        if (status != null) {
+            // TODO should be status.equals(Status.NEEDS_ACTION) etc. if
+            // Status had a factory method to guarantee that the shared, static
+            // instances are always used for these properties
+            //
+            // NOTE: equals() method should be overridden to ensure that status
+            // instances with the same value are declared equal.
+            if (! (status.getValue().equals(Status.VALUE_NEEDS_ACTION) ||
+                    status.getValue().equals(Status.VALUE_COMPLETED) ||
+                    status.getValue().equals(Status.VALUE_IN_PROCESS) ||
+                    status.getValue().equals(Status.VALUE_CANCELLED)))
+            throw new ValidationException(
+                "Status property [" + status.toString()
+                        + "] may not occur in VTODO");
+        }
+
         /*
          * ; either 'due' or 'duration' may appear in ; a 'todoprop', but 'due'
          * and 'duration' ; MUST NOT occur in the same 'todoprop'
@@ -274,7 +292,7 @@ public class VToDo extends Component {
         if (getProperties().getProperty(Property.DUE) != null
                 && getProperties().getProperty(Property.DURATION) != null) { throw new ValidationException(
                 "Properties [" + Property.DUE + "," + Property.DURATION
-                        + "] may not occur in the same VEVENT"); }
+                        + "] may not occur in the same VTODO"); }
 
         /*
          * ; the following are optional, ; and MAY occur more than once attach /

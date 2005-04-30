@@ -41,6 +41,7 @@ import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.util.PropertyValidator;
 
@@ -152,12 +153,12 @@ public class VJournal extends Component {
                 getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.DTSTAMP,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(
-                Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().validateOneOrLess(Property.LAST_MODIFIED,
+                getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.ORGANIZER,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(
-                Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().validateOneOrLess(Property.RECURRENCE_ID,
+                getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.SEQUENCE,
                 getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.STATUS,
@@ -168,6 +169,22 @@ public class VJournal extends Component {
                 getProperties());
         PropertyValidator.getInstance().validateOneOrLess(Property.URL,
                 getProperties());
+
+        Status status = (Status) getProperties().getProperty(Property.STATUS);
+        if (status != null) {
+            // TODO should be status.equals(Status.DRAFT) etc. if
+            // Status had a factory method to guarantee that the shared, static
+            // instances are always used for these properties
+            //
+            // NOTE: equals() method should be overridden to ensure that status
+            // instances with the same value are declared equal.
+            if (! (status.getValue().equals(Status.VALUE_DRAFT) ||
+                    status.getValue().equals(Status.VALUE_FINAL) ||
+                    status.getValue().equals(Status.VALUE_CANCELLED)))
+            throw new ValidationException(
+                "Status property [" + status.toString()
+                        + "] may not occur in VJOURNAL");
+        }
 
         /*
          * ; the following are optional, ; and MAY occur more than once
