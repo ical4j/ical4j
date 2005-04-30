@@ -117,25 +117,4 @@ public class Value extends Parameter {
     public String getValue() {
         return value;
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
-    public final boolean equals(final Object arg0) {
-        if (arg0 instanceof Value) {
-            return getValue().equals(((Value) arg0).getValue());
-        }
-        return super.equals(arg0);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
-    public final int hashCode() {
-        return getValue().hashCode();
-    }
 }

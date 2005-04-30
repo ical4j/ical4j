@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -143,14 +143,16 @@ public abstract class Parameter extends Content {
      */
     public static final String VALUE = "VALUE";
 
-    private static final String EXPERIMENTAL_PREFIX = "X-";
+    /**
+     * Prefix to all experimental parameters.
+     */
+    public static final String EXPERIMENTAL_PREFIX = "X-";
 
     private String name;
 
     /**
      * Constructor.
      * @param aName name of this parameter
-     * @param aValue value of this parameter
      */
     public Parameter(final String aName) {
         this.name = aName;
@@ -185,4 +187,26 @@ public abstract class Parameter extends Content {
      * @return Returns the value.
      */
     public abstract String getValue();
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public final boolean equals(final Object arg0) {
+        if (arg0 instanceof Parameter) {
+            Parameter p = (Parameter) arg0;
+            return getName().equals(p.getName()) && getValue().equals(p.getValue());
+        }
+        return super.equals(arg0);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    public final int hashCode() {
+        return getName().hashCode() + getValue().hashCode();
+    }
 }
