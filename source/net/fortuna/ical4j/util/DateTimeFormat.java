@@ -48,8 +48,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public final class DateTimeFormat {
 
+    /**
+     * FORM #1: DATE WITH LOCAL TIME
+     */
     private static final String DEFAULT_PATTERN = "yyyyMMdd'T'HHmmss";
-
+    
+    /**
+     * FORM #2: DATE WITH UTC TIME
+     */
     private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss'Z'";
 
     private static Log log = LogFactory.getLog(DateTimeFormat.class);
@@ -110,14 +116,14 @@ public final class DateTimeFormat {
     }
     
     /**
-     * @return
+     * @return a new date format instance
      */
     private DateFormat getDefaultFormat() {
         return new SimpleDateFormat(DEFAULT_PATTERN);
     }
     
     /**
-     * @return
+     * @return a new date format instance
      */
     private DateFormat getUtcFormat() {
         DateFormat utcFormat = new SimpleDateFormat(UTC_PATTERN);
