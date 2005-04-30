@@ -42,13 +42,21 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class FbType extends Parameter {
 
-    public static final FbType FREE = new FbType("FREE");
+    private static final String VALUE_FREE = "FREE";
+    
+    private static final String VALUE_BUSY = "BUSY";
+    
+    private static final String VALUE_BUSY_UNAVAILABLE = "BUSY-UNAVAILABLE";
+    
+    private static final String VALUE_BUSY_TENTATIVE = "BUSY-TENTATIVE";
 
-    public static final FbType BUSY = new FbType("BUSY");
-
-    public static final FbType BUSY_UNAVAILABLE = new FbType("BUSY-UNAVAILABLE");
-
-    public static final FbType BUSY_TENTATIVE = new FbType("BUSY-TENTATIVE");
+    public static final FbType FREE = new FbType(VALUE_FREE);
+    
+    public static final FbType BUSY = new FbType(VALUE_BUSY);
+    
+    public static final FbType BUSY_UNAVAILABLE = new FbType(VALUE_BUSY_UNAVAILABLE);
+    
+    public static final FbType BUSY_TENTATIVE = new FbType(VALUE_BUSY_TENTATIVE);
 
     private String value;
 

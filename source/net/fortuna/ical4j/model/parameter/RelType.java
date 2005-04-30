@@ -42,11 +42,17 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class RelType extends Parameter {
 
-    public static final RelType PARENT = new RelType("PARENT");
+    private static final String VALUE_PARENT = "PARENT";
+    
+    private static final String VALUE_CHILD = "CHILD";
+    
+    private static final String VALUE_SIBLING = "SIBLING";
 
-    public static final RelType CHILD = new RelType("CHILD");
-
-    public static final RelType SIBLING = new RelType("SIBLING");
+    public static final RelType PARENT = new RelType(VALUE_PARENT);
+    
+    public static final RelType CHILD = new RelType(VALUE_CHILD);
+    
+    public static final RelType SIBLING = new RelType(VALUE_SIBLING);
 
     private String value;
 

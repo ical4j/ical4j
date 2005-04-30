@@ -42,13 +42,21 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class Role extends Parameter {
 
-    public static final Role CHAIR = new Role("CHAIR");
+    private static final String VALUE_CHAIR = "CHAIR";
+    
+    private static final String VALUE_REQ_PARTICIPANT = "REQ-PARTICIPANT";
+    
+    private static final String VALUE_OPT_PARTICIPANT = "OPT-PARTICIPANT";
+    
+    private static final String VALUE_NON_PARTICIPANT = "NON-PARTICIPANT";
 
-    public static final Role REQ_PARTICIPANT = new Role("REQ-PARTICIPANT");
-
-    public static final Role OPT_PARTICIPANT = new Role("OPT-PARTICIPANT");
-
-    public static final Role NON_PARTICIPANT = new Role("NON-PARTICIPANT");
+    public static final Role CHAIR = new Role(VALUE_CHAIR);
+    
+    public static final Role REQ_PARTICIPANT = new Role(VALUE_REQ_PARTICIPANT);
+    
+    public static final Role OPT_PARTICIPANT = new Role(VALUE_OPT_PARTICIPANT);
+    
+    public static final Role NON_PARTICIPANT = new Role(VALUE_NON_PARTICIPANT);
 
     private String value;
 

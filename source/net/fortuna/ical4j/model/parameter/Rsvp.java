@@ -42,9 +42,13 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class Rsvp extends Parameter {
 
-    public static final Rsvp TRUE = new Rsvp("TRUE");
+    private static final String VALUE_TRUE = "TRUE";
+    
+    private static final String VALUE_FALSE = "FALSE";
 
-    public static final Rsvp FALSE = new Rsvp("FALSE");
+    public static final Rsvp TRUE = new Rsvp(VALUE_TRUE);
+    
+    public static final Rsvp FALSE = new Rsvp(VALUE_FALSE);
 
     private Boolean rsvp;
 

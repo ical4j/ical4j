@@ -42,9 +42,13 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class Encoding extends Parameter {
 
-    public static final Encoding EIGHT_BIT = new Encoding("8BIT");
+    private static final String VALUE_EIGHT_BIT = "8BIT";
+    
+    private static final String VALUE_BASE64 = "BASE64";
 
-    public static final Encoding BASE64 = new Encoding("BASE64");
+    public static final Encoding EIGHT_BIT = new Encoding(VALUE_EIGHT_BIT);
+    
+    public static final Encoding BASE64 = new Encoding(VALUE_BASE64);
 
     private String value;
 

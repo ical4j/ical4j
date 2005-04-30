@@ -38,19 +38,65 @@ import net.fortuna.ical4j.model.Parameter;
 /**
  * Defines a Value Data Type parameter.
  * 
- * @author benfortuna
+ * @author Ben Fortuna
  */
 public class Value extends Parameter {
 
-    public static final Value DATE_TIME = new Value("DATE-TIME");
+    private static final String VALUE_BINARY = "BINARY";
+    
+    private static final String VALUE_BOOLEAN = "BOOLEAN";
+    
+    private static final String VALUE_CAL_ADDRESS = "CAL-ADDRESS";
+    
+    private static final String VALUE_DATE = "DATE";
+    
+    private static final String VALUE_DATE_TIME = "DATE-TIME";
+    
+    private static final String VALUE_DURATION = "DURATION";
+    
+    private static final String VALUE_FLOAT = "FLOAT";
+    
+    private static final String VALUE_INTEGER = "INTEGER";
+    
+    private static final String VALUE_PERIOD = "PERIOD";
+    
+    private static final String VALUE_RECUR = "RECUR";
+    
+    private static final String VALUE_TEXT = "TEXT";
+    
+    private static final String VALUE_TIME = "TIME";
+    
+    private static final String VALUE_URI = "URI";
+    
+    private static final String VALUE_UTC_OFFSET = "UTC-OFFSET";
 
-    public static final Value DATE = new Value("DATE");
-
-    public static final Value DURATION = new Value("DURATION");
-
-    public static final Value BINARY = new Value("BINARY");
-
-    public static final Value PERIOD = new Value("PERIOD");
+    public static final Value BINARY = new Value(VALUE_BINARY);
+    
+    public static final Value BOOLEAN = new Value(VALUE_BOOLEAN);
+    
+    public static final Value CAL_ADDRESS = new Value(VALUE_CAL_ADDRESS);
+    
+    public static final Value DATE = new Value(VALUE_DATE);
+    
+    public static final Value DATE_TIME = new Value(VALUE_DATE_TIME);
+    
+    public static final Value DURATION = new Value(VALUE_DURATION);
+    
+    public static final Value FLOAT = new Value(VALUE_FLOAT);
+    
+    public static final Value INTEGER = new Value(VALUE_INTEGER);
+    
+    public static final Value PERIOD = new Value(VALUE_PERIOD);
+    
+    public static final Value RECUR = new Value(VALUE_RECUR);
+    
+    public static final Value TEXT = new Value(VALUE_TEXT);
+    
+    public static final Value TIME = new Value(VALUE_TIME);
+    
+    public static final Value URI = new Value(VALUE_URI);
+    
+    public static final Value UTC_OFFSET = new Value(VALUE_UTC_OFFSET);
 
     private String value;
 

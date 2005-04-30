@@ -42,22 +42,36 @@ import net.fortuna.ical4j.model.Parameter;
  */
 public class PartStat extends Parameter {
 
-    public static final PartStat NEEDS_ACTION = new PartStat("NEEDS-ACTION");
+    private static final String VALUE_NEEDS_ACTION = "NEEDS-ACTION";
+    
+    private static final String VALUE_ACCEPTED = "ACCEPTED";
+    
+    private static final String VALUE_DECLINED = "DECLINED";
+    
+    private static final String VALUE_TENTATIVE = "TENTATIVE";
+    
+    private static final String VALUE_DELEGATED = "DELEGATED";
+    
+    private static final String VALUE_COMPLETED = "COMPLETED";
+    
+    private static final String VALUE_IN_PROCESS = "IN-PROCESS";
 
-    public static final PartStat ACCEPTED = new PartStat("ACCEPTED");
-
-    public static final PartStat DECLINED = new PartStat("DECLINED");
-
-    public static final PartStat TENTATIVE = new PartStat("TENTATIVE");
-
-    public static final PartStat DELEGATED = new PartStat("DELEGATED");
-
-    public static final PartStat COMPLETED = new PartStat("COMPLETED");
-
-    private static final PartStat IN_PROCESS = new PartStat("IN-PROCESS");
+    public static final PartStat NEEDS_ACTION = new PartStat(VALUE_NEEDS_ACTION);
+    
+    public static final PartStat ACCEPTED = new PartStat(VALUE_ACCEPTED);
+    
+    public static final PartStat DECLINED = new PartStat(VALUE_DECLINED);
+    
+    public static final PartStat TENTATIVE = new PartStat(VALUE_TENTATIVE);
+    
+    public static final PartStat DELEGATED = new PartStat(VALUE_DELEGATED);
+    
+    public static final PartStat COMPLETED = new PartStat(VALUE_COMPLETED);
+    
+    public static final PartStat IN_PROCESS = new PartStat(VALUE_IN_PROCESS);
 
     private String value;
-
+    
     /**
      * @param aValue
      *            a string representation of a participation status
