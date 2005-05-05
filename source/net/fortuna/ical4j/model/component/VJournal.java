@@ -178,9 +178,9 @@ public class VJournal extends Component {
             //
             // NOTE: equals() method should be overridden to ensure that status
             // instances with the same value are declared equal.
-            if (! (status.getValue().equals(Status.VJOURNAL_DRAFT.getValue()) ||
-                    status.getValue().equals(Status.VJOURNAL_FINAL.getValue()) ||
-                    status.getValue().equals(Status.VJOURNAL_CANCELLED.getValue())))
+            if (! (Status.VJOURNAL_DRAFT.equals(status) ||
+                    Status.VJOURNAL_FINAL.equals(status) ||
+                    Status.VJOURNAL_CANCELLED.equals(status)))
             throw new ValidationException(
                 "Status property [" + status.toString()
                         + "] may not occur in VJOURNAL");
