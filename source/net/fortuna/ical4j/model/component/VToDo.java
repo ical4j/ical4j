@@ -273,10 +273,10 @@ public class VToDo extends Component {
             //
             // NOTE: equals() method should be overridden to ensure that status
             // instances with the same value are declared equal.
-            if (! (status.getValue().equals(Status.VALUE_NEEDS_ACTION) ||
-                    status.getValue().equals(Status.VALUE_COMPLETED) ||
-                    status.getValue().equals(Status.VALUE_IN_PROCESS) ||
-                    status.getValue().equals(Status.VALUE_CANCELLED)))
+            if (! (status.getValue().equals(Status.VTODO_NEEDS_ACTION.getValue()) ||
+                    status.getValue().equals(Status.VTODO_COMPLETED.getValue()) ||
+                    status.getValue().equals(Status.VTODO_IN_PROCESS.getValue()) ||
+                    status.getValue().equals(Status.VTODO_CANCELLED.getValue())))
             throw new ValidationException(
                 "Status property [" + status.toString()
                         + "] may not occur in VTODO");

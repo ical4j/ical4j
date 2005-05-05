@@ -360,9 +360,9 @@ public class VEvent extends Component {
             // NOTE: equals() method should be overridden to ensure that status
             // instances with the same value are declared equal.
             // (see parameter Value for example)
-            if (! (status.getValue().equals(Status.VALUE_TENTATIVE) ||
-                    status.getValue().equals(Status.VALUE_CONFIRMED) ||
-                    status.getValue().equals(Status.VALUE_CANCELLED)))
+            if (! (status.getValue().equals(Status.VEVENT_TENTATIVE.getValue()) ||
+                    status.getValue().equals(Status.VEVENT_CONFIRMED.getValue()) ||
+                    status.getValue().equals(Status.VEVENT_CANCELLED.getValue())))
             throw new ValidationException(
                 "Status property [" + status.toString()
                         + "] may not occur in VEVENT");
