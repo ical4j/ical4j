@@ -164,6 +164,8 @@ public abstract class Property extends Content {
 
     public static final String RRULE = "RRULE";
 
+    public static final String EXPERIMENTAL_PREFIX = "X-";
+
     private String name;
 
     private ParameterList parameters;
@@ -284,5 +286,37 @@ public abstract class Property extends Content {
      */
     public void validate() throws ValidationException {
         // empty implementation..
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    /**
+     * Two properties are equal if and only if their
+     * name, value and parameter list are equal.
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public final boolean equals(final Object arg0) {
+        if (arg0 instanceof Property) {
+            Property p = (Property) arg0;
+            return getName().equals(p.getName())
+                    && getValue().equals(p.getValue())
+                    && getParameters().equals(p.getParameters());
+        }
+        return super.equals(arg0);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    public final int hashCode() {
+        // as parameter name is case-insensitive generate hash for uppercase..
+        return getName().toUpperCase().hashCode()
+                + getValue().hashCode()
+                + getParameters().hashCode();
     }
 }

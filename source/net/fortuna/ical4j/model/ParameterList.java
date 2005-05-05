@@ -188,4 +188,35 @@ public class ParameterList implements Serializable {
     public final int size() {
         return parameters.size();
     }
+
+    /**
+     * Two parameter lists are equals if and only if
+     * they contain the same set of parameters.
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public final boolean equals(final Object arg0) {
+        if (arg0 instanceof ParameterList) {
+            ParameterList p = (ParameterList) arg0;
+            for (Iterator i = p.iterator(); i.hasNext();) {
+                if (!parameters.contains(i.next())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return super.equals(arg0);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+    public final int hashCode() {
+        int hash = 0;
+        for (Iterator i = iterator(); i.hasNext();) {
+            hash += i.next().hashCode();
+        }
+        return hash;
+    }
 }

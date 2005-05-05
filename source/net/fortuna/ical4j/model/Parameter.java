@@ -207,6 +207,7 @@ public abstract class Parameter extends Content {
      * @see java.lang.Object#hashCode()
      */
     public final int hashCode() {
-        return getName().hashCode() + getValue().hashCode();
+        // as parameter name is case-insensitive generate hash for uppercase..
+        return getName().toUpperCase().hashCode() + getValue().hashCode();
     }
 }
