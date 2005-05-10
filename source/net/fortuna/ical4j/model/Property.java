@@ -302,7 +302,8 @@ public abstract class Property extends Content {
         if (arg0 instanceof Property) {
             Property p = (Property) arg0;
             return getName().equals(p.getName())
-                    && getValue().equals(p.getValue())
+                    && ((getValue() != null && getValue().equals(p.getValue()))
+                            || p.getValue() == null)
                     && getParameters().equals(p.getParameters());
         }
         return super.equals(arg0);
