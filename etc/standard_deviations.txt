@@ -1,0 +1,7 @@
+To-do List:
+==========
+Deviations from the rfc in real world apps:
+
+* Apple iCal uses VALUE=TEXT on some X-properties
+
+* Microsoft Outlook 2003 demands that the UID property must be present
