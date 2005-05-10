@@ -98,7 +98,7 @@ public class CalendarParserImpl implements CalendarParser {
 
             assertToken(tokeniser, ':');
 
-            assertToken(tokeniser, Calendar.VCALENDAR);
+            assertToken(tokeniser, Calendar.VCALENDAR, true);
 
             assertToken(tokeniser, StreamTokenizer.TT_EOL);
 
@@ -115,7 +115,7 @@ public class CalendarParserImpl implements CalendarParser {
 
             assertToken(tokeniser, ':');
 
-            assertToken(tokeniser, Calendar.VCALENDAR);
+            assertToken(tokeniser, Calendar.VCALENDAR, true);
 
             handler.endCalendar();
         } catch (Exception e) {
@@ -387,6 +387,18 @@ public class CalendarParserImpl implements CalendarParser {
     }
 
     /**
+     * Asserts that the next token in the stream matches the specified token. This method
+     * is case-sensitive.
+     * @param tokeniser
+     * @param token
+     * @throws IOException
+     * @throws ParserException
+     */
+    private static void assertToken(final StreamTokenizer tokeniser, final String token) throws IOException, ParserException {
+        assertToken(tokeniser, token, false);
+    }
+    
+    /**
      * Asserts that the next token in the stream matches the specified token.
      * 
      * @param tokeniser
@@ -399,13 +411,19 @@ public class CalendarParserImpl implements CalendarParser {
      *             when next token in the stream does not match the expected
      *             token
      */
-    private static void assertToken(final StreamTokenizer tokeniser, final String token)
+    private static void assertToken(final StreamTokenizer tokeniser, final String token, final boolean ignoreCase)
             throws IOException, ParserException {
 
         // ensure next token is a word token..
         assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
-        if (!token.equals(tokeniser.sval)) {
+        if (ignoreCase) {
+            if (!token.equalsIgnoreCase(tokeniser.sval)) {
+                throw new ParserException("Expected [" + token + "], read ["
+                        + tokeniser.sval + "] at line " + tokeniser.lineno());
+            }
+        }
+        else if (!token.equals(tokeniser.sval)) {
             throw new ParserException("Expected [" + token + "], read ["
                     + tokeniser.sval + "] at line " + tokeniser.lineno());
         }
