@@ -49,7 +49,7 @@ public final class StringUtils {
         Pattern.compile("([,;\"])");
 
     private static final Pattern ESCAPE_PATTERN_2 =
-        Pattern.compile("\n");
+        Pattern.compile("[\r\n]+");
 
     private static final Pattern ESCAPE_PATTERN_3 =
         Pattern.compile("\\\\");
