@@ -93,64 +93,64 @@ public final class ParameterFactory {
     public Parameter createParameter(final String name, final String value)
             throws URISyntaxException {
 
-        if (Parameter.ALTREP.equals(name)) {
+        if (Parameter.ALTREP.equalsIgnoreCase(name)) {
             return new AltRep(value);
         }
-        else if (Parameter.CN.equals(name)) {
+        else if (Parameter.CN.equalsIgnoreCase(name)) {
             return new Cn(value);
         }
-        else if (Parameter.CUTYPE.equals(name)) {
+        else if (Parameter.CUTYPE.equalsIgnoreCase(name)) {
             return new CuType(value);
         }
-        else if (Parameter.DELEGATED_FROM.equals(name)) {
+        else if (Parameter.DELEGATED_FROM.equalsIgnoreCase(name)) {
             return new DelegatedFrom(value);
         }
-        else if (Parameter.DELEGATED_TO.equals(name)) {
+        else if (Parameter.DELEGATED_TO.equalsIgnoreCase(name)) {
             return new DelegatedTo(value);
         }
-        else if (Parameter.DIR.equals(name)) {
+        else if (Parameter.DIR.equalsIgnoreCase(name)) {
             return new Dir(value);
         }
-        else if (Parameter.ENCODING.equals(name)) {
+        else if (Parameter.ENCODING.equalsIgnoreCase(name)) {
             return new Encoding(value);
         }
-        else if (Parameter.FMTTYPE.equals(name)) {
+        else if (Parameter.FMTTYPE.equalsIgnoreCase(name)) {
             return new FmtType(value);
         }
-        else if (Parameter.FBTYPE.equals(name)) {
+        else if (Parameter.FBTYPE.equalsIgnoreCase(name)) {
             return new FbType(value);
         }
-        else if (Parameter.LANGUAGE.equals(name)) {
+        else if (Parameter.LANGUAGE.equalsIgnoreCase(name)) {
             return new Language(value);
         }
-        else if (Parameter.MEMBER.equals(name)) {
+        else if (Parameter.MEMBER.equalsIgnoreCase(name)) {
             return new Member(value);
         }
-        else if (Parameter.PARTSTAT.equals(name)) {
+        else if (Parameter.PARTSTAT.equalsIgnoreCase(name)) {
             return new PartStat(value);
         }
-        else if (Parameter.RANGE.equals(name)) {
+        else if (Parameter.RANGE.equalsIgnoreCase(name)) {
             return new Range(value);
         }
-        else if (Parameter.RELATED.equals(name)) {
+        else if (Parameter.RELATED.equalsIgnoreCase(name)) {
             return new Related(value);
         }
-        else if (Parameter.RELTYPE.equals(name)) {
+        else if (Parameter.RELTYPE.equalsIgnoreCase(name)) {
             return new RelType(value);
         }
-        else if (Parameter.ROLE.equals(name)) {
+        else if (Parameter.ROLE.equalsIgnoreCase(name)) {
             return new Role(value);
         }
-        else if (Parameter.RSVP.equals(name)) {
+        else if (Parameter.RSVP.equalsIgnoreCase(name)) {
             return new Rsvp(value);
         }
-        else if (Parameter.SENT_BY.equals(name)) {
+        else if (Parameter.SENT_BY.equalsIgnoreCase(name)) {
             return new SentBy(value);
         }
-        else if (Parameter.TZID.equals(name)) {
+        else if (Parameter.TZID.equalsIgnoreCase(name)) {
             return new TzId(value);
         }
-        else if (Parameter.VALUE.equals(name)) {
+        else if (Parameter.VALUE.equalsIgnoreCase(name)) {
             return new Value(value);
         }
         // assume experimental parameter..
