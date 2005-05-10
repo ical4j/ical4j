@@ -104,6 +104,7 @@ public class UnfoldingReader extends PushbackReader {
      * @see java.io.PushbackReader#read()
      */
     public final int read() throws IOException {
+        /*
         for (int i = 0; i < buffers.size(); i++) {
             char[] buffer = (char[]) buffers.get(i);
             int read = super.read(buffer);
@@ -124,6 +125,35 @@ public class UnfoldingReader extends PushbackReader {
                 return read;
             }
         }
+        return super.read();
+        */
+        boolean didUnfold;
+
+        // need to loop since one line fold might be directly followed by another
+        do {
+            didUnfold = false;
+
+            for (int i = 0; i < buffers.size(); i++) {
+                char[] buffer = (char[]) buffers.get(i);
+                int read = super.read(buffer);
+                if (read > 0) {
+                    if (!Arrays.equals((char[]) FOLD_PATTERNS.get(i), buffer)) {
+                        unread(buffer, 0, read);
+                    }
+                    else {
+                        if (log.isDebugEnabled()) {
+                            log.debug("Unfolding...");
+                        }
+                        linesUnfolded++;
+                        didUnfold = true;
+                    }
+                }
+                else {
+                    return read;
+                }
+            }
+        } while (didUnfold);
+
         return super.read();
     }
 }
