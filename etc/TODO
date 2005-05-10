@@ -6,6 +6,8 @@ To-do List:
  - inspect date-based properties and default local time where TZID parameter
  is identified
  
+ - Add note regarding Outlook requiring Method=Publish and UIDs for each event for correct parsing.
+ 
  
  ===========
   RFC 2446:
