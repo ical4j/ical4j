@@ -45,13 +45,41 @@ import net.fortuna.ical4j.model.Property;
  */
 public class Priority extends Property {
 
-    public static final Priority UNDEFINED = new Priority(new ParameterList(true), 0);
+    public static final Priority UNDEFINED = new ImmutablePriority(0);
 
-    public static final Priority HIGH = new Priority(new ParameterList(true), 1);
+    public static final Priority HIGH = new ImmutablePriority(1);
 
-    public static final Priority MEDIUM = new Priority(new ParameterList(true), 5);
+    public static final Priority MEDIUM = new ImmutablePriority(5);
 
-    public static final Priority LOW = new Priority(new ParameterList(true), 9);
+    public static final Priority LOW = new ImmutablePriority(9);
+    
+    /**
+     * @author Ben Fortuna
+     * An immutable instance of Priority.
+     */
+    private static class ImmutablePriority extends Priority {
+        
+        /**
+         * @param value
+         */
+        private ImmutablePriority(final int level) {
+            super(new ParameterList(true), level);
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+         */
+        public final void setValue(final String aValue) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.property.Priority#setLevel(int)
+         */
+        public final void setLevel(final int level) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+    }
 
     private int level;
 
@@ -71,7 +99,7 @@ public class Priority extends Property {
      */
     public Priority(final ParameterList aList, final String aValue) {
         super(PRIORITY, aList);
-        setValue(aValue);
+        level = Integer.parseInt(aValue);
     }
 
     /**
@@ -104,14 +132,7 @@ public class Priority extends Property {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public final void setValue(final String aValue) {
-        // can't modify constant instances..
-        if (this.equals(UNDEFINED)
-                || this.equals(HIGH)
-                || this.equals(MEDIUM)
-                || this.equals(LOW)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
+    public void setValue(final String aValue) {
         level = Integer.parseInt(aValue);
     }
 
@@ -127,14 +148,7 @@ public class Priority extends Property {
     /**
      * @param level The level to set.
      */
-    public final void setLevel(final int level) {
-        // can't modify constant instances..
-        if (this.equals(UNDEFINED)
-                || this.equals(HIGH)
-                || this.equals(MEDIUM)
-                || this.equals(LOW)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
+    public void setLevel(final int level) {
         this.level = level;
     }
 }

@@ -45,11 +45,32 @@ import net.fortuna.ical4j.model.Property;
  */
 public class Clazz extends Property {
 
-    public static final Clazz PUBLIC = new Clazz(new ParameterList(true), "PUBLIC");
+    public static final Clazz PUBLIC = new ImmutableClazz("PUBLIC");
 
-    public static final Clazz PRIVATE = new Clazz(new ParameterList(true), "PRIVATE");
+    public static final Clazz PRIVATE = new ImmutableClazz("PRIVATE");
 
-    public static final Clazz CONFIDENTIAL = new Clazz(new ParameterList(true), "CONFIDENTIAL");
+    public static final Clazz CONFIDENTIAL = new ImmutableClazz("CONFIDENTIAL");
+    
+    /**
+     * @author Ben Fortuna
+     * An immutable instance of Clazz.
+     */
+    private static class ImmutableClazz extends Clazz {
+        
+        /**
+         * @param value
+         */
+        private ImmutableClazz(final String value) {
+            super(new ParameterList(true), value);
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+         */
+        public final void setValue(final String aValue) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+    }
 
     private String value;
 
@@ -66,7 +87,7 @@ public class Clazz extends Property {
      */
     public Clazz(final String aValue) {
         super(CLASS);
-        setValue(aValue);
+        this.value = aValue;
     }
 
     /**
@@ -77,20 +98,14 @@ public class Clazz extends Property {
      */
     public Clazz(final ParameterList aList, final String aValue) {
         super(CLASS, aList);
-        setValue(aValue);
+        this.value = aValue;
     }
     
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public final void setValue(final String aValue) {
-        // can't modify constant instances..
-        if (this.equals(PUBLIC)
-                || this.equals(PRIVATE)
-                || this.equals(CONFIDENTIAL)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 

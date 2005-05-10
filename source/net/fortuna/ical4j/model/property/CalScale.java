@@ -46,7 +46,28 @@ import net.fortuna.ical4j.model.ValidationException;
  */
 public class CalScale extends Property {
 
-    public static final CalScale GREGORIAN = new CalScale(new ParameterList(true), "GREGORIAN");
+    public static final CalScale GREGORIAN = new ImmutableCalScale("GREGORIAN");
+    
+    /**
+     * @author Ben Fortuna
+     * An immutable instance of CalScale.
+     */
+    private static class ImmutableCalScale extends CalScale {
+        
+        /**
+         * @param value
+         */
+        private ImmutableCalScale(final String value) {
+            super(new ParameterList(true), value);
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+         */
+        public final void setValue(final String aValue) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+    }
 
     private String value;
 
@@ -63,7 +84,7 @@ public class CalScale extends Property {
      */
     public CalScale(final String aValue) {
         super(CALSCALE);
-        setValue(aValue);
+        this.value = aValue;
     }
 
     /**
@@ -74,18 +95,14 @@ public class CalScale extends Property {
      */
     public CalScale(final ParameterList aList, final String aValue) {
         super(CALSCALE, aList);
-        setValue(aValue);
+        this.value = aValue;
     }
     
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public final void setValue(final String aValue) {
-        // can't modify constant instances..
-        if (this.equals(GREGORIAN)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 

@@ -52,7 +52,7 @@ public class Method extends Property {
      * user. An example might include a baseball team
      * publishing its schedule to the public. [RFC 2446]
 	 */
-	public static final Method PUBLISH = new Method(new ParameterList(true), "PUBLISH");
+	public static final Method PUBLISH = new ImmutableMethod("PUBLISH");
 
 	/**
 	 * Used to schedule a calendar entry with other
@@ -64,7 +64,7 @@ public class Method extends Property {
      * Requests are also used by the "Organizer" to
      * update the status of a calendar entry. [RFC 2446]
      */
-	public static final Method REQUEST = new Method(new ParameterList(true), "REQUEST");
+	public static final Method REQUEST = new ImmutableMethod("REQUEST");
 
 	/**
 	 * A Reply is used in response to a Request to
@@ -72,25 +72,25 @@ public class Method extends Property {
      * Replies are commonly used to respond to meeting
      * and task requests. [RFC2446]
      */
-	public static final Method REPLY = new Method(new ParameterList(true), "REPLY");
+	public static final Method REPLY = new ImmutableMethod("REPLY");
 
 	/**
 	 * Add one or more instances to an existing
      * VEVENT, VTODO, or VJOURNAL. [RFC 2446]
      */
-	public static final Method ADD = new Method(new ParameterList(true), "ADD");
+	public static final Method ADD = new ImmutableMethod("ADD");
 
 	/**
 	 * Cancel one or more instances of an existing
      * VEVENT, VTODO, or VJOURNAL. [RFC 2446]
      */
-	public static final Method CANCEL = new Method(new ParameterList(true), "CANCEL");
+	public static final Method CANCEL = new ImmutableMethod("CANCEL");
 
 	/**
 	 * The Refresh method is used by an "Attendee" to
      * request the latest version of a calendar entry. [RFC 2446]
      */
-	public static final Method REFRESH = new Method(new ParameterList(true), "REFRESH");
+	public static final Method REFRESH = new ImmutableMethod("REFRESH");
 
 	/**
 	 * The Counter method is used by an "Attendee" to
@@ -99,13 +99,34 @@ public class Method extends Property {
      * proposed Event time or change the due date for a
      * VTODO. [RFC 2446]
      */
-	public static final Method COUNTER = new Method(new ParameterList(true), "COUNTER");
+	public static final Method COUNTER = new ImmutableMethod("COUNTER");
 
 	/**
 	 * Used by the "Organizer" to decline the proposed
      * counter-proprosal. [RFC 2446]
      */
-	public static final Method DECLINE_COUNTER = new Method(new ParameterList(true), "DECLINE-COUNTER");
+	public static final Method DECLINE_COUNTER = new ImmutableMethod("DECLINE-COUNTER");
+    
+    /**
+     * @author Ben Fortuna
+     * An immutable instance of Method.
+     */
+    private static class ImmutableMethod extends Method {
+        
+        /**
+         * @param value
+         */
+        private ImmutableMethod(final String value) {
+            super(new ParameterList(true), value);
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+         */
+        public final void setValue(final String aValue) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+    }
 
     private String value;
 
@@ -122,7 +143,7 @@ public class Method extends Property {
      */
     public Method(final String aValue) {
         super(METHOD);
-        setValue(aValue);
+        this.value = aValue;
     }
 
     /**
@@ -133,25 +154,13 @@ public class Method extends Property {
      */
     public Method(final ParameterList aList, final String aValue) {
         super(METHOD, aList);
-        setValue(aValue);
+        this.value = aValue;
     }
-    
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public final void setValue(final String aValue) {
-        // can't modify constant instances..
-        if (this.equals(PUBLISH)
-                || this.equals(REQUEST)
-                || this.equals(REPLY)
-                || this.equals(ADD)
-                || this.equals(CANCEL)
-                || this.equals(REFRESH)
-                || this.equals(COUNTER)
-                || this.equals(DECLINE_COUNTER)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 

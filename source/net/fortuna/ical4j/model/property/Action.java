@@ -45,13 +45,34 @@ import net.fortuna.ical4j.model.Property;
  */
 public class Action extends Property {
 
-    public static final Action AUDIO = new Action(new ParameterList(true), "AUDIO");
+    public static final Action AUDIO = new ImmutableAction("AUDIO");
 
-    public static final Action DISPLAY = new Action(new ParameterList(true), "DISPLAY");
+    public static final Action DISPLAY = new ImmutableAction("DISPLAY");
 
-    public static final Action EMAIL = new Action(new ParameterList(true), "EMAIL");
+    public static final Action EMAIL = new ImmutableAction("EMAIL");
 
-    public static final Action PROCEDURE = new Action(new ParameterList(true), "PROCEDURE");
+    public static final Action PROCEDURE = new ImmutableAction("PROCEDURE");
+    
+    /**
+     * @author Ben Fortuna
+     * An immutable instance of Action.
+     */
+    private static class ImmutableAction extends Action {
+        
+        /**
+         * @param value
+         */
+        private ImmutableAction(final String value) {
+            super(new ParameterList(true), value);
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+         */
+        public final void setValue(final String aValue) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+    }
 
     private String value;
 
@@ -68,7 +89,7 @@ public class Action extends Property {
      */
     public Action(final String aValue) {
         super(ACTION);
-        setValue(aValue);
+        this.value = aValue;
     }
 
     /**
@@ -79,7 +100,7 @@ public class Action extends Property {
      */
     public Action(final ParameterList aList, final String aValue) {
         super(ACTION, aList);
-        setValue(aValue);
+        this.value = aValue;
     }
     
     
@@ -87,13 +108,6 @@ public class Action extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) {
-        // can't modify constant instances..
-        if (this.equals(AUDIO)
-                || this.equals(DISPLAY)
-                || this.equals(EMAIL)
-                || this.equals(PROCEDURE)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
         this.value = aValue;
     }
 

@@ -52,6 +52,41 @@ import net.fortuna.ical4j.model.Property;
 public class Version extends Property {
 
     public static final Version VERSION_2_0 = new Version(new ParameterList(true), null, "2.0");
+    
+    /**
+     * @author Ben Fortuna
+     * An immutable instance of Version.
+     */
+    private static class ImmutableVersion extends Version {
+        
+        /**
+         * @param value
+         */
+        private ImmutableVersion(final String value) {
+            super(new ParameterList(true), value);
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+         */
+        public final void setValue(final String aValue) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.property.Version#setMaxVersion(java.lang.String)
+         */
+        public final void setMaxVersion(final String maxVersion) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.property.Version#setMinVersion(java.lang.String)
+         */
+        public final void setMinVersion(final String minVersion) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+    }
 
     private String minVersion;
 
@@ -72,7 +107,13 @@ public class Version extends Property {
      */
     public Version(final ParameterList aList, final String aValue) {
         super(VERSION, aList);
-        setValue(aValue);
+        if (aValue.indexOf(';') >= 0) {
+            this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
+            this.maxVersion = aValue.substring(aValue.indexOf(';'));
+        }
+        else {
+            this.maxVersion = aValue;
+        }
     }
 
     /**
@@ -119,11 +160,7 @@ public class Version extends Property {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public final void setValue(final String aValue) {
-        // can't modify constant instances..
-        if (this.equals(VERSION_2_0)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
+    public void setValue(final String aValue) {
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
             this.maxVersion = aValue.substring(aValue.indexOf(';'));
@@ -155,22 +192,14 @@ public class Version extends Property {
     /**
      * @param maxVersion The maxVersion to set.
      */
-    public final void setMaxVersion(final String maxVersion) {
-        // can't modify constant instances..
-        if (this.equals(VERSION_2_0)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
+    public void setMaxVersion(final String maxVersion) {
         this.maxVersion = maxVersion;
     }
 
     /**
      * @param minVersion The minVersion to set.
      */
-    public final void setMinVersion(final String minVersion) {
-        // can't modify constant instances..
-        if (this.equals(VERSION_2_0)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
+    public void setMinVersion(final String minVersion) {
         this.minVersion = minVersion;
     }
 }

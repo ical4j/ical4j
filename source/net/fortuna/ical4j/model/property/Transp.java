@@ -45,9 +45,30 @@ import net.fortuna.ical4j.model.Property;
  */
 public class Transp extends Property {
 
-    public static final Transp OPAQUE = new Transp(new ParameterList(true), "OPAQUE");
+    public static final Transp OPAQUE = new ImmutableTransp("OPAQUE");
 
-    public static final Transp TRANSPARENT = new Transp(new ParameterList(true), "TRANSPARENT");
+    public static final Transp TRANSPARENT = new ImmutableTransp("TRANSPARENT");
+    
+    /**
+     * @author Ben Fortuna
+     * An immutable instance of Transp.
+     */
+    private static class ImmutableTransp extends Transp {
+        
+        /**
+         * @param value
+         */
+        private ImmutableTransp(final String value) {
+            super(new ParameterList(true), value);
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+         */
+        public final void setValue(final String aValue) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+    }
 
     private String value;
 
@@ -64,7 +85,7 @@ public class Transp extends Property {
      */
     public Transp(final String aValue) {
         super(TRANSP);
-        setValue(aValue);
+        this.value = aValue;
     }
 
     /**
@@ -75,18 +96,13 @@ public class Transp extends Property {
      */
     public Transp(final ParameterList aList, final String aValue) {
         super(TRANSP, aList);
-        setValue(aValue);
+        this.value = aValue;
     }
         
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public final void setValue(final String aValue) {
-        // can't modify constant instances..
-        if (this.equals(OPAQUE)
-                || this.equals(TRANSPARENT)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 

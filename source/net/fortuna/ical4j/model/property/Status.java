@@ -46,27 +46,48 @@ import net.fortuna.ical4j.model.Property;
 public class Status extends Property {
 
     // Status values for a "VEVENT"
-    public static final Status VEVENT_TENTATIVE = new Status(new ParameterList(true), "TENTATIVE");
+    public static final Status VEVENT_TENTATIVE = new ImmutableStatus("TENTATIVE");
 
-    public static final Status VEVENT_CONFIRMED = new Status(new ParameterList(true), "CONFIRMED");
+    public static final Status VEVENT_CONFIRMED = new ImmutableStatus("CONFIRMED");
 
-    public static final Status VEVENT_CANCELLED = new Status(new ParameterList(true), "CANCELLED");
+    public static final Status VEVENT_CANCELLED = new ImmutableStatus("CANCELLED");
 
     // Status values for "VTODO"
-    public static final Status VTODO_NEEDS_ACTION = new Status(new ParameterList(true), "NEEDS-ACTION");
+    public static final Status VTODO_NEEDS_ACTION = new ImmutableStatus("NEEDS-ACTION");
 
-    public static final Status VTODO_COMPLETED = new Status(new ParameterList(true), "COMPLETED");
+    public static final Status VTODO_COMPLETED = new ImmutableStatus("COMPLETED");
 
-    public static final Status VTODO_IN_PROCESS = new Status(new ParameterList(true), "IN-PROCESS");
+    public static final Status VTODO_IN_PROCESS = new ImmutableStatus("IN-PROCESS");
 
-    public static final Status VTODO_CANCELLED = new Status(new ParameterList(true), "CANCELLED");
+    public static final Status VTODO_CANCELLED = new ImmutableStatus("CANCELLED");
 
     // Status values for "VJOURNAL"
-    public static final Status VJOURNAL_DRAFT = new Status(new ParameterList(true), "DRAFT");
+    public static final Status VJOURNAL_DRAFT = new ImmutableStatus("DRAFT");
 
-    public static final Status VJOURNAL_FINAL = new Status(new ParameterList(true), "FINAL");
+    public static final Status VJOURNAL_FINAL = new ImmutableStatus("FINAL");
 
-    public static final Status VJOURNAL_CANCELLED = new Status(new ParameterList(true), "CANCELLED");
+    public static final Status VJOURNAL_CANCELLED = new ImmutableStatus("CANCELLED");
+    
+    /**
+     * @author Ben Fortuna
+     * An immutable instance of Status.
+     */
+    private static class ImmutableStatus extends Status {
+        
+        /**
+         * @param value
+         */
+        private ImmutableStatus(final String value) {
+            super(new ParameterList(true), value);
+        }
+        
+        /* (non-Javadoc)
+         * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+         */
+        public final void setValue(final String aValue) {
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+    }
 
     private String value;
 
@@ -83,7 +104,7 @@ public class Status extends Property {
      */
     public Status(final String aValue) {
         super(STATUS);
-        setValue(aValue);
+        this.value = aValue;
     }
 
     /**
@@ -94,26 +115,13 @@ public class Status extends Property {
      */
     public Status(final ParameterList aList, final String aValue) {
         super(STATUS, aList);
-        setValue(aValue);
+        this.value = aValue;
     }
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public final void setValue(final String aValue) {
-        // can't modify constant instances..
-        if (this.equals(VEVENT_TENTATIVE)
-                || this.equals(VEVENT_CONFIRMED)
-                || this.equals(VEVENT_CANCELLED)
-                || this.equals(VTODO_NEEDS_ACTION)
-                || this.equals(VTODO_IN_PROCESS)
-                || this.equals(VTODO_CANCELLED)
-                || this.equals(VEVENT_CANCELLED)
-                || this.equals(VJOURNAL_DRAFT)
-                || this.equals(VJOURNAL_FINAL)
-                || this.equals(VJOURNAL_CANCELLED)) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
-        }
+    public void setValue(final String aValue) {
         this.value = aValue;
     }
 
