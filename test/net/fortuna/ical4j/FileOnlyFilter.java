@@ -11,6 +11,13 @@ import java.io.File;
 public class FileOnlyFilter implements FileFilter {
     public boolean accept(final File file) {
         // skip directories (including CVS)
-        return file.isFile();
+        boolean accept = file.isFile();
+
+        if (accept) {
+            // ignore hidden files
+            accept = !file.isHidden();
+        }
+
+        return accept;
     }
 }
