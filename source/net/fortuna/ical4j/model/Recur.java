@@ -605,6 +605,7 @@ public class Recur implements Serializable {
                 increment(cal);
             }
         }
+        /*
         else if (getCount() >= 1) {
             for (int i = 0;
                 i < getCount() && !(periodEnd != null && cal.getTime().after(periodEnd));
@@ -613,6 +614,7 @@ public class Recur implements Serializable {
                 increment(cal);
             }
         }
+        */
         else if (periodEnd != null) {
             while (!cal.getTime().after(periodEnd)) {
                 dates.add(cal.getTime());
