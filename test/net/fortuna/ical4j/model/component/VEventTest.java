@@ -23,7 +23,6 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
@@ -42,7 +41,10 @@ public class VEventTest extends TestCase {
     private static Log log = LogFactory.getLog(VEventTest.class);
 
     private VEvent weekdayNineToFiveEvents = null;
-
+    
+    private VEvent dailyWeekdayEvents = null;
+    
+    private VEvent monthlyWeekdayEvents = null;
 
     public void setUp() throws Exception {
         super.setUp();
@@ -60,25 +62,67 @@ public class VEventTest extends TestCase {
         untilCal.set(2005, Calendar.DECEMBER, 31);
         untilCal.set(Calendar.MILLISECOND, 0);
 
-        // 9:00AM to 5:00PM Rule
-        Recur recur = new Recur(Recur.WEEKLY, untilCal.getTime());
-        recur.getDayList().add(WeekDay.MO);
-        recur.getDayList().add(WeekDay.TU);
-        recur.getDayList().add(WeekDay.WE);
-        recur.getDayList().add(WeekDay.TH);
-        recur.getDayList().add(WeekDay.FR);
-        recur.setInterval(3);
-        recur.setWeekStartDay(WeekDay.MO.getDay());
-        RRule rrule = new RRule(recur);
+        // 9:00AM to 5:00PM Rule using weekly
+        Recur recurWeekly = new Recur(Recur.WEEKLY, untilCal.getTime());
+        recurWeekly.getDayList().add(WeekDay.MO);
+        recurWeekly.getDayList().add(WeekDay.TU);
+        recurWeekly.getDayList().add(WeekDay.WE);
+        recurWeekly.getDayList().add(WeekDay.TH);
+        recurWeekly.getDayList().add(WeekDay.FR);
+        recurWeekly.setInterval(3);
+        recurWeekly.setWeekStartDay(WeekDay.MO.getDay());
+        RRule rruleWeekly = new RRule(recurWeekly);
 
-        Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI");
+        // 9:00AM to 5:00PM Rule using daily frequency
+        Recur recurDaily = new Recur(Recur.DAILY, untilCal.getTime());
+        recurDaily.getDayList().add(WeekDay.MO);
+        recurDaily.getDayList().add(WeekDay.TU);
+        recurDaily.getDayList().add(WeekDay.WE);
+        recurDaily.getDayList().add(WeekDay.TH);
+        recurDaily.getDayList().add(WeekDay.FR);
+        recurDaily.setInterval(1);
+        recurDaily.setWeekStartDay(WeekDay.MO.getDay());
+        RRule rruleDaily = new RRule(recurDaily);
+
+        // 9:00AM to 5:00PM Rule using monthly frequency
+        Recur recurMonthly = new Recur(Recur.MONTHLY, untilCal.getTime());
+        recurMonthly.getDayList().add(WeekDay.MO);
+        recurMonthly.getDayList().add(WeekDay.TU);
+        recurMonthly.getDayList().add(WeekDay.WE);
+        recurMonthly.getDayList().add(WeekDay.TH);
+        recurMonthly.getDayList().add(WeekDay.FR);
+        recurMonthly.setInterval(1);
+        recurMonthly.setWeekStartDay(WeekDay.MO.getDay());
+        RRule rruleMonthly = new RRule(recurMonthly);
+
+        Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
 
         weekdayNineToFiveEvents = new VEvent();
-        weekdayNineToFiveEvents.getProperties().add(rrule);
+        weekdayNineToFiveEvents.getProperties().add(rruleWeekly);
         weekdayNineToFiveEvents.getProperties().add(summary);
         weekdayNineToFiveEvents.getProperties().add(
                                         new DtStart(weekday9AM.getTime()));
         weekdayNineToFiveEvents.getProperties().add(
+                                        new DtEnd(weekday5PM.getTime()));
+
+        summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY");
+
+        dailyWeekdayEvents = new VEvent();
+        dailyWeekdayEvents.getProperties().add(rruleDaily);
+        dailyWeekdayEvents.getProperties().add(summary);
+        dailyWeekdayEvents.getProperties().add(
+                                        new DtStart(weekday9AM.getTime()));
+        dailyWeekdayEvents.getProperties().add(
+                                        new DtEnd(weekday5PM.getTime()));
+
+        summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY");
+
+        monthlyWeekdayEvents = new VEvent();
+        monthlyWeekdayEvents.getProperties().add(rruleMonthly);
+        monthlyWeekdayEvents.getProperties().add(summary);
+        monthlyWeekdayEvents.getProperties().add(
+                                        new DtStart(weekday9AM.getTime()));
+        monthlyWeekdayEvents.getProperties().add(
                                         new DtEnd(weekday5PM.getTime()));
     }
 
@@ -147,43 +191,6 @@ public class VEventTest extends TestCase {
     }
     
 
-    /*
-    public void testGetRecurringStartDates() {
-
-        // Test Null Dates
-        try {
-            weekdayNineToFiveEvents.getRecurringStartDates(null, null);
-            fail("Should've thrown an exception.");
-        } catch (RuntimeException re) {
-            // Expecting an exception here.
-        }
-
-        // Test Start 04/01/2005, End One month later.
-        // Query Calendar Start and End Dates.
-        Calendar queryStartDate = Calendar.getInstance();
-        queryStartDate.set(2005, Calendar.APRIL, 1, 14, 47, 0);
-        queryStartDate.set(Calendar.MILLISECOND, 0);
-        Calendar queryEndDate = Calendar.getInstance();
-        queryEndDate.set(2005, Calendar.MAY, 1, 11, 15, 0);
-        queryEndDate.set(Calendar.MILLISECOND, 0);
-
-        DateList startDateList =
-                        weekdayNineToFiveEvents.getRecurringStartDates(
-                              queryStartDate.getTime(), queryEndDate.getTime());
-
-        assertNotNull(startDateList);
-        assertTrue(startDateList.size() > 0);
-
-        Calendar expectedCal = Calendar.getInstance();
-        expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
-        expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedFirstStart = expectedCal.getTime();
-        Date firstStartDate = (Date) startDateList.get(0);
-        assertEquals(expectedFirstStart.getTime(), firstStartDate.getTime());
-
-    }
-    */
-
     /**
      * Test Null Dates
      * Test Start today, End One month from now.
@@ -206,14 +213,75 @@ public class VEventTest extends TestCase {
         queryStartDate.set(2005, Calendar.APRIL, 1, 14, 47, 0);
         queryStartDate.set(Calendar.MILLISECOND, 0);
         Calendar queryEndDate = Calendar.getInstance();
-        queryEndDate.set(2005, Calendar.MAY, 1, 11, 15, 0);
+        queryEndDate.set(2005, Calendar.MAY, 1, 07, 15, 0);
         queryEndDate.set(Calendar.MILLISECOND, 0);
+        Calendar week1EndDate = Calendar.getInstance();
+        week1EndDate.set(2005, Calendar.APRIL, 8, 11, 15, 0);
+        week1EndDate.set(Calendar.MILLISECOND, 0);
+        Calendar week4StartDate = Calendar.getInstance();
+        week4StartDate.set(2005, Calendar.APRIL, 24, 14, 47, 0);
+        week4StartDate.set(Calendar.MILLISECOND, 0);
 
         // This range is monday to friday every three weeks, starting from
         // March 7th 2005, which means for our query dates we need
         // April 18th through to the 22nd.
-        PeriodList periods =
+        PeriodList weeklyPeriods =
                 weekdayNineToFiveEvents.getConsumedTime(queryStartDate.getTime(),
+                                                      queryEndDate.getTime());
+        PeriodList dailyPeriods =
+                dailyWeekdayEvents.getConsumedTime(queryStartDate.getTime(),
+                                                      week1EndDate.getTime());
+        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4StartDate.getTime(),
+                                                      queryEndDate.getTime()));
+
+        Calendar expectedCal = Calendar.getInstance();
+        expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
+        expectedCal.set(Calendar.MILLISECOND, 0);
+        Date expectedStartOfFirstRange = expectedCal.getTime();
+        expectedCal.set(2005, Calendar.APRIL, 4, 17, 0, 0);
+        expectedCal.set(Calendar.MILLISECOND, 0);
+        Date expectedEndOfFirstRange = expectedCal.getTime();
+        assertNotNull(weeklyPeriods);
+        assertTrue(weeklyPeriods.size() > 0);
+        Period firstPeriod = (Period) weeklyPeriods.toArray()[0];
+        assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
+        assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
+        assertEquals(dailyPeriods, weeklyPeriods);
+
+    }
+
+
+    /**
+     * Test whether you can select weekdays using a daily frequency.
+     * <p>
+     * This test really belongs in RecurTest, but the weekly range test
+     * in this VEventTest matches so perfectly with the daily range test
+     * that should produce the same results for some weeks that it was
+     * felt leveraging the existing test code was more important.
+     * <p>
+     * This addresses bug
+     * <a href="http://sourceforge.net/tracker/index.php?func=detail&aid=1203990&group_id=107024&atid=646395">1203990</a>
+     *
+     */
+   public final void testGetConsumedTimeDaily() throws Exception {
+
+        // Test Starts 04/03/2005, Ends One week later.
+        // Query Calendar Start and End Dates.
+        Calendar queryStartDate = Calendar.getInstance();
+        queryStartDate.set(2005, Calendar.APRIL, 3, 05, 12, 0);
+        queryStartDate.set(Calendar.MILLISECOND, 0);
+        Calendar queryEndDate = Calendar.getInstance();
+        queryEndDate.set(2005, Calendar.APRIL, 10, 21, 55, 0);
+        queryEndDate.set(Calendar.MILLISECOND, 0);
+
+        // This range is Monday to Friday every day (which has a filtering
+        // effect), starting from March 7th 2005. Our query dates are
+        // April 3rd through to the 10th.
+        PeriodList weeklyPeriods =
+                weekdayNineToFiveEvents.getConsumedTime(queryStartDate.getTime(),
+                                                      queryEndDate.getTime());
+        PeriodList dailyPeriods =
+                dailyWeekdayEvents.getConsumedTime(queryStartDate.getTime(),
                                                       queryEndDate.getTime());
         Calendar expectedCal = Calendar.getInstance();
         expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
@@ -222,14 +290,66 @@ public class VEventTest extends TestCase {
         expectedCal.set(2005, Calendar.APRIL, 4, 17, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
         Date expectedEndOfFirstRange = expectedCal.getTime();
-        assertNotNull(periods);
-        assertTrue(periods.size() > 0);
-        Period firstPeriod = (Period) periods.toArray()[0];
+        assertNotNull(dailyPeriods);
+        assertTrue(dailyPeriods.size() > 0);
+        Period firstPeriod = (Period) dailyPeriods.toArray()[0];
         assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
         assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
-
+        assertEquals(weeklyPeriods, dailyPeriods);
     }
-   
+
+
+    /**
+     * Test whether you can select weekdays using a monthly frequency.
+     * <p>
+     * This test really belongs in RecurTest, but the weekly range test
+     * in this VEventTest matches so perfectly with the daily range test
+     * that should produce the same results for some weeks that it was
+     * felt leveraging the existing test code was more important.
+     * <p>
+     * Section 4.3.10 of the iCalendar specification RFC 2445 reads:
+     * <pre>
+     * If an integer modifier is not present, it means all days of
+     * this type within the specified frequency.
+     * </pre>
+     * This test ensures compliance.
+     */
+   public final void testGetConsumedTimeMonthly() throws Exception {
+
+        // Test Starts 04/03/2005, Ends two weeks later.
+        // Query Calendar Start and End Dates.
+        Calendar queryStartDate = Calendar.getInstance();
+        queryStartDate.set(2005, Calendar.APRIL, 3, 05, 12, 0);
+        queryStartDate.set(Calendar.MILLISECOND, 0);
+        Calendar queryEndDate = Calendar.getInstance();
+        queryEndDate.set(2005, Calendar.APRIL, 17, 21, 55, 0);
+        queryEndDate.set(Calendar.MILLISECOND, 0);
+
+        // This range is Monday to Friday every month (which has a multiplying
+        // effect), starting from March 7th 2005. Our query dates are
+        // April 3rd through to the 17th.
+        PeriodList monthlyPeriods =
+                monthlyWeekdayEvents.getConsumedTime(queryStartDate.getTime(),
+                                                      queryEndDate.getTime());
+        PeriodList dailyPeriods =
+                dailyWeekdayEvents.getConsumedTime(queryStartDate.getTime(),
+                                                      queryEndDate.getTime());
+        Calendar expectedCal = Calendar.getInstance();
+        expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
+        expectedCal.set(Calendar.MILLISECOND, 0);
+        Date expectedStartOfFirstRange = expectedCal.getTime();
+        expectedCal.set(2005, Calendar.APRIL, 4, 17, 0, 0);
+        expectedCal.set(Calendar.MILLISECOND, 0);
+        Date expectedEndOfFirstRange = expectedCal.getTime();
+        assertNotNull(monthlyPeriods);
+        assertTrue(monthlyPeriods.size() > 0);
+        Period firstPeriod = (Period) monthlyPeriods.toArray()[0];
+        assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
+        assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
+        assertEquals(dailyPeriods, monthlyPeriods);
+        }
+
+
     public final void testGetConsumedTime2() throws Exception {
         String filename = "etc/samples/valid/derryn.ics";
         
