@@ -33,8 +33,8 @@ public class AllTests extends TestSuite{
         TestSuite suite = new TestSuite();
 
         // data tests
-        suite.addTestSuite(CalendarBuilderTest.class);
-        suite.addTestSuite(CalendarOutputterTest.class);
+        suite.addTest(CalendarBuilderTest.suite());
+//        suite.addTest(CalendarOutputterTest.suite());
 
         // model tests
         suite.addTestSuite(CalendarTest.class);

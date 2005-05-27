@@ -51,7 +51,7 @@ import net.fortuna.ical4j.model.Property;
  */
 public class Version extends Property {
 
-    public static final Version VERSION_2_0 = new Version(new ParameterList(true), null, "2.0");
+    public static final Version VERSION_2_0 = new ImmutableVersion("2.0");
     
     /**
      * @author Ben Fortuna

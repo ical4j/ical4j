@@ -14,7 +14,14 @@
  
  - Removed VEvent.getRecurringStartDates() (use Recur.getDates() instead)
  
+ - Applied patches where possible: #1197119, #1191253, #1185766 - thanks tobli
  
+ - Default charset for CalendarBuilder and CalendarOutputter now UTF-8 (as per
+ RFC2445, section 4.1.4)
+ 
+ - Applied patch from bug #1203990 to Recur.getAbsWeekDays()
+ 
+
 0.9.12:
 
  - Redefined parameter and property constants to class instances rather

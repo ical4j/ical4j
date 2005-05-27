@@ -74,7 +74,7 @@ public class CalendarBuilderTest extends TestCase {
             log.warn("File: " + filename, e);
         }
 
-        assertNotNull(calendar);
+        assertNotNull("File [" + filename + "] invalid", calendar);
 
         try {
             calendar.validate();

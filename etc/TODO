@@ -8,6 +8,10 @@ To-do List:
  
  - Add note regarding Outlook requiring Method=Publish and UIDs for each event for correct parsing.
  
+ - Allow for extra whitespace between all content lines in the parser.
+ 
+ - Add an easy way to replace parameters, etc. in lists.
+ 
  
  ===========
   RFC 2446:
