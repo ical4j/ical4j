@@ -1109,7 +1109,13 @@ public class Recur implements Serializable {
             // a matching weekday cannot be identified..
             return days;
         }
-        if (WEEKLY.equals(getFrequency())  || !getWeekNoList().isEmpty()) {
+        if (DAILY.equals(getFrequency())) {
+            if (cal.get(Calendar.DAY_OF_WEEK) == calDay) {
+                // only one date is applicable..
+                days.add(cal.getTime());
+            }
+        }
+        else if (WEEKLY.equals(getFrequency())  || !getWeekNoList().isEmpty()) {
             //int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
             // construct a list of possible week days..
 //            cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, 1);

@@ -74,6 +74,26 @@ public class RecurTest extends TestCase {
         log.info(recur);
         log.info(recur.getDates(start, end, Value.DATE));
     }
+    
+    /**
+     * Test BYDAY rules.
+     */
+    public void testGetDatesByDay() {
+        Recur recur = new Recur(Recur.DAILY, 10);
+        recur.setInterval(1);
+        recur.getDayList().add(WeekDay.MO);
+        recur.getDayList().add(WeekDay.TU);
+        recur.getDayList().add(WeekDay.WE);
+        recur.getDayList().add(WeekDay.TH);
+        recur.getDayList().add(WeekDay.FR);
+        log.info(recur);
+        
+        Calendar cal = Calendar.getInstance();
+        Date start = cal.getTime();
+        cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
+        Date end = cal.getTime();
+        log.info(recur.getDates(start, end, Value.DATE_TIME));        
+    }
 
     /**
      * 
