@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
@@ -47,8 +48,11 @@ import net.fortuna.ical4j.model.ValidationException;
  * @author benf
  */
 public class CalendarOutputter {
+    
+    private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
     private boolean validating;
+    
     private int foldLength;
 
     /**
@@ -90,7 +94,7 @@ public class CalendarOutputter {
     public final void output(final Calendar calendar, final OutputStream out)
             throws IOException, ValidationException {
 
-        output(calendar, new OutputStreamWriter(out));
+        output(calendar, new OutputStreamWriter(out, DEFAULT_CHARSET));
     }
 
     /**

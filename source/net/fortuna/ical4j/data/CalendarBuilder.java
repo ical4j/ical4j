@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Calendar;
@@ -60,6 +61,8 @@ import net.fortuna.ical4j.model.component.VToDo;
  * @version 2.0
  */
 public class CalendarBuilder implements ContentHandler {
+    
+    private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
     private CalendarParser parser;
     
@@ -97,7 +100,7 @@ public class CalendarBuilder implements ContentHandler {
      */
     public final Calendar build(final InputStream in) throws IOException,
             ParserException {
-        return build(new InputStreamReader(in));
+        return build(new InputStreamReader(in, DEFAULT_CHARSET));
     }
 
     /**
