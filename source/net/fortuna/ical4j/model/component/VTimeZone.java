@@ -128,6 +128,8 @@ import net.fortuna.ical4j.util.TimeZoneUtils;
  * @author Ben Fortuna
  */
 public class VTimeZone extends Component {
+    
+    private static final long serialVersionUID = 5629679741050917815L;
 
     private static Log log = LogFactory.getLog(VTimeZone.class);
 

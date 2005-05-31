@@ -39,6 +39,8 @@ package net.fortuna.ical4j.data;
  * @author benf
  */
 public class ParserException extends Exception {
+    
+    private static final long serialVersionUID = 6116644246112002214L;
 
     /**
      * Default constructor

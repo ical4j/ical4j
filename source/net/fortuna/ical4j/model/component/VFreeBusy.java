@@ -125,6 +125,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class VFreeBusy extends Component {
     
+    private static final long serialVersionUID = 1046534053331139832L;
+    
     private static Log log = LogFactory.getLog(VFreeBusy.class);
 
     /**

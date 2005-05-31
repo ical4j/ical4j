@@ -197,6 +197,8 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * @author Ben Fortuna
  */
 public class VEvent extends Component {
+    
+    private static final long serialVersionUID = 2547948989200697335L;
 
     private ComponentList alarms;
 

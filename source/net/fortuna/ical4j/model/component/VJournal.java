@@ -100,6 +100,8 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * @author Ben Fortuna
  */
 public class VJournal extends Component {
+    
+    private static final long serialVersionUID = -7635140949183238830L;
 
     /**
      * Default constructor.

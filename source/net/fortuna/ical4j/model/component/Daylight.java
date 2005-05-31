@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.PropertyList;
  * @author benf
  */
 public class Daylight extends Time {
+    
+    private static final long serialVersionUID = -2494710612002978763L;
 
     /**
      * Default constructor.

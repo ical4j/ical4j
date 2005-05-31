@@ -112,6 +112,8 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * @author Ben Fortuna
  */
 public class VToDo extends Component {
+    
+    private static final long serialVersionUID = -269658210065896668L;
 
     private ComponentList alarms = new ComponentList();
 
