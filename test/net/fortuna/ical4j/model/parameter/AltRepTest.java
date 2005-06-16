@@ -9,7 +9,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 
 import junit.framework.TestCase;
 
@@ -34,7 +34,7 @@ public class AltRepTest extends TestCase {
             // test success.
         }
         
-        AltRep ar = (AltRep) ParameterFactory.getInstance().createParameter(Parameter.ALTREP, "mailto:valid@test.com");
+        AltRep ar = (AltRep) ParameterFactoryImpl.getInstance().createParameter(Parameter.ALTREP, "mailto:valid@test.com");
         
         assertNotNull(ar.getUri());
     }

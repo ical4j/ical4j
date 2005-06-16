@@ -46,7 +46,7 @@ import java.text.ParseException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -186,7 +186,7 @@ public class CalendarBuilder implements ContentHandler {
     public void parameter(final String name, final String value) throws URISyntaxException {
         if (property != null) {
             // parameter names are case-insensitive, but convert to upper case to simplify further processing
-            property.getParameters().add(ParameterFactory.getInstance().createParameter(name.toUpperCase(), value));
+            property.getParameters().add(ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value));
         }
     }
     
