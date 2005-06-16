@@ -159,8 +159,15 @@ public class DtStart extends Property {
                 "Parameter [" + Parameter.VALUE + "] is invalid");
         }
 
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
-                getParameters());
+        if (isUtc()) {
+            ParameterValidator.getInstance().validateNone(Parameter.TZID,
+                    getParameters());
+            
+        }
+        else {
+            ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
+                    getParameters());
+        }
 
         /*
          *  ; the following is optional, ; and MAY occur more than once

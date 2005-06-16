@@ -137,8 +137,16 @@ public class RecurrenceId extends Property {
                 "Parameter [" + Parameter.VALUE + "] is invalid");
         }
 
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
-                getParameters());
+        if (isUtc()) {
+            ParameterValidator.getInstance().validateNone(Parameter.TZID,
+                    getParameters());
+            
+        }
+        else {
+            ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
+                    getParameters());
+        }
+
         ParameterValidator.getInstance().validateOneOrLess(Parameter.RANGE,
                 getParameters());
 
