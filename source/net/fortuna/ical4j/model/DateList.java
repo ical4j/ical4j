@@ -53,6 +53,8 @@ public class DateList extends ArrayList implements Serializable {
     private static final long serialVersionUID = 5925108767897130313L;
 
     private Value type;
+    
+    private boolean utc;
 
     /**
      * Default constructor.
@@ -98,7 +100,7 @@ public class DateList extends ArrayList implements Serializable {
                 b.append(DateFormat.getInstance().format((Date) i.next()));
             }
             else {
-                b.append(DateTimeFormat.getInstance().format((Date) i.next()));
+                b.append(DateTimeFormat.getInstance().format((Date) i.next(), isUtc()));
             }
             if (i.hasNext()) {
                 b.append(',');
@@ -136,4 +138,31 @@ public class DateList extends ArrayList implements Serializable {
     public final Value getType() {
         return type;
     }
+    
+	/**
+	 * @param type The type to set.
+	 */
+	public final void setType(final Value type) {
+        if (!Value.DATE.equals(type) && !Value.DATE_TIME.equals(type)) {
+            throw new IllegalArgumentException("Type must be either DATE or DATE-TIME");
+        }
+		this.type = type;
+	}
+    
+	/**
+     * Indicates whether this list is in local or UTC format. This property will
+     * have no affect if the type of the list is not DATE-TIME.
+	 * @return Returns true if in UTC format, otherwise false.
+	 */
+	public final boolean isUtc() {
+		return utc;
+	}
+    
+	/**
+     * Sets whether this list is in UTC or local time format.
+	 * @param utc The utc to set.
+	 */
+	public final void setUtc(final boolean utc) {
+		this.utc = utc;
+	}
 }
