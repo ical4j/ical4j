@@ -88,6 +88,20 @@ public final class ParameterValidator {
                 "Parameter [" + paramName + "] must be specified once");
         }
     }
+    
+    /**
+     * Ensure a parameter doesn't occur in the specified list.
+     * @param propertyName the name of a property
+     * @param properties a list of properties
+     * @throws ValidationException thrown when the specified property
+     * is found in the list of properties
+     */
+    public void validateNone(final String paramName, final ParameterList parameters) throws ValidationException {
+        if (parameters.getParameters(paramName).size() > 0) {
+            throw new ValidationException(
+                "Parameter [" + paramName + "] is not applicable");
+        }
+    }
 
     /**
      * @return Returns the instance.
