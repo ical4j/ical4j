@@ -294,6 +294,7 @@ public final class ParameterFactoryImpl implements ParameterFactory {
      * @return
      */
     private boolean isExperimentalName(final String name) {
-        return name.startsWith(Parameter.EXPERIMENTAL_PREFIX);
+        return name.startsWith(Parameter.EXPERIMENTAL_PREFIX)
+                && name.length() > Parameter.EXPERIMENTAL_PREFIX.length();
     }
 }
