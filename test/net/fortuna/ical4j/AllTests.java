@@ -3,7 +3,6 @@ package net.fortuna.ical4j;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilderTest;
-import net.fortuna.ical4j.data.CalendarOutputterTest;
 import net.fortuna.ical4j.model.CalendarTest;
 import net.fortuna.ical4j.model.PeriodListTest;
 import net.fortuna.ical4j.model.PeriodTest;
