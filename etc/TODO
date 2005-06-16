@@ -12,6 +12,10 @@ To-do List:
  
  - Add an easy way to replace parameters, etc. in lists.
  
+ - investigate use of commons-lang for equals/hashcode implementations.
+ 
+ - The TZID property parameter MUST NOT be applied to DATE-TIME or TIME
+   properties whose time values are specified in UTC.
  
  ===========
   RFC 2446:
