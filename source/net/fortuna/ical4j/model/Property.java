@@ -154,8 +154,6 @@ public abstract class Property extends Content {
 
     public static final String EXRULE = "EXRULE";
 
-    public static final String RSTATUS = "RSTATUS";
-
     public static final String RELATED_TO = "RELATED-TO";
 
     public static final String RESOURCES = "RESOURCES";
