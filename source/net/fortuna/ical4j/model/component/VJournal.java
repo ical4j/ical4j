@@ -133,9 +133,7 @@ public class VJournal extends Component {
         getProperties().add(new Summary(summary));
     }
 
-    /*
-     * (non-Javadoc)
-     *
+    /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
     public final void validate(final boolean recurse) throws ValidationException {
@@ -180,12 +178,13 @@ public class VJournal extends Component {
             //
             // NOTE: equals() method should be overridden to ensure that status
             // instances with the same value are declared equal.
-            if (! (Status.VJOURNAL_DRAFT.equals(status) ||
-                    Status.VJOURNAL_FINAL.equals(status) ||
-                    Status.VJOURNAL_CANCELLED.equals(status)))
-            throw new ValidationException(
-                "Status property [" + status.toString()
-                        + "] may not occur in VJOURNAL");
+            if (!(Status.VJOURNAL_DRAFT.equals(status)
+                    || Status.VJOURNAL_FINAL.equals(status)
+                    || Status.VJOURNAL_CANCELLED.equals(status))) {
+                throw new ValidationException(
+                        "Status property [" + status.toString()
+                                + "] may not occur in VJOURNAL");
+            }
         }
 
         /*

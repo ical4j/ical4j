@@ -40,8 +40,8 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Defines the format used for all iCalendar durations.
- *
  * @author benfortuna
+ * @deprecated Use <code>net.fortuna.ical4j.model.Dur</code> instead.
  */
 public final class DurationFormat {
 

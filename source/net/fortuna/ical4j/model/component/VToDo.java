@@ -38,6 +38,7 @@ import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
@@ -169,7 +170,7 @@ public class VToDo extends Component {
      * @param duration the duration of the new todo
      * @param summary the todo summary
      */
-    public VToDo(final Date start, final long duration, final String summary) {
+    public VToDo(final Date start, final Dur duration, final String summary) {
         this();
         getProperties().add(new DtStamp(new Date()));
         getProperties().add(new DtStart(start));

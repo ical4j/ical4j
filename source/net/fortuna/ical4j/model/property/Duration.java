@@ -37,9 +37,9 @@ package net.fortuna.ical4j.model.property;
 
 import java.util.Date;
 
+import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.util.DurationFormat;
 
 /**
  * Defines a DURATION iCalendar component property.
@@ -48,7 +48,7 @@ import net.fortuna.ical4j.util.DurationFormat;
  */
 public class Duration extends Property {
 
-    private long duration;
+    private Dur duration;
 
     /**
      * Default constructor.
@@ -67,14 +67,13 @@ public class Duration extends Property {
         super(DURATION, aList);
         setValue(aValue);
     }
-
+    
     /**
-     * @param aDuration
-     *            a duration specified in milliseconds
+     * @param duration
      */
-    public Duration(final long aDuration) {
+    public Duration(final Dur duration) {
         super(DURATION);
-        setDuration(aDuration);
+        this.duration = duration;
     }
 
     /**
@@ -83,9 +82,9 @@ public class Duration extends Property {
      * @param aDuration
      *            a duration specified in milliseconds
      */
-    public Duration(final ParameterList aList, final long aDuration) {
+    public Duration(final ParameterList aList, final Dur duration) {
         super(DURATION, aList);
-        setDuration(aDuration);
+        setDuration(duration);
     }
     
     /**
@@ -96,13 +95,13 @@ public class Duration extends Property {
      */
     public Duration(final Date start, final Date end) {
         super(DURATION);
-        setDuration(end.getTime() - start.getTime());
+        setDuration(new Dur(start, end));
     }
 
     /**
      * @return Returns the duration.
      */
-    public final long getDuration() {
+    public final Dur getDuration() {
         return duration;
     }
     
@@ -111,7 +110,8 @@ public class Duration extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
-        duration = DurationFormat.getInstance().parse(aValue);
+//        duration = DurationFormat.getInstance().parse(aValue);
+        duration = new Dur(aValue);
     }
 
     /*
@@ -120,13 +120,14 @@ public class Duration extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return DurationFormat.getInstance().format(getDuration());
+//        return DurationFormat.getInstance().format(getDuration());
+        return duration.toString();
     }
     
     /**
      * @param duration The duration to set.
      */
-    public final void setDuration(final long duration) {
+    public final void setDuration(final Dur duration) {
         this.duration = duration;
     }
 }

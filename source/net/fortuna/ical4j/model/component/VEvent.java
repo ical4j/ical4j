@@ -39,6 +39,7 @@ import java.util.Iterator;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
@@ -269,7 +270,7 @@ public class VEvent extends Component {
      * @param duration the duration of the new event
      * @param summary the event summary
      */
-    public VEvent(final Date start, final long duration, final String summary) {
+    public VEvent(final Date start, final Dur duration, final String summary) {
         this();
         getProperties().add(new DtStamp(new Date()));
         getProperties().add(new DtStart(start));
@@ -282,8 +283,8 @@ public class VEvent extends Component {
      * @return a component list
      */
     public final ComponentList getAlarms() {
-		return alarms;
-	}
+        return alarms;
+    }
 
     /**
      * @see java.lang.Object#toString()
@@ -304,10 +305,9 @@ public class VEvent extends Component {
         while (iterator.hasNext()) {
             Component component = (Component) iterator.next();
 
-            if (! (component instanceof VAlarm)) {
+            if (!(component instanceof VAlarm)) {
                 throw new ValidationException(
-                    "Component [" + component.getName() +
-                        "] may not occur in VEVENT");
+                    "Component [" + component.getName() + "] may not occur in VEVENT");
             }
         }
 
@@ -362,12 +362,13 @@ public class VEvent extends Component {
             // NOTE: equals() method should be overridden to ensure that status
             // instances with the same value are declared equal.
             // (see parameter Value for example)
-            if (! (Status.VEVENT_TENTATIVE.equals(status) ||
-                    Status.VEVENT_CONFIRMED.equals(status) ||
-                    Status.VEVENT_CANCELLED.equals(status)))
-            throw new ValidationException(
-                "Status property [" + status.toString()
-                        + "] may not occur in VEVENT");
+            if (!(Status.VEVENT_TENTATIVE.equals(status)
+                    || Status.VEVENT_CONFIRMED.equals(status)
+                    || Status.VEVENT_CANCELLED.equals(status))) {
+                throw new ValidationException(
+                    "Status property [" + status.toString()
+                            + "] may not occur in VEVENT");
+            }
         }
 
         /*
@@ -440,9 +441,9 @@ public class VEvent extends Component {
         }
         // if an explicit event duration is not specified, derive a value for recurring
         // periods from the end date..
-        long rDuration;
+        Dur rDuration;
         if (duration == null) {
-            rDuration = end.getTime().getTime() - start.getTime().getTime();
+            rDuration = new Dur(start.getTime(), end.getTime());
         }
         else {
             rDuration = duration.getDuration();
@@ -549,8 +550,7 @@ public class VEvent extends Component {
             DtStart dtStart = getStartDate();
             Duration vEventDuration =
                       (Duration) getProperties().getProperty(Property.DURATION);
-            dtEnd = new DtEnd(new Date(dtStart.getTime().getTime() +
-                                       vEventDuration.getDuration()));
+            dtEnd = new DtEnd(vEventDuration.getDuration().getTime(dtStart.getTime()));
         }
 
         return dtEnd;

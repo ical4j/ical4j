@@ -38,6 +38,7 @@ import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
@@ -178,7 +179,7 @@ public class VFreeBusy extends Component {
      * @param duration
      *            the length of the period being requested
      */
-    public VFreeBusy(final Date startDate, final Date endDate, final long duration) {
+    public VFreeBusy(final Date startDate, final Date endDate, final Dur duration) {
         this();
         // dtstart MUST be specified in UTC..
         getProperties().add(new DtStart(startDate, true));
@@ -260,7 +261,7 @@ public class VFreeBusy extends Component {
      * @param components
      * @return
      */
-    private FreeBusy createFreeTime(final Date start, final Date end, final long duration, final ComponentList components) {
+    private FreeBusy createFreeTime(final Date start, final Date end, final Dur duration, final ComponentList components) {
         FreeBusy fb = new FreeBusy();
         fb.getParameters().add(FbType.FREE);
         PeriodList periods = getConsumedTime(components, start, end);
@@ -283,7 +284,7 @@ public class VFreeBusy extends Component {
             // calculate duration between this period start and last period end..
             if (lastPeriodEnd != null) {
                 Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
-                if (freeDuration.getDuration() >= duration) {
+                if (freeDuration.getDuration().compareTo(duration) >= 0) {
                     fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
                 }
             }

@@ -35,16 +35,16 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.util.Date;
+
+import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.DateTimeFormat;
-import net.fortuna.ical4j.util.DurationFormat;
 import net.fortuna.ical4j.util.ParameterValidator;
-
-import java.util.Date;
 
 /**
  * Defines a TRIGGER iCalendar component property.
@@ -53,7 +53,7 @@ import java.util.Date;
  */
 public class Trigger extends Property {
 
-    private long duration;
+    private Dur duration;
 
     /**
      * The value type can be set to a DATE-TIME value type, in which case the
@@ -84,9 +84,9 @@ public class Trigger extends Property {
      * @param aDuration
      *            a duration in milliseconds
      */
-    public Trigger(final long aDuration) {
+    public Trigger(final Dur duration) {
         super(TRIGGER);
-        duration = aDuration;
+        setDuration(duration);
     }
 
     /**
@@ -95,9 +95,9 @@ public class Trigger extends Property {
      * @param aDuration
      *            a duration in milliseconds
      */
-    public Trigger(final ParameterList aList, final long aDuration) {
+    public Trigger(final ParameterList aList, final Dur duration) {
         super(TRIGGER, aList);
-        duration = aDuration;
+        setDuration(duration);
     }
 
     /**
@@ -186,7 +186,7 @@ public class Trigger extends Property {
     /**
      * @return Returns the duration.
      */
-    public final long getDuration() {
+    public final Dur getDuration() {
         return duration;
     }
     
@@ -196,10 +196,11 @@ public class Trigger extends Property {
     public final void setValue(final String aValue) {
         try {
             dateTime = DateTimeFormat.getInstance().parse(aValue);
-            duration = 0;
+            duration = null;
         }
         catch (Exception e) {
-            duration = DurationFormat.getInstance().parse(aValue);
+//            duration = DurationFormat.getInstance().parse(aValue);
+            duration = new Dur(aValue);
             dateTime = null;
         }
     }
@@ -214,7 +215,8 @@ public class Trigger extends Property {
             return DateTimeFormat.getInstance().format(getDateTime());
         }
         else {
-            return DurationFormat.getInstance().format(getDuration());
+//            return DurationFormat.getInstance().format(getDuration());
+            return duration.toString();
         }
     }
     
@@ -223,13 +225,13 @@ public class Trigger extends Property {
      */
     public final void setDateTime(final Date dateTime) {
         this.dateTime = dateTime;
-        duration = 0;
+        duration = null;
     }
     
     /**
      * @param duration The duration to set.
      */
-    public final void setDuration(final long duration) {
+    public final void setDuration(final Dur duration) {
         this.duration = duration;
         dateTime = null;
     }

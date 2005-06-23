@@ -38,7 +38,6 @@ import java.text.ParseException;
 import java.util.Date;
 
 import net.fortuna.ical4j.util.DateTimeFormat;
-import net.fortuna.ical4j.util.DurationFormat;
 
 /**
  * Defines a period of time. A period may be specified as either a start date
@@ -57,7 +56,7 @@ public class Period implements Serializable, Comparable {
 
     private Date end;
 
-    private long duration;
+    private Dur duration;
 
     /**
      * Constructor.
@@ -74,7 +73,8 @@ public class Period implements Serializable, Comparable {
                     .parse(aValue.substring(aValue.indexOf('/') + 1));
         }
         catch (ParseException pe) {
-            duration = DurationFormat.getInstance().parse(aValue);
+//            duration = DurationFormat.getInstance().parse(aValue);
+            duration = new Dur(aValue);
         }
     }
     
@@ -94,7 +94,7 @@ public class Period implements Serializable, Comparable {
      * @param start the start date of the period
      * @param duration the duration of the period
      */
-    public Period(final Date start, final long duration) {
+    public Period(final Date start, final Dur duration) {
         this.start = start;
         this.duration = duration;
     }
@@ -104,9 +104,9 @@ public class Period implements Serializable, Comparable {
      * specified, the duration is derived from the end date.
      * @return the duration of this period in milliseconds.
      */
-    public final long getDuration() {
+    public final Dur getDuration() {
     	if (end != null) {
-    		return end.getTime() - start.getTime();
+    		return new Dur(start, end);
     	}
         return duration;
     }
@@ -118,7 +118,7 @@ public class Period implements Serializable, Comparable {
      */
     public final Date getEnd() {
     	if (end == null) {
-    		return new Date(start.getTime() + duration);
+    		return duration.getTime(start);
     	}
         return end;
     }
@@ -254,7 +254,8 @@ public class Period implements Serializable, Comparable {
             b.append(DateTimeFormat.getInstance().format(end));
         }
         else {
-            b.append(DurationFormat.getInstance().format(duration));
+//            b.append(DurationFormat.getInstance().format(duration));
+            b.append(duration);
         }
         return b.toString();
     }
@@ -288,7 +289,7 @@ public class Period implements Serializable, Comparable {
             }
         }
         // ..or durations
-        return new Long(getDuration() - arg0.getDuration()).intValue();
+        return getDuration().compareTo(arg0.getDuration());
     }
 
     /**
