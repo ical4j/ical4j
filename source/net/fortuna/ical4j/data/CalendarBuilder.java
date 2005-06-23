@@ -48,7 +48,7 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
@@ -223,6 +223,6 @@ public class CalendarBuilder implements ContentHandler {
      */
     public void startProperty(final String name) {
         // property names are case-insensitive, but convert to upper case to simplify further processing
-        property = PropertyFactory.getInstance().createProperty(name.toUpperCase());
+        property = PropertyFactoryImpl.getInstance().createProperty(name.toUpperCase());
     }
 }
