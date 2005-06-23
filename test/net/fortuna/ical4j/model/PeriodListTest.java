@@ -190,9 +190,9 @@ public class PeriodListTest extends TestCase {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, 25);
         periods.add(new Period(new Date(), cal.getTime()));
-        periods.add(new Period(cal.getTime(), 2 * 60 * 60 * 1000));
-        periods.add(new Period(new Date(), 2 * 60 * 60 * 1000));
-        periods.add(new Period(new Date(), 1 * 60 * 60 * 1000));
+        periods.add(new Period(cal.getTime(), new Dur(0, 2, 0, 0)));
+        periods.add(new Period(new Date(), new Dur(0, 2, 0, 0)));
+        periods.add(new Period(new Date(), new Dur(0, 1, 0, 0)));
         
 //        log.info("Unsorted list: " + periods);
         

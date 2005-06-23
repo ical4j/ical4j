@@ -25,12 +25,12 @@ package net.fortuna.ical4j.model.property;
 import java.text.ParseException;
 import java.util.Date;
 
+import junit.framework.TestCase;
+import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.util.DateTimeFormat;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import net.fortuna.ical4j.util.DateTimeFormat;
-import net.fortuna.ical4j.util.DurationFormat;
-import junit.framework.TestCase;
 
 /**
  * @author Ben
@@ -47,9 +47,11 @@ public class TriggerTest extends TestCase {
         log.info(DateTimeFormat.getInstance().format(new Date(0)));
         log.info(trigger);
 
-        trigger.setValue(DurationFormat.getInstance().format(5000));
+//        trigger.setValue(DurationFormat.getInstance().format(5000));
+        trigger.setValue(new Dur(0, 0, 0, 5).toString());
         
-        log.info(DurationFormat.getInstance().format(5000));
+//        log.info(DurationFormat.getInstance().format(5000));
+        log.info(new Dur(0, 0, 0, 5));
         log.info(trigger);
     }
 

@@ -34,6 +34,7 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -69,7 +70,7 @@ public class VFreeBusyTest extends TestCase {
         VEvent event = new VEvent();
         event.getProperties().add(new DtStart(startDate));
 //        event.getProperties().add(new DtEnd(new Date()));
-        event.getProperties().add(new Duration(ONE_HOUR));
+        event.getProperties().add(new Duration(new Dur(0, 1, 0, 0)));
         components.add(event);        
         
         VEvent event2 = new VEvent();
@@ -106,7 +107,7 @@ public class VFreeBusyTest extends TestCase {
         log.info("\n==\n" + fb.toString());
 
         // request all free time between 1970 and now of duration 2 hours or more..
-        VFreeBusy requestFree = new VFreeBusy(startDate, endDate, 2 * 60 * 60 * 1000);
+        VFreeBusy requestFree = new VFreeBusy(startDate, endDate, new Dur(0, 2, 0, 0));
         
         VFreeBusy fb2 = new VFreeBusy(requestFree, calendar.getComponents());
         
@@ -123,7 +124,7 @@ public class VFreeBusyTest extends TestCase {
         cal.setTime(startDate);
         cal.add(java.util.Calendar.HOUR_OF_DAY, 1);
         
-        VEvent event = new VEvent(startDate, ONE_HOUR, "Progress Meeting");
+        VEvent event = new VEvent(startDate, new Dur(0, 1, 0, 0), "Progress Meeting");
 //        VEvent event = new VEvent(startDate, cal.getTime(), "Progress Meeting");
         // add timezone information..
         VTimeZone tz = VTimeZone.getDefault();
@@ -160,7 +161,7 @@ public class VFreeBusyTest extends TestCase {
         VEvent event = new VEvent();
         event.getProperties().add(new DtStart(startDate));
 //        event.getProperties().add(new DtEnd(new Date()));
-        event.getProperties().add(new Duration(ONE_HOUR));
+        event.getProperties().add(new Duration(new Dur(0, 1, 0, 0)));
         components.add(event);        
         
         VEvent event2 = new VEvent();
@@ -168,7 +169,7 @@ public class VFreeBusyTest extends TestCase {
         event2.getProperties().add(new DtEnd(endDate));
         components.add(event2);
         
-        VFreeBusy request = new VFreeBusy(startDate, endDate, ONE_HOUR);
+        VFreeBusy request = new VFreeBusy(startDate, endDate, new Dur(0, 1, 0, 0));
         
         VFreeBusy fb = new VFreeBusy(request, components);
         
@@ -186,7 +187,7 @@ public class VFreeBusyTest extends TestCase {
             start.add(java.util.Calendar.DATE, -1); 
             VEvent dteStartOnly = new VEvent(start.getTime(), "DATE START ONLY"); 
             VEvent dteEnd = new VEvent(start.getTime(), end.getTime(), "DATE END INCLUDED"); 
-            VEvent duration = new VEvent(start.getTime(), 60 * 60 * 1000, "DURATION"); 
+            VEvent duration = new VEvent(start.getTime(), new Dur(0, 1, 0, 0), "DURATION"); 
             FreeBusyTest.getComponents().add(dteEnd); 
             FreeBusyTest.getComponents().add(duration); 
              
@@ -194,7 +195,7 @@ public class VFreeBusyTest extends TestCase {
             java.util.Calendar dtend = java.util.Calendar.getInstance(); 
             dtstart.add(java.util.Calendar.DATE, -2); 
             VFreeBusy getBusy = new VFreeBusy(dtstart.getTime(), dtend.getTime()); 
-            VFreeBusy requestFree = new VFreeBusy(dtstart.getTime(), dtend.getTime(), 30 * 60 * 1000); 
+            VFreeBusy requestFree = new VFreeBusy(dtstart.getTime(), dtend.getTime(), new Dur(0, 0, 30, 0)); 
              
             log.debug("GET BUSY: \n" + getBusy.toString());
             log.debug("REQUEST FREE: \n" + requestFree.toString());

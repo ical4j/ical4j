@@ -15,6 +15,7 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
@@ -69,7 +70,7 @@ public class VEventTest extends TestCase {
         recurWeekly.getDayList().add(WeekDay.WE);
         recurWeekly.getDayList().add(WeekDay.TH);
         recurWeekly.getDayList().add(WeekDay.FR);
-        recurWeekly.setInterval(3);
+        recurWeekly.setInterval(1);
         recurWeekly.setWeekStartDay(WeekDay.MO.getDay());
         RRule rruleWeekly = new RRule(recurWeekly);
 
@@ -180,7 +181,7 @@ public class VEventTest extends TestCase {
         cal.set(java.util.Calendar.HOUR_OF_DAY, 9);
         cal.set(java.util.Calendar.MINUTE, 30);
 
-        VEvent meeting = new VEvent(cal.getTime(), 1000 * 60 * 60, "Progress Meeting");
+        VEvent meeting = new VEvent(cal.getTime(), new Dur(0, 1, 0, 0), "Progress Meeting");
 
         // add timezone information..
         VTimeZone tz = VTimeZone.getDefault();
@@ -230,7 +231,8 @@ public class VEventTest extends TestCase {
                                                       queryEndDate.getTime());
         PeriodList dailyPeriods =
                 dailyWeekdayEvents.getConsumedTime(queryStartDate.getTime(),
-                                                      week1EndDate.getTime());
+                        queryEndDate.getTime());
+//                                                      week1EndDate.getTime());
         dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4StartDate.getTime(),
                                                       queryEndDate.getTime()));
 
@@ -396,5 +398,35 @@ public class VEventTest extends TestCase {
                 log.debug("Consumed time [" + consumed + "]");
             }
         }
+    }
+    
+    /**
+     * Test COUNT rules.
+     */
+    public void testGetConsumeTimeByCount() {
+        Recur recur = new Recur(Recur.WEEKLY, 3);
+        recur.setInterval(1);
+        recur.getDayList().add(WeekDay.SU);
+        log.info(recur);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 8);
+        Date start = cal.getTime();
+//        cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
+        cal.add(Calendar.HOUR_OF_DAY, 1);
+        Date end = cal.getTime();
+//        log.info(recur.getDates(start, end, Value.DATE_TIME));
+        
+        RRule rrule = new RRule(recur);
+        VEvent event = new VEvent(start, end, "Test recurrence COUNT");
+        event.getProperties().add(rrule);
+        log.info(event);
+        
+        Calendar rangeCal = Calendar.getInstance();
+        Date rangeStart = rangeCal.getTime();
+        rangeCal.add(Calendar.WEEK_OF_YEAR, 4);
+        Date rangeEnd = rangeCal.getTime();
+        
+        log.info(event.getConsumedTime(rangeStart, rangeEnd));
     }
 }

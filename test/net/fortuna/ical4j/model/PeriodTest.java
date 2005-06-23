@@ -156,7 +156,7 @@ public class PeriodTest extends TestCase
                 (todayMillis - testMillis) < 5000);
         */
 
-        testPeriod = new Period(past, null);
+        testPeriod = new Period(past, (Date) null);
         assertEquals(past, testPeriod.getStart());
 
         /*
