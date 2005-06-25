@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class Role extends Parameter {
+    
+    private static final long serialVersionUID = 1438225631470825963L;
 
     private static final String VALUE_CHAIR = "CHAIR";
     

@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class RelType extends Parameter {
+    
+    private static final long serialVersionUID = 5346030888832899016L;
 
     private static final String VALUE_PARENT = "PARENT";
     

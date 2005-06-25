@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class Cn extends Parameter {
+    
+    private static final long serialVersionUID = -8087119055007093293L;
 
     private String value;
 

@@ -45,6 +45,8 @@ import net.fortuna.ical4j.util.StringUtils;
  * @author benfortuna
  */
 public class AltRep extends Parameter {
+    
+    private static final long serialVersionUID = -2445932592596993470L;
 
     private URI uri;
 

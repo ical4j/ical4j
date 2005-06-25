@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author Ben Fortuna
  */
 public class Value extends Parameter {
+    
+    private static final long serialVersionUID = -7238642734500301768L;
 
     private static final String VALUE_BINARY = "BINARY";
     

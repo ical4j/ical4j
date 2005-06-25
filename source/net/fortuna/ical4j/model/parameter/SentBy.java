@@ -45,6 +45,8 @@ import net.fortuna.ical4j.util.StringUtils;
  * @author benfortuna
  */
 public class SentBy extends Parameter {
+    
+    private static final long serialVersionUID = -1169413145174029391L;
 
     private URI address;
 

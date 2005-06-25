@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class Encoding extends Parameter {
+    
+    private static final long serialVersionUID = 7536336461076399077L;
 
     private static final String VALUE_EIGHT_BIT = "8BIT";
     

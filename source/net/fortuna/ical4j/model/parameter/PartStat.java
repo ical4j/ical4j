@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class PartStat extends Parameter {
+    
+    private static final long serialVersionUID = -7856347127343842441L;
 
     private static final String VALUE_NEEDS_ACTION = "NEEDS-ACTION";
     

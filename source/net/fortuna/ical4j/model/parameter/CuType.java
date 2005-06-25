@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class CuType extends Parameter {
+    
+    private static final long serialVersionUID = -3134064324693983052L;
 
     private static final String VALUE_INDIVIDUAL = "INDIVIDUAL";
     

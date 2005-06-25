@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class Range extends Parameter {
+    
+    private static final long serialVersionUID = -3057531444558393776L;
 
     private static final String VALUE_THISANDPRIOR = "THISANDPRIOR";
 

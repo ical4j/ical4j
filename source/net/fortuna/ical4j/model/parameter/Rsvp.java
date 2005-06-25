@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class Rsvp extends Parameter {
+    
+    private static final long serialVersionUID = -5381653882942018012L;
 
     private static final String VALUE_TRUE = "TRUE";
     

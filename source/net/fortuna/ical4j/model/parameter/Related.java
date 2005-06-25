@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class Related extends Parameter {
+    
+    private static final long serialVersionUID = 1570525804115869565L;
 
     private static final String VALUE_START = "START";
 

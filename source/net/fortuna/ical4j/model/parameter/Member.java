@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class Member extends Parameter {
+    
+    private static final long serialVersionUID = 287348849443687499L;
 
     private AddressList groups;
 

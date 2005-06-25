@@ -45,6 +45,8 @@ import net.fortuna.ical4j.util.StringUtils;
  * @author benfortuna
  */
 public class Dir extends Parameter {
+    
+    private static final long serialVersionUID = -8581904779721020689L;
 
     private URI uri;
 

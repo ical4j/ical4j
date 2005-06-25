@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class DelegatedFrom extends Parameter {
+    
+    private static final long serialVersionUID = -795956139235258568L;
 
     private AddressList delegators;
 

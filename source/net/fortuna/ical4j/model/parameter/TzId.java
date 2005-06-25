@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class TzId extends Parameter {
+    
+    private static final long serialVersionUID = 2366516258055857879L;
 
     public static final String PREFIX = "/";
 

@@ -41,6 +41,8 @@ import net.fortuna.ical4j.model.Parameter;
  * @author benfortuna
  */
 public class FbType extends Parameter {
+    
+    private static final long serialVersionUID = -2217689716824679375L;
 
     private static final String VALUE_FREE = "FREE";
     
