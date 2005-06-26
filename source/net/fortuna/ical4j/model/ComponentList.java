@@ -41,33 +41,29 @@ import java.util.List;
 /**
  * Defines a list of iCalendar components.
  *
- * @author benf
+ * @author Ben Fortuna
  */
-public class ComponentList implements Serializable {
+public class ComponentList extends ArrayList implements Serializable {
     
     private static final long serialVersionUID = 7308557606558767449L;
 
-    private List components;
+//    private List components;
 
     /**
      * Constructor.
      */
     public ComponentList() {
-        components = new ArrayList();
+//        components = new ArrayList();
     }
 
     /**
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-
         StringBuffer buffer = new StringBuffer();
-
-        for (Iterator i = components.iterator(); i.hasNext();) {
-
+        for (Iterator i = iterator(); i.hasNext();) {
             buffer.append(i.next().toString());
         }
-
         return buffer.toString();
     }
 
@@ -78,15 +74,12 @@ public class ComponentList implements Serializable {
      * found
      */
     public final Component getComponent(final String aName) {
-
-        for (Iterator i = components.iterator(); i.hasNext();) {
+        for (Iterator i = iterator(); i.hasNext();) {
             Component c = (Component) i.next();
-
             if (c.getName().equals(aName)) {
                 return c;
             }
         }
-
         return null;
     }
 
@@ -97,24 +90,36 @@ public class ComponentList implements Serializable {
      * @see List#add(java.lang.Object)
      */
     public final boolean add(final Component component) {
-        return components.add(component);
+        return add((Object) component);
+    }
+    
+    /**
+     * Overrides superclass to throw an <code>IllegalArgumentException</code>
+     * where argument is not a <code>net.fortuna.ical4j.model.Component</code>.
+     * @see List#add(E)
+     */
+    public final boolean add(final Object arg0) {
+        if (!(arg0 instanceof Component)) {
+            throw new IllegalArgumentException("Argument not a " + Component.class.getName());
+        }
+        return super.add(arg0);
     }
 
     /**
      * @return boolean indicates if the list is empty
      * @see List#isEmpty()
      */
-    public final boolean isEmpty() {
-        return components.isEmpty();
-    }
+//    public final boolean isEmpty() {
+//        return components.isEmpty();
+//    }
 
     /**
      * @return an iterator
      * @see List#iterator()
      */
-    public final Iterator iterator() {
-        return components.iterator();
-    }
+//    public final Iterator iterator() {
+//        return components.iterator();
+//    }
 
     /**
      * Remove a component from the list
@@ -123,23 +128,23 @@ public class ComponentList implements Serializable {
      * @see List#remove(java.lang.Object)
      */
     public final boolean remove(final Component component) {
-        return components.remove(component);
+        return remove((Object) component);
     }
 
     /**
      * @return the number of components in the list
      * @see List#size()
      */
-    public final int size() {
-        return components.size();
-    }
+//    public final int size() {
+//        return components.size();
+//    }
 
     /**
      * Provides a list containing all components contained
      * in this component list.
      * @return a list
      */
-    public final List toList() {
-        return new ArrayList(components);
-    }
+//    public final List toList() {
+//        return new ArrayList(components);
+//    }
 }
