@@ -62,7 +62,7 @@ import net.fortuna.ical4j.model.parameter.XParameter;
 /**
  * A factory for creating iCalendar parameters.
  *
- * @author benfortuna
+ * @author Ben Fortuna
  */
 public final class ParameterFactoryImpl implements ParameterFactory {
 
@@ -99,7 +99,23 @@ public final class ParameterFactoryImpl implements ParameterFactory {
              */
             public final Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
-                return new CuType(value);
+                CuType parameter =  new CuType(value);
+                if (CuType.INDIVIDUAL.equals(parameter)) {
+                    return CuType.INDIVIDUAL;
+                }
+                else if (CuType.GROUP.equals(parameter)) {
+                    return CuType.GROUP;
+                }
+                else if (CuType.RESOURCE.equals(parameter)) {
+                    return CuType.RESOURCE;
+                }
+                else if (CuType.ROOM.equals(parameter)) {
+                    return CuType.ROOM;
+                }
+                else if (CuType.UNKNOWN.equals(parameter)) {
+                    return CuType.UNKNOWN;
+                }
+                return parameter;
             }
         });
         factories.put(Parameter.DELEGATED_FROM, new ParameterFactory() {
@@ -135,7 +151,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
              */
             public final Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
-                return new Encoding(value);
+                Encoding parameter = new Encoding(value);
+                if (Encoding.EIGHT_BIT.equals(parameter)) {
+                    return Encoding.EIGHT_BIT;
+                }
+                else if (Encoding.BASE64.equals(parameter)) {
+                    return Encoding.BASE64;
+                }
+                return parameter;
             }
         });
         factories.put(Parameter.FMTTYPE, new ParameterFactory() {
@@ -153,7 +176,20 @@ public final class ParameterFactoryImpl implements ParameterFactory {
              */
             public final Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
-                return new FbType(value);
+                FbType parameter = new FbType(value);
+                if (FbType.FREE.equals(parameter)) {
+                    return FbType.FREE;
+                }
+                else if (FbType.BUSY.equals(parameter)) {
+                    return FbType.BUSY;
+                }
+                else if (FbType.BUSY_TENTATIVE.equals(parameter)) {
+                    return FbType.BUSY_TENTATIVE;
+                }
+                else if (FbType.BUSY_UNAVAILABLE.equals(parameter)) {
+                    return FbType.BUSY_UNAVAILABLE;
+                }
+                return parameter;
             }
         });
         factories.put(Parameter.LANGUAGE, new ParameterFactory() {
@@ -180,7 +216,29 @@ public final class ParameterFactoryImpl implements ParameterFactory {
              */
             public final Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
-                return new PartStat(value);
+                PartStat parameter = new PartStat(value);
+                if (PartStat.NEEDS_ACTION.equals(parameter)) {
+                    return PartStat.NEEDS_ACTION;
+                }
+                else if (PartStat.ACCEPTED.equals(parameter)) {
+                    return PartStat.ACCEPTED;
+                }
+                else if (PartStat.DECLINED.equals(parameter)) {
+                    return PartStat.DECLINED;
+                }
+                else if (PartStat.TENTATIVE.equals(parameter)) {
+                    return PartStat.TENTATIVE;
+                }
+                else if (PartStat.DELEGATED.equals(parameter)) {
+                    return PartStat.DELEGATED;
+                }
+                else if (PartStat.COMPLETED.equals(parameter)) {
+                    return PartStat.COMPLETED;
+                }
+                else if (PartStat.IN_PROCESS.equals(parameter)) {
+                    return PartStat.IN_PROCESS;
+                }
+                return parameter;
             }
         });
         factories.put(Parameter.RANGE, new ParameterFactory() {
@@ -189,7 +247,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
              */
             public final Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
-                return new Range(value);
+                Range parameter = new Range(value);
+                if (Range.THISANDFUTURE.equals(parameter)) {
+                    return Range.THISANDFUTURE;
+                }
+                else if (Range.THISANDPRIOR.equals(parameter)) {
+                    return Range.THISANDPRIOR;
+                }
+                return parameter;
             }
         });
         factories.put(Parameter.RELATED, new ParameterFactory() {
@@ -198,7 +263,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
              */
             public final Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
-                return new Related(value);
+                Related parameter = new Related(value);
+                if (Related.START.equals(parameter)) {
+                    return Related.START;
+                }
+                else if (Related.END.equals(parameter)) {
+                    return Related.END;
+                }
+                return parameter;
             }
         });
         factories.put(Parameter.RELTYPE, new ParameterFactory() {
@@ -207,7 +279,17 @@ public final class ParameterFactoryImpl implements ParameterFactory {
              */
             public final Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
-                return new RelType(value);
+                RelType parameter = new RelType(value);
+                if (RelType.PARENT.equals(parameter)) {
+                    return RelType.PARENT;
+                }
+                else if (RelType.CHILD.equals(parameter)) {
+                    return RelType.CHILD;
+                }
+                if (RelType.SIBLING.equals(parameter)) {
+                    return RelType.SIBLING;
+                }
+                return parameter;
             }
         });
         factories.put(Parameter.ROLE, new ParameterFactory() {
@@ -216,7 +298,20 @@ public final class ParameterFactoryImpl implements ParameterFactory {
              */
             public final Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
-                return new Role(value);
+                Role parameter = new Role(value);
+                if (Role.CHAIR.equals(parameter)) {
+                    return Role.CHAIR;
+                }
+                else if (Role.REQ_PARTICIPANT.equals(parameter)) {
+                    return Role.REQ_PARTICIPANT;
+                }
+                else if (Role.OPT_PARTICIPANT.equals(parameter)) {
+                    return Role.OPT_PARTICIPANT;
+                }
+                else if (Role.NON_PARTICIPANT.equals(parameter)) {
+                    return Role.NON_PARTICIPANT;
+                }
+                return parameter;
             }
         });
         factories.put(Parameter.RSVP, new ParameterFactory() {
@@ -225,7 +320,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
              */
             public final Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
-                return new Rsvp(value);
+                Rsvp parameter = new Rsvp(value);
+                if (Rsvp.TRUE.equals(parameter)) {
+                    return Rsvp.TRUE;
+                }
+                else if (Rsvp.FALSE.equals(parameter)) {
+                    return Rsvp.FALSE;
+                }
+                return parameter;
             }
         });
         factories.put(Parameter.SENT_BY, new ParameterFactory() {
@@ -252,7 +354,50 @@ public final class ParameterFactoryImpl implements ParameterFactory {
              */
             public final Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
-                return new Value(value);
+                Value parameter = new Value(value);
+                if (Value.BINARY.equals(parameter)) {
+                    return Value.BINARY;
+                }
+                else if (Value.BOOLEAN.equals(parameter)) {
+                    return Value.BOOLEAN;
+                }
+                else if (Value.CAL_ADDRESS.equals(parameter)) {
+                    return Value.CAL_ADDRESS;
+                }
+                else if (Value.DATE.equals(parameter)) {
+                    return Value.DATE;
+                }
+                else if (Value.DATE_TIME.equals(parameter)) {
+                    return Value.DATE_TIME;
+                }
+                else if (Value.DURATION.equals(parameter)) {
+                    return Value.DURATION;
+                }
+                else if (Value.FLOAT.equals(parameter)) {
+                    return Value.FLOAT;
+                }
+                else if (Value.INTEGER.equals(parameter)) {
+                    return Value.INTEGER;
+                }
+                else if (Value.PERIOD.equals(parameter)) {
+                    return Value.PERIOD;
+                }
+                else if (Value.RECUR.equals(parameter)) {
+                    return Value.RECUR;
+                }
+                else if (Value.TEXT.equals(parameter)) {
+                    return Value.TEXT;
+                }
+                else if (Value.TIME.equals(parameter)) {
+                    return Value.TIME;
+                }
+                else if (Value.URI.equals(parameter)) {
+                    return Value.URI;
+                }
+                else if (Value.UTC_OFFSET.equals(parameter)) {
+                    return Value.UTC_OFFSET;
+                }
+                return parameter;
             }
         });
     }
