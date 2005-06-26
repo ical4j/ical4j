@@ -39,7 +39,7 @@ import net.fortuna.ical4j.model.ValidationException;
 /**
  * Defines methods for validating properties and property lists.
  *
- * @author benfortuna
+ * @author Ben Fortuna
  */
 public final class PropertyValidator {
 

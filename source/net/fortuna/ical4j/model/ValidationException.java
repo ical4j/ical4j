@@ -35,7 +35,8 @@ package net.fortuna.ical4j.model;
 
 /**
  * An exception thrown during validation.
- * @author benfortuna
+ * 
+ * @author Ben Fortuna
  */
 public class ValidationException extends Exception {
     

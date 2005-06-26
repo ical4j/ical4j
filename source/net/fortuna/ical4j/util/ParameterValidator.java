@@ -39,7 +39,8 @@ import net.fortuna.ical4j.model.ValidationException;
 /**
  * Defines methods for validating parameters and parameter
  * lists.
- * @author benfortuna
+ * 
+ * @author Ben Fortuna
  */
 public final class ParameterValidator {
 

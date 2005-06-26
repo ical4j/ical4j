@@ -11,9 +11,9 @@ import java.net.URISyntaxException;
 
 
 /**
- * @author Ben_Fortuna
- *
  * Implementors provide parameter creation services.
+ * 
+ * @author Ben Fortuna
  */
 public interface ParameterFactory {
 

@@ -37,7 +37,8 @@ import java.util.regex.Pattern;
 
 /**
  * Utility methods for working with parameters.
- * @author benfortuna
+ * 
+ * @author Ben Fortuna
  */
 public final class StringUtils {
 

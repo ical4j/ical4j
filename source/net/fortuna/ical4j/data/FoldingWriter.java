@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * A writer that performs iCalendar folding as it writes.
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public class FoldingWriter extends FilterWriter {
 

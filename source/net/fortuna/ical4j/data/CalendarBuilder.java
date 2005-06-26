@@ -57,8 +57,8 @@ import net.fortuna.ical4j.model.component.VToDo;
  * Parses and builds an iCalendar model from an input stream.
  * Note that this class is not thread-safe.
  *
- * @author benf
  * @version 2.0
+ * @author Ben Fortuna
  */
 public class CalendarBuilder implements ContentHandler {
     

@@ -41,7 +41,8 @@ import java.util.Calendar;
 /**
  * Defines a day of the week with a possible offset related to
  * a MONTHLY or YEARLY occurrence.
- * @author benfortuna
+ * 
+ * @author Ben Fortuna
  */
 public class WeekDay implements Serializable {
     

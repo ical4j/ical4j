@@ -45,7 +45,7 @@ import net.fortuna.ical4j.model.ValidationException;
 /**
  * Writes an iCalendar model to an output stream.
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public class CalendarOutputter {
     

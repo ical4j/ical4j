@@ -36,7 +36,7 @@ package net.fortuna.ical4j.data;
 /**
  * An exception thrown when an error ocurrs in parsing iCalendar data.
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public class ParserException extends Exception {
     

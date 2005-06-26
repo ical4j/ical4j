@@ -91,7 +91,7 @@ import net.fortuna.ical4j.model.property.XProperty;
 /**
  * A factory for creating iCalendar properties.
  *
- * @author benfortuna
+ * @author Ben Fortuna
  */
 public final class PropertyFactoryImpl implements PropertyFactory {
 

@@ -43,7 +43,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @author Ben Fortuna
  * Represents a duration of time in iCalendar. Note that according to RFC2445
  * durations represented in weeks are mutually exclusive of other duration
  * fields.
@@ -68,6 +67,8 @@ import org.apache.commons.logging.LogFactory;
  *      dur-second = 1*DIGIT "S"
  *      dur-day    = 1*DIGIT "D"
  * </pre>
+ * 
+ * @author Ben Fortuna
  */
 public class Dur implements Comparable {
 

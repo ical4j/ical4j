@@ -40,9 +40,9 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 
 /**
- * @author Ben Fortuna
- * 
  * A factory for creating iCalendar properties.
+ * 
+ * @author Ben Fortuna
  */
 public interface PropertyFactory {
 

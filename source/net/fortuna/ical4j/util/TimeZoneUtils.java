@@ -40,7 +40,7 @@ import java.util.TimeZone;
 /**
  * Utility methods relevant to Java timezones.
  *
- * @author benfortuna
+ * @author Ben Fortuna
  */
 public final class TimeZoneUtils {
 

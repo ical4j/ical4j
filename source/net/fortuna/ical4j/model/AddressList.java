@@ -46,7 +46,8 @@ import net.fortuna.ical4j.util.StringUtils;
 
 /**
  * Defines a list of iCalendar addresses.
- * @author benfortuna
+ * 
+ * @author Ben Fortuna
  */
 public class AddressList implements Serializable {
     

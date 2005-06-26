@@ -41,7 +41,8 @@ import java.util.StringTokenizer;
 
 /**
  * Defines a list of iCalendar categories.
- * @author benfortuna
+ * 
+ * @author Ben Fortuna
  */
 public class CategoryList implements Serializable {
     

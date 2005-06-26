@@ -41,7 +41,8 @@ import java.util.StringTokenizer;
 
 /**
  * Defines a list of iCalendar resouces.
- * @author benfortuna
+ * 
+ * @author Ben Fortuna
  */
 public class ResourceList implements Serializable {
     

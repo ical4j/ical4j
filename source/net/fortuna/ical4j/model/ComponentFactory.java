@@ -46,7 +46,7 @@ import net.fortuna.ical4j.model.component.VToDo;
 /**
  * A factory for creating iCalendar components.
  *
- * @author benfortuna
+ * @author Ben Fortuna
  */
 public final class ComponentFactory {
 

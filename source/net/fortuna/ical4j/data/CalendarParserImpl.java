@@ -48,9 +48,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @author Ben Fortuna
- *
  * The default implementation of a calendar parser.
+ * 
+ * @author Ben Fortuna
  */
 public class CalendarParserImpl implements CalendarParser {
 

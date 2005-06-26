@@ -36,6 +36,12 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
+/**
+ * Implementors provide functionality applicable during the parsing
+ * of an iCalendar data stream (e.g. building an object model).
+ * 
+ * @author Ben Fortuna
+ */
 public interface ContentHandler {
 
     /**
