@@ -37,7 +37,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,8 +44,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.DateFormat;
-import net.fortuna.ical4j.util.DateTimeFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,7 +52,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Defines a recurrence.
  *
- * @author benfortuna
+ * @author Ben Fortuna
  */
 public class Recur implements Serializable {
 
@@ -161,10 +158,10 @@ public class Recur implements Serializable {
             else if (UNTIL.equals(token)) {
                 String untilString = t.nextToken();
                 try {
-                    until = DateFormat.getInstance().parse(untilString);
+                    until = new Date(untilString);
                 }
                 catch (ParseException pe) {
-                    until = DateTimeFormat.getInstance().parse(untilString);
+                    until = new DateTime(untilString);
                 }
             }
             else if (COUNT.equals(token)) {
@@ -391,11 +388,8 @@ public class Recur implements Serializable {
             b.append(';');
             b.append(UNTIL);
             b.append('=');
-            // although UNTIL may be either date or date-time,
-            // for now we'll assume its a date and output as such..
-            b.append(DateFormat.getInstance().format(until));
-            // TODO: Implement option for date-time until. Note: date-time
-            // representations should always be in UTC time.
+            // Note: date-time representations should always be in UTC time.
+            b.append(until);
         }
         if (count >= 1) {
             b.append(';');
@@ -493,36 +487,18 @@ public class Recur implements Serializable {
                                    final Date periodEnd, final Value value) {
 
         DateList dates = new DateList(value);
-        
-        Date start = (Date) periodStart.clone();
 
         // Should never happen!  base is always required!
         if (base == null) {
             return dates;
         }
+        
+        Date start = (Date) periodStart.clone();
 
-        // We don't want to see or search any dates that occurr before the
+        // We don't want to see or search any dates that occur before the
         // first instance of this recurrence.
         if (start.before(base)) {
             start = base;
-        }
-
-        int lowestVariableField = 9999;
-
-        if (YEARLY.equals(frequency)) {
-            lowestVariableField = Calendar.YEAR;
-        } else if (MONTHLY.equals(frequency)) {
-            lowestVariableField = Calendar.MONTH;
-        } else if (WEEKLY.equals(frequency)) {
-            lowestVariableField = Calendar.DAY_OF_MONTH;
-        } else if (DAILY.equals(frequency)) {
-            lowestVariableField = Calendar.DAY_OF_MONTH;
-        } else if (HOURLY.equals(frequency)) {
-            lowestVariableField = Calendar.HOUR_OF_DAY;
-        } else if (MINUTELY.equals(frequency)) {
-            lowestVariableField = Calendar.MINUTE;
-        } else if (SECONDLY.equals(frequency)) {
-            lowestVariableField = Calendar.SECOND;
         }
 
         Calendar baseCalendar = Calendar.getInstance();
@@ -531,60 +507,21 @@ public class Recur implements Serializable {
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         cal.set(Calendar.MILLISECOND, 0);
-        // reset fields where BY* rules apply..
-        if (!getMonthList().isEmpty()) {
-            //cal.set(Calendar.MONTH, 0);
-            lowestVariableField = Calendar.MONTH < lowestVariableField ?
-                                  Calendar.MONTH : lowestVariableField;
-        }
-        if (!getWeekNoList().isEmpty()) {
-            //cal.set(Calendar.WEEK_OF_YEAR, 1);
-            lowestVariableField = Calendar.DAY_OF_MONTH < lowestVariableField ?
-                                  Calendar.DAY_OF_MONTH : lowestVariableField;
-        }
-        if (!getYearDayList().isEmpty()) {
-            //cal.set(Calendar.DAY_OF_YEAR, 1);
-            lowestVariableField = Calendar.DAY_OF_MONTH < lowestVariableField ?
-                                  Calendar.DAY_OF_MONTH : lowestVariableField;
-        }
-        if (!getMonthDayList().isEmpty()) {
-            //cal.set(Calendar.DAY_OF_MONTH, 1);
-            lowestVariableField = Calendar.DAY_OF_MONTH < lowestVariableField ?
-                                  Calendar.DAY_OF_MONTH : lowestVariableField;
-        }
-        if (!getDayList().isEmpty()) {
-            //cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-            lowestVariableField = Calendar.DAY_OF_MONTH < lowestVariableField ?
-                                  Calendar.DAY_OF_MONTH : lowestVariableField;
-        }
-        if (!getHourList().isEmpty()) {
-            //cal.set(Calendar.HOUR_OF_DAY, 0);
-            lowestVariableField = Calendar.HOUR_OF_DAY < lowestVariableField ?
-                                  Calendar.HOUR_OF_DAY : lowestVariableField;
-        }
-        if (!getMinuteList().isEmpty()) {
-            //cal.set(Calendar.MINUTE, 0);
-            lowestVariableField = Calendar.MINUTE < lowestVariableField ?
-                                  Calendar.MINUTE : lowestVariableField;
-        }
-        if (!getSecondList().isEmpty()) {
-            //cal.set(Calendar.SECOND, 0);
-            lowestVariableField = Calendar.SECOND < lowestVariableField ?
-                                  Calendar.SECOND : lowestVariableField;
-        }
 
+        int lvf = getLowestVariableField();
+        
         // Set everything to the right of the LVF to match the DTSTART.
         // Everything else comes from the query start date.
-        int[] matchFields = getMatchFields(lowestVariableField);
+        int[] matchFields = getMatchFields(lvf);
         for (int i = 0; i < matchFields.length; i++) {
             cal.set(matchFields[i], baseCalendar.get(matchFields[i]));
         }
 
         // Deal with rolling over to the next time period if necessary.
         if (cal.getTime().before(periodStart)) {
-            cal.add(lowestVariableField, 1);
+            cal.add(lvf, 1);
         }
-
+        
         // Weekly frequencies need to match up the week day. (i.e. if it's
         // Friday, and that's not part of our criteria, keep adding a day
         // until they match).
@@ -597,11 +534,13 @@ public class Recur implements Serializable {
             }
         }*/
 
+        cal.setTime(base);
+        
         // apply frequency/interval rules..
         if (getUntil() != null) {
             while (!cal.getTime().after(getUntil())
                     && !(periodEnd != null && cal.getTime().after(periodEnd))) {
-                dates.add(cal.getTime());
+                dates.add(new Date(cal.getTime().getTime()));
                 increment(cal);
             }
         }
@@ -617,7 +556,7 @@ public class Recur implements Serializable {
         */
         else if (periodEnd != null) {
             while (!cal.getTime().after(periodEnd)) {
-                dates.add(cal.getTime());
+                dates.add(new Date(cal.getTime().getTime()));
                 increment(cal);
             }
         }
@@ -687,11 +626,23 @@ public class Recur implements Serializable {
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYSECOND processing: " + dates);
         }
+        
+        // check count..
+        if (getCount() >= 1 && dates.size() >= getCount()) {
+            for (int i = getCount(); i < dates.size();) {
+                dates.remove(i);
+            }
+        }
 
-        // final processing..
+        // debugging..
+        if (log.isDebugEnabled()) {
+            log.debug("Dates after COUNT processing: " + dates);
+        }
+
+        // final post-processing..
         for (int i = 0; i < dates.size(); i++) {
             Date date = (Date) dates.get(i);
-            if (date.before(start)) {
+            if (periodStart != null && date.before(periodStart)) {
                 dates.remove(date);
                 i--;
             }
@@ -703,13 +654,74 @@ public class Recur implements Serializable {
                 dates.remove(date);
                 i--;
             }
+            /*
             else if (getCount() >= 1 && i >= getCount()) {
                 dates.remove(date);
                 i--;
             }
+            */
         }
 
         return dates;
+    }
+    
+    /**
+     * Returns the finest precision at which this recurrence will modify
+     * a date value.
+     * @return an int representing a <code>java.util.Calendar</code> field.
+     */
+    private int getLowestVariableField() {
+        int lowestVariableField = 9999;
+
+        // check frequency precision..
+        if (YEARLY.equals(frequency)) {
+            lowestVariableField = Calendar.YEAR;
+        }
+        else if (MONTHLY.equals(frequency)) {
+            lowestVariableField = Calendar.MONTH;
+        }
+        else if (WEEKLY.equals(frequency)) {
+            lowestVariableField = Calendar.DAY_OF_MONTH;
+        }
+        else if (DAILY.equals(frequency)) {
+            lowestVariableField = Calendar.DAY_OF_MONTH;
+        }
+        else if (HOURLY.equals(frequency)) {
+            lowestVariableField = Calendar.HOUR_OF_DAY;
+        }
+        else if (MINUTELY.equals(frequency)) {
+            lowestVariableField = Calendar.MINUTE;
+        }
+        else if (SECONDLY.equals(frequency)) {
+            lowestVariableField = Calendar.SECOND;
+        }
+
+        // check BY* rules precision..
+        if (!getMonthList().isEmpty() && Calendar.MONTH < lowestVariableField) {
+            lowestVariableField = Calendar.MONTH;
+        }
+        if (!getWeekNoList().isEmpty() && Calendar.DAY_OF_MONTH < lowestVariableField) {
+            lowestVariableField = Calendar.DAY_OF_MONTH;
+        }
+        if (!getYearDayList().isEmpty() && Calendar.DAY_OF_MONTH < lowestVariableField) {
+            lowestVariableField = Calendar.DAY_OF_MONTH;
+        }
+        if (!getMonthDayList().isEmpty() && Calendar.DAY_OF_MONTH < lowestVariableField) {
+            lowestVariableField = Calendar.DAY_OF_MONTH;
+        }
+        if (!getDayList().isEmpty() && Calendar.DAY_OF_MONTH < lowestVariableField) {
+            lowestVariableField = Calendar.DAY_OF_MONTH;
+        }
+        if (!getHourList().isEmpty() && Calendar.HOUR_OF_DAY < lowestVariableField) {
+            lowestVariableField = Calendar.HOUR_OF_DAY;
+        }
+        if (!getMinuteList().isEmpty() && Calendar.MINUTE < lowestVariableField) {
+            lowestVariableField = Calendar.MINUTE;
+        }
+        if (!getSecondList().isEmpty() && Calendar.SECOND < lowestVariableField) {
+            lowestVariableField = Calendar.SECOND;
+        }
+        return lowestVariableField;
     }
 
     /**
@@ -769,7 +781,7 @@ public class Recur implements Serializable {
     private void increment(final Calendar cal) {
         // initialise interval..
         int calInterval = (getInterval() >= 1) ? getInterval() : 1;
-        if (getFrequency() == SECONDLY) {
+        if (SECONDLY.equals(getFrequency())) {
             cal.add(Calendar.SECOND, calInterval);
         }
         else if (MINUTELY.equals(getFrequency())) {
@@ -787,7 +799,6 @@ public class Recur implements Serializable {
         else if (MONTHLY.equals(getFrequency())) {
             cal.add(Calendar.MONTH, calInterval);
         }
-
         else if (YEARLY.equals(getFrequency())) {
             cal.add(Calendar.YEAR, calInterval);
         }
@@ -813,11 +824,18 @@ public class Recur implements Serializable {
                 Integer month = (Integer) j.next();
                 // Java months are zero-based..
                 cal.set(Calendar.MONTH, month.intValue() - 1);
-                monthlyDates.add(cal.getTime());
+                monthlyDates.add(new Date(cal.getTime().getTime()));
             }
         }
         // apply BYSETPOS rules..
-        if (!getSetPosList().isEmpty() && getWeekNoList().isEmpty() && getYearDayList().isEmpty() && getMonthDayList().isEmpty() && getDayList().isEmpty() && getHourList().isEmpty() && getMinuteList().isEmpty() && getSecondList().isEmpty()) {
+        if (!getSetPosList().isEmpty()
+                && getWeekNoList().isEmpty()
+                && getYearDayList().isEmpty()
+                && getMonthDayList().isEmpty()
+                && getDayList().isEmpty()
+                && getHourList().isEmpty()
+                && getMinuteList().isEmpty()
+                && getSecondList().isEmpty()) {
             DateList setPosDates = new DateList(dates.getType());
             for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
                 Integer setPos = (Integer) i.next();
@@ -856,7 +874,13 @@ public class Recur implements Serializable {
             }
         }
         // apply BYSETPOS rules..
-        if (!getSetPosList().isEmpty() && getYearDayList().isEmpty() && getMonthDayList().isEmpty() && getDayList().isEmpty() && getHourList().isEmpty() && getMinuteList().isEmpty() && getSecondList().isEmpty()) {
+        if (!getSetPosList().isEmpty()
+                && getYearDayList().isEmpty()
+                && getMonthDayList().isEmpty()
+                && getDayList().isEmpty()
+                && getHourList().isEmpty()
+                && getMinuteList().isEmpty()
+                && getSecondList().isEmpty()) {
             DateList setPosDates = new DateList(dates.getType());
             for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
                 Integer setPos = (Integer) i.next();
@@ -881,7 +905,7 @@ public class Recur implements Serializable {
      * @param weekNo
      * @return
      */
-    private int getAbsWeekNo(final Date date, final int weekNo) {
+    private int getAbsWeekNo(final java.util.Date date, final int weekNo) {
         if (weekNo == 0 || weekNo < -53 || weekNo > 53) {
             throw new IllegalArgumentException("Invalid week number [" + weekNo + "]");
         }
@@ -924,7 +948,12 @@ public class Recur implements Serializable {
             }
         }
         // apply BYSETPOS rules..
-        if (!getSetPosList().isEmpty() && getMonthDayList().isEmpty() && getDayList().isEmpty() && getHourList().isEmpty() && getMinuteList().isEmpty() && getSecondList().isEmpty()) {
+        if (!getSetPosList().isEmpty()
+                && getMonthDayList().isEmpty()
+                && getDayList().isEmpty()
+                && getHourList().isEmpty()
+                && getMinuteList().isEmpty()
+                && getSecondList().isEmpty()) {
             DateList setPosDates = new DateList(dates.getType());
             for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
                 Integer setPos = (Integer) i.next();
@@ -949,7 +978,7 @@ public class Recur implements Serializable {
      * @param yearDay
      * @return
      */
-    private int getAbsYearDay(final Date date, final int yearDay) {
+    private int getAbsYearDay(final java.util.Date date, final int yearDay) {
         if (yearDay == 0 || yearDay < -366 || yearDay > 366) {
             throw new IllegalArgumentException("Invalid year day [" + yearDay + "]");
         }
@@ -988,11 +1017,15 @@ public class Recur implements Serializable {
             for (Iterator j = getMonthDayList().iterator(); j.hasNext();) {
                 Integer monthDay = (Integer) j.next();
                 cal.set(Calendar.DAY_OF_YEAR, getAbsMonthDay(cal.getTime(), monthDay.intValue()));
-                monthDayDates.add(cal.getTime());
+                monthDayDates.add(new Date(cal.getTime().getTime()));
             }
         }
         // apply BYSETPOS rules..
-        if (!getSetPosList().isEmpty() && getDayList().isEmpty() && getHourList().isEmpty() && getMinuteList().isEmpty() && getSecondList().isEmpty()) {
+        if (!getSetPosList().isEmpty()
+                && getDayList().isEmpty()
+                && getHourList().isEmpty()
+                && getMinuteList().isEmpty()
+                && getSecondList().isEmpty()) {
             DateList setPosDates = new DateList(dates.getType());
             for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
                 Integer setPos = (Integer) i.next();
@@ -1017,7 +1050,7 @@ public class Recur implements Serializable {
      * @param monthDay
      * @return
      */
-    private int getAbsMonthDay(final Date date, final int monthDay) {
+    private int getAbsMonthDay(final java.util.Date date, final int monthDay) {
         if (monthDay == 0 || monthDay < -31 || monthDay > 31) {
             throw new IllegalArgumentException("Invalid month day [" + monthDay + "]");
         }
@@ -1057,7 +1090,10 @@ public class Recur implements Serializable {
             }
         }
         // apply BYSETPOS rules..
-        if (!getSetPosList().isEmpty() && getHourList().isEmpty() && getMinuteList().isEmpty() && getSecondList().isEmpty()) {
+        if (!getSetPosList().isEmpty()
+                && getHourList().isEmpty()
+                && getMinuteList().isEmpty()
+                && getSecondList().isEmpty()) {
             DateList setPosDates = new DateList(dates.getType());
             for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
                 Integer setPos = (Integer) i.next();
@@ -1085,7 +1121,7 @@ public class Recur implements Serializable {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int calDay = -1;
-        List days = new ArrayList();
+        DateList days = new DateList(Value.DATE);
         if (WeekDay.SU.getDay().equals(weekDay.getDay())) {
             calDay = Calendar.SUNDAY;
         }
@@ -1114,7 +1150,7 @@ public class Recur implements Serializable {
         if (DAILY.equals(getFrequency())) {
             if (cal.get(Calendar.DAY_OF_WEEK) == calDay) {
                 // only one date is applicable..
-                days.add(cal.getTime());
+                days.add(new Date(cal.getTime().getTime()));
             }
         }
         else if (WEEKLY.equals(getFrequency())  || !getWeekNoList().isEmpty()) {
@@ -1128,7 +1164,7 @@ public class Recur implements Serializable {
             int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
 
             while (cal.get(Calendar.WEEK_OF_YEAR) == weekNo) {
-                days.add(cal.getTime());
+                days.add(new Date(cal.getTime().getTime()));
                 cal.add(Calendar.DAY_OF_WEEK, 7);
             }
         }
@@ -1140,7 +1176,7 @@ public class Recur implements Serializable {
                 cal.add(Calendar.DAY_OF_MONTH, 1);
             }
             while (cal.get(Calendar.MONTH) == month) {
-                days.add(cal.getTime());
+                days.add(new Date(cal.getTime().getTime()));
                 cal.add(Calendar.DAY_OF_MONTH, 7);
             }
         }
@@ -1152,11 +1188,11 @@ public class Recur implements Serializable {
                 cal.add(Calendar.DAY_OF_YEAR, 1);
             }
             while (cal.get(Calendar.YEAR) == year) {
-                days.add(cal.getTime());
+                days.add(new Date(cal.getTime().getTime()));
                 cal.add(Calendar.DAY_OF_YEAR, 7);
             }
         }
-        List weekDays = new ArrayList();
+        DateList weekDays = new DateList(days.getType());
         if (weekDay.getOffset() < 0) {
             weekDays.add(days.get(days.size() + weekDay.getOffset()));
         }
@@ -1189,11 +1225,13 @@ public class Recur implements Serializable {
             for (Iterator j = getHourList().iterator(); j.hasNext();) {
                 Integer hour = (Integer) j.next();
                 cal.set(Calendar.HOUR_OF_DAY, hour.intValue());
-                hourlyDates.add(cal.getTime());
+                hourlyDates.add(new Date(cal.getTime().getTime()));
             }
         }
         // apply BYSETPOS rules..
-        if (!getSetPosList().isEmpty() && getMinuteList().isEmpty() && getSecondList().isEmpty()) {
+        if (!getSetPosList().isEmpty()
+                && getMinuteList().isEmpty()
+                && getSecondList().isEmpty()) {
             DateList setPosDates = new DateList(dates.getType());
             for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
                 Integer setPos = (Integer) i.next();
@@ -1228,7 +1266,7 @@ public class Recur implements Serializable {
             for (Iterator j = getMinuteList().iterator(); j.hasNext();) {
                 Integer minute = (Integer) j.next();
                 cal.set(Calendar.MINUTE, minute.intValue());
-                minutelyDates.add(cal.getTime());
+                minutelyDates.add(new Date(cal.getTime().getTime()));
             }
         }
         // apply BYSETPOS rules..
@@ -1267,7 +1305,7 @@ public class Recur implements Serializable {
             for (Iterator j = getSecondList().iterator(); j.hasNext();) {
                 Integer second = (Integer) j.next();
                 cal.set(Calendar.SECOND, second.intValue());
-                secondlyDates.add(cal.getTime());
+                secondlyDates.add(new Date(cal.getTime().getTime()));
             }
         }
         // apply BYSETPOS rules..
