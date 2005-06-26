@@ -33,11 +33,12 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Date;
 import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
@@ -163,7 +164,7 @@ public class VFreeBusy extends Component {
         getProperties().add(new DtStart(startDate, true));
         // dtend MUST be specified in UTC..
         getProperties().add(new DtEnd(endDate, true));
-        getProperties().add(new DtStamp(new Date()));
+        getProperties().add(new DtStamp(new DateTime()));
     }
 
     /**
@@ -186,7 +187,7 @@ public class VFreeBusy extends Component {
         // dtend MUST be specified in UTC..
         getProperties().add(new DtEnd(endDate, true));
         getProperties().add(new Duration(duration));
-        getProperties().add(new DtStamp(new Date()));
+        getProperties().add(new DtStamp(new DateTime()));
     }
 
     /**
@@ -207,7 +208,7 @@ public class VFreeBusy extends Component {
         getProperties().add(new DtStart(start.getTime(), true));
         // dtend MUST be specified in UTC..
         getProperties().add(new DtEnd(end.getTime(), true));
-        getProperties().add(new DtStamp(new Date()));
+        getProperties().add(new DtStamp(new DateTime()));
         if (duration != null) {
             getProperties().add(new Duration(duration.getDuration()));
             // Initialise with all free time of at least the specified
@@ -269,7 +270,7 @@ public class VFreeBusy extends Component {
         if (log.isDebugEnabled()) {
             log.debug("Busy periods: " + periods);
         }
-        Date lastPeriodEnd = null;
+        DateTime lastPeriodEnd = null;
         for (Iterator i = periods.iterator(); i.hasNext();) {
             Period period = (Period) i.next();
             // check if period outside bounds..
@@ -279,7 +280,7 @@ public class VFreeBusy extends Component {
             // create a dummy last period end if first period starts after the start date
             // (i.e. there is a free time gap between the start and the first period).
             if (lastPeriodEnd == null && period.getStart().after(start)) {
-                lastPeriodEnd = start;
+                lastPeriodEnd = new DateTime(start);
             }
             // calculate duration between this period start and last period end..
             if (lastPeriodEnd != null) {

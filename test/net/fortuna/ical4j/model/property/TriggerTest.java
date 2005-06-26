@@ -26,14 +26,14 @@ import java.text.ParseException;
 import java.util.Date;
 
 import junit.framework.TestCase;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.util.DateTimeFormat;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * @author Ben
+ * @author Ben Fortuna
  *
  */
 public class TriggerTest extends TestCase {
@@ -42,9 +42,9 @@ public class TriggerTest extends TestCase {
 
     public void testSetValue() throws ParseException {
         Trigger trigger = new Trigger();
-        trigger.setValue(DateTimeFormat.getInstance().format(new Date(0)));
+        trigger.setValue(new DateTime(new Date(0).getTime()).toString());
         
-        log.info(DateTimeFormat.getInstance().format(new Date(0)));
+        log.info(new DateTime(new Date(0).getTime()));
         log.info(trigger);
 
 //        trigger.setValue(DurationFormat.getInstance().format(5000));

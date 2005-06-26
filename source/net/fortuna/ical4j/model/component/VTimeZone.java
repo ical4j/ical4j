@@ -36,17 +36,16 @@ package net.fortuna.ical4j.model.component;
 import java.io.IOException;
 import java.util.TimeZone;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.UtcOffset;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.TzId;
@@ -55,6 +54,9 @@ import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.TimeZoneUtils;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Defines an iCalendar VTIMEZONE component.
@@ -284,12 +286,12 @@ public class VTimeZone extends Component {
         TzName standardTzName = new TzName(new ParameterList(), timezone
                 .getDisplayName());
         DtStart standardTzStart = new DtStart(new ParameterList(),
-                TimeZoneUtils.getDaylightEnd(timezone));
+                new Date(TimeZoneUtils.getDaylightEnd(timezone).getTime()));
         TzOffsetTo standardTzOffsetTo = new TzOffsetTo(new ParameterList(),
-                timezone.getRawOffset());
-        TzOffsetFrom standardTzOffsetFrom = new TzOffsetFrom(timezone
+                new UtcOffset(timezone.getRawOffset()));
+        TzOffsetFrom standardTzOffsetFrom = new TzOffsetFrom(new UtcOffset(timezone
                 .getRawOffset()
-                + timezone.getDSTSavings());
+                + timezone.getDSTSavings()));
 
         PropertyList standardTzProps = new PropertyList();
         standardTzProps.add(standardTzName);
@@ -304,11 +306,11 @@ public class VTimeZone extends Component {
                     .getDisplayName()
                     + " (DST)");
             DtStart daylightTzStart = new DtStart(new ParameterList(),
-                    TimeZoneUtils.getDaylightStart(timezone));
+                    new Date(TimeZoneUtils.getDaylightStart(timezone).getTime()));
             TzOffsetTo daylightTzOffsetTo = new TzOffsetTo(new ParameterList(),
-                    timezone.getRawOffset() + timezone.getDSTSavings());
-            TzOffsetFrom daylightTzOffsetFrom = new TzOffsetFrom(timezone
-                    .getRawOffset());
+                    new UtcOffset(timezone.getRawOffset() + timezone.getDSTSavings()));
+            TzOffsetFrom daylightTzOffsetFrom = new TzOffsetFrom(new UtcOffset(timezone
+                    .getRawOffset()));
 
             PropertyList daylightTzProps = new PropertyList();
             daylightTzProps.add(daylightTzName);

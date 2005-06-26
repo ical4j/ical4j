@@ -34,12 +34,11 @@
 
 package net.fortuna.ical4j.model;
 
+import java.util.GregorianCalendar;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * <p>Period Tester.</p>
@@ -50,16 +49,16 @@ import java.util.GregorianCalendar;
  */
 public class PeriodTest extends TestCase
 {
-    private Date today;
-    private Date past;
-    private Date future;
-    private Date begin1994;
-    private Date end1994;
-    private Date mar1994;
-    private Date apr1994;
-    private Date may1994;
-    private Date jun1994;
-    private Date jul1994;
+    private DateTime today;
+    private DateTime past;
+    private DateTime future;
+    private DateTime begin1994;
+    private DateTime end1994;
+    private DateTime mar1994;
+    private DateTime apr1994;
+    private DateTime may1994;
+    private DateTime jun1994;
+    private DateTime jul1994;
     private Period year1994;
     private Period monthMarch;
     private Period monthApril;
@@ -82,23 +81,23 @@ public class PeriodTest extends TestCase
         super.setUp();
         java.util.Calendar cal = new GregorianCalendar(1980,
                 java.util.Calendar.JANUARY, 23);
-        past = cal.getTime();
+        past = new DateTime(cal.getTime().getTime());
         cal.set(2022, java.util.Calendar.FEBRUARY, 23);
-        future = cal.getTime();
+        future = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.JANUARY, 1);
-        begin1994 = cal.getTime();
+        begin1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.DECEMBER, 31);
-        end1994 = cal.getTime();
+        end1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.MARCH, 4);
-        mar1994 = cal.getTime();
+        mar1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.APRIL, 12);
-        apr1994 = cal.getTime();
+        apr1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.MAY, 19);
-        may1994 = cal.getTime();
+        may1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.JUNE, 22);
-        jun1994 = cal.getTime();
+        jun1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.JULY, 29);
-        jul1994 = cal.getTime();
+        jul1994 = new DateTime(cal.getTime().getTime());
         year1994 = new Period(begin1994, end1994);
         monthMarch = new Period(mar1994, apr1994);
         monthApril = new Period(apr1994, may1994);
@@ -110,7 +109,7 @@ public class PeriodTest extends TestCase
         marchToMay = new Period(mar1994, jun1994);
         marchToApril = new Period(mar1994, may1994);
         duplicateRange = new Period(begin1994, end1994);
-        today = new Date();
+        today = new DateTime();
     }
 
     public void tearDown() throws Exception
@@ -156,7 +155,7 @@ public class PeriodTest extends TestCase
                 (todayMillis - testMillis) < 5000);
         */
 
-        testPeriod = new Period(past, (Date) null);
+        testPeriod = new Period(past, (DateTime) null);
         assertEquals(past, testPeriod.getStart());
 
         /*

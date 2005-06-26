@@ -34,6 +34,7 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
@@ -46,7 +47,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.FileInputStream;
-import java.util.Date;
 
 /**
  * @author Ben Fortuna
@@ -154,9 +154,9 @@ public class VFreeBusyTest extends TestCase {
 
         java.util.Calendar cal = java.util.Calendar.getInstance();
 
-        Date startDate = cal.getTime();
+        Date startDate = new Date(cal.getTime().getTime());
         cal.add(java.util.Calendar.DATE, 3);
-        Date endDate = cal.getTime();
+        Date endDate = new Date(cal.getTime().getTime());
         
         VEvent event = new VEvent();
         event.getProperties().add(new DtStart(startDate));
@@ -185,17 +185,17 @@ public class VFreeBusyTest extends TestCase {
             java.util.Calendar start = java.util.Calendar.getInstance(); 
             java.util.Calendar end = java.util.Calendar.getInstance(); 
             start.add(java.util.Calendar.DATE, -1); 
-            VEvent dteStartOnly = new VEvent(start.getTime(), "DATE START ONLY"); 
-            VEvent dteEnd = new VEvent(start.getTime(), end.getTime(), "DATE END INCLUDED"); 
-            VEvent duration = new VEvent(start.getTime(), new Dur(0, 1, 0, 0), "DURATION"); 
+            VEvent dteStartOnly = new VEvent(new Date(start.getTime().getTime()), "DATE START ONLY"); 
+            VEvent dteEnd = new VEvent(new Date(start.getTime().getTime()), new Date(end.getTime().getTime()), "DATE END INCLUDED"); 
+            VEvent duration = new VEvent(new Date(start.getTime().getTime()), new Dur(0, 1, 0, 0), "DURATION"); 
             FreeBusyTest.getComponents().add(dteEnd); 
             FreeBusyTest.getComponents().add(duration); 
              
             java.util.Calendar dtstart = java.util.Calendar.getInstance();
             java.util.Calendar dtend = java.util.Calendar.getInstance(); 
             dtstart.add(java.util.Calendar.DATE, -2); 
-            VFreeBusy getBusy = new VFreeBusy(dtstart.getTime(), dtend.getTime()); 
-            VFreeBusy requestFree = new VFreeBusy(dtstart.getTime(), dtend.getTime(), new Dur(0, 0, 30, 0)); 
+            VFreeBusy getBusy = new VFreeBusy(new Date(dtstart.getTime().getTime()), new Date(dtend.getTime().getTime())); 
+            VFreeBusy requestFree = new VFreeBusy(new Date(dtstart.getTime().getTime()), new Date(dtend.getTime().getTime()), new Dur(0, 0, 30, 0)); 
              
             log.debug("GET BUSY: \n" + getBusy.toString());
             log.debug("REQUEST FREE: \n" + requestFree.toString());

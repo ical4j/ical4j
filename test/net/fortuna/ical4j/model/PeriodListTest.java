@@ -36,7 +36,6 @@
 package net.fortuna.ical4j.model;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
@@ -51,20 +50,20 @@ public class PeriodListTest extends TestCase {
     
     private static Log log = LogFactory.getLog(PeriodListTest.class);
     
-    private Date begin1994;
-    private Date end1994;
-    private Date jan1994;
-    private Date feb1994;
-    private Date mar1994;
-    private Date apr1994;
-    private Date may1994;
-    private Date jun1994;
-    private Date jul1994;
-    private Date aug1994;
-    private Date sep1994;
-    private Date oct1994;
-    private Date nov1994;
-    private Date dec1994;
+    private DateTime begin1994;
+    private DateTime end1994;
+    private DateTime jan1994;
+    private DateTime feb1994;
+    private DateTime mar1994;
+    private DateTime apr1994;
+    private DateTime may1994;
+    private DateTime jun1994;
+    private DateTime jul1994;
+    private DateTime aug1994;
+    private DateTime sep1994;
+    private DateTime oct1994;
+    private DateTime nov1994;
+    private DateTime dec1994;
     private Period year1994;
     private Period monthJanuary;
     private Period monthFebruary;
@@ -106,33 +105,33 @@ public class PeriodListTest extends TestCase {
         // create ranges that are intervals
         java.util.Calendar cal = new GregorianCalendar(1994,
                 java.util.Calendar.JANUARY, 1);
-        begin1994 = cal.getTime();
+        begin1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.DECEMBER, 31);
-        end1994 = cal.getTime();
+        end1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.JANUARY, 22);
-        jan1994 = cal.getTime();
+        jan1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.FEBRUARY, 15);
-        feb1994 = cal.getTime();
+        feb1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.MARCH, 4);
-        mar1994 = cal.getTime();
+        mar1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.APRIL, 12);
-        apr1994 = cal.getTime();
+        apr1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.MAY, 19);
-        may1994 = cal.getTime();
+        may1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.JUNE, 21);
-        jun1994 = cal.getTime();
+        jun1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.JULY, 28);
-        jul1994 = cal.getTime();
+        jul1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.AUGUST, 20);
-        aug1994 = cal.getTime();
+        aug1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.SEPTEMBER, 17);
-        sep1994 = cal.getTime();
+        sep1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.OCTOBER, 29);
-        oct1994 = cal.getTime();
+        oct1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.NOVEMBER, 11);
-        nov1994 = cal.getTime();
+        nov1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.DECEMBER, 2);
-        dec1994 = cal.getTime();
+        dec1994 = new DateTime(cal.getTime().getTime());
         year1994 = new Period(begin1994, end1994);
         monthJanuary = new Period(jan1994, feb1994);
         monthFebruary = new Period(feb1994, mar1994);
@@ -189,10 +188,10 @@ public class PeriodListTest extends TestCase {
         PeriodList periods = new PeriodList();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, 25);
-        periods.add(new Period(new Date(), cal.getTime()));
-        periods.add(new Period(cal.getTime(), new Dur(0, 2, 0, 0)));
-        periods.add(new Period(new Date(), new Dur(0, 2, 0, 0)));
-        periods.add(new Period(new Date(), new Dur(0, 1, 0, 0)));
+        periods.add(new Period(new DateTime(), new DateTime(cal.getTime().getTime())));
+        periods.add(new Period(new DateTime(cal.getTime().getTime()), new Dur(0, 2, 0, 0)));
+        periods.add(new Period(new DateTime(), new Dur(0, 2, 0, 0)));
+        periods.add(new Period(new DateTime(), new Dur(0, 1, 0, 0)));
         
 //        log.info("Unsorted list: " + periods);
         

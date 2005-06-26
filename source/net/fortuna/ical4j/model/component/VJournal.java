@@ -33,9 +33,9 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Date;
-
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
@@ -128,7 +128,7 @@ public class VJournal extends Component {
      */
     public VJournal(final Date start, final String summary) {
         this();
-        getProperties().add(new DtStamp(new Date()));
+        getProperties().add(new DtStamp(new DateTime()));
         getProperties().add(new DtStart(start));
         getProperties().add(new Summary(summary));
     }

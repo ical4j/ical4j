@@ -38,6 +38,7 @@ package net.fortuna.ical4j.model.property;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -83,7 +84,7 @@ public class AttachTest extends TestCase {
         cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
         cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
 
-        DtStart start = new DtStart(cal.getTime());
+        DtStart start = new DtStart(new Date(cal.getTime().getTime()));
         start.getParameters().add(Value.DATE);
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");

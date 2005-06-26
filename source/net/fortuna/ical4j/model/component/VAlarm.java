@@ -33,9 +33,8 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Date;
-
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
@@ -217,7 +216,7 @@ public class VAlarm extends Component {
      * the specified time.
      * @param trigger the time the alarm will trigger
      */
-    public VAlarm(final Date trigger) {
+    public VAlarm(final DateTime trigger) {
         this();
         getProperties().add(new Trigger(trigger));
     }

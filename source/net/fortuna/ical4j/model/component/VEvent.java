@@ -33,12 +33,13 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Date;
 import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Period;
@@ -243,7 +244,7 @@ public class VEvent extends Component {
      */
     public VEvent(final Date start, final String summary) {
         this();
-        getProperties().add(new DtStamp(new Date()));
+        getProperties().add(new DtStamp(new DateTime()));
         getProperties().add(new DtStart(start));
         getProperties().add(new Summary(summary));
     }
@@ -257,7 +258,7 @@ public class VEvent extends Component {
      */
     public VEvent(final Date start, final Date end, final String summary) {
         this();
-        getProperties().add(new DtStamp(new Date()));
+        getProperties().add(new DtStamp(new DateTime()));
         getProperties().add(new DtStart(start));
         getProperties().add(new DtEnd(end));
         getProperties().add(new Summary(summary));
@@ -272,7 +273,7 @@ public class VEvent extends Component {
      */
     public VEvent(final Date start, final Dur duration, final String summary) {
         this();
-        getProperties().add(new DtStamp(new Date()));
+        getProperties().add(new DtStamp(new DateTime()));
         getProperties().add(new DtStart(start));
         getProperties().add(new Duration(duration));
         getProperties().add(new Summary(summary));
@@ -485,7 +486,7 @@ public class VEvent extends Component {
             DateList startDates = rrule.getRecur().getDates(start.getTime(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
             for (int j = 0; j < startDates.size(); j++) {
                 Date startDate = (Date) startDates.get(j);
-                periods.add(new Period(startDate, rDuration));
+                periods.add(new Period(new DateTime(startDate), rDuration));
             }
         }
         // exception rules..
@@ -496,7 +497,7 @@ public class VEvent extends Component {
             DateList startDates = exrule.getRecur().getDates(start.getTime(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
             for (Iterator j = startDates.iterator(); j.hasNext();) {
                 Date startDate = (Date) j.next();
-                exPeriods.add(new Period(startDate, rDuration));
+                exPeriods.add(new Period(new DateTime(startDate), rDuration));
             }
         }
         // apply exceptions..
@@ -511,10 +512,10 @@ public class VEvent extends Component {
         // add first instance if included in range..
         if (start.getTime().before(rangeEnd)) {
             if (end != null && end.getTime().after(rangeStart)) {
-                periods.add(new Period(start.getTime(), end.getTime()));
+                periods.add(new Period(new DateTime(start.getTime()), new DateTime(end.getTime())));
             }
             else if (duration != null) {
-                Period period = new Period(start.getTime(), duration.getDuration());
+                Period period = new Period(new DateTime(start.getTime()), duration.getDuration());
                 if (period.getEnd().after(rangeStart)) {
                     periods.add(period);
                 }
@@ -546,11 +547,10 @@ public class VEvent extends Component {
 
         // No DTEND?  No problem, we'll use the DURATION.
         if (dtEnd == null) {
-
             DtStart dtStart = getStartDate();
             Duration vEventDuration =
                       (Duration) getProperties().getProperty(Property.DURATION);
-            dtEnd = new DtEnd(vEventDuration.getDuration().getTime(dtStart.getTime()));
+            dtEnd = new DtEnd(new Date(vEventDuration.getDuration().getTime(dtStart.getTime()).getTime()));
         }
 
         return dtEnd;

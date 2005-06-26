@@ -36,7 +36,6 @@
 package net.fortuna.ical4j.model;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -60,12 +59,12 @@ public class RecurTest extends TestCase {
         log.info(recur);
         
         Calendar cal = Calendar.getInstance();
-        Date start = cal.getTime();
+        Date start = new Date(cal.getTime().getTime());
         cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
-        Date end = cal.getTime();
+        Date end = new Date(cal.getTime().getTime());
         log.info(recur.getDates(start, end, Value.DATE_TIME));        
         
-        recur.setUntil(cal.getTime());
+        recur.setUntil(new Date(cal.getTime().getTime()));
         log.info(recur);
         log.info(recur.getDates(start, end, Value.DATE_TIME));
         
@@ -89,9 +88,9 @@ public class RecurTest extends TestCase {
         log.info(recur);
         
         Calendar cal = Calendar.getInstance();
-        Date start = cal.getTime();
+        Date start = new Date(cal.getTime().getTime());
         cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
-        Date end = cal.getTime();
+        Date end = new Date(cal.getTime().getTime());
         log.info(recur.getDates(start, end, Value.DATE_TIME));        
     }
 
@@ -123,10 +122,10 @@ public class RecurTest extends TestCase {
         recur.getMinuteList().add(new Integer(30));
 
         Calendar cal = Calendar.getInstance();
-        Date start = cal.getTime();
+        Date start = new Date(cal.getTime().getTime());
         cal.add(Calendar.YEAR, 2);
-        Date end = cal.getTime();
+        Date end = new Date(cal.getTime().getTime());
         log.info(recur);
-        log.info(recur.getDates(testCal.getTime(), start, end, Value.DATE_TIME));
+        log.info(recur.getDates(new Date(testCal.getTime().getTime()), start, end, Value.DATE_TIME));
     }
 }
