@@ -146,12 +146,17 @@ public class ParameterList implements Serializable {
     }
 
     /**
-     * Add a parameter to the list.
+     * Add a parameter to the list. Note that this method will also remove from the
+     * list all other parameters with the same name. This is under the assumption
+     * that a parameter may only be specified once. 
      * @param parameter the parameter to add
      * @return true
      * @see List#add(java.lang.Object)
      */
     public final boolean add(final Parameter parameter) {
+        for (Iterator i = getParameters(parameter.getName()).iterator(); i.hasNext();) {
+            remove((Parameter) i.next());
+        }
         return parameters.add(parameter);
     }
 
