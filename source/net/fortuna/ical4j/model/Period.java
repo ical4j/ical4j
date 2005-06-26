@@ -37,8 +37,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 
-import net.fortuna.ical4j.util.DateTimeFormat;
-
 /**
  * Defines a period of time. A period may be specified as either a start date
  * and end date, or a start date and duration.
@@ -52,9 +50,9 @@ public class Period implements Serializable, Comparable {
     
     private static final long serialVersionUID = 7321090422911676490L;
 
-    private Date start;
+    private DateTime start;
 
-    private Date end;
+    private DateTime end;
 
     private Dur duration;
 
@@ -65,12 +63,11 @@ public class Period implements Serializable, Comparable {
      * not a valid representation
      */
     public Period(final String aValue) throws ParseException {
-        start = DateTimeFormat.getInstance().parse(aValue.substring(0, aValue.indexOf('/')));
+        start = new DateTime(aValue.substring(0, aValue.indexOf('/')));
 
         // period may end in either a date-time or a duration..
         try {
-            end = DateTimeFormat.getInstance()
-                    .parse(aValue.substring(aValue.indexOf('/') + 1));
+            end = new DateTime(aValue.substring(aValue.indexOf('/') + 1));
         }
         catch (ParseException pe) {
 //            duration = DurationFormat.getInstance().parse(aValue);
@@ -83,7 +80,7 @@ public class Period implements Serializable, Comparable {
      * @param start the start date of the period
      * @param end the end date of the period
      */
-    public Period(final Date start, final Date end) {
+    public Period(final DateTime start, final DateTime end) {
         this.start = start;
         this.end = end;
     }
@@ -94,7 +91,7 @@ public class Period implements Serializable, Comparable {
      * @param start the start date of the period
      * @param duration the duration of the period
      */
-    public Period(final Date start, final Dur duration) {
+    public Period(final DateTime start, final Dur duration) {
         this.start = start;
         this.duration = duration;
     }
@@ -116,9 +113,9 @@ public class Period implements Serializable, Comparable {
      * specified, the end date is derived from the duration.
      * @return the end date of this period.
      */
-    public final Date getEnd() {
+    public final DateTime getEnd() {
     	if (end == null) {
-    		return duration.getTime(start);
+    		return new DateTime(duration.getTime(start).getTime());
     	}
         return end;
     }
@@ -126,7 +123,7 @@ public class Period implements Serializable, Comparable {
     /**
      * @return Returns the start.
      */
-    public final Date getStart() {
+    public final DateTime getStart() {
         return start;
     }
     
@@ -218,8 +215,8 @@ public class Period implements Serializable, Comparable {
      * @return a period 
      */
     public final Period add(final Period period) {
-    	Date newPeriodStart = null;
-    	Date newPeriodEnd = null;
+    	DateTime newPeriodStart = null;
+    	DateTime newPeriodEnd = null;
     	
         if (period == null) {
             newPeriodStart = getStart();
@@ -248,10 +245,10 @@ public class Period implements Serializable, Comparable {
      */
     public final String toString() {
         StringBuffer b = new StringBuffer();
-        b.append(DateTimeFormat.getInstance().format(start));
+        b.append(start);
         b.append('/');
         if (end != null) {
-            b.append(DateTimeFormat.getInstance().format(end));
+            b.append(end);
         }
         else {
 //            b.append(DurationFormat.getInstance().format(duration));
