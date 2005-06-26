@@ -264,4 +264,25 @@ public class Calendar implements Serializable {
             component.validate();
         }
     }
+    
+    /**
+     * Two calendars are equal if and only if their
+     * property lists and component lists are equal.
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public final boolean equals(final Object arg0) {
+        if (arg0 instanceof Calendar) {
+            Calendar calendar = (Calendar) arg0;
+            return getProperties().equals(calendar.getProperties())
+                    && getComponents().equals(calendar.getComponents());
+        }
+        return super.equals(arg0);
+    }
+
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    public final int hashCode() {
+        return getProperties().hashCode() + getComponents().hashCode();
+    }
 }

@@ -40,7 +40,7 @@ import java.util.Iterator;
  * Defines an iCalendar component. Subclasses of this class provide additional
  * validation and typed values for specific iCalendar components.
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public abstract class Component implements Serializable {
 
@@ -157,5 +157,26 @@ public abstract class Component implements Serializable {
             Property property = (Property) i.next();
             property.validate();
         }
+    }
+
+    /**
+     * Two components are equal if and only if their
+     * name and property lists are equal.
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public final boolean equals(final Object arg0) {
+        if (arg0 instanceof Component) {
+            Component c = (Component) arg0;
+            return getName().equals(c.getName())
+                    && getProperties().equals(c.getProperties());
+        }
+        return super.equals(arg0);
+    }
+
+    /*
+     * @see java.lang.Object#hashCode()
+     */
+    public final int hashCode() {
+        return getName().hashCode() + getProperties().hashCode();
     }
 }
