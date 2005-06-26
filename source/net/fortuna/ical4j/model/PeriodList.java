@@ -35,8 +35,8 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
@@ -44,6 +44,7 @@ import java.util.TreeSet;
  * Defines a list of iCalendar periods.
  * NOTE: By implementing the <code>java.util.SortedSet</code> interface period
  * lists will always be sorted according to natural ordering.
+ * 
  * @author Ben Fortuna
  */
 public class PeriodList extends TreeSet implements Serializable {
@@ -98,6 +99,18 @@ public class PeriodList extends TreeSet implements Serializable {
      */
     public final boolean add(final Period period) {
         return add((Object) period);
+    }
+    
+    /**
+     * Overrides superclass to throw an <code>IllegalArgumentException</code>
+     * where argument is not a <code>net.fortuna.ical4j.model.Period</code>.
+     * @see List#add(E)
+     */
+    public final boolean add(final Object arg0) {
+        if (!(arg0 instanceof Period)) {
+            throw new IllegalArgumentException("Argument not a " + Period.class.getName());
+        }
+        return super.add(arg0);
     }
 
     /**
@@ -175,7 +188,9 @@ public class PeriodList extends TreeSet implements Serializable {
     		prevPeriod = period;
     	}
         // remember to add the last period to the list..
-        newList.add(prevPeriod);
+        if (prevPeriod != null) {
+            newList.add(prevPeriod);
+        }
         // only return new list if normalisation
         // has ocurred..
         if (normalised) {
@@ -228,8 +243,8 @@ public class PeriodList extends TreeSet implements Serializable {
                         continue;
                     }
                     else if (subtraction.intersects(period)) {
-                        Date newPeriodStart;
-                        Date newPeriodEnd;
+                        DateTime newPeriodStart;
+                        DateTime newPeriodEnd;
                         if (subtraction.getStart().before(period.getStart())) {
                             newPeriodStart = subtraction.getEnd();
                             newPeriodEnd = period.getEnd();
