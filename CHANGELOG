@@ -2,6 +2,37 @@
  iCal4j - Changes
 ==================
 
+0.9.14:
+
+ - Reimplemented ParameterFactory and PropertyFactory with improved design
+ 
+ - Added a duration type (Dur) for represeting durations in properties Duration
+ and Trigger, and type Period. (DurationFormat deprecated).
+ 
+ - ParameterList.add() now automatically removes from the list all other parameters
+ with the same name
+ 
+ - Added serialVersionUID to all properties, parameters and types
+ 
+ - Added utc offset type (UtcOffset) for representing utc offsets (UtcOffsetFormat
+ deprecated)
+ 
+ - Added date/date-time types (Date/DateTime) for representing date values
+ (DateFormat/DateTimeFormat deprecated)
+ 
+ - Removed DateList.setType() (use new DateList(DateList, Value) instead)
+ 
+ - added equals()/hashcode() to Calendar, Component
+ 
+ - refactored ComponentList/PropertyList to extend ArrayList
+ 
+ - overridden List.add() for all lists extending ArrayList
+ 
+ - created Escapable interface to replace setEscapable/isEscapable methods
+ 
+ - ParameterFactory now returns constant instances where applicable
+ 
+ 
 0.9.13:
 
  - Merged DateRange functionality into Period
