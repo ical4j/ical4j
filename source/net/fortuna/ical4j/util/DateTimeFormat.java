@@ -45,6 +45,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Defines a format for all iCalendar date-times.
  * @author benfortuna
+ * @deprecated Use <code>net.fortuna.ical4j.model.DateTime</code> instead.
  */
 public final class DateTimeFormat {
 

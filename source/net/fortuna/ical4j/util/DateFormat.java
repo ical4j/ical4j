@@ -40,6 +40,7 @@ import java.util.Date;
 /**
  * Defines a format for all iCalendar dates.
  * @author benfortuna
+ * @deprecated Use <code>net.fortuna.ical4j.model.Date</code> instead.
  */
 public final class DateFormat {
 

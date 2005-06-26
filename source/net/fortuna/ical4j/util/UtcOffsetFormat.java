@@ -43,6 +43,7 @@ import org.apache.commons.logging.LogFactory;
  * Defines the format used by all iCalendar UTC offsets.
  * 
  * @author benfortuna
+ * @deprecated use <code>net.fortuna.ical4j.model.UtcOffset</code> instead.
  */
 public final class UtcOffsetFormat {
 
