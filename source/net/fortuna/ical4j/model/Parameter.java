@@ -39,7 +39,7 @@ import net.fortuna.ical4j.util.StringUtils;
  * Defines an iCalendar parameter. Subclasses of this class provide additional
  * validation and typed values for specific iCalendar parameters.
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public abstract class Parameter extends Content {
 
@@ -166,7 +166,7 @@ public abstract class Parameter extends Content {
         b.append(getName());
         b.append('=');
 
-        if (isEscapable()) {
+        if (this instanceof Escapable) {
             b.append(StringUtils.escape(getValue()));
         }
         else {

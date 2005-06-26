@@ -43,7 +43,7 @@ import net.fortuna.ical4j.util.StringUtils;
  * Defines an iCalendar property. Subclasses of this class provide additional
  * validation and typed values for specific iCalendar properties.
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public abstract class Property extends Content {
 
@@ -212,7 +212,7 @@ public abstract class Property extends Content {
         buffer.append(getName());
         buffer.append(getParameters());
         buffer.append(':');
-        if (isEscapable()) {
+        if (this instanceof Escapable) {
             buffer.append(StringUtils.escape(getValue()));
         }
         else {
@@ -313,7 +313,7 @@ public abstract class Property extends Content {
      * @see java.lang.Object#hashCode()
      */
     public final int hashCode() {
-        // as parameter name is case-insensitive generate hash for uppercase..
+        // as property name is case-insensitive generate hash for uppercase..
         return getName().toUpperCase().hashCode()
                 + getValue().hashCode()
                 + getParameters().hashCode();
