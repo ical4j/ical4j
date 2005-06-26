@@ -36,11 +36,13 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
  * Defines a list of days.
- * @author benfortuna
+ * 
+ * @author Ben Fortuna
  */
 public class WeekDayList extends ArrayList implements Serializable {
     
@@ -69,6 +71,18 @@ public class WeekDayList extends ArrayList implements Serializable {
      */
     public final boolean add(final WeekDay weekDay) {
         return add((Object) weekDay);
+    }
+    
+    /**
+     * Overrides superclass to throw an <code>IllegalArgumentException</code>
+     * where argument is not a <code>net.fortuna.ical4j.model.WeekDay</code>.
+     * @see List#add(E)
+     */
+    public final boolean add(final Object arg0) {
+        if (!(arg0 instanceof WeekDay)) {
+            throw new IllegalArgumentException("Argument not a " + WeekDay.class.getName());
+        }
+        return super.add(arg0);
     }
 
     /**
