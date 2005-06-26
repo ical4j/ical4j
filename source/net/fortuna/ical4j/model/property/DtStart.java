@@ -36,23 +36,82 @@
 package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
-import java.util.Date;
 
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.DateFormat;
-import net.fortuna.ical4j.util.DateTimeFormat;
 import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a DTSTART iCalendar component property.
  *
- * @author benf
+ * <pre>
+ * 4.8.2.4 Date/Time Start
+ * 
+ *    Property Name: DTSTART
+ * 
+ *    Purpose: This property specifies when the calendar component begins.
+ * 
+ *    Value Type: The default value type is DATE-TIME. The time value MUST
+ *    be one of the forms defined for the DATE-TIME value type. The value
+ *    type can be set to a DATE value type.
+ * 
+ *    Property Parameters: Non-standard, value data type, time zone
+ *    identifier property parameters can be specified on this property.
+ * 
+ *    Conformance: This property can be specified in the "VEVENT", "VTODO",
+ *    "VFREEBUSY", or "VTIMEZONE" calendar components.
+ * 
+ *    Description: Within the "VEVENT" calendar component, this property
+ *    defines the start date and time for the event. The property is
+ *    REQUIRED in "VEVENT" calendar components. Events can have a start
+ *    date/time but no end date/time. In that case, the event does not take
+ *    up any time.
+ * 
+ *    Within the "VFREEBUSY" calendar component, this property defines the
+ *    start date and time for the free or busy time information. The time
+ *    MUST be specified in UTC time.
+ * 
+ *    Within the "VTIMEZONE" calendar component, this property defines the
+ *    effective start date and time for a time zone specification. This
+ *    property is REQUIRED within each STANDARD and DAYLIGHT part included
+ *    in "VTIMEZONE" calendar components and MUST be specified as a local
+ *    DATE-TIME without the "TZID" property parameter.
+ * 
+ *    Format Definition: The property is defined by the following notation:
+ * 
+ *      dtstart    = "DTSTART" dtstparam ":" dtstval CRLF
+ * 
+ *      dtstparam  = *(
+ * 
+ *                 ; the following are optional,
+ *                 ; but MUST NOT occur more than once
+ * 
+ *                 (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+ *                 (";" tzidparam) /
+ * 
+ *                 ; the following is optional,
+ *                 ; and MAY occur more than once
+ * 
+ *                   *(";" xparam)
+ * 
+ *                 )
+ * 
+ * 
+ * 
+ *      dtstval    = date-time / date
+ *      ;Value MUST match value type
+ * </pre>
+ * 
+ * @author Ben Fortuna
  */
 public class DtStart extends Property {
+    
+    private static final long serialVersionUID = -5707097476081111815L;
 
     private Date time;
 
@@ -183,10 +242,10 @@ public class DtStart extends Property {
     public final void setValue(final String aValue) throws ParseException {
         // value can be either a date-time or a date..
         if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
-            time = DateFormat.getInstance().parse(aValue);
+            time = new Date(aValue);
         }
         else {
-            time = DateTimeFormat.getInstance().parse(aValue);
+            time = new DateTime(aValue);
         }
     }
 
@@ -194,11 +253,14 @@ public class DtStart extends Property {
 	 * @see net.fortuna.ical4j.model.Property#getValue()
 	 */
 	public final String getValue() {
+        /*
 		if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
             return DateFormat.getInstance().format(getTime());
 		}
         // return local time..
         return DateTimeFormat.getInstance().format(getTime(), isUtc());
+        */
+        return time.toString();
 	}
 
     /**
@@ -212,11 +274,14 @@ public class DtStart extends Property {
      * @param utc The utc to set.
      */
     public final void setUtc(final boolean utc) {
-        this.utc = utc;
-        // remove TZID parameter if necessary..
         if (utc) {
+            if (time instanceof DateTime) {
+                ((DateTime) time).setUtc(utc);
+            }
+            // remove TZID parameter if necessary..
             getParameters().remove(getParameters().getParameter(Parameter.TZID));
         }
+        this.utc = utc;
     }
     
     /**

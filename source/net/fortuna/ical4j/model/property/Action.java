@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class Action extends Property {
+    
+    private static final long serialVersionUID = -2353353838411753712L;
 
     public static final Action AUDIO = new ImmutableAction("AUDIO");
 
@@ -58,6 +60,8 @@ public class Action extends Property {
      * An immutable instance of Action.
      */
     private static class ImmutableAction extends Action {
+        
+        private static final long serialVersionUID = -2752235951243969905L;
         
         /**
          * @param value

@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class Transp extends Property {
+    
+    private static final long serialVersionUID = 3801479657311785518L;
 
     public static final Transp OPAQUE = new ImmutableTransp("OPAQUE");
 
@@ -54,6 +56,8 @@ public class Transp extends Property {
      * An immutable instance of Transp.
      */
     private static class ImmutableTransp extends Transp {
+        
+        private static final long serialVersionUID = -6595830107310111996L;
         
         /**
          * @param value

@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class Clazz extends Property {
+    
+    private static final long serialVersionUID = 4939943639175551481L;
 
     public static final Clazz PUBLIC = new ImmutableClazz("PUBLIC");
 
@@ -56,6 +58,8 @@ public class Clazz extends Property {
      * An immutable instance of Clazz.
      */
     private static class ImmutableClazz extends Clazz {
+        
+        private static final long serialVersionUID = 5978394762293365042L;
         
         /**
          * @param value

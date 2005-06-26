@@ -50,6 +50,8 @@ import net.fortuna.ical4j.model.Property;
  * @author Ben Fortuna
  */
 public class Version extends Property {
+    
+    private static final long serialVersionUID = 8872508067309087704L;
 
     public static final Version VERSION_2_0 = new ImmutableVersion("2.0");
     
@@ -58,6 +60,8 @@ public class Version extends Property {
      * An immutable instance of Version.
      */
     private static class ImmutableVersion extends Version {
+        
+        private static final long serialVersionUID = -5040679357859594835L;
         
         /**
          * @param value

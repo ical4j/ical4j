@@ -35,6 +35,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 
@@ -43,7 +44,9 @@ import net.fortuna.ical4j.model.Property;
  *
  * @author benf
  */
-public class TzId extends Property {
+public class TzId extends Property implements Escapable {
+    
+    private static final long serialVersionUID = -522764921502407137L;
 
     private static final String PREFIX = "/";
 
@@ -54,7 +57,6 @@ public class TzId extends Property {
      */
     public TzId() {
         super(TZID);
-        setEscapable(true);
     }
     
     /**
@@ -64,7 +66,6 @@ public class TzId extends Property {
     public TzId(final String aValue) {
         super(TZID);
         setValue(aValue);
-        setEscapable(true);
     }
 
     /**
@@ -76,7 +77,6 @@ public class TzId extends Property {
     public TzId(final ParameterList aList, final String aValue) {
         super(TZID, aList);
         setValue(aValue);
-        setEscapable(true);
     }
     
     /* (non-Javadoc)

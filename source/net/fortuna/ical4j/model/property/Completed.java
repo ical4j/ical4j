@@ -36,30 +36,56 @@
 package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
-import java.util.Date;
 
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.util.DateTimeFormat;
 
 /**
  * Defines a COMPLETED iCalendar component property.
+ * 
+ * <pre>
+ * 4.8.2.1 Date/Time Completed
+ * 
+ *    Property Name: COMPLETED
+ * 
+ *    Purpose: This property defines the date and time that a to-do was
+ *    actually completed.
+ * 
+ *    Value Type: DATE-TIME
+ * 
+ *    Property Parameters: Non-standard property parameters can be
+ *    specified on this property.
+ * 
+ *    Conformance: The property can be specified in a "VTODO" calendar
+ *    component.
+ * 
+ *    Description: The date and time MUST be in a UTC format.
+ * 
+ *    Format Definition: The property is defined by the following notation:
+ * 
+ *      completed  = "COMPLETED" compparam ":" date-time CRLF
+ * 
+ *      compparam  = *(";" xparam)
+ * </pre>
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public class Completed extends Property {
+    
+    private static final long serialVersionUID = 6824213281785639181L;
 
     /**
      * NOTE: The date and time MUST be in a UTC format.
      */
-    private Date time;
+    private DateTime time;
 
     /**
      * Default constructor.
      */
     public Completed() {
         super(COMPLETED);
-        time = new Date();
+        time = new DateTime();
     }
     
     /**
@@ -94,7 +120,7 @@ public class Completed extends Property {
      * @param aDate
      *            a date
      */
-    public Completed(final Date aDate) {
+    public Completed(final DateTime aDate) {
         super(COMPLETED);
         time = aDate;
     }
@@ -105,7 +131,7 @@ public class Completed extends Property {
      * @param aDate
      *            a date
      */
-    public Completed(final ParameterList aList, final Date aDate) {
+    public Completed(final ParameterList aList, final DateTime aDate) {
         super(COMPLETED, aList);
         time = aDate;
     }
@@ -113,16 +139,15 @@ public class Completed extends Property {
     /**
      * @return Returns the time.
      */
-    public final Date getTime() {
+    public final DateTime getTime() {
         return time;
     }
-    
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-        time = DateTimeFormat.getInstance().parse(aValue);
+        time = new DateTime(aValue);
     }
 
     /*
@@ -131,6 +156,6 @@ public class Completed extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return DateTimeFormat.getInstance().format(getTime());
+        return getTime().toString();
     }
 }

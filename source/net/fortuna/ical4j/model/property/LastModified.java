@@ -36,30 +36,61 @@
 package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
-import java.util.Date;
 
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.util.DateTimeFormat;
 
 /**
  * Defines a LAST-MODIFIED iCalendar component property.
+ * 
+ * <pre>
+ * 4.8.7.3 Last Modified
+ * 
+ *    Property Name: LAST-MODIFIED
+ * 
+ *    Purpose: The property specifies the date and time that the
+ *    information associated with the calendar component was last revised
+ *    in the calendar store.
+ * 
+ *         Note: This is analogous to the modification date and time for a
+ *         file in the file system.
+ * 
+ *    Value Type: DATE-TIME
+ * 
+ *    Property Parameters: Non-standard property parameters can be
+ *    specified on this property.
+ * 
+ *    Conformance: This property can be specified in the "EVENT", "VTODO",
+ *    "VJOURNAL" or "VTIMEZONE" calendar components.
+ * 
+ *    Description: The property value MUST be specified in the UTC time
+ *    format.
+ * 
+ *    Format Definition: The property is defined by the following notation:
+ * 
+ *      last-mod   = "LAST-MODIFIED" lstparam ":" date-time CRLF
+ * 
+ *      lstparam   = *(";" xparam)
+ * </pre>
  *
  * @author benf
  */
 public class LastModified extends Property {
+    
+    private static final long serialVersionUID = 5288572652052836062L;
 
     /**
      * The property value MUST be specified in the UTC time format.
      */
-    private Date dateTime;
+    private DateTime dateTime;
 
     /**
      * Default constructor.
      */
     public LastModified() {
         super(LAST_MODIFIED);
-        dateTime = new Date();
+        dateTime = new DateTime();
     }
     
     /**
@@ -81,7 +112,7 @@ public class LastModified extends Property {
      * @param aDate
      *            a date representation of a date-time value
      */
-    public LastModified(final Date aDate) {
+    public LastModified(final DateTime aDate) {
         super(LAST_MODIFIED);
         dateTime = aDate;
     }
@@ -92,7 +123,7 @@ public class LastModified extends Property {
      * @param aDate
      *            a date representation of a date-time value
      */
-    public LastModified(final ParameterList aList, final Date aDate) {
+    public LastModified(final ParameterList aList, final DateTime aDate) {
         super(LAST_MODIFIED, aList);
         dateTime = aDate;
     }
@@ -100,7 +131,7 @@ public class LastModified extends Property {
     /**
      * @return Returns the date-time.
      */
-    public final Date getDateTime() {
+    public final DateTime getDateTime() {
         return dateTime;
     }
     
@@ -109,7 +140,7 @@ public class LastModified extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-        dateTime = DateTimeFormat.getInstance().parse(aValue);
+        dateTime = new DateTime(aValue);
     }
 
     /*
@@ -118,13 +149,13 @@ public class LastModified extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return DateTimeFormat.getInstance().format(getDateTime());
+        return getDateTime().toString();
     }
     
     /**
      * @param dateTime The dateTime to set.
      */
-    public final void setDateTime(final Date dateTime) {
+    public final void setDateTime(final DateTime dateTime) {
         this.dateTime = dateTime;
     }
 }

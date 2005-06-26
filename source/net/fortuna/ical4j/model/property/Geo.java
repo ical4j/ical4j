@@ -47,6 +47,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class Geo extends Property {
+    
+    private static final long serialVersionUID = -902100715801867636L;
 
     private float lattitude;
 

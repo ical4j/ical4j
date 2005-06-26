@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class Repeat extends Property {
+    
+    private static final long serialVersionUID = -1765522613173314831L;
 
     private int count;
 

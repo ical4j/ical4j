@@ -50,6 +50,8 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * @author benf
  */
 public class Attendee extends Property {
+    
+    private static final long serialVersionUID = 8430929418723298803L;
 
     private URI calAddress;
 

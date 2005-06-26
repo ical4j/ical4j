@@ -47,6 +47,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class TzUrl extends Property {
+    
+    private static final long serialVersionUID = 9106100107954797406L;
 
     private URI uri;
 

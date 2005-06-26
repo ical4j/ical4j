@@ -47,6 +47,8 @@ import net.fortuna.ical4j.model.Recur;
  * @author benf
  */
 public class RRule extends Property {
+    
+    private static final long serialVersionUID = -9188265089143001164L;
 
     private Recur recur;
 

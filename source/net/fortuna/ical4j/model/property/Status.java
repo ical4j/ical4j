@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class Status extends Property {
+    
+    private static final long serialVersionUID = 7401102230299289898L;
 
     // Status values for a "VEVENT"
     public static final Status VEVENT_TENTATIVE = new ImmutableStatus("TENTATIVE");
@@ -73,6 +75,8 @@ public class Status extends Property {
      * An immutable instance of Status.
      */
     private static class ImmutableStatus extends Status {
+        
+        private static final long serialVersionUID = 7771868877237685612L;
         
         /**
          * @param value

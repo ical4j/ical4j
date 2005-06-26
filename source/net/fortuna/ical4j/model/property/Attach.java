@@ -99,6 +99,8 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * @author benf
  */
 public class Attach extends Property {
+    
+    private static final long serialVersionUID = 4439949507756383452L;
 
     private URI uri;
 

@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class Priority extends Property {
+    
+    private static final long serialVersionUID = -5654367843953827397L;
 
     public static final Priority UNDEFINED = new ImmutablePriority(0);
 
@@ -58,6 +60,8 @@ public class Priority extends Property {
      * An immutable instance of Priority.
      */
     private static class ImmutablePriority extends Priority {
+        
+        private static final long serialVersionUID = 5884973714694108418L;
         
         /**
          * @param value

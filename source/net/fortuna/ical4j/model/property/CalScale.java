@@ -45,6 +45,8 @@ import net.fortuna.ical4j.model.ValidationException;
  * @author benf
  */
 public class CalScale extends Property {
+    
+    private static final long serialVersionUID = 7446184786984981423L;
 
     public static final CalScale GREGORIAN = new ImmutableCalScale("GREGORIAN");
     
@@ -53,6 +55,8 @@ public class CalScale extends Property {
      * An immutable instance of CalScale.
      */
     private static class ImmutableCalScale extends CalScale {
+        
+        private static final long serialVersionUID = 1750949550694413878L;
         
         /**
          * @param value

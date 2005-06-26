@@ -48,6 +48,8 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * @author benf
  */
 public class Categories extends Property {
+    
+    private static final long serialVersionUID = -7769987073466681634L;
 
     private CategoryList categories;
 

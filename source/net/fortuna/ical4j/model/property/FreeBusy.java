@@ -50,6 +50,8 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * @author benf
  */
 public class FreeBusy extends Property {
+    
+    private static final long serialVersionUID = -6415954847619338567L;
 
     private PeriodList periods;
 

@@ -48,6 +48,8 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * @author benf
  */
 public class Resources extends Property {
+    
+    private static final long serialVersionUID = -848562477226746807L;
 
     private ResourceList resources;
 

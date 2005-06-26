@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class Sequence extends Property {
+    
+    private static final long serialVersionUID = -1606972893204822853L;
 
     private int sequenceNo;
 

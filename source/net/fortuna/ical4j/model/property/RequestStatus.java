@@ -49,6 +49,8 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * @author benf
  */
 public class RequestStatus extends Property {
+    
+    private static final long serialVersionUID = -3273944031884755345L;
 
     private static final String PRELIM_SUCCESS = "1";
 

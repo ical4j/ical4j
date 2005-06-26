@@ -37,7 +37,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.util.UtcOffsetFormat;
+import net.fortuna.ical4j.model.UtcOffset;
 
 /**
  * Defines a TZOFFSETTO iCalendar component property.
@@ -45,8 +45,10 @@ import net.fortuna.ical4j.util.UtcOffsetFormat;
  * @author benf
  */
 public class TzOffsetTo extends Property {
+    
+    private static final long serialVersionUID = 8213874575051177732L;
 
-    private long offset;
+    private UtcOffset offset;
 
     /**
      * Default constructor.
@@ -70,7 +72,7 @@ public class TzOffsetTo extends Property {
      * @param anOffset
      *            a timezone offset in milliseconds
      */
-    public TzOffsetTo(final long anOffset) {
+    public TzOffsetTo(final UtcOffset anOffset) {
         super(TZOFFSETTO);
         offset = anOffset;
     }
@@ -81,7 +83,7 @@ public class TzOffsetTo extends Property {
      * @param anOffset
      *            a timezone offset in milliseconds
      */
-    public TzOffsetTo(final ParameterList aList, final long anOffset) {
+    public TzOffsetTo(final ParameterList aList, final UtcOffset anOffset) {
         super(TZOFFSETTO, aList);
         offset = anOffset;
     }
@@ -89,7 +91,7 @@ public class TzOffsetTo extends Property {
     /**
      * @return Returns the offset.
      */
-    public final long getOffset() {
+    public final UtcOffset getOffset() {
         return offset;
     }
     
@@ -97,7 +99,7 @@ public class TzOffsetTo extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
-        offset = UtcOffsetFormat.getInstance().parse(aValue);
+        offset = new UtcOffset(aValue);
     }
 
     /*
@@ -106,13 +108,16 @@ public class TzOffsetTo extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return UtcOffsetFormat.getInstance().format(getOffset());
+        if (offset != null) {
+            return offset.toString();
+        }
+        return "";
     }
     
     /**
      * @param offset The offset to set.
      */
-    public final void setOffset(final long offset) {
+    public final void setOffset(final UtcOffset offset) {
         this.offset = offset;
     }
 }

@@ -51,6 +51,8 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * @author benf
  */
 public class ExDate extends Property {
+    
+    private static final long serialVersionUID = 2635730172243974463L;
 
     private DateList dates;
 

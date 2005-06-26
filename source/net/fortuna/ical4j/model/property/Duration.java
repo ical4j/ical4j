@@ -47,6 +47,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class Duration extends Property {
+    
+    private static final long serialVersionUID = 9144969653829796798L;
 
     private Dur duration;
 

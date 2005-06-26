@@ -36,30 +36,60 @@
 package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
-import java.util.Date;
 
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.util.DateTimeFormat;
 
 /**
  * Defines a CREATED iCalendar component property.
  *
- * @author benf
+ * <pre>
+ * 4.8.7.1 Date/Time Created
+ * 
+ *    Property Name: CREATED
+ * 
+ *    Purpose: This property specifies the date and time that the calendar
+ *    information was created by the calendar user agent in the calendar
+ *    store.
+ * 
+ *         Note: This is analogous to the creation date and time for a file
+ *         in the file system.
+ * 
+ *    Value Type: DATE-TIME
+ * 
+ *    Property Parameters: Non-standard property parameters can be
+ *    specified on this property.
+ * 
+ *    Conformance: The property can be specified once in "VEVENT", "VTODO"
+ *    or "VJOURNAL" calendar components.
+ * 
+ *    Description: The date and time is a UTC value.
+ * 
+ *    Format Definition: The property is defined by the following notation:
+ * 
+ *      created    = "CREATED" creaparam ":" date-time CRLF
+ * 
+ *      creaparam  = *(";" xparam)
+ * </pre>
+ * 
+ * @author Ben Fortuna
  */
 public class Created extends Property {
+    
+    private static final long serialVersionUID = -8658935097721652961L;
 
     /**
      * The date and time is a UTC value.
      */
-    private Date dateTime;
+    private DateTime dateTime;
 
     /**
      * Default constructor.
      */
     public Created() {
         super(CREATED);
-        dateTime = new Date();
+        dateTime = new DateTime();
     }
     
     /**
@@ -94,7 +124,7 @@ public class Created extends Property {
      * @param aDate
      *            a date
      */
-    public Created(final Date aDate) {
+    public Created(final DateTime aDate) {
         super(CREATED);
         dateTime = aDate;
     }
@@ -105,7 +135,7 @@ public class Created extends Property {
      * @param aDate
      *            a date
      */
-    public Created(final ParameterList aList, final Date aDate) {
+    public Created(final ParameterList aList, final DateTime aDate) {
         super(CREATED, aList);
         dateTime = aDate;
     }
@@ -113,7 +143,7 @@ public class Created extends Property {
     /**
      * @return Returns the date-time.
      */
-    public final Date getDateTime() {
+    public final DateTime getDateTime() {
         return dateTime;
     }
     
@@ -122,7 +152,7 @@ public class Created extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-        dateTime = DateTimeFormat.getInstance().parse(aValue);
+        dateTime = new DateTime(aValue);
     }
 
     /*
@@ -131,6 +161,6 @@ public class Created extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return DateTimeFormat.getInstance().format(getDateTime());
+        return getDateTime().toString();
     }
 }

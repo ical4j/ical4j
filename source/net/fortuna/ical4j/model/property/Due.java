@@ -36,23 +36,68 @@
 package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
-import java.util.Date;
 
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.DateFormat;
-import net.fortuna.ical4j.util.DateTimeFormat;
 import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a DUE iCalendar component property.
+ * 
+ * <pre>
+ * 4.8.2.3 Date/Time Due
+ * 
+ *    Property Name: DUE
+ * 
+ *    Purpose: This property defines the date and time that a to-do is
+ *    expected to be completed.
+ * 
+ *    Value Type: The default value type is DATE-TIME. The value type can
+ *    be set to a DATE value type.
+ * 
+ *    Property Parameters: Non-standard, value data type, time zone
+ *    identifier property parameters can be specified on this property.
+ * 
+ *    Conformance: The property can be specified once in a "VTODO" calendar
+ *    component.
+ * 
+ *    Description: The value MUST be a date/time equal to or after the
+ *    DTSTART value, if specified.
+ * 
+ *    Format Definition: The property is defined by the following notation:
+ * 
+ *      due        = "DUE" dueparam":" dueval CRLF
+ * 
+ *      dueparam   = *(
+ *                 ; the following are optional,
+ *                 ; but MUST NOT occur more than once
+ * 
+ *                 (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+ *                 (";" tzidparam) /
+ * 
+ *                 ; the following is optional,
+ *                 ; and MAY occur more than once
+ * 
+ *                   *(";" xparam)
+ * 
+ *                 )
+ * 
+ * 
+ * 
+ *      dueval     = date-time / date
+ *      ;Value MUST match value type
+ * </pre>
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public class Due extends Property {
+    
+    private static final long serialVersionUID = -2965312347832730406L;
 
     private Date time;
 
@@ -66,7 +111,7 @@ public class Due extends Property {
      */
     public Due() {
         super(DUE);
-        time = new Date();
+        time = new DateTime();
     }
     
     /**
@@ -162,10 +207,10 @@ public class Due extends Property {
 
         // value can be either a date-time or a date..
         if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
-            time = DateFormat.getInstance().parse(aValue);
+            time = new Date(aValue);
         }
         else {
-            time = DateTimeFormat.getInstance().parse(aValue);
+            time = new DateTime(aValue);
         }
     }
 
@@ -173,10 +218,13 @@ public class Due extends Property {
 	 * @see net.fortuna.ical4j.model.Property#getValue()
 	 */
 	public final String getValue() {
+        /*
 		if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
             return DateFormat.getInstance().format(getTime());
 		}
         return DateTimeFormat.getInstance().format(getTime(), isUtc());
+        */
+        return getTime().toString();
 	}
 
     /**
@@ -190,6 +238,9 @@ public class Due extends Property {
      * @param utc The utc to set.
      */
     public final void setUtc(final boolean utc) {
+        if (Value.DATE_TIME.equals(getParameters().getParameter(Parameter.VALUE))) {
+            ((DateTime) getTime()).setUtc(utc);
+        }
         this.utc = utc;
     }
     

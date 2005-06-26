@@ -36,23 +36,101 @@
 package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
-import java.util.Date;
 
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.DateFormat;
-import net.fortuna.ical4j.util.DateTimeFormat;
 import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a RECURRENCE-ID iCalendar component property.
+ * 
+ * <pre>
+ * 4.8.4.4 Recurrence ID
+ * 
+ *    Property Name: RECURRENCE-ID
+ * 
+ *    Purpose: This property is used in conjunction with the "UID" and
+ *    "SEQUENCE" property to identify a specific instance of a recurring
+ *    "VEVENT", "VTODO" or "VJOURNAL" calendar component. The property
+ *    value is the effective value of the "DTSTART" property of the
+ *    recurrence instance.
+ * 
+ *    Value Type: The default value type for this property is DATE-TIME.
+ *    The time format can be any of the valid forms defined for a DATE-TIME
+ *    value type. See DATE-TIME value type definition for specific
+ *    interpretations of the various forms. The value type can be set to
+ *    DATE.
+ * 
+ *    Property Parameters: Non-standard property, value data type, time
+ *    zone identifier and recurrence identifier range parameters can be
+ *    specified on this property.
+ * 
+ *    Conformance: This property can be specified in an iCalendar object
+ *    containing a recurring calendar component.
+ * 
+ *    Description: The full range of calendar components specified by a
+ *    recurrence set is referenced by referring to just the "UID" property
+ *    value corresponding to the calendar component. The "RECURRENCE-ID"
+ *    property allows the reference to an individual instance within the
+ *    recurrence set.
+ * 
+ *    If the value of the "DTSTART" property is a DATE type value, then the
+ *    value MUST be the calendar date for the recurrence instance.
+ * 
+ *    The date/time value is set to the time when the original recurrence
+ *    instance would occur; meaning that if the intent is to change a
+ *    Friday meeting to Thursday, the date/time is still set to the
+ *    original Friday meeting.
+ * 
+ *    The "RECURRENCE-ID" property is used in conjunction with the "UID"
+ *    and "SEQUENCE" property to identify a particular instance of a
+ *    recurring event, to-do or journal. For a given pair of "UID" and
+ *    "SEQUENCE" property values, the "RECURRENCE-ID" value for a
+ *    recurrence instance is fixed. When the definition of the recurrence
+ *    set for a calendar component changes, and hence the "SEQUENCE"
+ *    property value changes, the "RECURRENCE-ID" for a given recurrence
+ *    instance might also change.The "RANGE" parameter is used to specify
+ *    the effective range of recurrence instances from the instance
+ *    specified by the "RECURRENCE-ID" property value. The default value
+ *    for the range parameter is the single recurrence instance only. The
+ *    value can also be "THISANDPRIOR" to indicate a range defined by the
+ *    given recurrence instance and all prior instances or the value can be
+ *    "THISANDFUTURE" to indicate a range defined by the given recurrence
+ *    instance and all subsequent instances.
+ * 
+ *    Format Definition: The property is defined by the following notation:
+ * 
+ *      recurid    = "RECURRENCE-ID" ridparam ":" ridval CRLF
+ * 
+ *      ridparam   = *(
+ * 
+ *                 ; the following are optional,
+ *                 ; but MUST NOT occur more than once
+ * 
+ *                 (";" "VALUE" "=" ("DATE-TIME" / "DATE)) /
+ *                 (";" tzidparam) / (";" rangeparam) /
+ * 
+ *                 ; the following is optional,
+ *                 ; and MAY occur more than once
+ * 
+ *                 (";" xparam)
+ * 
+ *                 )
+ * 
+ *      ridval     = date-time / date
+ *      ;Value MUST match value type
+ * </pre>
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public class RecurrenceId extends Property {
+    
+    private static final long serialVersionUID = 4456883817126011006L;
 
     private Date time;
 
@@ -65,7 +143,7 @@ public class RecurrenceId extends Property {
      */
     public RecurrenceId() {
         super(RECURRENCE_ID);
-        time = new Date();
+        time = new DateTime();
     }
     
     /**
@@ -165,10 +243,10 @@ public class RecurrenceId extends Property {
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
         if (valueParam != null && Value.DATE.equals(valueParam)) {
-            time = DateFormat.getInstance().parse(aValue);
+            time = new Date(aValue);
         }
         else {
-            time = DateTimeFormat.getInstance().parse(aValue);
+            time = new DateTime(aValue);
         }
     }
 
@@ -176,14 +254,15 @@ public class RecurrenceId extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
+        /*
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
-
         if (valueParam != null && Value.DATE.equals(valueParam)) {
             return DateFormat.getInstance().format(getTime());
         }
-
         // return local time..
         return DateTimeFormat.getInstance().format(getTime(), isUtc());
+        */
+        return getTime().toString();
     }
 
     /**
@@ -197,6 +276,9 @@ public class RecurrenceId extends Property {
      * @param utc The utc to set.
      */
     public final void setUtc(final boolean utc) {
+        if (Value.DATE_TIME.equals(getParameters().getParameter(Parameter.VALUE))) {
+            ((DateTime) getTime()).setUtc(utc);
+        }
         this.utc = utc;
     }
     

@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class Method extends Property {
+    
+    private static final long serialVersionUID = 7220956532685378719L;
 
 	/**
 	 * Used to publish a calendar entry to one or more
@@ -112,6 +114,8 @@ public class Method extends Property {
      * An immutable instance of Method.
      */
     private static class ImmutableMethod extends Method {
+        
+        private static final long serialVersionUID = 5332607957381969713L;
         
         /**
          * @param value

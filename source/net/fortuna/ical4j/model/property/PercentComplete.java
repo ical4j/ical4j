@@ -44,6 +44,8 @@ import net.fortuna.ical4j.model.Property;
  * @author benf
  */
 public class PercentComplete extends Property {
+    
+    private static final long serialVersionUID = 7788138484983240112L;
 
     private int percentage;
 

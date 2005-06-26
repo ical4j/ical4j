@@ -36,23 +36,75 @@
 package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
-import java.util.Date;
 
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.DateFormat;
-import net.fortuna.ical4j.util.DateTimeFormat;
 import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a DTEND iCalendar component property.
+ * 
+ * <pre>
+ * 4.8.2.2 Date/Time End
+ * 
+ *    Property Name: DTEND
+ * 
+ *    Purpose: This property specifies the date and time that a calendar
+ *    component ends.
+ * 
+ *    Value Type: The default value type is DATE-TIME. The value type can
+ *    be set to a DATE value type.
+ * 
+ *    Property Parameters: Non-standard, value data type, time zone
+ *    identifier property parameters can be specified on this property.
+ * 
+ *    Conformance: This property can be specified in "VEVENT" or
+ *    "VFREEBUSY" calendar components.
+ * 
+ *    Description: Within the "VEVENT" calendar component, this property
+ *    defines the date and time by which the event ends. The value MUST be
+ *    later in time than the value of the "DTSTART" property.
+ * 
+ *    Within the "VFREEBUSY" calendar component, this property defines the
+ *    end date and time for the free or busy time information. The time
+ *    MUST be specified in the UTC time format. The value MUST be later in
+ *    time than the value of the "DTSTART" property.
+ * 
+ *    Format Definition: The property is defined by the following notation:
+ * 
+ *      dtend      = "DTEND" dtendparam":" dtendval CRLF
+ * 
+ *      dtendparam = *(
+ * 
+ *                 ; the following are optional,
+ *                 ; but MUST NOT occur more than once
+ * 
+ *                 (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+ *                 (";" tzidparam) /
+ * 
+ *                 ; the following is optional,
+ *                 ; and MAY occur more than once
+ * 
+ *                 (";" xparam)
+ * 
+ *                 )
+ * 
+ * 
+ * 
+ *      dtendval   = date-time / date
+ *      ;Value MUST match value type
+ * </pre>
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public class DtEnd extends Property {
+    
+    private static final long serialVersionUID = 8107416684717228297L;
 
     private Date time;
 
@@ -168,13 +220,12 @@ public class DtEnd extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-
         // value can be either a date-time or a date..
         if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
-            time = DateFormat.getInstance().parse(aValue);
+            time = new Date(aValue);
         }
         else {
-            time = DateTimeFormat.getInstance().parse(aValue);
+            time = new DateTime(aValue);
         }
     }
 
@@ -184,11 +235,14 @@ public class DtEnd extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
+        /*
         if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
             return DateFormat.getInstance().format(getTime());
         }
         // return local time..
         return DateTimeFormat.getInstance().format(getTime(), isUtc());
+        */
+        return time.toString();
     }
 
     /**
@@ -203,11 +257,14 @@ public class DtEnd extends Property {
      *            The utc to set.
      */
     public final void setUtc(final boolean utc) {
-        this.utc = utc;
-        // remove TZID parameter if necessary..
         if (utc) {
+            if (time instanceof DateTime) {
+                ((DateTime) time).setUtc(utc);
+            }
+            // remove TZID parameter if necessary..
             getParameters().remove(getParameters().getParameter(Parameter.TZID));
         }
+        this.utc = utc;
     }
     /**
      * @param time The time to set.

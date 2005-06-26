@@ -35,6 +35,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
@@ -46,7 +47,9 @@ import net.fortuna.ical4j.util.ParameterValidator;
  *
  * @author benf
  */
-public class Location extends Property {
+public class Location extends Property implements Escapable {
+    
+    private static final long serialVersionUID = 8651881536125682401L;
 
     private String value;
 
@@ -55,7 +58,6 @@ public class Location extends Property {
      */
     public Location() {
         super(LOCATION);
-        setEscapable(true);
     }
     
     /**
@@ -65,7 +67,6 @@ public class Location extends Property {
     public Location(final String aValue) {
         super(LOCATION);
         setValue(aValue);
-        setEscapable(true);
     }
 
     /**
@@ -77,7 +78,6 @@ public class Location extends Property {
     public Location(final ParameterList aList, final String aValue) {
         super(LOCATION, aList);
         setValue(aValue);
-        setEscapable(true);
     }
 
     /**

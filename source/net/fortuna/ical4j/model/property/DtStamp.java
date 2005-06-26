@@ -36,23 +36,61 @@
 package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
-import java.util.Date;
 
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.util.DateTimeFormat;
 
 /**
  * Defines a DTSTAMP iCalendar component property.
+ * 
+ * <pre>
+ * 4.8.7.2 Date/Time Stamp
+ * 
+ *    Property Name: DTSTAMP
+ * 
+ *    Purpose: The property indicates the date/time that the instance of
+ *    the iCalendar object was created.
+ * 
+ *    Value Type: DATE-TIME
+ * 
+ *    Property Parameters: Non-standard property parameters can be
+ *    specified on this property.
+ * 
+ *    Conformance: This property MUST be included in the "VEVENT", "VTODO",
+ *    "VJOURNAL" or "VFREEBUSY" calendar components.
+ * 
+ *    Description: The value MUST be specified in the UTC time format.
+ * 
+ *    This property is also useful to protocols such as [IMIP] that have
+ *    inherent latency issues with the delivery of content. This property
+ *    will assist in the proper sequencing of messages containing iCalendar
+ *    objects.
+ * 
+ *    This property is different than the "CREATED" and "LAST-MODIFIED"
+ *    properties. These two properties are used to specify when the
+ *    particular calendar data in the calendar store was created and last
+ *    modified. This is different than when the iCalendar object
+ *    representation of the calendar service information was created or
+ *    last modified.
+ * 
+ *    Format Definition: The property is defined by the following notation:
+ * 
+ *      dtstamp    = "DTSTAMP" stmparam ":" date-time CRLF
+ * 
+ *      stmparam   = *(";" xparam)
+ * </pre>
  *
- * @author benf
+ * @author Ben Fortuna
  */
 public class DtStamp extends Property {
+    
+    private static final long serialVersionUID = 7581197869433744070L;
 
     /**
      * The value MUST be specified in the UTC time format.
      */
-    private Date dateTime;
+    private DateTime dateTime;
 
     /**
      * Default constructor. Initialises the dateTime value to the time
@@ -60,7 +98,7 @@ public class DtStamp extends Property {
      */
     public DtStamp() {
         super(DTSTAMP);
-        dateTime = new Date();
+        dateTime = new DateTime();
     }
     
     /**
@@ -82,7 +120,7 @@ public class DtStamp extends Property {
      * @param aDate
      *            a date representing a date-time
      */
-    public DtStamp(final Date aDate) {
+    public DtStamp(final DateTime aDate) {
         super(DTSTAMP);
         dateTime = aDate;
     }
@@ -93,7 +131,7 @@ public class DtStamp extends Property {
      * @param aDate
      *            a date representing a date-time
      */
-    public DtStamp(final ParameterList aList, final Date aDate) {
+    public DtStamp(final ParameterList aList, final DateTime aDate) {
         super(DTSTAMP, aList);
         dateTime = aDate;
     }
@@ -101,7 +139,7 @@ public class DtStamp extends Property {
     /**
      * @return Returns the date-time.
      */
-    public final Date getDateTime() {
+    public final DateTime getDateTime() {
         return dateTime;
     }
     
@@ -110,7 +148,7 @@ public class DtStamp extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-        dateTime = DateTimeFormat.getInstance().parse(aValue);
+        dateTime = new DateTime(aValue);
     }
 
     /*
@@ -119,13 +157,13 @@ public class DtStamp extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return DateTimeFormat.getInstance().format(getDateTime());
+        return getDateTime().toString();
     }
     
     /**
      * @param dateTime The dateTime to set.
      */
-    public final void setDateTime(final Date dateTime) {
+    public final void setDateTime(final DateTime dateTime) {
         this.dateTime = dateTime;
     }
 }
