@@ -40,39 +40,9 @@ import java.io.Serializable;
 /**
  * Base class for calendar content in the form of
  * properties and parameters.
+ * 
  * @author Ben Fortuna
  */
 public abstract class Content implements Serializable {
-    
-    private static final long serialVersionUID = -7171009178537464842L;
-
-    /**
-     * Indicates whether the content may contain
-     * characters in the string representation that
-     * should be escaped.
-     */
-    private boolean escapable = false;
-
-    /**
-     * Indicates whether the content may contain
-     * characters in the string representation that
-     * should be escaped.
-     * @return Returns true if special characters
-     * should be escaped in the string representation
-     */
-    protected final boolean isEscapable() {
-        return escapable;
-    }
-
-    /**
-     * Sets whether the content may contain
-     * characters in the string representation that
-     * should be escaped.
-     * @param escapable if true special characters
-     * will be escaped in the string representation
-     */
-    protected final void setEscapable(final boolean escapable) {
-        this.escapable = escapable;
-    }
 
 }
