@@ -17,6 +17,37 @@ To-do List:
  - The TZID property parameter MUST NOT be applied to DATE-TIME or TIME
    properties whose time values are specified in UTC.
  
+ - Timezone processing and validation as follows:
+ 
+ 	1. Creating iCalendar data with timezone-specific info:
+ 	
+ 	  * retrieve VTimeZones as currently implemented (search classpath for definition,
+ 	  otherwise construct new VTimeZone)
+ 	
+ 	  * In validation, ensure any referenced VTimeZones (TzId parameter) are included in the
+ 	  VCalendar on output.
+ 	  
+ 	  * possibly automate VTimeZone inclusion by examining all date/date-time-based properties
+ 	  for timezone-specific instances.
+ 	
+ 	2. Reading existing iCalendar data and interpreting timezone-specific info:
+ 	
+ 	  * CalendarBuilder contructs a list of VTimeZones that is provided to each TzId parameter.
+ 	  Add TzId.getVTimeZone(), which checks the list and falls back to using
+ 	  VTimeZone.getVTimeZone(TzId)
+ 	
+ 	  * Property.setValue() should read TzId parameters where applicable and pass corresponding
+ 	  Java timezone to Time constructor.
+ 	
+ 	  * Add method to Calendar for retrieving VTimeZone information:
+ 	  
+ 	  	Calendar.getVTimeZones();
+ 	  	
+ 	  * If VTimeZone not found in Calendar, fall back to using VTimeZone.getVTimeZone(TzId)
+ 	  
+ 	  * Add VTimeZone.getTimeZone() and other conveniences to map Java timezone to VTimeZone
+ 	
+ 
  ===========
   RFC 2446:
  ===========
@@ -71,3 +102,20 @@ To-do List:
  	* When implementing the creation of a MIME message incorporate a human-readable text summary in case
  	iCalendar is not supported by the recipient. Add Calendar/Component formatting into human-readable
  	text/html.
+ 
+ 
+ ==============================
+  Questions for calconnect.org
+ ==============================
+ 
+  * When implementing a CUA there are occasional incompatibilities discovered with alternate implementations. Would it
+  be possible for calconnect members to maintain a compatibility matrix in areas that are either ambiguous or not
+  clearly defined by RFC2445?
+  
+  * Timezone support for iCalendar depends heavily on identical timezone definitions used across all CUAs. VTIMEZONE
+  objects may be included in iCalendar files, however this is not mandatory. Would it be possible for calconnect to
+  maintain a repository of VTIMEZONE objects accessible to all CUAs (similar to those provided by libical)?
+  
+  * With the complexity of the iCalendar specifications, it is more than likely that each CUA implementation does not
+  implement the entire specification (correctly). Could calconnect provide a common set of test cases (possibly defined
+  in a use-case format) that each CUA must pass to be a "certified" implementation of iCalendar?
