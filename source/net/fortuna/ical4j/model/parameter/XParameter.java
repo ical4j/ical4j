@@ -66,5 +66,4 @@ public class XParameter extends Parameter {
     public String getValue() {
         return value;
     }
-
 }

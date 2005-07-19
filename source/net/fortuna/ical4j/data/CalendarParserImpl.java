@@ -206,8 +206,8 @@ public class CalendarParserImpl implements CalendarParser {
 
         int nextToken = tokeniser.nextToken();
 
-        while (nextToken != StreamTokenizer.TT_EOL &&
-                nextToken != StreamTokenizer.TT_EOF) {
+        while (nextToken != StreamTokenizer.TT_EOL
+                && nextToken != StreamTokenizer.TT_EOF) {
 
             if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
                 value.append(tokeniser.sval);
@@ -223,8 +223,7 @@ public class CalendarParserImpl implements CalendarParser {
         }
 
         if (nextToken == StreamTokenizer.TT_EOF) {
-            throw new ParserException("Unexpected end of file at line " +
-                    tokeniser.lineno());
+            throw new ParserException("Unexpected end of file at line " + tokeniser.lineno());
         }
 
         handler.propertyValue(StringUtils.unescape(value.toString()));
@@ -309,6 +308,9 @@ public class CalendarParserImpl implements CalendarParser {
                 }
             }
             catch (ParserException pe) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Caught exception absorbing extra whitespace", pe);
+                }
             }
 //            assertToken(tokeniser, StreamTokenizer.TT_WORD);
         }

@@ -129,14 +129,14 @@ public class CalendarOutputter {
     /**
      * @return Returns the validating.
      */
-    public boolean isValidating() {
+    public final boolean isValidating() {
         return validating;
     }
 
     /**
      * @param validating The validating to set.
      */
-    public void setValidating(final boolean validating) {
+    public final void setValidating(final boolean validating) {
         this.validating = validating;
     }
 }

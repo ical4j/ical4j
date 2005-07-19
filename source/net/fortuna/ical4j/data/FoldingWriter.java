@@ -65,7 +65,7 @@ public class FoldingWriter extends FilterWriter {
      * @param writer a writer to write output to
      * @param foldLength
      */
-    public FoldingWriter(final Writer writer, int foldLength) {
+    public FoldingWriter(final Writer writer, final int foldLength) {
         super(writer);
         this.foldLength = Math.min(foldLength, MAX_FOLD_LENGTH);
     }
@@ -83,7 +83,7 @@ public class FoldingWriter extends FilterWriter {
      * @see java.io.FilterWriter#write(int)
      *
      */
-    public void write(final int c) throws IOException {
+    public final void write(final int c) throws IOException {
 
         /*
         super.write(c);
@@ -106,7 +106,7 @@ public class FoldingWriter extends FilterWriter {
     /* (non-Javadoc)
      * @see java.io.FilterWriter#write(char[], int, int)
      */
-    public void write(final char[] buffer, final int offset, final int length) throws IOException {
+    public final void write(final char[] buffer, final int offset, final int length) throws IOException {
         int maxIndex = offset + length - 1;
         for (int i = offset; i <= maxIndex; i++) {
 
@@ -139,7 +139,7 @@ public class FoldingWriter extends FilterWriter {
     /* (non-Javadoc)
      * @see java.io.FilterWriter#write(java.lang.String, int, int)
      */
-    public void write(final String str, final int off, final int len) throws IOException {
+    public final void write(final String str, final int off, final int len) throws IOException {
         write(str.toCharArray(), off, len);
     }
 
