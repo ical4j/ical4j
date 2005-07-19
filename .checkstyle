@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<fileset-config file-format-version="1.0.0">
-    <fileset check-config-name="My Checks" enabled="true" name="Java Source">
-        <file-match-pattern include-pattern="true" match-pattern=".java$"/>
-    </fileset>
+<?xml version="1.0" encoding="UTF-8"?><fileset-config file-format-version="1.1.0" simple-config="false">
+<fileset name="Java Source" check-config-name="Default Checks" enabled="true"><file-match-pattern match-pattern=".java$" include-pattern="true"/>
+</fileset>
+<filter name="WriteProtectedFiles" enabled="true"/>
 </fileset-config>
