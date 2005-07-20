@@ -68,7 +68,7 @@ public class Encoding extends Parameter {
      * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 }

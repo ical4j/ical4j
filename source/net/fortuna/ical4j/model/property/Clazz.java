@@ -57,7 +57,7 @@ public class Clazz extends Property {
      * @author Ben Fortuna
      * An immutable instance of Clazz.
      */
-    private static class ImmutableClazz extends Clazz {
+    private static final class ImmutableClazz extends Clazz {
         
         private static final long serialVersionUID = 5978394762293365042L;
         
@@ -71,7 +71,7 @@ public class Clazz extends Property {
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
-        public final void setValue(final String aValue) {
+        public void setValue(final String aValue) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
     }

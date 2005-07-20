@@ -48,7 +48,7 @@ public class TzId extends Property implements Escapable {
     
     private static final long serialVersionUID = -522764921502407137L;
 
-    private static final String PREFIX = "/";
+    public static final String PREFIX = "/";
 
     private String value;
 

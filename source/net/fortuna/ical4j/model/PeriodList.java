@@ -36,7 +36,6 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Iterator;
-import java.util.List;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
@@ -130,7 +129,7 @@ public class PeriodList extends TreeSet implements Serializable {
 //    }
 
     /**
-     * Remove a period from the list
+     * Remove a period from the list.
      * @param period the period to remove
      * @return true if the list contained the specified period
      * @see java.util.List#remove(java.lang.Object)

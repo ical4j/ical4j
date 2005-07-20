@@ -36,7 +36,6 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Defines a list of iCalendar properties.
@@ -138,7 +137,7 @@ public class PropertyList extends ArrayList implements Serializable {
 //    }
 
     /**
-     * Remove a property from the list
+     * Remove a property from the list.
      * @param property the property to remove
      * @return true if the list contained the specified property
      * @see List#remove(java.lang.Object)

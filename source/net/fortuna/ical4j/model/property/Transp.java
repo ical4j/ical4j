@@ -55,7 +55,7 @@ public class Transp extends Property {
      * @author Ben Fortuna
      * An immutable instance of Transp.
      */
-    private static class ImmutableTransp extends Transp {
+    private static final class ImmutableTransp extends Transp {
         
         private static final long serialVersionUID = -6595830107310111996L;
         
@@ -69,7 +69,7 @@ public class Transp extends Property {
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
-        public final void setValue(final String aValue) {
+        public void setValue(final String aValue) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
     }

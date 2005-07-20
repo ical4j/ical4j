@@ -118,7 +118,7 @@ public class CategoryList implements Serializable {
     }
 
     /**
-     * Remove a category from the list
+     * Remove a category from the list.
      * @param category the category to remove
      * @return true if the list contained the specified category
      * @see List#remove(java.lang.Object)

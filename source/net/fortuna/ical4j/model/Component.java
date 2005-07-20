@@ -152,7 +152,7 @@ public abstract class Component implements Serializable {
      * @throws ValidationException
      *             where any of the component properties is not in a valid state
      */
-    protected void validateProperties() throws ValidationException {
+    protected final void validateProperties() throws ValidationException {
         for (Iterator i = getProperties().iterator(); i.hasNext();) {
             Property property = (Property) i.next();
             property.validate();

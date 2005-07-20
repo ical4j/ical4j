@@ -59,7 +59,7 @@ public class Version extends Property {
      * @author Ben Fortuna
      * An immutable instance of Version.
      */
-    private static class ImmutableVersion extends Version {
+    private static final class ImmutableVersion extends Version {
         
         private static final long serialVersionUID = -5040679357859594835L;
         
@@ -73,21 +73,21 @@ public class Version extends Property {
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
-        public final void setValue(final String aValue) {
+        public void setValue(final String aValue) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
         
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.property.Version#setMaxVersion(java.lang.String)
          */
-        public final void setMaxVersion(final String maxVersion) {
+        public void setMaxVersion(final String maxVersion) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
         
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.property.Version#setMinVersion(java.lang.String)
          */
-        public final void setMinVersion(final String minVersion) {
+        public void setMinVersion(final String minVersion) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
     }

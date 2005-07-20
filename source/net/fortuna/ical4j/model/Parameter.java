@@ -44,102 +44,102 @@ import net.fortuna.ical4j.util.StringUtils;
 public abstract class Parameter extends Content {
 
     /**
-     * Alternate text representation
+     * Alternate text representation.
      */
     public static final String ALTREP = "ALTREP";
 
     /**
-     * Common name
+     * Common name.
      */
     public static final String CN = "CN";
 
     /**
-     * Calendar user type
+     * Calendar user type.
      */
     public static final String CUTYPE = "CUTYPE";
 
     /**
-     * Delegator
+     * Delegator.
      */
     public static final String DELEGATED_FROM = "DELEGATED-FROM";
 
     /**
-     * Delegatee
+     * Delegatee.
      */
     public static final String DELEGATED_TO = "DELEGATED-TO";
 
     /**
-     * Directory entry
+     * Directory entry.
      */
     public static final String DIR = "DIR";
 
     /**
-     * Inline encoding
+     * Inline encoding.
      */
     public static final String ENCODING = "ENCODING";
 
     /**
-     * Format type
+     * Format type.
      */
     public static final String FMTTYPE = "FMTTYPE";
 
     /**
-     * Free/busy time type
+     * Free/busy time type.
      */
     public static final String FBTYPE = "FBTYPE";
 
     /**
-     * Language for text
+     * Language for text.
      */
     public static final String LANGUAGE = "LANGUAGE";
 
     /**
-     * Group or list membership
+     * Group or list membership.
      */
     public static final String MEMBER = "MEMBER";
 
     /**
-     * Participation status
+     * Participation status.
      */
     public static final String PARTSTAT = "PARTSTAT";
 
     /**
-     * Recurrence identifier range
+     * Recurrence identifier range.
      */
     public static final String RANGE = "RANGE";
 
     /**
-     * Alarm trigger relationship
+     * Alarm trigger relationship.
      */
     public static final String RELATED = "RELATED";
 
     /**
-     * Relationship type
+     * Relationship type.
      */
     public static final String RELTYPE = "RELTYPE";
 
     /**
-     * Participation role
+     * Participation role.
      */
     public static final String ROLE = "ROLE";
 
     /**
-     * RSVP expectation
+     * RSVP expectation.
      */
     public static final String RSVP = "RSVP";
 
     /**
-     * Sent by
+     * Sent by.
      */
     public static final String SENT_BY = "SENT-BY";
 
     /**
-     * Reference to time zone object
+     * Reference to time zone object.
      */
     public static final String TZID = "TZID";
 
     /**
-     * Property value data type
+     * Property value data type.
      */
     public static final String VALUE = "VALUE";
 

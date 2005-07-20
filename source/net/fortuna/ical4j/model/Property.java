@@ -51,14 +51,14 @@ public abstract class Property extends Content {
 
     /**
      * 'prodid' and 'version' are both REQUIRED, but MUST NOT occur more than
-     * once
+     * once.
      */
     public static final String PRODID = "PRODID";
 
     public static final String VERSION = "VERSION";
 
     /**
-     * 'calscale' and 'method' are optional, but MUST NOT occur more than once
+     * 'calscale' and 'method' are optional, but MUST NOT occur more than once.
      */
     public static final String CALSCALE = "CALSCALE";
 
@@ -67,7 +67,7 @@ public abstract class Property extends Content {
     // Component properties..
 
     /**
-     * the following are optional, but MUST NOT occur more than once
+     * the following are optional, but MUST NOT occur more than once.
      */
     public static final String CLASS = "CLASS";
 
@@ -131,14 +131,14 @@ public abstract class Property extends Content {
 
     /**
      * either 'dtend' or 'duration' may appear in a 'eventprop', but 'dtend' and
-     * 'duration' MUST NOT occur in the same 'eventprop'
+     * 'duration' MUST NOT occur in the same 'eventprop'.
      */
     public static final String DTEND = "DTEND";
 
     public static final String DURATION = "DURATION";
 
     /**
-     * the following are optional, and MAY occur more than once
+     * the following are optional, and MAY occur more than once.
      */
     public static final String ATTACH = "ATTACH";
 
@@ -225,7 +225,7 @@ public abstract class Property extends Content {
 
     /**
      * Indicates whether this property is a
-     * calendar property
+     * calendar property.
      * @return boolean
      */
     public final boolean isCalendarProperty() {
@@ -236,7 +236,7 @@ public abstract class Property extends Content {
 
     /**
      * Indicates whether this property is a
-     * component property
+     * component property.
      * @return boolean
      */
     public final boolean isComponentProperty() {

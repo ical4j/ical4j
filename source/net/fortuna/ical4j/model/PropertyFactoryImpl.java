@@ -108,14 +108,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Action(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Action();
             }
         });
@@ -123,14 +123,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Attach(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Attach();
             }
         });
@@ -138,14 +138,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Attendee(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Attendee();
             }
         });
@@ -153,14 +153,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new CalScale(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new CalScale();
             }
         });
@@ -168,14 +168,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Categories(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Categories();
             }
         });
@@ -183,14 +183,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Clazz(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Clazz();
             }
         });
@@ -198,14 +198,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Comment(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Comment();
             }
         });
@@ -213,14 +213,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Completed(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Completed();
             }
         });
@@ -228,14 +228,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Contact(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Contact();
             }
         });
@@ -243,14 +243,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Created(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Created();
             }
         });
@@ -258,14 +258,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Description(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Description();
             }
         });
@@ -273,14 +273,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new DtEnd(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new DtEnd();
             }
         });
@@ -288,14 +288,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new DtStamp(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new DtStamp();
             }
         });
@@ -303,14 +303,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new DtStart(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new DtStart();
             }
         });
@@ -318,14 +318,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Due(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Due();
             }
         });
@@ -333,14 +333,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Duration(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Duration();
             }
         });
@@ -348,14 +348,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new ExDate(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new ExDate();
             }
         });
@@ -363,14 +363,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new ExRule(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new ExRule();
             }
         });
@@ -378,14 +378,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new FreeBusy(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new FreeBusy();
             }
         });
@@ -393,14 +393,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Geo(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Geo();
             }
         });
@@ -408,14 +408,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new LastModified(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new LastModified();
             }
         });
@@ -423,14 +423,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Location(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Location();
             }
         });
@@ -438,14 +438,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Method(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Method();
             }
         });
@@ -453,14 +453,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Organizer(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Organizer();
             }
         });
@@ -468,14 +468,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new PercentComplete(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new PercentComplete();
             }
         });
@@ -483,14 +483,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Priority(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Priority();
             }
         });
@@ -498,14 +498,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new ProdId(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new ProdId();
             }
         });
@@ -513,14 +513,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new RDate(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new RDate();
             }
         });
@@ -528,14 +528,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new RecurrenceId(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new RecurrenceId();
             }
         });
@@ -543,14 +543,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new RelatedTo(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new RelatedTo();
             }
         });
@@ -558,14 +558,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Repeat(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Repeat();
             }
         });
@@ -573,14 +573,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new RequestStatus(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new RequestStatus();
             }
         });
@@ -588,14 +588,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Resources(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Resources();
             }
         });
@@ -603,14 +603,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new RRule(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new RRule();
             }
         });
@@ -618,14 +618,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Sequence(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Sequence();
             }
         });
@@ -633,14 +633,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Status(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Status();
             }
         });
@@ -648,14 +648,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Summary(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Summary();
             }
         });
@@ -663,14 +663,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Transp(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Transp();
             }
         });
@@ -678,14 +678,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Trigger(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Trigger();
             }
         });
@@ -693,14 +693,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new TzId(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new TzId();
             }
         });
@@ -708,14 +708,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new TzName(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new TzName();
             }
         });
@@ -723,14 +723,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new TzOffsetFrom(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new TzOffsetFrom();
             }
         });
@@ -738,14 +738,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new TzOffsetTo(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new TzOffsetTo();
             }
         });
@@ -753,14 +753,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new TzUrl(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new TzUrl();
             }
         });
@@ -768,14 +768,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Uid(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Uid();
             }
         });
@@ -783,14 +783,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Url(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Url();
             }
         });
@@ -798,14 +798,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
-            public final Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
+            public Property createProperty(final String name, final ParameterList parameters, final String value) throws IOException, URISyntaxException, ParseException {
                 return new Version(parameters, value);
             }
 
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
              */
-            public final Property createProperty(final String name) {
+            public Property createProperty(final String name) {
                 return new Version();
             }
         });

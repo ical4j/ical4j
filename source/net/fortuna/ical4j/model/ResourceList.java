@@ -118,7 +118,7 @@ public class ResourceList implements Serializable {
     }
 
     /**
-     * Remove a resource from the list
+     * Remove a resource from the list.
      * @param resource the resource to remove
      * @return true if the list contained the specified resource
      * @see List#remove(java.lang.Object)

@@ -217,10 +217,9 @@ public class VToDo extends Component {
         while (iterator.hasNext()) {
             Component component = (Component) iterator.next();
 
-            if (! (component instanceof VAlarm)) {
+            if (!(component instanceof VAlarm)) {
                 throw new ValidationException(
-                    "Component [" + component.getName() +
-                        "] may not occur in VTODO");
+                    "Component [" + component.getName() + "] may not occur in VTODO");
             }
         }
 
@@ -277,13 +276,14 @@ public class VToDo extends Component {
             //
             // NOTE: equals() method should be overridden to ensure that status
             // instances with the same value are declared equal.
-            if (! (Status.VTODO_NEEDS_ACTION.equals(status) ||
-                    Status.VTODO_COMPLETED.equals(status) ||
-                    Status.VTODO_IN_PROCESS.equals(status) ||
-                    Status.VTODO_CANCELLED.equals(status)))
-            throw new ValidationException(
-                "Status property [" + status.toString()
-                        + "] may not occur in VTODO");
+            if (!(Status.VTODO_NEEDS_ACTION.equals(status)
+                    || Status.VTODO_COMPLETED.equals(status)
+                    || Status.VTODO_IN_PROCESS.equals(status)
+                    || Status.VTODO_CANCELLED.equals(status))) {
+                throw new ValidationException(
+                        "Status property [" + status.toString()
+                                + "] may not occur in VTODO");
+            }
         }
 
         /*

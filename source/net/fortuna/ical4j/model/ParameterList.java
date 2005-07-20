@@ -177,7 +177,7 @@ public class ParameterList implements Serializable {
     }
 
     /**
-     * Remove a parameter from the list
+     * Remove a parameter from the list.
      * @param parameter the parameter to remove
      * @return true if the list contained the specified parameter
      * @see List#remove(java.lang.Object)

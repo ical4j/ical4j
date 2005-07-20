@@ -59,7 +59,7 @@ public class Action extends Property {
      * @author Ben Fortuna
      * An immutable instance of Action.
      */
-    private static class ImmutableAction extends Action {
+    private static final class ImmutableAction extends Action {
         
         private static final long serialVersionUID = -2752235951243969905L;
         
@@ -73,7 +73,7 @@ public class Action extends Property {
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
-        public final void setValue(final String aValue) {
+        public void setValue(final String aValue) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
     }
@@ -120,7 +120,7 @@ public class Action extends Property {
      *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public String getValue() {
+    public final String getValue() {
         return value;
     }
 }

@@ -37,7 +37,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.model.parameter.Value;
@@ -162,7 +161,7 @@ public class DateList extends ArrayList implements Serializable {
     }
 
     /**
-     * Remove a date from the list
+     * Remove a date from the list.
      * 
      * @param date
      *            the date to remove

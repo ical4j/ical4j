@@ -50,15 +50,15 @@ import net.fortuna.ical4j.util.ParameterValidator;
  */
 public class RequestStatus extends Property {
     
-    private static final long serialVersionUID = -3273944031884755345L;
+    public static final long serialVersionUID = -3273944031884755345L;
 
-    private static final String PRELIM_SUCCESS = "1";
+    public static final String PRELIM_SUCCESS = "1";
 
-    private static final String SUCCESS = "2";
+    public static final String SUCCESS = "2";
 
-    private static final String CLIENT_ERROR = "3";
+    public static final String CLIENT_ERROR = "3";
 
-    private static final String SCHEDULING_ERROR = "4";
+    public static final String SCHEDULING_ERROR = "4";
 
     private String statusCode;
 

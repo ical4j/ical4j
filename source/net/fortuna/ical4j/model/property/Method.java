@@ -113,7 +113,7 @@ public class Method extends Property {
      * @author Ben Fortuna
      * An immutable instance of Method.
      */
-    private static class ImmutableMethod extends Method {
+    private static final class ImmutableMethod extends Method {
         
         private static final long serialVersionUID = 5332607957381969713L;
         
@@ -127,7 +127,7 @@ public class Method extends Property {
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
-        public final void setValue(final String aValue) {
+        public void setValue(final String aValue) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
     }

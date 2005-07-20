@@ -59,7 +59,7 @@ public class Priority extends Property {
      * @author Ben Fortuna
      * An immutable instance of Priority.
      */
-    private static class ImmutablePriority extends Priority {
+    private static final class ImmutablePriority extends Priority {
         
         private static final long serialVersionUID = 5884973714694108418L;
         
@@ -73,14 +73,14 @@ public class Priority extends Property {
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
-        public final void setValue(final String aValue) {
+        public void setValue(final String aValue) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
         
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.property.Priority#setLevel(int)
          */
-        public final void setLevel(final int level) {
+        public void setLevel(final int level) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
     }

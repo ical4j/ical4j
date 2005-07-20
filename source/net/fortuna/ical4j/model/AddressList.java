@@ -125,7 +125,7 @@ public class AddressList implements Serializable {
     }
 
     /**
-     * Remove an address from the list
+     * Remove an address from the list.
      * @param address the address to remove
      * @return true if the list contained the specified address
      * @see List#remove(java.lang.Object)

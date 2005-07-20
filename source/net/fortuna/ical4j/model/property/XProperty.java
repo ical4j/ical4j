@@ -89,5 +89,4 @@ public class XProperty extends Property implements Escapable {
     public final String getValue() {
         return value;
     }
-
 }

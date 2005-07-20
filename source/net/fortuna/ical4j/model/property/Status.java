@@ -74,7 +74,7 @@ public class Status extends Property {
      * @author Ben Fortuna
      * An immutable instance of Status.
      */
-    private static class ImmutableStatus extends Status {
+    private static final class ImmutableStatus extends Status {
         
         private static final long serialVersionUID = 7771868877237685612L;
         
@@ -88,7 +88,7 @@ public class Status extends Property {
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
-        public final void setValue(final String aValue) {
+        public void setValue(final String aValue) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
     }

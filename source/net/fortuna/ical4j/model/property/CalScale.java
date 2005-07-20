@@ -54,7 +54,7 @@ public class CalScale extends Property {
      * @author Ben Fortuna
      * An immutable instance of CalScale.
      */
-    private static class ImmutableCalScale extends CalScale {
+    private static final class ImmutableCalScale extends CalScale {
         
         private static final long serialVersionUID = 1750949550694413878L;
         
@@ -68,7 +68,7 @@ public class CalScale extends Property {
         /* (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
-        public final void setValue(final String aValue) {
+        public void setValue(final String aValue) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
     }
