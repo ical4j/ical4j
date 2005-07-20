@@ -75,15 +75,47 @@ public final class ParameterFactoryImpl implements ParameterFactory {
      */
     private ParameterFactoryImpl() {
         factories = new HashMap();
-        factories.put(Parameter.ALTREP, new ParameterFactory() {
+        factories.put(Parameter.ALTREP, createAltRepFactory());
+        factories.put(Parameter.CN, createCnFactory());
+        factories.put(Parameter.CUTYPE, createCuTypeFactory());
+        factories.put(Parameter.DELEGATED_FROM, createDelegatedFromFactory());
+        factories.put(Parameter.DELEGATED_TO, createDelegatedToFactory());
+        factories.put(Parameter.DIR, createDirFactory());
+        factories.put(Parameter.ENCODING, createEncodingFactory());
+        factories.put(Parameter.FMTTYPE, createFmtTypeFactory());
+        factories.put(Parameter.FBTYPE, createFbTypeFactory());
+        factories.put(Parameter.LANGUAGE, createLanguageFactory());
+        factories.put(Parameter.MEMBER, createMemberFactory());
+        factories.put(Parameter.PARTSTAT, createPartStatFactory());
+        factories.put(Parameter.RANGE, createRangeFactory());
+        factories.put(Parameter.RELATED, createRelatedFactory());
+        factories.put(Parameter.RELTYPE, createRelTypeFactory());
+        factories.put(Parameter.ROLE, createRoleFactory());
+        factories.put(Parameter.RSVP, createRsvpFactory());
+        factories.put(Parameter.SENT_BY, createSentByFactory());
+        factories.put(Parameter.TZID, createTzIdFactory());
+        factories.put(Parameter.VALUE, createValueFactory());
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createAltRepFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
             public Parameter createParameter(final String name, final String value) throws URISyntaxException {
                 return new AltRep(value);
             }
-        });
-        factories.put(Parameter.CN, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createCnFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -91,8 +123,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                     throws URISyntaxException {
                 return new Cn(value);
             }
-        });
-        factories.put(Parameter.CUTYPE, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createCuTypeFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -116,8 +154,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                 }
                 return parameter;
             }
-        });
-        factories.put(Parameter.DELEGATED_FROM, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createDelegatedFromFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -125,8 +169,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                     throws URISyntaxException {
                 return new DelegatedFrom(value);
             }
-        });
-        factories.put(Parameter.DELEGATED_TO, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createDelegatedToFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -134,8 +184,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                     throws URISyntaxException {
                 return new DelegatedTo(value);
             }
-        });
-        factories.put(Parameter.DIR, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createDirFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -143,8 +199,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                     throws URISyntaxException {
                 return new Dir(value);
             }
-        });
-        factories.put(Parameter.ENCODING, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createEncodingFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -159,8 +221,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                 }
                 return parameter;
             }
-        });
-        factories.put(Parameter.FMTTYPE, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createFmtTypeFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -168,8 +236,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                     throws URISyntaxException {
                 return new FmtType(value);
             }
-        });
-        factories.put(Parameter.FBTYPE, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createFbTypeFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -190,8 +264,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                 }
                 return parameter;
             }
-        });
-        factories.put(Parameter.LANGUAGE, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createLanguageFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -199,8 +279,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                     throws URISyntaxException {
                 return new Language(value);
             }
-        });
-        factories.put(Parameter.MEMBER, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createMemberFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -208,8 +294,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                     throws URISyntaxException {
                 return new Member(value);
             }
-        });
-        factories.put(Parameter.PARTSTAT, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createPartStatFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -239,8 +331,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                 }
                 return parameter;
             }
-        });
-        factories.put(Parameter.RANGE, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createRangeFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -255,8 +353,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                 }
                 return parameter;
             }
-        });
-        factories.put(Parameter.RELATED, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createRelatedFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -271,8 +375,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                 }
                 return parameter;
             }
-        });
-        factories.put(Parameter.RELTYPE, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createRelTypeFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -290,8 +400,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                 }
                 return parameter;
             }
-        });
-        factories.put(Parameter.ROLE, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createRoleFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -312,8 +428,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                 }
                 return parameter;
             }
-        });
-        factories.put(Parameter.RSVP, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createRsvpFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -328,8 +450,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                 }
                 return parameter;
             }
-        });
-        factories.put(Parameter.SENT_BY, new ParameterFactory() {
+        };
+    }
+
+    /**
+     * @return
+     */
+    private ParameterFactory createSentByFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -337,8 +465,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                     throws URISyntaxException {
                 return new SentBy(value);
             }
-        });
-        factories.put(Parameter.TZID, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createTzIdFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -346,8 +480,14 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                     throws URISyntaxException {
                 return new TzId(value);
             }
-        });
-        factories.put(Parameter.VALUE, new ParameterFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private ParameterFactory createValueFactory() {
+        return new ParameterFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
@@ -398,9 +538,9 @@ public final class ParameterFactoryImpl implements ParameterFactory {
                 }
                 return parameter;
             }
-        });
+        };
     }
-
+    
     /**
      * @return Returns the instance.
      */
