@@ -1,7 +1,7 @@
 /*
  * $Id$ [05-Apr-2004]
  *
- * Copyright (c) 2004, Ben Fortuna
+ * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,12 +40,13 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
- * Defines an iCalendar timezone type component. Class made abstract such that
- * only Standard and Daylight instances are valid.
+ * Defines an iCalendar sub-component representing a seasonal timezone change.
+ * Class made abstract such that only Standard and Daylight instances are
+ * valid.
  *
- * @author benf
+ * @author Ben Fortuna
  */
-public abstract class Time extends Component {
+public abstract class SeasonalTime extends Component {
 
     /**
      * one of 'standardc' or 'daylightc' MUST occur and each MAY occur more than
@@ -60,7 +61,7 @@ public abstract class Time extends Component {
      * and no properties.
      * @param name the name of this time component
      */
-    protected Time(final String name) {
+    protected SeasonalTime(final String name) {
         super(name);
     }
 
@@ -70,7 +71,7 @@ public abstract class Time extends Component {
      * @param name the name of the time type
      * @param properties a list of properties
      */
-    protected Time(final String name, final PropertyList properties) {
+    protected SeasonalTime(final String name, final PropertyList properties) {
         super(name, properties);
     }
 

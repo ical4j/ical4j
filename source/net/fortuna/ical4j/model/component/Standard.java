@@ -40,7 +40,7 @@ import net.fortuna.ical4j.model.PropertyList;
  *
  * @author benf
  */
-public class Standard extends Time {
+public class Standard extends SeasonalTime {
     
     private static final long serialVersionUID = -4750910013406451159L;
 
