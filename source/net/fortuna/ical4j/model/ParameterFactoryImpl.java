@@ -1,5 +1,7 @@
 /*
- * $Id$ [05-Apr-2004]
+ * $Id $
+ * 
+ * [05-Apr-2004]
  *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
