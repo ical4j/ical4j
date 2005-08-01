@@ -14,21 +14,22 @@
     <property name="source.dir" location="source"/>
     <property name="test.source.dir" location="test"/>
     <property name="output.dir" location="bin"/>
-	
     <property name="package.dir" location="build"/>
     <property name="package.file" value="ical4j.jar"/>
-	
     <property name="javadoc.dir" location="docs/api"/>
     <property name="javadoc.packages" value="net.fortuna.ical4j.*"/>
-	
     <property name="dist.dir" location=".."/>
     <property name="dist.name" value="ical4j"/>
     <property name="dist.maven.file" value="${dist.name}-${project.version}-bundle.jar"/>
+	
+	<!-- Load overrides for library paths -->
+	<property file="build.properties"/>
 
 	<!-- Library paths -->
     <property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/"/>
-	
     <property name="jakarta-commons-logging.apiurl" value="http://jakarta.apache.org/commons/logging/api/"/>
+	
+	<property name="project.classpath" value="lib/commons-logging.jar;${output.dir}"/>
     
 	<!-- Targets -->
     <target name="clean-compile">
@@ -39,11 +40,13 @@
     </target>
     
     <target name="compile">
-        <javac source="1.4" srcdir="${source.dir}" destdir="${output.dir}" debug="false" deprecation="true"/>
+    	<echo message="Compiling source from classpath: ${project.classpath}"/>
+        <javac target="1.4" srcdir="${source.dir}" destdir="${output.dir}" debug="false" deprecation="true" classpath="${project.classpath}"/>
     </target>
     
     <target name="compile-tests">
-        <javac srcdir="${test.source.dir}" destdir="${output.dir}" debug="false" deprecation="true"/>
+    	<echo message="Compiling tests from classpath: ${project.classpath}"/>
+        <javac srcdir="${test.source.dir}" destdir="${output.dir}" debug="false" deprecation="true" classpath="${project.classpath}"/>
     </target>
     
     <target name="clean-package">
@@ -69,13 +72,14 @@
     </target>
     
     <target name="javadoc" depends="clean-javadoc">
+    	<echo message="Generating Javadocs from classpath: ${project.classpath}"/>
         <javadoc sourcepath="${source.dir}"
                  destdir="${javadoc.dir}"
                  packagenames="${javadoc.packages}"
                  Windowtitle="${ant.project.name}"
                  Doctitle="${ant.project.name}"
                  Overview="etc/overview.html"
-                 classpath="lib/commons-logging.jar">
+                 classpath="${project.classpath}">
      		<link href="${j2se.apiurl}"/>
      		<link href="${jakarta-commons-logging.apiurl}"/>
         </javadoc>
@@ -115,12 +119,9 @@
     
 	<!-- JUnit tests -->
     <target name="run-tests" depends="compile, compile-tests">
+    	<echo message="Running unit tests with classpath: ${project.classpath}"/>
         <junit printsummary="yes" showoutput="yes" fork="yes">
-            <classpath>
-                <pathelement location="lib/commons-logging.jar"/>
-                <pathelement location="${output.dir}"/>
-            </classpath>
-
+            <classpath path="${project.classpath}"/>
             <test name="net.fortuna.ical4j.AllTests"/>
 <!--
             <batchtest>

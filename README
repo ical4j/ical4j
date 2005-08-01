@@ -16,6 +16,23 @@
  be compatible with prior versions of eclipse.
 
 
+==============
+ How to build
+==============
+ 
+ If you have downloaded the source distribution, you should be able to package a JAR
+ file simply by running ant in the root directory. e.g:
+ 
+   C:\Libs\iCal4j-0.9.16-src\>ant
+ 
+ If for some reason you would like to override the default build classpath, I would
+ suggest creating a "build.properties" file (see the provided sample) in the root directory
+ and add overridden properties to this. You can also override properties via Java system
+ properties (e.g. -Dproject.classpath="..."). You shouldn't need to modify the "build.xml" at all,
+ so if you do find a need let me know and I'll try to rectify this.
+ 
+ 
+ 
 =================
  Relaxed Parsing
 =================

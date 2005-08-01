@@ -1,0 +1,3 @@
+## To override properties in build.xml rename
+## this file to "build.properties" and modify accordingly..
+project.classpath=C:/libs/commons-logging-1.0.3/commons-logging.jar;${output.dir}
