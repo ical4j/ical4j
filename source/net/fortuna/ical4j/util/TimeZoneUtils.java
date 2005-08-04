@@ -107,4 +107,14 @@ public final class TimeZoneUtils {
 
         return calendar.getTime();
     }
+    
+    /**
+     * Indicates whether the specified timezone is equivalent to
+     * UTC time.
+     * @param timezone
+     * @return true if the timezone is UTC time, otherwise false
+     */
+    public static boolean isUtc(final TimeZone timezone) {
+        return timezone.equals(TimeZone.getTimeZone("UTC"));
+    }
 }
