@@ -103,7 +103,9 @@ public class UtcOffset {
             // seconds not supplied..
             log.debug("Seconds not specified", e);
         }
-        offset = -offset;
+        if (negative) {
+            offset = -offset;
+        }
     }
     
     /**
@@ -136,5 +138,12 @@ public class UtcOffset {
             b.append(SECOND_FORMAT.format(remainder / MILLIS_PER_SECOND));
         }
         return b.toString();
+    }
+
+    /**
+     * @return Returns the offset.
+     */
+    public final long getOffset() {
+        return offset;
     }
 }
