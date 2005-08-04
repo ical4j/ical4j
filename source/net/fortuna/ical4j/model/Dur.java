@@ -71,16 +71,18 @@ import org.apache.commons.logging.LogFactory;
  * @author Ben Fortuna
  */
 public class Dur implements Comparable {
-
-    private static final long MILLIS_PER_SECOND = 1000;
-
-    private static final long MILLIS_PER_MINUTE = 60000;
-
-    private static final long MILLIS_PER_HOUR = 3600000;
-
-    private static final long MILLIS_PER_DAY = 86400000;
-
-    private static final long MILLIS_PER_WEEK = 604800000;
+    
+    private static final int DAYS_PER_WEEK = 7;
+    
+    private static final int WEEKS_PER_YEAR = 52;
+    
+    private static final int SECONDS_PER_MINUTE = 60;
+    
+    private static final int MINUTES_PER_HOUR = 60;
+    
+    private static final int HOURS_PER_DAY = 24;
+    
+    private static final int DAYS_PER_YEAR = 365;
     
     private static Log log = LogFactory.getLog(Dur.class);
 
@@ -237,21 +239,21 @@ public class Dur implements Comparable {
             negative = true;
         }
         
-        if ((dayDelta % 7) + hourDelta + minuteDelta + secondDelta == 0) {
+        if ((dayDelta % DAYS_PER_WEEK) + hourDelta + minuteDelta + secondDelta == 0) {
             // weeks..
             while (startCal.get(Calendar.YEAR) != endCal.get(Calendar.YEAR)) {
-                weekDelta = 52 * (endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR));
-                if (weekDelta < 0) {
+                weekDelta = WEEKS_PER_YEAR * (endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR));
+//                if (weekDelta < 0) {
 //                    negative = true;
-                }
+//                }
                 weeks += weekDelta;
                 startCal.add(Calendar.WEEK_OF_YEAR, weekDelta);
             }
             if (startCal.get(Calendar.WEEK_OF_YEAR) != endCal.get(Calendar.WEEK_OF_YEAR)) {
                 weekDelta = endCal.get(Calendar.WEEK_OF_YEAR) - startCal.get(Calendar.WEEK_OF_YEAR);
-                if (weeks == 0 && weekDelta < 0) {
+//                if (weeks == 0 && weekDelta < 0) {
 //                    negative = true;
-                }
+//                }
                 weeks += weekDelta;
             }
             weeks = Math.abs(weeks);
@@ -264,11 +266,11 @@ public class Dur implements Comparable {
             // seconds..
             if (secondDelta > 0 && negative) {
                 startCal.add(Calendar.MINUTE, 1);
-                seconds = 60 - secondDelta;
+                seconds = SECONDS_PER_MINUTE - secondDelta;
             }
             else if (secondDelta < 0 && !negative) {
                 startCal.add(Calendar.MINUTE, 1);
-                seconds = 60 + secondDelta;
+                seconds = SECONDS_PER_MINUTE + secondDelta;
             }
             else {
                 seconds = Math.abs(secondDelta);
@@ -278,11 +280,11 @@ public class Dur implements Comparable {
             minuteDelta = endCal.get(Calendar.MINUTE) - startCal.get(Calendar.MINUTE);
             if (minuteDelta > 0 && negative) {
                 startCal.add(Calendar.HOUR, 1);
-                minutes = 60 - minuteDelta;
+                minutes = MINUTES_PER_HOUR - minuteDelta;
             }
             else if (minuteDelta < 0 && !negative) {
                 startCal.add(Calendar.HOUR, 1);
-                minutes = 60 + minuteDelta;
+                minutes = MINUTES_PER_HOUR + minuteDelta;
             }
             else {
                 minutes = Math.abs(minuteDelta);
@@ -292,11 +294,11 @@ public class Dur implements Comparable {
             hourDelta = endCal.get(Calendar.HOUR_OF_DAY) - startCal.get(Calendar.HOUR_OF_DAY);
             if (hourDelta > 0 && negative) {
                 startCal.add(Calendar.DAY_OF_YEAR, 1);
-                hours = 24 - hourDelta;
+                hours = HOURS_PER_DAY - hourDelta;
             }
             else if (hourDelta < 0 && !negative) {
                 startCal.add(Calendar.DAY_OF_YEAR, 1);
-                hours = 24 + hourDelta;
+                hours = HOURS_PER_DAY + hourDelta;
             }
             else {
                 hours = Math.abs(hourDelta);
@@ -304,7 +306,7 @@ public class Dur implements Comparable {
             
             // days..
             while (startCal.get(Calendar.YEAR) != endCal.get(Calendar.YEAR)) {
-                dayDelta = 365 * (endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR));
+                dayDelta = DAYS_PER_YEAR * (endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR));
                 days += dayDelta;
                 startCal.add(Calendar.DAY_OF_YEAR, dayDelta);
             }

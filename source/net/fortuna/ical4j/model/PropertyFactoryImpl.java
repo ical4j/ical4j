@@ -104,7 +104,60 @@ public final class PropertyFactoryImpl implements PropertyFactory {
      */
     private PropertyFactoryImpl() {
         factories = new HashMap();
-        factories.put(Property.ACTION, new PropertyFactory() {
+        factories.put(Property.ACTION, createActionFactory());
+        factories.put(Property.ATTACH, createAttachFactory());
+        factories.put(Property.ATTENDEE, createAttendeeFactory());
+        factories.put(Property.CALSCALE, createCalScaleFactory());
+        factories.put(Property.CATEGORIES, createCategoriesFactory());
+        factories.put(Property.CLASS, createClazzFactory());
+        factories.put(Property.COMMENT, createCommentFactory());
+        factories.put(Property.COMPLETED, createCompletedFactory());
+        factories.put(Property.CONTACT, createContactFactory());
+        factories.put(Property.CREATED, createCreatedFactory());
+        factories.put(Property.DESCRIPTION, createDescriptionFactory());
+        factories.put(Property.DTEND, createDtEndFactory());
+        factories.put(Property.DTSTAMP, createDtStampFactory());
+        factories.put(Property.DTSTART, createDtStartFactory());
+        factories.put(Property.DUE, createDueFactory());
+        factories.put(Property.DURATION, createDurationFactory());
+        factories.put(Property.EXDATE, createExDateFactory());
+        factories.put(Property.EXRULE, createExRuleFactory());
+        factories.put(Property.FREEBUSY, createFreeBusyFactory());
+        factories.put(Property.GEO, createGeoFactory());
+        factories.put(Property.LAST_MODIFIED, createLastModifiedFactory());
+        factories.put(Property.LOCATION, createLocationFactory());
+        factories.put(Property.METHOD, createMethodFactory());
+        factories.put(Property.ORGANIZER, createOrganizerFactory());
+        factories.put(Property.PERCENT_COMPLETE, createPercentCompleteFactory());
+        factories.put(Property.PRIORITY, createPriorityFactory());
+        factories.put(Property.PRODID, createProdIdFactory());
+        factories.put(Property.RDATE, createRDateFactory());
+        factories.put(Property.RECURRENCE_ID, createRecurrenceIdFactory());
+        factories.put(Property.RELATED_TO, createRelatedToFactory());
+        factories.put(Property.REPEAT, createRepeatFactory());
+        factories.put(Property.REQUEST_STATUS, createRequestStatusFactory());
+        factories.put(Property.RESOURCES, createResourcesFactory());
+        factories.put(Property.RRULE, createRRuleFactory());
+        factories.put(Property.SEQUENCE, createSequenceFactory());
+        factories.put(Property.STATUS, createStatusFactory());
+        factories.put(Property.SUMMARY, createSummaryFactory());
+        factories.put(Property.TRANSP, createTranspFactory());
+        factories.put(Property.TRIGGER, createTriggerFactory());
+        factories.put(Property.TZID, createTzIdFactory());
+        factories.put(Property.TZNAME, createTzNameFactory());
+        factories.put(Property.TZOFFSETFROM, createTzOffsetFromFactory());
+        factories.put(Property.TZOFFSETTO, createTzOffsetToFactory());
+        factories.put(Property.TZURL, createTzUrlFactory());
+        factories.put(Property.UID, createUidFactory());
+        factories.put(Property.URL, createUrlFactory());
+        factories.put(Property.VERSION, createVersionFactory());
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createActionFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -118,8 +171,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Action();
             }
-        });
-        factories.put(Property.ATTACH, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createAttachFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -133,8 +192,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Attach();
             }
-        });
-        factories.put(Property.ATTENDEE, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createAttendeeFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -148,8 +213,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Attendee();
             }
-        });
-        factories.put(Property.CALSCALE, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createCalScaleFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -163,8 +234,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new CalScale();
             }
-        });
-        factories.put(Property.CATEGORIES, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createCategoriesFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -178,8 +255,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Categories();
             }
-        });
-        factories.put(Property.CLASS, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createClazzFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -193,8 +276,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Clazz();
             }
-        });
-        factories.put(Property.COMMENT, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createCommentFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -208,8 +297,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Comment();
             }
-        });
-        factories.put(Property.COMPLETED, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createCompletedFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -223,8 +318,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Completed();
             }
-        });
-        factories.put(Property.CONTACT, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createContactFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -238,8 +339,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Contact();
             }
-        });
-        factories.put(Property.CREATED, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createCreatedFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -253,8 +360,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Created();
             }
-        });
-        factories.put(Property.DESCRIPTION, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createDescriptionFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -268,8 +381,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Description();
             }
-        });
-        factories.put(Property.DTEND, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createDtEndFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -283,8 +402,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new DtEnd();
             }
-        });
-        factories.put(Property.DTSTAMP, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createDtStampFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -298,8 +423,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new DtStamp();
             }
-        });
-        factories.put(Property.DTSTART, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createDtStartFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -313,8 +444,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new DtStart();
             }
-        });
-        factories.put(Property.DUE, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createDueFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -328,8 +465,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Due();
             }
-        });
-        factories.put(Property.DURATION, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createDurationFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -343,8 +486,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Duration();
             }
-        });
-        factories.put(Property.EXDATE, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createExDateFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -358,8 +507,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new ExDate();
             }
-        });
-        factories.put(Property.EXRULE, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createExRuleFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -373,8 +528,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new ExRule();
             }
-        });
-        factories.put(Property.FREEBUSY, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createFreeBusyFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -388,8 +549,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new FreeBusy();
             }
-        });
-        factories.put(Property.GEO, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createGeoFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -403,8 +570,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Geo();
             }
-        });
-        factories.put(Property.LAST_MODIFIED, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createLastModifiedFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -418,8 +591,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new LastModified();
             }
-        });
-        factories.put(Property.LOCATION, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createLocationFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -433,8 +612,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Location();
             }
-        });
-        factories.put(Property.METHOD, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createMethodFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -448,8 +633,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Method();
             }
-        });
-        factories.put(Property.ORGANIZER, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createOrganizerFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -463,8 +654,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Organizer();
             }
-        });
-        factories.put(Property.PERCENT_COMPLETE, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createPercentCompleteFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -478,8 +675,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new PercentComplete();
             }
-        });
-        factories.put(Property.PRIORITY, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createPriorityFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -493,8 +696,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Priority();
             }
-        });
-        factories.put(Property.PRODID, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createProdIdFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -508,8 +717,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new ProdId();
             }
-        });
-        factories.put(Property.RDATE, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createRDateFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -523,8 +738,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new RDate();
             }
-        });
-        factories.put(Property.RECURRENCE_ID, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createRecurrenceIdFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -538,8 +759,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new RecurrenceId();
             }
-        });
-        factories.put(Property.RELATED_TO, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createRelatedToFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -553,8 +780,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new RelatedTo();
             }
-        });
-        factories.put(Property.REPEAT, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createRepeatFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -568,8 +801,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Repeat();
             }
-        });
-        factories.put(Property.REQUEST_STATUS, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createRequestStatusFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -583,8 +822,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new RequestStatus();
             }
-        });
-        factories.put(Property.RESOURCES, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createResourcesFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -598,8 +843,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Resources();
             }
-        });
-        factories.put(Property.RRULE, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createRRuleFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -613,8 +864,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new RRule();
             }
-        });
-        factories.put(Property.SEQUENCE, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createSequenceFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -628,8 +885,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Sequence();
             }
-        });
-        factories.put(Property.STATUS, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createStatusFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -643,8 +906,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Status();
             }
-        });
-        factories.put(Property.SUMMARY, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createSummaryFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -658,8 +927,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Summary();
             }
-        });
-        factories.put(Property.TRANSP, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createTranspFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -673,8 +948,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Transp();
             }
-        });
-        factories.put(Property.TRIGGER, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createTriggerFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -688,8 +969,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Trigger();
             }
-        });
-        factories.put(Property.TZID, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createTzIdFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -703,8 +990,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new TzId();
             }
-        });
-        factories.put(Property.TZNAME, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createTzNameFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -718,8 +1011,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new TzName();
             }
-        });
-        factories.put(Property.TZOFFSETFROM, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createTzOffsetFromFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -733,8 +1032,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new TzOffsetFrom();
             }
-        });
-        factories.put(Property.TZOFFSETTO, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createTzOffsetToFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -748,8 +1053,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new TzOffsetTo();
             }
-        });
-        factories.put(Property.TZURL, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createTzUrlFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -763,8 +1074,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new TzUrl();
             }
-        });
-        factories.put(Property.UID, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createUidFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -778,8 +1095,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Uid();
             }
-        });
-        factories.put(Property.URL, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createUrlFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -793,8 +1116,14 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Url();
             }
-        });
-        factories.put(Property.VERSION, new PropertyFactory() {
+        };
+    }
+    
+    /**
+     * @return
+     */
+    private PropertyFactory createVersionFactory() {
+        return new PropertyFactory() {
             /* (non-Javadoc)
              * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String, net.fortuna.ical4j.model.ParameterList, java.lang.String)
              */
@@ -808,7 +1137,7 @@ public final class PropertyFactoryImpl implements PropertyFactory {
             public Property createProperty(final String name) {
                 return new Version();
             }
-        });
+        };
     }
 
     /**

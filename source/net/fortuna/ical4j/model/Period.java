@@ -39,15 +39,15 @@ import java.util.Date;
 
 /**
  * Defines a period of time. A period may be specified as either a start date
- * and end date, or a start date and duration.
- * NOTE: End dates and durations are implicitly derived when not explicitly
- * specified. This means that you cannot rely on the returned values from
- * the getters to deduce whether a period has an explicit end date or duration.
- *
+ * and end date, or a start date and duration. NOTE: End dates and durations are
+ * implicitly derived when not explicitly specified. This means that you cannot
+ * rely on the returned values from the getters to deduce whether a period has
+ * an explicit end date or duration.
+ * 
  * @author Ben Fortuna
  */
 public class Period implements Serializable, Comparable {
-    
+
     private static final long serialVersionUID = 7321090422911676490L;
 
     private DateTime start;
@@ -58,9 +58,11 @@ public class Period implements Serializable, Comparable {
 
     /**
      * Constructor.
-     * @param aValue a string representation of a period
-     * @throws ParseException where the specified string is
-     * not a valid representation
+     * 
+     * @param aValue
+     *            a string representation of a period
+     * @throws ParseException
+     *             where the specified string is not a valid representation
      */
     public Period(final String aValue) throws ParseException {
         start = new DateTime(aValue.substring(0, aValue.indexOf('/')));
@@ -68,28 +70,32 @@ public class Period implements Serializable, Comparable {
         // period may end in either a date-time or a duration..
         try {
             end = new DateTime(aValue.substring(aValue.indexOf('/') + 1));
-        }
-        catch (ParseException pe) {
-//            duration = DurationFormat.getInstance().parse(aValue);
+        } catch (ParseException pe) {
+            // duration = DurationFormat.getInstance().parse(aValue);
             duration = new Dur(aValue);
         }
     }
-    
+
     /**
      * Constructs a new period with the specied start and end date.
-     * @param start the start date of the period
-     * @param end the end date of the period
+     * 
+     * @param start
+     *            the start date of the period
+     * @param end
+     *            the end date of the period
      */
     public Period(final DateTime start, final DateTime end) {
         this.start = start;
         this.end = end;
     }
-    
+
     /**
-     * Constructs a new period with the specified start date and
-     * duration.
-     * @param start the start date of the period
-     * @param duration the duration of the period
+     * Constructs a new period with the specified start date and duration.
+     * 
+     * @param start
+     *            the start date of the period
+     * @param duration
+     *            the duration of the period
      */
     public Period(final DateTime start, final Dur duration) {
         this.start = start;
@@ -99,24 +105,26 @@ public class Period implements Serializable, Comparable {
     /**
      * Returns the duration of this period. If an explicit duration is not
      * specified, the duration is derived from the end date.
+     * 
      * @return the duration of this period in milliseconds.
      */
     public final Dur getDuration() {
-    	if (end != null) {
-    		return new Dur(start, end);
-    	}
+        if (end != null) {
+            return new Dur(start, end);
+        }
         return duration;
     }
 
     /**
      * Returns the end date of this period. If an explicit end date is not
      * specified, the end date is derived from the duration.
+     * 
      * @return the end date of this period.
      */
     public final DateTime getEnd() {
-    	if (end == null) {
-    		return new DateTime(duration.getTime(start).getTime());
-    	}
+        if (end == null) {
+            return new DateTime(duration.getTime(start).getTime());
+        }
         return end;
     }
 
@@ -126,11 +134,12 @@ public class Period implements Serializable, Comparable {
     public final DateTime getStart() {
         return start;
     }
-    
+
     /**
      * Decides whether a date falls within this period.
-     *
-     * @param date the date to be tested
+     * 
+     * @param date
+     *            the date to be tested
      * @return true if the date is in the perod, false otherwise
      */
     public final boolean includes(final Date date) {
@@ -138,67 +147,73 @@ public class Period implements Serializable, Comparable {
     }
 
     /**
-     * Decides whether this period is completed before the given period starts
-     *
-     * @param period a period that may or may not start after this period ends
-     * @return true if the specified period starts after this periods ends, otherwise
-     * false
+     * Decides whether this period is completed before the given period starts.
+     * 
+     * @param period
+     *            a period that may or may not start after this period ends
+     * @return true if the specified period starts after this periods ends,
+     *         otherwise false
      */
     public final boolean before(final Period period) {
         return (getEnd().before(period.getStart()));
     }
 
     /**
-     * Decides whether this period starts after the given period ends
-     *
-     * @param period a period that may or may not end before this period starts
-     * @return true if the specified period end before this periods starts, otherwise
-     * false
+     * Decides whether this period starts after the given period ends.
+     * 
+     * @param period
+     *            a period that may or may not end before this period starts
+     * @return true if the specified period end before this periods starts,
+     *         otherwise false
      */
     public final boolean after(final Period period) {
         return (getStart().after(period.getEnd()));
     }
 
     /**
-     * Decides whether this period intersects with another one
-     *
-     * @param period a possible intersecting period
-     * @return true if the specified period intersects this one, false otherwise.
+     * Decides whether this period intersects with another one.
+     * 
+     * @param period
+     *            a possible intersecting period
+     * @return true if the specified period intersects this one, false
+     *         otherwise.
      */
     public final boolean intersects(final Period period) {
         // Test for our start date in period
         // (Exclude if it is the end date of test range)
-    	if (period.includes(getStart()) && !period.getEnd().equals(getStart())) {
-    		return true;
-    	}
+        if (period.includes(getStart()) && !period.getEnd().equals(getStart())) {
+            return true;
+        }
         // Test for test range's start date in our range
         // (Exclude if it is the end date of our range)
-    	else if (includes(period.getStart()) && !getEnd().equals(period.getStart())) {
-    		return true;
-    	}
+        else if (includes(period.getStart())
+                && !getEnd().equals(period.getStart())) {
+            return true;
+        }
         return false;
     }
 
     /**
      * Decides whether these periods are serial without a gap.
+     * 
      * @return true if one period immediately follows the other, false otherwise
      */
     public final boolean adjacent(final Period period) {
         if (getStart().equals(period.getEnd())) {
             return true;
-        }
-        else if (getEnd().equals(period.getStart())) {
+        } else if (getEnd().equals(period.getStart())) {
             return true;
         }
         return false;
     }
 
     /**
-     * Decides whether the given period is completely contained within this one
-     *
-     * @param period the period that may be contained by this one
+     * Decides whether the given period is completely contained within this one.
+     * 
+     * @param period
+     *            the period that may be contained by this one
      * @return true if this period covers all the dates of the specified period,
-     * otherwise false
+     *         otherwise false
      */
     public final boolean contains(final Period period) {
         // Test for period's start and end dates in our range
@@ -206,37 +221,35 @@ public class Period implements Serializable, Comparable {
     }
 
     /**
-     * Creates a period that encompasses both this period and another one.
-     * If the other period is null, return a copy of this period.
-     * NOTE: Resulting periods are specified by explicitly setting a start date
-     * and end date (i.e. durations are implied).
-     *
-     * @param period the period to add to this one
-     * @return a period 
+     * Creates a period that encompasses both this period and another one. If
+     * the other period is null, return a copy of this period. NOTE: Resulting
+     * periods are specified by explicitly setting a start date and end date
+     * (i.e. durations are implied).
+     * 
+     * @param period
+     *            the period to add to this one
+     * @return a period
      */
     public final Period add(final Period period) {
-    	DateTime newPeriodStart = null;
-    	DateTime newPeriodEnd = null;
-    	
+        DateTime newPeriodStart = null;
+        DateTime newPeriodEnd = null;
+
         if (period == null) {
             newPeriodStart = getStart();
             newPeriodEnd = getEnd();
+        } else {
+            if (getStart().before(period.getStart())) {
+                newPeriodStart = getStart();
+            } else {
+                newPeriodStart = period.getStart();
+            }
+            if (getEnd().after(period.getEnd())) {
+                newPeriodEnd = getEnd();
+            } else {
+                newPeriodEnd = period.getEnd();
+            }
         }
-        else {
-        	if (getStart().before(period.getStart())) {
-        		newPeriodStart = getStart();
-        	}
-        	else {
-        		newPeriodStart = period.getStart();
-        	}
-        	if (getEnd().after(period.getEnd())) {
-        		newPeriodEnd = getEnd();
-        	}
-        	else {
-        		newPeriodEnd = period.getEnd();
-        	}
-        }
-        
+
         return new Period(newPeriodStart, newPeriodEnd);
     }
 
@@ -249,23 +262,25 @@ public class Period implements Serializable, Comparable {
         b.append('/');
         if (end != null) {
             b.append(end);
-        }
-        else {
-//            b.append(DurationFormat.getInstance().format(duration));
+        } else {
+            // b.append(DurationFormat.getInstance().format(duration));
             b.append(duration);
         }
         return b.toString();
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     public final int compareTo(final Object arg0) {
         return compareTo((Period) arg0);
     }
-    
+
     /**
      * Compares the specified period with this period.
+     * 
      * @param arg0
      * @return
      */
@@ -290,34 +305,33 @@ public class Period implements Serializable, Comparable {
     }
 
     /**
-     * Overrides the equality test, compares fields of instances for
-     * equality.
-     *
-     * @param o object being compared for equality
+     * Overrides the equality test, compares fields of instances for equality.
+     * 
+     * @param o
+     *            object being compared for equality
      * @return true if the objects are equal, false otherwise
      */
     public final boolean equals(final Object o) {
         if (this == o) {
-        	return true;
+            return true;
         }
         if (!(o instanceof Period)) {
-        	return false;
+            return false;
         }
 
         final Period period = (Period) o;
 
         if (!getStart().equals(period.getStart())) {
-        	return false;
-        }
-        else if (!getEnd().equals(period.getEnd())) {
-        	return false;
+            return false;
+        } else if (!getEnd().equals(period.getEnd())) {
+            return false;
         }
         return true;
     }
 
     /**
      * Override hashCode() with code that checks fields in this object.
-     *
+     * 
      * @return hascode for this object
      */
     public final int hashCode() {
