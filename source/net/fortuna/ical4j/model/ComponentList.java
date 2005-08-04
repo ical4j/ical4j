@@ -36,7 +36,6 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Defines a list of iCalendar components.
@@ -84,6 +83,22 @@ public class ComponentList extends ArrayList implements Serializable {
     }
 
     /**
+     * Returns a list containing all components with specified name.
+     * @param name name of components to return
+     * @return a list of components with the matching name
+     */
+    public final ComponentList getComponents(final String name) {
+        ComponentList components = new ComponentList();
+        for (Iterator i = iterator(); i.hasNext();) {
+            Component c = (Component) i.next();
+            if (c.getName().equals(name)) {
+                components.add(c);
+            }
+        }
+        return components;
+    }
+
+    /**
      * Add a component to the list.
      * @param component the component to add
      * @return true
@@ -122,7 +137,7 @@ public class ComponentList extends ArrayList implements Serializable {
 //    }
 
     /**
-     * Remove a component from the list
+     * Remove a component from the list.
      * @param component the component to remove
      * @return true if the list contained the specified component
      * @see List#remove(java.lang.Object)
