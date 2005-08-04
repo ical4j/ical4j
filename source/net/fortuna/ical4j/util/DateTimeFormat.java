@@ -39,9 +39,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * Defines a format for all iCalendar date-times.
  * @author benfortuna
@@ -59,7 +56,7 @@ public final class DateTimeFormat {
      */
     private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss'Z'";
 
-    private static Log log = LogFactory.getLog(DateTimeFormat.class);
+//    private static Log log = LogFactory.getLog(DateTimeFormat.class);
 
     private static DateTimeFormat instance = new DateTimeFormat();
 
