@@ -380,17 +380,11 @@ public class VTimeZone extends Component {
      * 
      * @throws ParseException
      *             if the time zone canot be created due to spec a vioalation
-     * @return An instance of SimpleTimeZone representing the this VTimeZone
+     * @return A <code>java.util.TimeZone</code> instance representing this VTimeZone
      */
-    public final TimeZone getTimeZone() throws ParseException {
-        // final String tzid =
-        // getProperties().getProperty(Property.TZID).getValue() ;
-        // TimeZone tz = (TimeZone) tzMap.get(tzid) ;
-
+    public final TimeZone getTimeZone() {
         if (timeZone == null) {
             String tzid = getProperties().getProperty(Property.TZID).getValue();
-            // synchronized (tzMap) {
-            // if (!tzMap.containsKey(tzid)) {
             final ComponentList types = getTypes();
             final Component std = types.getComponent(SeasonalTime.STANDARD);
             final Component dl = types.getComponent(SeasonalTime.DAYLIGHT);
@@ -410,14 +404,13 @@ public class VTimeZone extends Component {
                                 .getTime(), dlInfo.getOffset()
                                 - stdInfo.getOffset());
             } else {
+                /*
                 throw new ParseException(
                         "Time Zone must contain at least 1 STANDARD or DAYLIGHT section.",
                         -1);
+                 */
+                log.warn("Time Zone must contain at least 1 STANDARD or DAYLIGHT section.");
             }
-
-            // tzMap.put(tzid, tz) ;
-            // }
-            // }
         }
         return timeZone;
     }
@@ -427,7 +420,7 @@ public class VTimeZone extends Component {
      * @return
      * @throws ParseException
      */
-    private TzInfo getTzInfo(final Component tzComp) throws ParseException {
+    private TzInfo getTzInfo(final Component tzComp) {
         if (tzComp == null) {
             return null;
         }
