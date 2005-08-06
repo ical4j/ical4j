@@ -35,7 +35,10 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -127,5 +130,73 @@ public class RecurTest extends TestCase {
         Date end = new Date(cal.getTime().getTime());
         log.info(recur);
         log.info(recur.getDates(new Date(testCal.getTime().getTime()), start, end, Value.DATE_TIME));
+    }
+
+
+    public void testSublistNegative() {
+        List list = new LinkedList();
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        assertSublistEquals(list, list, 0);
+        assertSublistEquals(asList("3"), list, -1);
+        assertSublistEquals(asList("2"), list, -2);
+        assertSublistEquals(asList("1"), list, -3);
+        assertSublistEquals(list, list, -4);
+    }
+
+    public void testSublistPositive() {
+        List list = new LinkedList();
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        assertSublistEquals(list, list, 0);
+        assertSublistEquals(asList("1"), list, 1);
+        assertSublistEquals(asList("2"), list, 2);
+        assertSublistEquals(asList("3"), list, 3);
+        assertSublistEquals(list, list, 4);
+    }
+
+    private void assertSublistEquals(List expected, List list, int offset) {
+        List sublist = new LinkedList();
+        Recur.sublist(list, offset, sublist);
+        assertEquals(expected, sublist);
+    }
+
+    private List asList(Object o) {
+        List list = new LinkedList();
+        list.add(o);
+        return list;
+    }
+
+    public void testSetPosNegative() throws Exception {
+        Date[] dates = new Date[] { new Date(1), new Date(2), new Date(3) };
+        Date[] expected = new Date[] { new Date(3), new Date(2) };
+        assertSetPosApplied(expected, dates, "BYSETPOS=-1,-2");
+    }
+
+    public void testSetPosPositve() throws Exception {
+        Date[] dates = new Date[] { new Date(1), new Date(2), new Date(3) };
+        Date[] expected = new Date[] { new Date(2), new Date(3) };
+        assertSetPosApplied(expected, dates, "BYSETPOS=2,3");
+    }
+
+    public void testSetPosOutOfBounds() throws Exception {
+        Date[] dates = new Date[] { new Date(1) };
+        Date[] expected = new Date[] {};
+        assertSetPosApplied(expected, dates, "BYSETPOS=-2,2");
+    }
+
+    private void assertSetPosApplied(Date[] expected, Date[] dates, String rule)
+            throws Exception {
+        Recur recur = new Recur(rule);
+        DateList expectedList = asDateList(expected);
+        assertEquals(expectedList, recur.applySetPosRules(asDateList(dates)));
+    }
+
+    private DateList asDateList(Date[] dates) {
+        DateList dateList = new DateList(Value.DATE);
+        dateList.addAll(Arrays.asList(dates));
+        return dateList;
     }
 }

@@ -35,7 +35,6 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,6 +43,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.Dates;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -464,7 +464,7 @@ public class Recur implements Serializable {
      * @return a list of dates
      */
     public final DateList getDates(final Date periodStart, final Date periodEnd, final Value value) {
-    	return getDates(periodStart, periodStart, periodEnd, value);
+        return getDates(periodStart, periodStart, periodEnd, value);
     }
 
     /**
@@ -730,7 +730,7 @@ public class Recur implements Serializable {
      * @param lowestVariableField
      * @return
      */
-    private int[] getMatchFields(int lowestVariableField) {
+    private int[] getMatchFields(final int lowestVariableField) {
 
         int[] matchFields = new int[0];
         int lvfIndex = getDateOrderIndex(lowestVariableField);
@@ -759,7 +759,7 @@ public class Recur implements Serializable {
      * @param val
      * @return
      */
-    private int getDateOrderIndex(int val) {
+    private int getDateOrderIndex(final int val) {
 
         for (int i = 0; i < DATE_ORDER.length; i++) {
 
@@ -805,6 +805,28 @@ public class Recur implements Serializable {
     }
 
     /**
+     * Applies BYSETPOS rules to <code>dates</code>. Valid positions are from
+     * 1 to the size of the date list. Invalid positions are ignored.
+     * 
+     * @param dates
+     */
+    protected final DateList applySetPosRules(final DateList dates) {
+        DateList setPosDates = new DateList(dates.getType());
+        int size = dates.size();
+        for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
+            Integer setPos = (Integer) i.next();
+            int pos = setPos.intValue();
+            if (pos > 0 && pos <= size) {
+                setPosDates.add(dates.get(pos - 1));
+            }
+            else if (pos < 0 && pos >= -size) {
+                setPosDates.add(dates.get(size + pos));
+            }
+        }
+        return setPosDates;
+    }
+    
+    /**
      * Applies BYMONTH rules specified in this Recur instance to the
      * specified date list. If no BYMONTH rules are specified the
      * date list is returned unmodified.
@@ -836,17 +858,7 @@ public class Recur implements Serializable {
                 && getHourList().isEmpty()
                 && getMinuteList().isEmpty()
                 && getSecondList().isEmpty()) {
-            DateList setPosDates = new DateList(dates.getType());
-            for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
-                Integer setPos = (Integer) i.next();
-                if (setPos.intValue() > 0) {
-                    setPosDates.add(monthlyDates.get(setPos.intValue()));
-                }
-                else {
-                    setPosDates.add(monthlyDates.get(monthlyDates.size() + setPos.intValue()));
-                }
-            }
-            return setPosDates;
+            return applySetPosRules(monthlyDates);
         }
         return monthlyDates;
     }
@@ -869,7 +881,7 @@ public class Recur implements Serializable {
             cal.setTime(date);
             for (Iterator j = getWeekNoList().iterator(); j.hasNext();) {
                 Integer weekNo = (Integer) j.next();
-                cal.set(Calendar.WEEK_OF_YEAR, getAbsWeekNo(cal.getTime(), weekNo.intValue()));
+                cal.set(Calendar.WEEK_OF_YEAR, Dates.getAbsWeekNo(cal.getTime(), weekNo.intValue()));
                 weekNoDates.add(cal.getTime());
             }
         }
@@ -881,48 +893,9 @@ public class Recur implements Serializable {
                 && getHourList().isEmpty()
                 && getMinuteList().isEmpty()
                 && getSecondList().isEmpty()) {
-            DateList setPosDates = new DateList(dates.getType());
-            for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
-                Integer setPos = (Integer) i.next();
-                if (setPos.intValue() > 0) {
-                    setPosDates.add(weekNoDates.get(setPos.intValue()));
-                }
-                else {
-                    setPosDates.add(weekNoDates.get(weekNoDates.size() + setPos.intValue()));
-                }
-            }
-            return setPosDates;
+            return applySetPosRules(weekNoDates);
         }
         return weekNoDates;
-    }
-
-    /**
-     * Returns the absolute week number for the year specified by the
-     * supplied date. Note that a value of zero (0) is invalid for the
-     * weekNo parameter and an <code>IllegalArgumentException</code>
-     * will be thrown.
-     * @param date
-     * @param weekNo
-     * @return
-     */
-    private int getAbsWeekNo(final java.util.Date date, final int weekNo) {
-        if (weekNo == 0 || weekNo < -53 || weekNo > 53) {
-            throw new IllegalArgumentException("Invalid week number [" + weekNo + "]");
-        }
-        if (weekNo > 0) {
-            return weekNo;
-        }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int year = cal.get(Calendar.YEAR);
-        // construct a list of possible week numbers..
-        List weeks = new ArrayList();
-        cal.set(Calendar.WEEK_OF_YEAR, 1);
-        while (cal.get(Calendar.YEAR) == year) {
-            weeks.add(new Integer(cal.get(Calendar.WEEK_OF_YEAR)));
-            cal.add(Calendar.WEEK_OF_YEAR, 1);
-        }
-        return ((Integer) weeks.get(weeks.size() + weekNo)).intValue();
     }
 
     /**
@@ -943,7 +916,7 @@ public class Recur implements Serializable {
             cal.setTime(date);
             for (Iterator j = getYearDayList().iterator(); j.hasNext();) {
                 Integer yearDay = (Integer) j.next();
-                cal.set(Calendar.DAY_OF_YEAR, getAbsYearDay(cal.getTime(), yearDay.intValue()));
+                cal.set(Calendar.DAY_OF_YEAR, Dates.getAbsYearDay(cal.getTime(), yearDay.intValue()));
                 yearDayDates.add(cal.getTime());
             }
         }
@@ -954,48 +927,9 @@ public class Recur implements Serializable {
                 && getHourList().isEmpty()
                 && getMinuteList().isEmpty()
                 && getSecondList().isEmpty()) {
-            DateList setPosDates = new DateList(dates.getType());
-            for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
-                Integer setPos = (Integer) i.next();
-                if (setPos.intValue() > 0) {
-                    setPosDates.add(yearDayDates.get(setPos.intValue()));
-                }
-                else {
-                    setPosDates.add(yearDayDates.get(yearDayDates.size() + setPos.intValue()));
-                }
-            }
-            return setPosDates;
+            return applySetPosRules(yearDayDates);
         }
         return yearDayDates;
-    }
-
-    /**
-     * Returns the absolute year day for the year specified by the
-     * supplied date. Note that a value of zero (0) is invalid for the
-     * yearDay parameter and an <code>IllegalArgumentException</code>
-     * will be thrown.
-     * @param date
-     * @param yearDay
-     * @return
-     */
-    private int getAbsYearDay(final java.util.Date date, final int yearDay) {
-        if (yearDay == 0 || yearDay < -366 || yearDay > 366) {
-            throw new IllegalArgumentException("Invalid year day [" + yearDay + "]");
-        }
-        if (yearDay > 0) {
-            return yearDay;
-        }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int year = cal.get(Calendar.YEAR);
-        // construct a list of possible year days..
-        List days = new ArrayList();
-        cal.set(Calendar.DAY_OF_YEAR, 1);
-        while (cal.get(Calendar.YEAR) == year) {
-            days.add(new Integer(cal.get(Calendar.DAY_OF_YEAR)));
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-        }
-        return ((Integer) days.get(days.size() + yearDay)).intValue();
     }
 
     /**
@@ -1016,7 +950,7 @@ public class Recur implements Serializable {
             cal.setTime(date);
             for (Iterator j = getMonthDayList().iterator(); j.hasNext();) {
                 Integer monthDay = (Integer) j.next();
-                cal.set(Calendar.DAY_OF_YEAR, getAbsMonthDay(cal.getTime(), monthDay.intValue()));
+                cal.set(Calendar.DAY_OF_YEAR, Dates.getAbsMonthDay(cal.getTime(), monthDay.intValue()));
                 monthDayDates.add(new Date(cal.getTime().getTime()));
             }
         }
@@ -1026,48 +960,9 @@ public class Recur implements Serializable {
                 && getHourList().isEmpty()
                 && getMinuteList().isEmpty()
                 && getSecondList().isEmpty()) {
-            DateList setPosDates = new DateList(dates.getType());
-            for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
-                Integer setPos = (Integer) i.next();
-                if (setPos.intValue() > 0) {
-                    setPosDates.add(monthDayDates.get(setPos.intValue()));
-                }
-                else {
-                    setPosDates.add(monthDayDates.get(monthDayDates.size() + setPos.intValue()));
-                }
-            }
-            return setPosDates;
+            return applySetPosRules(monthDayDates);
         }
         return monthDayDates;
-    }
-
-    /**
-     * Returns the absolute month day for the month specified by the
-     * supplied date. Note that a value of zero (0) is invalid for the
-     * monthDay parameter and an <code>IllegalArgumentException</code>
-     * will be thrown.
-     * @param date
-     * @param monthDay
-     * @return
-     */
-    private int getAbsMonthDay(final java.util.Date date, final int monthDay) {
-        if (monthDay == 0 || monthDay < -31 || monthDay > 31) {
-            throw new IllegalArgumentException("Invalid month day [" + monthDay + "]");
-        }
-        if (monthDay > 0) {
-            return monthDay;
-        }
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int month = cal.get(Calendar.MONTH);
-        // construct a list of possible month days..
-        List days = new ArrayList();
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        while (cal.get(Calendar.MONTH) == month) {
-            days.add(new Integer(cal.get(Calendar.DAY_OF_MONTH)));
-            cal.add(Calendar.DAY_OF_MONTH, 1);
-        }
-        return ((Integer) days.get(days.size() + monthDay)).intValue();
     }
 
     /**
@@ -1094,17 +989,7 @@ public class Recur implements Serializable {
                 && getHourList().isEmpty()
                 && getMinuteList().isEmpty()
                 && getSecondList().isEmpty()) {
-            DateList setPosDates = new DateList(dates.getType());
-            for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
-                Integer setPos = (Integer) i.next();
-                if (setPos.intValue() > 0) {
-                    setPosDates.add(weekDayDates.get(setPos.intValue()));
-                }
-                else {
-                    setPosDates.add(weekDayDates.get(weekDayDates.size() + setPos.intValue()));
-                }
-            }
-            return setPosDates;
+            return applySetPosRules(weekDayDates);
         }
         return weekDayDates;
     }
@@ -1193,23 +1078,36 @@ public class Recur implements Serializable {
             }
         }
         DateList weekDays = new DateList(days.getType());
-        if (weekDay.getOffset() < 0) {
-            weekDays.add(days.get(days.size() + weekDay.getOffset()));
-        }
-        // FIXME: Should this be [days.get(weekDay.getOffset() - 1)]??
-        else if (weekDay.getOffset() > 0 && days.size() > (weekDay.getOffset() + 2)) {
-            weekDays.add(days.get(weekDay.getOffset() + 1));
-        }
-        else {
-            weekDays.addAll(days);
-        }
+        sublist(days, weekDay.getOffset(), weekDays);
         return weekDays;
+    }
+
+    /**
+     * Returns a single-element sublist containing the element of
+     * <code>list</code> at <code>offset</code>. Valid offsets are from 1
+     * to the size of the list. If an invalid offset is supplied, all elements
+     * from <code>list</code> are added to <code>sublist</code>.
+     * 
+     * @param list
+     * @param offset
+     * @param sublist
+     */
+    protected static void sublist(final List list, final int offset, final List sublist) {
+        int size = list.size();
+        if (offset < 0 && offset >= -size) {
+            sublist.add(list.get(size + offset));
+        } else if (offset > 0 && offset <= size) {
+            sublist.add(list.get(offset - 1));
+        } else {
+            sublist.addAll(list);
+        }
     }
     
     /**
-     * Applies BYHOUR rules specified in this Recur instance to the
-     * specified date list. If no BYHOUR rules are specified the
-     * date list is returned unmodified.
+     * Applies BYHOUR rules specified in this Recur instance to the specified
+     * date list. If no BYHOUR rules are specified the date list is returned
+     * unmodified.
+     * 
      * @param dates
      * @return
      */
@@ -1232,17 +1130,7 @@ public class Recur implements Serializable {
         if (!getSetPosList().isEmpty()
                 && getMinuteList().isEmpty()
                 && getSecondList().isEmpty()) {
-            DateList setPosDates = new DateList(dates.getType());
-            for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
-                Integer setPos = (Integer) i.next();
-                if (setPos.intValue() > 0) {
-                    setPosDates.add(hourlyDates.get(setPos.intValue()));
-                }
-                else {
-                    setPosDates.add(hourlyDates.get(hourlyDates.size() + setPos.intValue()));
-                }
-            }
-            return setPosDates;
+            return applySetPosRules(hourlyDates);
         }
         return hourlyDates;
     }
@@ -1271,17 +1159,7 @@ public class Recur implements Serializable {
         }
         // apply BYSETPOS rules..
         if (!getSetPosList().isEmpty() && getSecondList().isEmpty()) {
-            DateList setPosDates = new DateList(dates.getType());
-            for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
-                Integer setPos = (Integer) i.next();
-                if (setPos.intValue() > 0) {
-                    setPosDates.add(minutelyDates.get(setPos.intValue()));
-                }
-                else {
-                    setPosDates.add(minutelyDates.get(minutelyDates.size() + setPos.intValue()));
-                }
-            }
-            return setPosDates;
+            return applySetPosRules(minutelyDates);
         }
         return minutelyDates;
     }
@@ -1310,17 +1188,7 @@ public class Recur implements Serializable {
         }
         // apply BYSETPOS rules..
         if (!getSetPosList().isEmpty()) {
-            DateList setPosDates = new DateList(dates.getType());
-            for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
-                Integer setPos = (Integer) i.next();
-                if (setPos.intValue() > 0) {
-                    setPosDates.add(secondlyDates.get(setPos.intValue()));
-                }
-                else {
-                    setPosDates.add(secondlyDates.get(secondlyDates.size() + setPos.intValue()));
-                }
-            }
-            return setPosDates;
+            return applySetPosRules(secondlyDates);
         }
         return secondlyDates;
     }
