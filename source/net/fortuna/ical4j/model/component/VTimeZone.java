@@ -34,6 +34,10 @@
 package net.fortuna.ical4j.model.component;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -45,9 +49,12 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.UtcOffset;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzName;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
@@ -132,8 +139,27 @@ import org.apache.commons.logging.LogFactory;
 public class VTimeZone extends Component {
     
     private static final long serialVersionUID = 5629679741050917815L;
+	
+	//FIXED (CR4): Create a cache map tzid to the java TimeZone 
+	private static final Map tzMap = new HashMap(100) ;
+	
+	//FIXED (CR4): time constants
+	private static final int MINUTE_IN_MILLIS = 60 * 1000;
+	private static final int HOUR_IN_MILLIS = 60 * MINUTE_IN_MILLIS ;
 
     private static Log log = LogFactory.getLog(VTimeZone.class);
+    
+    //FIXED (CR4): create map of Ical days to Calendar days
+	private static Map DAY_MAP = new HashMap(7) ;
+	static {
+		DAY_MAP.put(WeekDay.SU.getDay(), new Integer(java.util.Calendar.SUNDAY)) ;
+		DAY_MAP.put(WeekDay.MO.getDay(), new Integer(java.util.Calendar.MONDAY)) ;
+		DAY_MAP.put(WeekDay.TU.getDay(), new Integer(java.util.Calendar.TUESDAY)) ;
+		DAY_MAP.put(WeekDay.WE.getDay(), new Integer(java.util.Calendar.WEDNESDAY)) ;
+		DAY_MAP.put(WeekDay.TH.getDay(), new Integer(java.util.Calendar.THURSDAY)) ;
+		DAY_MAP.put(WeekDay.FR.getDay(), new Integer(java.util.Calendar.FRIDAY)) ;
+		DAY_MAP.put(WeekDay.SA.getDay(), new Integer(java.util.Calendar.SATURDAY)) ;
+	}
 
     private ComponentList types;
 
@@ -209,10 +235,10 @@ public class VTimeZone extends Component {
          *
          * standardc / daylightc /
          */
-        if (getTypes().getComponent(Time.STANDARD) == null
-                && getTypes().getComponent(Time.DAYLIGHT) == null) {
+        if (getTypes().getComponent(SeasonalTime.STANDARD) == null
+                && getTypes().getComponent(SeasonalTime.DAYLIGHT) == null) {
             throw new ValidationException(
-                "Sub-components [" + Time.STANDARD + "," + Time.DAYLIGHT
+                "Sub-components [" + SeasonalTime.STANDARD + "," + SeasonalTime.DAYLIGHT
                         + "] must be specified at least once"); }
 
         /*
@@ -330,4 +356,122 @@ public class VTimeZone extends Component {
     public final ComponentList getTypes() {
         return types;
     }
+    
+    //FIXED (CR4): add the getTimeZone() method and helpers
+    
+	/** Create a Java TimeZone (instance of SimpleTimeZone) representing this VTimeZone
+	 * <b>Note:</b> The time zone returned will <b>NOT</b> be a predefined java TimeZone (e.g. America/Denver)
+	 * Rather a new TimeZone will be created, with an ID equal to the value of TZID.
+	 * 
+	 * @throws ParseException if the time zone canot be created due to spec a vioalation
+	 * @return An instance of SimpleTimeZone representing the this VTimeZone
+	 */
+	public TimeZone getTimeZone() throws ParseException {
+		final String tzid = getProperties().getProperty(Property.TZID).getValue() ;
+		TimeZone tz = (TimeZone) tzMap.get(tzid) ;
+		
+		if (tz == null) {
+			synchronized (tzMap) {
+				if (!tzMap.containsKey(tzid)) {
+					final ComponentList types = getTypes();
+					final Component std = types.getComponent(SeasonalTime.STANDARD) ;
+					final Component dl = types.getComponent(SeasonalTime.DAYLIGHT) ;
+					
+					final TzInfo stdInfo = getTzInfo(std);
+					final TzInfo dlInfo = getTzInfo(dl);
+					
+					if (stdInfo != null && dlInfo == null) {
+						tz = new SimpleTimeZone(stdInfo.getOffset(), tzid) ;
+					} else if (stdInfo == null && dlInfo != null) {
+						tz = new SimpleTimeZone(dlInfo.getOffset(), tzid) ;
+					} else if (stdInfo != null && dlInfo != null) {
+						tz = new SimpleTimeZone(stdInfo.getOffset(), tzid, 
+								dlInfo.getMonth(), dlInfo.getWeekOffset(), dlInfo.getDay(), dlInfo.getTime(),
+								stdInfo.getMonth(), stdInfo.getWeekOffset(), stdInfo.getDay(), stdInfo.getTime(),
+								dlInfo.getOffset() - stdInfo.getOffset()) ;
+					} else {
+						throw new ParseException("Time Zone must contain at least 1 STANDARD or DAYLIGHT section.", -1) ;
+					}
+					
+					tzMap.put(tzid, tz) ;
+				}
+			}
+		}
+		return tz ;
+	}
+
+	private TzInfo getTzInfo(final Component tzComp) throws ParseException {
+		if (tzComp == null) {
+			return null ;
+		}
+		final PropertyList properties = tzComp.getProperties();
+		final String offsetStr = properties.getProperty(Property.TZOFFSETTO).getValue() ;
+		final RRule rruleProp = (RRule) properties.getProperty(Property.RRULE);
+
+		final int weekOffset ;
+		final int day ;
+		final int month ;
+
+		if (rruleProp != null) {
+			final Recur recur = rruleProp.getRecur() ;
+			final WeekDay weekDay = (WeekDay) recur.getDayList().get(0);
+			weekOffset = weekDay.getOffset() ;
+			day = ((Integer) DAY_MAP.get(weekDay.getDay())).intValue() ;
+			month = ((Integer) recur.getMonthList().get(0)).intValue() - 1;
+		} else {
+			weekOffset = 0 ;
+			day = 0 ;
+			month = 0 ;
+		}
+		
+		final Date date = ((DtStart) properties.getProperty(Property.DTSTART)).getTime() ;
+		final java.util.Calendar cal = java.util.Calendar.getInstance() ;
+		cal.setTime(date) ;
+		final int time = HOUR_IN_MILLIS * cal.get(java.util.Calendar.HOUR_OF_DAY) + 
+			MINUTE_IN_MILLIS * cal.get(java.util.Calendar.MINUTE) ;
+		final int offset = convertOffset(offsetStr);
+		
+		return new TzInfo(month, day, weekOffset, time, offset) ;
+	}
+
+	private int convertOffset(final String strOffset) {
+		final int minStart = strOffset.length() - 2;
+		final String hours = strOffset.substring(0, minStart) ;
+		final String mins = strOffset.substring(minStart) ;
+	
+		int offset = HOUR_IN_MILLIS * Integer.parseInt(hours) + MINUTE_IN_MILLIS * Integer.parseInt(mins) ;
+		return offset;
+	}
+
+	private static class TzInfo {
+		private final int weekOffset ;
+		private final int day ;
+		private final int time ;
+		private final int offset ;
+		private final int month ;
+		
+		public TzInfo(int month, int day, int weekOffset, int time, int offset) {
+			this.month = month ;
+			this.day = day;
+			this.offset = offset;
+			this.time = time;
+			this.weekOffset = weekOffset;
+		}
+		public int getMonth() {
+			return month ;
+		}
+		public int getDay() {
+			return day;
+		}
+		public int getOffset() {
+			return offset;
+		}
+		public int getTime() {
+			return time;
+		}
+		public int getWeekOffset() {
+			return weekOffset;
+		}
+	}
+
 }
