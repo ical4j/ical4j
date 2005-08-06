@@ -37,6 +37,8 @@ public class CalendarBuilderTest extends TestCase {
     private String filename;
 
     private CalendarBuilder builder;
+    
+    private boolean valid;
 
     /**
      * Constructor.
@@ -46,12 +48,10 @@ public class CalendarBuilderTest extends TestCase {
      * @param file
      *            an iCalendar filename
      */
-    public CalendarBuilderTest(final String method, final String file) {
-
+    public CalendarBuilderTest(final String method, final String file, final boolean valid) {
         super(method);
-
         this.filename = file;
-
+        this.valid = valid;
         builder = new CalendarBuilder();
     }
 
@@ -68,18 +68,20 @@ public class CalendarBuilderTest extends TestCase {
 
         try {
             calendar = builder.build(fin);
+            assertNotNull("File [" + filename + "] invalid", calendar);
+
+            try {
+                calendar.validate();
+            } catch (ValidationException e) {
+                log.warn("Calendar file [" + filename + "] is valid.", e);
+                assertFalse(valid);
+            }
         } catch (IOException e) {
             log.warn("File: " + filename, e);
+            assertFalse(valid);
         } catch (ParserException e) {
             log.warn("File: " + filename, e);
-        }
-
-        assertNotNull("File [" + filename + "] invalid", calendar);
-
-        try {
-            calendar.validate();
-        } catch (ValidationException e) {
-            assertTrue("Calendar file " + filename + " isn't valid:\n" + e.getMessage(), false);
+            assertFalse(valid);
         }
 
         if (log.isInfoEnabled()) {
@@ -110,12 +112,20 @@ public class CalendarBuilderTest extends TestCase {
 
         List testFiles = new ArrayList();
 
+        // valid tests..
         testFiles.addAll(Arrays.asList(new File("etc/samples/valid").listFiles(new FileOnlyFilter())));
-        testFiles.addAll(Arrays.asList(new File("etc/samples/invalid").listFiles(new FileOnlyFilter())));
-
         for (int i = 0; i < testFiles.size(); i++) {
             log.info("Sample [" + testFiles.get(i) + "]");
-			suite.addTest(new CalendarBuilderTest("testBuildInputStream", ((File)testFiles.get(i)).getPath()));
+			suite.addTest(new CalendarBuilderTest("testBuildInputStream", ((File) testFiles.get(i)).getPath(), true));
+        }
+
+        testFiles.clear();
+        
+        // invalid tests..
+        testFiles.addAll(Arrays.asList(new File("etc/samples/invalid").listFiles(new FileOnlyFilter())));
+        for (int i = 0; i < testFiles.size(); i++) {
+            log.info("Sample [" + testFiles.get(i) + "]");
+            suite.addTest(new CalendarBuilderTest("testBuildInputStream", ((File) testFiles.get(i)).getPath(), false));
         }
 
         return suite;
