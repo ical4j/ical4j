@@ -59,6 +59,7 @@ import net.fortuna.ical4j.model.property.TzName;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 import net.fortuna.ical4j.util.Dates;
+import net.fortuna.ical4j.util.Numbers;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.TimeZoneUtils;
 
@@ -467,8 +468,8 @@ public class VTimeZone extends Component {
         final String hours = strOffset.substring(0, minStart);
         final String mins = strOffset.substring(minStart);
 
-        int offset = (int) Dates.MILLIS_PER_HOUR * Integer.parseInt(hours)
-                + (int) Dates.MILLIS_PER_MINUTE * Integer.parseInt(mins);
+        int offset = (int) Dates.MILLIS_PER_HOUR * Numbers.parseInt(hours)
+                + (int) Dates.MILLIS_PER_MINUTE * Numbers.parseInt(mins);
         return offset;
     }
 

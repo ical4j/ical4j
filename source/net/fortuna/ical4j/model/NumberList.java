@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import net.fortuna.ical4j.util.Numbers;
+
 /**
  * Defines a list of numbers.
  * 
@@ -60,7 +62,7 @@ public class NumberList extends ArrayList implements Serializable {
     public NumberList(final String aString) {
         for (StringTokenizer t = new StringTokenizer(aString, ","); t
                 .hasMoreTokens();) {
-            add(new Integer(t.nextToken()));
+            add(new Integer(Numbers.parseInt(t.nextToken())));
         }
     }
 

@@ -1,7 +1,7 @@
 /*
- * Created on 13/02/2005
- *
  * $Id$
+ *
+ * Created on 6/08/2005
  *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -33,48 +33,30 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model;
-
-import java.util.Calendar;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
+package net.fortuna.ical4j.util;
 
 /**
+ * A utility class for number processing.
  * @author Ben Fortuna
  */
-public class WeekDayTest extends TestCase {
-    
-    private static Log log = LogFactory.getLog(WeekDayTest.class);
+public final class Numbers {
 
-    public void testGetWeekDay() {
-        Calendar cal = Calendar.getInstance();
-        log.info("Weekday: " + WeekDay.getWeekDay(cal));
-    }
-
-    public void testGetMonthlyOffset() {
-        Calendar cal = Calendar.getInstance();
-        log.info("Monthly offset: " + WeekDay.getMonthlyOffset(cal));
-        
-        cal.add(Calendar.DAY_OF_MONTH, 15);
-        log.info("Monthly offset: " + WeekDay.getMonthlyOffset(cal));
-    }
-
-    public void testGetNegativeMonthlyOffset() {
-        Calendar cal = Calendar.getInstance();
-        log.info("Negative monthly offset: " + WeekDay.getNegativeMonthlyOffset(cal));
-        
-        cal.add(Calendar.DAY_OF_MONTH, 15);
-        log.info("Negative monthly offset: " + WeekDay.getNegativeMonthlyOffset(cal));
+    /**
+     * Constructor made private to enforce static nature.
+     */
+    private Numbers() {
     }
     
     /**
-     * Tests the parsing of various offset values.
+     * Wraps <code>java.lang.Integer.parseInt()</code> to accept values with
+     * a PLUS character (i.e. "+2").
+     * @param value
+     * @return
      */
-    public void testOffsetParsing() {
-        log.info(new WeekDay("-1SU"));
-        log.info(new WeekDay("+2SU"));
+    public static int parseInt(final String value) {
+        if (value != null && value.startsWith("+")) {
+            return Integer.parseInt(value.substring(1));
+        }
+        return Integer.parseInt(value);
     }
 }
