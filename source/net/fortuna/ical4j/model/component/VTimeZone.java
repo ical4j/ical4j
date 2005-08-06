@@ -34,7 +34,6 @@
 package net.fortuna.ical4j.model.component;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SimpleTimeZone;
