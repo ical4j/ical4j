@@ -5,19 +5,28 @@
  */
 package net.fortuna.ical4j.data;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.FileOnlyFilter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.FileOnlyFilter;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Test case for iCalendarOutputter.
@@ -109,7 +118,7 @@ public class CalendarOutputterTest extends TestCase {
 
         for (int i = 0; i < testFiles.size(); i++) {
             log.info("Sample [" + testFiles.get(i) + "]");
-			suite.addTest(new CalendarOutputterTest("testOutput", ((File)testFiles.get(i)).getPath()));
+			suite.addTest(new CalendarOutputterTest("testOutput", ((File) testFiles.get(i)).getPath()));
         }
 
         return suite;

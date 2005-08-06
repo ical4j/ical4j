@@ -30,6 +30,8 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.io.FileInputStream;
+
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
@@ -43,18 +45,16 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.RRule;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.FileInputStream;
-
 /**
  * @author Ben Fortuna
- *
  */
 public class VFreeBusyTest extends TestCase {
     
-    private static final long ONE_HOUR = 3600000;
+//    private static final long ONE_HOUR = 3600000;
     
     private static Log log = LogFactory.getLog(VFreeBusyTest.class);
 
