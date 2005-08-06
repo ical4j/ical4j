@@ -158,10 +158,10 @@ public class Recur implements Serializable {
             else if (UNTIL.equals(token)) {
                 String untilString = t.nextToken();
                 try {
-                    until = new Date(untilString);
+                    until = new DateTime(untilString);
                 }
                 catch (ParseException pe) {
-                    until = new DateTime(untilString);
+                    until = new Date(untilString);
                 }
             }
             else if (COUNT.equals(token)) {
