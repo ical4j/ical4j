@@ -65,11 +65,11 @@ public class CalendarTest extends TestCase {
         calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
-        
-        // Add events, etc..
         VTimeZone tz = VTimeZone.getDefault();
+        calendar.getComponents().add(tz);
         TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
         
+        // Add events, etc..
         java.util.Calendar calStart = java.util.Calendar.getInstance();
         calStart.set(java.util.Calendar.DAY_OF_WEEK, java.util.Calendar.MONDAY);
         calStart.set(java.util.Calendar.HOUR_OF_DAY, 9);
