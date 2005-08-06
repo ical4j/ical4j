@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 26/06/2005
+ * Created on 30/06/2005
  *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -35,47 +35,55 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.ParseException;
-
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * Base class for all representations of time values in RFC2445.
- * 
+ * Base class for date and time representations as defined
+ * by the ISO 8601 standard.
  * @author Ben Fortuna
  */
-public class Date extends Iso8601 {
-    
-    private static final long serialVersionUID = 7136072363141363141L;
+public abstract class Iso8601 extends Date {
 
-    private static final String PATTERN = "yyyyMMdd";
+    private DateFormat format;
     
     /**
-     * Default constructor.
+     * @param pattern
      */
-    public Date() {
-        super(PATTERN);
+    public Iso8601(final String pattern) {
+        format = new SimpleDateFormat(pattern);
     }
-    
+
     /**
      * @param time
+     * @param pattern
      */
-    public Date(final long time) {
-        super(time, PATTERN);
+    public Iso8601(final long time, final String pattern) {
+        super(time);
+        format = new SimpleDateFormat(pattern);
+    }
+
+    /**
+     * @param time
+     * @param pattern
+     */
+    public Iso8601(final Date time, final String pattern) {
+        super(time.getTime());
+        format = new SimpleDateFormat(pattern);
     }
     
-    /**
-     * @param date
+    /* (non-Javadoc)
+     * @see java.lang.Object#toString()
      */
-    public Date(final java.util.Date date) {
-        super(date.getTime(), PATTERN);
+    public String toString() {
+        return format.format(this);
     }
-    
+
     /**
-     * @param value
-     * @throws ParseException
+     * @return Returns the format.
      */
-    public Date(final String value) throws ParseException {
-        this();
-        setTime(getFormat().parse(value).getTime());
+    protected final DateFormat getFormat() {
+        return format;
     }
 }

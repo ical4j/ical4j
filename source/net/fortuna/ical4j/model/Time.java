@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 26/06/2005
+ * Created on 30/06/2005
  *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -35,47 +35,58 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.ParseException;
+import java.util.TimeZone;
 
+import net.fortuna.ical4j.util.TimeZoneUtils;
 
 /**
- * Base class for all representations of time values in RFC2445.
- * 
+ * A type used to represent iCalendar time values.
  * @author Ben Fortuna
  */
-public class Date extends Iso8601 {
+public class Time extends Iso8601 {
     
-    private static final long serialVersionUID = 7136072363141363141L;
+    private static final long serialVersionUID = -8401010870773304348L;
+    
+    /**
+     * FORM #1: LOCAL TIME.
+     */
+    private static final String DEFAULT_PATTERN = "HHmmss";
+    
+    /**
+     * FORM #2: UTC TIME.
+     */
+    private static final String UTC_PATTERN = "HHmmss'Z'";
 
-    private static final String PATTERN = "yyyyMMdd";
-    
     /**
      * Default constructor.
      */
-    public Date() {
-        super(PATTERN);
+    public Time(final TimeZone timezone) {
+        super(TimeZoneUtils.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN);
+        getFormat().setTimeZone(timezone);
     }
-    
+
     /**
      * @param time
+     * @param utc
      */
-    public Date(final long time) {
-        super(time, PATTERN);
+    public Time(final long time, final TimeZone timezone) {
+        super(time, (TimeZoneUtils.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN));
+        getFormat().setTimeZone(timezone);
     }
-    
+
     /**
-     * @param date
+     * @param time
+     * @param utc
      */
-    public Date(final java.util.Date date) {
-        super(date.getTime(), PATTERN);
+    public Time(final java.util.Date time, final TimeZone timezone) {
+        super(time, (TimeZoneUtils.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN));
+        getFormat().setTimeZone(timezone);
     }
-    
+
     /**
-     * @param value
-     * @throws ParseException
+     * @return Returns the utc.
      */
-    public Date(final String value) throws ParseException {
-        this();
-        setTime(getFormat().parse(value).getTime());
+    public final boolean isUtc() {
+        return TimeZoneUtils.isUtc(getFormat().getTimeZone());
     }
 }
