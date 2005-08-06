@@ -151,4 +151,17 @@ public final class StringUtils {
 
         return aValue;
     }
+    
+    /**
+     * Wraps <code>java.lang.String.valueOf()</code> to return an empty string
+     * where the specified object is null.
+     * @param object
+     * @return
+     */
+    public static String valueOf(final Object object) {
+        if (object == null) {
+            return "";
+        }
+        return object.toString();
+    }
 }

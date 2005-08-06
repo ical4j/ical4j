@@ -167,10 +167,10 @@ public abstract class Parameter extends Content {
         b.append('=');
 
         if (this instanceof Escapable) {
-            b.append(StringUtils.escape(getValue()));
+            b.append(StringUtils.escape(StringUtils.valueOf(getValue())));
         }
         else {
-            b.append(getValue());
+            b.append(StringUtils.valueOf(getValue()));
         }
 
         return b.toString();

@@ -213,10 +213,10 @@ public abstract class Property extends Content {
         buffer.append(getParameters());
         buffer.append(':');
         if (this instanceof Escapable) {
-            buffer.append(StringUtils.escape(getValue()));
+            buffer.append(StringUtils.escape(StringUtils.valueOf(getValue())));
         }
         else {
-            buffer.append(getValue());
+            buffer.append(StringUtils.valueOf(getValue()));
         }
         buffer.append("\r\n");
 
