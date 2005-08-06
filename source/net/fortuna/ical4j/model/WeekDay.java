@@ -38,6 +38,8 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import net.fortuna.ical4j.util.Numbers;
+
 /**
  * Defines a day of the week with a possible offset related to
  * a MONTHLY or YEARLY occurrence.
@@ -70,10 +72,10 @@ public class WeekDay implements Serializable {
      * @param value
      */
     public WeekDay(final String value) {
-        try {
-            offset = Integer.parseInt(value.substring(0, value.length() - 2));
+        if (value.length() > 2) {
+            offset = Numbers.parseInt(value.substring(0, value.length() - 2));
         }
-        catch (NumberFormatException nfe) {
+        else {
             offset = 0;
         }
         day = value.substring(value.length() - 2);
@@ -95,8 +97,8 @@ public class WeekDay implements Serializable {
      * @param offset
      */
     public WeekDay(final WeekDay weekDay, final int offset) {
-    	this.day = weekDay.getDay();
-    	this.offset = offset;
+        this.day = weekDay.getDay();
+        this.offset = offset;
     }
     
     /**
@@ -160,28 +162,47 @@ public class WeekDay implements Serializable {
      * specified
      */
     private static WeekDay getDay(final int calDay) {
-        if (calDay == Calendar.SUNDAY) {
-            return SU;
+        switch (calDay) {
+            case Calendar.SUNDAY: return SU;
+            case Calendar.MONDAY: return MO;
+            case Calendar.TUESDAY: return TU;
+            case Calendar.WEDNESDAY: return WE;
+            case Calendar.THURSDAY: return TH;
+            case Calendar.FRIDAY: return FR;
+            case Calendar.SATURDAY: return SA;
+            default: return null;
         }
-        else if (calDay == Calendar.MONDAY) {
-            return MO;
+    }
+    
+    /**
+     * Returns the corresponding <code>java.util.Calendar.DAY_OF_WEEK</code>
+     * constant for the specified <code>WeekDay</code>.
+     * @param weekday
+     * @return
+     */
+    public static int getCalendarDay(final WeekDay weekday) {
+        if (SU.getDay().equals(weekday.getDay())) {
+            return Calendar.SUNDAY;
         }
-        else if (calDay == Calendar.TUESDAY) {
-            return TU;
+        else if (MO.getDay().equals(weekday.getDay())) {
+            return Calendar.MONDAY;
         }
-        else if (calDay == Calendar.WEDNESDAY) {
-            return WE;
+        else if (TU.getDay().equals(weekday.getDay())) {
+            return Calendar.TUESDAY;
         }
-        else if (calDay == Calendar.THURSDAY) {
-            return TH;
+        else if (WE.getDay().equals(weekday.getDay())) {
+            return Calendar.WEDNESDAY;
         }
-        else if (calDay == Calendar.FRIDAY) {
-            return FR;
+        else if (TH.getDay().equals(weekday.getDay())) {
+            return Calendar.THURSDAY;
         }
-        else if (calDay == Calendar.SATURDAY) {
-            return SA;
+        else if (FR.getDay().equals(weekday.getDay())) {
+            return Calendar.FRIDAY;
         }
-        return null;
+        else if (SA.getDay().equals(weekday.getDay())) {
+            return Calendar.SATURDAY;
+        }
+        return -1;
     }
     
     /* (non-Javadoc)
