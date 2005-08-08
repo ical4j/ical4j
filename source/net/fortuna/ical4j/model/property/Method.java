@@ -10,14 +10,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -47,17 +47,17 @@ public class Method extends Property {
     
     private static final long serialVersionUID = 7220956532685378719L;
 
-	/**
-	 * Used to publish a calendar entry to one or more
+    /**
+     * Used to publish a calendar entry to one or more
      * Calendar Users. There is no interactivity
      * between the publisher and any other calendar
      * user. An example might include a baseball team
      * publishing its schedule to the public. [RFC 2446]
-	 */
-	public static final Method PUBLISH = new ImmutableMethod("PUBLISH");
+     */
+    public static final Method PUBLISH = new ImmutableMethod("PUBLISH");
 
-	/**
-	 * Used to schedule a calendar entry with other
+    /**
+     * Used to schedule a calendar entry with other
      * Calendar Users. Requests are interactive in that
      * they require the receiver to respond using
      * the Reply methods. Meeting Requests, Busy
@@ -66,48 +66,48 @@ public class Method extends Property {
      * Requests are also used by the "Organizer" to
      * update the status of a calendar entry. [RFC 2446]
      */
-	public static final Method REQUEST = new ImmutableMethod("REQUEST");
+    public static final Method REQUEST = new ImmutableMethod("REQUEST");
 
-	/**
-	 * A Reply is used in response to a Request to
+    /**
+     * A Reply is used in response to a Request to
      * convey "Attendee" status to the "Organizer".
      * Replies are commonly used to respond to meeting
      * and task requests. [RFC2446]
      */
-	public static final Method REPLY = new ImmutableMethod("REPLY");
+    public static final Method REPLY = new ImmutableMethod("REPLY");
 
-	/**
-	 * Add one or more instances to an existing
+    /**
+     * Add one or more instances to an existing
      * VEVENT, VTODO, or VJOURNAL. [RFC 2446]
      */
-	public static final Method ADD = new ImmutableMethod("ADD");
+    public static final Method ADD = new ImmutableMethod("ADD");
 
-	/**
-	 * Cancel one or more instances of an existing
+    /**
+     * Cancel one or more instances of an existing
      * VEVENT, VTODO, or VJOURNAL. [RFC 2446]
      */
-	public static final Method CANCEL = new ImmutableMethod("CANCEL");
+    public static final Method CANCEL = new ImmutableMethod("CANCEL");
 
-	/**
-	 * The Refresh method is used by an "Attendee" to
+    /**
+     * The Refresh method is used by an "Attendee" to
      * request the latest version of a calendar entry. [RFC 2446]
      */
-	public static final Method REFRESH = new ImmutableMethod("REFRESH");
+    public static final Method REFRESH = new ImmutableMethod("REFRESH");
 
-	/**
-	 * The Counter method is used by an "Attendee" to
+    /**
+     * The Counter method is used by an "Attendee" to
      * negotiate a change in the calendar entry.
      * Examples include the request to change a
      * proposed Event time or change the due date for a
      * VTODO. [RFC 2446]
      */
-	public static final Method COUNTER = new ImmutableMethod("COUNTER");
+    public static final Method COUNTER = new ImmutableMethod("COUNTER");
 
-	/**
-	 * Used by the "Organizer" to decline the proposed
+    /**
+     * Used by the "Organizer" to decline the proposed
      * counter-proprosal. [RFC 2446]
      */
-	public static final Method DECLINE_COUNTER = new ImmutableMethod("DECLINE-COUNTER");
+    public static final Method DECLINE_COUNTER = new ImmutableMethod("DECLINE-COUNTER");
     
     /**
      * @author Ben Fortuna
