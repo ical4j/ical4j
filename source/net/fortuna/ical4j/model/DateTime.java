@@ -77,6 +77,14 @@ public class DateTime extends Date {
     }
     
     /**
+     * @param utc
+     */
+    public DateTime(final boolean utc) {
+        this();
+        setUtc(utc);
+    }
+    
+    /**
      * @param time
      */
     public DateTime(final long time) {
