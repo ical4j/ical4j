@@ -53,6 +53,12 @@ import net.fortuna.ical4j.model.property.Version;
 public final class Constants {
 
     /**
+     * Constructor made private to enforce static nature.
+     */
+    private Constants() {
+    }
+    
+    /**
      * Returns a constant equivalent to the specified property
      * if one is applicable. Otherwise will return the specified
      * property.
