@@ -43,6 +43,8 @@ import java.util.TimeZone;
  * @author Ben Fortuna
  */
 public final class TimeZoneUtils {
+    
+    public static final String UTC_ID = "UTC";
 
     /**
      * Constructor made private to enforce static nature.
@@ -115,6 +117,6 @@ public final class TimeZoneUtils {
      * @return true if the timezone is UTC time, otherwise false
      */
     public static boolean isUtc(final TimeZone timezone) {
-        return timezone.equals(TimeZone.getTimeZone("UTC"));
+        return timezone.equals(TimeZone.getTimeZone(UTC_ID));
     }
 }
