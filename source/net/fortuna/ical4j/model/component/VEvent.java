@@ -444,7 +444,7 @@ public class VEvent extends Component {
         // periods from the end date..
         Dur rDuration;
         if (duration == null) {
-            rDuration = new Dur(start.getTime(), end.getTime());
+            rDuration = new Dur(start.getTime(), end.getDate());
         }
         else {
             rDuration = duration.getDuration();
@@ -511,8 +511,8 @@ public class VEvent extends Component {
         }
         // add first instance if included in range..
         if (start.getTime().before(rangeEnd)) {
-            if (end != null && end.getTime().after(rangeStart)) {
-                periods.add(new Period(new DateTime(start.getTime()), new DateTime(end.getTime())));
+            if (end != null && end.getDate().after(rangeStart)) {
+                periods.add(new Period(new DateTime(start.getTime()), new DateTime(end.getDate())));
             }
             else if (duration != null) {
                 Period period = new Period(new DateTime(start.getTime()), duration.getDuration());

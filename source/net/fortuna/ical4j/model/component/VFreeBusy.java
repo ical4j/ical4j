@@ -160,10 +160,20 @@ public class VFreeBusy extends Component {
      */
     public VFreeBusy(final Date startDate, final Date endDate) {
         this();
-        // dtstart MUST be specified in UTC..
-        getProperties().add(new DtStart(startDate, true));
-        // dtend MUST be specified in UTC..
-        getProperties().add(new DtEnd(endDate, true));
+        if (startDate instanceof DateTime) {
+            // dtstart MUST be specified in UTC..
+            getProperties().add(new DtStart(startDate, true));
+        }
+        else {
+            getProperties().add(new DtStart(startDate));
+        }
+        if (endDate instanceof DateTime) {
+            // dtend MUST be specified in UTC..
+            getProperties().add(new DtEnd(endDate, true));
+        }
+        else {
+            getProperties().add(new DtEnd(endDate));
+        }
         getProperties().add(new DtStamp(new DateTime()));
     }
 
@@ -204,22 +214,32 @@ public class VFreeBusy extends Component {
         DtStart start = (DtStart) request.getProperties().getProperty(Property.DTSTART);
         DtEnd end = (DtEnd) request.getProperties().getProperty(Property.DTEND);
         Duration duration = (Duration) request.getProperties().getProperty(Property.DURATION);
-        // dtstart MUST be specified in UTC..
-        getProperties().add(new DtStart(start.getTime(), true));
-        // dtend MUST be specified in UTC..
-        getProperties().add(new DtEnd(end.getTime(), true));
+        if (start.getTime() instanceof DateTime) {
+            // dtstart MUST be specified in UTC..
+            getProperties().add(new DtStart(start.getTime(), true));
+        }
+        else {
+            getProperties().add(new DtStart(start.getTime()));
+        }
+        if (end.getDate() instanceof DateTime) {
+            // dtend MUST be specified in UTC..
+            getProperties().add(new DtEnd(end.getDate(), true));
+        }
+        else {
+            getProperties().add(new DtEnd(end.getDate()));
+        }
         getProperties().add(new DtStamp(new DateTime()));
         if (duration != null) {
             getProperties().add(new Duration(duration.getDuration()));
             // Initialise with all free time of at least the specified
             // duration..
-            FreeBusy fb = createFreeTime(start.getTime(), end.getTime(), duration.getDuration(), components);
+            FreeBusy fb = createFreeTime(start.getTime(), end.getDate(), duration.getDuration(), components);
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
         } else {
             // initialise with all busy time for the specified period..
-            FreeBusy fb = createBusyTime(start.getTime(), end.getTime(), components);
+            FreeBusy fb = createBusyTime(start.getTime(), end.getDate(), components);
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
@@ -355,7 +375,7 @@ public class VFreeBusy extends Component {
         // DtEnd value must be later in time that DtStart..
         DtStart dtStart = (DtStart) getProperties().getProperty(Property.DTSTART);
         DtEnd dtEnd = (DtEnd) getProperties().getProperty(Property.DTEND);
-        if (dtStart != null && dtEnd != null && !dtStart.getTime().before(dtEnd.getTime())) {
+        if (dtStart != null && dtEnd != null && !dtStart.getTime().before(dtEnd.getDate())) {
             throw new ValidationException("Property [" + Property.DTEND + "] must be later in time than ["
                     + Property.DTSTART + "]");
         }
