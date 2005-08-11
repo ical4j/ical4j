@@ -40,7 +40,6 @@ import java.text.ParseException;
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
@@ -50,18 +49,15 @@ import net.fortuna.ical4j.util.ParameterValidator;
  *
  * @author benf
  */
-public class ExDate extends Property {
+public class ExDate extends DateListProperty {
     
     private static final long serialVersionUID = 2635730172243974463L;
-
-    private DateList dates;
 
     /**
      * Default constructor.
      */
     public ExDate() {
         super(EXDATE);
-        dates = new DateList(Value.DATE_TIME);
     }
     
     /**
@@ -84,8 +80,7 @@ public class ExDate extends Property {
      *            a list of dates
      */
     public ExDate(final DateList dList) {
-        super(EXDATE);
-        dates = dList;
+        super(EXDATE, dList);
     }
 
     /**
@@ -95,15 +90,7 @@ public class ExDate extends Property {
      *            a list of dates
      */
     public ExDate(final ParameterList aList, final DateList dList) {
-        super(EXDATE, aList);
-        dates = dList;
-    }
-
-    /**
-     * @return Returns the dates.
-     */
-    public final DateList getDates() {
-        return dates;
+        super(EXDATE, aList, dList);
     }
 
     /**
@@ -136,22 +123,5 @@ public class ExDate extends Property {
          *
          * (";" xparam)
          */
-    }
-    
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
-     */
-    public final void setValue(final String aValue) throws ParseException {
-        dates = new DateList(aValue, (Value) getParameters().getParameter(Parameter.VALUE));
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see net.fortuna.ical4j.model.Property#getValue()
-     */
-    public final String getValue() {
-        return getDates().toString();
     }
 }

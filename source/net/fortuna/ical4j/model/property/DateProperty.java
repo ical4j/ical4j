@@ -95,7 +95,7 @@ public abstract class DateProperty extends Property {
      * @param vTimeZone
      */
     public final void setVTimeZone(final VTimeZone vTimeZone) {
-        if (!(getDate() instanceof DateTime)) {
+        if (getDate() != null && !(getDate() instanceof DateTime)) {
             throw new UnsupportedOperationException("VTimeZone is not applicable to current value");
         }
         if (TimeZoneUtils.isUtc(vTimeZone.getTimeZone())) {
@@ -103,7 +103,9 @@ public abstract class DateProperty extends Property {
         }
         else {
             getParameters().add(vTimeZone.getTzIdParam());
-            ((DateTime) getDate()).setTimeZone(vTimeZone.getTimeZone());
+            if (getDate() != null) {
+                ((DateTime) getDate()).setTimeZone(vTimeZone.getTimeZone());
+            }
         }
     }
     

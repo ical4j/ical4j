@@ -76,7 +76,7 @@ import net.fortuna.ical4j.util.StringUtils;
  *
  * @author benf
  */
-public class LastModified extends DateProperty {
+public class LastModified extends UtcProperty {
     
     private static final long serialVersionUID = 5288572652052836062L;
 

@@ -10,14 +10,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -41,10 +41,10 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.util.StringUtils;
 
 /**
  * Defines a DTEND iCalendar component property.
@@ -102,15 +102,9 @@ import net.fortuna.ical4j.util.ParameterValidator;
  *
  * @author Ben Fortuna
  */
-public class DtEnd extends Property {
+public class DtEnd extends DateProperty {
     
     private static final long serialVersionUID = 8107416684717228297L;
-
-    private Date time;
-
-    // default value determined through inspection
-    // of iCal-generated files..
-    private boolean utc = false;
 
     /**
      * Default constructor. The time value is initialised to the
@@ -118,7 +112,7 @@ public class DtEnd extends Property {
      */
     public DtEnd() {
         super(DTEND);
-        time = new Date();
+//        setDate(new Date());
     }
     
     /**
@@ -144,7 +138,7 @@ public class DtEnd extends Property {
      */
     public DtEnd(final Date aDate) {
         super(DTEND);
-        time = aDate;
+        setDate(aDate);
     }
     
     /**
@@ -154,7 +148,7 @@ public class DtEnd extends Property {
      */
     public DtEnd(final Date time, final boolean utc) {
         super(DTEND);
-        setTime(time);
+        setDate(time);
         setUtc(utc);
     }
 
@@ -169,13 +163,14 @@ public class DtEnd extends Property {
      */
     public DtEnd(final ParameterList aList, final Date aDate) {
         super(DTEND, aList);
-        time = aDate;
+        setDate(aDate);
     }
 
     /**
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
+        super.validate();
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once
@@ -187,18 +182,20 @@ public class DtEnd extends Property {
 
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
-        if (valueParam != null && !Value.DATE_TIME.equals(valueParam) && !Value.DATE.equals(valueParam)) {
-            throw new ValidationException("Parameter [" + Parameter.VALUE + "] is invalid");
+        if (valueParam == null && !(getDate() instanceof DateTime)) {
+            throw new ValidationException("VALUE parameter is invalid for time instance");
         }
-
-        if (isUtc()) {
-            ParameterValidator.getInstance().validateNone(Parameter.TZID,
-                    getParameters());
-            
-        }
-        else {
-            ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
-                    getParameters());
+        if (getDate() instanceof DateTime) {
+            DateTime dateTime = (DateTime) getDate();
+            if (dateTime.isUtc()) {
+                ParameterValidator.getInstance().validateNone(Parameter.TZID,
+                        getParameters());
+            }
+            else {
+                ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
+                        getParameters());
+                // TODO: ensure tzid matches date-time timezone..
+            }
         }
 
         /*
@@ -207,14 +204,6 @@ public class DtEnd extends Property {
          * (";" xparam)
          */
     }
-
-    /**
-     * @return Returns the time.
-     */
-    public final Date getTime() {
-        return time;
-    }
-    
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
@@ -222,54 +211,17 @@ public class DtEnd extends Property {
     public final void setValue(final String aValue) throws ParseException {
         // value can be either a date-time or a date..
         if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
-            time = new Date(aValue);
+            setDate(new Date(aValue));
         }
         else {
-            time = new DateTime(aValue);
+            setDate(new DateTime(aValue));
         }
     }
 
     /*
-     * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        /*
-        if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
-            return DateFormat.getInstance().format(getTime());
-        }
-        // return local time..
-        return DateTimeFormat.getInstance().format(getTime(), isUtc());
-        */
-        return time.toString();
-    }
-
-    /**
-     * @return Returns the utc.
-     */
-    public final boolean isUtc() {
-        return utc;
-    }
-
-    /**
-     * @param utc
-     *            The utc to set.
-     */
-    public final void setUtc(final boolean utc) {
-        if (utc) {
-            if (time instanceof DateTime) {
-                ((DateTime) time).setUtc(utc);
-            }
-            // remove TZID parameter if necessary..
-            getParameters().remove(getParameters().getParameter(Parameter.TZID));
-        }
-        this.utc = utc;
-    }
-    /**
-     * @param time The time to set.
-     */
-    public final void setTime(final Date time) {
-        this.time = time;
+        return StringUtils.valueOf(getDate());
     }
 }

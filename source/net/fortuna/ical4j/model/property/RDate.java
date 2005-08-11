@@ -41,21 +41,19 @@ import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PeriodList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.util.StringUtils;
 
 /**
  * Defines an RDATE iCalendar component property.
  *
  * @author benf
  */
-public class RDate extends Property {
+public class RDate extends DateListProperty {
     
     private static final long serialVersionUID = -3320381650013860193L;
-
-    private DateList dates;
 
     private PeriodList periods;
 
@@ -64,7 +62,6 @@ public class RDate extends Property {
      */
     public RDate() {
         super(RDATE);
-        dates = new DateList(Value.DATE_TIME);
     }
     
     /**
@@ -89,8 +86,7 @@ public class RDate extends Property {
      *            a date representation of a date or date-time
      */
     public RDate(final DateList dates) {
-        super(RDATE);
-        this.dates = dates;
+        super(RDATE, dates);
     }
 
     /**
@@ -103,8 +99,7 @@ public class RDate extends Property {
      *            a date representation of a date or date-time
      */
     public RDate(final ParameterList aList, final DateList dates) {
-        super(RDATE, aList);
-        this.dates = dates;
+        super(RDATE, aList, dates);
     }
 
     /**
@@ -113,7 +108,7 @@ public class RDate extends Property {
      *            a period
      */
     public RDate(final PeriodList periods) {
-        super(RDATE);
+        super(RDATE, (DateList) null);
         this.periods = periods;
     }
 
@@ -126,7 +121,7 @@ public class RDate extends Property {
      *            a period
      */
     public RDate(final ParameterList aList, final PeriodList periods) {
-        super(RDATE, aList);
+        super(RDATE, aList, (DateList) null);
         this.periods = periods;
     }
 
@@ -167,28 +162,16 @@ public class RDate extends Property {
     public final PeriodList getPeriods() {
         return periods;
     }
-
-    /**
-     * @return Returns the date list.
-     */
-    public final DateList getDates() {
-        return dates;
-    }
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-        // value can be either a date-time or a date..
-        Value valueParam = (Value) getParameters().getParameter(Parameter.VALUE);
-        if (valueParam != null && Value.PERIOD.equals(valueParam)) {
+        if (Value.PERIOD.equals(getParameters().getParameter(Parameter.VALUE))) {
             periods = new PeriodList(aValue);
         }
-        else if (valueParam != null) {
-            dates = new DateList(aValue, valueParam);
-        }
         else {
-            dates = new DateList(aValue, Value.DATE_TIME);
+            super.setValue(aValue);
         }
     }    
 
@@ -199,11 +182,8 @@ public class RDate extends Property {
      */
     public final String getValue() {
         if (getDates() != null) {
-            return getDates().toString();
+            return super.getValue();
         }
-        else if (getPeriods() != null) {
-            return getPeriods().toString();
-        }
-        return null;
+        return StringUtils.valueOf(getPeriods());
     }
 }

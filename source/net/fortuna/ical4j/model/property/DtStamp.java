@@ -10,14 +10,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -39,7 +39,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.util.StringUtils;
 
 /**
  * Defines a DTSTAMP iCalendar component property.
@@ -83,7 +83,7 @@ import net.fortuna.ical4j.model.Property;
  *
  * @author Ben Fortuna
  */
-public class DtStamp extends Property {
+public class DtStamp extends UtcProperty {
     
     private static final long serialVersionUID = 7581197869433744070L;
 
@@ -157,7 +157,7 @@ public class DtStamp extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return getDateTime().toString();
+        return StringUtils.valueOf(getDateTime());
     }
     
     /**

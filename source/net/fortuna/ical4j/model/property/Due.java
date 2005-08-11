@@ -10,14 +10,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -41,10 +41,10 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.util.StringUtils;
 
 /**
  * Defines a DUE iCalendar component property.
@@ -95,15 +95,11 @@ import net.fortuna.ical4j.util.ParameterValidator;
  *
  * @author Ben Fortuna
  */
-public class Due extends Property {
+public class Due extends DateProperty {
     
     private static final long serialVersionUID = -2965312347832730406L;
 
     private Date time;
-
-    // default value determined through inspection
-    // of iCal-generated files..
-    private boolean utc = true;
 
     /**
      * Default constructor. The time value is initialised to
@@ -111,7 +107,8 @@ public class Due extends Property {
      */
     public Due() {
         super(DUE);
-        time = new DateTime();
+        // defaults to UTC time..
+        time = new DateTime(true);
     }
     
     /**
@@ -215,33 +212,10 @@ public class Due extends Property {
     }
 
     /* (non-Javadoc)
-	 * @see net.fortuna.ical4j.model.Property#getValue()
-	 */
-	public final String getValue() {
-        /*
-		if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
-            return DateFormat.getInstance().format(getTime());
-		}
-        return DateTimeFormat.getInstance().format(getTime(), isUtc());
-        */
-        return getTime().toString();
-	}
-
-    /**
-     * @return Returns the utc.
+     * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public final boolean isUtc() {
-        return utc;
-    }
-
-    /**
-     * @param utc The utc to set.
-     */
-    public final void setUtc(final boolean utc) {
-        if (Value.DATE_TIME.equals(getParameters().getParameter(Parameter.VALUE))) {
-            ((DateTime) getTime()).setUtc(utc);
-        }
-        this.utc = utc;
+    public final String getValue() {
+        return StringUtils.valueOf(getTime());
     }
     
     /**

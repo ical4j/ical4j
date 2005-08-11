@@ -10,14 +10,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -41,10 +41,10 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.util.StringUtils;
 
 /**
  * Defines a DTSTART iCalendar component property.
@@ -109,15 +109,11 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * 
  * @author Ben Fortuna
  */
-public class DtStart extends Property {
+public class DtStart extends DateProperty {
     
     private static final long serialVersionUID = -5707097476081111815L;
 
     private Date time;
-
-    // default value determined through inspection
-    // of iCal-generated files..
-    private boolean utc = false;
 
     /**
      * Default constructor. The time value is initialised to the
@@ -138,7 +134,7 @@ public class DtStart extends Property {
     public DtStart(final String aValue)
             throws ParseException {
         super(DTSTART);
-		setValue(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -153,7 +149,7 @@ public class DtStart extends Property {
     public DtStart(final ParameterList aList, final String aValue)
             throws ParseException {
         super(DTSTART, aList);
-		setValue(aValue);
+        setValue(aValue);
     }
 
     /**
@@ -250,38 +246,10 @@ public class DtStart extends Property {
     }
 
     /* (non-Javadoc)
-	 * @see net.fortuna.ical4j.model.Property#getValue()
-	 */
-	public final String getValue() {
-        /*
-		if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
-            return DateFormat.getInstance().format(getTime());
-		}
-        // return local time..
-        return DateTimeFormat.getInstance().format(getTime(), isUtc());
-        */
-        return time.toString();
-	}
-
-    /**
-     * @return Returns the utc.
+     * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public final boolean isUtc() {
-        return utc;
-    }
-
-    /**
-     * @param utc The utc to set.
-     */
-    public final void setUtc(final boolean utc) {
-        if (utc) {
-            if (time instanceof DateTime) {
-                ((DateTime) time).setUtc(utc);
-            }
-            // remove TZID parameter if necessary..
-            getParameters().remove(getParameters().getParameter(Parameter.TZID));
-        }
-        this.utc = utc;
+    public final String getValue() {
+        return StringUtils.valueOf(getTime());
     }
     
     /**

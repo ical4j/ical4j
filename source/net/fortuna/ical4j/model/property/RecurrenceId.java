@@ -41,7 +41,6 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
@@ -128,15 +127,11 @@ import net.fortuna.ical4j.util.ParameterValidator;
  *
  * @author Ben Fortuna
  */
-public class RecurrenceId extends Property {
+public class RecurrenceId extends DateProperty {
     
     private static final long serialVersionUID = 4456883817126011006L;
 
     private Date time;
-
-    // default value determined through inspection
-    // of iCal-generated files..
-    private boolean utc = false;
 
     /**
      * Default constructor.
@@ -263,23 +258,6 @@ public class RecurrenceId extends Property {
         return DateTimeFormat.getInstance().format(getTime(), isUtc());
         */
         return getTime().toString();
-    }
-
-    /**
-     * @return Returns the utc.
-     */
-    public final boolean isUtc() {
-        return utc;
-    }
-
-    /**
-     * @param utc The utc to set.
-     */
-    public final void setUtc(final boolean utc) {
-        if (Value.DATE_TIME.equals(getParameters().getParameter(Parameter.VALUE))) {
-            ((DateTime) getTime()).setUtc(utc);
-        }
-        this.utc = utc;
     }
     
     /**
