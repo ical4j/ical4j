@@ -72,6 +72,41 @@
 
  Its a shame everyone can't just agree to one
  standard as it would make life much simpler. :)
+
+
+======================
+ iCal4j and Timezones
+======================
+
+ Supporting timezones in an iCalendar implementation can be a complicated process,
+ mostly due to the fact that there is not a definitive list of timezone definitions
+ used by all iCalendar implementations. This means that an iCalendar file may be
+ produced by one implementation and, if the file does not include all definitions
+ for timezones relevant to the calendar properties, an alternate implementation
+ may not know how to interpret the timezone identified in the calendar (or worse,
+ it may interpret the timezone differently to the original implementation). All
+ of these possibilities mean unpredictable behaviour which, to put it nicely, is
+ not desireable.
+ 
+ iCal4j approaches the problem of timezones in two ways: The first and by far the
+ preferred approach is for iCalendar files to include definitions for all timezones
+ referenced in the calendar object. To support this, when an existing calendar is
+ parsed a list of VTimeZone definitions contained in the calendar is constructed.
+ This list may then be queried whenever a VTimeZone definition is required.
+ 
+ The second approach is to rely on a central repository of VTimeZone definitions.
+ This repository is constructed lazily by searching the classpath for a VTimeZone
+ definition matching the desired TzId. If a definition is not found in the classpath,
+ iCal4j can construct a crude definition from a Java timezone object as needed. This
+ approach is required when constructing new iCalendar files, and as such you should
+ include the required VTimeZone definitions in your classpath (see the libical project
+ for an extensive list of timezone definitions).
+ 
+ Note that the intention of the iCal4j model is not to provide continuous validation
+ feedback for every change in the model. For this reason you are free to change
+ timezones on Time objects, remove or add TzId parameters, remove or add VTimeZone
+ definitions, etc. without restriction. However when validation is run (automatically
+ on output of the calendar) you will be notified if the changes are invalid.
  
 
 ============================
