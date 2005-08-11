@@ -36,6 +36,8 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.PropertyValidator;
 
@@ -104,7 +106,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  *
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable {
+public class Calendar implements Serializable, TimeZoneProvider {
     
     private static final long serialVersionUID = -1654118204678581940L;
 
@@ -284,5 +286,19 @@ public class Calendar implements Serializable {
      */
     public final int hashCode() {
         return getProperties().hashCode() + getComponents().hashCode();
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.TimeZoneProvider#getVTimeZone(net.fortuna.ical4j.model.parameter.TzId)
+     */
+    public final VTimeZone getVTimeZone(final TzId tzId) {
+        ComponentList vTimeZones = getComponents().getComponents(Component.VTIMEZONE);
+        for (Iterator i = vTimeZones.iterator(); i.hasNext();) {
+            VTimeZone vTimeZone = (VTimeZone) i.next();
+            if (tzId.getValue().equals(vTimeZone.getProperties().getProperty(Property.TZID).getValue())) {
+                return vTimeZone;
+            }
+        }
+        return VTimeZone.getVTimeZone(tzId.getValue());
     }
 }
