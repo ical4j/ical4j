@@ -38,8 +38,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.TimeZone;
 
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.TimeZoneUtils;
 
 /**
  * Defines a list of iCalendar dates.
@@ -52,7 +54,7 @@ public class DateList extends ArrayList implements Serializable {
 
     private Value type;
 
-    private boolean utc;
+    private TimeZone timeZone;
 
     /**
      * Default constructor.
@@ -62,6 +64,7 @@ public class DateList extends ArrayList implements Serializable {
      */
     public DateList(final Value aType) {
         this.type = aType;
+        this.timeZone = TimeZone.getTimeZone(TimeZoneUtils.UTC_ID);
     }
 
     /**
@@ -77,8 +80,7 @@ public class DateList extends ArrayList implements Serializable {
      */
     public DateList(final String aValue, final Value aType)
             throws ParseException {
-        this.type = aType;
-
+        this(aType);
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {
             if (type != null && Value.DATE.equals(type)) {
@@ -134,14 +136,16 @@ public class DateList extends ArrayList implements Serializable {
     }
 
     /**
-     * Add a date to the list.
-     * 
-     * @param date
-     *            the date to add
+     * Add a date to the list. The date will be updated to reflect the
+     * timezone of this list.
+     * @param date the date to add
      * @return true
      * @see List#add(java.lang.Object)
      */
     public final boolean add(final Date date) {
+        if (date instanceof DateTime) {
+            ((DateTime) date).setTimeZone(getTimeZone());
+        }
         if (Value.DATE_TIME.equals(getType()) && !(date instanceof DateTime)) {
             return add((Object) new DateTime(date));
         }
@@ -189,7 +193,7 @@ public class DateList extends ArrayList implements Serializable {
      * @return Returns true if in UTC format, otherwise false.
      */
     public final boolean isUtc() {
-        return utc;
+        return TimeZoneUtils.isUtc(getTimeZone());
     }
 
     /**
@@ -199,11 +203,28 @@ public class DateList extends ArrayList implements Serializable {
      *            The utc to set.
      */
     public final void setUtc(final boolean utc) {
+        setTimeZone(TimeZone.getTimeZone(TimeZoneUtils.UTC_ID));
+    }
+    
+    /**
+     * Applies the specified timezone to all dates in the list.
+     * All dates added to this list will also have this timezone
+     * applied.
+     * @param timezone
+     */
+    public final void setTimeZone(final TimeZone timeZone) {
         if (Value.DATE_TIME.equals(type)) {
             for (Iterator i = iterator(); i.hasNext();) {
-                ((DateTime) i.next()).setUtc(utc);
+                ((DateTime) i.next()).setTimeZone(timeZone);
             }
         }
-        this.utc = utc;
+        this.timeZone = timeZone;
+    }
+
+    /**
+     * @return Returns the timeZone.
+     */
+    public final TimeZone getTimeZone() {
+        return timeZone;
     }
 }
