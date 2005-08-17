@@ -48,13 +48,21 @@
         <tbody>
             <tr>
                 <td>
-                    iCal4j is a Java library used to read and
-                    write iCalendar data streams as defined in
-                    <a href="http://www.faqs.org/rfcs/rfc2445.html">RFC2445</a>.
-                    Providing both a parser and an object model, iCal4j allows
-                    you to either modify existing iCalendar data or create new
-                    data models. Validation is also provided to ensure the
-                    data maintains a state consistent with the specification.
+                	<p>
+	                    iCal4j is a Java library used to read and
+	                    write iCalendar data streams as defined in
+	                    <a href="http://www.faqs.org/rfcs/rfc2445.html">RFC2445</a>.
+	                    The iCalendar standard provides a common data format used to store information about
+	                    calendar-specific data such as events, appointments, to-do lists, etc.
+	                    All of the popular calendaring tools, such as Lotus Notes, Outlook and Apple's iCal
+	                    also support the iCalendar standard.
+                    </p>
+                    <p>
+	                    Providing both a parser and an object model, iCal4j allows
+	                    you to either modify existing iCalendar data or create new
+	                    data models. Validation is also provided to ensure the
+	                    data maintains a state consistent with the specification.
+	                </p>
                 </td>
             </tr>
         </tbody>
@@ -72,8 +80,8 @@
         <tbody>
             <tr>
                 <td>
-                    <a href="http://sourceforge.net/project/stats/?group_id=107024">
-                        <img src="http://sourceforge.net/project/stats/stats_graph.png?group_id=107024&amp;report=last_30" alt="SourceForge.net Statistics"/>
+                    <a href="http://sourceforge.net/project/stats/detail.php?group_id=107024&amp;ugn=ical4j&amp;mode=60day&amp;type=prdownload">
+                        <img src="http://sourceforge.net/project/stats/detail.php?group_id=107024&amp;ugn=ical4j&amp;type=prdownload&amp;mode=60day&amp;package_id=0&amp;graph=1" alt="SourceForge.net Download Statistics"/>
                     </a>
                 </td>
             </tr>
@@ -231,8 +239,20 @@
                         <li>Seventh alpha release</li>
                         <li>"Normalised" DateRange/Period, DateRangeNormalizer/PeriodList and associated recurrance methods</li>
                         <li>Default charset is now UTF-8</li>
-                        <li>Applied patch <a href="https://sourceforge.net/tracker/index.php?func=detail&aid=1203990&group_id=107024&atid=646395">#1203990</a></li>
+                        <li>Applied patches #1197119, #1191253, #1185766, <a href="https://sourceforge.net/tracker/index.php?func=detail&amp;aid=1203990&amp;group_id=107024&amp;atid=646395">#1203990</a></li>
                         <li>See the CHANGELOG for further details</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>0.9.14</th>
+                <td style="width:100%">
+                    <ul>
+                        <li>Interim release</li>
+                        <li>Introduced Date, DateTime and Dur types</li>
+                        <li>More support for timezones</li>
+                        <li>Applied patches: #1234424, #1244945</a></li>
+                        <li>Many more changes - see the CHANGELOG for further details</li>
                     </ul>
                 </td>
             </tr>

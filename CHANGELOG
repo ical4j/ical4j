@@ -32,6 +32,27 @@
  
  - ParameterFactory now returns constant instances where applicable
  
+ - changes to VTimeZone.getVTimeZone() method signature
+ 
+ - added Calendar.getVTimeZone()
+ 
+ - added Constants utility class for working with constants.
+ 
+ - CalendarBuilder replaces properties with constant instances where applicable
+ 
+ - Checkstyle-based code clean up
+ 
+ - Applied patches: #1234424, #1244945
+ 
+ - Added Numbers.parseInt(), StringUtils.valueOf() utility methods.
+ 
+ - Completed rewrite of Recur to use "candidate" dates to generate a list
+ of applicable dates.
+ 
+ - Date-based properties refactored to use superclasses.
+ 
+ - VFreeBusy modified to only accept date-time ranges (may be revised later).
+ 
  
 0.9.13:
 

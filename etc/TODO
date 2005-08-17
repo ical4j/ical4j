@@ -10,12 +10,12 @@ To-do List:
  
  - Allow for extra whitespace between all content lines in the parser.
  
- - Add an easy way to replace parameters, etc. in lists.
- 
  - investigate use of commons-lang for equals/hashcode implementations.
  
- - The TZID property parameter MUST NOT be applied to DATE-TIME or TIME
-   properties whose time values are specified in UTC.
+ - add validation to ensure that date-time instances are not used where only date
+ instances are applicable..
+ 
+ - investigate use of alternative Base64 implementation (michael grev?)
  
  - Timezone processing and validation as follows:
  
@@ -47,7 +47,8 @@ To-do List:
  	  
  	  * Add VTimeZone.getTimeZone() and other conveniences to map Java timezone to VTimeZone
  	
- 
+ - refactor StringUtils/TimeZoneUtils to Strings/TimeZones.
+  
  ===========
   RFC 2446:
  ===========
