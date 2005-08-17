@@ -74,7 +74,11 @@ public class RecurTest extends TestCase {
         recur.setFrequency(Recur.WEEKLY);
         recur.getDayList().add(WeekDay.MO);
         log.info(recur);
-        log.info(recur.getDates(start, end, Value.DATE));
+
+        DateList dates = recur.getDates(start, end, Value.DATE);
+        log.info(dates);
+        
+        assertTrue("Date list exceeds COUNT limit", dates.size() <= 10);
     }
     
     /**
@@ -94,7 +98,11 @@ public class RecurTest extends TestCase {
         Date start = new Date(cal.getTime().getTime());
         cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
         Date end = new Date(cal.getTime().getTime());
-        log.info(recur.getDates(start, end, Value.DATE_TIME));        
+        
+        DateList dates = recur.getDates(start, end, Value.DATE_TIME);
+        log.info(dates);
+        
+        assertTrue("Date list exceeds COUNT limit", dates.size() <= 10);
     }
 
     /**
@@ -129,7 +137,9 @@ public class RecurTest extends TestCase {
         cal.add(Calendar.YEAR, 2);
         Date end = new Date(cal.getTime().getTime());
         log.info(recur);
-        log.info(recur.getDates(new Date(testCal.getTime().getTime()), start, end, Value.DATE_TIME));
+        
+        DateList dates = recur.getDates(new Date(testCal.getTime()), start, end, Value.DATE_TIME);
+        log.info(dates);
     }
 
 
@@ -198,5 +208,79 @@ public class RecurTest extends TestCase {
         DateList dateList = new DateList(Value.DATE);
         dateList.addAll(Arrays.asList(dates));
         return dateList;
+    }
+    
+    /**
+     * This test creates a rule outside of the specified boundaries to
+     * confirm that the returned date list is empty.
+     * <pre>
+     *  Weekly on Tuesday and Thursday for 5 weeks: 
+     *
+     *  DTSTART;TZID=US-Eastern:19970902T090000 
+     *  RRULE:FREQ=WEEKLY;UNTIL=19971007T000000Z;WKST=SU;BYDAY=TU,TH 
+     *  or 
+     *
+     *  RRULE:FREQ=WEEKLY;COUNT=10;WKST=SU;BYDAY=TU,TH 
+     *
+     *  ==> (1997 9:00 AM EDT)September 2,4,9,11,16,18,23,25,30;October 2 
+     * </pre>
+     */
+    public final void testBoundaryProcessing() {
+        Recur recur = new Recur(Recur.WEEKLY, 10);
+        recur.getDayList().add(WeekDay.TU);
+        recur.getDayList().add(WeekDay.TH);
+        log.info(recur);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 1997);
+        cal.set(Calendar.MONTH, Calendar.SEPTEMBER);
+        cal.set(Calendar.DAY_OF_MONTH, 2);
+        cal.set(Calendar.HOUR_OF_DAY, 9);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        
+        Date seed = new DateTime(cal.getTime());
+
+        cal = Calendar.getInstance();
+        Date start = new DateTime(cal.getTime());
+        cal.add(Calendar.YEAR, 2);
+        Date end = new DateTime(cal.getTime());
+        
+        DateList dates = recur.getDates(seed, start, end, Value.DATE_TIME);
+        log.info(dates);
+        
+        assertTrue(dates.isEmpty());
+    }
+    
+    /**
+     * This test confirms SETPOS rules are working correctly.
+     * <pre>
+     *      The BYSETPOS rule part specifies a COMMA character (US-ASCII decimal
+     *      44) separated list of values which corresponds to the nth occurrence
+     *      within the set of events specified by the rule. Valid values are 1 to
+     *      366 or -366 to -1. It MUST only be used in conjunction with another
+     *      BYxxx rule part. For example "the last work day of the month" could
+     *      be represented as:
+     *   
+     *        RRULE:FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1
+     * </pre>
+     */
+    public final void testSetPosProcessing() {
+        Recur recur = new Recur(Recur.MONTHLY, -1);
+        recur.getDayList().add(WeekDay.MO);
+        recur.getDayList().add(WeekDay.TU);
+        recur.getDayList().add(WeekDay.WE);
+        recur.getDayList().add(WeekDay.TH);
+        recur.getDayList().add(WeekDay.FR);
+        recur.getSetPosList().add(new Integer(-1));
+        log.info(recur);
+
+        Calendar cal = Calendar.getInstance();
+        Date start = new DateTime(cal.getTime());
+        cal.add(Calendar.YEAR, 2);
+        Date end = new DateTime(cal.getTime());
+        
+        DateList dates = recur.getDates(start, end, Value.DATE_TIME);
+        log.info(dates);
     }
 }
