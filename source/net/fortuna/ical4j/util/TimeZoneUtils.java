@@ -117,6 +117,8 @@ public final class TimeZoneUtils {
      * @return true if the timezone is UTC time, otherwise false
      */
     public static boolean isUtc(final TimeZone timezone) {
-        return timezone.equals(TimeZone.getTimeZone(UTC_ID));
+//        return timezone.hasSameRules(TimeZone.getTimeZone(UTC_ID));
+//        return timezone.getRawOffset() == 0;
+        return UTC_ID.equals(timezone.getID());
     }
 }
