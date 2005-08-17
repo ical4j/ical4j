@@ -181,36 +181,6 @@ public class Dur implements Comparable {
     }
     
     /**
-     * Constructs a new duration from the specified milliseconds.
-     * @param duration a duration in milliseconds
-     * @deprecated This constructor will potentially produce innaccurate durations
-     */
-    /*
-    public Dur(final long duration) {
-        negative = duration < 0;
-        long remainder = Math.abs(duration);
-        if (remainder % MILLIS_PER_WEEK == 0) {
-            weeks = (int) (remainder / MILLIS_PER_WEEK);
-        }
-        else {
-            days = (int) (remainder / MILLIS_PER_DAY);
-            if (remainder >= MILLIS_PER_DAY) {
-                remainder = remainder % MILLIS_PER_DAY;
-            }
-            hours = (int) (remainder / MILLIS_PER_HOUR);
-            if (remainder >= MILLIS_PER_HOUR) {
-                remainder = remainder % MILLIS_PER_HOUR;
-            }
-            minutes = (int) (remainder / MILLIS_PER_MINUTE);
-            if (remainder >= MILLIS_PER_MINUTE) {
-                remainder = remainder % MILLIS_PER_MINUTE;
-            }
-            seconds = (int) (remainder / MILLIS_PER_SECOND);
-        }
-    }
-    */
-    
-    /**
      * Constructs a new duration representing the time between the two
      * specified dates. The end date may precede the start date in order
      * to represent a negative duration.
