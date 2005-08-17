@@ -56,6 +56,8 @@ public final class Dates {
     public static final long MILLIS_PER_DAY = 86400000;
 
     public static final long MILLIS_PER_WEEK = 604800000;
+    
+    public static final int DAYS_PER_WEEK = 7;
 
     /**
      * Constructor made private to prevent instantiation.
