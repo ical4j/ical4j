@@ -37,7 +37,6 @@ import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
@@ -158,22 +157,12 @@ public class VFreeBusy extends Component {
      * @param endDate
      *            the ending boundary for the VFreeBusy
      */
-    public VFreeBusy(final Date startDate, final Date endDate) {
+    public VFreeBusy(final DateTime start, final DateTime end) {
         this();
-        if (startDate instanceof DateTime) {
-            // dtstart MUST be specified in UTC..
-            getProperties().add(new DtStart(startDate, true));
-        }
-        else {
-            getProperties().add(new DtStart(startDate));
-        }
-        if (endDate instanceof DateTime) {
-            // dtend MUST be specified in UTC..
-            getProperties().add(new DtEnd(endDate, true));
-        }
-        else {
-            getProperties().add(new DtEnd(endDate));
-        }
+        // dtstart MUST be specified in UTC..
+        getProperties().add(new DtStart(start, true));
+        // dtend MUST be specified in UTC..
+        getProperties().add(new DtEnd(end, true));
         getProperties().add(new DtStamp(new DateTime()));
     }
 
@@ -190,12 +179,12 @@ public class VFreeBusy extends Component {
      * @param duration
      *            the length of the period being requested
      */
-    public VFreeBusy(final Date startDate, final Date endDate, final Dur duration) {
+    public VFreeBusy(final DateTime start, final DateTime end, final Dur duration) {
         this();
         // dtstart MUST be specified in UTC..
-        getProperties().add(new DtStart(startDate, true));
+        getProperties().add(new DtStart(start, true));
         // dtend MUST be specified in UTC..
-        getProperties().add(new DtEnd(endDate, true));
+        getProperties().add(new DtEnd(end, true));
         getProperties().add(new Duration(duration));
         getProperties().add(new DtStamp(new DateTime()));
     }
@@ -214,32 +203,22 @@ public class VFreeBusy extends Component {
         DtStart start = (DtStart) request.getProperties().getProperty(Property.DTSTART);
         DtEnd end = (DtEnd) request.getProperties().getProperty(Property.DTEND);
         Duration duration = (Duration) request.getProperties().getProperty(Property.DURATION);
-        if (start.getTime() instanceof DateTime) {
-            // dtstart MUST be specified in UTC..
-            getProperties().add(new DtStart(start.getTime(), true));
-        }
-        else {
-            getProperties().add(new DtStart(start.getTime()));
-        }
-        if (end.getDate() instanceof DateTime) {
-            // dtend MUST be specified in UTC..
-            getProperties().add(new DtEnd(end.getDate(), true));
-        }
-        else {
-            getProperties().add(new DtEnd(end.getDate()));
-        }
+        // dtstart MUST be specified in UTC..
+        getProperties().add(new DtStart(start.getTime(), true));
+        // dtend MUST be specified in UTC..
+        getProperties().add(new DtEnd(end.getDate(), true));
         getProperties().add(new DtStamp(new DateTime()));
         if (duration != null) {
             getProperties().add(new Duration(duration.getDuration()));
             // Initialise with all free time of at least the specified
             // duration..
-            FreeBusy fb = createFreeTime(start.getTime(), end.getDate(), duration.getDuration(), components);
+            FreeBusy fb = createFreeTime(new DateTime(start.getTime()), new DateTime(end.getDate()), duration.getDuration(), components);
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
         } else {
             // initialise with all busy time for the specified period..
-            FreeBusy fb = createBusyTime(start.getTime(), end.getDate(), components);
+            FreeBusy fb = createBusyTime(new DateTime(start.getTime()), new DateTime(end.getDate()), components);
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
@@ -257,12 +236,12 @@ public class VFreeBusy extends Component {
      *            a component to base the FREEBUSY property on
      * @return a FreeBusy instance or null if the component is not applicable
      */
-    private FreeBusy createBusyTime(final Date startDate, final Date endDate, final ComponentList components) {
-        PeriodList periods = getConsumedTime(components, startDate, endDate);
+    private FreeBusy createBusyTime(final DateTime start, final DateTime end, final ComponentList components) {
+        PeriodList periods = getConsumedTime(components, start, end);
         for (Iterator i = periods.iterator(); i.hasNext();) {
             Period period = (Period) i.next();
             // check if period outside bounds..
-            if (period.getStart().after(endDate) || period.getEnd().before(startDate)) {
+            if (period.getStart().after(end) || period.getEnd().before(start)) {
                 periods.remove(period);
             }
         }
@@ -282,7 +261,7 @@ public class VFreeBusy extends Component {
      * @param components
      * @return
      */
-    private FreeBusy createFreeTime(final Date start, final Date end, final Dur duration, final ComponentList components) {
+    private FreeBusy createFreeTime(final DateTime start, final DateTime end, final Dur duration, final ComponentList components) {
         FreeBusy fb = new FreeBusy();
         fb.getParameters().add(FbType.FREE);
         PeriodList periods = getConsumedTime(components, start, end);
@@ -320,7 +299,7 @@ public class VFreeBusy extends Component {
      * @param components
      * @return
      */
-    private PeriodList getConsumedTime(final ComponentList components, final Date rangeStart, final Date rangeEnd) {
+    private PeriodList getConsumedTime(final ComponentList components, final DateTime rangeStart, final DateTime rangeEnd) {
         PeriodList periods = new PeriodList();
         for (Iterator i = components.iterator(); i.hasNext();) {
             Component component = (Component) i.next();

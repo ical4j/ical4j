@@ -216,7 +216,7 @@ public class CalendarTest extends TestCase {
         queryStartCal.set(2006, java.util.Calendar.JULY, 1, 9, 0, 0);
         queryEndCal.set(2006, java.util.Calendar.AUGUST, 1, 9, 0, 0);
         
-        VFreeBusy request = new VFreeBusy(new Date(queryStartCal.getTime().getTime()), new Date(queryEndCal.getTime().getTime()));
+        VFreeBusy request = new VFreeBusy(new DateTime(queryStartCal.getTime()), new DateTime(queryEndCal.getTime()));
 
         VFreeBusy reply = new VFreeBusy(request, calendar.getComponents());
         /*

@@ -37,6 +37,7 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
@@ -64,8 +65,8 @@ public class VFreeBusyTest extends TestCase {
     public final void testVFreeBusyComponentList() throws Exception {
         ComponentList components = new ComponentList();
 
-        Date startDate = new Date(0);
-        Date endDate = new Date();
+        DateTime startDate = new DateTime(0);
+        DateTime endDate = new DateTime();
         
         VEvent event = new VEvent();
         event.getProperties().add(new DtStart(startDate));
@@ -96,8 +97,8 @@ public class VFreeBusyTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(fin);
 
-        Date startDate = new Date(0);
-        Date endDate = new Date();
+        DateTime startDate = new DateTime(0);
+        DateTime endDate = new DateTime();
 
         // request all busy time between 1970 and now..
         VFreeBusy requestBusy = new VFreeBusy(startDate, endDate);
@@ -117,8 +118,8 @@ public class VFreeBusyTest extends TestCase {
     public final void testVFreeBusyComponentList3() throws Exception {
         ComponentList components = new ComponentList();
 
-        Date startDate = new Date(0);
-        Date endDate = new Date();
+        DateTime startDate = new DateTime(0);
+        DateTime endDate = new DateTime();
         
         java.util.Calendar cal = java.util.Calendar.getInstance();
         cal.setTime(startDate);
@@ -154,9 +155,9 @@ public class VFreeBusyTest extends TestCase {
 
         java.util.Calendar cal = java.util.Calendar.getInstance();
 
-        Date startDate = new Date(cal.getTime().getTime());
+        DateTime startDate = new DateTime(cal.getTime());
         cal.add(java.util.Calendar.DATE, 3);
-        Date endDate = new Date(cal.getTime().getTime());
+        DateTime endDate = new DateTime(cal.getTime());
         
         VEvent event = new VEvent();
         event.getProperties().add(new DtStart(startDate));
@@ -194,8 +195,8 @@ public class VFreeBusyTest extends TestCase {
             java.util.Calendar dtstart = java.util.Calendar.getInstance();
             java.util.Calendar dtend = java.util.Calendar.getInstance(); 
             dtstart.add(java.util.Calendar.DATE, -2); 
-            VFreeBusy getBusy = new VFreeBusy(new Date(dtstart.getTime().getTime()), new Date(dtend.getTime().getTime())); 
-            VFreeBusy requestFree = new VFreeBusy(new Date(dtstart.getTime().getTime()), new Date(dtend.getTime().getTime()), new Dur(0, 0, 30, 0)); 
+            VFreeBusy getBusy = new VFreeBusy(new DateTime(dtstart.getTime()), new DateTime(dtend.getTime())); 
+            VFreeBusy requestFree = new VFreeBusy(new DateTime(dtstart.getTime()), new DateTime(dtend.getTime()), new Dur(0, 0, 30, 0)); 
              
             log.debug("GET BUSY: \n" + getBusy.toString());
             log.debug("REQUEST FREE: \n" + requestFree.toString());
