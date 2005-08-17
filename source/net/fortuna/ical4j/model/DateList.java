@@ -64,7 +64,7 @@ public class DateList extends ArrayList implements Serializable {
      */
     public DateList(final Value aType) {
         this.type = aType;
-        this.timeZone = TimeZone.getTimeZone(TimeZoneUtils.UTC_ID);
+        this.timeZone = TimeZone.getDefault();
     }
 
     /**
@@ -146,8 +146,10 @@ public class DateList extends ArrayList implements Serializable {
         if (date instanceof DateTime) {
             ((DateTime) date).setTimeZone(getTimeZone());
         }
-        if (Value.DATE_TIME.equals(getType()) && !(date instanceof DateTime)) {
-            return add((Object) new DateTime(date));
+        else if (Value.DATE_TIME.equals(getType())) {
+            DateTime dateTime = new DateTime(date);
+            dateTime.setTimeZone(getTimeZone());
+            return add((Object) dateTime);
         }
         return add((Object) date);
     }
