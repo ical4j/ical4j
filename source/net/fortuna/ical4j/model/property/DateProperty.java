@@ -103,9 +103,9 @@ public abstract class DateProperty extends Property {
         }
         else {
             getParameters().add(vTimeZone.getTzIdParam());
-            if (getDate() != null) {
-                ((DateTime) getDate()).setTimeZone(vTimeZone.getTimeZone());
-            }
+        }
+        if (getDate() != null) {
+            ((DateTime) getDate()).setTimeZone(vTimeZone.getTimeZone());
         }
     }
     

@@ -88,17 +88,11 @@ public class DtStamp extends UtcProperty {
     private static final long serialVersionUID = 7581197869433744070L;
 
     /**
-     * The value MUST be specified in the UTC time format.
-     */
-    private DateTime dateTime;
-
-    /**
      * Default constructor. Initialises the dateTime value to the time
      * of instantiation.
      */
     public DtStamp() {
         super(DTSTAMP);
-        dateTime = new DateTime();
     }
     
     /**
@@ -122,7 +116,9 @@ public class DtStamp extends UtcProperty {
      */
     public DtStamp(final DateTime aDate) {
         super(DTSTAMP);
-        dateTime = aDate;
+        // time must be in UTC..
+        aDate.setUtc(true);
+        setDate(aDate);
     }
 
     /**
@@ -133,14 +129,16 @@ public class DtStamp extends UtcProperty {
      */
     public DtStamp(final ParameterList aList, final DateTime aDate) {
         super(DTSTAMP, aList);
-        dateTime = aDate;
+        // time must be in UTC..
+        aDate.setUtc(true);
+        setDate(aDate);
     }
 
     /**
      * @return Returns the date-time.
      */
     public final DateTime getDateTime() {
-        return dateTime;
+        return (DateTime) getDate();
     }
     
     
@@ -148,7 +146,7 @@ public class DtStamp extends UtcProperty {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-        dateTime = new DateTime(aValue);
+        setDate(new DateTime(aValue));
     }
 
     /*
@@ -164,6 +162,8 @@ public class DtStamp extends UtcProperty {
      * @param dateTime The dateTime to set.
      */
     public final void setDateTime(final DateTime dateTime) {
-        this.dateTime = dateTime;
+        // time must be in UTC..
+        dateTime.setUtc(true);
+        setDate(dateTime);
     }
 }

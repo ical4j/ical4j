@@ -81,16 +81,10 @@ public class LastModified extends UtcProperty {
     private static final long serialVersionUID = 5288572652052836062L;
 
     /**
-     * The property value MUST be specified in the UTC time format.
-     */
-    private DateTime dateTime;
-
-    /**
      * Default constructor.
      */
     public LastModified() {
         super(LAST_MODIFIED);
-        dateTime = new DateTime();
     }
     
     /**
@@ -114,7 +108,9 @@ public class LastModified extends UtcProperty {
      */
     public LastModified(final DateTime aDate) {
         super(LAST_MODIFIED);
-        dateTime = aDate;
+        // time must be in UTC..
+        aDate.setUtc(true);
+        setDate(aDate);
     }
 
     /**
@@ -125,14 +121,16 @@ public class LastModified extends UtcProperty {
      */
     public LastModified(final ParameterList aList, final DateTime aDate) {
         super(LAST_MODIFIED, aList);
-        dateTime = aDate;
+        // time must be in UTC..
+        aDate.setUtc(true);
+        setDate(aDate);
     }
 
     /**
      * @return Returns the date-time.
      */
     public final DateTime getDateTime() {
-        return dateTime;
+        return (DateTime) getDate();
     }
     
     
@@ -140,7 +138,7 @@ public class LastModified extends UtcProperty {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-        dateTime = new DateTime(aValue);
+        setDate(new DateTime(aValue));
     }
 
     /*
@@ -156,6 +154,8 @@ public class LastModified extends UtcProperty {
      * @param dateTime The dateTime to set.
      */
     public final void setDateTime(final DateTime dateTime) {
-        this.dateTime = dateTime;
+        // time must be in UTC..
+        dateTime.setUtc(true);
+        setDate(dateTime);
     }
 }

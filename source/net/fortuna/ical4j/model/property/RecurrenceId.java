@@ -44,6 +44,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.util.StringUtils;
 
 /**
  * Defines a RECURRENCE-ID iCalendar component property.
@@ -131,14 +132,12 @@ public class RecurrenceId extends DateProperty {
     
     private static final long serialVersionUID = 4456883817126011006L;
 
-    private Date time;
-
     /**
      * Default constructor.
      */
     public RecurrenceId() {
         super(RECURRENCE_ID);
-        time = new DateTime();
+        setDate(new DateTime());
     }
     
     /**
@@ -164,7 +163,7 @@ public class RecurrenceId extends DateProperty {
      */
     public RecurrenceId(final Date aDate) {
         super(RECURRENCE_ID);
-        time = aDate;
+        setDate(aDate);
     }
 
     /**
@@ -177,14 +176,14 @@ public class RecurrenceId extends DateProperty {
      */
     public RecurrenceId(final ParameterList aList, final Date aDate) {
         super(RECURRENCE_ID, aList);
-        time = aDate;
+        setDate(aDate);
     }
 
     /**
      * @return Returns the time.
      */
     public final Date getTime() {
-        return time;
+        return getDate();
     }
 
     /**
@@ -238,10 +237,10 @@ public class RecurrenceId extends DateProperty {
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
 
         if (valueParam != null && Value.DATE.equals(valueParam)) {
-            time = new Date(aValue);
+            setDate(new Date(aValue));
         }
         else {
-            time = new DateTime(aValue);
+            setDate(new DateTime(aValue));
         }
     }
 
@@ -249,21 +248,13 @@ public class RecurrenceId extends DateProperty {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        /*
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
-        if (valueParam != null && Value.DATE.equals(valueParam)) {
-            return DateFormat.getInstance().format(getTime());
-        }
-        // return local time..
-        return DateTimeFormat.getInstance().format(getTime(), isUtc());
-        */
-        return getTime().toString();
+        return StringUtils.valueOf(getTime());
     }
     
     /**
      * @param time The time to set.
      */
     public final void setTime(final Date time) {
-        this.time = time;
+        setDate(time);
     }
 }

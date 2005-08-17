@@ -99,8 +99,6 @@ public class Due extends DateProperty {
     
     private static final long serialVersionUID = -2965312347832730406L;
 
-    private Date time;
-
     /**
      * Default constructor. The time value is initialised to
      * the time of instantiation.
@@ -108,7 +106,7 @@ public class Due extends DateProperty {
     public Due() {
         super(DUE);
         // defaults to UTC time..
-        time = new DateTime(true);
+        setDate(new DateTime(true));
     }
     
     /**
@@ -134,7 +132,7 @@ public class Due extends DateProperty {
      */
     public Due(final Date aDate) {
         super(DUE);
-        time = aDate;
+        setDate(aDate);
     }
 
     /**
@@ -147,7 +145,7 @@ public class Due extends DateProperty {
      */
     public Due(final ParameterList aList, final Date aDate) {
         super(DUE, aList);
-        time = aDate;
+        setDate(aDate);
     }
 
     /**
@@ -193,7 +191,7 @@ public class Due extends DateProperty {
      * @return Returns the time.
      */
     public final Date getTime() {
-        return time;
+        return getDate();
     }
     
     
@@ -204,10 +202,10 @@ public class Due extends DateProperty {
 
         // value can be either a date-time or a date..
         if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
-            time = new Date(aValue);
+            setDate(new Date(aValue));
         }
         else {
-            time = new DateTime(aValue);
+            setDate(new DateTime(aValue));
         }
     }
 
@@ -222,6 +220,6 @@ public class Due extends DateProperty {
      * @param time The time to set.
      */
     public final void setTime(final Date time) {
-        this.time = time;
+        setDate(time);
     }
 }

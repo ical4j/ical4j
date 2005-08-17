@@ -52,6 +52,7 @@ public abstract class UtcProperty extends DateProperty {
      */
     public UtcProperty(final String name, final ParameterList parameters) {
         super(name, parameters);
+        setDate(new DateTime(true));
     }
 
     /**
@@ -59,6 +60,7 @@ public abstract class UtcProperty extends DateProperty {
      */
     public UtcProperty(final String name) {
         super(name);
+        setDate(new DateTime(true));
     }
 
     /* (non-Javadoc)

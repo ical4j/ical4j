@@ -113,15 +113,12 @@ public class DtStart extends DateProperty {
     
     private static final long serialVersionUID = -5707097476081111815L;
 
-    private Date time;
-
     /**
      * Default constructor. The time value is initialised to the
      * time of instantiation.
      */
     public DtStart() {
         super(DTSTART);
-        time = new Date();
     }
     
     /**
@@ -160,7 +157,7 @@ public class DtStart extends DateProperty {
      */
     public DtStart(final Date aDate) {
         super(DTSTART);
-        time = aDate;
+        setDate(aDate);
     }
     
     /**
@@ -170,7 +167,7 @@ public class DtStart extends DateProperty {
      */
     public DtStart(final Date time, final boolean utc) {
         super(DTSTART);
-        setTime(time);
+        setDate(time);
         setUtc(utc);
     }
 
@@ -184,14 +181,14 @@ public class DtStart extends DateProperty {
      */
     public DtStart(final ParameterList aList, final Date aDate) {
         super(DTSTART, aList);
-        time = aDate;
+        setDate(aDate);
     }
 
     /**
      * @return Returns the time.
      */
     public final Date getTime() {
-        return time;
+        return getDate();
     }
 
     /**
@@ -238,10 +235,10 @@ public class DtStart extends DateProperty {
     public final void setValue(final String aValue) throws ParseException {
         // value can be either a date-time or a date..
         if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
-            time = new Date(aValue);
+            setDate(new Date(aValue));
         }
         else {
-            time = new DateTime(aValue);
+            setDate(new DateTime(aValue));
         }
     }
 
@@ -256,6 +253,6 @@ public class DtStart extends DateProperty {
      * @param time The time to set.
      */
     public final void setTime(final Date time) {
-        this.time = time;
+        setDate(time);
     }
 }

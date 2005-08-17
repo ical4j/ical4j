@@ -39,6 +39,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.util.StringUtils;
 
 /**
  * Defines a CREATED iCalendar component property.
@@ -79,16 +80,10 @@ public class Created extends UtcProperty {
     private static final long serialVersionUID = -8658935097721652961L;
 
     /**
-     * The date and time is a UTC value.
-     */
-    private DateTime dateTime;
-
-    /**
      * Default constructor.
      */
     public Created() {
         super(CREATED);
-        dateTime = new DateTime();
     }
     
     /**
@@ -125,7 +120,9 @@ public class Created extends UtcProperty {
      */
     public Created(final DateTime aDate) {
         super(CREATED);
-        dateTime = aDate;
+        // time must be in UTC..
+        aDate.setUtc(true);
+        setDate(aDate);
     }
 
     /**
@@ -136,14 +133,16 @@ public class Created extends UtcProperty {
      */
     public Created(final ParameterList aList, final DateTime aDate) {
         super(CREATED, aList);
-        dateTime = aDate;
+        // time must be in UTC..
+        aDate.setUtc(true);
+        setDate(aDate);
     }
 
     /**
      * @return Returns the date-time.
      */
     public final DateTime getDateTime() {
-        return dateTime;
+        return (DateTime) getDate();
     }
     
     
@@ -151,7 +150,7 @@ public class Created extends UtcProperty {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-        dateTime = new DateTime(aValue);
+        setDate(new DateTime(aValue));
     }
 
     /*
@@ -160,6 +159,6 @@ public class Created extends UtcProperty {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return getDateTime().toString();
+        return StringUtils.valueOf(getDateTime());
     }
 }

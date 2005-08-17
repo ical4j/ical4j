@@ -76,16 +76,10 @@ public class Completed extends UtcProperty {
     private static final long serialVersionUID = 6824213281785639181L;
 
     /**
-     * NOTE: The date and time MUST be in a UTC format.
-     */
-    private DateTime time;
-
-    /**
      * Default constructor.
      */
     public Completed() {
         super(COMPLETED);
-        time = new DateTime();
     }
     
     /**
@@ -122,7 +116,9 @@ public class Completed extends UtcProperty {
      */
     public Completed(final DateTime aDate) {
         super(COMPLETED);
-        time = aDate;
+        // time must be in UTC..
+        aDate.setUtc(true);
+        setDate(aDate);
     }
 
     /**
@@ -133,21 +129,23 @@ public class Completed extends UtcProperty {
      */
     public Completed(final ParameterList aList, final DateTime aDate) {
         super(COMPLETED, aList);
-        time = aDate;
+        // time must be in UTC..
+        aDate.setUtc(true);
+        setDate(aDate);
     }
 
     /**
      * @return Returns the time.
      */
     public final DateTime getTime() {
-        return time;
+        return (DateTime) getDate();
     }
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-        time = new DateTime(aValue);
+        setDate(new DateTime(aValue));
     }
 
     /*
