@@ -50,13 +50,10 @@ public class PeriodList extends TreeSet implements Serializable {
     
     private static final long serialVersionUID = -6319585959747194724L;
 
-//    private List periods;
-
     /**
      * Default constructor.
      */
     public PeriodList() {
-//        periods = new ArrayList();
     }
 
     /**
@@ -68,8 +65,6 @@ public class PeriodList extends TreeSet implements Serializable {
      * representation of a period list is specified
      */
     public PeriodList(final String aValue) throws ParseException {
-//        periods = new ArrayList();
-
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {
             add(new Period(t.nextToken()));
@@ -113,22 +108,6 @@ public class PeriodList extends TreeSet implements Serializable {
     }
 
     /**
-     * @return boolean indicates if the list is empty
-     * @see java.util.List#isEmpty()
-     */
-//    public final boolean isEmpty() {
-//        return periods.isEmpty();
-//    }
-
-    /**
-     * @return an iterator
-     * @see java.util.List#iterator()
-     */
-//    public final Iterator iterator() {
-//        return periods.iterator();
-//    }
-
-    /**
      * Remove a period from the list.
      * @param period the period to remove
      * @return true if the list contained the specified period
@@ -137,14 +116,6 @@ public class PeriodList extends TreeSet implements Serializable {
     public final boolean remove(final Period period) {
         return remove((Object) period);
     }
-
-    /**
-     * @return the number of periods in the list
-     * @see java.util.List#size()
-     */
-//    public final int size() {
-//        return periods.size();
-//    }
     
     /**
      * Returns a normalised version of this period list. Normalisation includes
