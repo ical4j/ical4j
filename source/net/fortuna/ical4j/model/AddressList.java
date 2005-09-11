@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Uris;
 
 
 /**
@@ -72,10 +73,9 @@ public class AddressList implements Serializable {
      */
     public AddressList(final String aValue) throws URISyntaxException {
         addresses = new ArrayList();
-
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {
-            addresses.add(new URI(StringUtils.unquote(t.nextToken())));
+            addresses.add(new URI(Uris.encode(StringUtils.unquote(t.nextToken()))));
         }
     }
 
@@ -83,18 +83,13 @@ public class AddressList implements Serializable {
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-
         StringBuffer b = new StringBuffer();
-
         for (Iterator i = addresses.iterator(); i.hasNext();) {
-
-            b.append(StringUtils.quote(i.next()));
-
+            b.append(StringUtils.quote(Uris.decode(StringUtils.valueOf(i.next()))));
             if (i.hasNext()) {
                 b.append(',');
             }
         }
-
         return b.toString();
     }
 

@@ -43,6 +43,8 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Uris;
 
 /**
  * Defines an ATTENDEE iCalendar component property.
@@ -113,7 +115,7 @@ public class Attendee extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) throws URISyntaxException {
-        calAddress = new URI(aValue);
+        calAddress = new URI(Uris.encode(aValue));
     }
 
     /**
@@ -172,7 +174,7 @@ public class Attendee extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return getCalAddress().toString();
+        return Uris.decode(StringUtils.valueOf(getCalAddress()));
     }
     
     /**

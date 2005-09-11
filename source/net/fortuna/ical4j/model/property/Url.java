@@ -40,6 +40,8 @@ import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Uris;
 
 /**
  * Defines a URL iCalendar component property.
@@ -104,7 +106,7 @@ public class Url extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws URISyntaxException {
-        uri = new URI(aValue);
+        uri = new URI(Uris.encode(aValue));
     }
 
     /*
@@ -113,7 +115,7 @@ public class Url extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return getUri().toString();
+        return Uris.decode(StringUtils.valueOf(getUri()));
     }
     
     /**

@@ -38,6 +38,7 @@ import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Uris;
 
 /**
  * Defines a Directory Entry Reference parameter.
@@ -57,7 +58,7 @@ public class Dir extends Parameter {
      *             when the specified string is not a valid (quoted) uri
      */
     public Dir(final String aValue) throws URISyntaxException {
-        this(new URI(StringUtils.unquote(aValue)));
+        this(new URI(Uris.encode(StringUtils.unquote(aValue))));
     }
 
     /**
@@ -66,7 +67,6 @@ public class Dir extends Parameter {
      */
     public Dir(final URI aUri) {
         super(DIR);
-
         this.uri = aUri;
     }
 
@@ -83,6 +83,6 @@ public class Dir extends Parameter {
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {
-        return StringUtils.quote(getUri());
+        return StringUtils.quote(Uris.decode(StringUtils.valueOf(getUri())));
     }
 }

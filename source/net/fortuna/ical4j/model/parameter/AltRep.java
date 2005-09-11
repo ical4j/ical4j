@@ -38,6 +38,7 @@ import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Uris;
 
 /**
  * Defines an Alternate Text Representation parameter.
@@ -57,7 +58,7 @@ public class AltRep extends Parameter {
      *             when the specified string is not a value (quoted) uri
      */
     public AltRep(final String aValue) throws URISyntaxException {
-        this(new URI(StringUtils.unquote(aValue)));
+        this(new URI(Uris.encode(StringUtils.unquote(aValue))));
     }
 
     /**
@@ -83,6 +84,6 @@ public class AltRep extends Parameter {
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {
-        return StringUtils.quote(getUri());
+        return StringUtils.quote(Uris.decode(StringUtils.valueOf(getUri())));
     }
 }

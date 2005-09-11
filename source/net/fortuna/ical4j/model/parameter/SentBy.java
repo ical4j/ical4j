@@ -38,6 +38,7 @@ import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Uris;
 
 /**
  * Defines a Sent By parameter.
@@ -57,7 +58,7 @@ public class SentBy extends Parameter {
      *             when the specified string is not a valid (quoted) uri
      */
     public SentBy(final String aValue) throws URISyntaxException {
-        this(new URI(StringUtils.unquote(aValue)));
+        this(new URI(Uris.encode(StringUtils.unquote(aValue))));
     }
 
     /**
@@ -66,7 +67,6 @@ public class SentBy extends Parameter {
      */
     public SentBy(final URI aUri) {
         super(SENT_BY);
-
         this.address = aUri;
     }
 
@@ -83,6 +83,6 @@ public class SentBy extends Parameter {
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {
-        return StringUtils.quote(getAddress());
+        return StringUtils.quote(Uris.decode(StringUtils.valueOf(getAddress())));
     }
 }

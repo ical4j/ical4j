@@ -47,6 +47,8 @@ import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Base64;
 import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Uris;
 
 /**
  * Defines an ATTACH iCalendar component property.
@@ -148,7 +150,7 @@ public class Attach extends Property {
         }
         // assume URI..
         else {
-            uri = new URI(aValue);
+            uri = new URI(Uris.encode(aValue));
         }
     }
 
@@ -236,7 +238,7 @@ public class Attach extends Property {
      */
     public final String getValue() {
         if (getUri() != null) {
-            return getUri().toString();
+            return Uris.decode(StringUtils.valueOf(getUri()));
         }
         else if (getBinary() != null) {
             return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
