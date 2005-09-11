@@ -18,7 +18,7 @@ DTSTART;TZID=America/Los_Angeles:20040629T100000
 DTEND;TZID=America/Los_Angeles:20040629T110000
 SUMMARY:This Cat Roars! Experience the New Functionality in JavaTM 2 Platform, Standard Edition (J2SETM), Version 1.5
 DESCRIPTION:Today JavaTM technology is everywhere -- in large enterprise systems, desktops, hand-held devices and smart cards. Consequently Java technology is the platform of choice for developers all over the world. All this has happened in the short time since the technology was first introduced in 1995. While there have been updates and enhancements since the first version, release 1.5 of the core Java platform brings to the table more language-level updates and other enhancements through the incorporation of a number of Java Specification Requests (JSRs) than at any other time. In this hands-on session, developers will learn about all these changes and how to build desktop applications using version 1.5 of the Java platform.
-LAST-MODIFIED;TZID=America/Los_Angeles:20040610T120147
+LAST-MODIFIED:20040610T120147Z
 LOCATION:6113
 END:VEVENT
 BEGIN:VEVENT
@@ -59,7 +59,7 @@ DTSTART;TZID=America/Los_Angeles:20040630T203000
 DTEND;TZID=America/Los_Angeles:20040630T213000
 SUMMARY:Taming the JavaTM Technology ClassLoader
 DESCRIPTION:Classloaders are integral to the JavaTM technology runtime environment, providing security and dynamic class loading capabilities. Java Servlet and EJBTM containers, for example, implement their own classloaders to support features like hot deployment. Even though they mostly stay in the background, giving a hint of their presence only through the NoClassDefFoundError, there are times when problems show up as more obscure exceptions like java.lang.LinkageError. A solid understanding of classloader function is important to the ability to debug these occasional problems.
-LAST-MODIFIED;TZID=America/Los_Angeles:20040610T120652
+LAST-MODIFIED:20040610T120652Z
 LOCATION:BOF-1373
 END:VEVENT
 BEGIN:VEVENT
@@ -299,7 +299,7 @@ DTSTART;TZID=America/Los_Angeles:20040629T223000
 DTEND;TZID=America/Los_Angeles:20040629T233000
 SUMMARY:JavaTM 2 Platform, Enterprise Edition (J2EETM) Development With Free and Open-Source Tools
 DESCRIPTION:The average JavaTM 2 Platform, Enterprise Edition (J2EETM platform) IDE, application server, database server, and even OS can set you back a pretty penny. Even large companies may not want to outfit every developer with a full stack of commercial software tools. But you don't need to hemorrhage money to develop applications for the J2EE platform.
-LAST-MODIFIED;TZID=America/Los_Angeles:20040610T131106
+LAST-MODIFIED:20040610T131106Z
 LOCATION:BOF-2923
 END:VEVENT
 BEGIN:VEVENT
