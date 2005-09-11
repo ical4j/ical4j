@@ -357,7 +357,14 @@ public class Dur implements Comparable {
      */
     public final int compareTo(final Dur arg0) {
         if (isNegative() != arg0.isNegative()) {
-            return Boolean.valueOf(isNegative()).compareTo(Boolean.valueOf(arg0.isNegative()));
+//            return Boolean.valueOf(isNegative()).compareTo(Boolean.valueOf(arg0.isNegative()));
+            // for pre-java 1.5 compatibility..
+            if (isNegative()) {
+                return Integer.MAX_VALUE;
+            }
+            else {
+                return Integer.MIN_VALUE;
+            }
         }
         else if (getWeeks() != arg0.getWeeks()) {
             return getWeeks() - arg0.getWeeks();
