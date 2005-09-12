@@ -490,14 +490,17 @@ public class Recur implements Serializable {
             DateList candidates = getCandidates(new Date(cal.getTime().getTime()), value);
             for (Iterator i = candidates.iterator(); i.hasNext();) {
                 Date candidate = (Date) i.next();
-                if (candidate.before(periodStart) || candidate.after(periodEnd)) {
-                    invalidCandidateCount++;
-                }
-                else if (getCount() >= 1 && (dates.size() + invalidCandidateCount) >= getCount()) {
-                    break;
-                }
-                else if (!(getUntil() != null && cal.getTime().after(getUntil()))) {
-                    dates.add(candidate);
+                // don't count candidates that occur before the seed date..
+                if (!candidate.before(seed)) {
+                    if (candidate.before(periodStart) || candidate.after(periodEnd)) {
+                        invalidCandidateCount++;
+                    }
+                    else if (getCount() >= 1 && (dates.size() + invalidCandidateCount) >= getCount()) {
+                        break;
+                    }
+                    else if (!(getUntil() != null && cal.getTime().after(getUntil()))) {
+                        dates.add(candidate);
+                    }
                 }
             }
             increment(cal);
@@ -603,7 +606,7 @@ public class Recur implements Serializable {
      * 
      * @param dates
      */
-    protected final DateList applySetPosRules(final DateList dates) {
+    private final DateList applySetPosRules(final DateList dates) {
         // return if no SETPOS rules specified..
         if (getSetPosList().isEmpty()) {
             return dates;
@@ -734,7 +737,7 @@ public class Recur implements Serializable {
             cal.setTime(date);
             for (Iterator j = getMonthDayList().iterator(); j.hasNext();) {
                 Integer monthDay = (Integer) j.next();
-                cal.set(Calendar.DAY_OF_YEAR, Dates.getAbsMonthDay(cal.getTime(), monthDay.intValue()));
+                cal.set(Calendar.DAY_OF_MONTH, Dates.getAbsMonthDay(cal.getTime(), monthDay.intValue()));
                 if (Value.DATE_TIME.equals(monthDayDates.getType())) {
                     monthDayDates.add(new DateTime(cal.getTime()));
                 }
@@ -863,7 +866,7 @@ public class Recur implements Serializable {
      * @param offset
      * @param sublist
      */
-    protected static void sublist(final List list, final int offset, final List sublist) {
+    private void sublist(final List list, final int offset, final List sublist) {
         int size = list.size();
         if (offset < 0 && offset >= -size) {
             sublist.add(list.get(size + offset));
