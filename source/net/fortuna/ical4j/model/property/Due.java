@@ -152,6 +152,7 @@ public class Due extends DateProperty {
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
+        super.validate();
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once
