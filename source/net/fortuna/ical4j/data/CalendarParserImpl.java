@@ -160,12 +160,17 @@ public class CalendarParserImpl implements CalendarParser {
 
         assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
-        while (!Component.BEGIN.equals(tokeniser.sval)
-                && !Component.END.equals(tokeniser.sval)) {
-
-            parseProperty(tokeniser, handler);
-
-            assertToken(tokeniser, StreamTokenizer.TT_WORD);
+        while (/*!Component.BEGIN.equals(tokeniser.sval)
+                && */!Component.END.equals(tokeniser.sval)) {
+            // check for timezones observances or vevent/vtodo alarms..
+            if (Component.BEGIN.equals(tokeniser.sval)) {
+                parseComponent(tokeniser, handler);
+            }
+            else {
+                parseProperty(tokeniser, handler);
+            }
+            absorbWhitespace(tokeniser);
+//            assertToken(tokeniser, StreamTokenizer.TT_WORD);
         }
     }
 
@@ -300,18 +305,7 @@ public class CalendarParserImpl implements CalendarParser {
 
         while (Component.BEGIN.equals(tokeniser.sval)) {
             parseComponent(tokeniser, handler);
-            
-            // HACK: absorb extraneous whitespace between components (KOrganizer)..
-            try {
-                while (true) {
-                    assertToken(tokeniser, StreamTokenizer.TT_EOL);
-                }
-            }
-            catch (ParserException pe) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Caught exception absorbing extra whitespace", pe);
-                }
-            }
+            absorbWhitespace(tokeniser);
 //            assertToken(tokeniser, StreamTokenizer.TT_WORD);
         }
     }
@@ -341,6 +335,7 @@ public class CalendarParserImpl implements CalendarParser {
 
         parsePropertyList(tokeniser, handler);
 
+        /*
         // a special case for VTIMEZONE component which contains
         // sub-components..
         if (Component.VTIMEZONE.equals(name)) {
@@ -352,6 +347,7 @@ public class CalendarParserImpl implements CalendarParser {
                 && Component.BEGIN.equals(tokeniser.sval)) {
             parseComponentList(tokeniser, handler);
         }
+        */
 
         assertToken(tokeniser, ':');
 
@@ -432,6 +428,25 @@ public class CalendarParserImpl implements CalendarParser {
 
         if (log.isDebugEnabled()) {
             log.debug("[" + token + "]");
+        }
+    }
+    
+    /**
+     * Absorbs extraneous newlines.
+     * @param tokeniser
+     * @throws IOException
+     */
+    private void absorbWhitespace(final StreamTokenizer tokeniser) throws IOException {
+        // HACK: absorb extraneous whitespace between components (KOrganizer)..
+        try {
+            while (true) {
+                assertToken(tokeniser, StreamTokenizer.TT_EOL);
+            }
+        }
+        catch (ParserException pe) {
+            if (log.isDebugEnabled()) {
+                log.debug("Caught exception absorbing extra whitespace", pe);
+            }
         }
     }
 }
