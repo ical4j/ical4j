@@ -20,7 +20,7 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.TimeZoneRegistryImpl;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -56,7 +56,7 @@ public class VEventTest extends TestCase {
         super.setUp();
         
         // create timezone property..
-        tz = TimeZoneRegistryImpl.getInstance().getTimeZone("Australia/Melbourne").getVTimeZone();
+        tz = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Australia/Melbourne").getVTimeZone();
         // create tzid parameter..
         tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
 

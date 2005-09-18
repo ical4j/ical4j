@@ -65,7 +65,7 @@ public class CalendarTest extends TestCase {
         calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
-        VTimeZone tz = TimeZoneRegistryImpl.getInstance().getTimeZone("Australia/Melbourne").getVTimeZone();
+        VTimeZone tz = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Australia/Melbourne").getVTimeZone();
         calendar.getComponents().add(tz);
         TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
         
@@ -142,7 +142,7 @@ public class CalendarTest extends TestCase {
         calendar.getProperties().add(CalScale.GREGORIAN);
 
         // Add events, etc..
-        VTimeZone tz = TimeZoneRegistryImpl.getInstance().getTimeZone("Australia/Melbourne").getVTimeZone();
+        VTimeZone tz = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Australia/Melbourne").getVTimeZone();
         TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
 
         java.util.Calendar calStart = java.util.Calendar.getInstance();

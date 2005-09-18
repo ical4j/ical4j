@@ -36,15 +36,16 @@
 package net.fortuna.ical4j.model;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * The default implementation of a <code>TimeZoneRegistry</code>. This
@@ -55,8 +56,6 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private static Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
-    
-    private static TimeZoneRegistryImpl instance = new TimeZoneRegistryImpl();
     
     private Map timezones;
     
@@ -82,8 +81,10 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         if (timezone == null) {
             try {
                 VTimeZone vTimeZone = loadVTimeZone(id);
-                timezone = new TimeZone(vTimeZone);
-                register(timezone);
+                if (vTimeZone != null) {
+                    timezone = new TimeZone(vTimeZone);
+                    register(timezone);
+                }
             }
             catch (Exception e) {
                 log.warn("Error occurred loading VTimeZone", e);
@@ -98,21 +99,14 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      */
     private static VTimeZone loadVTimeZone(final String id) throws IOException,
             ParserException {
-        String resource = "/" + id + ".ics";
-
-        CalendarBuilder builder = new CalendarBuilder();
-
-        Calendar calendar = builder.build(VTimeZone.class
-                .getResourceAsStream(resource));
-
-        return (VTimeZone) calendar.getComponents().getComponent(
-                Component.VTIMEZONE);
-    }
-
-    /**
-     * @return Returns the instance.
-     */
-    public static final TimeZoneRegistryImpl getInstance() {
-        return instance;
+//        String resource = "/" + id + ".ics";
+        URL resource = TimeZoneRegistryImpl.class.getResource("/" + id + ".ics");
+        if (resource != null) {
+            CalendarBuilder builder = new CalendarBuilder();
+            Calendar calendar = builder.build(resource.openStream());
+            return (VTimeZone) calendar.getComponents().getComponent(
+                    Component.VTIMEZONE);
+        }
+        return null;
     }
 }

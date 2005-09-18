@@ -41,7 +41,7 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.TimeZoneRegistryImpl;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -70,7 +70,7 @@ public class VFreeBusyTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         // create timezone property..
-        tz = TimeZoneRegistryImpl.getInstance().getTimeZone("Australia/Melbourne").getVTimeZone();
+        tz = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Australia/Melbourne").getVTimeZone();
         // create tzid parameter..
         tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
     }

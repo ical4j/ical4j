@@ -56,7 +56,7 @@ public class TimeZoneTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         tz = java.util.TimeZone.getTimeZone("Australia/Melbourne");
-        timezone = TimeZoneRegistryImpl.getInstance().getTimeZone("Australia/Melbourne");
+        timezone = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Australia/Melbourne");
     }
 
     /**
@@ -114,7 +114,7 @@ public class TimeZoneTest extends TestCase {
         assertEquals(tz.useDaylightTime(), timezone.useDaylightTime());
         
         java.util.TimeZone noDaylightTz = java.util.TimeZone.getTimeZone("Africa/Abidjan");
-        TimeZone noDaylightTimezone = TimeZoneRegistryImpl.getInstance().getTimeZone("Africa/Abidjan");
+        TimeZone noDaylightTimezone = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Africa/Abidjan");
         assertEquals(noDaylightTz.useDaylightTime(), noDaylightTimezone.useDaylightTime());
     }
     

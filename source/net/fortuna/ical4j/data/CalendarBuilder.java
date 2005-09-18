@@ -51,7 +51,7 @@ import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistryImpl;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
@@ -168,7 +168,7 @@ public class CalendarBuilder implements ContentHandler {
                 calendar.getComponents().add(component);
                 if (component instanceof VTimeZone) {
                     // register the timezone for use with iCalendar objects..
-                    TimeZoneRegistryImpl.getInstance().register(new TimeZone((VTimeZone) component));
+                    TimeZoneRegistryFactory.getInstance().getRegistry().register(new TimeZone((VTimeZone) component));
                 }
                 component = null;
             }
@@ -207,7 +207,7 @@ public class CalendarBuilder implements ContentHandler {
             Parameter param = ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value);
             property.getParameters().add(param);
             if (param instanceof TzId) {
-                TimeZone timezone = TimeZoneRegistryImpl.getInstance().getTimeZone(param.getValue());
+                TimeZone timezone = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone(param.getValue());
                 try {
                     ((DateProperty) property).setTimeZone(timezone);
                 }
