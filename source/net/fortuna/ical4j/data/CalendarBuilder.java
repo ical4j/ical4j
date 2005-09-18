@@ -50,6 +50,8 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactoryImpl;
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.TimeZoneRegistryImpl;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
@@ -152,7 +154,9 @@ public class CalendarBuilder implements ContentHandler {
         if (component != null) {
             if (subComponent != null) {
                 if (component instanceof VTimeZone) {
-                    ((VTimeZone) component).getTypes().add(subComponent);
+                    ((VTimeZone) component).getObservances().add(subComponent);
+                    // register the timezone for use with iCalendar objects..
+                    TimeZoneRegistryImpl.getInstance().register(new TimeZone((VTimeZone) component));
                 }
                 else if (component instanceof VEvent) {
                     ((VEvent) component).getAlarms().add(subComponent);
@@ -201,12 +205,13 @@ public class CalendarBuilder implements ContentHandler {
             Parameter param = ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value);
             property.getParameters().add(param);
             if (param instanceof TzId) {
+                TimeZone timezone = TimeZoneRegistryImpl.getInstance().getTimeZone(param.getValue());
                 try {
-                    ((DateProperty) property).setVTimeZone(calendar.getVTimeZone((TzId) param));
+                    ((DateProperty) property).setTimeZone(timezone);
                 }
                 catch (Exception e) {
                     try {
-                        ((DateListProperty) property).setVTimeZone(calendar.getVTimeZone((TzId) param));
+                        ((DateListProperty) property).setTimeZone(timezone);
                     }
                     catch (Exception e2) {
                         log.warn("Error setting timezone [" + param + "] on property [" + property.getName() + "]", e);
