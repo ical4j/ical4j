@@ -20,6 +20,7 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.TimeZoneRegistryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -40,6 +41,10 @@ import org.apache.commons.logging.LogFactory;
 public class VEventTest extends TestCase {
 
     private static Log log = LogFactory.getLog(VEventTest.class);
+    
+    private VTimeZone tz;
+    
+    private TzId tzParam;
 
     private VEvent weekdayNineToFiveEvents = null;
     
@@ -49,6 +54,11 @@ public class VEventTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
+        
+        // create timezone property..
+        tz = TimeZoneRegistryImpl.getInstance().getTimeZone("Australia/Melbourne").getVTimeZone();
+        // create tzid parameter..
+        tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
 
         Calendar weekday9AM = Calendar.getInstance();
         weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
@@ -132,13 +142,6 @@ public class VEventTest extends TestCase {
      *  
      */
     public final void test() {
-        // create timezone property..
-        VTimeZone tz = VTimeZone.getDefault();
-
-        // create tzid parameter..
-        TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID)
-                .getValue());
-
         // create event start date..
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         calendar.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
@@ -168,8 +171,6 @@ public class VEventTest extends TestCase {
         christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
         // add timezone information..
-        VTimeZone tz = VTimeZone.getDefault();
-        TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
         christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
 
         log.info(christmas);
@@ -185,8 +186,6 @@ public class VEventTest extends TestCase {
         VEvent meeting = new VEvent(new Date(cal.getTime().getTime()), new Dur(0, 1, 0, 0), "Progress Meeting");
 
         // add timezone information..
-        VTimeZone tz = VTimeZone.getDefault();
-        TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
         meeting.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);       
 
         log.info(meeting);
@@ -429,5 +428,20 @@ public class VEventTest extends TestCase {
         Date rangeEnd = new Date(rangeCal.getTime().getTime());
         
         log.info(event.getConsumedTime(rangeStart, rangeEnd));
+    }
+    
+    /**
+     * A test to confirm that the end date is calculated correctly
+     * from a given start date and duration.
+     */
+    public final void testEventEndDate() {
+        Calendar cal = Calendar.getInstance();
+        Date startDate = new Date(cal.getTime());
+        log.info("Start date: " + startDate);
+        VEvent event = new VEvent(startDate, new Dur(3, 0, 0, 0), "3 day event");
+        Date endDate = event.getEndDate().getDate();
+        log.info("End date: " + endDate);
+        cal.add(Calendar.DAY_OF_YEAR, 3);
+        assertEquals(new Date(cal.getTime()), endDate);
     }
 }

@@ -37,6 +37,7 @@ package net.fortuna.ical4j.model;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,7 +57,7 @@ public class DateTimeTest extends TestCase {
      */
     public void testDateTimelong() {
         DateTime dt = new DateTime(0);
-        assertEquals("19700101T100000", dt.toString());
+        assertEquals("19700101T000000", dt.toString());
         
         dt.setUtc(true);
         assertEquals("19700101T000000Z", dt.toString());
@@ -66,7 +67,7 @@ public class DateTimeTest extends TestCase {
      * Class under test for void DateTime(Date)
      */
     public void testDateTimeDate() {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         cal.set(Calendar.YEAR, 1984);
         // months are zero-based..
         cal.set(Calendar.MONTH, 3);
@@ -82,7 +83,7 @@ public class DateTimeTest extends TestCase {
      */
     public void testDateTimeString() throws Exception {
         try {
-            assertEquals("20050630", new DateTime("20050630").toString());
+            new DateTime("20050630");
             fail("Should throw ParseException");
         }
         catch (ParseException pe) {

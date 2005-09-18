@@ -41,6 +41,7 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.TimeZoneRegistryImpl;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -59,6 +60,21 @@ public class VFreeBusyTest extends TestCase {
     
     private static Log log = LogFactory.getLog(VFreeBusyTest.class);
 
+    private VTimeZone tz;
+    
+    private TzId tzParam;
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+        // create timezone property..
+        tz = TimeZoneRegistryImpl.getInstance().getTimeZone("Australia/Melbourne").getVTimeZone();
+        // create tzid parameter..
+        tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
+    }
+    
     /*
      * Class under test for void VFreeBusy(ComponentList)
      */
@@ -128,8 +144,6 @@ public class VFreeBusyTest extends TestCase {
         VEvent event = new VEvent(startDate, new Dur(0, 1, 0, 0), "Progress Meeting");
 //        VEvent event = new VEvent(startDate, cal.getTime(), "Progress Meeting");
         // add timezone information..
-        VTimeZone tz = VTimeZone.getDefault();
-        TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
         event.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
         components.add(event);
         
