@@ -33,38 +33,15 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SimpleTimeZone;
-import java.util.TimeZone;
+import java.util.Iterator;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.UtcOffset;
 import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.WeekDay;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.TzId;
-import net.fortuna.ical4j.model.property.TzName;
-import net.fortuna.ical4j.model.property.TzOffsetFrom;
-import net.fortuna.ical4j.model.property.TzOffsetTo;
-import net.fortuna.ical4j.util.Dates;
-import net.fortuna.ical4j.util.Numbers;
 import net.fortuna.ical4j.util.PropertyValidator;
-import net.fortuna.ical4j.util.TimeZoneUtils;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Defines an iCalendar VTIMEZONE component.
@@ -141,18 +118,7 @@ public class VTimeZone extends Component {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
-    private static Log log = LogFactory.getLog(VTimeZone.class);
-
-    private static Map cache = new HashMap();
-
-    private ComponentList types;
-
-    private net.fortuna.ical4j.model.parameter.TzId tzIdParam;
-
-    /**
-     * A Java timezone representation of this VTimeZone.
-     */
-    private TimeZone timeZone;
+    private ComponentList observances;
 
     /**
      * Constructs a new instance containing the specified properties.
@@ -162,19 +128,19 @@ public class VTimeZone extends Component {
      */
     public VTimeZone(final PropertyList properties) {
         super(VTIMEZONE, properties);
-        this.types = new ComponentList();
+        this.observances = new ComponentList();
     }
 
     /**
      * Constructs a new vtimezone component with no properties and the specified
      * list of type components.
      * 
-     * @param types
+     * @param observances
      *            a list of type components
      */
-    public VTimeZone(final ComponentList types) {
+    public VTimeZone(final ComponentList observances) {
         super(VTIMEZONE);
-        this.types = types;
+        this.observances = observances;
     }
 
     /**
@@ -182,19 +148,19 @@ public class VTimeZone extends Component {
      * 
      * @param properties
      *            a list of properties
-     * @param types
+     * @param observances
      *            a list of timezone types
      */
-    public VTimeZone(final PropertyList properties, final ComponentList types) {
+    public VTimeZone(final PropertyList properties, final ComponentList observances) {
         super(VTIMEZONE, properties);
-        this.types = types;
+        this.observances = observances;
     }
 
     /**
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        return BEGIN + ":" + getName() + "\r\n" + getProperties() + types + END
+        return BEGIN + ":" + getName() + "\r\n" + getProperties() + observances + END
                 + ":" + getName() + "\r\n";
     }
 
@@ -211,16 +177,16 @@ public class VTimeZone extends Component {
          * 
          * tzid /
          */
-        PropertyValidator.getInstance().validateOne(Property.TZID,
+        PropertyValidator.getInstance().assertOne(Property.TZID,
                 getProperties());
 
         /*
          * ; 'last-mod' and 'tzurl' are optional, but MUST NOT occur more than
          * once last-mod / tzurl /
          */
-        PropertyValidator.getInstance().validateOneOrLess(
+        PropertyValidator.getInstance().assertOneOrLess(
                 Property.LAST_MODIFIED, getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.TZURL,
+        PropertyValidator.getInstance().assertOneOrLess(Property.TZURL,
                 getProperties());
 
         /*
@@ -229,10 +195,10 @@ public class VTimeZone extends Component {
          * 
          * standardc / daylightc /
          */
-        if (getTypes().getComponent(SeasonalTime.STANDARD) == null
-                && getTypes().getComponent(SeasonalTime.DAYLIGHT) == null) {
+        if (getObservances().getComponent(Observance.STANDARD) == null
+                && getObservances().getComponent(Observance.DAYLIGHT) == null) {
             throw new ValidationException("Sub-components ["
-                    + SeasonalTime.STANDARD + "," + SeasonalTime.DAYLIGHT
+                    + Observance.STANDARD + "," + Observance.DAYLIGHT
                     + "] must be specified at least once");
         }
 
@@ -248,272 +214,30 @@ public class VTimeZone extends Component {
     }
 
     /**
-     * Returns an instance of VTimeZone representing the user's default
-     * timezone.
-     * 
-     * @return a VTimeZone
-     */
-    public static VTimeZone getDefault() {
-        return getVTimeZone(TimeZone.getDefault().getID());
-    }
-
-    /**
-     * Returns an instance of VTimeZone corresponding to the specified timezone
-     * id.
-     * 
-     * @param id
-     *            a timezone identifier
-     * @return
-     */
-    public static VTimeZone getVTimeZone(final String id) {
-        VTimeZone vTimeZone = (VTimeZone) cache.get(id);
-        if (vTimeZone == null) {
-            try {
-                vTimeZone = loadVTimeZone(id);
-            } catch (Exception e) {
-                log.debug("Error loading VTimeZone", e);
-            }
-            if (vTimeZone == null) {
-                vTimeZone = createVTimeZone(id);
-            }
-            if (vTimeZone != null) {
-                cache.put(id, vTimeZone);
-            }
-        }
-        return vTimeZone;
-    }
-
-    /**
-     * Loads an existing VTimeZone from the classpath corresponding to the
-     * specified Java timezone.
-     */
-    private static VTimeZone loadVTimeZone(final String id) throws IOException,
-            ParserException {
-        String resource = "/" + id + ".ics";
-
-        CalendarBuilder builder = new CalendarBuilder();
-
-        Calendar calendar = builder.build(VTimeZone.class
-                .getResourceAsStream(resource));
-
-        return (VTimeZone) calendar.getComponents().getComponent(
-                Component.VTIMEZONE);
-    }
-
-    /**
-     * Creates a new VTimeZone based on the specified Java timezone.
-     */
-    private static VTimeZone createVTimeZone(final String id) {
-        TimeZone timezone = TimeZone.getTimeZone(id);
-
-        TzId tzId = new TzId(timezone.getID());
-        PropertyList tzProps = new PropertyList();
-        tzProps.add(tzId);
-
-        TzName standardTzName = new TzName(new ParameterList(), timezone
-                .getDisplayName());
-        DtStart standardTzStart = new DtStart(new ParameterList(), new Date(
-                TimeZoneUtils.getDaylightEnd(timezone).getTime()));
-        TzOffsetTo standardTzOffsetTo = new TzOffsetTo(new ParameterList(),
-                new UtcOffset(timezone.getRawOffset()));
-        TzOffsetFrom standardTzOffsetFrom = new TzOffsetFrom(new UtcOffset(
-                timezone.getRawOffset() + timezone.getDSTSavings()));
-        PropertyList standardTzProps = new PropertyList();
-        standardTzProps.add(standardTzName);
-        standardTzProps.add(standardTzStart);
-        standardTzProps.add(standardTzOffsetTo);
-        standardTzProps.add(standardTzOffsetFrom);
-
-        ComponentList tzComponents = new ComponentList();
-        tzComponents.add(new Standard(standardTzProps));
-
-        if (timezone.useDaylightTime()) {
-            TzName daylightTzName = new TzName(new ParameterList(), timezone
-                    .getDisplayName()
-                    + " (DST)");
-            DtStart daylightTzStart = new DtStart(
-                    new ParameterList(),
-                    new Date(TimeZoneUtils.getDaylightStart(timezone).getTime()));
-            TzOffsetTo daylightTzOffsetTo = new TzOffsetTo(new ParameterList(),
-                    new UtcOffset(timezone.getRawOffset()
-                            + timezone.getDSTSavings()));
-            TzOffsetFrom daylightTzOffsetFrom = new TzOffsetFrom(new UtcOffset(
-                    timezone.getRawOffset()));
-
-            PropertyList daylightTzProps = new PropertyList();
-            daylightTzProps.add(daylightTzName);
-            daylightTzProps.add(daylightTzStart);
-            daylightTzProps.add(daylightTzOffsetTo);
-            daylightTzProps.add(daylightTzOffsetFrom);
-
-            tzComponents.add(new Daylight(daylightTzProps));
-        }
-
-        return new VTimeZone(tzProps, tzComponents);
-    }
-
-    /**
      * @return Returns the types.
      */
-    public final ComponentList getTypes() {
-        return types;
+    public final ComponentList getObservances() {
+        return observances;
     }
-
+    
     /**
-     * @return
+     * Returns the latest applicable timezone observance for the specified
+     * date.
+     * @param date the latest possible date for a timezone observance onset
+     * @return the latest applicable timezone observance for the specified
+     * date or null if there are no applicable observances
      */
-    public final net.fortuna.ical4j.model.parameter.TzId getTzIdParam() {
-        if (tzIdParam == null) {
-            tzIdParam = new net.fortuna.ical4j.model.parameter.TzId(
-                    getProperties().getProperty(Property.TZID).getValue());
-        }
-        return tzIdParam;
-    }
-
-    // FIXED (CR4): add the getTimeZone() method and helpers
-
-    /**
-     * Create a Java TimeZone (instance of SimpleTimeZone) representing this
-     * VTimeZone <b>Note:</b> The time zone returned will <b>NOT</b> be a
-     * predefined java TimeZone (e.g. America/Denver) Rather a new TimeZone will
-     * be created, with an ID equal to the value of TZID.
-     * 
-     * @throws ParseException
-     *             if the time zone canot be created due to spec a vioalation
-     * @return A <code>java.util.TimeZone</code> instance representing this VTimeZone
-     */
-    public final TimeZone getTimeZone() {
-        if (timeZone == null) {
-            String tzid = getProperties().getProperty(Property.TZID).getValue();
-            final ComponentList types = getTypes();
-            final Component std = types.getComponent(SeasonalTime.STANDARD);
-            final Component dl = types.getComponent(SeasonalTime.DAYLIGHT);
-
-            final TzInfo stdInfo = getTzInfo(std);
-            final TzInfo dlInfo = getTzInfo(dl);
-
-            if (stdInfo != null && dlInfo == null) {
-                timeZone = new SimpleTimeZone(stdInfo.getOffset(), tzid);
-            } else if (stdInfo == null && dlInfo != null) {
-                timeZone = new SimpleTimeZone(dlInfo.getOffset(), tzid);
-            } else if (stdInfo != null && dlInfo != null) {
-                timeZone = new SimpleTimeZone(stdInfo.getOffset(), tzid, dlInfo
-                        .getMonth(), dlInfo.getWeekOffset(), dlInfo.getDay(),
-                        dlInfo.getTime(), stdInfo.getMonth(), stdInfo
-                                .getWeekOffset(), stdInfo.getDay(), stdInfo
-                                .getTime(), dlInfo.getOffset()
-                                - stdInfo.getOffset());
-            } else {
-                /*
-                throw new ParseException(
-                        "Time Zone must contain at least 1 STANDARD or DAYLIGHT section.",
-                        -1);
-                 */
-                log.warn("Time Zone must contain at least 1 STANDARD or DAYLIGHT section.");
+    public final Observance getApplicableObservance(final Date date) {
+        Observance latestObservance = null;
+        Date latestOnset = null;
+        for (Iterator i = getObservances().iterator(); i.hasNext();) {
+            Observance observance = (Observance) i.next();
+            Date onset = observance.getLatestOnset(date);
+            if (latestOnset == null || onset.after(latestOnset)) {
+                latestOnset = onset;
+                latestObservance = observance;
             }
         }
-        return timeZone;
-    }
-
-    /**
-     * @param tzComp
-     * @return
-     * @throws ParseException
-     */
-    private TzInfo getTzInfo(final Component tzComp) {
-        if (tzComp == null) {
-            return null;
-        }
-        final PropertyList properties = tzComp.getProperties();
-        final String offsetStr = properties.getProperty(Property.TZOFFSETTO)
-                .getValue();
-        final RRule rruleProp = (RRule) properties.getProperty(Property.RRULE);
-
-        final int weekOffset;
-        final int day;
-        final int month;
-
-        if (rruleProp != null) {
-            final Recur recur = rruleProp.getRecur();
-            final WeekDay weekDay = (WeekDay) recur.getDayList().get(0);
-            weekOffset = weekDay.getOffset();
-            // day = ((Integer) DAY_MAP.get(weekDay.getDay())).intValue() ;
-            day = WeekDay.getCalendarDay(weekDay);
-            month = ((Integer) recur.getMonthList().get(0)).intValue() - 1;
-        } else {
-            weekOffset = 0;
-            day = 0;
-            month = 0;
-        }
-
-        final Date date = ((DtStart) properties.getProperty(Property.DTSTART))
-                .getTime();
-        final java.util.Calendar cal = java.util.Calendar.getInstance();
-        cal.setTime(date);
-        final int time = (int) Dates.MILLIS_PER_HOUR
-                * cal.get(java.util.Calendar.HOUR_OF_DAY)
-                + (int) Dates.MILLIS_PER_MINUTE
-                * cal.get(java.util.Calendar.MINUTE);
-        final int offset = convertOffset(offsetStr);
-
-        return new TzInfo(month, day, weekOffset, time, offset);
-    }
-
-    /**
-     * @param strOffset
-     * @return
-     */
-    private int convertOffset(final String strOffset) {
-        final int minStart = strOffset.length() - 2;
-        final String hours = strOffset.substring(0, minStart);
-        final String mins = strOffset.substring(minStart);
-
-        int offset = (int) Dates.MILLIS_PER_HOUR * Numbers.parseInt(hours)
-                + (int) Dates.MILLIS_PER_MINUTE * Numbers.parseInt(mins);
-        return offset;
-    }
-
-    /**
-     * @author npilke
-     *
-     */
-    private static class TzInfo {
-        private final int weekOffset;
-
-        private final int day;
-
-        private final int time;
-
-        private final int offset;
-
-        private final int month;
-
-        public TzInfo(final int month, final int day, final int weekOffset, final int time, final int offset) {
-            this.month = month;
-            this.day = day;
-            this.offset = offset;
-            this.time = time;
-            this.weekOffset = weekOffset;
-        }
-
-        public int getMonth() {
-            return month;
-        }
-
-        public int getDay() {
-            return day;
-        }
-
-        public int getOffset() {
-            return offset;
-        }
-
-        public int getTime() {
-            return time;
-        }
-
-        public int getWeekOffset() {
-            return weekOffset;
-        }
+        return latestObservance;
     }
 }

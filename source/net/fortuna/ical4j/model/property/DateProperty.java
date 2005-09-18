@@ -35,17 +35,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.util.TimeZone;
-
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.TimeZoneUtils;
 
 /**
  * Base class for properties with a DATE or DATE-TIME value. Note that some
@@ -87,25 +85,28 @@ public abstract class DateProperty extends Property {
     }
 
     /**
-     * Updates the VTIMEZONE associated with the property's value. The underlying
-     * TZID parameter will also be updated by this method.
+     * Updates the timezone associated with the property's value. If the specified
+     * timezone is equivalent to UTC any existing TZID parameters will be removed.
      * Note that this method is only applicable where the current date is an
      * instance of <code>DateTime</code>. For all other cases an
      * <code>UnsupportedOperationException</code> will be thrown.
      * @param vTimeZone
      */
-    public final void setVTimeZone(final VTimeZone vTimeZone) {
-        if (getDate() != null && !(getDate() instanceof DateTime)) {
-            throw new UnsupportedOperationException("VTimeZone is not applicable to current value");
-        }
-        if (TimeZoneUtils.isUtc(vTimeZone.getTimeZone())) {
+    public final void setTimeZone(final TimeZone timezone) {
+        if (timezone != null) {
+            if (getDate() != null && !(getDate() instanceof DateTime)) {
+                throw new UnsupportedOperationException("TimeZone is not applicable to current value");
+            }
+            if (getDate() != null) {
+                ((DateTime) getDate()).setTimeZone(timezone);
+            }
             getParameters().remove(getParameters().getParameter(Parameter.TZID));
+            TzId tzId = new TzId(timezone.getID());
+            getParameters().add(tzId);
         }
         else {
-            getParameters().add(vTimeZone.getTzIdParam());
-        }
-        if (getDate() != null) {
-            ((DateTime) getDate()).setTimeZone(vTimeZone.getTimeZone());
+            // use setUtc() to reset timezone..
+            setUtc(false);
         }
     }
     
@@ -118,12 +119,13 @@ public abstract class DateProperty extends Property {
      * @param utc
      */
     public final void setUtc(final boolean utc) {
-        if (utc) {
-            setVTimeZone(VTimeZone.getVTimeZone(TimeZone.getTimeZone("UTC").getID()));
+        if (getDate() != null && !(getDate() instanceof DateTime)) {
+            throw new UnsupportedOperationException("UTC time is not applicable to current value");
         }
-        else {
-            setVTimeZone(VTimeZone.getDefault());
+        if (getDate() != null) {
+            ((DateTime) getDate()).setUtc(utc);
         }
+        getParameters().remove(getParameters().getParameter(Parameter.TZID));
     }
     
     /**
@@ -149,6 +151,15 @@ public abstract class DateProperty extends Property {
         if ((Value.DATE.equals(value) && getDate() instanceof DateTime)
                 || (Value.DATE_TIME.equals(value) && !(getDate() instanceof DateTime))) {
             throw new ValidationException("VALUE parameter [" + value.getValue() + "] is invalid for date instance");
+        }
+        if (getDate() instanceof DateTime) {
+            DateTime dateTime = (DateTime) date;
+            // ensure tzid matches date-time timezone..
+            Parameter tzId = getParameters().getParameter(Parameter.TZID);
+            if (dateTime.getTimeZone() != null
+                    && (tzId == null || !tzId.getValue().equals(dateTime.getTimeZone().getID()))) {
+                throw new ValidationException("TZID parameter [" + tzId + "] does not match the timezone [" + dateTime.getTimeZone().getID() + "]");
+            }
         }
     }
 }

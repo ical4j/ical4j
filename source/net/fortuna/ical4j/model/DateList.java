@@ -38,10 +38,9 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
 
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.TimeZoneUtils;
+import net.fortuna.ical4j.util.TimeZones;
 
 /**
  * Defines a list of iCalendar dates.
@@ -64,7 +63,6 @@ public class DateList extends ArrayList implements Serializable {
      */
     public DateList(final Value aType) {
         this.type = aType;
-        this.timeZone = TimeZone.getDefault();
     }
 
     /**
@@ -195,7 +193,7 @@ public class DateList extends ArrayList implements Serializable {
      * @return Returns true if in UTC format, otherwise false.
      */
     public final boolean isUtc() {
-        return TimeZoneUtils.isUtc(getTimeZone());
+        return TimeZones.isUtc(getTimeZone());
     }
 
     /**
@@ -205,7 +203,12 @@ public class DateList extends ArrayList implements Serializable {
      *            The utc to set.
      */
     public final void setUtc(final boolean utc) {
-        setTimeZone(TimeZone.getTimeZone(TimeZoneUtils.UTC_ID));
+        if (Value.DATE_TIME.equals(type)) {
+            for (Iterator i = iterator(); i.hasNext();) {
+                ((DateTime) i.next()).setUtc(utc);
+            }
+        }
+        this.timeZone = null;
     }
     
     /**

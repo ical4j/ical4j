@@ -38,7 +38,6 @@ package net.fortuna.ical4j.model;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 /**
  * Represents a time of day on a specific date.
@@ -67,6 +66,8 @@ public class DateTime extends Date {
     }
     
     private Time time;
+    
+    private TimeZone timezone;
     
     /**
      * Default constructor.
@@ -106,7 +107,18 @@ public class DateTime extends Date {
      * @param value
      */
     public DateTime(final String value) throws ParseException {
-        this(value, TimeZone.getDefault());
+        this();
+        long time = 0;
+        try {
+            time = utcFormat.parse(value).getTime();
+            setUtc(true);
+        }
+        catch (ParseException pe) {
+            defaultFormat.setTimeZone(getFormat().getTimeZone());
+            time = defaultFormat.parse(value).getTime();
+            this.time = new Time(getTime(), getFormat().getTimeZone());
+        }
+        setTime(time);
     }
     
     /**
@@ -114,8 +126,7 @@ public class DateTime extends Date {
      * @throws ParseException
      */
     public DateTime(final String value, final TimeZone timezone) throws ParseException {
-        super();
-        this.time = new Time(getTime(), timezone);
+        this();
         try {
             setTime(utcFormat.parse(value).getTime());
             setUtc(true);
@@ -123,6 +134,7 @@ public class DateTime extends Date {
         catch (ParseException pe) {
             defaultFormat.setTimeZone(timezone);
             setTime(defaultFormat.parse(value).getTime());
+            setTimeZone(timezone);
         }
     }
     
@@ -147,20 +159,31 @@ public class DateTime extends Date {
      * @param utc The utc to set.
      */
     public final void setUtc(final boolean utc) {
+        // reset the timezone associated with this instance..
+        setTimeZone(null);
         if (utc) {
-            setTimeZone(TimeZone.getTimeZone("UTC"));
-        }
-        else {
-            setTimeZone(TimeZone.getDefault());
+            getFormat().setTimeZone(TimeZone.getTimeZone("UTC"));
+            time = new Time(time, getFormat().getTimeZone());
         }
     }
 
     /**
+     * Sets the timezone associated with this date-time instance. If the specified
+     * timezone is null 
      * @param timezone
      */
     public final void setTimeZone(final TimeZone timezone) {
-        getFormat().setTimeZone(timezone);
-        time = new Time(time, timezone);
+        this.timezone = timezone;
+        if (timezone != null) {
+            getFormat().setTimeZone(timezone);
+        }
+        else {
+            // use GMT timezone to avoid daylight savings rules affecting floating
+            // time values..
+//            getFormat().setTimeZone(TimeZone.getDefault());
+            getFormat().setTimeZone(TimeZone.getTimeZone("GMT"));
+        }
+        time = new Time(time, getFormat().getTimeZone());
     }
     
     /**
@@ -168,7 +191,7 @@ public class DateTime extends Date {
      * @return a Java timezone
      */
     public final TimeZone getTimeZone() {
-        return getFormat().getTimeZone();
+        return timezone;
     }
     
     /* (non-Javadoc)

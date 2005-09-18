@@ -41,10 +41,10 @@ import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.StringUtils;
-import net.fortuna.ical4j.util.TimeZoneUtils;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Base class for properties with a list of dates as a value.
@@ -106,20 +106,42 @@ public abstract class DateListProperty extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public String getValue() {
-        return StringUtils.valueOf(dates);
+        return Strings.valueOf(dates);
     }
     
     /**
-     * @param vTimeZone
+     * Sets the timezone associated with this property.
+     * @param timezone a timezone to associate with this property
      */
-    public final void setVTimeZone(final VTimeZone vTimeZone) {
-        if (TimeZoneUtils.isUtc(vTimeZone.getTimeZone())) {
+    public final void setTimeZone(final TimeZone timezone) {
+        if (timezone != null) {
+            if (!Value.DATE_TIME.equals(getDates().getType())) {
+                throw new UnsupportedOperationException("TimeZone is not applicable to current value");
+            }
+            dates.setTimeZone(timezone);
             getParameters().remove(getParameters().getParameter(Parameter.TZID));
-            dates.setUtc(true);
+            TzId tzId = new TzId(timezone.getID());
+            getParameters().add(tzId);
         }
         else {
-            getParameters().add(vTimeZone.getTzIdParam());
-            dates.setTimeZone(vTimeZone.getTimeZone());
+            // use setUtc() to reset timezone..
+            setUtc(false);
         }
+    }
+    
+    /**
+     * Resets the timezone associated with the property. If utc is true,
+     * any TZID parameters are removed and the Java timezone is updated
+     * to UTC time. If utc is false, TZID parameters are removed and the
+     * Java timezone is set to the default timezone (i.e. represents a
+     * "floating" local time)
+     * @param utc
+     */
+    public final void setUtc(final boolean utc) {
+        if (!Value.DATE_TIME.equals(dates.getType())) {
+            throw new UnsupportedOperationException("TimeZone is not applicable to current value");
+        }
+        dates.setUtc(utc);
+        getParameters().remove(getParameters().getParameter(Parameter.TZID));
     }
 }
