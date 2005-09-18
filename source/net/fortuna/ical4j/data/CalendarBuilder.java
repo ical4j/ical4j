@@ -155,8 +155,6 @@ public class CalendarBuilder implements ContentHandler {
             if (subComponent != null) {
                 if (component instanceof VTimeZone) {
                     ((VTimeZone) component).getObservances().add(subComponent);
-                    // register the timezone for use with iCalendar objects..
-                    TimeZoneRegistryImpl.getInstance().register(new TimeZone((VTimeZone) component));
                 }
                 else if (component instanceof VEvent) {
                     ((VEvent) component).getAlarms().add(subComponent);
@@ -168,6 +166,10 @@ public class CalendarBuilder implements ContentHandler {
             }
             else {
                 calendar.getComponents().add(component);
+                if (component instanceof VTimeZone) {
+                    // register the timezone for use with iCalendar objects..
+                    TimeZoneRegistryImpl.getInstance().register(new TimeZone((VTimeZone) component));
+                }
                 component = null;
             }
         }
