@@ -224,7 +224,7 @@ public class Trigger extends Property {
              *
              * (";" "VALUE" "=" "DATE-TIME") /
              */
-            ParameterValidator.getInstance().validateOne(Parameter.VALUE,
+            ParameterValidator.getInstance().assertOne(Parameter.VALUE,
                     getParameters());
 
             Parameter valueParam = getParameters()
@@ -247,7 +247,7 @@ public class Trigger extends Property {
              *
              * (";" "VALUE" "=" "DURATION") / (";" trigrelparam) /
              */
-            ParameterValidator.getInstance().validateOneOrLess(Parameter.VALUE,
+            ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                     getParameters());
 
             Parameter valueParam = getParameters()
@@ -257,7 +257,7 @@ public class Trigger extends Property {
                     && !Value.DURATION.equals(valueParam.getValue())) { throw new ValidationException(
                     "Parameter [" + Parameter.VALUE + "=" + valueParam.getValue() + "] is invalid"); }
 
-            ParameterValidator.getInstance().validateOneOrLess(
+            ParameterValidator.getInstance().assertOneOrLess(
                     Parameter.RELATED, getParameters());
 
             /*

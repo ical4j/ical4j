@@ -259,9 +259,9 @@ public class VAlarm extends Component {
          *
          * duration / repeat /
          */
-        PropertyValidator.getInstance().validateOneOrLess(Property.DURATION,
+        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.REPEAT,
+        PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT,
                 getProperties());
 
         if ((getProperties().getProperty(Property.DURATION) == null && getProperties()
@@ -304,7 +304,7 @@ public class VAlarm extends Component {
          *
          * attach /
          */
-        PropertyValidator.getInstance().validateOneOrLess(Property.ATTACH,
+        PropertyValidator.getInstance().assertOneOrLess(Property.ATTACH,
                 getProperties());
     }
 
@@ -317,7 +317,7 @@ public class VAlarm extends Component {
          *
          * action / description / trigger /
          */
-        PropertyValidator.getInstance().validateOne(Property.DESCRIPTION,
+        PropertyValidator.getInstance().assertOne(Property.DESCRIPTION,
                 getProperties());
     }
 
@@ -340,12 +340,12 @@ public class VAlarm extends Component {
          *
          * attach / x-prop
          */
-        PropertyValidator.getInstance().validateOne(Property.DESCRIPTION,
+        PropertyValidator.getInstance().assertOne(Property.DESCRIPTION,
                 getProperties());
-        PropertyValidator.getInstance().validateOne(Property.SUMMARY,
+        PropertyValidator.getInstance().assertOne(Property.SUMMARY,
                 getProperties());
 
-        PropertyValidator.getInstance().validateOneOrMore(Property.ATTENDEE,
+        PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE,
                 getProperties());
     }
 
@@ -368,10 +368,10 @@ public class VAlarm extends Component {
          *
          * x-prop
          */
-        PropertyValidator.getInstance().validateOne(Property.ATTACH,
+        PropertyValidator.getInstance().assertOne(Property.ATTACH,
                 getProperties());
 
-        PropertyValidator.getInstance().validateOneOrLess(Property.DESCRIPTION,
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION,
                 getProperties());
     }
 }

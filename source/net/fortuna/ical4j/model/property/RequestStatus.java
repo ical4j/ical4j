@@ -127,7 +127,7 @@ public class RequestStatus extends Property {
          *
          * (";" languageparm) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.LANGUAGE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
         /*

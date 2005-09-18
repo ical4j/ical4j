@@ -40,7 +40,7 @@ import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
 /**
@@ -115,7 +115,7 @@ public class TzUrl extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return Uris.decode(StringUtils.valueOf(getUri()));
+        return Uris.decode(Strings.valueOf(getUri()));
     }
     
     /**

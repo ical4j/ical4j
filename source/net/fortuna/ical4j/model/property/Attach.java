@@ -47,7 +47,7 @@ import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Base64;
 import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
 /**
@@ -207,7 +207,7 @@ public class Attach extends Property {
          *
          * (";" fmttypeparam) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.FMTTYPE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.FMTTYPE,
                 getParameters());
 
         /*
@@ -238,7 +238,7 @@ public class Attach extends Property {
      */
     public final String getValue() {
         if (getUri() != null) {
-            return Uris.decode(StringUtils.valueOf(getUri()));
+            return Uris.decode(Strings.valueOf(getUri()));
         }
         else if (getBinary() != null) {
             return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);

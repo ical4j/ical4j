@@ -231,41 +231,41 @@ public class VToDo extends Component {
          * last-mod / location / organizer / percent / priority / recurid / seq /
          * status / summary / uid / url /
          */
-        PropertyValidator.getInstance().validateOneOrLess(Property.CLASS,
+        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.COMPLETED,
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMPLETED,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.CREATED,
+        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.DESCRIPTION,
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.DTSTAMP,
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTAMP,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.DTSTART,
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.GEO,
+        PropertyValidator.getInstance().assertOneOrLess(Property.GEO,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.LAST_MODIFIED,
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.LOCATION,
+        PropertyValidator.getInstance().assertOneOrLess(Property.LOCATION,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.ORGANIZER,
+        PropertyValidator.getInstance().assertOneOrLess(Property.ORGANIZER,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.PERCENT_COMPLETE,
+        PropertyValidator.getInstance().assertOneOrLess(Property.PERCENT_COMPLETE,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.PRIORITY,
+        PropertyValidator.getInstance().assertOneOrLess(Property.PRIORITY,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.RECURRENCE_ID,
+        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.SEQUENCE,
+        PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.STATUS,
+        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.SUMMARY,
+        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.UID,
+        PropertyValidator.getInstance().assertOneOrLess(Property.UID,
                 getProperties());
-        PropertyValidator.getInstance().validateOneOrLess(Property.URL,
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL,
                 getProperties());
 
         Status status = (Status) getProperties().getProperty(Property.STATUS);

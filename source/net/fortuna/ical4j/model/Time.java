@@ -37,7 +37,7 @@ package net.fortuna.ical4j.model;
 
 import java.util.TimeZone;
 
-import net.fortuna.ical4j.util.TimeZoneUtils;
+import net.fortuna.ical4j.util.TimeZones;
 
 /**
  * A type used to represent iCalendar time values.
@@ -61,7 +61,7 @@ public class Time extends Iso8601 {
      * Default constructor.
      */
     public Time(final TimeZone timezone) {
-        super(TimeZoneUtils.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN);
+        super(TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN);
         getFormat().setTimeZone(timezone);
     }
 
@@ -70,7 +70,7 @@ public class Time extends Iso8601 {
      * @param utc
      */
     public Time(final long time, final TimeZone timezone) {
-        super(time, (TimeZoneUtils.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN));
+        super(time, (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN));
         getFormat().setTimeZone(timezone);
     }
 
@@ -79,7 +79,7 @@ public class Time extends Iso8601 {
      * @param utc
      */
     public Time(final java.util.Date time, final TimeZone timezone) {
-        super(time, (TimeZoneUtils.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN));
+        super(time, (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN));
         getFormat().setTimeZone(timezone);
     }
 
@@ -87,6 +87,6 @@ public class Time extends Iso8601 {
      * @return Returns the utc.
      */
     public final boolean isUtc() {
-        return TimeZoneUtils.isUtc(getFormat().getTimeZone());
+        return TimeZones.isUtc(getFormat().getTimeZone());
     }
 }

@@ -39,7 +39,7 @@ import junit.framework.TestCase;
  * Unit test for StringUtils.
  * @author Chris Borrill
  */
-public class StringUtilsTest extends TestCase {
+public class StringsTest extends TestCase {
     
     private static final String SEMI_COLON = ";XXX;";
     private static final String ESCAPED_SEMI_COLON = "\\;XXX\\;";
@@ -58,47 +58,47 @@ public class StringUtilsTest extends TestCase {
 
     public void testEscapeSemiColon() {
         assertEquals("EscapeSemiColon", ESCAPED_SEMI_COLON, 
-            StringUtils.escape(SEMI_COLON));
+            Strings.escape(SEMI_COLON));
     }
 
     public void testUnEscapeSemiColon() {
         assertEquals("UnEscapeSemiColon", SEMI_COLON, 
-            StringUtils.unescape(ESCAPED_SEMI_COLON));
+            Strings.unescape(ESCAPED_SEMI_COLON));
     }
 
     public void testEscapeComma() {
-        assertEquals("EscapeComma", ESCAPED_COMMA , StringUtils.escape(COMMA));
+        assertEquals("EscapeComma", ESCAPED_COMMA , Strings.escape(COMMA));
     }
 
     public void testUnEscapeComma() {
-        assertEquals("UnEscapeComma", COMMA, StringUtils.unescape(ESCAPED_COMMA));
+        assertEquals("UnEscapeComma", COMMA, Strings.unescape(ESCAPED_COMMA));
     }
 
     public void testEscapeQuote() {
-        assertEquals("EscapeQuote", ESCAPED_QUOTE, StringUtils.escape(QUOTE));
+        assertEquals("EscapeQuote", ESCAPED_QUOTE, Strings.escape(QUOTE));
     }
 
     public void testUnEscapeQuote() {
-        assertEquals("UnEscapeQuote", QUOTE, StringUtils.unescape(ESCAPED_QUOTE));
+        assertEquals("UnEscapeQuote", QUOTE, Strings.unescape(ESCAPED_QUOTE));
     }
 
 
     public void testEscapeDoubleBackSlash() {
         assertEquals("EscapeDoubleBackSlash", ESCAPED_DOUBLE_BACKSLASH, 
-            StringUtils.escape(DOUBLE_BACKSLASH));
+            Strings.escape(DOUBLE_BACKSLASH));
     }
 
     public void testUnEscapeDoubleBackSlash() {
         assertEquals("UnEscapeDoubleBackSlash", DOUBLE_BACKSLASH, 
-            StringUtils.unescape(ESCAPED_DOUBLE_BACKSLASH));
+            Strings.unescape(ESCAPED_DOUBLE_BACKSLASH));
     }    
 
     public void testEscapeNewline() {
-        assertEquals("EscapeNewline", ESCAPED_NEWLINE, StringUtils.escape(NEWLINE));
+        assertEquals("EscapeNewline", ESCAPED_NEWLINE, Strings.escape(NEWLINE));
     }
 
     public void testUnEscapeNewline() {
-        assertEquals("UnEscapeNewline", NEWLINE, StringUtils.unescape(ESCAPED_NEWLINE));
+        assertEquals("UnEscapeNewline", NEWLINE, Strings.unescape(ESCAPED_NEWLINE));
     }
         
 }

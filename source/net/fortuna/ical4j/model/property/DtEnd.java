@@ -44,7 +44,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a DTEND iCalendar component property.
@@ -177,7 +177,7 @@ public class DtEnd extends DateProperty {
          *
          * (";" "VALUE" "=" ("DATE-TIME" / "DATE")) / (";" tzidparam) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.VALUE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
@@ -188,13 +188,12 @@ public class DtEnd extends DateProperty {
         if (getDate() instanceof DateTime) {
             DateTime dateTime = (DateTime) getDate();
             if (dateTime.isUtc()) {
-                ParameterValidator.getInstance().validateNone(Parameter.TZID,
+                ParameterValidator.getInstance().assertNone(Parameter.TZID,
                         getParameters());
             }
             else {
-                ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
+                ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
                         getParameters());
-                // TODO: ensure tzid matches date-time timezone..
             }
         }
 
@@ -222,6 +221,6 @@ public class DtEnd extends DateProperty {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return StringUtils.valueOf(getDate());
+        return Strings.valueOf(getDate());
     }
 }

@@ -90,7 +90,7 @@ public class TzName extends Property implements Escapable {
          *
          * (";" languageparam) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.LANGUAGE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
         /*

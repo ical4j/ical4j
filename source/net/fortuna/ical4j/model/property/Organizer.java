@@ -43,7 +43,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
 /**
@@ -109,13 +109,13 @@ public class Organizer extends Property {
          * (";" cnparam) / (";" dirparam) / (";" sentbyparam) / (";"
          * languageparam) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.CN,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.CN,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.DIR,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.DIR,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.SENT_BY,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.SENT_BY,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.LANGUAGE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
         /*
@@ -145,7 +145,7 @@ public class Organizer extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return Uris.decode(StringUtils.valueOf(getCalAddress()));
+        return Uris.decode(Strings.valueOf(getCalAddress()));
     }
     
     /**

@@ -33,7 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an iCalendar parameter. Subclasses of this class provide additional
@@ -167,10 +167,10 @@ public abstract class Parameter extends Content {
         b.append('=');
 
         if (this instanceof Escapable) {
-            b.append(StringUtils.escape(StringUtils.valueOf(getValue())));
+            b.append(Strings.escape(Strings.valueOf(getValue())));
         }
         else {
-            b.append(StringUtils.valueOf(getValue()));
+            b.append(Strings.valueOf(getValue()));
         }
 
         return b.toString();

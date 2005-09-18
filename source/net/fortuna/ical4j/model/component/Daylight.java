@@ -36,11 +36,34 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.PropertyList;
 
 /**
- * Defines an iCalendar daylight savings timezone component.
+ * Defines an iCalendar daylight savings timezone observance component.
  *
- * @author benf
+ * <pre>
+ * 
+ *      daylightc  = "BEGIN" ":" "DAYLIGHT" CRLF
+ * 
+ *                   tzprop
+ * 
+ *                   "END" ":" "DAYLIGHT" CRLF
+ * 
+ *      tzprop     = 3*(
+ * 
+ *                 ; the following are each REQUIRED,
+ *                 ; but MUST NOT occur more than once
+ * 
+ *                 dtstart / tzoffsetto / tzoffsetfrom /
+ * 
+ *                 ; the following are optional,
+ *                 ; and MAY occur more than once
+ * 
+ *                 comment / rdate / rrule / tzname / x-prop
+ * 
+ *                 )
+ * </pre>
+ *
+ * @author Ben Fortuna
  */
-public class Daylight extends SeasonalTime {
+public class Daylight extends Observance {
     
     private static final long serialVersionUID = -2494710612002978763L;
 

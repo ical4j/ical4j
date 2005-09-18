@@ -8,14 +8,14 @@
  * modification, are permitted provided that the following conditions
  * are met:
  *
- * 	o Redistributions of source code must retain the above copyright
+ *  o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
  *
- * 	o Redistributions in binary form must reproduce the above copyright
+ *  o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
  *
- * 	o Neither the name of Ben Fortuna nor the names of any other contributors
+ *  o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
  *
@@ -62,7 +62,7 @@ public final class ParameterValidator {
      * @throws ValidationException
      *             when the specified parameter occurs more than once
      */
-    public void validateOneOrLess(final String paramName,
+    public void assertOneOrLess(final String paramName,
             final ParameterList parameters) throws ValidationException {
 
         if (parameters.getParameters(paramName).size() > 1) {
@@ -81,7 +81,7 @@ public final class ParameterValidator {
      * @throws ValidationException
      *             when the specified parameter does not occur once
      */
-    public void validateOne(final String paramName,
+    public void assertOne(final String paramName,
             final ParameterList parameters) throws ValidationException {
 
         if (parameters.getParameters(paramName).size() != 1) {
@@ -97,7 +97,7 @@ public final class ParameterValidator {
      * @throws ValidationException thrown when the specified property
      * is found in the list of properties
      */
-    public void validateNone(final String paramName, final ParameterList parameters) throws ValidationException {
+    public void assertNone(final String paramName, final ParameterList parameters) throws ValidationException {
         if (parameters.getParameters(paramName).size() > 0) {
             throw new ValidationException(
                 "Parameter [" + paramName + "] is not applicable");

@@ -35,7 +35,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.Standard;
-import net.fortuna.ical4j.model.component.SeasonalTime;
+import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VFreeBusy;
@@ -96,10 +96,10 @@ public final class ComponentFactory {
         else if (Component.VTODO.equals(name)) {
             return new VToDo(properties);
         }
-        else if (SeasonalTime.STANDARD.equals(name)) {
+        else if (Observance.STANDARD.equals(name)) {
             return new Standard(properties);
         }
-        else if (SeasonalTime.DAYLIGHT.equals(name)) {
+        else if (Observance.DAYLIGHT.equals(name)) {
             return new Daylight(properties);
         }
         else if (Component.VTIMEZONE.equals(name)) {

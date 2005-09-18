@@ -39,7 +39,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a COMPLETED iCalendar component property.
@@ -154,6 +154,6 @@ public class Completed extends UtcProperty {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return StringUtils.valueOf(getTime());
+        return Strings.valueOf(getTime());
     }
 }

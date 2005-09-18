@@ -39,7 +39,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a LAST-MODIFIED iCalendar component property.
@@ -147,7 +147,7 @@ public class LastModified extends UtcProperty {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return StringUtils.valueOf(getDateTime());
+        return Strings.valueOf(getDateTime());
     }
     
     /**

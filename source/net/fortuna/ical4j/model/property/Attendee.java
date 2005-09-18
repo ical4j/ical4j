@@ -43,7 +43,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
 /**
@@ -131,27 +131,27 @@ public class Attendee extends Property {
          * delfromparam) / (";" sentbyparam) / (";"cnparam) / (";" dirparam) /
          * (";" languageparam) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.CUTYPE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.CUTYPE,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.MEMBER,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.MEMBER,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.ROLE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.ROLE,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.PARTSTAT,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.PARTSTAT,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.RSVP,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.RSVP,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(
+        ParameterValidator.getInstance().assertOneOrLess(
                 Parameter.DELEGATED_TO, getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(
+        ParameterValidator.getInstance().assertOneOrLess(
                 Parameter.DELEGATED_FROM, getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.SENT_BY,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.SENT_BY,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.CN,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.CN,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.DIR,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.DIR,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.LANGUAGE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
         /*
@@ -174,7 +174,7 @@ public class Attendee extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return Uris.decode(StringUtils.valueOf(getCalAddress()));
+        return Uris.decode(Strings.valueOf(getCalAddress()));
     }
     
     /**

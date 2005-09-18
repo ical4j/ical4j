@@ -325,14 +325,14 @@ public class VFreeBusy extends Component {
          * contact / dtstart / dtend / duration / dtstamp / organizer / uid /
          * url /
          */
-        validator.validateOneOrLess(Property.CONTACT, getProperties());
-        validator.validateOneOrLess(Property.DTSTART, getProperties());
-        validator.validateOneOrLess(Property.DTEND, getProperties());
-        validator.validateOneOrLess(Property.DURATION, getProperties());
-        validator.validateOneOrLess(Property.DTSTAMP, getProperties());
-        validator.validateOneOrLess(Property.ORGANIZER, getProperties());
-        validator.validateOneOrLess(Property.UID, getProperties());
-        validator.validateOneOrLess(Property.URL, getProperties());
+        validator.assertOneOrLess(Property.CONTACT, getProperties());
+        validator.assertOneOrLess(Property.DTSTART, getProperties());
+        validator.assertOneOrLess(Property.DTEND, getProperties());
+        validator.assertOneOrLess(Property.DURATION, getProperties());
+        validator.assertOneOrLess(Property.DTSTAMP, getProperties());
+        validator.assertOneOrLess(Property.ORGANIZER, getProperties());
+        validator.assertOneOrLess(Property.UID, getProperties());
+        validator.assertOneOrLess(Property.URL, getProperties());
 
         /*
          * ; the following are optional, ; and MAY occur more than once
@@ -346,10 +346,10 @@ public class VFreeBusy extends Component {
          * events are resolved into their individual busy time periods using the
          * "FREEBUSY" property.
          */
-        validator.validateNone(Property.RRULE, getProperties());
-        validator.validateNone(Property.EXRULE, getProperties());
-        validator.validateNone(Property.RDATE, getProperties());
-        validator.validateNone(Property.EXDATE, getProperties());
+        validator.assertNone(Property.RRULE, getProperties());
+        validator.assertNone(Property.EXRULE, getProperties());
+        validator.assertNone(Property.RDATE, getProperties());
+        validator.assertNone(Property.EXDATE, getProperties());
 
         // DtEnd value must be later in time that DtStart..
         DtStart dtStart = (DtStart) getProperties().getProperty(Property.DTSTART);

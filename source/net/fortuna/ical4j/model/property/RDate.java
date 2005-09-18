@@ -44,7 +44,7 @@ import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an RDATE iCalendar component property.
@@ -211,7 +211,7 @@ public class RDate extends DateListProperty {
          *
          * (";" "VALUE" "=" ("DATE-TIME" / "DATE" / "PERIOD")) / (";" tzidparam) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.VALUE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
@@ -223,7 +223,7 @@ public class RDate extends DateListProperty {
             throw new ValidationException(
                 "Parameter [" + Parameter.VALUE + "] is invalid"); }
 
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
                 getParameters());
 
         /*
@@ -259,7 +259,7 @@ public class RDate extends DateListProperty {
      */
     public final String getValue() {
         if (getPeriods() != null) {
-            return StringUtils.valueOf(getPeriods());
+            return Strings.valueOf(getPeriods());
         }
         return super.getValue();
     }

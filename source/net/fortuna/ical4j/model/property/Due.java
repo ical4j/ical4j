@@ -44,7 +44,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a DUE iCalendar component property.
@@ -159,7 +159,7 @@ public class Due extends DateProperty {
          *
          * (";" "VALUE" "=" ("DATE-TIME" / "DATE")) / (";" tzidparam) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.VALUE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
         Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
@@ -172,12 +172,12 @@ public class Due extends DateProperty {
         }
 
         if (isUtc()) {
-            ParameterValidator.getInstance().validateNone(Parameter.TZID,
+            ParameterValidator.getInstance().assertNone(Parameter.TZID,
                     getParameters());
             
         }
         else {
-            ParameterValidator.getInstance().validateOneOrLess(Parameter.TZID,
+            ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
                     getParameters());
         }
 
@@ -214,7 +214,7 @@ public class Due extends DateProperty {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        return StringUtils.valueOf(getTime());
+        return Strings.valueOf(getTime());
     }
     
     /**

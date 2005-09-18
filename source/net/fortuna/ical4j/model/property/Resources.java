@@ -102,9 +102,9 @@ public class Resources extends Property {
          *
          * (";" altrepparam) / (";" languageparam) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.ALTREP,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
                 getParameters());
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.LANGUAGE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
         /*

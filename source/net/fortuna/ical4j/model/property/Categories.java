@@ -119,7 +119,7 @@ public class Categories extends Property {
          *
          * (";" languageparam ) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.LANGUAGE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
         /*

@@ -90,7 +90,7 @@ public class RelatedTo extends Property implements Escapable {
          *
          * (";" reltypeparam) /
          */
-        ParameterValidator.getInstance().validateOneOrLess(Parameter.RELTYPE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.RELTYPE,
                 getParameters());
 
         /*

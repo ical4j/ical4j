@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional
@@ -213,10 +213,10 @@ public abstract class Property extends Content {
         buffer.append(getParameters());
         buffer.append(':');
         if (this instanceof Escapable) {
-            buffer.append(StringUtils.escape(StringUtils.valueOf(getValue())));
+            buffer.append(Strings.escape(Strings.valueOf(getValue())));
         }
         else {
-            buffer.append(StringUtils.valueOf(getValue()));
+            buffer.append(Strings.valueOf(getValue()));
         }
         buffer.append("\r\n");
 

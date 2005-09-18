@@ -42,7 +42,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.util.StringUtils;
+import net.fortuna.ical4j.util.Strings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -231,7 +231,7 @@ public class CalendarParserImpl implements CalendarParser {
             throw new ParserException("Unexpected end of file at line " + tokeniser.lineno());
         }
 
-        handler.propertyValue(StringUtils.unescape(value.toString()));
+        handler.propertyValue(Strings.unescape(value.toString()));
         handler.endProperty(name);
     }
 
@@ -286,7 +286,7 @@ public class CalendarParserImpl implements CalendarParser {
             paramValue.append(tokeniser.sval);
         }
 
-        handler.parameter(paramName, StringUtils
+        handler.parameter(paramName, Strings
                 .unescape(paramValue.toString()));
     }
 

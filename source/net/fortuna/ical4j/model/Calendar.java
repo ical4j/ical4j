@@ -36,8 +36,6 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.Iterator;
 
-import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.PropertyValidator;
 
@@ -106,7 +104,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  *
  * @author Ben Fortuna
  */
-public class Calendar implements Serializable, TimeZoneProvider {
+public class Calendar implements Serializable {
     
     private static final long serialVersionUID = -1654118204678581940L;
 
@@ -203,14 +201,14 @@ public class Calendar implements Serializable, TimeZoneProvider {
     public final void validate(final boolean recurse) throws ValidationException {
         // 'prodid' and 'version' are both REQUIRED,
         // but MUST NOT occur more than once
-        PropertyValidator.getInstance().validateOne(Property.PRODID, properties);
-        PropertyValidator.getInstance().validateOne(Property.VERSION, properties);
+        PropertyValidator.getInstance().assertOne(Property.PRODID, properties);
+        PropertyValidator.getInstance().assertOne(Property.VERSION, properties);
 
         // 'calscale' and 'method' are optional,
         // but MUST NOT occur more than once
         PropertyValidator.getInstance()
-                .validateOneOrLess(Property.CALSCALE, properties);
-        PropertyValidator.getInstance().validateOneOrLess(Property.METHOD, properties);
+                .assertOneOrLess(Property.CALSCALE, properties);
+        PropertyValidator.getInstance().assertOneOrLess(Property.METHOD, properties);
 
         // must contain at least one component
         if (getComponents().isEmpty()) { throw new ValidationException(
@@ -286,19 +284,5 @@ public class Calendar implements Serializable, TimeZoneProvider {
      */
     public final int hashCode() {
         return getProperties().hashCode() + getComponents().hashCode();
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.TimeZoneProvider#getVTimeZone(net.fortuna.ical4j.model.parameter.TzId)
-     */
-    public final VTimeZone getVTimeZone(final TzId tzId) {
-        ComponentList vTimeZones = getComponents().getComponents(Component.VTIMEZONE);
-        for (Iterator i = vTimeZones.iterator(); i.hasNext();) {
-            VTimeZone vTimeZone = (VTimeZone) i.next();
-            if (tzId.getValue().equals(vTimeZone.getProperties().getProperty(Property.TZID).getValue())) {
-                return vTimeZone;
-            }
-        }
-        return VTimeZone.getVTimeZone(tzId.getValue());
     }
 }

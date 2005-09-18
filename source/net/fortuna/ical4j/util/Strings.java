@@ -40,7 +40,7 @@ import java.util.regex.Pattern;
  * 
  * @author Ben Fortuna
  */
-public final class StringUtils {
+public final class Strings {
 
     private static final Pattern CHECK_ESCAPE = Pattern.compile("[,;\"\n\\\\]");
 
@@ -67,7 +67,7 @@ public final class StringUtils {
     /**
      * Constructor made private to prevent instantiation.
      */
-    private StringUtils() {
+    private Strings() {
     }
 
     /**
