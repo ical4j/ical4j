@@ -53,6 +53,9 @@ public abstract class Iso8601 extends Date {
      */
     public Iso8601(final String pattern) {
         format = new SimpleDateFormat(pattern);
+        // use GMT timezone to avoid daylight savings rules affecting floating
+        // time values..
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     /**
@@ -62,6 +65,9 @@ public abstract class Iso8601 extends Date {
     public Iso8601(final long time, final String pattern) {
         super(time);
         format = new SimpleDateFormat(pattern);
+        // use GMT timezone to avoid daylight savings rules affecting floating
+        // time values..
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     /**
@@ -71,6 +77,9 @@ public abstract class Iso8601 extends Date {
     public Iso8601(final Date time, final String pattern) {
         super(time.getTime());
         format = new SimpleDateFormat(pattern);
+        // use GMT timezone to avoid daylight savings rules affecting floating
+        // time values..
+        format.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
     
     /* (non-Javadoc)
