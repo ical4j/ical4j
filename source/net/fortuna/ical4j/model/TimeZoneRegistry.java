@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 3/07/2005
+ * Created on 18/09/2005
  *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
@@ -35,21 +35,27 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.parameter.TzId;
-
 /**
- * Implementors are able to act as a source for time zone definitions
- * (in the form of VTimeZone objects).
+ * Implementors provide a list of timezone definitions applicable for use
+ * with iCalendar objects.
  * @author Ben Fortuna
  */
-public interface TimeZoneProvider {
+public interface TimeZoneRegistry {
 
     /**
-     * Returns the first found definition of a VTimeZone component with an
-     * identifier matching the value of the specified TzId parameter.
-     * @param tzId
-     * @return
+     * Registers a new timezone for use with iCalendar objects. If a timezone
+     * with the same identifier is already registered this timezone will take
+     * precedence.
+     * @param timezone a timezone to be registered for use with iCalendar
+     * objects
      */
-    VTimeZone getVTimeZone(final TzId tzId);
+    void register(final TimeZone timezone);
+    
+    /**
+     * Returns a timezone with the specified identifier.
+     * @param id a timezone identifier
+     * @return a timezone matching the specified identifier. If no timezone
+     * is registered with the specified identifier null is returned.
+     */
+    TimeZone getTimeZone(final String id);
 }
