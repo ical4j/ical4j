@@ -16,7 +16,7 @@ import net.fortuna.ical4j.model.property.AttachTest;
 import net.fortuna.ical4j.model.property.CalScaleTest;
 import net.fortuna.ical4j.model.property.TriggerTest;
 import net.fortuna.ical4j.model.property.VersionTest;
-import net.fortuna.ical4j.util.StringUtilsTest;
+import net.fortuna.ical4j.util.StringsTest;
 
 /**
  * User: tobli
@@ -57,7 +57,7 @@ public class AllTests extends TestSuite{
         suite.addTestSuite(VersionTest.class);
 
         // util tests
-        suite.addTestSuite(StringUtilsTest.class);
+        suite.addTestSuite(StringsTest.class);
 
         return suite;
     }
