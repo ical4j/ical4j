@@ -11,7 +11,7 @@
  - Detailed descriptions of changes included in each release may be found
  in the CHANGELOG.
  
- - iCal4j was created with the help of eclipse version 3.0 [http://eclipse.org].
+ - iCal4j was created with the help of eclipse version 3.1 [http://eclipse.org].
  Note that the project metadata included in the source version of iCal4j may not
  be compatible with prior versions of eclipse.
 
