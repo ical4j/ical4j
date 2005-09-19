@@ -2,6 +2,24 @@
  iCal4j - Changes
 ==================
 
+0.9.15
+
+ - Fixed DateProperties to correctly call super.validate() in validation
+ 
+ - Fix applied to Recur.getMonthDayVariants() to correctly set the month of
+ candidate dates. Also fixed to ignore dates prior to seed date.
+ 
+ - Added encoding/decoding of URIs
+
+ - Fixed parser to allow arbitrary ordering of VTIMEZONE observances/properties.
+ 
+ - Now allows for additional whitespace between properties.
+ 
+ - Introduced a custom timezone implementation for use with iCalendar objects
+ 
+ - Introduced a timezone registry with support for alternative implementations
+
+
 0.9.14:
 
  - Reimplemented ParameterFactory and PropertyFactory with improved design
