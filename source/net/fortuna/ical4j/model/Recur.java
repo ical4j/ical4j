@@ -606,7 +606,7 @@ public class Recur implements Serializable {
      * 
      * @param dates
      */
-    private final DateList applySetPosRules(final DateList dates) {
+    private DateList applySetPosRules(final DateList dates) {
         // return if no SETPOS rules specified..
         if (getSetPosList().isEmpty()) {
             return dates;
