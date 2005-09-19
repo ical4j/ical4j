@@ -102,6 +102,16 @@ public class CalendarBuilderTest extends TestCase {
             }
         }
     }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#getName()
+     */
+    /**
+     * Overridden to return the current iCalendar file under test.
+     */
+    public final String getName() {
+        return filename;
+    }
 
     /**
      * Test suite.

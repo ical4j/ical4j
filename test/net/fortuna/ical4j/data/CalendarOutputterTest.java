@@ -104,6 +104,16 @@ public class CalendarOutputterTest extends TestCase {
             throw e;
         }
     }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#getName()
+     */
+    /**
+     * Overridden to return the current iCalendar file under test.
+     */
+    public final String getName() {
+        return filename;
+    }
 
     /**
      * @return
@@ -114,11 +124,11 @@ public class CalendarOutputterTest extends TestCase {
         List testFiles = new ArrayList();
 
         testFiles.addAll(Arrays.asList(new File("etc/samples/valid").listFiles(new FileOnlyFilter())));
-        testFiles.addAll(Arrays.asList(new File("etc/samples/invalid").listFiles(new FileOnlyFilter())));
+//        testFiles.addAll(Arrays.asList(new File("etc/samples/invalid").listFiles(new FileOnlyFilter())));
 
         for (int i = 0; i < testFiles.size(); i++) {
             log.info("Sample [" + testFiles.get(i) + "]");
-			suite.addTest(new CalendarOutputterTest("testOutput", ((File) testFiles.get(i)).getPath()));
+            suite.addTest(new CalendarOutputterTest("testOutput", ((File) testFiles.get(i)).getPath()));
         }
 
         return suite;
