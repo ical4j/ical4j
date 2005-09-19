@@ -113,8 +113,7 @@ public class TimeZone extends java.util.TimeZone {
      * @see java.util.TimeZone#setRawOffset(int)
      */
     public final void setRawOffset(final int offsetMillis) {
-        // TODO Auto-generated method stub
-        
+        throw new UnsupportedOperationException("Updates to the VTIMEZONE object must be performed directly");
     }
 
     /* (non-Javadoc)
