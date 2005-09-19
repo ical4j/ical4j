@@ -8,7 +8,7 @@
 <project name="iCal4j" basedir="." default="package">
 
 	<!-- Project details -->
-    <property name="project.version" value="0.9.14"/>
+    <property name="project.version" value="0.9.15"/>
 	
 	<!-- Project paths -->
     <property name="source.dir" location="source"/>
@@ -41,7 +41,7 @@
     
     <target name="compile">
     	<echo message="Compiling source from classpath: ${project.classpath}"/>
-        <javac target="1.4" srcdir="${source.dir}" destdir="${output.dir}" debug="false" deprecation="true" classpath="${project.classpath}"/>
+        <javac source="1.4" target="1.4" srcdir="${source.dir}" destdir="${output.dir}" debug="false" deprecation="true" classpath="${project.classpath}"/>
     </target>
     
     <target name="compile-tests">

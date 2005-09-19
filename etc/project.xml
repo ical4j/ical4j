@@ -3,7 +3,7 @@
     <id>ical4j</id>
     <artifactId>ical4j</artifactId>
     <name>iCal4j</name>
-    <currentVersion>0.9.14</currentVersion>
+    <currentVersion>0.9.15</currentVersion>
 
     <organization>
         <name>Ben Fortuna</name>
