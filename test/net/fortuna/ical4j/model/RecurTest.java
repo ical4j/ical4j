@@ -37,8 +37,6 @@ package net.fortuna.ical4j.model;
 
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -142,7 +140,7 @@ public class RecurTest extends TestCase {
         log.info(dates);
     }
 
-
+    /*
     public void testSublistNegative() {
         List list = new LinkedList();
         list.add("1");
@@ -203,6 +201,7 @@ public class RecurTest extends TestCase {
         DateList expectedList = asDateList(expected);
         assertEquals(expectedList, recur.applySetPosRules(asDateList(dates)));
     }
+    */
 
     private DateList asDateList(Date[] dates) {
         DateList dateList = new DateList(Value.DATE);
@@ -282,5 +281,55 @@ public class RecurTest extends TestCase {
         
         DateList dates = recur.getDates(start, end, Value.DATE_TIME);
         log.info(dates);
+    }
+    
+    public void testMgmill2001() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_MONTH, 11);
+        cal.set(Calendar.MONTH, 0);
+        cal.set(Calendar.YEAR, 2005);
+        java.util.Date eventStart = cal.getTime();
+        
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        java.util.Date rangeStart = cal.getTime();
+        
+        cal.set(Calendar.YEAR, 2009);
+        java.util.Date rangeEnd = cal.getTime();
+        
+        // FREQ=MONTHLY;INTERVAL=1;COUNT=4;BYMONTHDAY=2
+        Recur recur = new Recur(Recur.MONTHLY, 4);
+        recur.setInterval(1);
+        recur.getMonthDayList().add(new Integer(2));
+        getDates(rangeStart, rangeEnd, eventStart, recur);
+        
+        // FREQ=MONTHLY;INTERVAL=2;COUNT=4;BYDAY=2MO
+        recur = new Recur(Recur.MONTHLY, 4);
+        recur.setInterval(2);
+        recur.getDayList().add(new WeekDay(WeekDay.MO, 2));
+        getDates(rangeStart, rangeEnd, eventStart, recur);
+        
+        // FREQ=YEARLY;COUNT=4;BYMONTH=2;BYMONTHDAY=3
+        recur = new Recur(Recur.YEARLY, 4);
+        recur.getMonthList().add(new Integer(2));
+        recur.getMonthDayList().add(new Integer(3));
+        getDates(rangeStart, rangeEnd, eventStart, recur);
+        
+        // FREQ=YEARLY;COUNT=4;BYMONTH=2;BYDAY=2SU
+        recur = new Recur(Recur.YEARLY, 4);
+        recur.getMonthList().add(new Integer(2));
+        recur.getDayList().add(new WeekDay(WeekDay.SU, 2));
+        getDates(rangeStart, rangeEnd, eventStart, recur);
+    }
+    
+    private void getDates(java.util.Date startRange, java.util.Date endRange, java.util.Date eventStart, Recur recur) { 
+        
+        net.fortuna.ical4j.model.Date start = new net.fortuna.ical4j.model.Date(startRange); 
+        net.fortuna.ical4j.model.Date end = new net.fortuna.ical4j.model.Date(endRange); 
+        net.fortuna.ical4j.model.Date seed = new net.fortuna.ical4j.model.Date(eventStart); 
+         
+        DateList dates = recur.getDates(seed, start, end, Value.DATE); 
+        for (int i=0; i<dates.size(); i++) { 
+            System.out.println("date_" + i + " = " + dates.get(i).toString()); 
+        } 
     }
 }
