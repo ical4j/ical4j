@@ -100,6 +100,15 @@ import net.fortuna.ical4j.util.Strings;
  *      ;Value MUST match value type
  * </pre>
  *
+ * Examples:
+ * 
+ * <pre>
+ *  // construct an end date from a start date and a duration..
+ *  DtStart start = ...
+ *  Dur oneWeek = new Dur("1W");
+ *  DtEnd end = new DtEnd(oneWeek.getTime(start.getDate());
+ * </pre>
+ * 
  * @author Ben Fortuna
  */
 public class DtEnd extends DateProperty {
@@ -112,7 +121,6 @@ public class DtEnd extends DateProperty {
      */
     public DtEnd() {
         super(DTEND);
-//        setDate(new Date());
     }
     
     /**
