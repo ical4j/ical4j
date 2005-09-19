@@ -231,8 +231,8 @@ public class Trigger extends Property {
                     .getParameter(Parameter.VALUE);
 
             if (valueParam == null
-                    || !Value.DATE_TIME.equals(valueParam.getValue())) { throw new ValidationException(
-                            "Parameter [" + Parameter.VALUE + "=" + valueParam.getValue() + "] is invalid"); }
+                    || !Value.DATE_TIME.equals(valueParam)) { throw new ValidationException(
+                            "Parameter [" + valueParam + "] is invalid"); }
 
             /*
              * ; the following is optional, ; and MAY occur more than once

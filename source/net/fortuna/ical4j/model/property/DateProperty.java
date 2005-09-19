@@ -146,11 +146,11 @@ public abstract class DateProperty extends Property {
         super.validate();
         Value value = (Value) getParameters().getParameter(Parameter.VALUE);
         if (value != null && !Value.DATE.equals(value) && !Value.DATE_TIME.equals(value)) {
-            throw new ValidationException("Invalid VALUE parameter [" + value.getValue() + "]");
+            throw new ValidationException("Invalid VALUE parameter [" + value + "]");
         }
         if ((Value.DATE.equals(value) && getDate() instanceof DateTime)
                 || (Value.DATE_TIME.equals(value) && !(getDate() instanceof DateTime))) {
-            throw new ValidationException("VALUE parameter [" + value.getValue() + "] is invalid for date instance");
+            throw new ValidationException("VALUE parameter [" + value + "] is invalid for date instance");
         }
         if (getDate() instanceof DateTime) {
             DateTime dateTime = (DateTime) date;
