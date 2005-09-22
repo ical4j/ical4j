@@ -290,6 +290,13 @@ public class VFreeBusy extends Component {
             }
             lastPeriodEnd = period.getEnd();
         }
+        // calculate duration between last period end and end ..
+        if (lastPeriodEnd != null) {
+            Duration freeDuration = new Duration(lastPeriodEnd, end);
+            if (freeDuration.getDuration().compareTo(duration) >= 0) {
+                fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
+            }
+        }
         return fb;
     }
 
