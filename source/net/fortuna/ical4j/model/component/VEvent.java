@@ -368,7 +368,7 @@ public class VEvent extends Component {
                     || Status.VEVENT_CANCELLED.equals(status))) {
                 throw new ValidationException(
                     "Status property [" + status.toString()
-                            + "] may not occur in VEVENT");
+                            + "] is not applicable for VEVENT");
             }
         }
 
