@@ -42,7 +42,9 @@ import java.util.TimeZone;
  */
 public final class TimeZones {
     
-    public static final String UTC_ID = "UTC";
+    public static final String UTC_ID = "Etc/UTC";
+    
+    public static final String GMT_ID = "Etc/GMT";
 
     /**
      * Constructor made private to enforce static nature.

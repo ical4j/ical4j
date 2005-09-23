@@ -39,6 +39,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import net.fortuna.ical4j.util.TimeZones;
+
 /**
  * Base class for date and time representations as defined
  * by the ISO 8601 standard.
@@ -55,7 +57,7 @@ public abstract class Iso8601 extends Date {
         format = new SimpleDateFormat(pattern);
         // use GMT timezone to avoid daylight savings rules affecting floating
         // time values..
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 
     /**
@@ -67,7 +69,7 @@ public abstract class Iso8601 extends Date {
         format = new SimpleDateFormat(pattern);
         // use GMT timezone to avoid daylight savings rules affecting floating
         // time values..
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 
     /**
@@ -79,7 +81,7 @@ public abstract class Iso8601 extends Date {
         format = new SimpleDateFormat(pattern);
         // use GMT timezone to avoid daylight savings rules affecting floating
         // time values..
-        format.setTimeZone(TimeZone.getTimeZone("GMT"));
+        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
     
     /* (non-Javadoc)

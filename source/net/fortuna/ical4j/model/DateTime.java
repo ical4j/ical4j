@@ -39,6 +39,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import net.fortuna.ical4j.util.TimeZones;
+
 /**
  * Represents a time of day on a specific date.
  * 
@@ -62,7 +64,7 @@ public class DateTime extends Date {
      */
     private DateFormat utcFormat = new SimpleDateFormat(UTC_PATTERN);
     {
-        utcFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        utcFormat.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
     }
     
     private Time time;
@@ -162,7 +164,7 @@ public class DateTime extends Date {
         // reset the timezone associated with this instance..
         setTimeZone(null);
         if (utc) {
-            getFormat().setTimeZone(TimeZone.getTimeZone("UTC"));
+            getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
             time = new Time(time, getFormat().getTimeZone());
         }
     }
@@ -181,7 +183,7 @@ public class DateTime extends Date {
             // use GMT timezone to avoid daylight savings rules affecting floating
             // time values..
 //            getFormat().setTimeZone(TimeZone.getDefault());
-            getFormat().setTimeZone(TimeZone.getTimeZone("GMT"));
+            getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
         }
         time = new Time(time, getFormat().getTimeZone());
     }
