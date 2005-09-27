@@ -492,7 +492,8 @@ public class Recur implements Serializable {
                 Date candidate = (Date) i.next();
                 // don't count candidates that occur before the seed date..
                 if (!candidate.before(seed)) {
-                    if (candidate.before(periodStart) || candidate.after(periodEnd)) {
+                    // candidates exclusive of periodEnd..
+                    if (candidate.before(periodStart) || !candidate.before(periodEnd)) {
                         invalidCandidateCount++;
                     }
                     else if (getCount() >= 1 && (dates.size() + invalidCandidateCount) >= getCount()) {
