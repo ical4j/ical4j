@@ -143,14 +143,14 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#endCalendar()
      */
-    public final void endCalendar() {
+    public void endCalendar() {
         // do nothing..
     }
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#endComponent(java.lang.String)
      */
-    public final void endComponent(final String name) {
+    public void endComponent(final String name) {
         if (component != null) {
             if (subComponent != null) {
                 if (component instanceof VTimeZone) {
@@ -178,7 +178,7 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#endProperty(java.lang.String)
      */
-    public final void endProperty(final String name) {
+    public void endProperty(final String name) {
         if (property != null) {
             // replace with a constant instance if applicable..
             property = Constants.forProperty(property);
@@ -201,7 +201,7 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#parameter(java.lang.String, java.lang.String)
      */
-    public final void parameter(final String name, final String value) throws URISyntaxException {
+    public void parameter(final String name, final String value) throws URISyntaxException {
         if (property != null) {
             // parameter names are case-insensitive, but convert to upper case to simplify further processing
             Parameter param = ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value);
@@ -226,7 +226,7 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#propertyValue(java.lang.String)
      */
-    public final void propertyValue(final String value) throws URISyntaxException, ParseException, IOException {
+    public void propertyValue(final String value) throws URISyntaxException, ParseException, IOException {
         if (property != null) {
             property.setValue(value);
         }
@@ -235,14 +235,14 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#startCalendar()
      */
-    public final void startCalendar() {
+    public void startCalendar() {
         calendar = new Calendar();
     }
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#startComponent(java.lang.String)
      */
-    public final void startComponent(final String name) {
+    public void startComponent(final String name) {
         if (component != null) {
             subComponent = ComponentFactory.getInstance().createComponent(name);
         }
@@ -254,7 +254,7 @@ public class CalendarBuilder implements ContentHandler {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#startProperty(java.lang.String)
      */
-    public final void startProperty(final String name) {
+    public void startProperty(final String name) {
         // property names are case-insensitive, but convert to upper case to simplify further processing
         property = PropertyFactoryImpl.getInstance().createProperty(name.toUpperCase());
     }
