@@ -48,9 +48,17 @@ public class WeekDayList extends ArrayList implements Serializable {
     private static final long serialVersionUID = 1243262497035300445L;
 
     /**
-     * Constructor.
+     * Default constructor.
      */
     public WeekDayList() {
+    }
+
+    /**
+     * Creates a new instance with the specified initial capacity.
+     * @param initialCapacity the initial capacity of the list
+     */
+    public WeekDayList(final int initialCapacity) {
+        super(initialCapacity);
     }
 
     /**

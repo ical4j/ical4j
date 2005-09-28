@@ -57,6 +57,20 @@ public class DateList extends ArrayList implements Serializable {
 
     /**
      * Default constructor.
+     */
+    public DateList() {
+    }
+
+    /**
+     * Creates a new instance with the specified initial capacity.
+     * @param initialCapacity the initial capacity of the list
+     */
+    public DateList(final int initialCapacity) {
+        super(initialCapacity);
+    }
+
+    /**
+     * Default constructor.
      * 
      * @param aType
      *            specifies the type of dates (either date or date-time)

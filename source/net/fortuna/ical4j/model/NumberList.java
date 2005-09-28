@@ -50,9 +50,17 @@ public class NumberList extends ArrayList implements Serializable {
     private static final long serialVersionUID = -1667481795613729889L;
 
     /**
-     * Constructor.
+     * Default constructor.
      */
     public NumberList() {
+    }
+
+    /**
+     * Creates a new instance with the specified initial capacity.
+     * @param initialCapacity the initial capacity of the list
+     */
+    public NumberList(final int initialCapacity) {
+        super(initialCapacity);
     }
 
     /**

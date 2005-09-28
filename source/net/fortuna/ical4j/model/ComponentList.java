@@ -46,13 +46,18 @@ public class ComponentList extends ArrayList implements Serializable {
     
     private static final long serialVersionUID = 7308557606558767449L;
 
-//    private List components;
-
     /**
-     * Constructor.
+     * Default constructor.
      */
     public ComponentList() {
-//        components = new ArrayList();
+    }
+    
+    /**
+     * Creates a new instance with the specified initial capacity.
+     * @param initialCapacity the initial capacity of the list
+     */
+    public ComponentList(final int initialCapacity) {
+        super(initialCapacity);
     }
 
     /**

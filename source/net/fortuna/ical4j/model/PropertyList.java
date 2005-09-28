@@ -46,13 +46,18 @@ public class PropertyList extends ArrayList implements Serializable {
     
     private static final long serialVersionUID = -8875923766224921031L;
 
-//    private List properties;
-
     /**
-     * Constructor.
+     * Default constructor.
      */
     public PropertyList() {
-//        properties = new ArrayList();
+    }
+
+    /**
+     * Creates a new instance with the specified initial capacity.
+     * @param initialCapacity the initial capacity of the list
+     */
+    public PropertyList(final int initialCapacity) {
+        super(initialCapacity);
     }
 
     /**
