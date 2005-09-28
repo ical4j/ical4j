@@ -31,6 +31,7 @@
 package net.fortuna.ical4j.model.component;
 
 import java.io.FileInputStream;
+import java.text.ParseException;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -39,13 +40,17 @@ import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.RRule;
 
 import org.apache.commons.logging.Log;
@@ -230,5 +235,37 @@ public class VFreeBusyTest extends TestCase {
              
             log.debug("REPLY BUSY2: \n" + replyBusy2.toString());
             log.debug("REPLY FREE2: \n" + replyFree2.toString());
+    }
+    
+    /**
+     * A test for a request for free time where the VFreeBusy
+     * instance doesn't consume any time in the specified range. Correct
+     * behaviour should see the return of a VFreeBusy specifying the entire
+     * range as free.
+     * @throws ParseException
+     */
+    public final void testRequestFreeTime() throws ParseException {
+        ComponentList components = new ComponentList();
+
+        VEvent event1 = new VEvent(new DateTime("20050101T080000"),
+                new Dur(0,0,15,0),
+                "Consultation 1");
+        components.add(event1);
+
+        DateTime start = new DateTime("20050103T000000");
+        DateTime end = new DateTime("20050104T000000");
+
+        VFreeBusy requestFree = new VFreeBusy(start, end, new Dur(0, 0, 5, 0));
+
+        VFreeBusy freeBusy = new VFreeBusy(requestFree, components);
+
+        FreeBusy fg = (FreeBusy) freeBusy.getProperties().getProperty(Property.FREEBUSY);
+        assertNotNull(fg);
+        // free/busy type should be FREE..
+        assertEquals(FbType.FREE, fg.getParameters().getParameter(Parameter.FBTYPE));
+        // should be only one period..
+        assertEquals(1, fg.getPeriods().size());
+        // period should be from the start to the end date..
+        assertEquals(new Period(start, end), fg.getPeriods().first());
     }
 }

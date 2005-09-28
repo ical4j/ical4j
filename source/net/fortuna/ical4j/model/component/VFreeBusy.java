@@ -270,6 +270,10 @@ public class VFreeBusy extends Component {
             log.debug("Busy periods: " + periods);
         }
         DateTime lastPeriodEnd = null;
+        // where no time is consumed set the last period end as the range start..
+        if (periods.isEmpty()) {
+            lastPeriodEnd = new DateTime(start);
+        }
         for (Iterator i = periods.iterator(); i.hasNext();) {
             Period period = (Period) i.next();
             // check if period outside bounds..
