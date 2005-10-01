@@ -41,6 +41,7 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -78,9 +79,17 @@ public abstract class DateProperty extends Property {
     }
 
     /**
+     * Sets the date value of this property. If a TZID parameter is specified
+     * for this property and the date value is a DATE-TIME instance, the
+     * DATE-TIME's timezone will be updated accordingly.
      * @param date The date to set.
      */
     public final void setDate(final Date date) {
+        Parameter tzId = getParameters().getParameter(Parameter.TZID);
+        if (tzId != null && date instanceof DateTime) {
+            TimeZone timezone = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone(tzId.getValue());
+            ((DateTime) date).setTimeZone(timezone);
+        }
         this.date = date;
     }
 
