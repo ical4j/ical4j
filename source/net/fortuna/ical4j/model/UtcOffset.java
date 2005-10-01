@@ -43,11 +43,12 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * Represents a timezone offset from UTC time.
- * 
+ *
  * @author Ben Fortuna
  */
 public class UtcOffset {
 
+    // TODO: use commons constants in Dates..
     private static final long MILLIS_PER_SECOND = 1000;
 
     private static final long MILLIS_PER_MINUTE = 60000;
@@ -71,11 +72,11 @@ public class UtcOffset {
     private static final NumberFormat MINUTE_FORMAT = new DecimalFormat("00");
 
     private static final NumberFormat SECOND_FORMAT = new DecimalFormat("00");
-    
+
     private static Log log = LogFactory.getLog(UtcOffset.class);
 
     private long offset;
-    
+
     /**
      * @param value
      */
@@ -107,14 +108,15 @@ public class UtcOffset {
             offset = -offset;
         }
     }
-    
+
     /**
      * @param offset
      */
     public UtcOffset(final long offset) {
+		// TODO: apply rounding to remove millisecond precision..
         this.offset = offset;
     }
-    
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */

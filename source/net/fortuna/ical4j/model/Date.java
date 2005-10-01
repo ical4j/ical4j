@@ -40,36 +40,37 @@ import java.text.ParseException;
 
 /**
  * Base class for all representations of time values in RFC2445.
- * 
+ *
  * @author Ben Fortuna
  */
 public class Date extends Iso8601 {
-    
+
     private static final long serialVersionUID = 7136072363141363141L;
 
     private static final String PATTERN = "yyyyMMdd";
-    
+
     /**
      * Default constructor.
      */
     public Date() {
         super(PATTERN);
     }
-    
+
     /**
      * @param time
      */
     public Date(final long time) {
+		// TODO: apply rounding to remove millisecond precision..
         super(time, PATTERN);
     }
-    
+
     /**
      * @param date
      */
     public Date(final java.util.Date date) {
         super(date.getTime(), PATTERN);
     }
-    
+
     /**
      * @param value
      * @throws ParseException
