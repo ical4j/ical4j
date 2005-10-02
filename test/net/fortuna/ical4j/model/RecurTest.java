@@ -35,6 +35,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
 
@@ -131,12 +132,12 @@ public class RecurTest extends TestCase {
         recur.getMinuteList().add(new Integer(30));
 
         Calendar cal = Calendar.getInstance();
-        Date start = new Date(cal.getTime().getTime());
+        Date start = new DateTime(cal.getTime().getTime());
         cal.add(Calendar.YEAR, 2);
-        Date end = new Date(cal.getTime().getTime());
+        Date end = new DateTime(cal.getTime().getTime());
         log.info(recur);
         
-        DateList dates = recur.getDates(new Date(testCal.getTime()), start, end, Value.DATE_TIME);
+        DateList dates = recur.getDates(new DateTime(testCal.getTime()), start, end, Value.DATE_TIME);
         log.info(dates);
     }
 
@@ -331,5 +332,24 @@ public class RecurTest extends TestCase {
         for (int i=0; i<dates.size(); i++) { 
             System.out.println("date_" + i + " = " + dates.get(i).toString()); 
         } 
+    }
+    
+    /**
+     * @throws ParseException
+     */
+    public final void testRecurGetDates() throws ParseException {
+        Recur recur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=SA");
+    
+        Date start = new Date("20050101Z");
+        Date end = new Date("20060101Z");
+    
+        DateList list = recur.getDates(start, end, null);
+        for (int i = 0; i < list.size(); i++) {
+            Date date = (Date) list.get(i);
+//            Calendar calendar = Dates.getCalendarInstance(date);
+            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+            calendar.setTime(date);
+            assertEquals(Calendar.SATURDAY, calendar.get(Calendar.DAY_OF_WEEK));
+        }
     }
 }
