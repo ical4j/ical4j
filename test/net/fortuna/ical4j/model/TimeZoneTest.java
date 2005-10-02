@@ -56,6 +56,7 @@ public class TimeZoneTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         tz = java.util.TimeZone.getTimeZone("Australia/Melbourne");
+        TimeZoneRegistryFactory.getInstance().getRegistry().clear();
         timezone = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Australia/Melbourne");
     }
 
