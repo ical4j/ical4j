@@ -37,8 +37,12 @@ package net.fortuna.ical4j.util;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.parameter.Value;
 
 /**
  * Implements a collection of utility methods relevant to date processing.
@@ -74,7 +78,7 @@ public final class Dates {
      * @param weekNo
      * @return
      */
-    public static int getAbsWeekNo(final Date date, final int weekNo) {
+    public static int getAbsWeekNo(final java.util.Date date, final int weekNo) {
         if (weekNo == 0 || weekNo < -53 || weekNo > 53) {
             throw new IllegalArgumentException("Invalid week number [" + weekNo + "]");
         }
@@ -103,7 +107,7 @@ public final class Dates {
      * @param yearDay
      * @return
      */
-    public static int getAbsYearDay(final Date date, final int yearDay) {
+    public static int getAbsYearDay(final java.util.Date date, final int yearDay) {
         if (yearDay == 0 || yearDay < -366 || yearDay > 366) {
             throw new IllegalArgumentException("Invalid year day [" + yearDay + "]");
         }
@@ -150,5 +154,38 @@ public final class Dates {
             cal.add(Calendar.DAY_OF_MONTH, 1);
         }
         return ((Integer) days.get(days.size() + monthDay)).intValue();
+    }
+    
+    /**
+     * Returns a new date instance of the specified type. If no type is
+     * specified a DateTime instance is returned.
+     * @param date a seed Java date instance
+     * @param type the type of date instance
+     * @return an instance of <code>net.fortuna.ical4j.model.Date</code>
+     */
+    public static Date getInstance(final java.util.Date date, Value type) {
+        if (Value.DATE.equals(type)) {
+            return new Date(date);
+        }
+        return new DateTime(date);
+    }
+    
+    /**
+     * Returns an instance of <code>java.util.Calendar</code> that is suitably
+     * initialised for working with the specified date.
+     * @param date a date instance
+     * @return a <code>java.util.Calendar</code>
+     */
+    public static Calendar getCalendarInstance(final Date date) {
+        if (date instanceof DateTime) {
+            DateTime dateTime = (DateTime) date;
+            if (dateTime.getTimeZone() != null) {
+                return Calendar.getInstance(dateTime.getTimeZone());
+            }
+            else if (dateTime.isUtc()){
+                return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.UTC_ID));
+            }
+        }
+        return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 }
