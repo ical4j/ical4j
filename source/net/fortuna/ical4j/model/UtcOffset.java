@@ -38,6 +38,8 @@ package net.fortuna.ical4j.model;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+import net.fortuna.ical4j.util.Dates;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -47,13 +49,6 @@ import org.apache.commons.logging.LogFactory;
  * @author Ben Fortuna
  */
 public class UtcOffset {
-
-    // TODO: use commons constants in Dates..
-    private static final long MILLIS_PER_SECOND = 1000;
-
-    private static final long MILLIS_PER_MINUTE = 60000;
-
-    private static final long MILLIS_PER_HOUR = 3600000;
 
     private static final int HOUR_START_INDEX = 1;
 
@@ -91,14 +86,14 @@ public class UtcOffset {
         offset = 0;
         offset += Integer.parseInt(value.substring(HOUR_START_INDEX,
                 HOUR_END_INDEX))
-                * MILLIS_PER_HOUR;
+                * Dates.MILLIS_PER_HOUR;
         offset += Integer.parseInt(value.substring(MINUTE_START_INDEX,
                 MINUTE_END_INDEX))
-                * MILLIS_PER_MINUTE;
+                * Dates.MILLIS_PER_MINUTE;
         try {
             offset += Integer.parseInt(value.substring(SECOND_START_INDEX,
                     SECOND_END_INDEX))
-                    * MILLIS_PER_SECOND;
+                    * Dates.MILLIS_PER_SECOND;
         }
         catch (Exception e) {
             // seconds not supplied..
@@ -113,8 +108,7 @@ public class UtcOffset {
      * @param offset
      */
     public UtcOffset(final long offset) {
-		// TODO: apply rounding to remove millisecond precision..
-        this.offset = offset;
+        this.offset = (long) Math.floor(offset / (double) Dates.MILLIS_PER_SECOND) * Dates.MILLIS_PER_SECOND;
     }
 
     /* (non-Javadoc)
@@ -130,14 +124,14 @@ public class UtcOffset {
         else {
             b.append('+');
         }
-        b.append(HOUR_FORMAT.format(remainder / MILLIS_PER_HOUR));
+        b.append(HOUR_FORMAT.format(remainder / Dates.MILLIS_PER_HOUR));
 
-        remainder = remainder % MILLIS_PER_HOUR;
-        b.append(MINUTE_FORMAT.format(remainder / MILLIS_PER_MINUTE));
+        remainder = remainder % Dates.MILLIS_PER_HOUR;
+        b.append(MINUTE_FORMAT.format(remainder / Dates.MILLIS_PER_MINUTE));
 
-        remainder = remainder % MILLIS_PER_MINUTE;
+        remainder = remainder % Dates.MILLIS_PER_MINUTE;
         if (remainder > 0) {
-            b.append(SECOND_FORMAT.format(remainder / MILLIS_PER_SECOND));
+            b.append(SECOND_FORMAT.format(remainder / Dates.MILLIS_PER_SECOND));
         }
         return b.toString();
     }
@@ -147,5 +141,22 @@ public class UtcOffset {
      */
     public final long getOffset() {
         return offset;
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public final boolean equals(final Object arg0) {
+        if (arg0 instanceof UtcOffset) {
+            return getOffset() == ((UtcOffset) arg0).getOffset();
+        }
+        return super.equals(arg0);
+    }
+
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    public final int hashCode() {
+        return (int) getOffset();
     }
 }
