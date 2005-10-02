@@ -74,7 +74,7 @@ public class TimeZone extends java.util.TimeZone {
         cal.set(Calendar.DAY_OF_YEAR, day);
         cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
         cal.set(Calendar.MILLISECOND, milliseconds);
-        Observance observance = vTimeZone.getApplicableObservance(new net.fortuna.ical4j.model.Date(cal.getTime()));
+        Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));
         if (observance != null) {
             TzOffsetTo offset = (TzOffsetTo) observance.getProperties().getProperty(Property.TZOFFSETTO);
             return (int) offset.getOffset().getOffset();
@@ -105,7 +105,7 @@ public class TimeZone extends java.util.TimeZone {
      * daylight time.
      */
     public final boolean inDaylightTime(final Date date) {
-        Observance observance = vTimeZone.getApplicableObservance(new net.fortuna.ical4j.model.Date(date));
+        Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
         return (observance != null && observance instanceof Daylight);
     }
 
