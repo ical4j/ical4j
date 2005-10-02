@@ -269,21 +269,13 @@ public class VToDo extends Component {
                 getProperties());
 
         Status status = (Status) getProperties().getProperty(Property.STATUS);
-        if (status != null) {
-            // TODO should be status.equals(Status.NEEDS_ACTION) etc. if
-            // Status had a factory method to guarantee that the shared, static
-            // instances are always used for these properties
-            //
-            // NOTE: equals() method should be overridden to ensure that status
-            // instances with the same value are declared equal.
-            if (!(Status.VTODO_NEEDS_ACTION.equals(status)
-                    || Status.VTODO_COMPLETED.equals(status)
-                    || Status.VTODO_IN_PROCESS.equals(status)
-                    || Status.VTODO_CANCELLED.equals(status))) {
+        if (status != null &&
+                !Status.VTODO_NEEDS_ACTION.equals(status) &&
+                !Status.VTODO_COMPLETED.equals(status) &&
+                !Status.VTODO_IN_PROCESS.equals(status) &&
+                !Status.VTODO_CANCELLED.equals(status)) {
                 throw new ValidationException(
-                        "Status property [" + status.toString()
-                                + "] may not occur in VTODO");
-            }
+                        "Status property [" + status.toString() + "] may not occur in VTODO");
         }
 
         /*
