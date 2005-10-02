@@ -43,6 +43,7 @@ import java.util.Map;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.property.TzId;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -72,6 +73,13 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     public final void register(final TimeZone timezone) {
         timezones.put(timezone.getID(), timezone);
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.TimeZoneRegistry#clear()
+     */
+    public final void clear() {
+        timezones.clear();
+    }
 
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.TimeZoneRegistry#getTimeZone(java.lang.String)
@@ -82,6 +90,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             try {
                 VTimeZone vTimeZone = loadVTimeZone(id);
                 if (vTimeZone != null) {
+                    // XXX: temporary kludge..
+                    ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
                     timezone = new TimeZone(vTimeZone);
                     register(timezone);
                 }

@@ -52,6 +52,11 @@ public interface TimeZoneRegistry {
     void register(final TimeZone timezone);
     
     /**
+     * Clears all registered timezones.
+     */
+    void clear();
+    
+    /**
      * Returns a timezone with the specified identifier.
      * @param id a timezone identifier
      * @return a timezone matching the specified identifier. If no timezone
