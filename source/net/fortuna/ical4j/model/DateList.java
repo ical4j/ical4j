@@ -43,8 +43,8 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.TimeZones;
 
 /**
- * Defines a list of iCalendar dates.
- * 
+ * Defines a list of iCalendar dates. If no value type is specified a list
+ * defaults to DATE-TIME instances.
  * @author Ben Fortuna
  */
 public class DateList extends ArrayList implements Serializable {
@@ -95,9 +95,10 @@ public class DateList extends ArrayList implements Serializable {
         this(aType);
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {
-            if (type != null && Value.DATE.equals(type)) {
+            if (Value.DATE.equals(type)) {
                 add(new Date(t.nextToken()));
-            } else {
+            }
+            else {
                 add(new DateTime(t.nextToken()));
             }
         }
@@ -120,7 +121,7 @@ public class DateList extends ArrayList implements Serializable {
                 add(new Date((Date) i.next()));
             }
         }
-        else if (Value.DATE_TIME.equals(type)) {
+        else {
             for (Iterator i = list.iterator(); i.hasNext();) {
                 add(new DateTime((Date) i.next()));
             }
@@ -158,7 +159,7 @@ public class DateList extends ArrayList implements Serializable {
         if (date instanceof DateTime) {
             ((DateTime) date).setTimeZone(getTimeZone());
         }
-        else if (Value.DATE_TIME.equals(getType())) {
+        else if (!Value.DATE.equals(getType())) {
             DateTime dateTime = new DateTime(date);
             dateTime.setTimeZone(getTimeZone());
             return add((Object) dateTime);
@@ -217,7 +218,7 @@ public class DateList extends ArrayList implements Serializable {
      *            The utc to set.
      */
     public final void setUtc(final boolean utc) {
-        if (Value.DATE_TIME.equals(type)) {
+        if (!Value.DATE.equals(type)) {
             for (Iterator i = iterator(); i.hasNext();) {
                 ((DateTime) i.next()).setUtc(utc);
             }
@@ -232,7 +233,7 @@ public class DateList extends ArrayList implements Serializable {
      * @param timezone
      */
     public final void setTimeZone(final TimeZone timeZone) {
-        if (Value.DATE_TIME.equals(type)) {
+        if (!Value.DATE.equals(type)) {
             for (Iterator i = iterator(); i.hasNext();) {
                 ((DateTime) i.next()).setTimeZone(timeZone);
             }
