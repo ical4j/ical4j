@@ -7,15 +7,19 @@ package net.fortuna.ical4j.model.component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
@@ -27,8 +31,10 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.ExDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.util.TimeZones;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,16 +66,16 @@ public class VEventTest extends TestCase {
         // create tzid parameter..
         tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
 
-        Calendar weekday9AM = Calendar.getInstance();
+        Calendar weekday9AM = getCalendarInstance();
         weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
         weekday9AM.set(Calendar.MILLISECOND, 0);
 
-        Calendar weekday5PM = Calendar.getInstance();
+        Calendar weekday5PM = getCalendarInstance();
         weekday5PM.set(2005, Calendar.MARCH, 7, 17, 0, 0);
         weekday5PM.set(Calendar.MILLISECOND, 0);
 
         // Do the recurrence until December 31st.
-        Calendar untilCal = Calendar.getInstance();
+        Calendar untilCal = getCalendarInstance();
         untilCal.set(2005, Calendar.DECEMBER, 31);
         untilCal.set(Calendar.MILLISECOND, 0);
         Date until = new Date(untilCal.getTime().getTime());
@@ -112,30 +118,49 @@ public class VEventTest extends TestCase {
         weekdayNineToFiveEvents = new VEvent();
         weekdayNineToFiveEvents.getProperties().add(rruleWeekly);
         weekdayNineToFiveEvents.getProperties().add(summary);
-        weekdayNineToFiveEvents.getProperties().add(
-                                        new DtStart(new Date(weekday9AM.getTime().getTime())));
-        weekdayNineToFiveEvents.getProperties().add(
-                                        new DtEnd(new Date(weekday5PM.getTime().getTime())));
+        DtStart dtStart = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
+//        dtStart.getParameters().add(Value.DATE);
+        weekdayNineToFiveEvents.getProperties().add(dtStart);
+        DtEnd dtEnd = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
+//        dtEnd.getParameters().add(Value.DATE);
+        weekdayNineToFiveEvents.getProperties().add(dtEnd);
+        // ensure event is valid..
+        weekdayNineToFiveEvents.validate();
 
         summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY");
 
         dailyWeekdayEvents = new VEvent();
         dailyWeekdayEvents.getProperties().add(rruleDaily);
         dailyWeekdayEvents.getProperties().add(summary);
-        dailyWeekdayEvents.getProperties().add(
-                                        new DtStart(new Date(weekday9AM.getTime().getTime())));
-        dailyWeekdayEvents.getProperties().add(
-                                        new DtEnd(new Date(weekday5PM.getTime().getTime())));
+        DtStart dtStart2 = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
+//        dtStart2.getParameters().add(Value.DATE);
+        dailyWeekdayEvents.getProperties().add(dtStart2);
+        DtEnd dtEnd2 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
+//        dtEnd2.getParameters().add(Value.DATE);
+        dailyWeekdayEvents.getProperties().add(dtEnd2);
+        // ensure event is valid..
+        dailyWeekdayEvents.validate();
 
         summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY");
 
         monthlyWeekdayEvents = new VEvent();
         monthlyWeekdayEvents.getProperties().add(rruleMonthly);
         monthlyWeekdayEvents.getProperties().add(summary);
-        monthlyWeekdayEvents.getProperties().add(
-                                        new DtStart(new Date(weekday9AM.getTime().getTime())));
-        monthlyWeekdayEvents.getProperties().add(
-                                        new DtEnd(new Date(weekday5PM.getTime().getTime())));
+        DtStart dtStart3 = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
+//        dtStart3.getParameters().add(Value.DATE);
+        monthlyWeekdayEvents.getProperties().add(dtStart3);
+        DtEnd dtEnd3 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
+//        dtEnd3.getParameters().add(Value.DATE);
+        monthlyWeekdayEvents.getProperties().add(dtEnd3);
+        // ensure event is valid..
+        monthlyWeekdayEvents.validate();
+    }
+    
+    /**
+     * @return
+     */
+    private Calendar getCalendarInstance() {
+        return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 
     /**
@@ -143,11 +168,11 @@ public class VEventTest extends TestCase {
      */
     public final void test() {
         // create event start date..
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        java.util.Calendar calendar = getCalendarInstance();
         calendar.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
         calendar.set(java.util.Calendar.DAY_OF_MONTH, 25);
 
-        DtStart start = new DtStart(new Date(calendar.getTime().getTime()));
+        DtStart start = new DtStart(new Date(calendar.getTime()));
         start.getParameters().add(tzParam);
         start.getParameters().add(Value.DATE);
 
@@ -161,11 +186,11 @@ public class VEventTest extends TestCase {
     }
 
     public final void test2() {
-        java.util.Calendar cal = java.util.Calendar.getInstance();
+        java.util.Calendar cal = getCalendarInstance();
         cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
         cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
 
-        VEvent christmas = new VEvent(new Date(cal.getTime().getTime()), "Christmas Day");
+        VEvent christmas = new VEvent(new Date(cal.getTime()), "Christmas Day");
 
         // initialise as an all-day event..
         christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(Value.DATE);
@@ -177,13 +202,13 @@ public class VEventTest extends TestCase {
     }
     
     public final void test3() {
-        java.util.Calendar cal = java.util.Calendar.getInstance();
+        java.util.Calendar cal = getCalendarInstance();
         // tomorrow..
         cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
         cal.set(java.util.Calendar.HOUR_OF_DAY, 9);
         cal.set(java.util.Calendar.MINUTE, 30);
 
-        VEvent meeting = new VEvent(new Date(cal.getTime().getTime()), new Dur(0, 1, 0, 0), "Progress Meeting");
+        VEvent meeting = new VEvent(new DateTime(cal.getTime().getTime()), new Dur(0, 1, 0, 0), "Progress Meeting");
 
         // add timezone information..
         meeting.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);       
@@ -210,39 +235,40 @@ public class VEventTest extends TestCase {
 
         // Test Start 04/01/2005, End One month later.
         // Query Calendar Start and End Dates.
-        Calendar queryStartDate = Calendar.getInstance();
+        Calendar queryStartDate = getCalendarInstance();
         queryStartDate.set(2005, Calendar.APRIL, 1, 14, 47, 0);
         queryStartDate.set(Calendar.MILLISECOND, 0);
-        Calendar queryEndDate = Calendar.getInstance();
+        DateTime queryStart = new DateTime(queryStartDate.getTime().getTime());
+        
+        Calendar queryEndDate = getCalendarInstance();
         queryEndDate.set(2005, Calendar.MAY, 1, 07, 15, 0);
         queryEndDate.set(Calendar.MILLISECOND, 0);
-        Calendar week1EndDate = Calendar.getInstance();
+        DateTime queryEnd = new DateTime(queryEndDate.getTime().getTime());
+
+        Calendar week1EndDate = getCalendarInstance();
         week1EndDate.set(2005, Calendar.APRIL, 8, 11, 15, 0);
         week1EndDate.set(Calendar.MILLISECOND, 0);
-        Calendar week4StartDate = Calendar.getInstance();
+        
+        Calendar week4StartDate = getCalendarInstance();
         week4StartDate.set(2005, Calendar.APRIL, 24, 14, 47, 0);
         week4StartDate.set(Calendar.MILLISECOND, 0);
+        DateTime week4Start = new DateTime(week4StartDate.getTime().getTime());
 
         // This range is monday to friday every three weeks, starting from
         // March 7th 2005, which means for our query dates we need
         // April 18th through to the 22nd.
-        PeriodList weeklyPeriods =
-                weekdayNineToFiveEvents.getConsumedTime(new Date(queryStartDate.getTime().getTime()),
-                        new Date(queryEndDate.getTime().getTime()));
-        PeriodList dailyPeriods =
-                dailyWeekdayEvents.getConsumedTime(new Date(queryStartDate.getTime().getTime()),
-                        new Date(queryEndDate.getTime().getTime()));
+        PeriodList weeklyPeriods = weekdayNineToFiveEvents.getConsumedTime(queryStart, queryEnd);
+        PeriodList dailyPeriods = dailyWeekdayEvents.getConsumedTime(queryStart, queryEnd);
 //                                                      week1EndDate.getTime());
-        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(new Date(week4StartDate.getTime().getTime()),
-                new Date(queryEndDate.getTime().getTime())));
+        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
 
-        Calendar expectedCal = Calendar.getInstance();
+        Calendar expectedCal = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
         expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedStartOfFirstRange = new Date(expectedCal.getTime().getTime());
+        Date expectedStartOfFirstRange = new DateTime(expectedCal.getTime().getTime());
         expectedCal.set(2005, Calendar.APRIL, 4, 17, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedEndOfFirstRange = new Date(expectedCal.getTime().getTime());
+        Date expectedEndOfFirstRange = new DateTime(expectedCal.getTime().getTime());
         assertNotNull(weeklyPeriods);
         assertTrue(weeklyPeriods.size() > 0);
         Period firstPeriod = (Period) weeklyPeriods.toArray()[0];
@@ -269,10 +295,10 @@ public class VEventTest extends TestCase {
 
         // Test Starts 04/03/2005, Ends One week later.
         // Query Calendar Start and End Dates.
-        Calendar queryStartDate = Calendar.getInstance();
+        Calendar queryStartDate = getCalendarInstance();
         queryStartDate.set(2005, Calendar.APRIL, 3, 05, 12, 0);
         queryStartDate.set(Calendar.MILLISECOND, 0);
-        Calendar queryEndDate = Calendar.getInstance();
+        Calendar queryEndDate = getCalendarInstance();
         queryEndDate.set(2005, Calendar.APRIL, 10, 21, 55, 0);
         queryEndDate.set(Calendar.MILLISECOND, 0);
 
@@ -280,18 +306,18 @@ public class VEventTest extends TestCase {
         // effect), starting from March 7th 2005. Our query dates are
         // April 3rd through to the 10th.
         PeriodList weeklyPeriods =
-                weekdayNineToFiveEvents.getConsumedTime(new Date(queryStartDate.getTime().getTime()),
-                        new Date(queryEndDate.getTime().getTime()));
+                weekdayNineToFiveEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
+                        new DateTime(queryEndDate.getTime()));
         PeriodList dailyPeriods =
-                dailyWeekdayEvents.getConsumedTime(new Date(queryStartDate.getTime().getTime()),
-                        new Date(queryEndDate.getTime().getTime()));
-        Calendar expectedCal = Calendar.getInstance();
+                dailyWeekdayEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
+                        new DateTime(queryEndDate.getTime()));
+        Calendar expectedCal = getCalendarInstance();
         expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedStartOfFirstRange = new Date(expectedCal.getTime().getTime());
+        Date expectedStartOfFirstRange = new DateTime(expectedCal.getTime());
         expectedCal.set(2005, Calendar.APRIL, 4, 17, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedEndOfFirstRange = new Date(expectedCal.getTime().getTime());
+        Date expectedEndOfFirstRange = new DateTime(expectedCal.getTime());
         assertNotNull(dailyPeriods);
         assertTrue(dailyPeriods.size() > 0);
         Period firstPeriod = (Period) dailyPeriods.toArray()[0];
@@ -320,10 +346,10 @@ public class VEventTest extends TestCase {
 
         // Test Starts 04/03/2005, Ends two weeks later.
         // Query Calendar Start and End Dates.
-        Calendar queryStartDate = Calendar.getInstance();
+        Calendar queryStartDate = getCalendarInstance();
         queryStartDate.set(2005, Calendar.APRIL, 3, 05, 12, 0);
         queryStartDate.set(Calendar.MILLISECOND, 0);
-        Calendar queryEndDate = Calendar.getInstance();
+        Calendar queryEndDate = getCalendarInstance();
         queryEndDate.set(2005, Calendar.APRIL, 17, 21, 55, 0);
         queryEndDate.set(Calendar.MILLISECOND, 0);
 
@@ -331,18 +357,18 @@ public class VEventTest extends TestCase {
         // effect), starting from March 7th 2005. Our query dates are
         // April 3rd through to the 17th.
         PeriodList monthlyPeriods =
-                monthlyWeekdayEvents.getConsumedTime(new Date(queryStartDate.getTime().getTime()),
-                        new Date(queryEndDate.getTime().getTime()));
+                monthlyWeekdayEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
+                        new DateTime(queryEndDate.getTime()));
         PeriodList dailyPeriods =
-                dailyWeekdayEvents.getConsumedTime(new Date(queryStartDate.getTime().getTime()),
-                        new Date(queryEndDate.getTime().getTime()));
-        Calendar expectedCal = Calendar.getInstance();
+                dailyWeekdayEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
+                        new DateTime(queryEndDate.getTime()));
+        Calendar expectedCal = getCalendarInstance();
         expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedStartOfFirstRange = new Date(expectedCal.getTime().getTime());
+        Date expectedStartOfFirstRange = new DateTime(expectedCal.getTime());
         expectedCal.set(2005, Calendar.APRIL, 4, 17, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedEndOfFirstRange = new Date(expectedCal.getTime().getTime());
+        Date expectedEndOfFirstRange = new DateTime(expectedCal.getTime());
         assertNotNull(monthlyPeriods);
         assertTrue(monthlyPeriods.size() > 0);
         Period firstPeriod = (Period) monthlyPeriods.toArray()[0];
@@ -384,7 +410,7 @@ public class VEventTest extends TestCase {
         }
 
         Date start = new Date();
-        Calendar endCal = Calendar.getInstance();
+        Calendar endCal = getCalendarInstance();
         endCal.setTime(start);
         endCal.add(Calendar.WEEK_OF_YEAR, 4);
 //        Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
@@ -409,12 +435,12 @@ public class VEventTest extends TestCase {
         recur.getDayList().add(WeekDay.SU);
         log.info(recur);
         
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = getCalendarInstance();
         cal.set(Calendar.DAY_OF_MONTH, 8);
-        Date start = new Date(cal.getTime().getTime());
+        Date start = new DateTime(cal.getTime());
 //        cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
         cal.add(Calendar.HOUR_OF_DAY, 1);
-        Date end = new Date(cal.getTime().getTime());
+        Date end = new DateTime(cal.getTime());
 //        log.info(recur.getDates(start, end, Value.DATE_TIME));
         
         RRule rrule = new RRule(recur);
@@ -422,10 +448,10 @@ public class VEventTest extends TestCase {
         event.getProperties().add(rrule);
         log.info(event);
         
-        Calendar rangeCal = Calendar.getInstance();
-        Date rangeStart = new Date(rangeCal.getTime().getTime());
+        Calendar rangeCal = getCalendarInstance();
+        Date rangeStart = new DateTime(rangeCal.getTime());
         rangeCal.add(Calendar.WEEK_OF_YEAR, 4);
-        Date rangeEnd = new Date(rangeCal.getTime().getTime());
+        Date rangeEnd = new DateTime(rangeCal.getTime());
         
         log.info(event.getConsumedTime(rangeStart, rangeEnd));
     }
@@ -435,7 +461,7 @@ public class VEventTest extends TestCase {
      * from a given start date and duration.
      */
     public final void testEventEndDate() {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = getCalendarInstance();
         Date startDate = new Date(cal.getTime());
         log.info("Start date: " + startDate);
         VEvent event = new VEvent(startDate, new Dur(3, 0, 0, 0), "3 day event");
@@ -444,4 +470,29 @@ public class VEventTest extends TestCase {
         cal.add(Calendar.DAY_OF_YEAR, 3);
         assertEquals(new Date(cal.getTime()), endDate);
     }
+    
+    /**
+     * Test to ensure that EXDATE properties are correctly applied.
+     * @throws ParseException
+     */
+    public void testGetConsumedTimeWithExDate() throws ParseException {
+
+        VEvent event1 = new VEvent(new DateTime("20050103T080000"),
+                new Dur(0, 0, 15, 0),
+                "Event 1");
+    
+        Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
+        RRule rRule = new RRule(rRuleRecur);
+        event1.getProperties().add(rRule);
+    
+        ParameterList parameterList = new ParameterList();
+        parameterList.add(Value.DATE);
+        ExDate exDate = new ExDate(parameterList, "20050106");
+        event1.getProperties().add(exDate);
+    
+        Date start = new Date("20050106");
+        Date end = new Date("20050107");
+        PeriodList list = event1.getConsumedTime(start, end);
+        assertTrue(list.isEmpty());
+    }    
 }
