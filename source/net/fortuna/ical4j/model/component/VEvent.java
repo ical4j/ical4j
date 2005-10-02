@@ -59,6 +59,7 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Transp;
+import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 
@@ -355,21 +356,12 @@ public class VEvent extends Component {
                 getProperties());
 
         Status status = (Status) getProperties().getProperty(Property.STATUS);
-        if (status != null) {
-            // TODO should be status.equals(Status.TENTATIVE) etc. if
-            // Status had a factory method to guarantee that the shared, static
-            // instances are always used for these properties
-            //
-            // NOTE: equals() method should be overridden to ensure that status
-            // instances with the same value are declared equal.
-            // (see parameter Value for example)
-            if (!(Status.VEVENT_TENTATIVE.equals(status)
-                    || Status.VEVENT_CONFIRMED.equals(status)
-                    || Status.VEVENT_CANCELLED.equals(status))) {
+        if (status != null &&
+                !Status.VEVENT_TENTATIVE.equals(status) &&
+                !Status.VEVENT_CONFIRMED.equals(status) &&
+                !Status.VEVENT_CANCELLED.equals(status)) {
                 throw new ValidationException(
-                    "Status property [" + status.toString()
-                            + "] is not applicable for VEVENT");
-            }
+                        "Status property [" + status.toString() + "] is not applicable for VEVENT");
         }
 
         /*
@@ -459,23 +451,13 @@ public class VEvent extends Component {
         for (Iterator i = rDates.iterator(); i.hasNext();) {
             RDate rdate = (RDate) i.next();
             // only period-based rdates are applicable..
+            // FIXME: ^^^ not true - date-time/date also applicable..
             if (Value.PERIOD.equals(rdate.getParameters().getParameter(Parameter.VALUE))) {
                 for (Iterator j = rdate.getPeriods().iterator(); j.hasNext();) {
                     Period period = (Period) j.next();
                     if (period.getStart().before(rangeEnd) && period.getEnd().after(rangeStart)) {
                         periods.add(period);
                     }
-                }
-            }
-        }
-        // exception dates..
-        PropertyList exDates = getProperties().getProperties(Property.EXDATE);
-        for (Iterator i = exDates.iterator(); i.hasNext();) {
-            ExDate exDate = (ExDate) i.next();
-            for (Iterator j = periods.iterator(); j.hasNext();) {
-                Period period = (Period) j.next();
-                if (exDate.getDates().contains(period.getStart())) {
-                    periods.remove(period);
                 }
             }
         }
@@ -489,7 +471,21 @@ public class VEvent extends Component {
                 periods.add(new Period(new DateTime(startDate), rDuration));
             }
         }
+        // exception dates..
+        PropertyList exDates = getProperties().getProperties(Property.EXDATE);
+        for (Iterator i = exDates.iterator(); i.hasNext();) {
+            ExDate exDate = (ExDate) i.next();
+            for (Iterator j = periods.iterator(); j.hasNext();) {
+                Period period = (Period) j.next();
+                // for DATE-TIME instances check for DATE-based exclusions also..
+                if (exDate.getDates().contains(period.getStart())
+                        || exDate.getDates().contains(new Date(period.getStart()))) {
+                    periods.remove(period);
+                }
+            }
+        }
         // exception rules..
+        // FIXME: exception rules should be consistent with exception dates (i.e. not use periods?)..
         PropertyList exRules = getProperties().getProperties(Property.EXRULE);
         PeriodList exPeriods = new PeriodList();
         for (Iterator i = exRules.iterator(); i.hasNext();) {
@@ -542,17 +538,15 @@ public class VEvent extends Component {
      *       The end for this VEVENT.
      */
     public final DtEnd getEndDate() {
-
         DtEnd dtEnd = (DtEnd) getProperties().getProperty(Property.DTEND);
-
         // No DTEND?  No problem, we'll use the DURATION.
         if (dtEnd == null) {
             DtStart dtStart = getStartDate();
             Duration vEventDuration =
                       (Duration) getProperties().getProperty(Property.DURATION);
-            dtEnd = new DtEnd(new Date(vEventDuration.getDuration().getTime(dtStart.getTime()).getTime()));
+            dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration().getTime(dtStart.getTime()),
+                    (Value) dtStart.getParameters().getParameter(Parameter.VALUE)));
         }
-
         return dtEnd;
     }
 }
