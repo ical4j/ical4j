@@ -75,8 +75,8 @@ public class DateTime extends Date {
      * Default constructor.
      */
     public DateTime() {
-        super();
-        this.time = new Time(getTime(), getFormat().getTimeZone());
+        super(PRECISION_SECOND);
+        this.time = new Time(System.currentTimeMillis(), getFormat().getTimeZone());
     }
     
     /**
@@ -91,16 +91,16 @@ public class DateTime extends Date {
      * @param time
      */
     public DateTime(final long time) {
-        super(time);
-        this.time = new Time(getTime(), getFormat().getTimeZone());
+        super(time, PRECISION_SECOND);
+        this.time = new Time(time, getFormat().getTimeZone());
     }
     
     /**
      * @param date
      */
     public DateTime(final java.util.Date date) {
-        super(date.getTime());
-        this.time = new Time(getTime(), getFormat().getTimeZone());
+        super(date.getTime(), PRECISION_SECOND);
+        this.time = new Time(date.getTime(), getFormat().getTimeZone());
     }
     
     /**
@@ -118,7 +118,7 @@ public class DateTime extends Date {
         catch (ParseException pe) {
             defaultFormat.setTimeZone(getFormat().getTimeZone());
             time = defaultFormat.parse(value).getTime();
-            this.time = new Time(getTime(), getFormat().getTimeZone());
+            this.time = new Time(time, getFormat().getTimeZone());
         }
         setTime(time);
     }
@@ -204,5 +204,22 @@ public class DateTime extends Date {
         b.append('T');
         b.append(time.toString());
         return b.toString();
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equals(final Object arg0) {
+        if (arg0 instanceof DateTime) {
+            return time.equals(((DateTime) arg0).time) && super.equals(arg0);
+        }
+        return super.equals(arg0);
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode() {
+        return time.hashCode() + super.hashCode();
     }
 }
