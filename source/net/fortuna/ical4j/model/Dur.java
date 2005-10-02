@@ -235,7 +235,7 @@ public class Dur implements Comparable {
         else {
             // seconds..
             if (secondDelta > 0 && negative) {
-                startCal.add(Calendar.MINUTE, 1);
+                startCal.add(Calendar.MINUTE, -1);
                 seconds = SECONDS_PER_MINUTE - secondDelta;
             }
             else if (secondDelta < 0 && !negative) {
@@ -249,7 +249,7 @@ public class Dur implements Comparable {
             // minutes..
             minuteDelta = endCal.get(Calendar.MINUTE) - startCal.get(Calendar.MINUTE);
             if (minuteDelta > 0 && negative) {
-                startCal.add(Calendar.HOUR, 1);
+                startCal.add(Calendar.HOUR, -1);
                 minutes = MINUTES_PER_HOUR - minuteDelta;
             }
             else if (minuteDelta < 0 && !negative) {
@@ -263,7 +263,7 @@ public class Dur implements Comparable {
             // hours..
             hourDelta = endCal.get(Calendar.HOUR_OF_DAY) - startCal.get(Calendar.HOUR_OF_DAY);
             if (hourDelta > 0 && negative) {
-                startCal.add(Calendar.DAY_OF_YEAR, 1);
+                startCal.add(Calendar.DAY_OF_YEAR, -1);
                 hours = HOURS_PER_DAY - hourDelta;
             }
             else if (hourDelta < 0 && !negative) {

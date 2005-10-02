@@ -102,9 +102,10 @@ public class DurTest extends TestCase {
         cal.add(Calendar.SECOND, -5);
         assertEquals("P1DT36M55S", new Dur(start, cal.getTime()).toString());
 
+        cal.setTime(start);
         cal.add(Calendar.YEAR, -2);
         cal.add(Calendar.WEEK_OF_YEAR, 11);
-        assertEquals("-P97W", new Dur(start, cal.getTime()).toString());
+        assertEquals("-P94W", new Dur(start, cal.getTime()).toString());
     }
 
 }
