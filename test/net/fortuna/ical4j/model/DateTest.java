@@ -35,6 +35,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.text.ParseException;
 import java.util.Calendar;
 
 import junit.framework.TestCase;
@@ -49,7 +50,7 @@ public class DateTest extends TestCase {
      * Class under test for void Date(long)
      */
     public void testDatelong() {
-        assertEquals("19700101", new Date(0).toString());
+        assertEquals("19700101", new Date(0l).toString());
     }
 
     /*
@@ -70,5 +71,21 @@ public class DateTest extends TestCase {
     public void testDateString() throws Exception {
         assertEquals("20050630", new Date("20050630").toString());
     }
-
+    
+    /**
+     * Test equality of Date instances created using different constructors.
+     * @throws ParseException
+     */
+    public void testDateEquals() throws ParseException {
+        Date date1 = new Date("20050101");
+    
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+        calendar.clear();
+        calendar.set(2005, 0, 1);
+        calendar.set(Calendar.MILLISECOND, 1);
+        Date date2 = new Date(calendar.getTime());
+    
+        assertEquals(date1.toString(), date2.toString());
+        assertEquals(date1, date2);
+    }
 }

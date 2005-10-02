@@ -92,5 +92,22 @@ public class DateTimeTest extends TestCase {
         assertEquals("20050630T093000", new DateTime("20050630T093000").toString());
         assertEquals("20050630T093000Z", new DateTime("20050630T093000Z").toString());
     }
+    
+    /**
+     * Test equality of DateTime instances created using different constructors.
+     * @throws ParseException
+     */
+    public void testDateTimeEquals() throws ParseException {
+        DateTime date1 = new DateTime("20050101T093000");
+    
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+        calendar.clear();
+        calendar.set(2005, 0, 1, 9, 30, 00);
+        calendar.set(Calendar.MILLISECOND, 1);
+        DateTime date2 = new DateTime(calendar.getTime());
+    
+        assertEquals(date1.toString(), date2.toString());
+        assertEquals(date1, date2);
+    }
 
 }
