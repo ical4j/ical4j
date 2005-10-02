@@ -53,22 +53,40 @@ public class Date extends Iso8601 {
      * Default constructor.
      */
     public Date() {
-        super(PATTERN);
+        super(PATTERN, PRECISION_DAY);
+    }
+    
+    /**
+     * Creates a new date instance with the specified precision. This
+     * constructor is only intended for use by sub-classes.
+     * @param precision
+     */
+    protected Date(final int precision) {
+        super(PATTERN, precision);
     }
 
     /**
      * @param time
      */
     public Date(final long time) {
-		// TODO: apply rounding to remove millisecond precision..
-        super(time, PATTERN);
+        super(time, PATTERN, PRECISION_DAY);
+    }
+    
+    /**
+     * Creates a new date instance with the specified precision. This
+     * constructor is only intended for use by sub-classes.
+     * @param time
+     * @param precision
+     */
+    protected Date(final long time, final int precision) {
+        super(time, PATTERN, precision);
     }
 
     /**
      * @param date
      */
     public Date(final java.util.Date date) {
-        super(date.getTime(), PATTERN);
+        super(date.getTime(), PATTERN, PRECISION_DAY);
     }
 
     /**

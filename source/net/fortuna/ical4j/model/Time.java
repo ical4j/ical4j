@@ -61,7 +61,7 @@ public class Time extends Iso8601 {
      * Default constructor.
      */
     public Time(final TimeZone timezone) {
-        super(TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN);
+        super(TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN, PRECISION_SECOND);
         getFormat().setTimeZone(timezone);
     }
 
@@ -70,7 +70,7 @@ public class Time extends Iso8601 {
      * @param utc
      */
     public Time(final long time, final TimeZone timezone) {
-        super(time, (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN));
+        super(time, (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN), PRECISION_SECOND);
         getFormat().setTimeZone(timezone);
     }
 
@@ -79,7 +79,7 @@ public class Time extends Iso8601 {
      * @param utc
      */
     public Time(final java.util.Date time, final TimeZone timezone) {
-        super(time, (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN));
+        super(time.getTime(), (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN), PRECISION_SECOND);
         getFormat().setTimeZone(timezone);
     }
 

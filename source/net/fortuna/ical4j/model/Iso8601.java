@@ -39,49 +39,52 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
 /**
  * Base class for date and time representations as defined
- * by the ISO 8601 standard.
+ * by the ISO 8601 standard. Sub-classes must ensure that either the correct
+ * precision is used in constructor arguments, or that <code>Object.equals()</code>
+ * is overridden to ensure equality checking is consistent with the type.
  * @author Ben Fortuna
  */
 public abstract class Iso8601 extends Date {
 
+    protected static final int PRECISION_SECOND = 0;
+
+    protected static final int PRECISION_DAY = 1;
+    
     private DateFormat format;
+    
+    private int precision;
+
+    /**
+     * @param time
+     * @param pattern
+     */
+    public Iso8601(final long time, final String pattern, final int precision) {
+        super(round(time, precision));
+        format = new SimpleDateFormat(pattern);
+        // use GMT timezone to avoid daylight savings rules affecting floating
+        // time values..
+        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        this.precision = precision;
+    }
     
     /**
      * @param pattern
      */
-    public Iso8601(final String pattern) {
-        format = new SimpleDateFormat(pattern);
-        // use GMT timezone to avoid daylight savings rules affecting floating
-        // time values..
-        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+    public Iso8601(final String pattern, final int precision) {
+        this(System.currentTimeMillis(), pattern, precision);
     }
 
     /**
      * @param time
      * @param pattern
      */
-    public Iso8601(final long time, final String pattern) {
-        super(time);
-        format = new SimpleDateFormat(pattern);
-        // use GMT timezone to avoid daylight savings rules affecting floating
-        // time values..
-        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
-    }
-
-    /**
-     * @param time
-     * @param pattern
-     */
-    public Iso8601(final Date time, final String pattern) {
-        super(time.getTime());
-        format = new SimpleDateFormat(pattern);
-        // use GMT timezone to avoid daylight savings rules affecting floating
-        // time values..
-        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+    public Iso8601(final Date time, final String pattern, final int precision) {
+        this(time.getTime(), pattern, precision);
     }
     
     /* (non-Javadoc)
@@ -96,5 +99,28 @@ public abstract class Iso8601 extends Date {
      */
     protected final DateFormat getFormat() {
         return format;
+    }
+    
+    /**
+     * Rounds a time value to remove any precision smaller than specified.
+     * @param time the time value to round
+     * @return a round time value
+     */
+    protected static final long round(final long time, final int precision) {
+        if (precision == PRECISION_DAY) {
+            return (long) Math.floor(time / (double) Dates.MILLIS_PER_DAY) * Dates.MILLIS_PER_DAY;
+        }
+        else if (precision == PRECISION_SECOND) {
+            return (long) Math.floor(time / (double) Dates.MILLIS_PER_SECOND) * Dates.MILLIS_PER_SECOND;
+        }
+        // unrecognised precision..
+        return time;
+    }
+    
+    /* (non-Javadoc)
+     * @see java.util.Date#setTime(long)
+     */
+    public void setTime(final long time) {
+        super.setTime(round(time, precision));
     }
 }
