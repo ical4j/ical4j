@@ -233,7 +233,7 @@ public class VTimeZone extends Component {
         for (Iterator i = getObservances().iterator(); i.hasNext();) {
             Observance observance = (Observance) i.next();
             Date onset = observance.getLatestOnset(date);
-            if (latestOnset == null || onset.after(latestOnset)) {
+            if (latestOnset == null || (onset != null && onset.after(latestOnset))) {
                 latestOnset = onset;
                 latestObservance = observance;
             }
