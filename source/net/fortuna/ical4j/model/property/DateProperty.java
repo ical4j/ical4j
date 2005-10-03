@@ -35,6 +35,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.text.ParseException;
+
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
@@ -85,12 +87,27 @@ public abstract class DateProperty extends Property {
      * @param date The date to set.
      */
     public final void setDate(final Date date) {
-        Parameter tzId = getParameters().getParameter(Parameter.TZID);
-        if (tzId != null && date instanceof DateTime) {
-            TimeZone timezone = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone(tzId.getValue());
-            ((DateTime) date).setTimeZone(timezone);
+        if (date instanceof DateTime) {
+            ((DateTime) date).setTimeZone(getTimeZone());
         }
         this.date = date;
+    }
+    
+    /**
+     * Default setValue() implementation. Allows for either DATE or DATE-TIME
+     * values.
+     */
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public void setValue(final String value) throws ParseException {
+        // value can be either a date-time or a date..
+        if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
+            this.date = new Date(value);
+        }
+        else {
+            this.date = new DateTime(value, getTimeZone());
+        }
     }
 
     /**
@@ -117,6 +134,19 @@ public abstract class DateProperty extends Property {
             // use setUtc() to reset timezone..
             setUtc(false);
         }
+    }
+    
+    /**
+     * Returns the timezone referenced by a TzId parameter. This method is for
+     * internal use only.
+     * @return a TimeZone instance, or null if no TzId parameter is specified.
+     */
+    protected final TimeZone getTimeZone() {
+        Parameter tzId = getParameters().getParameter(Parameter.TZID);
+        if (tzId != null) {
+            return TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone(tzId.getValue());
+        }
+        return null;
     }
     
     /**

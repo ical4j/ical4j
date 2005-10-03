@@ -144,14 +144,6 @@ public class Created extends UtcProperty {
     public final DateTime getDateTime() {
         return (DateTime) getDate();
     }
-    
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
-     */
-    public final void setValue(final String aValue) throws ParseException {
-        setDate(new DateTime(aValue));
-    }
 
     /*
      * (non-Javadoc)

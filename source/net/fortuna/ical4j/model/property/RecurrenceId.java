@@ -229,21 +229,6 @@ public class RecurrenceId extends DateProperty {
          * (";" xparam)
          */
     }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
-     */
-    public final void setValue(final String aValue) throws ParseException {
-        // value can be either a date-time or a date..
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
-
-        if (valueParam != null && Value.DATE.equals(valueParam)) {
-            setDate(new Date(aValue));
-        }
-        else {
-            setDate(new DateTime(aValue));
-        }
-    }
 
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#getValue()

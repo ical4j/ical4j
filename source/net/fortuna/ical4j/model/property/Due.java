@@ -195,21 +195,6 @@ public class Due extends DateProperty {
         return getDate();
     }
     
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
-     */
-    public final void setValue(final String aValue) throws ParseException {
-
-        // value can be either a date-time or a date..
-        if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
-            setDate(new Date(aValue));
-        }
-        else {
-            setDate(new DateTime(aValue));
-        }
-    }
-
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
