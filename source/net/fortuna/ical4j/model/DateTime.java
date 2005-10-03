@@ -134,7 +134,12 @@ public class DateTime extends Date {
             setUtc(true);
         }
         catch (ParseException pe) {
-            defaultFormat.setTimeZone(timezone);
+            if (timezone != null) {
+                defaultFormat.setTimeZone(timezone);
+            }
+            else {
+                defaultFormat.setTimeZone(getFormat().getTimeZone());
+            }
             setTime(defaultFormat.parse(value).getTime());
             setTimeZone(timezone);
         }
@@ -210,6 +215,8 @@ public class DateTime extends Date {
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(final Object arg0) {
+        //TODO: what about compareTo, before, after, etc.?
+        
         if (arg0 instanceof DateTime) {
             return time.equals(((DateTime) arg0).time) && super.equals(arg0);
         }
