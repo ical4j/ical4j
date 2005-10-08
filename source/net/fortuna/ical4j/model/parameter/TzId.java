@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
 
 /**
@@ -40,7 +41,7 @@ import net.fortuna.ical4j.model.Parameter;
  * 
  * @author benfortuna
  */
-public class TzId extends Parameter {
+public class TzId extends Parameter implements Escapable {
     
     private static final long serialVersionUID = 2366516258055857879L;
 
