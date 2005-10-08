@@ -39,7 +39,6 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a DTSTAMP iCalendar component property.
@@ -132,30 +131,5 @@ public class DtStamp extends UtcProperty {
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
-    }
-
-    /**
-     * @return Returns the date-time.
-     */
-    public final DateTime getDateTime() {
-        return (DateTime) getDate();
-    }
-    
-    /*
-     * (non-Javadoc)
-     *
-     * @see net.fortuna.ical4j.model.Property#getValue()
-     */
-    public final String getValue() {
-        return Strings.valueOf(getDateTime());
-    }
-    
-    /**
-     * @param dateTime The dateTime to set.
-     */
-    public final void setDateTime(final DateTime dateTime) {
-        // time must be in UTC..
-        dateTime.setUtc(true);
-        setDate(dateTime);
     }
 }

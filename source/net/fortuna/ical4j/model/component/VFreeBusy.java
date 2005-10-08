@@ -204,7 +204,7 @@ public class VFreeBusy extends Component {
         DtEnd end = (DtEnd) request.getProperties().getProperty(Property.DTEND);
         Duration duration = (Duration) request.getProperties().getProperty(Property.DURATION);
         // dtstart MUST be specified in UTC..
-        getProperties().add(new DtStart(start.getTime(), true));
+        getProperties().add(new DtStart(start.getDate(), true));
         // dtend MUST be specified in UTC..
         getProperties().add(new DtEnd(end.getDate(), true));
         getProperties().add(new DtStamp(new DateTime()));
@@ -212,13 +212,13 @@ public class VFreeBusy extends Component {
             getProperties().add(new Duration(duration.getDuration()));
             // Initialise with all free time of at least the specified
             // duration..
-            FreeBusy fb = createFreeTime(new DateTime(start.getTime()), new DateTime(end.getDate()), duration.getDuration(), components);
+            FreeBusy fb = createFreeTime(new DateTime(start.getDate()), new DateTime(end.getDate()), duration.getDuration(), components);
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
         } else {
             // initialise with all busy time for the specified period..
-            FreeBusy fb = createBusyTime(new DateTime(start.getTime()), new DateTime(end.getDate()), components);
+            FreeBusy fb = createBusyTime(new DateTime(start.getDate()), new DateTime(end.getDate()), components);
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
@@ -365,7 +365,7 @@ public class VFreeBusy extends Component {
         // DtEnd value must be later in time that DtStart..
         DtStart dtStart = (DtStart) getProperties().getProperty(Property.DTSTART);
         DtEnd dtEnd = (DtEnd) getProperties().getProperty(Property.DTEND);
-        if (dtStart != null && dtEnd != null && !dtStart.getTime().before(dtEnd.getDate())) {
+        if (dtStart != null && dtEnd != null && !dtStart.getDate().before(dtEnd.getDate())) {
             throw new ValidationException("Property [" + Property.DTEND + "] must be later in time than ["
                     + Property.DTSTART + "]");
         }

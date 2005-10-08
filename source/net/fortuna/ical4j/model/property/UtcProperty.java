@@ -63,6 +63,22 @@ public abstract class UtcProperty extends DateProperty {
         setDate(new DateTime(true));
     }
 
+    /**
+     * @return Returns the date-time.
+     */
+    public final DateTime getDateTime() {
+        return (DateTime) getDate();
+    }
+    
+    /**
+     * @param dateTime The dateTime to set.
+     */
+    public final void setDateTime(final DateTime dateTime) {
+        // time must be in UTC..
+        dateTime.setUtc(true);
+        setDate(dateTime);
+    }
+
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */

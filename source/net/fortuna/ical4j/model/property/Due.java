@@ -44,7 +44,6 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a DUE iCalendar component property.
@@ -186,26 +185,5 @@ public class Due extends DateProperty {
          *
          * (";" xparam)
          */
-    }
-
-    /**
-     * @return Returns the time.
-     */
-    public final Date getTime() {
-        return getDate();
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
-     */
-    public final String getValue() {
-        return Strings.valueOf(getTime());
-    }
-    
-    /**
-     * @param time The time to set.
-     */
-    public final void setTime(final Date time) {
-        setDate(time);
     }
 }

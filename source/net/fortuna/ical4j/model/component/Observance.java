@@ -168,6 +168,6 @@ public abstract class Observance extends Component implements Comparable {
         // TODO: sort by RDATE??
         DtStart dtStart = (DtStart) getProperties().getProperty(Property.DTSTART);
         DtStart dtStart0 = (DtStart) arg0.getProperties().getProperty(Property.DTSTART);
-        return dtStart.getTime().compareTo(dtStart0.getTime());
+        return dtStart.getDate().compareTo(dtStart0.getDate());
     }
 }

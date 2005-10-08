@@ -38,13 +38,11 @@ package net.fortuna.ical4j.model.property;
 import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a DTSTART iCalendar component property.
@@ -185,13 +183,6 @@ public class DtStart extends DateProperty {
     }
 
     /**
-     * @return Returns the time.
-     */
-    public final Date getTime() {
-        return getDate();
-    }
-
-    /**
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
@@ -227,19 +218,5 @@ public class DtStart extends DateProperty {
          *
          * (";" xparam)
          */
-    }
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
-     */
-    public final String getValue() {
-        return Strings.valueOf(getTime());
-    }
-    
-    /**
-     * @param time The time to set.
-     */
-    public final void setTime(final Date time) {
-        setDate(time);
     }
 }

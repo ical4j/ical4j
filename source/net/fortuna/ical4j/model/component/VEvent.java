@@ -436,7 +436,7 @@ public class VEvent extends Component {
         // periods from the end date..
         Dur rDuration;
         if (duration == null) {
-            rDuration = new Dur(start.getTime(), end.getDate());
+            rDuration = new Dur(start.getDate(), end.getDate());
         }
         else {
             rDuration = duration.getDuration();
@@ -465,7 +465,7 @@ public class VEvent extends Component {
         PropertyList rRules = getProperties().getProperties(Property.RRULE);
         for (Iterator i = rRules.iterator(); i.hasNext();) {
             RRule rrule = (RRule) i.next();
-            DateList startDates = rrule.getRecur().getDates(start.getTime(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
+            DateList startDates = rrule.getRecur().getDates(start.getDate(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
             for (int j = 0; j < startDates.size(); j++) {
                 Date startDate = (Date) startDates.get(j);
                 periods.add(new Period(new DateTime(startDate), rDuration));
@@ -490,7 +490,7 @@ public class VEvent extends Component {
         PeriodList exPeriods = new PeriodList();
         for (Iterator i = exRules.iterator(); i.hasNext();) {
             ExRule exrule = (ExRule) i.next();
-            DateList startDates = exrule.getRecur().getDates(start.getTime(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
+            DateList startDates = exrule.getRecur().getDates(start.getDate(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
             for (Iterator j = startDates.iterator(); j.hasNext();) {
                 Date startDate = (Date) j.next();
                 exPeriods.add(new Period(new DateTime(startDate), rDuration));
@@ -506,12 +506,12 @@ public class VEvent extends Component {
             return periods.normalise();
         }
         // add first instance if included in range..
-        if (start.getTime().before(rangeEnd)) {
+        if (start.getDate().before(rangeEnd)) {
             if (end != null && end.getDate().after(rangeStart)) {
-                periods.add(new Period(new DateTime(start.getTime()), new DateTime(end.getDate())));
+                periods.add(new Period(new DateTime(start.getDate()), new DateTime(end.getDate())));
             }
             else if (duration != null) {
-                Period period = new Period(new DateTime(start.getTime()), duration.getDuration());
+                Period period = new Period(new DateTime(start.getDate()), duration.getDuration());
                 if (period.getEnd().after(rangeStart)) {
                     periods.add(period);
                 }
@@ -544,7 +544,7 @@ public class VEvent extends Component {
             DtStart dtStart = getStartDate();
             Duration vEventDuration =
                       (Duration) getProperties().getProperty(Property.DURATION);
-            dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration().getTime(dtStart.getTime()),
+            dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration().getTime(dtStart.getDate()),
                     (Value) dtStart.getParameters().getParameter(Parameter.VALUE)));
         }
         return dtEnd;

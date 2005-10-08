@@ -42,9 +42,7 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a DTEND iCalendar component property.
@@ -210,12 +208,5 @@ public class DtEnd extends DateProperty {
          *
          * (";" xparam)
          */
-    }
-
-    /*
-     * @see net.fortuna.ical4j.model.Property#getValue()
-     */
-    public final String getValue() {
-        return Strings.valueOf(getDate());
     }
 }
