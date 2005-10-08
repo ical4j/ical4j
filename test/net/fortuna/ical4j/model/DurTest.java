@@ -71,6 +71,7 @@ public class DurTest extends TestCase {
      */
     public void testDurDateDate() {
         Calendar cal = Calendar.getInstance();
+        cal.set(2005, 7, 1);
         Date start = cal.getTime();
         
         cal.add(Calendar.YEAR, 1);
