@@ -2,6 +2,35 @@
  iCal4j - Changes
 ==================
 
+0.9.16
+
+ - Applied fixes for bugs #1297830, #1300305, #1300728, #1305610
+ 
+ - removed final modifiers in CalendarBuilder to allow for subclassing
+ 
+ - added initial capacity constructors to lists for optimisations
+ 
+ - fixed bug where DateProperty.setDate() was not correctly updating
+ timezones of new date values
+ 
+ - corrected bug in calculating negative durations
+ 
+ - added precision rounding to date/date-time instances to fix comparisons
+ and equality checking
+ 
+ - added convenience methods for creating date/calendar instances
+ 
+ - fixed recurrence rules to use correct timezones
+ 
+ - Fixed potential NullPointerException in TimeZone
+ 
+ - Fixed invalid date values in Date properties
+ 
+ - Removed redundant methods in DateProperties and general clean up
+ 
+ - TzId now correctly implements Escapable interface
+
+
 0.9.15
 
  - Fixed DateProperties to correctly call super.validate() in validation
