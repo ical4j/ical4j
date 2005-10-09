@@ -4,7 +4,8 @@
 
 0.9.16
 
- - Applied fixes for bugs #1297830, #1300305, #1300728, #1305610
+ - Applied fixes for bugs #1297830, #1300305, #1300728, #1305610, #1305634,
+ #1305655, #1305715
  
  - removed final modifiers in CalendarBuilder to allow for subclassing
  

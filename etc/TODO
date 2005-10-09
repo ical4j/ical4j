@@ -18,36 +18,13 @@ To-do List:
  - investigate use of alternative Base64 implementation (michael grev?)
  
  - Timezone processing and validation as follows:
- 
- 	1. Creating iCalendar data with timezone-specific info:
- 	
- 	  * retrieve VTimeZones as currently implemented (search classpath for definition,
- 	  otherwise construct new VTimeZone)
  	
  	  * In validation, ensure any referenced VTimeZones (TzId parameter) are included in the
  	  VCalendar on output.
  	  
  	  * possibly automate VTimeZone inclusion by examining all date/date-time-based properties
  	  for timezone-specific instances.
- 	
- 	2. Reading existing iCalendar data and interpreting timezone-specific info:
- 	
- 	  * CalendarBuilder contructs a list of VTimeZones that is provided to each TzId parameter.
- 	  Add TzId.getVTimeZone(), which checks the list and falls back to using
- 	  VTimeZone.getVTimeZone(TzId)
- 	
- 	  * Property.setValue() should read TzId parameters where applicable and pass corresponding
- 	  Java timezone to Time constructor.
- 	
- 	  * Add method to Calendar for retrieving VTimeZone information:
- 	  
- 	  	Calendar.getVTimeZones();
- 	  	
- 	  * If VTimeZone not found in Calendar, fall back to using VTimeZone.getVTimeZone(TzId)
- 	  
- 	  * Add VTimeZone.getTimeZone() and other conveniences to map Java timezone to VTimeZone
- 	
- - refactor StringUtils/TimeZoneUtils to Strings/TimeZones.
+
   
  ===========
   RFC 2446:
