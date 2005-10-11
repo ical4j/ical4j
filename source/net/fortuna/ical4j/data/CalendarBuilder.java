@@ -51,6 +51,7 @@ import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -78,19 +79,21 @@ public class CalendarBuilder implements ContentHandler {
 
     private CalendarParser parser;
     
-    private Calendar calendar;
+    private TimeZoneRegistry registry;
     
-    private Component component;
+    protected Calendar calendar;
     
-    private Component subComponent;
+    protected Component component;
     
-    private Property property;
+    protected Component subComponent;
+    
+    protected Property property;
     
     /**
      * Default constructor.
      */
     public CalendarBuilder() {
-        this(new CalendarParserImpl());
+        this(new CalendarParserImpl(), TimeZoneRegistryFactory.getInstance().createRegistry());
     }
     
     /**
@@ -99,7 +102,27 @@ public class CalendarBuilder implements ContentHandler {
      * @param parser a calendar parser used to parse calendar files
      */
     public CalendarBuilder(final CalendarParser parser) {
+        this(parser, TimeZoneRegistryFactory.getInstance().createRegistry());
+    }
+    
+    /**
+     * Constructs a new calendar builder using the specified
+     * timezone registry.
+     * @param parser a calendar parser used to parse calendar files
+     */
+    public CalendarBuilder(final TimeZoneRegistry registry) {
+        this(new CalendarParserImpl(), registry);
+    }
+    
+    /**
+     * Constructs a new instance using the specified parser and registry.
+     * @param parser a calendar parser used to construct the calendar
+     * @param registry a timezone registry used to retrieve timezones and
+     * register additional timezone information found in the calendar
+     */
+    public CalendarBuilder(final CalendarParser parser, final TimeZoneRegistry registry) {
         this.parser = parser;
+        this.registry = registry;
     }
 
     /**
@@ -166,9 +189,9 @@ public class CalendarBuilder implements ContentHandler {
             }
             else {
                 calendar.getComponents().add(component);
-                if (component instanceof VTimeZone) {
+                if (component instanceof VTimeZone && registry != null) {
                     // register the timezone for use with iCalendar objects..
-                    TimeZoneRegistryFactory.getInstance().getRegistry().register(new TimeZone((VTimeZone) component));
+                    registry.register(new TimeZone((VTimeZone) component));
                 }
                 component = null;
             }
@@ -206,8 +229,8 @@ public class CalendarBuilder implements ContentHandler {
             // parameter names are case-insensitive, but convert to upper case to simplify further processing
             Parameter param = ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value);
             property.getParameters().add(param);
-            if (param instanceof TzId) {
-                TimeZone timezone = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone(param.getValue());
+            if (param instanceof TzId && registry != null) {
+                TimeZone timezone = registry.getTimeZone(param.getValue());
                 try {
                     ((DateProperty) property).setTimeZone(timezone);
                 }
@@ -257,5 +280,13 @@ public class CalendarBuilder implements ContentHandler {
     public void startProperty(final String name) {
         // property names are case-insensitive, but convert to upper case to simplify further processing
         property = PropertyFactoryImpl.getInstance().createProperty(name.toUpperCase());
+    }
+
+    /**
+     * Returns the timezone registry used in the construction of calendars.
+     * @return a timezone registry
+     */
+    public final TimeZoneRegistry getRegistry() {
+        return registry;
     }
 }
