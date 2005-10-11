@@ -64,8 +64,8 @@ public abstract class TimeZoneRegistryFactory {
     }
     
     /**
-     * Returns the configured <code>TimeZoneRegistry</code>.
+     * Returns a new instance of the configured <code>TimeZoneRegistry</code>.
      * @return a timezone registry instance
      */
-    public abstract TimeZoneRegistry getRegistry();
+    public abstract TimeZoneRegistry createRegistry();
 }
