@@ -43,7 +43,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -58,6 +57,8 @@ import net.fortuna.ical4j.util.Strings;
 public abstract class DateProperty extends Property {
     
     private Date date;
+    
+    protected TimeZone timezone;
 
     /**
      * @param aName
@@ -106,7 +107,7 @@ public abstract class DateProperty extends Property {
             this.date = new Date(value);
         }
         else {
-            this.date = new DateTime(value, getTimeZone());
+            this.date = new DateTime(value, timezone);
         }
     }
     
@@ -126,6 +127,7 @@ public abstract class DateProperty extends Property {
      * @param vTimeZone
      */
     public final void setTimeZone(final TimeZone timezone) {
+        this.timezone = timezone;
         if (timezone != null) {
             if (getDate() != null && !(getDate() instanceof DateTime)) {
                 throw new UnsupportedOperationException("TimeZone is not applicable to current value");
@@ -141,19 +143,6 @@ public abstract class DateProperty extends Property {
             // use setUtc() to reset timezone..
             setUtc(false);
         }
-    }
-    
-    /**
-     * Returns the timezone referenced by a TzId parameter. This method is for
-     * internal use only.
-     * @return a TimeZone instance, or null if no TzId parameter is specified.
-     */
-    protected final TimeZone getTimeZone() {
-        Parameter tzId = getParameters().getParameter(Parameter.TZID);
-        if (tzId != null) {
-            return TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone(tzId.getValue());
-        }
-        return null;
     }
     
     /**
