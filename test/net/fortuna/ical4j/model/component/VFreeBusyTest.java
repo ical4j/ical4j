@@ -44,6 +44,7 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -61,9 +62,9 @@ import org.apache.commons.logging.LogFactory;
  */
 public class VFreeBusyTest extends TestCase {
     
-//    private static final long ONE_HOUR = 3600000;
-    
     private static Log log = LogFactory.getLog(VFreeBusyTest.class);
+
+    private TimeZoneRegistry registry;
 
     private VTimeZone tz;
     
@@ -74,8 +75,9 @@ public class VFreeBusyTest extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         // create timezone property..
-        tz = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Australia/Melbourne").getVTimeZone();
+        tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         // create tzid parameter..
         tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
     }

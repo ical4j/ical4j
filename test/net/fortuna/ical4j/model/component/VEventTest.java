@@ -24,6 +24,7 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.WeekDay;
@@ -41,12 +42,13 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * A test case for VEvents.
- * 
- * @author benfortuna
+ * @author Ben Fortuna
  */
 public class VEventTest extends TestCase {
 
     private static Log log = LogFactory.getLog(VEventTest.class);
+
+    private TimeZoneRegistry registry;
     
     private VTimeZone tz;
     
@@ -60,9 +62,9 @@ public class VEventTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        
+        registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         // create timezone property..
-        tz = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Australia/Melbourne").getVTimeZone();
+        tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         // create tzid parameter..
         tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
 

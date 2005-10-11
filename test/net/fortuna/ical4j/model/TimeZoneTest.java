@@ -45,6 +45,8 @@ import junit.framework.TestCase;
  * @author Ben Fortuna
  */
 public class TimeZoneTest extends TestCase {
+    
+    private TimeZoneRegistry registry;
 
     private java.util.TimeZone tz;
 
@@ -55,9 +57,9 @@ public class TimeZoneTest extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         tz = java.util.TimeZone.getTimeZone("Australia/Melbourne");
-        TimeZoneRegistryFactory.getInstance().getRegistry().clear();
-        timezone = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Australia/Melbourne");
+        timezone = registry.getTimeZone("Australia/Melbourne");
     }
 
     /**
@@ -118,7 +120,7 @@ public class TimeZoneTest extends TestCase {
         assertEquals(tz.useDaylightTime(), timezone.useDaylightTime());
         
         java.util.TimeZone noDaylightTz = java.util.TimeZone.getTimeZone("Africa/Abidjan");
-        TimeZone noDaylightTimezone = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Africa/Abidjan");
+        TimeZone noDaylightTimezone = registry.getTimeZone("Africa/Abidjan");
         assertEquals(noDaylightTz.useDaylightTime(), noDaylightTimezone.useDaylightTime());
     }
     

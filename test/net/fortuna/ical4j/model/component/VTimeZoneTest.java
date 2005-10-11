@@ -7,6 +7,7 @@ package net.fortuna.ical4j.model.component;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 
 import org.apache.commons.logging.Log;
@@ -21,18 +22,21 @@ public class VTimeZoneTest extends TestCase {
 
     private static Log log = LogFactory.getLog(VTimeZoneTest.class);
 
+    private TimeZoneRegistry registry;
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
+        registry = TimeZoneRegistryFactory.getInstance().createRegistry();
     }
 
     /**
      * 
      */
     public void testCreateDefinition() {
-        VTimeZone tz = TimeZoneRegistryFactory.getInstance().getRegistry().getTimeZone("Australia/Melbourne").getVTimeZone();
+        VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         Calendar calendar = new Calendar();
         calendar.getComponents().add(tz);
         log.info(calendar);
