@@ -33,7 +33,9 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
@@ -63,6 +65,9 @@ public abstract class Observance extends Component implements Comparable {
     public static final String STANDARD = "STANDARD";
 
     public static final String DAYLIGHT = "DAYLIGHT";
+    
+    // TODO: clear cache when observance definition changes (??)
+    private Map onsets = new HashMap();
 
     /**
      * Constructs a timezone observance with the specified name
@@ -127,30 +132,34 @@ public abstract class Observance extends Component implements Comparable {
         if (date.before(onset)) {
             return null;
         }
-        // check rdates for latest applicable onset..
-        PropertyList rdates = getProperties().getProperties(Property.RDATE);
-        for (Iterator i = rdates.iterator(); i.hasNext();) {
-            RDate rdate = (RDate) i.next();
-            for (Iterator j = rdate.getDates().iterator(); j.hasNext();) {
-                Date rdateOnset = (Date) j.next();
-                if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
-                    onset = rdateOnset;
+        if (onsets.get(date) == null) {
+            // check rdates for latest applicable onset..
+            PropertyList rdates = getProperties().getProperties(Property.RDATE);
+            for (Iterator i = rdates.iterator(); i.hasNext();) {
+                RDate rdate = (RDate) i.next();
+                for (Iterator j = rdate.getDates().iterator(); j.hasNext();) {
+                    Date rdateOnset = (Date) j.next();
+                    if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
+                        onset = rdateOnset;
+                    }
                 }
             }
-        }
-        // check recurrence rules for latest applicable onset..
-        PropertyList rrules = getProperties().getProperties(Property.RRULE);
-        Value dateType = (date instanceof DateTime) ? Value.DATE_TIME : Value.DATE;
-        for (Iterator i = rrules.iterator(); i.hasNext();) {
-            RRule rrule = (RRule) i.next();
-            for (Iterator j = rrule.getRecur().getDates(onset, date, dateType).iterator(); j.hasNext();) {
-                Date rruleOnset = (Date) j.next();
-                if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
-                    onset = rruleOnset;
+            // check recurrence rules for latest applicable onset..
+            PropertyList rrules = getProperties().getProperties(Property.RRULE);
+            Value dateType = (date instanceof DateTime) ? Value.DATE_TIME : Value.DATE;
+            for (Iterator i = rrules.iterator(); i.hasNext();) {
+                RRule rrule = (RRule) i.next();
+                for (Iterator j = rrule.getRecur().getDates(onset, date, dateType).iterator(); j.hasNext();) {
+                    Date rruleOnset = (Date) j.next();
+                    if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
+                        onset = rruleOnset;
+                    }
                 }
             }
+            onsets.put(date, onset);
         }
-        return onset;
+        return (Date) onsets.get(date);
+//            return onset;
     }
 
     /* (non-Javadoc)
