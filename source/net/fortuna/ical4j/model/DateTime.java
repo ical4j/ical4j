@@ -101,6 +101,16 @@ public class DateTime extends Date {
     public DateTime(final java.util.Date date) {
         super(date.getTime(), PRECISION_SECOND);
         this.time = new Time(date.getTime(), getFormat().getTimeZone());
+        // copy timezone information if applicable..
+        if (date instanceof DateTime) {
+            DateTime dateTime = (DateTime) date;
+            if (dateTime.isUtc()) {
+                setUtc(true);
+            }
+            else {
+                setTimeZone(dateTime.getTimeZone());
+            }
+        }
     }
     
     /**
