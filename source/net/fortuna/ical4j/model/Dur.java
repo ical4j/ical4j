@@ -297,12 +297,32 @@ public class Dur implements Comparable {
     public final Date getTime(final Date start) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
-        cal.add(Calendar.WEEK_OF_YEAR, weeks);
-        cal.add(Calendar.DAY_OF_WEEK, days);
-        cal.add(Calendar.HOUR_OF_DAY, hours);
-        cal.add(Calendar.MINUTE, minutes);
-        cal.add(Calendar.SECOND, seconds);
+        if (isNegative()) {
+            cal.add(Calendar.WEEK_OF_YEAR, -weeks);
+            cal.add(Calendar.DAY_OF_WEEK, -days);
+            cal.add(Calendar.HOUR_OF_DAY, -hours);
+            cal.add(Calendar.MINUTE, -minutes);
+            cal.add(Calendar.SECOND, -seconds);
+        }
+        else {
+            cal.add(Calendar.WEEK_OF_YEAR, weeks);
+            cal.add(Calendar.DAY_OF_WEEK, days);
+            cal.add(Calendar.HOUR_OF_DAY, hours);
+            cal.add(Calendar.MINUTE, minutes);
+            cal.add(Calendar.SECOND, seconds);
+        }
         return cal.getTime();
+    }
+    
+    /**
+     * Provides a negation of this instance.
+     * @return a Dur instance that represents a negation of this instance
+     */
+    public final Dur negate() {
+        Dur negated = new Dur(days, hours, minutes, seconds);
+        negated.weeks = weeks;
+        negated.negative = !negative;
+        return negated;
     }
     
     /* (non-Javadoc)
