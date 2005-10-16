@@ -231,15 +231,17 @@ public class CalendarBuilder implements ContentHandler {
             property.getParameters().add(param);
             if (param instanceof TzId && registry != null) {
                 TimeZone timezone = registry.getTimeZone(param.getValue());
-                try {
-                    ((DateProperty) property).setTimeZone(timezone);
-                }
-                catch (Exception e) {
+                if (timezone != null) {
                     try {
-                        ((DateListProperty) property).setTimeZone(timezone);
+                        ((DateProperty) property).setTimeZone(timezone);
                     }
-                    catch (Exception e2) {
-                        log.warn("Error setting timezone [" + param + "] on property [" + property.getName() + "]", e);
+                    catch (Exception e) {
+                        try {
+                            ((DateListProperty) property).setTimeZone(timezone);
+                        }
+                        catch (Exception e2) {
+                            log.warn("Error setting timezone [" + param + "] on property [" + property.getName() + "]", e);
+                        }
                     }
                 }
             }
