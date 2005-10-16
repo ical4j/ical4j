@@ -499,7 +499,7 @@ public class Recur implements Serializable {
                     else if (getCount() >= 1 && (dates.size() + invalidCandidateCount) >= getCount()) {
                         break;
                     }
-                    else if (!(getUntil() != null && cal.getTime().after(getUntil()))) {
+                    else if (!(getUntil() != null && candidate.after(getUntil()))) {
                         dates.add(candidate);
                     }
                 }
