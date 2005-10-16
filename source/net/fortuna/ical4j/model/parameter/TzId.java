@@ -35,6 +35,7 @@ package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Time Zone Identifier parameter.
@@ -45,18 +46,25 @@ public class TzId extends Parameter implements Escapable {
     
     private static final long serialVersionUID = 2366516258055857879L;
 
+    private static final boolean COMPATIBILITY_MODE_ENABLED = "true".equals(System.getProperty("ical4j.tzid.compatibility"));
+
     public static final String PREFIX = "/";
 
     private String value;
 
     /**
-     * @param aValue
-     *            a string representation of a time zone identifier
+     * @param aValue a string representation of a time zone identifier
      */
     public TzId(final String aValue) {
         super(TZID);
-
-        this.value = aValue;
+        // Work around a Microsoft Bug
+        // (Not conforming to rfc2445, Microsoft Exchange quotes timezone references.)
+        if (COMPATIBILITY_MODE_ENABLED) {
+            this.value = Strings.unquote(aValue);
+        }
+        else {
+            this.value = aValue;
+        }
     }
 
     /*
