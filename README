@@ -40,8 +40,9 @@
  iCal4j now has the capability to "relax" its parsing rules to enable parsing of
  *.ics files that don't properly conform to the iCalendar specification (RFC2445)
  
- - By specifying the system property "ical4j.unfolding.relaxed=true", iCalendar
- files created with Mozilla Calendar/Sunbird may be correctly unfolded.
+ - You can relax iCal4j's parsing rules by specifying the following system property:
+ 
+    ical4j.unfolding.relaxed=true
  
  Note that I believe this problem is not restricted to Mozilla calendaring
  products, but rather may be caused by UNIX/Linux-based applications relying on the
@@ -70,9 +71,15 @@
  API documentation for Java 1.5 says that it does do this, so if you still see problems
  with parsing it could be a bug in the Java implementation.
 
- Its a shame everyone can't just agree to one
- standard as it would make life much simpler. :)
-
+ Microsoft Outlook also appears to provide quoted TZID parameter values, as follows:
+ 
+   DTSTART;TZID="Pacific Time (US & Canada),Tijuana":20041011T223000
+ 
+ To allow for compatibility with such iCalendar files you should specify the
+ following system property:
+ 
+   ical4j.tzid.compatibility=true
+   
 
 ======================
  iCal4j and Timezones
