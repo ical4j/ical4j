@@ -18,3 +18,6 @@
  * Apple iCal uses VALUE=TEXT on some X-properties
 
  * Microsoft Outlook 2003 demands that the UID property must be present
+ 
+ * TZIDs: Microsoft Outlook provides quoted TZID parameters, and as such does
+ not conform with RFC2445
