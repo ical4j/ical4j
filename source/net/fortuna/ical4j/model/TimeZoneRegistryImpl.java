@@ -56,6 +56,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
+    private static final String TZ_RESOURCE_PREFIX = "/zoneinfo/";
+    
     private static Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
     
     private Map timezones;
@@ -109,8 +111,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      */
     private static VTimeZone loadVTimeZone(final String id) throws IOException,
             ParserException {
-//        String resource = "/" + id + ".ics";
-        URL resource = TimeZoneRegistryImpl.class.getResource("/" + id + ".ics");
+        URL resource = TimeZoneRegistryImpl.class.getResource(TZ_RESOURCE_PREFIX + id + ".ics");
         if (resource != null) {
             CalendarBuilder builder = new CalendarBuilder();
             Calendar calendar = builder.build(resource.openStream());
