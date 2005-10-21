@@ -61,7 +61,9 @@
             <!-- Add manifest attributes here.. -->
             <attribute name="Class-Path" value="commons-logging.jar" />
         </manifest>
-        <jar basedir="${output.dir}" compress="true" jarfile="${package.dir}/${package.file}" manifest="etc/manifest.mf"/>
+        <jar basedir="${output.dir}" compress="true" jarfile="${package.dir}/${package.file}" manifest="etc/manifest.mf">
+			<zipfileset dir="etc/zoneinfo" prefix="zoneinfo" excludes="zones.h,zones.tab"/>
+        </jar>
     </target>
     
     <target name="clean-javadoc">
