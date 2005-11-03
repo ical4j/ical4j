@@ -133,7 +133,7 @@ public class CalendarBuilder implements ContentHandler {
      * @throws IOException
      * @throws ParserException
      */
-    public final Calendar build(final InputStream in) throws IOException,
+    public Calendar build(final InputStream in) throws IOException,
             ParserException {
         return build(new InputStreamReader(in, DEFAULT_CHARSET));
     }
@@ -149,7 +149,7 @@ public class CalendarBuilder implements ContentHandler {
      * @throws IOException
      * @throws ParserException
      */
-    public final Calendar build(final Reader in) throws IOException, ParserException {
+    public Calendar build(final Reader in) throws IOException, ParserException {
         UnfoldingReader uin = new UnfoldingReader(in);
 
         // re-initialise..
