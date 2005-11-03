@@ -56,16 +56,27 @@ import org.apache.commons.logging.LogFactory;
  */
 public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
-    private static final String TZ_RESOURCE_PREFIX = "/zoneinfo/";
+    private static final String DEFAULT_RESOURCE_PREFIX = "/zoneinfo/";
     
     private static Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
     
     private Map timezones;
     
+    private String resourcePrefix;
+    
     /**
      * Default constructor.
      */
     public TimeZoneRegistryImpl() {
+        this(DEFAULT_RESOURCE_PREFIX);
+    }
+    
+    /**
+     * Creates a new instance using the specified resource prefix.
+     * @param resourcePrefix a prefix prepended to classpath resource lookups
+     */
+    public TimeZoneRegistryImpl(final String resourcePrefix) {
+        this.resourcePrefix = resourcePrefix;
         timezones = new HashMap();
     }
 
@@ -109,9 +120,9 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * Loads an existing VTimeZone from the classpath corresponding to the
      * specified Java timezone.
      */
-    private static VTimeZone loadVTimeZone(final String id) throws IOException,
+    private VTimeZone loadVTimeZone(final String id) throws IOException,
             ParserException {
-        URL resource = TimeZoneRegistryImpl.class.getResource(TZ_RESOURCE_PREFIX + id + ".ics");
+        URL resource = TimeZoneRegistryImpl.class.getResource(resourcePrefix + id + ".ics");
         if (resource != null) {
             CalendarBuilder builder = new CalendarBuilder();
             Calendar calendar = builder.build(resource.openStream());
