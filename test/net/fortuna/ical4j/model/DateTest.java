@@ -37,6 +37,9 @@ package net.fortuna.ical4j.model;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.TimeZone;
+
+import net.fortuna.ical4j.util.TimeZones;
 
 import junit.framework.TestCase;
 
@@ -57,7 +60,7 @@ public class DateTest extends TestCase {
      * Class under test for void Date(Date)
      */
     public void testDateDate() {
-        Calendar cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
         cal.set(Calendar.YEAR, 1984);
         // months are zero-based..
         cal.set(Calendar.MONTH, 3);
@@ -79,7 +82,7 @@ public class DateTest extends TestCase {
     public void testDateEquals() throws ParseException {
         Date date1 = new Date("20050101");
     
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
         calendar.clear();
         calendar.set(2005, 0, 1);
         calendar.set(Calendar.MILLISECOND, 1);
