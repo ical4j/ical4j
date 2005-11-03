@@ -34,14 +34,15 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.Daylight;
-import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.Observance;
+import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
+import net.fortuna.ical4j.model.component.XComponent;
 
 /**
  * A factory for creating iCalendar components.
@@ -136,13 +137,24 @@ public final class ComponentFactory {
 
                 return new VEvent(properties, components);
             }
+            else if (isExperimentalName(name)) {
+                return new XComponent(name, properties);
+            }
             else {
-
                 throw new IllegalArgumentException("Unkown component [" + name
                         + "]");
             }
         }
 
         return createComponent(name, properties);
+    }
+    
+    /**
+     * @param name
+     * @return
+     */
+    private boolean isExperimentalName(final String name) {
+        return name.startsWith(Component.EXPERIMENTAL_PREFIX)
+                && name.length() > Component.EXPERIMENTAL_PREFIX.length();
     }
 }
