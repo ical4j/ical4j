@@ -38,6 +38,8 @@ package net.fortuna.ical4j.model;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import net.fortuna.ical4j.model.property.DtStart;
+
 import junit.framework.TestCase;
 
 /**
@@ -136,5 +138,17 @@ public class TimeZoneTest extends TestCase {
         int millisecods = 0;
         assertEquals(tz.getOffset(era, year, month, day, dayOfWeek, millisecods),
                 timezone.getOffset(era, year, month, day, dayOfWeek, millisecods));
+    }
+    
+    public void testAmericaIndiana() {
+        java.util.TimeZone indianaTz = java.util.TimeZone.getTimeZone("America/Indiana/Indianapolis");
+
+        Calendar cal = Calendar.getInstance(indianaTz);
+        cal.set(Calendar.HOUR_OF_DAY, 10);
+        cal.set(Calendar.MINUTE, 20);
+        
+        DateTime dtStart = new DateTime(cal.getTime()); 
+        DtStart pDtStart = new DtStart(dtStart); 
+        pDtStart.setTimeZone(registry.getTimeZone("America/Indiana/Indianapolis"));
     }
 }

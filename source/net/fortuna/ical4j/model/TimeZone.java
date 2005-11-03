@@ -51,6 +51,8 @@ import net.fortuna.ical4j.model.property.TzOffsetTo;
  */
 public class TimeZone extends java.util.TimeZone {
     
+    private static final long serialVersionUID = -5620979316746547234L;
+    
     private VTimeZone vTimeZone;
     
     /**

@@ -163,7 +163,7 @@ public final class Dates {
      * @param type the type of date instance
      * @return an instance of <code>net.fortuna.ical4j.model.Date</code>
      */
-    public static Date getInstance(final java.util.Date date, Value type) {
+    public static Date getInstance(final java.util.Date date, final Value type) {
         if (Value.DATE.equals(type)) {
             return new Date(date);
         }
@@ -182,7 +182,7 @@ public final class Dates {
             if (dateTime.getTimeZone() != null) {
                 return Calendar.getInstance(dateTime.getTimeZone());
             }
-            else if (dateTime.isUtc()){
+            else if (dateTime.isUtc()) {
                 return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.UTC_ID));
             }
         }

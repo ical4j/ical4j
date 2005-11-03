@@ -126,7 +126,7 @@ public class CalendarBuilderTest extends TestCase {
         testFiles.addAll(Arrays.asList(new File("etc/samples/valid").listFiles(new FileOnlyFilter())));
         for (int i = 0; i < testFiles.size(); i++) {
             log.info("Sample [" + testFiles.get(i) + "]");
-			suite.addTest(new CalendarBuilderTest("testBuildInputStream", ((File) testFiles.get(i)).getPath(), true));
+            suite.addTest(new CalendarBuilderTest("testBuildInputStream", ((File) testFiles.get(i)).getPath(), true));
         }
 
         testFiles.clear();

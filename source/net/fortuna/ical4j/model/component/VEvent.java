@@ -356,10 +356,10 @@ public class VEvent extends Component {
                 getProperties());
 
         Status status = (Status) getProperties().getProperty(Property.STATUS);
-        if (status != null &&
-                !Status.VEVENT_TENTATIVE.equals(status) &&
-                !Status.VEVENT_CONFIRMED.equals(status) &&
-                !Status.VEVENT_CANCELLED.equals(status)) {
+        if (status != null
+                && !Status.VEVENT_TENTATIVE.equals(status)
+                && !Status.VEVENT_CONFIRMED.equals(status)
+                && !Status.VEVENT_CANCELLED.equals(status)) {
                 throw new ValidationException(
                         "Status property [" + status.toString() + "] is not applicable for VEVENT");
         }

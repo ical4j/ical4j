@@ -38,9 +38,11 @@ package net.fortuna.ical4j.model;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.TimeZones;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -351,5 +353,27 @@ public class RecurTest extends TestCase {
             calendar.setTime(date);
             assertEquals(Calendar.SATURDAY, calendar.get(Calendar.DAY_OF_WEEK));
         }
+    }
+    
+    public void testGetDatesRalph() throws ParseException {
+        Recur recur = new
+        Recur("FREQ=WEEKLY;WKST=MO;INTERVAL=1;UNTIL=20051003T000000Z;BYDAY=MO,WE");
+
+        Calendar queryStartDate = new
+        GregorianCalendar(TimeZone.getTimeZone(TimeZones.UTC_ID));
+        queryStartDate.set(2005, Calendar.SEPTEMBER, 3, 0,
+        0, 0);
+
+        Calendar queryEndDate = new
+        GregorianCalendar(TimeZone.getTimeZone(TimeZones.UTC_ID));
+        queryEndDate.set(2005, Calendar.OCTOBER, 31, 23,
+        59, 0);
+
+        DateList dateList = recur.getDates(new
+        DateTime(queryStartDate.getTime()), new
+        DateTime(queryStartDate.getTime()), new
+        DateTime(queryEndDate.getTime()), Value.DATE_TIME);
+        
+        log.info(dateList);
     }
 }

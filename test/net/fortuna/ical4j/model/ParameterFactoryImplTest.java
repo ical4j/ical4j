@@ -41,7 +41,7 @@ public class ParameterFactoryImplTest extends TestCase {
      */
     public void testInvalidParameter() throws Exception {
         try {
-            Parameter p = ParameterFactoryImpl.getInstance().createParameter("my-param", "Test");
+            ParameterFactoryImpl.getInstance().createParameter("my-param", "Test");
             fail("Should throw an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae) {
