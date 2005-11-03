@@ -45,11 +45,13 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.FbType;
+import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.FreeBusy;
+import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 import org.apache.commons.logging.Log;
@@ -212,13 +214,17 @@ public class VFreeBusy extends Component {
             getProperties().add(new Duration(duration.getDuration()));
             // Initialise with all free time of at least the specified
             // duration..
-            FreeBusy fb = createFreeTime(new DateTime(start.getDate()), new DateTime(end.getDate()), duration.getDuration(), components);
+            DateTime freeStart = new DateTime(start.getDate());
+            DateTime freeEnd = new DateTime(end.getDate());
+            FreeBusy fb = createFreeTime(freeStart, freeEnd, duration.getDuration(), components);
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
         } else {
             // initialise with all busy time for the specified period..
-            FreeBusy fb = createBusyTime(new DateTime(start.getDate()), new DateTime(end.getDate()), components);
+            DateTime busyStart = new DateTime(start.getDate());
+            DateTime busyEnd = new DateTime(end.getDate());
+            FreeBusy fb = createBusyTime(busyStart, busyEnd, components);
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
