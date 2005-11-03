@@ -2,6 +2,17 @@
  iCal4j - Changes
 ==================
 
+0.9.17
+
+ - Added support for experimental components (XComponent)
+ 
+ - Now includes default timezone definitions (based on Olson timezone database)
+ 
+ - Applied fixes for the following bugs: #1323762, #1338857
+ 
+ - Applied the following patches: #1326774
+
+
 0.9.16
 
  - Applied fixes for bugs #1297830, #1300305, #1300728, #1305610, #1305634,
