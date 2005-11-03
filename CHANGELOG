@@ -11,6 +11,14 @@
  - Applied fixes for the following bugs: #1323762, #1338857
  
  - Applied the following patches: #1326774
+ 
+ - Added rudimentary caching of timezone observance onsets to improve performance
+ 
+ - Updated timezone registry for improved multi-threaded support
+ 
+ - Added Dur.negate() convenience method
+ 
+ - 
 
 
 0.9.16
