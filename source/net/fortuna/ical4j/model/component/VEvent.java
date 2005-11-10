@@ -486,7 +486,7 @@ public class VEvent extends Component {
                 // for DATE-TIME instances check for DATE-based exclusions also..
                 if (exDate.getDates().contains(period.getStart())
                         || exDate.getDates().contains(new Date(period.getStart()))) {
-                    periods.remove(period);
+                    j.remove();
                 }
             }
         }
