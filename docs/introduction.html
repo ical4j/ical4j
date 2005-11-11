@@ -36,85 +36,59 @@
         </tbody>
     </table>
 
-    <table id="intro">
-        <thead>
-            <tr>
-                <td>
-                    Introduction
-                    <a href="#intro">&raquo;</a>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    iCal4j may be used for modifying existing iCalendar data or creating new iCalendar
-                    data from scratch. Here you will find a few examples indicating the recommended usage
-                    of this library.
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div id="intro" class="content">
+	<h2>Introduction <a href="#intro">&raquo;</a></h2>
+	<p>
+	    iCal4j may be used for modifying existing iCalendar data or creating new iCalendar
+	    data from scratch. Here you will find a few examples indicating the recommended usage
+	    of this library.
+	</p>
+</div>
 
-    <table id="usage">
-        <thead>
-            <tr>
-                <td>
-                    Usage
-                    <a href="#usage">&raquo;</a>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    Simply add the jar file (along with
-                    the Commons Logging jar file) to your classpath.
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div id="usage" class="content">
+	<h2>Usage <a href="#usage">&raquo;</a></h2>
+	<p>
+	    Simply add the jar file (along with
+	    the Commons Logging jar file) to your classpath.
+	</p>
+</div>
 
-    <table id="examples">
-        <thead>
-            <tr>
-                <td>
-                    Examples
-                    <a href="#examples">&raquo;</a>
-                </td>
-            </tr>
-        </thead>
+<div id="examples" class="content">
+	<h2>Examples <a href="#examples">&raquo;</a></h2>
+	
+	<h3>Parsing an iCalendar file</h3>
+	<p>
+		Support for parsing and building an iCalendar object model is provided
+		by the <code>CalendarParser</code> and <code>ContentHandler</code>
+		interfaces. You can provide your own implementations of either
+		of these, or just use the default implementations as provided by
+		the <code>CalendarBuilder</code> class. Note that <code>CalendarBuilder</code>
+		is not thread-safe, and as such it is good practice to construct a new
+		instance for each data stream you wish to parse (see <em><a href="#timezones">Working with TimeZones</a></em>
+		for further reasons).
+	</p>
+    <table style="border: 1px solid black; background: silver">
         <tbody>
-            <tr>
-                <td>
-                    <table style="border: 1px solid black; background: silver">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    Parsing an iCalendar file
-                                </th>
-                            </tr>
-                            <tr><td><pre><code>
-CalendarBuilder builder = new CalendarBuilder();
-
+            <tr><td><pre><code>
 FileInputStream fin = new FileInputStream("mycalendar.ics");
 
+CalendarBuilder builder = new CalendarBuilder();
+
 Calendar calendar = builder.build(fin);
-                            </code></pre></td></tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table style="border: 1px solid black; background: silver">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    Iterating over a Calendar
-                                </th>
-                            </tr>
-                            <tr><td><pre><code>
+            </code></pre></td></tr>
+        </tbody>
+    </table>
+	
+	<h3>Iterating over a Calendar</h3>
+	<p>
+		The iCal4j API is designed to conform with the standard Java collections
+		API as much as possible. As such, you will find that for searching and
+		manipulating a calendar object model you can make use of familiar concepts
+		such as <code>List</code>s, <code>Iterator</code>s, etc.
+	</p>
+    <table style="border: 1px solid black; background: silver">
+        <tbody>
+            <tr><td><pre><code>
 for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
     Component component = (Component) i.next();
     System.out.println("Component [" + component.getName() + "]");
@@ -124,150 +98,181 @@ for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
         System.out.println("Property [" + property.getName() + ", " + property.getValue() + "]");
     }
 }
-                            </code></pre></td></tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table style="border: 1px solid black; background: silver">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    Creating a new calendar
-                                </th>
-                            </tr>
-                            <tr><td><pre><code>
+            </code></pre></td></tr>
+        </tbody>
+    </table>
+	
+	<h3>Creating a new calendar</h3>
+	<p>
+		Creating a new calendar is quite straight-forward, in that all you need
+		to remember is that a <code>Calendar</code> contains a list of
+		<code>Properties</code> and <code>Components</code>. A calendar must
+		contain certain standard properties and at least one component to be
+		valid. You can verify that a calendar is valid via the method
+		<code>Calendar.validate()</code>. All iCal4j objects also override
+		<code>Object.toString()</code>, so you can verify the resulting calendar
+		data via this mechanism.
+	</p>
+    <table style="border: 1px solid black; background: silver">
+        <tbody>
+            <tr><td><pre><code>
 Calendar calendar = new Calendar();
 calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
 calendar.getProperties().add(Version.VERSION_2_0);
 calendar.getProperties().add(CalScale.GREGORIAN);
 
 // Add events, etc..
-                            </code></pre></td></tr>
-                            <tr>
-                                <th>
-                                    Output:
-                                </th>
-                            </tr>
-                            <tr><td><pre><code>
+	            </code></pre></td></tr>
+            <tr>
+                <th>
+                    Output:
+                </th>
+            </tr>
+            <tr><td><pre><code>
 BEGIN:VCALENDAR
 PRODID:-//Ben Fortuna//iCal4j 1.0//EN
 VERSION:2.0
 CALSCALE:GREGORIAN
 END:VCALENDAR
-                            </code></pre></td></tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table style="border: 1px solid black; background: silver">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    Working with VTimeZones
-                                </th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    iCal4j now supports pre-defined VTimeZones by attempting to load
-                                    a corresponding iCalendar file for the required VTimeZone. You
-                                    can enable this feature by obtaining or creating a set of VTimeZone
-                                    iCalendar files for your required VTimeZones. A set of VTimeZone
-                                    definitions is included in the
-                                    <a href="http://sourceforge.net/projects/freeassociation/">libical</a> project.
-                                    Simply add &lt;LIBICAL_HOME&gt;/zoneinfo to your classpath and iCal4j will
-                                    automatically load the VTimeZones as required.
-                                    <p/>
-                                    If no pre-defined VTimeZones are found in the classpath iCal4j will
-                                    attempt to construct a VTimeZone from the specified Java TimeZone.
-                                    Otherwise you are still able to construct a complete VTimeZone
-                                    manually.
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <pre><code>
-// obtain the VTimeZone corresponding to the default Java TimeZone
-VTimeZone tz = VTimeZone.getDefault();
-
-// obtain a VTimeZone corresponding to the specified Java TimeZone
-VTimeZone tz = VTimeZone.getVTimeZone(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
-                                    </code></pre>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <table style="border: 1px solid black; background: silver">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    Creating an event
-                                </th>
-                            </tr>
-                            <tr><td><pre><code>
+            </code></pre></td></tr>
+        </tbody>
+    </table>
+	
+	<h3>Creating an event</h3>
+	<p>
+		One of the more commonly used components is a <code>VEvent</code>. To create
+		a VEvent you can either set the date value and properties manually or you can
+		make use of the convenience constructors to initialise standard values.
+	</p>
+    <table style="border: 1px solid black; background: silver">
+        <tbody>
+            <tr><td><pre><code>
 java.util.Calendar cal = java.util.Calendar.getInstance();
 cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
 cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
 
-VEvent christmas = new VEvent(cal.getTime(), "Christmas Day");
-
+VEvent christmas = new VEvent(new Date(cal.getTime()), "Christmas Day");
 // initialise as an all-day event..
 christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(Value.DATE);
-
-// add timezone information..
-VTimeZone tz = VTimeZone.getDefault();
-TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
-christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
-                            </code></pre></td></tr>
-                            <tr>
-                                <th>
-                                    Output:
-                                </th>
-                            </tr>
-                            <tr><td><pre><code>
+            </code></pre></td></tr>
+            <tr>
+                <th>
+                    Output:
+                </th>
+            </tr>
+            <tr><td><pre><code>
 BEGIN:VEVENT
 DTSTAMP:20050222T044240Z
-DTSTART;VALUE=DATE;TZID=Australia/Sydney:20051225
+DTSTART;VALUE=DATE:20051225
 SUMMARY:Christmas Day
 END:VEVENT
-                            </code></pre></td></tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
+            </code></pre></td></tr>
+        </tbody>
+    </table>
+	
+	<h3 id="timezones">Working with TimeZones</h3>
+	<p>
+		Complete timezone support is now provided by iCal4j, which follows these
+		basic principles:
+	</p>
+	
+	<ul>
+		<li>
+			iCal4j includes its own set of timezone definitions, which are
+			based on the defacto standard Olson timezone database. Whilst
+			iCal4j's timezone identifiers may be identical to those provided
+			by the Java API, there is no guarantee that the rules defining
+			a timezone will match those used by a Java timezone.
+		</li>
+		<li>
+			The default timezone for iCal4j is the Java timezone represented
+			by the <em>Etc/GMT</em> identifier. This timezone is used where
+			no iCal4j timezone is specified, and the relevant iCal4j object
+			is not set as being in <em>UTC</em> time.
+		</li>
+		<li>
+			iCal4j timezones are accessible via the applicable
+			<code>TimeZoneRegistry</code> implementation. When parsing existing
+			iCalendar data you should obtain the appropriate <code>TimeZoneRegistry</code>
+			via the <code>CalendarBuilder.getRegistry()</code> method after
+			calling <code>CalendarBuilder.build()</code>. In addition to the
+			default iCal4j timezone definitions this registry instance will also
+			provide you access to any timezones defined in the parsed iCalendar
+			data stream. If you are creating a new calendar object you should
+			call <code>TimeZoneRegistryFactory.getInstance().createRegistry()</code>
+			to construct a default registry instance.
+		</li>
+		<li>
+			You can provide your own <code>TimeZoneRegistry</code> implementation
+			by sub-classing the <code>TimeZoneRegistyFactory</code> class and
+			specifying the following system property:
+			<p>
+			<em>net.fortuna.ical4j.timezone.registry=&lt;factory_class_name&gt;</em>
+			</p>
+			This may be useful if you want to read and/or store your timezone definitions
+			in a database.
+		</li>
+	</ul>
+
+    <table style="border: 1px solid black; background: silver">
+        <tbody>
             <tr>
                 <td>
-                    <table style="border: 1px solid black; background: silver">
-                        <tbody>
-                            <tr>
-                                <th>
-                                    Saving an iCalendar file
-                                </th>
-                            </tr>
-                            <tr><td><pre><code>
-FileOutputStream fout = new FileOutputStream("mycalendar.ics");
+                    <pre><code>
+TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+TimeZone timezone = registry.getTimeZone("Australia/Melbourne");
 
-CalendarOutputter outputter = new CalendarOutputter();
+java.util.Calendar cal = java.util.Calendar.getInstance(timezone);
+cal.set(java.util.Calendar.YEAR, 2005);
+cal.set(java.util.Calendar.MONTH, java.util.Calendar.NOVEMBER);
+cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+cal.set(java.util.Calendar.HOUR_OF_DAY, 15);
+cal.clear(java.util.Calendar.MINUTE);
+cal.clear(java.util.Calendar.SECOND);
 
-outputter.output(calendar, fout);
-                            </code></pre></td></tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
+DateTime dt = new DateTime(cal.getTime());
+dt.setTimeZone(timezone);
+VEvent melbourneCup = new VEvent(dt, "Melbourne Cup");
+            </code></pre></td></tr>
             <tr>
-            	<td>More examples may be found in the <a href="api/index.html">API Documentation</a>.</td>
+                <th>
+                    Output:
+                </th>
+            </tr>
+            <tr><td><pre><code>
+BEGIN:VEVENT
+DTSTAMP:20051105T094739Z
+DTSTART;TZID=Australia/Melbourne:20051101T150000
+SUMMARY:Melbourne Cup
+END:VEVENT
+                    </code></pre>
+                </td>
             </tr>
         </tbody>
     </table>
+	
+	<h3>Saving an iCalendar file</h3>
+	<p>
+		When saving an iCalendar file iCal4j will automatically validate your
+		calendar object model to ensure it complies with the
+		<a href="http://www.faqs.org/rfcs/rfc2445.html">RFC2445</a> specification.
+		If you would prefer not to validate your calendar data you can disable the
+		validation by calling <code>CalendarOutputter.setValidating(false)</code>.
+	</p>
+    <table style="border: 1px solid black; background: silver">
+        <tbody>
+            <tr><td><pre><code>
+FileOutputStream fout = new FileOutputStream("mycalendar.ics");
+
+CalendarOutputter outputter = new CalendarOutputter();
+outputter.output(calendar, fout);
+            </code></pre></td></tr>
+        </tbody>
+    </table>
+	<p>
+		More examples may be found in the <a href="api/index.html">API Documentation</a>.
+	</p>
+</div>
 
 <div id="footer">
 	<p>

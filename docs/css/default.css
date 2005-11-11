@@ -40,6 +40,10 @@ th {
 	font-size: 36pt;
 }
 
+.content {
+	margin: 20px;
+}
+
 #footer {
 	text-align: center;
 	margin: 10px auto 10px auto;
