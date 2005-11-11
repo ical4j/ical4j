@@ -43,7 +43,6 @@ import java.util.Map;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.property.TzId;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,6 +59,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     
     private static Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
     
+    private static final Map DEFAULT_TIMEZONES = new HashMap();
+    
     private Map timezones;
     
     private String resourcePrefix;
@@ -74,6 +75,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     /**
      * Creates a new instance using the specified resource prefix.
      * @param resourcePrefix a prefix prepended to classpath resource lookups
+     * for default timezones
      */
     public TimeZoneRegistryImpl(final String resourcePrefix) {
         this.resourcePrefix = resourcePrefix;
@@ -100,17 +102,22 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     public final TimeZone getTimeZone(final String id) {
         TimeZone timezone = (TimeZone) timezones.get(id);
         if (timezone == null) {
-            try {
-                VTimeZone vTimeZone = loadVTimeZone(id);
-                if (vTimeZone != null) {
-                    // XXX: temporary kludge..
-                    ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
-                    timezone = new TimeZone(vTimeZone);
-                    register(timezone);
+            timezone = (TimeZone) DEFAULT_TIMEZONES.get(id);
+            if (timezone == null) {
+                synchronized (DEFAULT_TIMEZONES) {
+                    try {
+                        VTimeZone vTimeZone = loadVTimeZone(id);
+                        if (vTimeZone != null) {
+                            // XXX: temporary kludge..
+//                            ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
+                            timezone = new TimeZone(vTimeZone);
+                            DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
+                        }
+                    }
+                    catch (Exception e) {
+                        log.warn("Error occurred loading VTimeZone", e);
+                    }
                 }
-            }
-            catch (Exception e) {
-                log.warn("Error occurred loading VTimeZone", e);
             }
         }
         return timezone;
