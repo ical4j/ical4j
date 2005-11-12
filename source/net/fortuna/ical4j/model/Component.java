@@ -36,6 +36,8 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import net.fortuna.ical4j.model.component.XComponent;
+
 /**
  * Defines an iCalendar component. Subclasses of this class provide additional
  * validation and typed values for specific iCalendar components.
@@ -121,7 +123,8 @@ public abstract class Component implements Serializable {
             || VFREEBUSY.equals(getName())
             || VJOURNAL.equals(getName())
             || VTIMEZONE.equals(getName())
-            || VTODO.equals(getName());
+            || VTODO.equals(getName())
+            || (this instanceof XComponent);
     }
 
     /**

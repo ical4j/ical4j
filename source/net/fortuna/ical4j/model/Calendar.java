@@ -220,7 +220,7 @@ public class Calendar implements Serializable {
 
             if (!(property instanceof XProperty)
                  && !property.isCalendarProperty()) {
-                throw new IllegalArgumentException(
+                throw new ValidationException(
                     "Invalid property: " + property.getName());
             }
         }
@@ -230,8 +230,8 @@ public class Calendar implements Serializable {
             Component component = (Component) i.next();
 
             if (!component.isCalendarComponent()) {
-                throw new IllegalArgumentException(
-                    "Invalid component: " + component.getName());
+                throw new ValidationException(
+                    "Not a valid calendar component: " + component.getName());
             }
         }
 

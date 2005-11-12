@@ -70,6 +70,9 @@ public class XComponent extends Component {
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
     public final void validate(final boolean recurse) throws ValidationException {
+        if (!getName().startsWith(EXPERIMENTAL_PREFIX)) {
+            throw new ValidationException("Experimental components must have the following prefix: " + EXPERIMENTAL_PREFIX);
+        }
         if (recurse) {
             validateProperties();
         }
