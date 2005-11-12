@@ -36,6 +36,7 @@
 package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
+import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -58,20 +59,25 @@ public class CalendarTest extends TestCase {
     private static Log log = LogFactory.getLog(Calendar.class);
     
     private TimeZoneRegistry registry;
+    
+    private Calendar calendar;
 
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
     protected void setUp() throws Exception {
         super.setUp();
         registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+        calendar = new Calendar();
+        calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
+        calendar.getProperties().add(Version.VERSION_2_0);
+        calendar.getProperties().add(CalScale.GREGORIAN);
     }
     
     /*
      * Class under test for void Calendar()
      */
     public void testCalendar() throws ValidationException {
-        Calendar calendar = new Calendar();
-        calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
-        calendar.getProperties().add(Version.VERSION_2_0);
-        calendar.getProperties().add(CalScale.GREGORIAN);
         VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         calendar.getComponents().add(tz);
         TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
@@ -141,13 +147,10 @@ public class CalendarTest extends TestCase {
         log.info(calendar);
     }
     
+    /**
+     * @throws ValidationException
+     */
     public void testGetEventDateRanges() throws ValidationException {
-
-        Calendar calendar = new Calendar();
-        calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
-        calendar.getProperties().add(Version.VERSION_2_0);
-        calendar.getProperties().add(CalScale.GREGORIAN);
-
         // Add events, etc..
         VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
@@ -233,5 +236,20 @@ public class CalendarTest extends TestCase {
                                                     */
 
         log.info(reply);
+    }
+    
+    /**
+     * Unit test for the method <code>Calendar.validate()</code>.
+     */
+    public void testCalendarValidation() {
+        calendar.getComponents().add(new Daylight());
+        try {
+            calendar.validate();
+            fail("Should throw a ValidationException");
+        }
+        catch (ValidationException ve) {
+            // success..
+            log.debug(ve);
+        }
     }
 }
