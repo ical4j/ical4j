@@ -263,16 +263,13 @@ public class Trigger extends UtcProperty {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         if (duration != null) {
             return duration.toString();
         }
-        else {
-            return getDateTime().toString();
-        }
+        return super.getValue();
     }
     
     /**
