@@ -29,10 +29,40 @@
     <property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/"/>
     <property name="jakarta-commons-logging.apiurl" value="http://jakarta.apache.org/commons/logging/api/"/>
 	
-	<property name="project.classpath" value="lib/commons-logging.jar;${output.dir}"/>
+	<path id="project.classpath">
+		<pathelement location="lib/commons-logging.jar"/>
+		<pathelement location="${output.dir}"/>
+	</path>
+
+	  <!-- output directory used for EMMA coverage reports: -->
+	  <property name="coverage.dir" value="${basedir}/coverage" />
+	  <property name="out.instr.dir" value="${coverage.dir}/instr" />
+
+	  <!-- directory that contains emma.jar and emma_ant.jar: -->
+	  <property name="emma.dir" value="C:/Tools/emma-2.0.5312/lib" />
+
+	  <!-- path element used by EMMA taskdef below: -->
+	  <path id="emma.lib" >
+	    <pathelement location="${emma.dir}/emma.jar" />
+	    <pathelement location="${emma.dir}/emma_ant.jar" />
+	  </path>
+
+	  <!-- this loads <emma> and <emmajava> custom tasks: -->
+	  <taskdef resource="emma_ant.properties" classpathref="emma.lib" />
     
 	<!-- Targets -->
-    <target name="clean-compile">
+
+	  <target name="emma" description="turns on EMMA's on-the-fly instrumentation mode" >
+	    <property name="emma.enabled" value="true" />
+	    
+	    <!-- this property, if overriden via -Demma.filter=<list of filter specs>
+	         on ANT's command line, will set the coverage filter; by default,
+	         all classes found in 'run.classpath' pathref will be instrumented:
+	    -->
+	    <property name="emma.filter" value="" />
+	  </target>
+
+	<target name="clean-compile">
         <mkdir dir="${output.dir}"/>
         <delete>
             <fileset dir="${output.dir}"/>
@@ -41,12 +71,15 @@
     
     <target name="compile">
     	<echo message="Compiling source from classpath: ${project.classpath}"/>
-        <javac source="1.4" target="1.4" srcdir="${source.dir}" destdir="${output.dir}" debug="false" deprecation="true" classpath="${project.classpath}"/>
+        <javac source="1.4" target="1.4"
+        	srcdir="${source.dir}" destdir="${output.dir}"
+        	debug="true" debuglevel="lines,source,vars" deprecation="true"
+        	classpathref="project.classpath"/>
     </target>
     
     <target name="compile-tests">
     	<echo message="Compiling tests from classpath: ${project.classpath}"/>
-        <javac srcdir="${test.source.dir}" destdir="${output.dir}" debug="false" deprecation="true" classpath="${project.classpath}"/>
+        <javac srcdir="${test.source.dir}" destdir="${output.dir}" debug="false" deprecation="true" classpathref="project.classpath"/>
     </target>
     
     <target name="clean-package">
@@ -81,7 +114,7 @@
                  Windowtitle="${ant.project.name}"
                  Doctitle="${ant.project.name}"
                  Overview="etc/overview.html"
-                 classpath="${project.classpath}">
+                 classpathref="project.classpath">
      		<link href="${j2se.apiurl}"/>
      		<link href="${jakarta-commons-logging.apiurl}"/>
         </javadoc>
@@ -122,8 +155,26 @@
 	<!-- JUnit tests -->
     <target name="run-tests" depends="compile, compile-tests">
     	<echo message="Running unit tests with classpath: ${project.classpath}"/>
+
+    	<emma enabled="${emma.enabled}" >
+          <instr instrpathref="project.classpath"
+                 destdir="${out.instr.dir}"	
+                 metadatafile="${coverage.dir}/metadata.emma"
+                 merge="true"
+          />
+        </emma>
+
         <junit printsummary="yes" showoutput="yes" fork="yes">
+        	<!--
             <classpath path="${project.classpath}"/>
+            -->
+            <classpath>
+              <pathelement location="${out.instr.dir}" />
+              <path refid="project.classpath" />
+              <path refid="emma.lib" />
+            </classpath> 
+            <jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
+            <jvmarg value="-Demma.coverage.out.merge=false" />
             <test name="net.fortuna.ical4j.AllTests"/>
 <!--
             <batchtest>
@@ -140,5 +191,16 @@
             <test name="net.fortuna.ical4j.data.CalendarBuilderTest"/>
             -->
         </junit>
+    	
+        <emma enabled="${emma.enabled}" >
+           <report sourcepath="${src.dir}" >
+            <fileset dir="${coverage.dir}" >
+              <include name="*.emma" />
+            </fileset>
+
+            <txt outfile="${coverage.dir}/coverage.txt" />
+            <html outfile="${coverage.dir}/coverage.html" />
+          </report>
+        </emma>
     </target>
 </project>
