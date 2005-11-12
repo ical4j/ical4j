@@ -73,9 +73,11 @@ public abstract class UtcProperty extends DateProperty {
     /**
      * @param dateTime The dateTime to set.
      */
-    public final void setDateTime(final DateTime dateTime) {
+    public void setDateTime(final DateTime dateTime) {
         // time must be in UTC..
-        dateTime.setUtc(true);
+        if (dateTime != null) {
+            dateTime.setUtc(true);
+        }
         setDate(dateTime);
     }
 

@@ -35,11 +35,12 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.text.ParseException;
+
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
@@ -142,24 +143,17 @@ import net.fortuna.ical4j.util.ParameterValidator;
  *
  * @author Ben Fortuna
  */
-public class Trigger extends Property {
+public class Trigger extends UtcProperty {
     
     private static final long serialVersionUID = 5049421499261722194L;
 
     private Dur duration;
 
     /**
-     * The value type can be set to a DATE-TIME value type, in which case the
-     * value MUST specify a UTC formatted DATE-TIME value.
-     */
-    private DateTime dateTime;
-
-    /**
      * Default constructor.
      */
     public Trigger() {
         super(TRIGGER);
-        dateTime = new DateTime();
     }
     
     /**
@@ -197,9 +191,9 @@ public class Trigger extends Property {
      * @param aDate
      *            a date representation of a date-time
      */
-    public Trigger(final DateTime aDate) {
+    public Trigger(final DateTime dateTime) {
         super(TRIGGER);
-        dateTime = aDate;
+        setDateTime(dateTime);
     }
 
     /**
@@ -208,72 +202,42 @@ public class Trigger extends Property {
      * @param aDate
      *            a date representation of a date-time
      */
-    public Trigger(final ParameterList aList, final DateTime aDate) {
+    public Trigger(final ParameterList aList, final DateTime dateTime) {
         super(TRIGGER, aList);
-        dateTime = aDate;
+        setDateTime(dateTime);
     }
 
     /**
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
-
-        if (getDateTime() != null) {
-            /*
-             * ; the following is REQUIRED, ; but MUST NOT occur more than once
-             *
-             * (";" "VALUE" "=" "DATE-TIME") /
-             */
-            ParameterValidator.getInstance().assertOne(Parameter.VALUE,
+        Parameter relParam = getParameters().getParameter(Parameter.RELATED);
+        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
+        if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
+            ParameterValidator.getInstance().assertOneOrLess(Parameter.RELATED,
                     getParameters());
-
-            Parameter valueParam = getParameters()
-                    .getParameter(Parameter.VALUE);
-
-            if (valueParam == null
-                    || !Value.DATE_TIME.equals(valueParam)) { throw new ValidationException(
-                            "Parameter [" + valueParam + "] is invalid"); }
-
-            /*
-             * ; the following is optional, ; and MAY occur more than once
-             *
-             * (";" xparam) ) ":" date-time
-             */
-        }
-        else { //if (duration > 0) {
-
-            /*
-             * ; the following are optional, ; but MUST NOT occur more than once
-             *
-             * (";" "VALUE" "=" "DURATION") / (";" trigrelparam) /
-             */
             ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                     getParameters());
-
-            Parameter valueParam = getParameters()
-                    .getParameter(Parameter.VALUE);
-
-            if (valueParam != null
-                    && !Value.DURATION.equals(valueParam.getValue())) { throw new ValidationException(
-                    "Parameter [" + Parameter.VALUE + "=" + valueParam.getValue() + "] is invalid"); }
-
-            ParameterValidator.getInstance().assertOneOrLess(
-                    Parameter.RELATED, getParameters());
-
-            /*
-             * ; the following is optional, ; and MAY occur more than once
-             *
-             * (";" xparam) ) ":" dur-value
-             */
-
+            if (valueParam != null && !Value.DURATION.equals(valueParam)) {
+                throw new ValidationException(
+                    "Parameter [" + valueParam + "] is invalid");
+            }
+            if (getDuration() == null) {
+                throw new ValidationException("Duration value not specified");
+            }
         }
-    }
-
-    /**
-     * @return Returns the dateTime.
-     */
-    public final DateTime getDateTime() {
-        return dateTime;
+        else {
+            ParameterValidator.getInstance().assertOne(Parameter.VALUE,
+                    getParameters());
+            if (valueParam != null && !Value.DATE_TIME.equals(valueParam)) {
+                throw new ValidationException(
+                        "Parameter [" + valueParam + "] is invalid");
+            }
+            if (getDateTime() == null) {
+                throw new ValidationException("DATE-TIME value not specified");
+            }
+            super.validate();
+        }
     }
 
     /**
@@ -288,13 +252,12 @@ public class Trigger extends Property {
      */
     public final void setValue(final String aValue) {
         try {
-            dateTime = new DateTime(aValue);
+            super.setValue(aValue);
             duration = null;
         }
-        catch (Exception e) {
-//            duration = DurationFormat.getInstance().parse(aValue);
+        catch (ParseException pe) {
             duration = new Dur(aValue);
-            dateTime = null;
+            super.setDateTime(null);
         }
     }
 
@@ -304,12 +267,11 @@ public class Trigger extends Property {
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-        if (getDateTime() != null) {
-            return getDateTime().toString();
+        if (duration != null) {
+            return duration.toString();
         }
         else {
-//            return DurationFormat.getInstance().format(getDuration());
-            return duration.toString();
+            return getDateTime().toString();
         }
     }
     
@@ -317,9 +279,7 @@ public class Trigger extends Property {
      * @param dateTime The dateTime to set.
      */
     public final void setDateTime(final DateTime dateTime) {
-        // ensure date-time is in UTC..
-        dateTime.setUtc(true);
-        this.dateTime = dateTime;
+        super.setDateTime(dateTime);
         duration = null;
     }
     
@@ -328,6 +288,6 @@ public class Trigger extends Property {
      */
     public final void setDuration(final Dur duration) {
         this.duration = duration;
-        dateTime = null;
+        super.setDateTime(null);
     }
 }

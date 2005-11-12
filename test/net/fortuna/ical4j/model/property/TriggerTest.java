@@ -28,6 +28,8 @@ import java.util.Date;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.parameter.Value;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,6 +42,9 @@ public class TriggerTest extends TestCase {
     
     private static Log log = LogFactory.getLog(TriggerTest.class);
 
+    /**
+     * @throws ParseException
+     */
     public void testSetValue() throws ParseException {
         Trigger trigger = new Trigger();
         trigger.setValue(new DateTime(new Date(0).getTime()).toString());
@@ -55,4 +60,35 @@ public class TriggerTest extends TestCase {
         log.info(trigger);
     }
 
+    /**
+     * Unit test on a duration trigger.
+     */
+    public void testTriggerDuration() {
+        Trigger trigger = new Trigger(new Dur(1, 0, 0, 0));
+        
+        assertNotNull(trigger.getDuration());
+        assertNull(trigger.getDate());
+        assertNull(trigger.getDateTime());
+    }
+
+    /**
+     * Unit test on a date-time trigger.
+     */
+    public void testTriggerDateTime() throws ValidationException {
+        Trigger trigger = new Trigger(new DateTime(new Date()));
+        
+        assertNull(trigger.getDuration());
+        assertNotNull(trigger.getDate());
+        assertNotNull(trigger.getDateTime());
+        
+        try {
+            trigger.validate();
+            fail("Should throw ValidationException");
+        }
+        catch (ValidationException ve) {
+            log.debug(ve);
+        }
+        trigger.getParameters().add(Value.DATE_TIME);
+        trigger.validate();
+    }
 }

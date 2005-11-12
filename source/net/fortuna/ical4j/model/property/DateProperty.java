@@ -114,7 +114,7 @@ public abstract class DateProperty extends Property {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
-    public final String getValue() {
+    public String getValue() {
         return Strings.valueOf(getDate());
     }
 
