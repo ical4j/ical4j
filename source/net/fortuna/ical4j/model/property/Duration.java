@@ -40,6 +40,7 @@ import java.util.Date;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a DURATION iCalendar component property.
@@ -131,5 +132,12 @@ public class Duration extends Property {
      */
     public final void setDuration(final Dur duration) {
         this.duration = duration;
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#validate()
+     */
+    public final void validate() throws ValidationException {
+        // TODO: Auto-generated method stub
     }
 }

@@ -178,7 +178,6 @@ public abstract class DateProperty extends Property {
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public void validate() throws ValidationException {
-        super.validate();
         Value value = (Value) getParameters().getParameter(Parameter.VALUE);
         if (value != null && !Value.DATE.equals(value) && !Value.DATE_TIME.equals(value)) {
             throw new ValidationException("Invalid VALUE parameter [" + value + "]");

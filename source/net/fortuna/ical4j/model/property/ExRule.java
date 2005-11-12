@@ -40,6 +40,7 @@ import java.text.ParseException;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a EXRULE iCalendar component property.
@@ -125,5 +126,12 @@ public class ExRule extends Property {
      */
     public final void setRecur(final Recur recur) {
         this.recur = recur;
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#validate()
+     */
+    public final void validate() throws ValidationException {
+        // TODO: Auto-generated method stub
     }
 }

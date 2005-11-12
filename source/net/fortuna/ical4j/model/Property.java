@@ -282,9 +282,7 @@ public abstract class Property extends Content {
      * @throws ValidationException
      *             where the property is not in a valid state
      */
-    public void validate() throws ValidationException {
-        // empty implementation..
-    }
+    public abstract void validate() throws ValidationException;
 
     /*
      * (non-Javadoc)

@@ -37,6 +37,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines an ACTION iCalendar component property.
@@ -122,5 +123,12 @@ public class Action extends Property {
      */
     public final String getValue() {
         return value;
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#validate()
+     */
+    public final void validate() throws ValidationException {
+        // TODO: Auto-generated method stub
     }
 }

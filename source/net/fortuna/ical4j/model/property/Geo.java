@@ -37,6 +37,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a GEO iCalendar component property. NOTE: The simple formula for
@@ -146,5 +147,12 @@ public class Geo extends Property {
      */
     public final void setLongitude(final float longitude) {
         this.longitude = longitude;
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#validate()
+     */
+    public final void validate() throws ValidationException {
+        // TODO: Auto-generated method stub
     }
 }

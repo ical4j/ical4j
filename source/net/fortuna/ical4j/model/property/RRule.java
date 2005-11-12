@@ -40,6 +40,7 @@ import java.text.ParseException;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines an RRULE iCalendar component property.
@@ -117,5 +118,12 @@ public class RRule extends Property {
      */
     public final String getValue() {
         return getRecur().toString();
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#validate()
+     */
+    public final void validate() throws ValidationException {
+        // TODO: Auto-generated method stub
     }
 }

@@ -37,6 +37,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a PERCENT-COMPLETE iCalendar component property.
@@ -116,5 +117,12 @@ public class PercentComplete extends Property {
      */
     public final void setPercentage(final int percentage) {
         this.percentage = percentage;
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#validate()
+     */
+    public final void validate() throws ValidationException {
+        // TODO: Auto-generated method stub
     }
 }
