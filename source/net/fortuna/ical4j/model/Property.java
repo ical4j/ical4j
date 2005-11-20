@@ -228,10 +228,10 @@ public abstract class Property extends Content {
      * calendar property.
      * @return boolean
      */
-    public final boolean isCalendarProperty() {
+    public boolean isCalendarProperty() {
 
-        return PRODID.equals(getName()) || VERSION.equals(getName())
-                || CALSCALE.equals(getName()) || METHOD.equals(getName());
+        return PRODID.equalsIgnoreCase(getName()) || VERSION.equalsIgnoreCase(getName())
+                || CALSCALE.equalsIgnoreCase(getName()) || METHOD.equalsIgnoreCase(getName());
     }
 
     /**
