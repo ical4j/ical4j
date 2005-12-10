@@ -70,15 +70,32 @@ public class DateList extends ArrayList implements Serializable {
     }
 
     /**
+     * @param aType
+     */
+    public DateList(final Value aType) {
+        this(aType, null);
+    }
+    
+    /**
      * Default constructor.
      * 
      * @param aType
      *            specifies the type of dates (either date or date-time)
      */
-    public DateList(final Value aType) {
+    public DateList(final Value aType, final TimeZone timezone) {
         this.type = aType;
+        this.timeZone = timezone;
     }
 
+    /**
+     * @param aValue
+     * @param aType
+     * @throws ParseException
+     */
+    public DateList(final String aValue, final Value aType) throws ParseException {
+        this(aValue, aType, null);
+    }
+    
     /**
      * Parses the specified string representation to create a list of dates.
      * 
@@ -90,16 +107,16 @@ public class DateList extends ArrayList implements Serializable {
      *             if an invalid date representation exists in the date list
      *             string
      */
-    public DateList(final String aValue, final Value aType)
+    public DateList(final String aValue, final Value aType, final TimeZone timezone)
             throws ParseException {
-        this(aType);
+        this(aType, timezone);
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {
             if (Value.DATE.equals(type)) {
                 add(new Date(t.nextToken()));
             }
             else {
-                add(new DateTime(t.nextToken()));
+                add(new DateTime(t.nextToken(), timezone));
             }
         }
     }
