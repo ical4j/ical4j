@@ -121,6 +121,14 @@ public class VTimeZone extends Component {
     private ComponentList observances;
 
     /**
+     * Default constructor.
+     */
+    public VTimeZone() {
+        super(VTIMEZONE);
+        this.observances = new ComponentList();
+    }
+    
+    /**
      * Constructs a new instance containing the specified properties.
      * 
      * @param properties
