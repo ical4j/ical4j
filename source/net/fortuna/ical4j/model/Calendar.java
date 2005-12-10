@@ -198,7 +198,7 @@ public class Calendar implements Serializable {
      * @throws ValidationException
      *             where the calendar is not in a valid state
      */
-    public final void validate(final boolean recurse) throws ValidationException {
+    public void validate(final boolean recurse) throws ValidationException {
         // 'prodid' and 'version' are both REQUIRED,
         // but MUST NOT occur more than once
         PropertyValidator.getInstance().assertOne(Property.PRODID, properties);

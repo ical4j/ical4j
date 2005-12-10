@@ -117,7 +117,7 @@ public abstract class Component implements Serializable {
      * calendar component.
      * @return a boolean value
      */
-    public final boolean isCalendarComponent() {
+    public boolean isCalendarComponent() {
         return VALARM.equals(getName())
             || VEVENT.equals(getName())
             || VFREEBUSY.equals(getName())
