@@ -37,6 +37,7 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
@@ -61,7 +62,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * @author Ben Fortuna
  */
-public class VFreeBusyTest extends TestCase {
+public class VFreeBusyTest extends ComponentTest {
 
     private static Log log = LogFactory.getLog(VFreeBusyTest.class);
 
@@ -317,5 +318,12 @@ public class VFreeBusyTest extends TestCase {
         Period busy1 = (Period) periods.iterator().next();
         assertEquals(busy1.getStart(), new DateTime("20050104T1100000Z"));
         assertEquals(busy1.getDuration().toString(), "PT30M");
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
+     */
+    public void testIsCalendarComponent() {
+        assertIsCalendarComponent(new VFreeBusy());
     }
 }

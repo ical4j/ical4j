@@ -5,8 +5,8 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 
@@ -18,7 +18,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author benfortuna
  */
-public class VTimeZoneTest extends TestCase {
+public class VTimeZoneTest extends ComponentTest {
 
     private static Log log = LogFactory.getLog(VTimeZoneTest.class);
 
@@ -40,5 +40,12 @@ public class VTimeZoneTest extends TestCase {
         Calendar calendar = new Calendar();
         calendar.getComponents().add(tz);
         log.info(calendar);
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
+     */
+    public void testIsCalendarComponent() {
+        assertIsCalendarComponent(new VTimeZone());
     }
 }

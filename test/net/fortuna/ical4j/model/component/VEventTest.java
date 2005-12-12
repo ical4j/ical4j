@@ -10,12 +10,11 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.TimeZone;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
@@ -24,6 +23,7 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.ValidationException;
@@ -44,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
  * A test case for VEvents.
  * @author Ben Fortuna
  */
-public class VEventTest extends TestCase {
+public class VEventTest extends ComponentTest {
 
     private static Log log = LogFactory.getLog(VEventTest.class);
 
@@ -162,13 +162,13 @@ public class VEventTest extends TestCase {
      * @return
      */
     private Calendar getCalendarInstance() {
-        return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        return Calendar.getInstance(); //java.util.TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 
     /**
      *  
      */
-    public final void test() {
+    public final void testChristmas() {
         // create event start date..
         java.util.Calendar calendar = getCalendarInstance();
         calendar.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
@@ -185,6 +185,28 @@ public class VEventTest extends TestCase {
         christmas.getProperties().add(summary);
 
         log.info(christmas);
+    }
+    
+    /**
+     * Test creating an event with an associated timezone.
+     */
+    public final void testMelbourneCup() {
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+        TimeZone timezone = registry.getTimeZone("Australia/Melbourne");
+
+        java.util.Calendar cal = java.util.Calendar.getInstance(timezone);
+        cal.set(java.util.Calendar.YEAR, 2005);
+        cal.set(java.util.Calendar.MONTH, java.util.Calendar.NOVEMBER);
+        cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 15);
+        cal.clear(java.util.Calendar.MINUTE);
+        cal.clear(java.util.Calendar.SECOND);
+
+        DateTime dt = new DateTime(cal.getTime());
+        dt.setTimeZone(timezone);
+        VEvent melbourneCup = new VEvent(dt, "Melbourne Cup");
+        
+        log.info(melbourneCup);
     }
 
     public final void test2() {
@@ -264,7 +286,7 @@ public class VEventTest extends TestCase {
 //                                                      week1EndDate.getTime());
         dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
 
-        Calendar expectedCal = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        Calendar expectedCal = Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
         expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
         Date expectedStartOfFirstRange = new DateTime(expectedCal.getTime().getTime());
@@ -496,5 +518,12 @@ public class VEventTest extends TestCase {
         Date end = new Date("20050107");
         PeriodList list = event1.getConsumedTime(start, end);
         assertTrue(list.isEmpty());
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
+     */
+    public void testIsCalendarComponent() {
+        assertIsCalendarComponent(new VEvent());
     }    
 }

@@ -57,8 +57,8 @@ public class XComponentTest extends ComponentTest {
         component = new XComponent("X-TEST");
     }
     
-    /**
-     * Test to ensure the component is a calendar component.
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
      */
     public void testIsCalendarComponent() {
         assertIsCalendarComponent(component);

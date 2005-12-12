@@ -35,8 +35,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.XComponent;
 import junit.framework.TestCase;
 
 /**
@@ -46,6 +44,11 @@ import junit.framework.TestCase;
 public abstract class ComponentTest extends TestCase {
 
     protected Component component;
+    
+    /**
+     * Test whether the component is a calendar component.
+     */
+    public abstract void testIsCalendarComponent();
     
     /**
      * @param c
