@@ -1,7 +1,7 @@
 package net.fortuna.ical4j;
 
-import java.io.FileFilter;
 import java.io.File;
+import java.io.FileFilter;
 
 /**
  * User: tobli
@@ -9,15 +9,12 @@ import java.io.File;
  * Time: 8:18:02 PM
  */
 public class FileOnlyFilter implements FileFilter {
+    
+    /* (non-Javadoc)
+     * @see java.io.FileFilter#accept(java.io.File)
+     */
     public boolean accept(final File file) {
         // skip directories (including CVS)
-        boolean accept = file.isFile();
-
-        if (accept) {
-            // ignore hidden files
-            accept = !file.isHidden();
-        }
-
-        return accept;
+        return file.isFile() && !file.isHidden();
     }
 }

@@ -14,9 +14,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -120,15 +117,20 @@ public class CalendarOutputterTest extends TestCase {
      */
     public static Test suite() {
         TestSuite suite = new TestSuite();
+        File[] testFiles = null;
 
-        List testFiles = new ArrayList();
-
-        testFiles.addAll(Arrays.asList(new File("etc/samples/valid").listFiles(new FileOnlyFilter())));
-//        testFiles.addAll(Arrays.asList(new File("etc/samples/invalid").listFiles(new FileOnlyFilter())));
-
-        for (int i = 0; i < testFiles.size(); i++) {
-            log.info("Sample [" + testFiles.get(i) + "]");
-            suite.addTest(new CalendarOutputterTest("testOutput", ((File) testFiles.get(i)).getPath()));
+        // valid tests..
+        testFiles = new File("etc/samples/valid").listFiles(new FileOnlyFilter());
+        for (int i = 0; i < testFiles.length; i++) {
+            log.info("Sample [" + testFiles[i] + "]");
+            suite.addTest(new CalendarOutputterTest("testOutput", testFiles[i].getPath()));
+        }
+        
+        // invalid tests..
+        testFiles = new File("etc/samples/invalid").listFiles(new FileOnlyFilter());
+        for (int i = 0; i < testFiles.length; i++) {
+            log.info("Sample [" + testFiles[i] + "]");
+            suite.addTest(new CalendarOutputterTest("testOutput", testFiles[i].getPath()));
         }
 
         return suite;
