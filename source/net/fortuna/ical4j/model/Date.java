@@ -37,6 +37,8 @@ package net.fortuna.ical4j.model;
 
 import java.text.ParseException;
 
+import net.fortuna.ical4j.util.Dates;
+
 
 /**
  * Base class for all representations of time values in RFC2445.
@@ -53,7 +55,7 @@ public class Date extends Iso8601 {
      * Default constructor.
      */
     public Date() {
-        super(PATTERN, PRECISION_DAY);
+        super(PATTERN, Dates.PRECISION_DAY);
     }
     
     /**
@@ -69,7 +71,7 @@ public class Date extends Iso8601 {
      * @param time
      */
     public Date(final long time) {
-        super(time, PATTERN, PRECISION_DAY);
+        super(time, PATTERN, Dates.PRECISION_DAY);
     }
     
     /**
@@ -86,7 +88,9 @@ public class Date extends Iso8601 {
      * @param date
      */
     public Date(final java.util.Date date) {
-        super(date.getTime(), PATTERN, PRECISION_DAY);
+//        this();
+        this(date.getTime(), Dates.PRECISION_DAY);
+//        setTime(date.getTime());
     }
 
     /**

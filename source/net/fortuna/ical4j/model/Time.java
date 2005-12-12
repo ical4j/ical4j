@@ -37,6 +37,7 @@ package net.fortuna.ical4j.model;
 
 import java.util.TimeZone;
 
+import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
 /**
@@ -61,7 +62,7 @@ public class Time extends Iso8601 {
      * Default constructor.
      */
     public Time(final TimeZone timezone) {
-        super(TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN, PRECISION_SECOND);
+        super(TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN, Dates.PRECISION_SECOND);
         getFormat().setTimeZone(timezone);
     }
 
@@ -70,7 +71,7 @@ public class Time extends Iso8601 {
      * @param utc
      */
     public Time(final long time, final TimeZone timezone) {
-        super(time, (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN), PRECISION_SECOND);
+        super(time, (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN), Dates.PRECISION_SECOND);
         getFormat().setTimeZone(timezone);
     }
 
@@ -79,7 +80,7 @@ public class Time extends Iso8601 {
      * @param utc
      */
     public Time(final java.util.Date time, final TimeZone timezone) {
-        super(time.getTime(), (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN), PRECISION_SECOND);
+        super(time.getTime(), (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN), Dates.PRECISION_SECOND);
         getFormat().setTimeZone(timezone);
     }
 
