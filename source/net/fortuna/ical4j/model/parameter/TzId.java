@@ -46,8 +46,6 @@ public class TzId extends Parameter implements Escapable {
     
     private static final long serialVersionUID = 2366516258055857879L;
 
-    private static final boolean COMPATIBILITY_MODE_ENABLED = "true".equals(System.getProperty("ical4j.tzid.compatibility"));
-
     public static final String PREFIX = "/";
 
     private String value;
@@ -59,7 +57,7 @@ public class TzId extends Parameter implements Escapable {
         super(TZID);
         // Work around a Microsoft Bug
         // (Not conforming to rfc2445, Microsoft Exchange quotes timezone references.)
-        if (COMPATIBILITY_MODE_ENABLED) {
+        if ("true".equals(System.getProperty("ical4j.tzid.compatibility"))) {
             this.value = Strings.unquote(aValue);
         }
         else {
