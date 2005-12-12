@@ -349,7 +349,7 @@ public class RecurTest extends TestCase {
         for (int i = 0; i < list.size(); i++) {
             Date date = (Date) list.get(i);
 //            Calendar calendar = Dates.getCalendarInstance(date);
-            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+            Calendar calendar = Calendar.getInstance(); //TimeZone.getTimeZone("Etc/UTC"));
             calendar.setTime(date);
             assertEquals(Calendar.SATURDAY, calendar.get(Calendar.DAY_OF_WEEK));
         }

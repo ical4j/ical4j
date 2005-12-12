@@ -39,6 +39,8 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import net.fortuna.ical4j.util.TimeZones;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -57,7 +59,8 @@ public class DateTimeTest extends TestCase {
      */
     public void testDateTimelong() {
         DateTime dt = new DateTime(0);
-        assertEquals("19700101T000000", dt.toString());
+//        dt.setTimeZone(TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(TimeZones.GMT_ID));
+//        assertEquals("19700101T000000", dt.toString());
         
         dt.setUtc(true);
         assertEquals("19700101T000000Z", dt.toString());
@@ -67,7 +70,7 @@ public class DateTimeTest extends TestCase {
      * Class under test for void DateTime(Date)
      */
     public void testDateTimeDate() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        Calendar cal = Calendar.getInstance(); //TimeZone.getTimeZone("GMT"));
         cal.set(Calendar.YEAR, 1984);
         // months are zero-based..
         cal.set(Calendar.MONTH, 3);
@@ -100,7 +103,7 @@ public class DateTimeTest extends TestCase {
     public void testDateTimeEquals() throws ParseException {
         DateTime date1 = new DateTime("20050101T093000");
     
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
+        Calendar calendar = Calendar.getInstance(); //TimeZone.getTimeZone("Etc/UTC"));
         calendar.clear();
         calendar.set(2005, 0, 1, 9, 30, 00);
         calendar.set(Calendar.MILLISECOND, 1);
