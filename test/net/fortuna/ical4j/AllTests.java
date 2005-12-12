@@ -3,6 +3,7 @@ package net.fortuna.ical4j;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilderTest;
+import net.fortuna.ical4j.model.AddressListTest;
 import net.fortuna.ical4j.model.CalendarTest;
 import net.fortuna.ical4j.model.DateTest;
 import net.fortuna.ical4j.model.DateTimeTest;
@@ -12,6 +13,7 @@ import net.fortuna.ical4j.model.ParameterFactoryImplTest;
 import net.fortuna.ical4j.model.PeriodListTest;
 import net.fortuna.ical4j.model.PeriodTest;
 import net.fortuna.ical4j.model.RecurTest;
+import net.fortuna.ical4j.model.ResourceListTest;
 import net.fortuna.ical4j.model.TimeZoneTest;
 import net.fortuna.ical4j.model.WeekDayTest;
 import net.fortuna.ical4j.model.component.VEventTest;
@@ -19,6 +21,8 @@ import net.fortuna.ical4j.model.component.VFreeBusyTest;
 import net.fortuna.ical4j.model.component.VTimeZoneTest;
 import net.fortuna.ical4j.model.component.XComponentTest;
 import net.fortuna.ical4j.model.parameter.AltRepTest;
+import net.fortuna.ical4j.model.parameter.CuTypeTest;
+import net.fortuna.ical4j.model.parameter.TzIdTest;
 import net.fortuna.ical4j.model.property.AttachTest;
 import net.fortuna.ical4j.model.property.CalScaleTest;
 import net.fortuna.ical4j.model.property.DtEndTest;
@@ -44,6 +48,7 @@ public class AllTests extends TestSuite{
 //        suite.addTest(CalendarOutputterTest.suite());
 
         // model tests
+        suite.addTestSuite(AddressListTest.class);
         suite.addTestSuite(CalendarTest.class);
         suite.addTestSuite(DateTest.class);
         suite.addTestSuite(DateTimeTest.class);
@@ -53,6 +58,7 @@ public class AllTests extends TestSuite{
         suite.addTestSuite(PeriodListTest.class);
         suite.addTestSuite(PeriodTest.class);
         suite.addTestSuite(RecurTest.class);
+        suite.addTestSuite(ResourceListTest.class);
         suite.addTestSuite(TimeZoneTest.class);
         suite.addTestSuite(WeekDayTest.class);
 
@@ -64,6 +70,8 @@ public class AllTests extends TestSuite{
 
         // parameter tests
         suite.addTestSuite(AltRepTest.class);
+        suite.addTestSuite(CuTypeTest.class);
+        suite.addTestSuite(TzIdTest.class);
 
         // property tests
         suite.addTestSuite(AttachTest.class);
