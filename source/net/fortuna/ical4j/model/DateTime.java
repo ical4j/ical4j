@@ -39,6 +39,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
 /**
@@ -75,7 +76,7 @@ public class DateTime extends Date {
      * Default constructor.
      */
     public DateTime() {
-        super(PRECISION_SECOND);
+        super(Dates.PRECISION_SECOND);
         this.time = new Time(System.currentTimeMillis(), getFormat().getTimeZone());
     }
     
@@ -91,7 +92,7 @@ public class DateTime extends Date {
      * @param time
      */
     public DateTime(final long time) {
-        super(time, PRECISION_SECOND);
+        super(time, Dates.PRECISION_SECOND);
         this.time = new Time(time, getFormat().getTimeZone());
     }
     
@@ -99,7 +100,7 @@ public class DateTime extends Date {
      * @param date
      */
     public DateTime(final java.util.Date date) {
-        super(date.getTime(), PRECISION_SECOND);
+        super(date.getTime(), Dates.PRECISION_SECOND);
         this.time = new Time(date.getTime(), getFormat().getTimeZone());
         // copy timezone information if applicable..
         if (date instanceof DateTime) {
@@ -197,8 +198,8 @@ public class DateTime extends Date {
         else {
             // use GMT timezone to avoid daylight savings rules affecting floating
             // time values..
-//            getFormat().setTimeZone(TimeZone.getDefault());
-            getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+            getFormat().setTimeZone(TimeZone.getDefault());
+//            getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
         }
         time = new Time(time, getFormat().getTimeZone());
     }

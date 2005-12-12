@@ -63,6 +63,10 @@ public final class Dates {
     
     public static final int DAYS_PER_WEEK = 7;
 
+    public static final int PRECISION_SECOND = 0;
+
+    public static final int PRECISION_DAY = 1;
+
     /**
      * Constructor made private to prevent instantiation.
      */
@@ -186,6 +190,29 @@ public final class Dates {
                 return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.UTC_ID));
             }
         }
-        return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        return Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
+    }
+    
+    /**
+     * Rounds a time value to remove any precision smaller than specified.
+     * @param time the time value to round
+     * @return a round time value
+     */
+    public static final long round(final long time, final int precision) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time);
+        if (precision == PRECISION_DAY) {
+//            return (long) Math.floor(time / (double) Dates.MILLIS_PER_DAY) * Dates.MILLIS_PER_DAY;
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.clear(Calendar.MINUTE);
+            cal.clear(Calendar.SECOND);
+            cal.clear(Calendar.MILLISECOND);
+        }
+        else if (precision == PRECISION_SECOND) {
+//            return (long) Math.floor(time / (double) Dates.MILLIS_PER_SECOND) * Dates.MILLIS_PER_SECOND;
+            cal.clear(Calendar.MILLISECOND);
+        }
+        // unrecognised precision..
+        return cal.getTimeInMillis();
     }
 }

@@ -37,10 +37,10 @@ package net.fortuna.ical4j.model;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import net.fortuna.ical4j.util.Dates;
-import net.fortuna.ical4j.util.TimeZones;
 
 /**
  * Base class for date and time representations as defined
@@ -50,10 +50,6 @@ import net.fortuna.ical4j.util.TimeZones;
  * @author Ben Fortuna
  */
 public abstract class Iso8601 extends Date {
-
-    protected static final int PRECISION_SECOND = 0;
-
-    protected static final int PRECISION_DAY = 1;
     
     private DateFormat format;
     
@@ -64,11 +60,11 @@ public abstract class Iso8601 extends Date {
      * @param pattern
      */
     public Iso8601(final long time, final String pattern, final int precision) {
-        super(round(time, precision));
+        super(Dates.round(time, precision));
         format = new SimpleDateFormat(pattern);
         // use GMT timezone to avoid daylight savings rules affecting floating
         // time values..
-        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+//        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
         this.precision = precision;
     }
     
@@ -101,26 +97,10 @@ public abstract class Iso8601 extends Date {
         return format;
     }
     
-    /**
-     * Rounds a time value to remove any precision smaller than specified.
-     * @param time the time value to round
-     * @return a round time value
-     */
-    protected static final long round(final long time, final int precision) {
-        if (precision == PRECISION_DAY) {
-            return (long) Math.floor(time / (double) Dates.MILLIS_PER_DAY) * Dates.MILLIS_PER_DAY;
-        }
-        else if (precision == PRECISION_SECOND) {
-            return (long) Math.floor(time / (double) Dates.MILLIS_PER_SECOND) * Dates.MILLIS_PER_SECOND;
-        }
-        // unrecognised precision..
-        return time;
-    }
-    
     /* (non-Javadoc)
      * @see java.util.Date#setTime(long)
      */
     public void setTime(final long time) {
-        super.setTime(round(time, precision));
+        super.setTime(Dates.round(time, precision));
     }
 }
