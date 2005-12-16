@@ -43,6 +43,7 @@ import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
@@ -189,5 +190,13 @@ public class VJournal extends Component {
         if (recurse) {
             validateProperties();
         }
+    }
+    
+    /**
+     * Returns the UID property of this component if available.
+     * @return a Uid instance, or null if no UID property exists
+     */
+    public final Uid getUid() {
+        return (Uid) getProperties().getProperty(Property.UID);
     }
 }

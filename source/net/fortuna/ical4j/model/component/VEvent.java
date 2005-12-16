@@ -59,6 +59,7 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Transp;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
 
@@ -555,5 +556,13 @@ public class VEvent extends Component {
                     (Value) dtStart.getParameters().getParameter(Parameter.VALUE)));
         }
         return dtEnd;
+    }
+    
+    /**
+     * Returns the UID property of this component if available.
+     * @return a Uid instance, or null if no UID property exists
+     */
+    public final Uid getUid() {
+        return (Uid) getProperties().getProperty(Property.UID);
     }
 }
