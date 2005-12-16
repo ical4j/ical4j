@@ -8,7 +8,10 @@
 <project name="iCal4j" basedir="." default="package">
 
 	<!-- Project details -->
-    <property name="project.version" value="0.9.17"/>
+    <property name="project.version" value="0.9.18"/>
+	
+	<!-- Load overrides for library paths -->
+	<property file="build.properties"/>
 	
 	<!-- Project paths -->
     <property name="source.dir" location="source"/>
@@ -21,9 +24,6 @@
     <property name="dist.dir" location=".."/>
     <property name="dist.name" value="ical4j"/>
     <property name="dist.maven.file" value="${dist.name}-${project.version}-bundle.jar"/>
-	
-	<!-- Load overrides for library paths -->
-	<property file="build.properties"/>
 
 	<!-- Library paths -->
     <property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/"/>

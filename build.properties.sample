@@ -2,5 +2,8 @@
 ## this file to "build.properties" and modify accordingly..
 project.classpath=C:/libs/commons-logging-1.0.3/commons-logging.jar;${output.dir}
 
+## Override JAR filename..
+package.file=ical4j-${project.version}.jar
+
 ## directory that contains emma.jar and emma_ant.jar
 emma.dir=C:/Tools/emma-2.0.5312/lib
