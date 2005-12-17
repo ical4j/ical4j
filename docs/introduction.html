@@ -185,10 +185,14 @@ END:VEVENT
 			a timezone will match those used by a Java timezone.
 		</li>
 		<li>
-			The default timezone for iCal4j is the Java timezone represented
-			by the <em>Etc/GMT</em> identifier. This timezone is used where
-			no iCal4j timezone is specified, and the relevant iCal4j object
-			is not set as being in <em>UTC</em> time.
+			The default timezone for iCal4j is the same as the default Java timezone.
+			This timezone is used where no iCal4j timezone is specified (i.e. floating time),
+			and the relevant iCal4j object is not set as being in <em>UTC</em> time.
+			<em>
+			  Note that it is not recommended to use floating time values in externalisable
+			  calendars (i.e. calendars you want to import into another program), as it
+			  may lead to inconsistent handling of timezone information.
+			</em>
 		</li>
 		<li>
 			iCal4j timezones are accessible via the applicable

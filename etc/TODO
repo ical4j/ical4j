@@ -25,11 +25,7 @@ To-do List:
  	  * possibly automate VTimeZone inclusion by examining all date/date-time-based properties
  	  for timezone-specific instances.
  
- - Improve performance of timezone registry by sharing iCal4j timezones across all
- registry instances
- 
  - Provide the option for automatically adding referenced VTimeZones to calendar
-
   
  ===========
   RFC 2446:
