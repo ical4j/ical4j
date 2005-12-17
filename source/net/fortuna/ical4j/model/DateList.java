@@ -54,6 +54,8 @@ public class DateList extends ArrayList implements Serializable {
     private Value type;
 
     private TimeZone timeZone;
+    
+    private boolean utc;
 
     /**
      * Default constructor.
@@ -174,7 +176,12 @@ public class DateList extends ArrayList implements Serializable {
      */
     public final boolean add(final Date date) {
         if (date instanceof DateTime) {
-            ((DateTime) date).setTimeZone(getTimeZone());
+            if (isUtc()) {
+                ((DateTime) date).setUtc(true);
+            }
+            else {
+                ((DateTime) date).setTimeZone(getTimeZone());
+            }
         }
         else if (!Value.DATE.equals(getType())) {
             DateTime dateTime = new DateTime(date);
@@ -225,7 +232,7 @@ public class DateList extends ArrayList implements Serializable {
      * @return Returns true if in UTC format, otherwise false.
      */
     public final boolean isUtc() {
-        return TimeZones.isUtc(getTimeZone());
+        return utc;
     }
 
     /**
@@ -241,6 +248,7 @@ public class DateList extends ArrayList implements Serializable {
             }
         }
         this.timeZone = null;
+        this.utc = true;
     }
     
     /**
@@ -256,6 +264,7 @@ public class DateList extends ArrayList implements Serializable {
             }
         }
         this.timeZone = timeZone;
+        this.utc = false;
     }
 
     /**
