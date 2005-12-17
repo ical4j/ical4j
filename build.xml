@@ -123,7 +123,7 @@
 	<!-- Source distribution -->
     <target name="dist-src" depends="clean-compile, clean-package, javadoc">
         <zip zipfile="${dist.dir}/${dist.name}-${project.version}-src.zip">
-            <zipfileset dir="." prefix="${dist.name}-${project.version}"/>
+            <zipfileset dir="." prefix="${dist.name}-${project.version}" excludes="coverage/**/*"/>
         </zip>
     </target>
 
