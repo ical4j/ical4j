@@ -445,8 +445,8 @@ public class VEvent extends Component {
         // adjust range start back by duration to allow for recurrences that
         // start before the range but finish inside..
 //        FIXME: See bug #1325558..
-//        Date adjustedRangeStart = new DateTime(rangeStart);
-//        adjustedRangeStart.setTime(rDuration.negate().getTime(rangeStart).getTime());
+        Date adjustedRangeStart = new DateTime(rangeStart);
+        adjustedRangeStart.setTime(rDuration.negate().getTime(rangeStart).getTime());
         // if start/end specified as anniversary-type (i.e. uses DATE values
         // rather than DATE-TIME), return empty list..
         if (Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE))) {
@@ -471,8 +471,8 @@ public class VEvent extends Component {
         PropertyList rRules = getProperties().getProperties(Property.RRULE);
         for (Iterator i = rRules.iterator(); i.hasNext();) {
             RRule rrule = (RRule) i.next();
-//            DateList startDates = rrule.getRecur().getDates(start.getDate(), adjustedRangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
-            DateList startDates = rrule.getRecur().getDates(start.getDate(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
+            DateList startDates = rrule.getRecur().getDates(start.getDate(), adjustedRangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
+//            DateList startDates = rrule.getRecur().getDates(start.getDate(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
             for (int j = 0; j < startDates.size(); j++) {
                 Date startDate = (Date) startDates.get(j);
                 periods.add(new Period(new DateTime(startDate), rDuration));
@@ -554,6 +554,9 @@ public class VEvent extends Component {
                       (Duration) getProperties().getProperty(Property.DURATION);
             dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration().getTime(dtStart.getDate()),
                     (Value) dtStart.getParameters().getParameter(Parameter.VALUE)));
+            if (dtStart.isUtc()) {
+                dtEnd.setUtc(true);
+            }
         }
         return dtEnd;
     }
