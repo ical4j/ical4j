@@ -481,6 +481,9 @@ public class Recur implements Serializable {
     public final DateList getDates(final Date seed, final Date periodStart,
             final Date periodEnd, final Value value) {
         DateList dates = new DateList(value);
+        if ((seed instanceof DateTime) && ((DateTime) seed).isUtc()) {
+            dates.setUtc(true);
+        }
         Calendar cal = Dates.getCalendarInstance(seed);
         cal.setTime(seed);
         int invalidCandidateCount = 0;
