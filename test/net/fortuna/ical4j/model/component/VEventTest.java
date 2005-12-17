@@ -287,10 +287,10 @@ public class VEventTest extends ComponentTest {
         dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
 
         Calendar expectedCal = Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
-        expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
+        expectedCal.set(2005, Calendar.APRIL, 1, 9, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
         Date expectedStartOfFirstRange = new DateTime(expectedCal.getTime().getTime());
-        expectedCal.set(2005, Calendar.APRIL, 4, 17, 0, 0);
+        expectedCal.set(2005, Calendar.APRIL, 1, 17, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
         Date expectedEndOfFirstRange = new DateTime(expectedCal.getTime().getTime());
         assertNotNull(weeklyPeriods);
