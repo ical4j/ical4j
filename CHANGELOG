@@ -2,6 +2,29 @@
  iCal4j - Changes
 ==================
 
+
+0.9.18
+
+ - Improved support for experimental components
+ 
+ - Added shared cache of default timezones for TimeZoneRegistryImpl
+
+ - Applied fixes for the following bugs: #1353378, #1338857
+
+ - Added override build option for including version name in JAR filename
+ (see build.properties.sample)
+ 
+ - Added convenience methods for retrieving UID properties from components
+ 
+ - Updated timezone definitions to Olson 2005q
+ 
+ - Date/Time instances now use the default Java timezone where no timezone
+ information is specified (i.e. floating time).
+ 
+ - Re-instated fix for retrieving consumed time whereby events partially intersect
+ date range (affects VEvent/VFreeBusy)
+
+
 0.9.17
 
  - Added support for experimental components (XComponent)
@@ -17,8 +40,6 @@
  - Updated timezone registry for improved multi-threaded support
  
  - Added Dur.negate() convenience method
- 
- - 
 
 
 0.9.16
