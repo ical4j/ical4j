@@ -126,7 +126,7 @@ public class FoldingWriter extends FilterWriter {
 
             super.write(buffer[i]);
 
-            if (buffer[i] == '\n') {
+            if (buffer[i] == '\r' || buffer[i] == '\n') {
                 lineLength = 0;
             }
             else {
