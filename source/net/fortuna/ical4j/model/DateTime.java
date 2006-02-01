@@ -56,17 +56,17 @@ public class DateTime extends Date {
     private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss'Z'";
     
     /**
+     * Used for parsing times in a UTC date-time representation.
+     */
+    private static final DateFormat UTC_FORMAT = new SimpleDateFormat(UTC_PATTERN);
+    static {
+        UTC_FORMAT.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+    }
+    
+    /**
      * Used for parsing times in a local date-time representation.
      */
     private DateFormat defaultFormat = new SimpleDateFormat(DEFAULT_PATTERN);
-    
-    /**
-     * Used for parsing times in a UTC date-time representation.
-     */
-    private DateFormat utcFormat = new SimpleDateFormat(UTC_PATTERN);
-    {
-        utcFormat.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
-    }
     
     private Time time;
     
@@ -123,7 +123,9 @@ public class DateTime extends Date {
         this();
         long time = 0;
         try {
-            time = utcFormat.parse(value).getTime();
+            synchronized (UTC_FORMAT) {
+                time = UTC_FORMAT.parse(value).getTime();
+            }
             setUtc(true);
         }
         catch (ParseException pe) {
@@ -141,7 +143,9 @@ public class DateTime extends Date {
     public DateTime(final String value, final TimeZone timezone) throws ParseException {
         this();
         try {
-            setTime(utcFormat.parse(value).getTime());
+            synchronized (UTC_FORMAT) {
+                setTime(UTC_FORMAT.parse(value).getTime());
+            }
             setUtc(true);
         }
         catch (ParseException pe) {
