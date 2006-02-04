@@ -64,7 +64,7 @@ public class AttendeeRule extends ComponentRule {
      * @see net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)
      */
     public boolean match(final Component component) {
-        PropertyList attendees = component.getProperties().getProperties(Property.ATTENDEE);
+        PropertyList attendees = component.getProperties(Property.ATTENDEE);
         for (Iterator i = attendees.iterator(); i.hasNext();) {
             Attendee a = (Attendee) i.next();
 //            if (attendee.equals(a)) {

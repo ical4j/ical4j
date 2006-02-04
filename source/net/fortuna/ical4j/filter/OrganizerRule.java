@@ -61,7 +61,7 @@ public class OrganizerRule extends ComponentRule {
      * @see net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)
      */
     public boolean match(final Component component) {
-        Organizer org = (Organizer) component.getProperties().getProperty(Property.ORGANIZER);
+        Organizer org = (Organizer) component.getProperty(Property.ORGANIZER);
         return (org != null && organiser.getValue().equals(org.getValue()));
     }
 

@@ -461,6 +461,16 @@ public class Recur implements Serializable {
     public final DateList getDates(final Date periodStart, final Date periodEnd, final Value value) {
         return getDates(periodStart, periodStart, periodEnd, value);
     }
+    
+    /**
+     * Convenience method for retrieving recurrences in a specified period.
+     * @param period the period of returned recurrence dates
+     * @param value type of dates to generate
+     * @return a list of dates
+     */
+    public final DateList getDates(final Date seed, final Period period, final Value value) {
+        return getDates(seed, period.getStart(), period.getEnd(), value);
+    }
 
     /**
      * Returns a list of start dates in the specified period represented

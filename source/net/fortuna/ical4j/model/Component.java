@@ -133,6 +133,26 @@ public abstract class Component implements Serializable {
     public final PropertyList getProperties() {
         return properties;
     }
+    
+    /**
+     * Convenience method for retrieving a list of named properties.
+     * @param name name of properties to retrieve
+     * @return a property list containing only properties with the specified
+     * name
+     */
+    public final PropertyList getProperties(final String name) {
+        return getProperties().getProperties(name);
+    }
+    
+    /**
+     * Convenience method for retrieving a named property.
+     * @param name name of the property to retrieve
+     * @return the first matching property in the property list with the specified
+     * name
+     */
+    public final Property getProperty(final String name) {
+        return getProperties().getProperty(name);
+    }
 
     /**
      * Perform validation on a component and its properties.

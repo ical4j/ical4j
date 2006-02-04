@@ -259,6 +259,26 @@ public abstract class Property extends Content {
     }
     
     /**
+     * Convenience method for retrieving a list of named parameters.
+     * @param name name of parameters to retrieve
+     * @return a parameter list containing only parameters with the specified
+     * name
+     */
+    public final ParameterList getParameters(final String name) {
+        return getParameters().getParameters(name);
+    }
+    
+    /**
+     * Convenience method for retrieving a single parameter.
+     * @param name name of the parameter to retrieve
+     * @return the first parameter from the parameter list with the specified
+     * name
+     */
+    public final Parameter getParameter(final String name) {
+        return getParameters().getParameter(name);
+    }
+    
+    /**
      * Sets the current value of the property.
      * @param aValue a string representation of the property
      * value

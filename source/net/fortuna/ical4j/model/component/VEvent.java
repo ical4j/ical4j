@@ -453,12 +453,12 @@ public class VEvent extends Component {
             return periods;
         }
         // recurrence dates..
-        PropertyList rDates = getProperties().getProperties(Property.RDATE);
+        PropertyList rDates = getProperties(Property.RDATE);
         for (Iterator i = rDates.iterator(); i.hasNext();) {
             RDate rdate = (RDate) i.next();
             // only period-based rdates are applicable..
             // FIXME: ^^^ not true - date-time/date also applicable..
-            if (Value.PERIOD.equals(rdate.getParameters().getParameter(Parameter.VALUE))) {
+            if (Value.PERIOD.equals(rdate.getParameter(Parameter.VALUE))) {
                 for (Iterator j = rdate.getPeriods().iterator(); j.hasNext();) {
                     Period period = (Period) j.next();
                     if (period.getStart().before(rangeEnd) && period.getEnd().after(rangeStart)) {
@@ -468,7 +468,7 @@ public class VEvent extends Component {
             }
         }
         // recurrence rules..
-        PropertyList rRules = getProperties().getProperties(Property.RRULE);
+        PropertyList rRules = getProperties(Property.RRULE);
         for (Iterator i = rRules.iterator(); i.hasNext();) {
             RRule rrule = (RRule) i.next();
             DateList startDates = rrule.getRecur().getDates(start.getDate(), adjustedRangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
