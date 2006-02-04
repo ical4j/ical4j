@@ -193,7 +193,7 @@ public class RecurrenceId extends DateProperty {
         ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
+        Parameter valueParam = getParameter(Parameter.VALUE);
 
         if (valueParam != null
                 && !Value.DATE_TIME.equals(valueParam)

@@ -211,8 +211,8 @@ public class Trigger extends UtcProperty {
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
-        Parameter relParam = getParameters().getParameter(Parameter.RELATED);
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
+        Parameter relParam = getParameter(Parameter.RELATED);
+        Parameter valueParam = getParameter(Parameter.VALUE);
         if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
             ParameterValidator.getInstance().assertOneOrLess(Parameter.RELATED,
                     getParameters());

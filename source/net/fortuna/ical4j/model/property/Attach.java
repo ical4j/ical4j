@@ -138,8 +138,8 @@ public class Attach extends Property {
     public void setValue(final String aValue) throws IOException, URISyntaxException {
         // determine if ATTACH is a URI or an embedded
         // binary..
-        if (Encoding.BASE64.equals(getParameters().getParameter(Parameter.ENCODING))
-                && Value.BINARY.equals(getParameters().getParameter(Parameter.VALUE))) {
+        if (Encoding.BASE64.equals(getParameter(Parameter.ENCODING))
+                && Value.BINARY.equals(getParameter(Parameter.VALUE))) {
             /*
             ByteArrayOutputStream bout = new ByteArrayOutputStream(aValue.length());
             OutputStreamWriter writer = new OutputStreamWriter(bout);

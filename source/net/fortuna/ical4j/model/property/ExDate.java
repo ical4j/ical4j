@@ -106,7 +106,7 @@ public class ExDate extends DateListProperty {
         ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
+        Parameter valueParam = getParameter(Parameter.VALUE);
 
         if (valueParam != null
                 && !Value.DATE_TIME.equals(valueParam)

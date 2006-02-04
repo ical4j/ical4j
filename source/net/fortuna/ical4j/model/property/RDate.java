@@ -214,7 +214,7 @@ public class RDate extends DateListProperty {
         ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
+        Parameter valueParam = getParameter(Parameter.VALUE);
 
         if (valueParam != null
                 && !Value.DATE_TIME.equals(valueParam)
@@ -244,7 +244,7 @@ public class RDate extends DateListProperty {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
-        if (Value.PERIOD.equals(getParameters().getParameter(Parameter.VALUE))) {
+        if (Value.PERIOD.equals(getParameter(Parameter.VALUE))) {
             periods = new PeriodList(aValue);
         }
         else {

@@ -74,7 +74,7 @@ public class TzIdTest extends TestCase {
             Component c = (Component) i.next();
             for (Iterator j = c.getProperties().iterator(); j.hasNext();) {
                 Property p = (Property) j.next();
-                TzId tzId = (TzId) p.getParameters().getParameter(Parameter.TZID);
+                TzId tzId = (TzId) p.getParameter(Parameter.TZID);
                 if (tzId != null) {
                     assertNotNull(registry.getTimeZone(tzId.getValue()));
                 }

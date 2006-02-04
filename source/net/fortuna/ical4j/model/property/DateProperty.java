@@ -103,7 +103,7 @@ public abstract class DateProperty extends Property {
      */
     public void setValue(final String value) throws ParseException {
         // value can be either a date-time or a date..
-        if (Value.DATE.equals(getParameters().getParameter(Parameter.VALUE))) {
+        if (Value.DATE.equals(getParameter(Parameter.VALUE))) {
             this.date = new Date(value);
         }
         else {
@@ -135,7 +135,7 @@ public abstract class DateProperty extends Property {
             if (getDate() != null) {
                 ((DateTime) getDate()).setTimeZone(timezone);
             }
-            getParameters().remove(getParameters().getParameter(Parameter.TZID));
+            getParameters().remove(getParameter(Parameter.TZID));
             TzId tzId = new TzId(timezone.getID());
             getParameters().add(tzId);
         }
@@ -160,7 +160,7 @@ public abstract class DateProperty extends Property {
         if (getDate() != null) {
             ((DateTime) getDate()).setUtc(utc);
         }
-        getParameters().remove(getParameters().getParameter(Parameter.TZID));
+        getParameters().remove(getParameter(Parameter.TZID));
     }
     
     /**
@@ -178,7 +178,7 @@ public abstract class DateProperty extends Property {
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public void validate() throws ValidationException {
-        Value value = (Value) getParameters().getParameter(Parameter.VALUE);
+        Value value = (Value) getParameter(Parameter.VALUE);
         if (value != null && !Value.DATE.equals(value) && !Value.DATE_TIME.equals(value)) {
             throw new ValidationException("Invalid VALUE parameter [" + value + "]");
         }
@@ -189,7 +189,7 @@ public abstract class DateProperty extends Property {
         if (getDate() instanceof DateTime) {
             DateTime dateTime = (DateTime) date;
             // ensure tzid matches date-time timezone..
-            Parameter tzId = getParameters().getParameter(Parameter.TZID);
+            Parameter tzId = getParameter(Parameter.TZID);
             if (dateTime.getTimeZone() != null
                     && (tzId == null || !tzId.getValue().equals(dateTime.getTimeZone().getID()))) {
                 throw new ValidationException("TZID parameter [" + tzId + "] does not match the timezone [" + dateTime.getTimeZone().getID() + "]");

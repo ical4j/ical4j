@@ -186,7 +186,7 @@ public class DtEnd extends DateProperty {
         ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
-        Parameter valueParam = getParameters().getParameter(Parameter.VALUE);
+        Parameter valueParam = getParameter(Parameter.VALUE);
 
         if (valueParam == null && !(getDate() instanceof DateTime)) {
             throw new ValidationException("VALUE parameter is invalid for time instance");

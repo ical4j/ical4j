@@ -282,8 +282,7 @@ public class VFreeBusyTest extends ComponentTest {
                 Property.FREEBUSY);
         assertNotNull(fg);
         // free/busy type should be FREE..
-        assertEquals(FbType.FREE, fg.getParameters().getParameter(
-                Parameter.FBTYPE));
+        assertEquals(FbType.FREE, fg.getParameter(Parameter.FBTYPE));
         // should be only one period..
         assertEquals(1, fg.getPeriods().size());
         // period should be from the start to the end date..

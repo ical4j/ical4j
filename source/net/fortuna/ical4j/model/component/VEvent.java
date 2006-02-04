@@ -390,8 +390,8 @@ public class VEvent extends Component {
             DtStart start = (DtStart) getProperties().getProperty(Property.DTSTART);
             DtEnd end = (DtEnd) getProperties().getProperty(Property.DTEND);
             if (start != null) {
-                Parameter value = start.getParameters().getParameter(Parameter.VALUE);
-                if (value != null && !value.equals(end.getParameters().getParameter(Parameter.VALUE))) {
+                Parameter value = start.getParameter(Parameter.VALUE);
+                if (value != null && !value.equals(end.getParameter(Parameter.VALUE))) {
                     throw new ValidationException("Property ["
                                 + Property.DTEND + "] must have the same ["
                                 + Parameter.VALUE + "] as [" + Property.DTSTART + "]");
@@ -449,7 +449,7 @@ public class VEvent extends Component {
         adjustedRangeStart.setTime(rDuration.negate().getTime(rangeStart).getTime());
         // if start/end specified as anniversary-type (i.e. uses DATE values
         // rather than DATE-TIME), return empty list..
-        if (Value.DATE.equals(start.getParameters().getParameter(Parameter.VALUE))) {
+        if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
             return periods;
         }
         // recurrence dates..
@@ -471,7 +471,7 @@ public class VEvent extends Component {
         PropertyList rRules = getProperties(Property.RRULE);
         for (Iterator i = rRules.iterator(); i.hasNext();) {
             RRule rrule = (RRule) i.next();
-            DateList startDates = rrule.getRecur().getDates(start.getDate(), adjustedRangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
+            DateList startDates = rrule.getRecur().getDates(start.getDate(), adjustedRangeStart, rangeEnd, (Value) start.getParameter(Parameter.VALUE));
 //            DateList startDates = rrule.getRecur().getDates(start.getDate(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
             for (int j = 0; j < startDates.size(); j++) {
                 Date startDate = (Date) startDates.get(j);
@@ -498,7 +498,7 @@ public class VEvent extends Component {
         for (Iterator i = exRules.iterator(); i.hasNext();) {
             ExRule exrule = (ExRule) i.next();
 //            DateList startDates = exrule.getRecur().getDates(start.getDate(), adjustedRangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
-            DateList startDates = exrule.getRecur().getDates(start.getDate(), rangeStart, rangeEnd, (Value) start.getParameters().getParameter(Parameter.VALUE));
+            DateList startDates = exrule.getRecur().getDates(start.getDate(), rangeStart, rangeEnd, (Value) start.getParameter(Parameter.VALUE));
             for (Iterator j = startDates.iterator(); j.hasNext();) {
                 Date startDate = (Date) j.next();
                 exPeriods.add(new Period(new DateTime(startDate), rDuration));
@@ -553,7 +553,7 @@ public class VEvent extends Component {
             Duration vEventDuration =
                       (Duration) getProperties().getProperty(Property.DURATION);
             dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration().getTime(dtStart.getDate()),
-                    (Value) dtStart.getParameters().getParameter(Parameter.VALUE)));
+                    (Value) dtStart.getParameter(Parameter.VALUE)));
             if (dtStart.isUtc()) {
                 dtEnd.setUtc(true);
             }

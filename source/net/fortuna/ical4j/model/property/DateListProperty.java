@@ -101,7 +101,7 @@ public abstract class DateListProperty extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) throws ParseException {
-        dates = new DateList(aValue, (Value) getParameters().getParameter(Parameter.VALUE), timezone);
+        dates = new DateList(aValue, (Value) getParameter(Parameter.VALUE), timezone);
     }
 
     /* (non-Javadoc)
@@ -122,7 +122,7 @@ public abstract class DateListProperty extends Property {
                 throw new UnsupportedOperationException("TimeZone is not applicable to current value");
             }
             dates.setTimeZone(timezone);
-            getParameters().remove(getParameters().getParameter(Parameter.TZID));
+            getParameters().remove(getParameter(Parameter.TZID));
             TzId tzId = new TzId(timezone.getID());
             getParameters().add(tzId);
         }
@@ -145,6 +145,6 @@ public abstract class DateListProperty extends Property {
             throw new UnsupportedOperationException("TimeZone is not applicable to current value");
         }
         dates.setUtc(utc);
-        getParameters().remove(getParameters().getParameter(Parameter.TZID));
+        getParameters().remove(getParameter(Parameter.TZID));
     }
 }
