@@ -40,7 +40,7 @@
  iCal4j now has the capability to "relax" its parsing rules to enable parsing of
  *.ics files that don't properly conform to the iCalendar specification (RFC2445)
  
- - You can relax iCal4j's parsing rules by specifying the following system property:
+ - You can relax iCal4j's unfolding rules by specifying the following system property:
  
     ical4j.unfolding.relaxed=true
  
@@ -70,8 +70,20 @@
  correctly identify LF as a newline on Windows, and CRLF as a newline on UNIX/Linux. The
  API documentation for Java 1.5 says that it does do this, so if you still see problems
  with parsing it could be a bug in the Java implementation.
+ 
+ 
+ - You may also relax the parsing rules of iCal4j by setting the following system property:
+ 
+     ical4j.parsing.relaxed=true
+ 
+ This property is intended as a general relaxation of parsing rules to allow for parsing
+ otherwise invalid calendar files. Initially enabling this property will allow for the
+ creation of properties and components with illegal names (e.g. Mozilla Calendar's "X"
+ property). Note that although this will allow for parsing calendars with illegal names,
+ validation will still identify such names as an error in the calendar model.
 
- Microsoft Outlook also appears to provide quoted TZID parameter values, as follows:
+
+ - Microsoft Outlook also appears to provide quoted TZID parameter values, as follows:
  
    DTSTART;TZID="Pacific Time (US & Canada),Tijuana":20041011T223000
  
@@ -101,13 +113,11 @@
  parsed a list of VTimeZone definitions contained in the calendar is constructed.
  This list may then be queried whenever a VTimeZone definition is required.
  
- The second approach is to rely on a central repository of VTimeZone definitions.
- This repository is constructed lazily by searching the classpath for a VTimeZone
- definition matching the desired TzId. If a definition is not found in the classpath,
- iCal4j can construct a crude definition from a Java timezone object as needed. This
- approach is required when constructing new iCalendar files, and as such you should
- include the required VTimeZone definitions in your classpath (see the libical project
- for an extensive list of timezone definitions).
+ The second approach is to rely on a registry of VTimeZone definitions. iCal4j
+ includes a default registry of timezone definitions (derived from the Olson timezone
+ database - a defacto standard for timezone definitions), or you may also provide your
+ own registry implementation from which to retreieve timezones. This approach is
+ required when constructing new iCalendar files.
  
  Note that the intention of the iCal4j model is not to provide continuous validation
  feedback for every change in the model. For this reason you are free to change
