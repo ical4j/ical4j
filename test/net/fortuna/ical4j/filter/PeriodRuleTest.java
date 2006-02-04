@@ -36,6 +36,7 @@
 package net.fortuna.ical4j.filter;
 
 import java.io.FileReader;
+import java.util.Iterator;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -54,7 +55,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class PeriodRuleTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(AttendeeRuleTest.class);
+    private static final Log LOG = LogFactory.getLog(PeriodRuleTest.class);
     
     private Calendar calendar;
     
@@ -71,6 +72,7 @@ public class PeriodRuleTest extends TestCase {
      */
     public void testFilter() {
         java.util.Calendar cal = java.util.Calendar.getInstance();
+        // April 1, 2004
         cal.set(2004, 3, 1);
         // period of two weeks..
         Period period = new Period(new DateTime(cal.getTime()), new Dur(2));
@@ -79,7 +81,11 @@ public class PeriodRuleTest extends TestCase {
         ComponentList filtered = (ComponentList) filter.filter(calendar.getComponents());
         assertTrue(!filtered.isEmpty());
         
+        if (LOG.isDebugEnabled()) {
+            for (Iterator i = filtered.iterator(); i.hasNext();) {
+                LOG.debug(i.next());
+            }
+        }
         LOG.info(filtered.size() + " matching component(s).");
     }
-
 }
