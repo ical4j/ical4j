@@ -59,7 +59,7 @@ public class ExDateTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(new FileInputStream("etc/samples/valid/EXDATE.ics"));
         
-        Component event = calendar.getComponents().getComponent(Component.VEVENT);
+        Component event = calendar.getComponent(Component.VEVENT);
         PropertyList exdates = event.getProperties(Property.EXDATE);
         for (Iterator i = exdates.iterator(); i.hasNext();) {
             ExDate exdate = (ExDate) i.next();

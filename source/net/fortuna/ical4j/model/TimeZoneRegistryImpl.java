@@ -133,8 +133,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         if (resource != null) {
             CalendarBuilder builder = new CalendarBuilder();
             Calendar calendar = builder.build(resource.openStream());
-            return (VTimeZone) calendar.getComponents().getComponent(
-                    Component.VTIMEZONE);
+            return (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
         }
         return null;
     }
