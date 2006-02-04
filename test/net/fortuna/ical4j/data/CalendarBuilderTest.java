@@ -67,19 +67,19 @@ public class CalendarBuilderTest extends TestCase {
         try {
             calendar = builder.build(fin);
             assertNotNull("File [" + filename + "] invalid", calendar);
-
             try {
                 calendar.validate();
+                assertTrue("File [" + filename + "] valid", valid);
             } catch (ValidationException e) {
-                log.warn("Calendar file [" + filename + "] is valid.", e);
-                assertFalse(valid);
+                log.warn("Calendar file [" + filename + "] is invalid.", e);
+                assertFalse("File [" + filename + "] invalid", valid);
             }
         } catch (IOException e) {
             log.warn("File: " + filename, e);
-            assertFalse(valid);
+            assertFalse("File [" + filename + "] invalid", valid);
         } catch (ParserException e) {
             log.warn("File: " + filename, e);
-            assertFalse(valid);
+            assertFalse("File [" + filename + "] invalid", valid);
         }
 
         if (log.isInfoEnabled()) {
