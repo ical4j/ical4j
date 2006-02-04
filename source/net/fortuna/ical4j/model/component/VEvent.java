@@ -356,7 +356,7 @@ public class VEvent extends Component {
         PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID,
                 getProperties());
 
-        Status status = (Status) getProperties().getProperty(Property.STATUS);
+        Status status = (Status) getProperty(Property.STATUS);
         if (status != null
                 && !Status.VEVENT_TENTATIVE.equals(status)
                 && !Status.VEVENT_CONFIRMED.equals(status)
@@ -371,8 +371,8 @@ public class VEvent extends Component {
          *
          * dtend / duration /
          */
-        if (getProperties().getProperty(Property.DTEND) != null) {
-            if (getProperties().getProperty(Property.DURATION) != null) {
+        if (getProperty(Property.DTEND) != null) {
+            if (getProperty(Property.DURATION) != null) {
                 throw new ValidationException(
                     "Properties [" + Property.DTEND + "," + Property.DURATION
                             + "] may not occur in the same VEVENT");
@@ -387,8 +387,8 @@ public class VEvent extends Component {
              *  "VEVENT" can span more than one date (i.e, "DTEND" property value is
              *  set to a calendar date after the "DTSTART" property value).
              */
-            DtStart start = (DtStart) getProperties().getProperty(Property.DTSTART);
-            DtEnd end = (DtEnd) getProperties().getProperty(Property.DTEND);
+            DtStart start = (DtStart) getProperty(Property.DTSTART);
+            DtEnd end = (DtEnd) getProperty(Property.DTEND);
             if (start != null) {
                 Parameter value = start.getParameter(Parameter.VALUE);
                 if (value != null && !value.equals(end.getParameter(Parameter.VALUE))) {
@@ -423,12 +423,12 @@ public class VEvent extends Component {
     public final PeriodList getConsumedTime(final Date rangeStart, final Date rangeEnd) {
         PeriodList periods = new PeriodList();
         // if component is transparent return empty list..
-        if (Transp.TRANSPARENT.equals(getProperties().getProperty(Property.TRANSP))) {
+        if (Transp.TRANSPARENT.equals(getProperty(Property.TRANSP))) {
             return periods;
         }
-        DtStart start = (DtStart) getProperties().getProperty(Property.DTSTART);
-        DtEnd end = (DtEnd) getProperties().getProperty(Property.DTEND);
-        Duration duration = (Duration) getProperties().getProperty(Property.DURATION);
+        DtStart start = (DtStart) getProperty(Property.DTSTART);
+        DtEnd end = (DtEnd) getProperty(Property.DTEND);
+        Duration duration = (Duration) getProperty(Property.DURATION);
         // if no start date specified return empty list..
         if (start == null) {
             return periods;
@@ -479,7 +479,7 @@ public class VEvent extends Component {
             }
         }
         // exception dates..
-        PropertyList exDates = getProperties().getProperties(Property.EXDATE);
+        PropertyList exDates = getProperties(Property.EXDATE);
         for (Iterator i = exDates.iterator(); i.hasNext();) {
             ExDate exDate = (ExDate) i.next();
             for (Iterator j = periods.iterator(); j.hasNext();) {
@@ -493,7 +493,7 @@ public class VEvent extends Component {
         }
         // exception rules..
         // FIXME: exception rules should be consistent with exception dates (i.e. not use periods?)..
-        PropertyList exRules = getProperties().getProperties(Property.EXRULE);
+        PropertyList exRules = getProperties(Property.EXRULE);
         PeriodList exPeriods = new PeriodList();
         for (Iterator i = exRules.iterator(); i.hasNext();) {
             ExRule exrule = (ExRule) i.next();
@@ -535,7 +535,7 @@ public class VEvent extends Component {
      *      The DtStart object representation of the start Date
      */
     public final DtStart getStartDate() {
-        return (DtStart) getProperties().getProperty(Property.DTSTART);
+        return (DtStart) getProperty(Property.DTSTART);
     }
 
     /**
@@ -546,12 +546,12 @@ public class VEvent extends Component {
      *       The end for this VEVENT.
      */
     public final DtEnd getEndDate() {
-        DtEnd dtEnd = (DtEnd) getProperties().getProperty(Property.DTEND);
+        DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
         // No DTEND?  No problem, we'll use the DURATION.
         if (dtEnd == null) {
             DtStart dtStart = getStartDate();
             Duration vEventDuration =
-                      (Duration) getProperties().getProperty(Property.DURATION);
+                      (Duration) getProperty(Property.DURATION);
             dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration().getTime(dtStart.getDate()),
                     (Value) dtStart.getParameter(Parameter.VALUE)));
             if (dtStart.isUtc()) {
@@ -566,6 +566,6 @@ public class VEvent extends Component {
      * @return a Uid instance, or null if no UID property exists
      */
     public final Uid getUid() {
-        return (Uid) getProperties().getProperty(Property.UID);
+        return (Uid) getProperty(Property.UID);
     }
 }

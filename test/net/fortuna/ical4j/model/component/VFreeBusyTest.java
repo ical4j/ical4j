@@ -82,7 +82,7 @@ public class VFreeBusyTest extends ComponentTest {
         // create timezone property..
         tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         // create tzid parameter..
-        tzParam = new TzId(tz.getProperties().getProperty(Property.TZID)
+        tzParam = new TzId(tz.getProperty(Property.TZID)
                 .getValue());
     }
 
@@ -159,7 +159,7 @@ public class VFreeBusyTest extends ComponentTest {
         // VEvent event = new VEvent(startDate, cal.getTime(), "Progress
         // Meeting");
         // add timezone information..
-        event.getProperties().getProperty(Property.DTSTART).getParameters()
+        event.getProperty(Property.DTSTART).getParameters()
                 .add(tzParam);
         components.add(event);
 
@@ -278,8 +278,7 @@ public class VFreeBusyTest extends ComponentTest {
 
         VFreeBusy freeBusy = new VFreeBusy(requestFree, components);
 
-        FreeBusy fg = (FreeBusy) freeBusy.getProperties().getProperty(
-                Property.FREEBUSY);
+        FreeBusy fg = (FreeBusy) freeBusy.getProperty(Property.FREEBUSY);
         assertNotNull(fg);
         // free/busy type should be FREE..
         assertEquals(FbType.FREE, fg.getParameter(Parameter.FBTYPE));
@@ -307,7 +306,7 @@ public class VFreeBusyTest extends ComponentTest {
 
         VFreeBusy request = new VFreeBusy(period.getStart(), period.getEnd());
         VFreeBusy busyTime = new VFreeBusy(request, list);
-        FreeBusy fg = (FreeBusy) busyTime.getProperties().getProperty(
+        FreeBusy fg = (FreeBusy) busyTime.getProperty(
                 Property.FREEBUSY);
         assertNotNull(fg);
         PeriodList periods = fg.getPeriods();

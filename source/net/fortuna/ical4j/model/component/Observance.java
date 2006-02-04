@@ -127,14 +127,14 @@ public abstract class Observance extends Component implements Comparable {
      * observance onset for the specified date
      */
     public final Date getLatestOnset(final Date date) {
-        Date onset = ((DtStart) getProperties().getProperty(Property.DTSTART)).getDate();
+        Date onset = ((DtStart) getProperty(Property.DTSTART)).getDate();
         // observance not applicable if date is before the effective date of this observance..
         if (date.before(onset)) {
             return null;
         }
         if (onsets.get(date) == null) {
             // check rdates for latest applicable onset..
-            PropertyList rdates = getProperties().getProperties(Property.RDATE);
+            PropertyList rdates = getProperties(Property.RDATE);
             for (Iterator i = rdates.iterator(); i.hasNext();) {
                 RDate rdate = (RDate) i.next();
                 for (Iterator j = rdate.getDates().iterator(); j.hasNext();) {
@@ -145,7 +145,7 @@ public abstract class Observance extends Component implements Comparable {
                 }
             }
             // check recurrence rules for latest applicable onset..
-            PropertyList rrules = getProperties().getProperties(Property.RRULE);
+            PropertyList rrules = getProperties(Property.RRULE);
             Value dateType = (date instanceof DateTime) ? Value.DATE_TIME : Value.DATE;
             for (Iterator i = rrules.iterator(); i.hasNext();) {
                 RRule rrule = (RRule) i.next();
@@ -175,8 +175,8 @@ public abstract class Observance extends Component implements Comparable {
      */
     public final int compareTo(final Observance arg0) {
         // TODO: sort by RDATE??
-        DtStart dtStart = (DtStart) getProperties().getProperty(Property.DTSTART);
-        DtStart dtStart0 = (DtStart) arg0.getProperties().getProperty(Property.DTSTART);
+        DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
+        DtStart dtStart0 = (DtStart) arg0.getProperty(Property.DTSTART);
         return dtStart.getDate().compareTo(dtStart0.getDate());
     }
 }

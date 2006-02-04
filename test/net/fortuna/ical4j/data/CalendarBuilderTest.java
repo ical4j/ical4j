@@ -91,7 +91,7 @@ public class CalendarBuilderTest extends TestCase {
                 for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
                     Component c = (Component) i.next();
 
-                    Description description = (Description) c.getProperties().getProperty(Property.DESCRIPTION);
+                    Description description = (Description) c.getProperty(Property.DESCRIPTION);
 
                     if (description != null) {
                         log.debug("Description [" + description.getValue() + "]");

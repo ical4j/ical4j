@@ -245,12 +245,12 @@ public class VAlarm extends Component {
          *
          * action / trigger /
          */
-        Property action = getProperties().getProperty(Property.ACTION);
+        Property action = getProperty(Property.ACTION);
 
         if (action == null) { throw new ValidationException("Property ["
                 + Property.ACTION + "] must be specified once"); }
 
-        if (getProperties().getProperty(Property.TRIGGER) == null) { throw new ValidationException(
+        if (getProperty(Property.TRIGGER) == null) { throw new ValidationException(
                 "Property [" + Property.TRIGGER + "] must be specified once"); }
 
         /*
@@ -264,10 +264,8 @@ public class VAlarm extends Component {
         PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT,
                 getProperties());
 
-        if ((getProperties().getProperty(Property.DURATION) == null && getProperties()
-                .getProperty(Property.REPEAT) != null)
-                || (getProperties().getProperty(Property.REPEAT) == null && getProperties()
-                        .getProperty(Property.DURATION) != null)) { throw new ValidationException(
+        if ((getProperty(Property.DURATION) == null && getProperty(Property.REPEAT) != null)
+                || (getProperty(Property.REPEAT) == null && getProperty(Property.DURATION) != null)) { throw new ValidationException(
                 "Properties [" + Property.DURATION + "," + Property.REPEAT
                         + "] must both be specified or not at all"); }
 

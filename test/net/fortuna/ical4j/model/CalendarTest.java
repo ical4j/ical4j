@@ -80,7 +80,7 @@ public class CalendarTest extends TestCase {
     public void testCalendar() throws ValidationException {
         VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         calendar.getComponents().add(tz);
-        TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
+        TzId tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
         
         // Add events, etc..
         java.util.Calendar calStart = java.util.Calendar.getInstance();
@@ -94,7 +94,7 @@ public class CalendarTest extends TestCase {
         calEnd.add(java.util.Calendar.YEAR, 1);
         
         VEvent week1UserA = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 1 - User A");
-        week1UserA.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week1UserA.getProperty(Property.DTSTART).getParameters().add(tzParam);
         
         Recur week1UserARecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week1UserARecur.setInterval(3);
@@ -110,7 +110,7 @@ public class CalendarTest extends TestCase {
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         
         VEvent week2UserB = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 2 - User B");
-        week2UserB.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week2UserB.getProperty(Property.DTSTART).getParameters().add(tzParam);
         
         Recur week2UserBRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week2UserBRecur.setInterval(3);
@@ -126,7 +126,7 @@ public class CalendarTest extends TestCase {
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         
         VEvent week3UserC = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 3 - User C");
-        week3UserC.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week3UserC.getProperty(Property.DTSTART).getParameters().add(tzParam);
         
         Recur week3UserCRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week3UserCRecur.setInterval(3);
@@ -153,7 +153,7 @@ public class CalendarTest extends TestCase {
     public void testGetEventDateRanges() throws ValidationException {
         // Add events, etc..
         VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
-        TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
+        TzId tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
 
         java.util.Calendar calStart = java.util.Calendar.getInstance();
         calStart.set(java.util.Calendar.YEAR, 2006);
@@ -168,7 +168,7 @@ public class CalendarTest extends TestCase {
         calEnd.add(java.util.Calendar.YEAR, 1);
 
         VEvent week1UserA = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 1 - User A");
-        week1UserA.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week1UserA.getProperty(Property.DTSTART).getParameters().add(tzParam);
 
         Recur week1UserARecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week1UserARecur.setInterval(3);
@@ -184,7 +184,7 @@ public class CalendarTest extends TestCase {
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
 
         VEvent week2UserB = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 2 - User B");
-        week2UserB.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week2UserB.getProperty(Property.DTSTART).getParameters().add(tzParam);
 
         Recur week2UserBRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week2UserBRecur.setInterval(3);
@@ -200,7 +200,7 @@ public class CalendarTest extends TestCase {
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
 
         VEvent week3UserC = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 3 - User C");
-        week3UserC.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week3UserC.getProperty(Property.DTSTART).getParameters().add(tzParam);
 
         Recur week3UserCRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week3UserCRecur.setInterval(3);

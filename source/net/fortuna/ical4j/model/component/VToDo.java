@@ -269,7 +269,7 @@ public class VToDo extends Component {
         PropertyValidator.getInstance().assertOneOrLess(Property.URL,
                 getProperties());
 
-        Status status = (Status) getProperties().getProperty(Property.STATUS);
+        Status status = (Status) getProperty(Property.STATUS);
         if (status != null &&
                 !Status.VTODO_NEEDS_ACTION.equals(status) &&
                 !Status.VTODO_COMPLETED.equals(status) &&
@@ -286,8 +286,8 @@ public class VToDo extends Component {
          * due / duration /
          *
          */
-        if (getProperties().getProperty(Property.DUE) != null
-                && getProperties().getProperty(Property.DURATION) != null) { throw new ValidationException(
+        if (getProperty(Property.DUE) != null
+                && getProperty(Property.DURATION) != null) { throw new ValidationException(
                 "Properties [" + Property.DUE + "," + Property.DURATION
                         + "] may not occur in the same VTODO"); }
 
@@ -307,6 +307,6 @@ public class VToDo extends Component {
      * @return a Uid instance, or null if no UID property exists
      */
     public final Uid getUid() {
-        return (Uid) getProperties().getProperty(Property.UID);
+        return (Uid) getProperty(Property.UID);
     }
 }

@@ -66,7 +66,7 @@ public class VEventTest extends ComponentTest {
         // create timezone property..
         tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         // create tzid parameter..
-        tzParam = new TzId(tz.getProperties().getProperty(Property.TZID).getValue());
+        tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
 
         Calendar weekday9AM = getCalendarInstance();
         weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
@@ -217,10 +217,10 @@ public class VEventTest extends ComponentTest {
         VEvent christmas = new VEvent(new Date(cal.getTime()), "Christmas Day");
 
         // initialise as an all-day event..
-        christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        christmas.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
         // add timezone information..
-        christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
+        christmas.getProperty(Property.DTSTART).getParameters().add(tzParam);
 
         log.info(christmas);
     }
@@ -235,7 +235,7 @@ public class VEventTest extends ComponentTest {
         VEvent meeting = new VEvent(new DateTime(cal.getTime().getTime()), new Dur(0, 1, 0, 0), "Progress Meeting");
 
         // add timezone information..
-        meeting.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);       
+        meeting.getProperty(Property.DTSTART).getParameters().add(tzParam);       
 
         log.info(meeting);
     }

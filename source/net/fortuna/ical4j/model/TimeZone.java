@@ -61,7 +61,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     public TimeZone(final VTimeZone vTimeZone) {
         this.vTimeZone = vTimeZone;
-        TzId tzId = (TzId) vTimeZone.getProperties().getProperty(Property.TZID);
+        TzId tzId = (TzId) vTimeZone.getProperty(Property.TZID);
         setID(tzId.getValue());
     }
 
@@ -78,7 +78,7 @@ public class TimeZone extends java.util.TimeZone {
         cal.set(Calendar.MILLISECOND, milliseconds);
         Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));
         if (observance != null) {
-            TzOffsetTo offset = (TzOffsetTo) observance.getProperties().getProperty(Property.TZOFFSETTO);
+            TzOffsetTo offset = (TzOffsetTo) observance.getProperty(Property.TZOFFSETTO);
             return (int) offset.getOffset().getOffset();
         }
         return 0;
@@ -93,7 +93,7 @@ public class TimeZone extends java.util.TimeZone {
         if (seasonalTime == null) {
             seasonalTime = vTimeZone.getObservances().getComponent(Observance.DAYLIGHT);
         }
-        TzOffsetTo offsetTo = (TzOffsetTo) seasonalTime.getProperties().getProperty(Property.TZOFFSETTO);
+        TzOffsetTo offsetTo = (TzOffsetTo) seasonalTime.getProperty(Property.TZOFFSETTO);
         if (offsetTo != null) {
             return (int) offsetTo.getOffset().getOffset();
         }

@@ -60,7 +60,7 @@ public class ExDateTest extends TestCase {
         Calendar calendar = builder.build(new FileInputStream("etc/samples/valid/EXDATE.ics"));
         
         Component event = calendar.getComponents().getComponent(Component.VEVENT);
-        PropertyList exdates = event.getProperties().getProperties(Property.EXDATE);
+        PropertyList exdates = event.getProperties(Property.EXDATE);
         for (Iterator i = exdates.iterator(); i.hasNext();) {
             ExDate exdate = (ExDate) i.next();
             assertNotNull("This EXDATE should have a timezone", exdate.getDates().getTimeZone());

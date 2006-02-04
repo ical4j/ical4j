@@ -171,7 +171,7 @@ public class VJournal extends Component {
         PropertyValidator.getInstance().assertOneOrLess(Property.URL,
                 getProperties());
 
-        Status status = (Status) getProperties().getProperty(Property.STATUS);
+        Status status = (Status) getProperty(Property.STATUS);
         if (status != null &&
                 !Status.VJOURNAL_DRAFT.equals(status) &&
                 !Status.VJOURNAL_FINAL.equals(status) &&
@@ -197,6 +197,6 @@ public class VJournal extends Component {
      * @return a Uid instance, or null if no UID property exists
      */
     public final Uid getUid() {
-        return (Uid) getProperties().getProperty(Property.UID);
+        return (Uid) getProperty(Property.UID);
     }
 }

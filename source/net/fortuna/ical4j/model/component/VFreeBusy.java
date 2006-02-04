@@ -201,9 +201,9 @@ public class VFreeBusy extends Component {
      */
     public VFreeBusy(final VFreeBusy request, final ComponentList components) {
         this();
-        DtStart start = (DtStart) request.getProperties().getProperty(Property.DTSTART);
-        DtEnd end = (DtEnd) request.getProperties().getProperty(Property.DTEND);
-        Duration duration = (Duration) request.getProperties().getProperty(Property.DURATION);
+        DtStart start = (DtStart) request.getProperty(Property.DTSTART);
+        DtEnd end = (DtEnd) request.getProperty(Property.DTEND);
+        Duration duration = (Duration) request.getProperty(Property.DURATION);
         // dtstart MUST be specified in UTC..
         getProperties().add(new DtStart(start.getDate(), true));
         // dtend MUST be specified in UTC..
@@ -368,8 +368,8 @@ public class VFreeBusy extends Component {
         validator.assertNone(Property.EXDATE, getProperties());
 
         // DtEnd value must be later in time that DtStart..
-        DtStart dtStart = (DtStart) getProperties().getProperty(Property.DTSTART);
-        DtEnd dtEnd = (DtEnd) getProperties().getProperty(Property.DTEND);
+        DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
+        DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
         if (dtStart != null && dtEnd != null && !dtStart.getDate().before(dtEnd.getDate())) {
             throw new ValidationException("Property [" + Property.DTEND + "] must be later in time than ["
                     + Property.DTSTART + "]");
@@ -385,6 +385,6 @@ public class VFreeBusy extends Component {
      * @return a Uid instance, or null if no UID property exists
      */
     public final Uid getUid() {
-        return (Uid) getProperties().getProperty(Property.UID);
+        return (Uid) getProperty(Property.UID);
     }
 }
