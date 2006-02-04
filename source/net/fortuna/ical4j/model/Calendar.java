@@ -173,6 +173,26 @@ public class Calendar implements Serializable {
     public final ComponentList getComponents() {
         return components;
     }
+    
+    /**
+     * Convenience method for retrieving a list of named components.
+     * @param name name of components to retrieve
+     * @return a component list containing only components with the specified
+     * name
+     */
+    public final ComponentList getComponents(final String name) {
+        return getComponents().getComponents(name);
+    }
+    
+    /**
+     * Convenience method for retrieving a named component.
+     * @param name name of the component to retrieve
+     * @return the first matching component in the component list with the specified
+     * name
+     */
+    public final Component getComponent(final String name) {
+        return getComponents().getComponent(name);
+    }
 
     /**
      * @return Returns the properties.
