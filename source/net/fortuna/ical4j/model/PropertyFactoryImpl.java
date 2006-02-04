@@ -39,6 +39,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.fortuna.ical4j.data.CalendarParserImpl;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.Attach;
 import net.fortuna.ical4j.model.property.Attendee;
@@ -89,8 +90,8 @@ import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
 
 /**
- * A factory for creating iCalendar properties.
- *
+ * A factory for creating iCalendar properties. Note that if relaxed parsing is enabled (via
+ * specifying the system property: icalj.parsing.relaxed=true) illegal property names are allowed.
  * @author Ben Fortuna
  */
 public final class PropertyFactoryImpl implements PropertyFactory {
@@ -99,10 +100,13 @@ public final class PropertyFactoryImpl implements PropertyFactory {
     
     private Map factories;
 
+    private boolean allowIllegalNames;
+
     /**
      * Constructor made private to prevent instantiation.
      */
     private PropertyFactoryImpl() {
+        allowIllegalNames = "true".equals(System.getProperty(CalendarParserImpl.KEY_PARSING_RELAXED));
         factories = new HashMap();
         factories.put(Property.ACTION, createActionFactory());
         factories.put(Property.ATTACH, createAttachFactory());
@@ -1161,8 +1165,11 @@ public final class PropertyFactoryImpl implements PropertyFactory {
         else if (isExperimentalName(name)) {
             return new XProperty(name);
         }
+        else if (allowIllegalNames) {
+            return new XProperty(name);
+        }
         else {
-            throw new IllegalArgumentException("Invalid property name: " + name);
+            throw new IllegalArgumentException("Illegal property [" + name + "]");
         }
     }
 
@@ -1187,8 +1194,11 @@ public final class PropertyFactoryImpl implements PropertyFactory {
         else if (isExperimentalName(name)) {
             return new XProperty(name, parameters, value);
         }
+        else if (allowIllegalNames) {
+            return new XProperty(name);
+        }
         else {
-            throw new IllegalArgumentException("Invalid property name: " + name);
+            throw new IllegalArgumentException("Illegal property [" + name + "]");
         }
     }
     

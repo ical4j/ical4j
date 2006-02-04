@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.data.CalendarParserImpl;
 import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.Standard;
@@ -45,18 +46,21 @@ import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.component.XComponent;
 
 /**
- * A factory for creating iCalendar components.
- *
+ * A factory for creating iCalendar components. Note that if relaxed parsing is enabled (via
+ * specifying the system property: icalj.parsing.relaxed=true) illegal component names are allowed.
  * @author Ben Fortuna
  */
 public final class ComponentFactory {
 
     private static ComponentFactory instance = new ComponentFactory();
 
+    private boolean allowIllegalNames;
+    
     /**
      * Constructor made private to prevent instantiation.
      */
     private ComponentFactory() {
+        allowIllegalNames = "true".equals(System.getProperty(CalendarParserImpl.KEY_PARSING_RELAXED));
     }
 
     /**
@@ -79,9 +83,7 @@ public final class ComponentFactory {
      *            a list of component properties
      * @return a component
      */
-    public Component createComponent(final String name,
-            final PropertyList properties) {
-
+    public Component createComponent(final String name, final PropertyList properties) {
         if (Component.VALARM.equals(name)) {
             return new VAlarm(properties);
         }
@@ -106,9 +108,14 @@ public final class ComponentFactory {
         else if (Component.VTIMEZONE.equals(name)) {
             return new VTimeZone(properties);
         }
+        else if (isExperimentalName(name)) {
+            return new XComponent(name, properties);
+        }
+        else if (allowIllegalNames) {
+            return new XComponent(name, properties);
+        }
         else {
-            throw new IllegalArgumentException("Unkown component [" + name
-                    + "]");
+            throw new IllegalArgumentException("Illegal component [" + name + "]");
         }
     }
 
@@ -126,26 +133,17 @@ public final class ComponentFactory {
      */
     public Component createComponent(final String name,
             final PropertyList properties, final ComponentList components) {
-
         if (components != null) {
-
             if (Component.VTIMEZONE.equals(name)) {
-
                 return new VTimeZone(properties, components);
             }
             else if (Component.VEVENT.equals(name)) {
-
                 return new VEvent(properties, components);
             }
-            else if (isExperimentalName(name)) {
-                return new XComponent(name, properties);
-            }
             else {
-                throw new IllegalArgumentException("Unkown component [" + name
-                        + "]");
+                throw new IllegalArgumentException("Illegal component [" + name + "]");
             }
         }
-
         return createComponent(name, properties);
     }
     
