@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 2/02/2006
+ * Created on 5/02/2006
  *
- * Copyright (c) 2005, Ben Fortuna
+ * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,34 +35,57 @@
  */
 package net.fortuna.ical4j.filter;
 
+import java.util.Iterator;
+
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.PropertyList;
 
 /**
- * A rule that matches any component with the specified organiser. Note that
- * this rule ignores any parameters matching only on the value of the Organizer
- * property.
+ * A rule that matches any component containing the specified property. Note that
+ * this rule ignores any parameters matching only on the value of the property.
  * @author Ben Fortuna
  */
-public class OrganizerRule extends ComponentRule {
+public class HasPropertyRule extends ComponentRule {
 
-    private Organizer organiser;
+    private Property property;
+    
+    private boolean matchEquals;
+
+    /**
+     * Constructs a new instance with the specified property. Ignores any
+     * parameters matching only on the value of the property.
+     * @param property
+     */
+    public HasPropertyRule(final Property property) {
+        this(property, false);
+    }
     
     /**
-     * Constructs a new instance with the specified organiser.
-     * @param organiser
+     * Constructs a new instance with the specified property.
+     * @param property the property to match
+     * @param matchEquals if true, matches must contain an identical property
+     * (as indicated by <code>Property.equals()</code>
      */
-    public OrganizerRule(final Organizer organiser) {
-        this.organiser = organiser;
+    public HasPropertyRule(final Property property, final boolean matchEquals) {
+        this.property = property;
+        this.matchEquals = matchEquals;
     }
     
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)
      */
-    public boolean match(final Component component) {
-        Organizer org = (Organizer) component.getProperty(Property.ORGANIZER);
-        return (org != null && organiser.getValue().equals(org.getValue()));
+    public boolean match(Component component) {
+        PropertyList properties = component.getProperties(property.getName());
+        for (Iterator i = properties.iterator(); i.hasNext();) {
+            Property p = (Property) i.next();
+            if (matchEquals && property.equals(p)) {
+                return true;
+            }
+            else if (property.getValue().equals(p.getValue())) {
+                return true;
+            }
+        }
+        return false;
     }
-
 }

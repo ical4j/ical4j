@@ -62,13 +62,13 @@ public class FilterTest extends TestCase {
 
     private Calendar calendar;
     
-    private OrganizerRule organiserRuleMatch;
+    private HasPropertyRule organiserRuleMatch;
     
-    private OrganizerRule organiserRuleNoMatch;
+    private HasPropertyRule organiserRuleNoMatch;
     
-    private AttendeeRule attendeeRuleMatch;
+    private HasPropertyRule attendeeRuleMatch;
     
-    private AttendeeRule attendeeRuleNoMatch;
+    private HasPropertyRule attendeeRuleNoMatch;
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
@@ -76,10 +76,10 @@ public class FilterTest extends TestCase {
     protected void setUp() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         calendar = builder.build(new FileReader("etc/samples/valid/incoming.ics"));
-        organiserRuleMatch = new OrganizerRule(new Organizer(new URI("Mailto:B@example.com")));
-        organiserRuleNoMatch = new OrganizerRule(new Organizer(new URI("Mailto:X@example.com")));
-        attendeeRuleMatch = new AttendeeRule(new Attendee(new URI("Mailto:A@example.com")));
-        attendeeRuleNoMatch = new AttendeeRule(new Attendee(new URI("Mailto:X@example.com")));
+        organiserRuleMatch = new HasPropertyRule(new Organizer(new URI("Mailto:B@example.com")));
+        organiserRuleNoMatch = new HasPropertyRule(new Organizer(new URI("Mailto:X@example.com")));
+        attendeeRuleMatch = new HasPropertyRule(new Attendee(new URI("Mailto:A@example.com")));
+        attendeeRuleNoMatch = new HasPropertyRule(new Attendee(new URI("Mailto:X@example.com")));
     }
     
     /**

@@ -3,9 +3,8 @@ package net.fortuna.ical4j;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilderTest;
-import net.fortuna.ical4j.filter.AttendeeRuleTest;
 import net.fortuna.ical4j.filter.FilterTest;
-import net.fortuna.ical4j.filter.OrganizerRuleTest;
+import net.fortuna.ical4j.filter.HasPropertyRuleTest;
 import net.fortuna.ical4j.filter.PeriodRuleTest;
 import net.fortuna.ical4j.model.AddressListTest;
 import net.fortuna.ical4j.model.CalendarTest;
@@ -52,8 +51,7 @@ public class AllTests extends TestSuite{
 //        suite.addTest(CalendarOutputterTest.suite());
 
         // filter tests..
-        suite.addTestSuite(OrganizerRuleTest.class);
-        suite.addTestSuite(AttendeeRuleTest.class);
+        suite.addTestSuite(HasPropertyRuleTest.class);
         suite.addTestSuite(PeriodRuleTest.class);
         suite.addTestSuite(FilterTest.class);
         

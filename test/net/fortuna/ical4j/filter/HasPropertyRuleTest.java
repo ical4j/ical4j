@@ -45,32 +45,53 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Unit tests for the organizer filter rule.
+ * Unit tests for the has property filter rule.
  * @author Ben Fortuna
  */
-public class OrganizerRuleTest extends TestCase {
+public class HasPropertyRuleTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(OrganizerRuleTest.class);
+    private static final Log LOG = LogFactory.getLog(HasPropertyRuleTest.class);
+    
+    private Calendar calendar;
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        CalendarBuilder builder = new CalendarBuilder();
+        calendar = builder.build(new FileReader("etc/samples/valid/incoming.ics"));
+    }
     
     /**
-     * Test filtering of a calendar.
+     * Test filtering of a calendar on organizer.
      */
-    public void testFilter() throws URISyntaxException, IOException, ParserException {
+    public void testFilterOrganizer() throws URISyntaxException, IOException, ParserException {
         Organizer organiser = new Organizer(new URI("Mailto:B@example.com"));
-        Filter filter = new Filter(new OrganizerRule(organiser));
-        
-        CalendarBuilder builder = new CalendarBuilder();
-        Calendar calendar = builder.build(new FileReader("etc/samples/valid/incoming.ics"));
+        Filter filter = new Filter(new HasPropertyRule(organiser));
         
         ComponentList filtered = (ComponentList) filter.filter(calendar.getComponents());
         assertTrue(!filtered.isEmpty());
         
         LOG.info(filtered.size() + " matching organizer(s).");
+    }
+    
+    /**
+     * Test filtering of a calendar on attendee.
+     */
+    public void testFilter() throws URISyntaxException, IOException, ParserException {
+        Attendee attendee = new Attendee(new URI("Mailto:A@example.com"));
+        Filter filter = new Filter(new HasPropertyRule(attendee));
+        
+        ComponentList filtered = (ComponentList) filter.filter(calendar.getComponents());
+        assertTrue(!filtered.isEmpty());
+        
+        LOG.info(filtered.size() + " matching attendee(s).");
     }
 }
