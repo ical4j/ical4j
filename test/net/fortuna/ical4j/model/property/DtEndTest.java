@@ -35,20 +35,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
-import junit.framework.TestCase;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Ben Fortuna
  *
  */
-public class DtEndTest extends TestCase {
+public class DtEndTest extends PropertyTest {
     
     private static Log log = LogFactory.getLog(DtEndTest.class);
 
@@ -61,16 +60,10 @@ public class DtEndTest extends TestCase {
         
         // test validation..
         log.info(dtEnd);
-        try {
-            dtEnd.validate();
-            fail("Should throw ValidationException");
-        }
-        catch (ValidationException ve) {
-            log.error("Exception thrown", ve);
-        }
+        assertValidationException(dtEnd);
         
         //
-        dtEnd.getParameters().add(Value.DATE_TIME);
+        dtEnd.getParameters().replace(Value.DATE_TIME);
         log.info(dtEnd);
         dtEnd.validate();
         
@@ -82,16 +75,10 @@ public class DtEndTest extends TestCase {
         //
         dtEnd.setDate(new Date());
         log.info(dtEnd);
-        try {
-            dtEnd.validate();
-            fail("Should throw ValidationException");
-        }
-        catch (ValidationException ve) {
-            log.error("Exception thrown", ve);
-        }
+        assertValidationException(dtEnd);
         
         //
-        dtEnd.getParameters().add(Value.DATE);
+        dtEnd.getParameters().replace(Value.DATE);
         log.info(dtEnd);
         dtEnd.validate();
     }

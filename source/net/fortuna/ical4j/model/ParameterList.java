@@ -146,18 +146,27 @@ public class ParameterList implements Serializable {
     }
 
     /**
-     * Add a parameter to the list. Note that this method will also remove from the
-     * list all other parameters with the same name. This is under the assumption
-     * that a parameter may only be specified once. 
+     * Add a parameter to the list. Note that this method will not remove existing
+     * parameters of the same type. To achieve this use { @link ParameterList#replace(Parameter) } 
      * @param parameter the parameter to add
      * @return true
      * @see List#add(java.lang.Object)
      */
     public final boolean add(final Parameter parameter) {
+        return parameters.add(parameter);
+    }
+    
+    /**
+     * Replace any parameters of the same type with the one specified.
+     * @param parameter parameter to add to this list in place of all others with
+     * the same name
+     * @return true if successfully added to this list
+     */
+    public final boolean replace(final Parameter parameter) {
         for (Iterator i = getParameters(parameter.getName()).iterator(); i.hasNext();) {
             remove((Parameter) i.next());
         }
-        return parameters.add(parameter);
+        return add(parameter);
     }
 
     /**

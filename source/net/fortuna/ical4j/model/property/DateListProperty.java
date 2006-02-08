@@ -124,7 +124,7 @@ public abstract class DateListProperty extends Property {
             dates.setTimeZone(timezone);
             getParameters().remove(getParameter(Parameter.TZID));
             TzId tzId = new TzId(timezone.getID());
-            getParameters().add(tzId);
+            getParameters().replace(tzId);
         }
         else {
             // use setUtc() to reset timezone..

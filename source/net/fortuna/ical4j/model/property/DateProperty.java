@@ -137,7 +137,7 @@ public abstract class DateProperty extends Property {
             }
             getParameters().remove(getParameter(Parameter.TZID));
             TzId tzId = new TzId(timezone.getID());
-            getParameters().add(tzId);
+            getParameters().replace(tzId);
         }
         else {
             // use setUtc() to reset timezone..
