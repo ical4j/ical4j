@@ -259,11 +259,6 @@ public class VAlarm extends Component {
          *
          * duration / repeat /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT,
-                getProperties());
-
         PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT, getProperties());
         
@@ -384,7 +379,7 @@ public class VAlarm extends Component {
      * Returns the mandatory action property.
      * @return
      */
-    public Action getAction() {
+    public final Action getAction() {
         return (Action) getProperty(Property.ACTION);
     }
     
@@ -392,7 +387,7 @@ public class VAlarm extends Component {
      * Returns the mandatory trigger property.
      * @return
      */
-    public Trigger getTrigger() {
+    public final Trigger getTrigger() {
         return (Trigger) getProperty(Property.TRIGGER);
     }
     
@@ -400,7 +395,7 @@ public class VAlarm extends Component {
      * Returns the optional duration property.
      * @return
      */
-    public Duration getDuration() {
+    public final Duration getDuration() {
         return (Duration) getProperty(Property.DURATION);
     }
     
@@ -408,7 +403,7 @@ public class VAlarm extends Component {
      * Returns the optional repeat property.
      * @return
      */
-    public Repeat getRepeat() {
+    public final Repeat getRepeat() {
         return (Repeat) getProperty(Property.REPEAT);
     }
     
@@ -416,7 +411,7 @@ public class VAlarm extends Component {
      * Returns the optional attachment property.
      * @return
      */
-    public Attach getAttachment() {
+    public final Attach getAttachment() {
         return (Attach) getProperty(Property.ATTACH);
     }
     
@@ -424,7 +419,7 @@ public class VAlarm extends Component {
      * Returns the optional description property.
      * @return
      */
-    public Description getDescription() {
+    public final Description getDescription() {
         return (Description) getProperty(Property.DESCRIPTION);
     }
     
@@ -432,7 +427,7 @@ public class VAlarm extends Component {
      * Returns the optional summary property.
      * @return
      */
-    public Summary getSummary() {
+    public final Summary getSummary() {
         return (Summary) getProperty(Property.SUMMARY);
     }
     
@@ -440,7 +435,7 @@ public class VAlarm extends Component {
      * Returns the optional attendee properties.
      * @return
      */
-    public PropertyList getAttendees() {
+    public final PropertyList getAttendees() {
         return getProperties(Property.ATTENDEE);
     }
 }

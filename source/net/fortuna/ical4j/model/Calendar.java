@@ -36,6 +36,10 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.PropertyValidator;
 
@@ -303,6 +307,38 @@ public class Calendar implements Serializable {
             Component component = (Component) i.next();
             component.validate();
         }
+    }
+    
+    /**
+     * Returns the mandatory prodid property.
+     * @return
+     */
+    public ProdId getProductId() {
+        return (ProdId) getProperty(Property.PRODID);
+    }
+    
+    /**
+     * Returns the mandatory version property.
+     * @return
+     */
+    public Version getVersion() {
+        return (Version) getProperty(Property.VERSION);
+    }
+    
+    /**
+     * Returns the optional calscale property.
+     * @return
+     */
+    public CalScale getCalendarScale() {
+        return (CalScale) getProperty(Property.CALSCALE);
+    }
+    
+    /**
+     * Returns the optional method property.
+     * @return
+     */
+    public Method getMethod() {
+        return (Method) getProperty(Property.METHOD);
     }
     
     /**

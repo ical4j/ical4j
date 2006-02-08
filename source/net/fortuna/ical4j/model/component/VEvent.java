@@ -371,12 +371,14 @@ public class VEvent extends Component {
          *
          * dtend / duration /
          */
+        try {
+            PropertyValidator.getInstance().assertNone(Property.DTEND, getProperties());
+        }
+        catch (ValidationException ve) {
+            PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+        }
+
         if (getProperty(Property.DTEND) != null) {
-            if (getProperty(Property.DURATION) != null) {
-                throw new ValidationException(
-                    "Properties [" + Property.DTEND + "," + Property.DURATION
-                            + "] may not occur in the same VEVENT");
-                }
             
             /*
              *  The "VEVENT" is also the calendar component used to specify an

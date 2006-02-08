@@ -47,6 +47,8 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.TzOffsetFrom;
+import net.fortuna.ical4j.model.property.TzOffsetTo;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
@@ -160,6 +162,30 @@ public abstract class Observance extends Component implements Comparable {
         }
         return (Date) onsets.get(date);
 //            return onset;
+    }
+    
+    /**
+     * Returns the mandatory dtstart property.
+     * @return
+     */
+    public final DtStart getStartDate() {
+        return (DtStart) getProperty(Property.DTSTART);
+    }
+    
+    /**
+     * Returns the mandatory tzoffsetfrom property.
+     * @return
+     */
+    public final TzOffsetFrom getOffsetFrom() {
+        return (TzOffsetFrom) getProperty(Property.TZOFFSETFROM);
+    }
+    
+    /**
+     * Returns the mandatory tzoffsetto property.
+     * @return
+     */
+    public final TzOffsetTo getOffsetTo() {
+        return (TzOffsetTo) getProperty(Property.TZOFFSETTO);
     }
 
     /* (non-Javadoc)

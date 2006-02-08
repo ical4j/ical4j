@@ -37,9 +37,12 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.Repeat;
 import net.fortuna.ical4j.model.property.Trigger;
 
 /**
@@ -66,5 +69,22 @@ public class VAlarmTest extends ComponentTest {
         assertValidationException(alarm);
         alarm.getProperties().add(new Description("Testing display"));
         alarm.validate();
+    }
+
+    /**
+     * Test duration/repeat validation.
+     * @throws ValidationException
+     */
+    public void testValidationDurationRepeat() throws ValidationException {
+        VAlarm alarm = new VAlarm(new Dur(0, 2, 0, 0));
+        alarm.getProperties().add(Action.DISPLAY);
+        alarm.getProperties().add(new Description("Testing display"));
+        Duration duration = new Duration(new Dur(0, 0, 2, 0));
+        alarm.getProperties().add(duration);
+        assertValidationException(alarm);
+        alarm.getProperties().add(new Repeat(2));
+        alarm.validate();
+        alarm.getProperties().remove(duration);
+        assertValidationException(alarm);
     }
 }

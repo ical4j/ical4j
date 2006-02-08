@@ -286,10 +286,12 @@ public class VToDo extends Component {
          * due / duration /
          *
          */
-        if (getProperty(Property.DUE) != null
-                && getProperty(Property.DURATION) != null) { throw new ValidationException(
-                "Properties [" + Property.DUE + "," + Property.DURATION
-                        + "] may not occur in the same VTODO"); }
+        try {
+            PropertyValidator.getInstance().assertNone(Property.DUE, getProperties());
+        }
+        catch (ValidationException ve) {
+            PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+        }
 
         /*
          * ; the following are optional, ; and MAY occur more than once attach /
