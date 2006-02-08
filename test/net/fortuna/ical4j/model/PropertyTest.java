@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 12/11/2005
+ * Created on 8/02/2006
  *
- * Copyright (c) 2005, Ben Fortuna
+ * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -35,46 +35,25 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import junit.framework.TestCase;
+
 /**
- * Unit tests for <code>Component</code> base class.
+ * Abstract base class for property unit tests.
  * @author Ben Fortuna
  */
-public abstract class ComponentTest extends TestCase {
+public abstract class PropertyTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(ComponentTest.class);
-
-    protected Component component;
+    private static final Log LOG = LogFactory.getLog(PropertyTest.class);
     
     /**
-     * Test whether the component is a calendar component.
+     * @param property
      */
-    public abstract void testIsCalendarComponent();
-    
-    /**
-     * @param c
-     */
-    protected void assertIsCalendarComponent(final Component c) {
-        assertTrue("Component is not a calendar component", c.isCalendarComponent());
-    }
-    
-    /**
-     * @param c
-     */
-    protected void assertIsNotCalendarComponent(final Component c) {
-        assertFalse("Component is a calendar component", c.isCalendarComponent());
-    }
-    
-    /**
-     * @param component
-     */
-    protected void assertValidationException(final Component component) {
+    protected void assertValidationException(final Property property) {
         try {
-            component.validate();
+            property.validate();
         }
         catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
@@ -82,4 +61,5 @@ public abstract class ComponentTest extends TestCase {
         }
         fail("ValidationException should be thrown!");
     }
+
 }

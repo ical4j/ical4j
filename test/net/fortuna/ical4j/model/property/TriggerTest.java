@@ -25,9 +25,9 @@ package net.fortuna.ical4j.model.property;
 import java.text.ParseException;
 import java.util.Date;
 
-import junit.framework.TestCase;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 
@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Ben Fortuna
  *
  */
-public class TriggerTest extends TestCase {
+public class TriggerTest extends PropertyTest {
     
     private static Log log = LogFactory.getLog(TriggerTest.class);
 
@@ -80,15 +80,9 @@ public class TriggerTest extends TestCase {
         assertNull(trigger.getDuration());
         assertNotNull(trigger.getDate());
         assertNotNull(trigger.getDateTime());
-        
-        try {
-            trigger.validate();
-            fail("Should throw ValidationException");
-        }
-        catch (ValidationException ve) {
-            log.debug(ve);
-        }
-        trigger.getParameters().add(Value.DATE_TIME);
         trigger.validate();
+
+        trigger.getParameters().add(Value.DURATION);
+        assertValidationException(trigger);
     }
 }

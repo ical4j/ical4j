@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 12/11/2005
+ * Created on 8/02/2006
  *
- * Copyright (c) 2005, Ben Fortuna
+ * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,53 +33,38 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import net.fortuna.ical4j.model.ComponentTest;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.property.Action;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Trigger;
 
 /**
- * Unit tests for <code>Component</code> base class.
+ * Unit tests for VAlarm component.
  * @author Ben Fortuna
  */
-public abstract class ComponentTest extends TestCase {
-
-    private static final Log LOG = LogFactory.getLog(ComponentTest.class);
-
-    protected Component component;
+public class VAlarmTest extends ComponentTest {
     
-    /**
-     * Test whether the component is a calendar component.
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
      */
-    public abstract void testIsCalendarComponent();
-    
-    /**
-     * @param c
-     */
-    protected void assertIsCalendarComponent(final Component c) {
-        assertTrue("Component is not a calendar component", c.isCalendarComponent());
+    public void testIsCalendarComponent() {
+        assertIsCalendarComponent(new VAlarm());
     }
     
     /**
-     * @param c
+     * Test component validation.
+     * @throws ValidationException
      */
-    protected void assertIsNotCalendarComponent(final Component c) {
-        assertFalse("Component is a calendar component", c.isCalendarComponent());
-    }
-    
-    /**
-     * @param component
-     */
-    protected void assertValidationException(final Component component) {
-        try {
-            component.validate();
-        }
-        catch (ValidationException ve) {
-            LOG.debug("Exception caught", ve);
-            return;
-        }
-        fail("ValidationException should be thrown!");
+    public void testValidation() throws ValidationException {
+        VAlarm alarm = new VAlarm();
+        alarm.getProperties().add(new Trigger(new DateTime(System.currentTimeMillis())));
+        alarm.getProperties().add(Action.DISPLAY);
+        assertValidationException(alarm);
+        alarm.getProperties().add(new Description("Testing display"));
+        alarm.validate();
     }
 }
