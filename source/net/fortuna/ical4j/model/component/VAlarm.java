@@ -40,6 +40,11 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.Action;
+import net.fortuna.ical4j.model.property.Attach;
+import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.Repeat;
+import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.util.PropertyValidator;
 
@@ -245,13 +250,8 @@ public class VAlarm extends Component {
          *
          * action / trigger /
          */
-        Property action = getProperty(Property.ACTION);
-
-        if (action == null) { throw new ValidationException("Property ["
-                + Property.ACTION + "] must be specified once"); }
-
-        if (getProperty(Property.TRIGGER) == null) { throw new ValidationException(
-                "Property [" + Property.TRIGGER + "] must be specified once"); }
+        PropertyValidator.getInstance().assertOne(Property.ACTION, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.TRIGGER, getProperties());
 
         /*
          * ; 'duration' and 'repeat' are both optional, ; and MUST NOT occur
@@ -264,27 +264,34 @@ public class VAlarm extends Component {
         PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT,
                 getProperties());
 
-        if ((getProperty(Property.DURATION) == null && getProperty(Property.REPEAT) != null)
-                || (getProperty(Property.REPEAT) == null && getProperty(Property.DURATION) != null)) { throw new ValidationException(
-                "Properties [" + Property.DURATION + "," + Property.REPEAT
-                        + "] must both be specified or not at all"); }
+        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT, getProperties());
+        
+        try {
+            PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+            PropertyValidator.getInstance().assertNone(Property.REPEAT, getProperties());
+        }
+        catch (ValidationException ve) {
+            PropertyValidator.getInstance().assertOne(Property.DURATION, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.REPEAT, getProperties());
+        }
 
         /*
          * ; the following is optional, ; and MAY occur more than once
          *
          * x-prop
          */
-
-        if (Action.AUDIO.equals(action.getValue())) {
+        Action action = getAction();
+        if (Action.AUDIO.equals(action)) {
             validateAudio();
         }
-        else if (Action.DISPLAY.equals(action.getValue())) {
+        else if (Action.DISPLAY.equals(action)) {
             validateDisplay();
         }
-        else if (Action.EMAIL.equals(action.getValue())) {
+        else if (Action.EMAIL.equals(action)) {
             validateEmail();
         }
-        else if (Action.PROCEDURE.equals(action.getValue())) {
+        else if (Action.PROCEDURE.equals(action)) {
             validateProcedure();
         }
 
@@ -371,5 +378,69 @@ public class VAlarm extends Component {
 
         PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION,
                 getProperties());
+    }
+    
+    /**
+     * Returns the mandatory action property.
+     * @return
+     */
+    public Action getAction() {
+        return (Action) getProperty(Property.ACTION);
+    }
+    
+    /**
+     * Returns the mandatory trigger property.
+     * @return
+     */
+    public Trigger getTrigger() {
+        return (Trigger) getProperty(Property.TRIGGER);
+    }
+    
+    /**
+     * Returns the optional duration property.
+     * @return
+     */
+    public Duration getDuration() {
+        return (Duration) getProperty(Property.DURATION);
+    }
+    
+    /**
+     * Returns the optional repeat property.
+     * @return
+     */
+    public Repeat getRepeat() {
+        return (Repeat) getProperty(Property.REPEAT);
+    }
+    
+    /**
+     * Returns the optional attachment property.
+     * @return
+     */
+    public Attach getAttachment() {
+        return (Attach) getProperty(Property.ATTACH);
+    }
+    
+    /**
+     * Returns the optional description property.
+     * @return
+     */
+    public Description getDescription() {
+        return (Description) getProperty(Property.DESCRIPTION);
+    }
+    
+    /**
+     * Returns the optional summary property.
+     * @return
+     */
+    public Summary getSummary() {
+        return (Summary) getProperty(Property.SUMMARY);
+    }
+    
+    /**
+     * Returns the optional attendee properties.
+     * @return
+     */
+    public PropertyList getAttendees() {
+        return getProperties(Property.ATTENDEE);
     }
 }
