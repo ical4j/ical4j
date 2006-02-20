@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 8/02/2006
+ * Created on 20/02/2006
  *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
@@ -33,51 +33,30 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model.property;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyTest;
 
 /**
- * Abstract base class for property unit tests.
+ * Unit tests for Summary property.
  * @author Ben Fortuna
  */
-public abstract class PropertyTest extends TestCase {
-
-    private static final Log LOG = LogFactory.getLog(PropertyTest.class);
-    
-    /**
-     * @param property
-     */
-    protected void assertValidationException(final Property property) {
-        try {
-            property.validate();
-        }
-        catch (ValidationException ve) {
-            LOG.debug("Exception caught", ve);
-            return;
-        }
-        fail("ValidationException should be thrown!");
-    }
+public class SummaryTest extends PropertyTest {
 
     /**
-     * Loads a calendar from the specified file.
-     * @param filename
-     * @return
+     * Test correct parsing of quoted text.
      * @throws IOException
      * @throws ParserException
      */
-    protected Calendar loadCalendar(String filename) throws IOException, ParserException {
-        FileInputStream fin = new FileInputStream(filename);
-        CalendarBuilder builder = new CalendarBuilder();
-        return builder.build(fin);
+    public void testQuotedText() throws IOException, ParserException {
+        Calendar calendar = loadCalendar("etc/samples/valid/mansour.ics");
+        Component event = calendar.getComponent(Component.VEVENT);
+        assertEquals("A colon with spaces on either side : like that", event.getProperty(Property.SUMMARY).getValue());
     }
 }

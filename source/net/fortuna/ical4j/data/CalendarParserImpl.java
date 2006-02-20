@@ -226,7 +226,7 @@ public class CalendarParserImpl implements CalendarParser {
             } else if (tokeniser.ttype == '"') {
                 value.append((char) tokeniser.ttype);
                 value.append(tokeniser.sval);
-                //                value.append((char) tokeniser.ttype);
+                value.append((char) tokeniser.ttype);
             } else {
                 value.append((char) tokeniser.ttype);
             }
