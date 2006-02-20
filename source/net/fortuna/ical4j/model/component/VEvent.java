@@ -414,15 +414,29 @@ public class VEvent extends Component {
     }
 
     /**
+     * Returns a normalised list of periods representing the consumed time for this
+     * event.
+     * @param rangeStart
+     * @param rangeEnd
+     * @return a normalised list of periods representing consumed time for this event
+     * @see VEvent#getConsumedTime(Date, Date, boolean)
+     */
+    public final PeriodList getConsumedTime(final Date rangeStart, final Date rangeEnd) {
+        return getConsumedTime(rangeStart, rangeEnd, true);
+    }
+    
+    /**
      * Returns a list of periods representing the consumed time for this event
      * in the specified range. Note that the returned list may contain a single
      * period for non-recurring components or multiple periods for recurring
      * components. If no time is consumed by this event an empty list is returned.
      * @param rangeStart the start of the range to check for consumed time
      * @param rangeEnd the end of the range to check for consumed time
+     * @param normalise indicate whether the returned list of periods should be
+     * normalised
      * @return a list of periods representing consumed time for this event
      */
-    public final PeriodList getConsumedTime(final Date rangeStart, final Date rangeEnd) {
+    public final PeriodList getConsumedTime(final Date rangeStart, final Date rangeEnd, final boolean normalise) {
         PeriodList periods = new PeriodList();
         // if component is transparent return empty list..
         if (Transp.TRANSPARENT.equals(getProperty(Property.TRANSP))) {
@@ -513,7 +527,12 @@ public class VEvent extends Component {
         // if periods already specified through recurrence, return..
         // ..also normalise before returning.
         if (!periods.isEmpty()) {
-            return periods.normalise();
+            if (normalise) {
+                return periods.normalise();
+            }
+            else {
+                return periods;
+            }
         }
         // add first instance if included in range..
         if (start.getDate().before(rangeEnd)) {
