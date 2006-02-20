@@ -58,7 +58,7 @@ public class CalendarBuilderTest extends TestCase {
      */
     public final void testBuildInputStream() throws Exception {
 
-        System.setProperty("ical4j.unfolding.relaxed", "true");
+        System.setProperty(UnfoldingReader.KEY_UNFOLDING_RELAXED, "true");
 
         FileInputStream fin = new FileInputStream(filename);
 

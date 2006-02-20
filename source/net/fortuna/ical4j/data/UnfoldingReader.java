@@ -55,6 +55,13 @@ import org.apache.commons.logging.LogFactory;
  */
 public class UnfoldingReader extends PushbackReader {
 
+    /**
+     * A system property key to enable relaxed unfolding. Relaxed
+     * unfolding is enabled by setting this system property to
+     * "true".
+     */
+    public static final String KEY_UNFOLDING_RELAXED = "ical4j.unfolding.relaxed";
+
     private static Log log = LogFactory.getLog(UnfoldingReader.class);
 
     /**
@@ -72,7 +79,7 @@ public class UnfoldingReader extends PushbackReader {
     
     static {
         FOLD_PATTERNS.add(DEFAULT_FOLD_PATTERN);
-        if ("true".equals(System.getProperty("ical4j.unfolding.relaxed"))) {
+        if ("true".equals(System.getProperty(KEY_UNFOLDING_RELAXED))) {
             FOLD_PATTERNS.add(RELAXED_FOLD_PATTERN);
         }
     }

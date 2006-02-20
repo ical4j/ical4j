@@ -49,7 +49,7 @@ public class CalendarOutputterTest extends TestCase {
      * @throws Exception
      */
     public void testOutput() throws Exception {
-        System.setProperty("ical4j.unfolding.relaxed", "true");
+        System.setProperty(UnfoldingReader.KEY_UNFOLDING_RELAXED, "true");
 
         try {
             CalendarBuilder builder = new CalendarBuilder();
