@@ -148,7 +148,13 @@ public abstract class Observance extends Component implements Comparable {
             }
             // check recurrence rules for latest applicable onset..
             PropertyList rrules = getProperties(Property.RRULE);
-            Value dateType = (date instanceof DateTime) ? Value.DATE_TIME : Value.DATE;
+            Value dateType;
+            if (date instanceof DateTime) {
+                dateType = Value.DATE_TIME;
+            }
+            else {
+                dateType = Value.DATE;
+            }
             for (Iterator i = rrules.iterator(); i.hasNext();) {
                 RRule rrule = (RRule) i.next();
                 for (Iterator j = rrule.getRecur().getDates(onset, date, dateType).iterator(); j.hasNext();) {
