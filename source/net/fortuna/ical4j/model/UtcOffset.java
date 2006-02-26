@@ -35,6 +35,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
@@ -48,8 +49,10 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Ben Fortuna
  */
-public class UtcOffset {
+public class UtcOffset implements Serializable {
 
+    private static final long serialVersionUID = 5883111996721531728L;
+    
     private static final int HOUR_START_INDEX = 1;
 
     private static final int HOUR_END_INDEX = 3;

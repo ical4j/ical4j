@@ -35,6 +35,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -70,7 +71,9 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Ben Fortuna
  */
-public class Dur implements Comparable {
+public class Dur implements Comparable, Serializable {
+    
+    private static final long serialVersionUID = 5013232281547134583L;
     
     private static final int DAYS_PER_WEEK = 7;
     
