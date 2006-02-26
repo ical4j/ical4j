@@ -33,17 +33,24 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.property.Clazz;
+import net.fortuna.ical4j.model.property.Created;
+import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.LastModified;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.RecurrenceId;
+import net.fortuna.ical4j.model.property.Sequence;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
@@ -100,7 +107,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * 
  * @author Ben Fortuna
  */
-public class VJournal extends Component {
+public class VJournal extends CalendarComponent {
     
     private static final long serialVersionUID = -7635140949183238830L;
 
@@ -172,10 +179,9 @@ public class VJournal extends Component {
                 getProperties());
 
         Status status = (Status) getProperty(Property.STATUS);
-        if (status != null &&
-                !Status.VJOURNAL_DRAFT.equals(status) &&
-                !Status.VJOURNAL_FINAL.equals(status) &&
-                !Status.VJOURNAL_CANCELLED.equals(status)) {
+        if (status != null && !Status.VJOURNAL_DRAFT.equals(status)
+                && !Status.VJOURNAL_FINAL.equals(status)
+                && !Status.VJOURNAL_CANCELLED.equals(status)) {
                 throw new ValidationException(
                         "Status property [" + status.toString() + "] may not occur in VJOURNAL");
         }
@@ -190,6 +196,91 @@ public class VJournal extends Component {
         if (recurse) {
             validateProperties();
         }
+    }
+    
+    /**
+     * @return the optional access classification property for a journal entry
+     */
+    public final Clazz getClassification() {
+        return (Clazz) getProperty(Property.CLASS);
+    }
+    
+    /**
+     * @return the optional creation-time property for a journal entry
+     */
+    public final Created getCreated() {
+        return (Created) getProperty(Property.CREATED);
+    }
+    
+    /**
+     * @return the optional description property for a journal entry
+     */
+    public final Description getDescription() {
+        return (Description) getProperty(Property.DESCRIPTION);
+    }
+
+    /**
+     * Convenience method to pull the DTSTART out of the property list.
+     * @return The DtStart object representation of the start Date
+     */
+    public final DtStart getStartDate() {
+        return (DtStart) getProperty(Property.DTSTART);
+    }
+    
+    /**
+     * @return the optional last-modified property for a journal entry
+     */
+    public final LastModified getLastModified() {
+        return (LastModified) getProperty(Property.LAST_MODIFIED);
+    }
+    
+    /**
+     * @return the optional organizer property for a journal entry
+     */
+    public final Organizer getOrganizer() {
+        return (Organizer) getProperty(Property.ORGANIZER);
+    }
+    
+    /**
+     * @return the optional date-stamp property
+     */
+    public final DtStamp getDateStamp() {
+        return (DtStamp) getProperty(Property.DTSTAMP);
+    }
+    
+    /**
+     * @return the optional sequence number property for a journal entry
+     */
+    public final Sequence getSequence() {
+        return (Sequence) getProperty(Property.SEQUENCE);
+    }
+    
+    /**
+     * @return the optional status property for a journal entry
+     */
+    public final Status getStatus() {
+        return (Status) getProperty(Property.STATUS);
+    }
+    
+    /**
+     * @return the optional summary property for a journal entry
+     */
+    public final Summary getSummary() {
+        return (Summary) getProperty(Property.SUMMARY);
+    }
+    
+    /**
+     * @return the optional URL property for a journal entry
+     */
+    public final Url getUrl() {
+        return (Url) getProperty(Property.URL);
+    }
+    
+    /**
+     * @return the optional recurrence identifier property for a journal entry
+     */
+    public final RecurrenceId getRecurrenceId() {
+        return (RecurrenceId) getProperty(Property.RECURRENCE_ID);
     }
     
     /**

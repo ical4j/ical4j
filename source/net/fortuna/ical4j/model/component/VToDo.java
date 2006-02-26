@@ -43,13 +43,26 @@ import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.property.Clazz;
+import net.fortuna.ical4j.model.property.Completed;
+import net.fortuna.ical4j.model.property.Created;
+import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.Geo;
+import net.fortuna.ical4j.model.property.LastModified;
+import net.fortuna.ical4j.model.property.Location;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.PercentComplete;
+import net.fortuna.ical4j.model.property.Priority;
+import net.fortuna.ical4j.model.property.RecurrenceId;
+import net.fortuna.ical4j.model.property.Sequence;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
@@ -114,7 +127,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * 
  * @author Ben Fortuna
  */
-public class VToDo extends Component {
+public class VToDo extends CalendarComponent {
     
     private static final long serialVersionUID = -269658210065896668L;
 
@@ -270,11 +283,10 @@ public class VToDo extends Component {
                 getProperties());
 
         Status status = (Status) getProperty(Property.STATUS);
-        if (status != null &&
-                !Status.VTODO_NEEDS_ACTION.equals(status) &&
-                !Status.VTODO_COMPLETED.equals(status) &&
-                !Status.VTODO_IN_PROCESS.equals(status) &&
-                !Status.VTODO_CANCELLED.equals(status)) {
+        if (status != null && !Status.VTODO_NEEDS_ACTION.equals(status)
+                && !Status.VTODO_COMPLETED.equals(status)
+                && !Status.VTODO_IN_PROCESS.equals(status)
+                && !Status.VTODO_CANCELLED.equals(status)) {
                 throw new ValidationException(
                         "Status property [" + status.toString() + "] may not occur in VTODO");
         }
@@ -302,6 +314,140 @@ public class VToDo extends Component {
         if (recurse) {
             validateProperties();
         }
+    }
+    
+    /**
+     * @return the optional access classification property
+     */
+    public final Clazz getClassification() {
+        return (Clazz) getProperty(Property.CLASS);
+    }
+    
+    /**
+     * @return the optional date completed property
+     */
+    public final Completed getDateCompleted() {
+        return (Completed) getProperty(Property.COMPLETED);
+    }
+    
+    /**
+     * @return the optional creation-time property
+     */
+    public final Created getCreated() {
+        return (Created) getProperty(Property.CREATED);
+    }
+    
+    /**
+     * @return the optional description property
+     */
+    public final Description getDescription() {
+        return (Description) getProperty(Property.DESCRIPTION);
+    }
+
+    /**
+     * Convenience method to pull the DTSTART out of the property list.
+     * @return The DtStart object representation of the start Date
+     */
+    public final DtStart getStartDate() {
+        return (DtStart) getProperty(Property.DTSTART);
+    }
+    
+    /**
+     * @return the optional geographic position property
+     */
+    public final Geo getGeographicPos() {
+        return (Geo) getProperty(Property.GEO);
+    }
+    
+    /**
+     * @return the optional last-modified property
+     */
+    public final LastModified getLastModified() {
+        return (LastModified) getProperty(Property.LAST_MODIFIED);
+    }
+    
+    /**
+     * @return the optional location property
+     */
+    public final Location getLocation() {
+        return (Location) getProperty(Property.LOCATION);
+    }
+    
+    /**
+     * @return the optional organizer property
+     */
+    public final Organizer getOrganizer() {
+        return (Organizer) getProperty(Property.ORGANIZER);
+    }
+    
+    /**
+     * @return the optional percentage complete property
+     */
+    public final PercentComplete getPercentComplete() {
+        return (PercentComplete) getProperty(Property.PERCENT_COMPLETE);
+    }
+    
+    /**
+     * @return the optional priority property
+     */
+    public final Priority getPriority() {
+        return (Priority) getProperty(Property.PRIORITY);
+    }
+    
+    /**
+     * @return the optional date-stamp property
+     */
+    public final DtStamp getDateStamp() {
+        return (DtStamp) getProperty(Property.DTSTAMP);
+    }
+    
+    /**
+     * @return the optional sequence number property
+     */
+    public final Sequence getSequence() {
+        return (Sequence) getProperty(Property.SEQUENCE);
+    }
+    
+    /**
+     * @return the optional status property
+     */
+    public final Status getStatus() {
+        return (Status) getProperty(Property.STATUS);
+    }
+    
+    /**
+     * @return the optional summary property
+     */
+    public final Summary getSummary() {
+        return (Summary) getProperty(Property.SUMMARY);
+    }
+    
+    /**
+     * @return the optional URL property
+     */
+    public final Url getUrl() {
+        return (Url) getProperty(Property.URL);
+    }
+    
+    /**
+     * @return the optional recurrence identifier property
+     */
+    public final RecurrenceId getRecurrenceId() {
+        return (RecurrenceId) getProperty(Property.RECURRENCE_ID);
+    }
+    
+    /**
+     * @return the optional Duration property
+     */
+    public final Duration getDuration() {
+        return (Duration) getProperty(Property.DURATION);
+    }
+    
+    /**
+     * @return the optional due property
+     */
+    public final Due getDue() {
+        return (Due) getProperty(Property.DUE);
     }
     
     /**

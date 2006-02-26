@@ -35,12 +35,14 @@ package net.fortuna.ical4j.model.component;
 
 import java.util.Iterator;
 
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.property.LastModified;
+import net.fortuna.ical4j.model.property.TzId;
+import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
@@ -114,7 +116,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * 
  * @author Ben Fortuna
  */
-public class VTimeZone extends Component {
+public class VTimeZone extends CalendarComponent {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
@@ -247,5 +249,26 @@ public class VTimeZone extends Component {
             }
         }
         return latestObservance;
+    }
+    
+    /**
+     * @return the mandatory timezone identifier property
+     */
+    public final TzId getTimeZoneId() {
+        return (TzId) getProperty(Property.TZID);
+    }
+    
+    /**
+     * @return the optional last-modified property
+     */
+    public final LastModified getLastModified() {
+        return (LastModified) getProperty(Property.LAST_MODIFIED);
+    }
+    
+    /**
+     * @return the optional timezone url property
+     */
+    public final TzUrl getTimeZoneUrl() {
+        return (TzUrl) getProperty(Property.TZURL);
     }
 }

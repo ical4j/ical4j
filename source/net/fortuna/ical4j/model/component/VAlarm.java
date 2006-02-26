@@ -33,7 +33,6 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Property;
@@ -195,7 +194,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * 
  * @author Ben Fortuna
  */
-public class VAlarm extends Component {
+public class VAlarm extends CalendarComponent {
     
     private static final long serialVersionUID = -8193965477414653802L;
 
@@ -429,13 +428,5 @@ public class VAlarm extends Component {
      */
     public final Summary getSummary() {
         return (Summary) getProperty(Property.SUMMARY);
-    }
-    
-    /**
-     * Returns the optional attendee properties.
-     * @return
-     */
-    public final PropertyList getAttendees() {
-        return getProperties(Property.ATTENDEE);
     }
 }

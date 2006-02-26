@@ -48,18 +48,29 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.Clazz;
+import net.fortuna.ical4j.model.property.Created;
+import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.ExDate;
 import net.fortuna.ical4j.model.property.ExRule;
+import net.fortuna.ical4j.model.property.Geo;
+import net.fortuna.ical4j.model.property.LastModified;
+import net.fortuna.ical4j.model.property.Location;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.Priority;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.RecurrenceId;
+import net.fortuna.ical4j.model.property.Sequence;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
 
@@ -200,7 +211,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * 
  * @author Ben Fortuna
  */
-public class VEvent extends Component {
+public class VEvent extends CalendarComponent {
     
     private static final long serialVersionUID = 2547948989200697335L;
 
@@ -548,38 +559,160 @@ public class VEvent extends Component {
         }
         return periods;
     }
+    
+    /**
+     * @return the optional access classification property for an event
+     */
+    public final Clazz getClassification() {
+        return (Clazz) getProperty(Property.CLASS);
+    }
+    
+    /**
+     * @return the optional creation-time property for an event
+     */
+    public final Created getCreated() {
+        return (Created) getProperty(Property.CREATED);
+    }
+    
+    /**
+     * @return the optional description property for an event
+     */
+    public final Description getDescription() {
+        return (Description) getProperty(Property.DESCRIPTION);
+    }
 
     /**
      * Convenience method to pull the DTSTART out of the property list.
-     *
-     * @return
-     *      The DtStart object representation of the start Date
+     * @return The DtStart object representation of the start Date
      */
     public final DtStart getStartDate() {
         return (DtStart) getProperty(Property.DTSTART);
     }
+    
+    /**
+     * @return the optional geographic position property for an event
+     */
+    public final Geo getGeographicPos() {
+        return (Geo) getProperty(Property.GEO);
+    }
+    
+    /**
+     * @return the optional last-modified property for an event
+     */
+    public final LastModified getLastModified() {
+        return (LastModified) getProperty(Property.LAST_MODIFIED);
+    }
+    
+    /**
+     * @return the optional location property for an event
+     */
+    public final Location getLocation() {
+        return (Location) getProperty(Property.LOCATION);
+    }
+    
+    /**
+     * @return the optional organizer property for an event
+     */
+    public final Organizer getOrganizer() {
+        return (Organizer) getProperty(Property.ORGANIZER);
+    }
+    
+    /**
+     * @return the optional priority property for an event
+     */
+    public final Priority getPriority() {
+        return (Priority) getProperty(Property.PRIORITY);
+    }
+    
+    /**
+     * @return the optional date-stamp property
+     */
+    public final DtStamp getDateStamp() {
+        return (DtStamp) getProperty(Property.DTSTAMP);
+    }
+    
+    /**
+     * @return the optional sequence number property for an event
+     */
+    public final Sequence getSequence() {
+        return (Sequence) getProperty(Property.SEQUENCE);
+    }
+    
+    /**
+     * @return the optional status property for an event
+     */
+    public final Status getStatus() {
+        return (Status) getProperty(Property.STATUS);
+    }
+    
+    /**
+     * @return the optional summary property for an event
+     */
+    public final Summary getSummary() {
+        return (Summary) getProperty(Property.SUMMARY);
+    }
+    
+    /**
+     * @return the optional time transparency property for an event
+     */
+    public final Transp getTransparency() {
+        return (Transp) getProperty(Property.TRANSP);
+    }
+    
+    /**
+     * @return the optional URL property for an event
+     */
+    public final Url getUrl() {
+        return (Url) getProperty(Property.URL);
+    }
+    
+    /**
+     * @return the optional recurrence identifier property for an event
+     */
+    public final RecurrenceId getRecurrenceId() {
+        return (RecurrenceId) getProperty(Property.RECURRENCE_ID);
+    }
 
+    /**
+     * Returns the end date of this event. Where an end date is not
+     * available it will be derived from the event duration.
+     * @return a DtEnd instance, or null if one cannot be derived
+     */
+    public final DtEnd getEndDate() {
+        return getEndDate(true);
+    }
+    
     /**
      * Convenience method to pull the DTEND out of the property list.  If
      * DTEND was not specified, use the DTSTART + DURATION to calculate it.
-     *
-     * @return
-     *       The end for this VEVENT.
+     * @param deriveFromDuration specifies whether to derive an end date from
+     * the event duration where an end date is not found
+     * @return The end for this VEVENT.
      */
-    public final DtEnd getEndDate() {
+    public final DtEnd getEndDate(final boolean deriveFromDuration) {
         DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
-        // No DTEND?  No problem, we'll use the DURATION.
-        if (dtEnd == null) {
-            DtStart dtStart = getStartDate();
-            Duration vEventDuration =
-                      (Duration) getProperty(Property.DURATION);
-            dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration().getTime(dtStart.getDate()),
-                    (Value) dtStart.getParameter(Parameter.VALUE)));
-            if (dtStart.isUtc()) {
-                dtEnd.setUtc(true);
+        if (deriveFromDuration) {
+            // No DTEND?  No problem, we'll use the DURATION.
+            if (dtEnd == null) {
+                DtStart dtStart = getStartDate();
+                Duration vEventDuration = getDuration();
+                if (vEventDuration != null) {
+                    dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration().getTime(dtStart.getDate()),
+                            (Value) dtStart.getParameter(Parameter.VALUE)));
+                    if (dtStart.isUtc()) {
+                        dtEnd.setUtc(true);
+                    }
+                }
             }
         }
         return dtEnd;
+    }
+    
+    /**
+     * @return the optional Duration property
+     */
+    public final Duration getDuration() {
+        return (Duration) getProperty(Property.DURATION);
     }
     
     /**
