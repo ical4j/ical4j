@@ -46,12 +46,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Performs collection filtering based on a set of rules. A filter may dictate
+ * whether at least one rule or all rules are matched.
  * @author Ben Fortuna
  */
 public class Filter {
     
+    /**
+     * Indicates that any rule may be matched to include an object in
+     * the filtered collection.
+     */
     public static final int MATCH_ANY = 1;
     
+    /**
+     * Indicates that all rules must be matched to include an object in
+     * the filtered collection.
+     */
     public static final int MATCH_ALL = 2;
     
     private static Log log = LogFactory.getLog(Filter.class);

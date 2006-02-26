@@ -36,6 +36,8 @@
 package net.fortuna.ical4j.filter;
 
 /**
+ * Implementors dictate whether a given object is classified as a "match"
+ * for the enclosing filter.
  * @author Ben Fortuna
  */
 public interface Rule {

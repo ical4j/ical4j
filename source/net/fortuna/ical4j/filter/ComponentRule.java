@@ -38,7 +38,8 @@ package net.fortuna.ical4j.filter;
 import net.fortuna.ical4j.model.Component;
 
 /**
- * An abstract rule implementation serving only to cast objects to components.
+ * An abstract rule implementation serving as the base class for component
+ * matching rule implementations.
  * @author Ben Fortuna
  */
 public abstract class ComponentRule implements Rule {
