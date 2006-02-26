@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 12/11/2005
+ * Created on 26/02/2006
  *
- * Copyright (c) 2005, Ben Fortuna
+ * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,55 +33,30 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model.component;
 
-import junit.framework.TestCase;
-
-import net.fortuna.ical4j.model.component.CalendarComponent;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.PropertyList;
 
 /**
- * Unit tests for <code>Component</code> base class.
+ * Base class for components that may be added to a calendar.
  * @author Ben Fortuna
  */
-public abstract class ComponentTest extends TestCase {
+public abstract class CalendarComponent extends Component {
 
-    private static final Log LOG = LogFactory.getLog(ComponentTest.class);
+    /**
+     * @param name component name
+     */
+    public CalendarComponent(final String name) {
+        super(name);
+    }
 
-    protected Component component;
-    
     /**
-     * Test whether the component is a calendar component.
+     * @param name component name
+     * @param properties component properties
      */
-    public abstract void testIsCalendarComponent();
-    
-    /**
-     * @param c
-     */
-    protected void assertIsCalendarComponent(final Component c) {
-        assertTrue("Component is not a calendar component", (c instanceof CalendarComponent));
+    public CalendarComponent(final String name, final PropertyList properties) {
+        super(name, properties);
     }
-    
-    /**
-     * @param c
-     */
-    protected void assertIsNotCalendarComponent(final Component c) {
-        assertFalse("Component is a calendar component", (c instanceof CalendarComponent));
-    }
-    
-    /**
-     * @param component
-     */
-    protected void assertValidationException(final Component component) {
-        try {
-            component.validate();
-        }
-        catch (ValidationException ve) {
-            LOG.debug("Exception caught", ve);
-            return;
-        }
-        fail("ValidationException should be thrown!");
-    }
+
 }

@@ -35,7 +35,6 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
 
@@ -44,7 +43,7 @@ import net.fortuna.ical4j.model.ValidationException;
  * 
  * @author Ben Fortuna
  */
-public class XComponent extends Component {
+public class XComponent extends CalendarComponent {
 
     private static final long serialVersionUID = -3622674849097714927L;
     

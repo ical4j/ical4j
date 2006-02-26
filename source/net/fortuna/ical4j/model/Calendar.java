@@ -36,6 +36,7 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.ProdId;
@@ -273,7 +274,7 @@ public class Calendar implements Serializable {
         for (Iterator i = getComponents().iterator(); i.hasNext();) {
             Component component = (Component) i.next();
 
-            if (!component.isCalendarComponent()) {
+            if (!(component instanceof CalendarComponent)) {
                 throw new ValidationException(
                     "Not a valid calendar component: " + component.getName());
             }
@@ -313,7 +314,7 @@ public class Calendar implements Serializable {
      * Returns the mandatory prodid property.
      * @return
      */
-    public ProdId getProductId() {
+    public final ProdId getProductId() {
         return (ProdId) getProperty(Property.PRODID);
     }
     
@@ -321,7 +322,7 @@ public class Calendar implements Serializable {
      * Returns the mandatory version property.
      * @return
      */
-    public Version getVersion() {
+    public final Version getVersion() {
         return (Version) getProperty(Property.VERSION);
     }
     
@@ -329,7 +330,7 @@ public class Calendar implements Serializable {
      * Returns the optional calscale property.
      * @return
      */
-    public CalScale getCalendarScale() {
+    public final CalScale getCalendarScale() {
         return (CalScale) getProperty(Property.CALSCALE);
     }
     
@@ -337,7 +338,7 @@ public class Calendar implements Serializable {
      * Returns the optional method property.
      * @return
      */
-    public Method getMethod() {
+    public final Method getMethod() {
         return (Method) getProperty(Property.METHOD);
     }
     
