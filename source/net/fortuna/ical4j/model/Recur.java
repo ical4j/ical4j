@@ -496,6 +496,17 @@ public class Recur implements Serializable {
         }
         Calendar cal = Dates.getCalendarInstance(seed);
         cal.setTime(seed);
+        
+        // optimize the start time for selecting candidates
+        // (only applicable where a COUNT is not specified)
+        if (getCount() < 1) {
+            Calendar seededCal = (Calendar) cal.clone();
+            while (seededCal.getTime().before(periodStart)) {
+                cal.setTime(seededCal.getTime());
+                increment(seededCal);
+            }
+        }
+        
         int invalidCandidateCount = 0;
         while (!((getUntil() != null && cal.getTime().after(getUntil()))
                 || (periodEnd != null && cal.getTime().after(periodEnd))
