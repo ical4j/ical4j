@@ -36,10 +36,7 @@ package net.fortuna.ical4j.data;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -74,29 +71,41 @@ public class UnfoldingReader extends PushbackReader {
      * and KOrganizer.
      */
     private static final char[] RELAXED_FOLD_PATTERN = {'\n', ' '};
-    
-    private static final List FOLD_PATTERNS = new ArrayList();
-    
-    static {
-        FOLD_PATTERNS.add(DEFAULT_FOLD_PATTERN);
-        if ("true".equals(System.getProperty(KEY_UNFOLDING_RELAXED))) {
-            FOLD_PATTERNS.add(RELAXED_FOLD_PATTERN);
-        }
-    }
 
-    private List buffers;
+    private char[][] patterns;
+    
+    private char[][] buffers;
     
     private int linesUnfolded;
 
     /**
-     * @param in a reader to read from
+     * Creates a new unfolding reader instance. Relaxed unfolding flag is
+     * read from system property.
+     * @param in the reader to unfold from
      */
     public UnfoldingReader(final Reader in) {
+        this(in, "true".equals(System.getProperty(KEY_UNFOLDING_RELAXED)));
+    }
+    
+    /**
+     * Creates a new unfolding reader instance.
+     * @param in a reader to read from
+     * @param relaxed specifies whether unfolding is relaxed
+     */
+    public UnfoldingReader(final Reader in, final boolean relaxed) {
         super(in, DEFAULT_FOLD_PATTERN.length);
-        buffers = new ArrayList();
-        for (Iterator i = FOLD_PATTERNS.iterator(); i.hasNext();) {
-            char[] pattern = (char[]) i.next();
-            buffers.add(new char[pattern.length]);
+        if (relaxed) {
+            patterns = new char[2][];
+            patterns[0] = DEFAULT_FOLD_PATTERN;
+            patterns[1] = RELAXED_FOLD_PATTERN;
+        }
+        else {
+            patterns = new char[1][];
+            patterns[0] = DEFAULT_FOLD_PATTERN;
+        }
+        buffers = new char[patterns.length][];
+        for (int i = 0; i < patterns.length; i++) {
+            buffers[i] = new char[patterns[i].length];
         }
     }
 
@@ -111,41 +120,17 @@ public class UnfoldingReader extends PushbackReader {
      * @see java.io.PushbackReader#read()
      */
     public final int read() throws IOException {
-        /*
-        for (int i = 0; i < buffers.size(); i++) {
-            char[] buffer = (char[]) buffers.get(i);
-            int read = super.read(buffer);
-            if (read > 0) {
-                if (!Arrays.equals((char[]) FOLD_PATTERNS.get(i), buffer)) {
-                    unread(buffer, 0, read);
-                }
-                else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Unfolding..");
-                    }
-                    linesUnfolded++;
-                    // return as soon as unfolding occurs..
-                    return super.read();
-                }
-            }
-            else {
-                return read;
-            }
-        }
-        return super.read();
-        */
         boolean didUnfold;
 
         // need to loop since one line fold might be directly followed by another
         do {
             didUnfold = false;
 
-            for (int i = 0; i < buffers.size(); i++) {
-                char[] buffer = (char[]) buffers.get(i);
-                int read = super.read(buffer);
+            for (int i = 0; i < buffers.length; i++) {
+                int read = super.read(buffers[i]);
                 if (read > 0) {
-                    if (!Arrays.equals((char[]) FOLD_PATTERNS.get(i), buffer)) {
-                        unread(buffer, 0, read);
+                    if (!Arrays.equals(patterns[i], buffers[i])) {
+                        unread(buffers[i], 0, read);
                     }
                     else {
                         if (log.isDebugEnabled()) {
