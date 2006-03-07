@@ -150,8 +150,17 @@ public class CalendarBuilder implements ContentHandler {
      * @throws ParserException
      */
     public Calendar build(final Reader in) throws IOException, ParserException {
-        UnfoldingReader uin = new UnfoldingReader(in);
-
+        return build(new UnfoldingReader(in));
+    }
+    
+    /**
+     * Build an iCalendar model by parsing data from the specified reader.
+     * @param uin an unfolding reader to read data from
+     * @return a calendar model
+     * @throws IOException
+     * @throws ParserException
+     */
+    public Calendar build(final UnfoldingReader uin) throws IOException, ParserException {
         // re-initialise..
         calendar = null;
         component = null;
