@@ -456,8 +456,8 @@ public class VEvent extends CalendarComponent {
         DtStart start = (DtStart) getProperty(Property.DTSTART);
         DtEnd end = (DtEnd) getProperty(Property.DTEND);
         Duration duration = (Duration) getProperty(Property.DURATION);
-        // if no start date specified return empty list..
-        if (start == null) {
+        // if no start date or duration specified return empty list..
+        if (start == null || (duration == null && end == null)) {
             return periods;
         }
         // if an explicit event duration is not specified, derive a value for recurring
