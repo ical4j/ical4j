@@ -33,13 +33,16 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.HashMap;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
@@ -49,6 +52,7 @@ import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
+import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
@@ -69,7 +73,7 @@ public abstract class Observance extends Component implements Comparable {
     public static final String DAYLIGHT = "DAYLIGHT";
     
     // TODO: clear cache when observance definition changes (??)
-    private Map onsets = new HashMap();
+    private Map onsets = new TreeMap();
 
     /**
      * Constructs a timezone observance with the specified name
@@ -129,12 +133,18 @@ public abstract class Observance extends Component implements Comparable {
      * observance onset for the specified date
      */
     public final Date getLatestOnset(final Date date) {
-        Date onset = ((DtStart) getProperty(Property.DTSTART)).getDate();
+        Date initialOnset = ((DtStart) getProperty(Property.DTSTART)).getDate();
+        
         // observance not applicable if date is before the effective date of this observance..
-        if (date.before(onset)) {
+        if (date.before(initialOnset)) {
             return null;
         }
-        if (onsets.get(date) == null) {
+        
+        Date onset = getCachedOnset(date);
+        if (onset == null) {
+            onset = initialOnset;
+            Date nextOnset = null;
+            
             // check rdates for latest applicable onset..
             PropertyList rdates = getProperties(Property.RDATE);
             for (Iterator i = rdates.iterator(); i.hasNext();) {
@@ -144,8 +154,12 @@ public abstract class Observance extends Component implements Comparable {
                     if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
                         onset = rdateOnset;
                     }
+                    else if (rdateOnset.after(date) && rdateOnset.after(onset)) {
+                        nextOnset = rdateOnset;
+                    }
                 }
             }
+            
             // check recurrence rules for latest applicable onset..
             PropertyList rrules = getProperties(Property.RRULE);
             Value dateType;
@@ -157,17 +171,50 @@ public abstract class Observance extends Component implements Comparable {
             }
             for (Iterator i = rrules.iterator(); i.hasNext();) {
                 RRule rrule = (RRule) i.next();
-                for (Iterator j = rrule.getRecur().getDates(onset, date, dateType).iterator(); j.hasNext();) {
+                // include future onsets to determine onset period..
+                Calendar cal = Dates.getCalendarInstance(date);
+                cal.setTime(date);
+                cal.add(Calendar.YEAR, 1);
+                Date endRecur = Dates.getInstance(cal.getTime(), dateType);
+                DateList recurrenceDates = rrule.getRecur().getDates(initialOnset, endRecur, dateType);
+                for (Iterator j = recurrenceDates.iterator(); j.hasNext();) {
                     Date rruleOnset = (Date) j.next();
                     if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
                         onset = rruleOnset;
                     }
+                    else if (rruleOnset.after(date) && rruleOnset.after(onset)) {
+                        nextOnset = rruleOnset;
+                    }
                 }
             }
-            onsets.put(date, onset);
+            
+            // cache onset..
+            Period onsetPeriod = null;
+            if (nextOnset != null) {
+                onsetPeriod = new Period(new DateTime(onset), new DateTime(nextOnset));
+            }
+            else {
+                onsetPeriod = new Period(new DateTime(onset), new DateTime(date));
+            }
+            onsets.put(onsetPeriod, onset);
         }
-        return (Date) onsets.get(date);
-//            return onset;
+        return onset;
+    }
+    
+    /**
+     * Returns a cached onset for the specified date.
+     * @param date
+     * @return a cached onset date or null if no cached onset is applicable
+     * for the specified date
+     */
+    private Date getCachedOnset(final Date date) {
+        for (Iterator i = onsets.keySet().iterator(); i.hasNext();) {
+            Period onsetPeriod = (Period) i.next();
+            if (onsetPeriod.includes(date)) {
+                return (Date) onsets.get(onsetPeriod);
+            }
+        }
+        return null;
     }
     
     /**
