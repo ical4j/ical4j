@@ -19,6 +19,7 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.Description;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,7 +59,7 @@ public class CalendarBuilderTest extends TestCase {
      */
     public final void testBuildInputStream() throws Exception {
 
-        System.setProperty(UnfoldingReader.KEY_UNFOLDING_RELAXED, "true");
+        System.setProperty(CompatibilityHints.KEY_RELAXED_UNFOLDING, "true");
 
         FileInputStream fin = new FileInputStream(filename);
 

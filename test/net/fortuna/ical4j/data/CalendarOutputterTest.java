@@ -21,6 +21,7 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.FileOnlyFilter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,7 +50,7 @@ public class CalendarOutputterTest extends TestCase {
      * @throws Exception
      */
     public void testOutput() throws Exception {
-        System.setProperty(UnfoldingReader.KEY_UNFOLDING_RELAXED, "true");
+        System.setProperty(CompatibilityHints.KEY_RELAXED_UNFOLDING, "true");
 
         try {
             CalendarBuilder builder = new CalendarBuilder();
