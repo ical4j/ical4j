@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
+
 /**
  * Defines a list of days.
  * 
@@ -66,9 +68,17 @@ public class WeekDayList extends ArrayList implements Serializable {
      * @param aString a string representation of a day list
      */
     public WeekDayList(final String aString) {
+        boolean outlookCompatibility =
+            "true".equals(System.getProperty(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY));
+        
         for (StringTokenizer t = new StringTokenizer(aString, ","); t
                 .hasMoreTokens();) {
-            add(new WeekDay(t.nextToken()));
+            if (outlookCompatibility) {
+                add(new WeekDay(t.nextToken().trim()));
+            }
+            else {
+                add(new WeekDay(t.nextToken()));
+            }
         }
     }
 
