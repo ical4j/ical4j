@@ -1,7 +1,9 @@
 /*
- * $Id$ [18-Apr-2004]
+ * $Id$
  *
- * Copyright (c) 2004, Ben Fortuna
+ * Created on 9/03/2006
+ *
+ * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -22,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -31,47 +33,38 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model.parameter;
-
-import net.fortuna.ical4j.model.Escapable;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.Strings;
+package net.fortuna.ical4j.util;
 
 /**
- * Defines a Time Zone Identifier parameter.
- * 
- * @author benfortuna
+ * A set of keys used to enable compatibility features.
+ * @author Ben Fortuna
  */
-public class TzId extends Parameter implements Escapable {
-    
-    private static final long serialVersionUID = 2366516258055857879L;
-
-    public static final String PREFIX = "/";
-
-    private String value;
+public final class CompatibilityHints {
 
     /**
-     * @param aValue a string representation of a time zone identifier
+     * Constructor made private to enforce static nature.
      */
-    public TzId(final String aValue) {
-        super(TZID);
-        // Work around a Microsoft Bug
-        // (Not conforming to rfc2445, Microsoft Exchange quotes timezone references.)
-        if ("true".equals(System.getProperty(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY))) {
-            this.value = Strings.unquote(aValue);
-        }
-        else {
-            this.value = aValue;
-        }
+    private CompatibilityHints() {
     }
+    
+    /**
+     * A system property key to enable relaxed unfolding. Relaxed
+     * unfolding is enabled by setting this system property to
+     * "true".
+     */
+    public static final String KEY_RELAXED_UNFOLDING = "ical4j.unfolding.relaxed";
+    
+    /**
+     * A system property key to enable relaxed parsing. Relaxed
+     * parsing is enabled by setting this system property to
+     * "true".
+     */
+    public static final String KEY_RELAXED_PARSING = "ical4j.parsing.relaxed";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see net.fortuna.ical4j.model.Parameter#getValue()
+    /**
+     * A system property key used to enable compatibility with
+     * Outlook/Exchange-generated iCalendar files. Outlook compatibility is
+     * enabled by setting this system property to "true".
      */
-    public final String getValue() {
-        return value;
-    }
+    public static final String KEY_OUTLOOK_COMPATIBILITY = "ical4j.compatibility.outlook";
 }

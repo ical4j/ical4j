@@ -38,6 +38,8 @@ import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.Arrays;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -51,13 +53,6 @@ import org.apache.commons.logging.LogFactory;
  * @author Ben Fortuna
  */
 public class UnfoldingReader extends PushbackReader {
-
-    /**
-     * A system property key to enable relaxed unfolding. Relaxed
-     * unfolding is enabled by setting this system property to
-     * "true".
-     */
-    public static final String KEY_UNFOLDING_RELAXED = "ical4j.unfolding.relaxed";
 
     private static Log log = LogFactory.getLog(UnfoldingReader.class);
 
@@ -84,7 +79,7 @@ public class UnfoldingReader extends PushbackReader {
      * @param in the reader to unfold from
      */
     public UnfoldingReader(final Reader in) {
-        this(in, "true".equals(System.getProperty(KEY_UNFOLDING_RELAXED)));
+        this(in, "true".equals(System.getProperty(CompatibilityHints.KEY_RELAXED_UNFOLDING)));
     }
     
     /**

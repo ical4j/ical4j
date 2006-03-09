@@ -33,7 +33,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.data.CalendarParserImpl;
 import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.Standard;
@@ -44,6 +43,7 @@ import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.component.XComponent;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * A factory for creating iCalendar components. Note that if relaxed parsing is enabled (via
@@ -60,7 +60,7 @@ public final class ComponentFactory {
      * Constructor made private to prevent instantiation.
      */
     private ComponentFactory() {
-        allowIllegalNames = "true".equals(System.getProperty(CalendarParserImpl.KEY_PARSING_RELAXED));
+        allowIllegalNames = "true".equals(System.getProperty(CompatibilityHints.KEY_RELAXED_PARSING));
     }
 
     /**

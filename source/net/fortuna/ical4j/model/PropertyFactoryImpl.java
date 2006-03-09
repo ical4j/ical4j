@@ -39,7 +39,6 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.fortuna.ical4j.data.CalendarParserImpl;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.Attach;
 import net.fortuna.ical4j.model.property.Attendee;
@@ -88,6 +87,7 @@ import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * A factory for creating iCalendar properties. Note that if relaxed parsing is enabled (via
@@ -106,7 +106,7 @@ public final class PropertyFactoryImpl implements PropertyFactory {
      * Constructor made private to prevent instantiation.
      */
     private PropertyFactoryImpl() {
-        allowIllegalNames = "true".equals(System.getProperty(CalendarParserImpl.KEY_PARSING_RELAXED));
+        allowIllegalNames = "true".equals(System.getProperty(CompatibilityHints.KEY_RELAXED_PARSING));
         factories = new HashMap();
         factories.put(Property.ACTION, createActionFactory());
         factories.put(Property.ATTACH, createAttachFactory());

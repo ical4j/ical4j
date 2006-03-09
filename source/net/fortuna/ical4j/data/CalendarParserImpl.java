@@ -54,13 +54,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CalendarParserImpl implements CalendarParser {
 
-    /**
-     * A system property key to enable relaxed parsing. Relaxed
-     * parsing is enabled by setting this system property to
-     * "true".
-     */
-    public static final String KEY_PARSING_RELAXED = "ical4j.parsing.relaxed";
-    
     private static final int WORD_CHAR_START = 32;
 
     private static final int WORD_CHAR_END = 126;
