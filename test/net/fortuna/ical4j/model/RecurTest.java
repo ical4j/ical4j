@@ -376,4 +376,30 @@ public class RecurTest extends TestCase {
         
         log.info(dateList);
     }
+    
+    /**
+     * Test ordering of returned dates.
+     * @throws ParseException
+     */
+    public void testDateOrdering() throws ParseException {
+        String s1 = "FREQ=WEEKLY;COUNT=75;INTERVAL=2;BYDAY=SU,MO,TU;WKST=SU"; 
+        
+        Recur rec = new Recur(s1); 
+         
+        Date d1 = new Date(); 
+        Calendar cal = Calendar.getInstance(); 
+        cal.add(Calendar.YEAR,1); 
+        Date d2 = new Date(cal.getTimeInMillis()); 
+         
+        DateList dl1 = rec.getDates(d1,d2, Value.DATE_TIME); 
+        
+        Date prev = null;
+        Date event = null;
+        for(int i=0; i<dl1.size(); i++) {
+            prev = event;
+            event = (Date) dl1.get(i); 
+            log.info("Occurence "+i+" at "+event);
+            assertTrue(prev == null || !prev.after(event));
+        }
+    }
 }
