@@ -39,6 +39,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
@@ -73,8 +76,12 @@ public abstract class Observance extends Component implements Comparable {
 
     public static final String DAYLIGHT = "DAYLIGHT";
     
+    private static final Log LOG = LogFactory.getLog(Observance.class);
+    
     // TODO: clear cache when observance definition changes (??)
     private Map onsets = new TreeMap();
+    
+    private boolean rdatesCached = false;
 
     /**
      * Constructs a timezone observance with the specified name
@@ -141,30 +148,40 @@ public abstract class Observance extends Component implements Comparable {
             return null;
         }
         
+        long start = System.currentTimeMillis();
+        
         Date onset = getCachedOnset(date);
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Cache " + ((onset != null) ? "hit" : "miss") + " - retrieval time: " + (System.currentTimeMillis() - start) + "ms");
+        }
+        
         if (onset == null) {
             onset = initialOnset;
             // collect all onsets for the purposes of caching..
             DateList cacheableOnsets = new DateList();
 //            Date nextOnset = null;
             
-            // check rdates for latest applicable onset..
-            PropertyList rdates = getProperties(Property.RDATE);
-            for (Iterator i = rdates.iterator(); i.hasNext();) {
-                RDate rdate = (RDate) i.next();
-                for (Iterator j = rdate.getDates().iterator(); j.hasNext();) {
-                    Date rdateOnset = (Date) j.next();
-                    if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
-                        onset = rdateOnset;
+            if (!rdatesCached) {
+                // check rdates for latest applicable onset..
+                PropertyList rdates = getProperties(Property.RDATE);
+                for (Iterator i = rdates.iterator(); i.hasNext();) {
+                    RDate rdate = (RDate) i.next();
+                    for (Iterator j = rdate.getDates().iterator(); j.hasNext();) {
+                        Date rdateOnset = (Date) j.next();
+                        if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
+                            onset = rdateOnset;
+                        }
+                        /*
+                        else if (rdateOnset.after(date) && rdateOnset.after(onset)
+                                && (nextOnset == null || rdateOnset.before(nextOnset))) {
+                            nextOnset = rdateOnset;
+                        }
+                        */
+                        cacheableOnsets.add(rdateOnset);
                     }
-                    /*
-                    else if (rdateOnset.after(date) && rdateOnset.after(onset)
-                            && (nextOnset == null || rdateOnset.before(nextOnset))) {
-                        nextOnset = rdateOnset;
-                    }
-                    */
-                    cacheableOnsets.add(rdateOnset);
                 }
+                rdatesCached = true;
             }
             
             // check recurrence rules for latest applicable onset..
@@ -183,7 +200,7 @@ public abstract class Observance extends Component implements Comparable {
                 cal.setTime(date);
                 cal.add(Calendar.YEAR, 1);
                 Date endRecur = Dates.getInstance(cal.getTime(), dateType);
-                DateList recurrenceDates = rrule.getRecur().getDates(initialOnset, endRecur, dateType);
+                DateList recurrenceDates = rrule.getRecur().getDates(onset, endRecur, dateType);
                 for (Iterator j = recurrenceDates.iterator(); j.hasNext();) {
                     Date rruleOnset = (Date) j.next();
                     if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
