@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.component;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -143,7 +144,9 @@ public abstract class Observance extends Component implements Comparable {
         Date onset = getCachedOnset(date);
         if (onset == null) {
             onset = initialOnset;
-            Date nextOnset = null;
+            // collect all onsets for the purposes of caching..
+            DateList cacheableOnsets = new DateList();
+//            Date nextOnset = null;
             
             // check rdates for latest applicable onset..
             PropertyList rdates = getProperties(Property.RDATE);
@@ -154,9 +157,13 @@ public abstract class Observance extends Component implements Comparable {
                     if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
                         onset = rdateOnset;
                     }
-                    else if (rdateOnset.after(date) && rdateOnset.after(onset)) {
+                    /*
+                    else if (rdateOnset.after(date) && rdateOnset.after(onset)
+                            && (nextOnset == null || rdateOnset.before(nextOnset))) {
                         nextOnset = rdateOnset;
                     }
+                    */
+                    cacheableOnsets.add(rdateOnset);
                 }
             }
             
@@ -182,13 +189,28 @@ public abstract class Observance extends Component implements Comparable {
                     if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
                         onset = rruleOnset;
                     }
-                    else if (rruleOnset.after(date) && rruleOnset.after(onset)) {
+                    /*
+                    else if (rruleOnset.after(date) && rruleOnset.after(onset)
+                            && (nextOnset == null || rruleOnset.before(nextOnset))) {
                         nextOnset = rruleOnset;
                     }
+                    */
+                    cacheableOnsets.add(rruleOnset);
                 }
             }
             
-            // cache onset..
+            // cache onsets..
+            Collections.sort(cacheableOnsets);
+            Date cacheableOnset = null;
+            Date nextOnset = null;
+            for (Iterator i = cacheableOnsets.iterator(); i.hasNext();) {
+                cacheableOnset = nextOnset;
+                nextOnset = (Date) i.next();
+                if (cacheableOnset != null) {
+                    onsets.put(new Period(new DateTime(cacheableOnset), new DateTime(nextOnset)), cacheableOnset);
+                }
+            }
+            /*
             Period onsetPeriod = null;
             if (nextOnset != null) {
                 onsetPeriod = new Period(new DateTime(onset), new DateTime(nextOnset));
@@ -197,6 +219,7 @@ public abstract class Observance extends Component implements Comparable {
                 onsetPeriod = new Period(new DateTime(onset), new DateTime(date));
             }
             onsets.put(onsetPeriod, onset);
+            */
         }
         return onset;
     }
