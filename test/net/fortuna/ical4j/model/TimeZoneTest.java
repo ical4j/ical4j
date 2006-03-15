@@ -38,6 +38,9 @@ package net.fortuna.ical4j.model;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.fortuna.ical4j.model.property.DtStart;
 
 import junit.framework.TestCase;
@@ -47,6 +50,8 @@ import junit.framework.TestCase;
  * @author Ben Fortuna
  */
 public class TimeZoneTest extends TestCase {
+    
+    private static final Log LOG = LogFactory.getLog(TimeZoneTest.class);
     
     private TimeZoneRegistry registry;
 
@@ -108,11 +113,24 @@ public class TimeZoneTest extends TestCase {
      */
     public void testInDaylightTime() {
         Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, -2);
+        /*
         cal.set(Calendar.MONTH, 12);
         assertEquals(tz.inDaylightTime(cal.getTime()), timezone.inDaylightTime(cal.getTime()));
         
         cal.set(Calendar.MONTH, 6);
         assertEquals(tz.inDaylightTime(cal.getTime()), timezone.inDaylightTime(cal.getTime()));
+        */
+        long start, stop;
+        for (int i = 0; i < 365; i++) {
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            start = System.currentTimeMillis();
+            assertEquals("inDaylightTime() invalid: [" + cal.getTime() + "]",
+                    tz.inDaylightTime(cal.getTime()),
+                    timezone.inDaylightTime(cal.getTime()));
+            stop = System.currentTimeMillis();
+            LOG.debug("Time: " + (stop - start) + "ms");
+        }
     }
     
     /**
