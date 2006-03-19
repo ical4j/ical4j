@@ -66,7 +66,7 @@ public class DateTime extends Date {
     /**
      * Used for parsing times in a local date-time representation.
      */
-    private DateFormat defaultFormat = new SimpleDateFormat(DEFAULT_PATTERN);
+    private static final DateFormat DEFAULT_FORMAT = new SimpleDateFormat(DEFAULT_PATTERN);
     
     private Time time;
     
@@ -129,8 +129,10 @@ public class DateTime extends Date {
             setUtc(true);
         }
         catch (ParseException pe) {
-            defaultFormat.setTimeZone(getFormat().getTimeZone());
-            time = defaultFormat.parse(value).getTime();
+            synchronized (DEFAULT_FORMAT) {
+                DEFAULT_FORMAT.setTimeZone(getFormat().getTimeZone());
+                time = DEFAULT_FORMAT.parse(value).getTime();
+            }
             this.time = new Time(time, getFormat().getTimeZone());
         }
         setTime(time);
@@ -149,13 +151,15 @@ public class DateTime extends Date {
             setUtc(true);
         }
         catch (ParseException pe) {
-            if (timezone != null) {
-                defaultFormat.setTimeZone(timezone);
+            synchronized (DEFAULT_FORMAT) {
+                if (timezone != null) {
+                    DEFAULT_FORMAT.setTimeZone(timezone);
+                }
+                else {
+                    DEFAULT_FORMAT.setTimeZone(getFormat().getTimeZone());
+                }
+                setTime(DEFAULT_FORMAT.parse(value).getTime());
             }
-            else {
-                defaultFormat.setTimeZone(getFormat().getTimeZone());
-            }
-            setTime(defaultFormat.parse(value).getTime());
             setTimeZone(timezone);
         }
     }
