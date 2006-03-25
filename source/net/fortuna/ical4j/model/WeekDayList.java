@@ -74,7 +74,7 @@ public class WeekDayList extends ArrayList implements Serializable {
         for (StringTokenizer t = new StringTokenizer(aString, ","); t
                 .hasMoreTokens();) {
             if (outlookCompatibility) {
-                add(new WeekDay(t.nextToken().trim()));
+                add(new WeekDay(t.nextToken().replaceAll(" ", "")));
             }
             else {
                 add(new WeekDay(t.nextToken()));
