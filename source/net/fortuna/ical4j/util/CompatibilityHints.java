@@ -35,12 +35,17 @@
  */
 package net.fortuna.ical4j.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A set of keys used to enable compatibility features.
  * @author Ben Fortuna
  */
 public final class CompatibilityHints {
 
+    private static final Map HINTS = new HashMap();
+    
     /**
      * Constructor made private to enforce static nature.
      */
@@ -67,4 +72,24 @@ public final class CompatibilityHints {
      * enabled by setting this system property to "true".
      */
     public static final String KEY_OUTLOOK_COMPATIBILITY = "ical4j.compatibility.outlook";
+    
+    /**
+     * @param key
+     * @param value
+     */
+    public static void setHintEnabled(final String key, final boolean enabled) {
+        HINTS.put(key, new Boolean(enabled));
+    }
+    
+    /**
+     * @param key
+     * @return
+     */
+    public static boolean isHintEnabled(final String key) {
+        Boolean enabled = (Boolean) HINTS.get(key);
+        if (enabled != null) {
+            return enabled.booleanValue();
+        }
+        return "true".equals(System.getProperty(key));
+    }
 }

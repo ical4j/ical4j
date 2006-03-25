@@ -60,7 +60,7 @@ public final class ComponentFactory {
      * Constructor made private to prevent instantiation.
      */
     private ComponentFactory() {
-        allowIllegalNames = "true".equals(System.getProperty(CompatibilityHints.KEY_RELAXED_PARSING));
+        allowIllegalNames = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 
     /**

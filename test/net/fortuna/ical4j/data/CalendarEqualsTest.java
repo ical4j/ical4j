@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.FileOnlyFilter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,7 +43,7 @@ public class CalendarEqualsTest extends TestCase {
      */ 
     private void doTestCalendarEquals(File file, boolean valid) throws Exception
     {
-        System.setProperty("ical4j.unfolding.relaxed", "true");
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
 
         FileInputStream fin = new FileInputStream(file);
         CalendarBuilder builder = new CalendarBuilder();

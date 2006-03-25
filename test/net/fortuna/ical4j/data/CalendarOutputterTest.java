@@ -50,7 +50,7 @@ public class CalendarOutputterTest extends TestCase {
      * @throws Exception
      */
     public void testOutput() throws Exception {
-        System.setProperty(CompatibilityHints.KEY_RELAXED_UNFOLDING, "true");
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
 
         try {
             CalendarBuilder builder = new CalendarBuilder();
@@ -110,7 +110,7 @@ public class CalendarOutputterTest extends TestCase {
      * Overridden to return the current iCalendar file under test.
      */
     public final String getName() {
-        return filename;
+        return super.getName() + " [" + filename + "]";
     }
 
     /**

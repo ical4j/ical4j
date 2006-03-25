@@ -61,7 +61,7 @@ public class TzIdTest extends TestCase {
 
     public void testTzIdCompatibility() throws IOException, ParserException {
         // enable TZID compatibility mode..
-        System.setProperty(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, "true");
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, true);
         
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(new FileInputStream("etc/samples/valid/tmeher.ics"));

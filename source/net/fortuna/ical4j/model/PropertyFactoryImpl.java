@@ -106,7 +106,7 @@ public final class PropertyFactoryImpl implements PropertyFactory {
      * Constructor made private to prevent instantiation.
      */
     private PropertyFactoryImpl() {
-        allowIllegalNames = "true".equals(System.getProperty(CompatibilityHints.KEY_RELAXED_PARSING));
+        allowIllegalNames = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         factories = new HashMap();
         factories.put(Property.ACTION, createActionFactory());
         factories.put(Property.ATTACH, createAttachFactory());

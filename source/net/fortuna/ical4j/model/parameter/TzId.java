@@ -58,7 +58,7 @@ public class TzId extends Parameter implements Escapable {
         super(TZID);
         // Work around a Microsoft Bug
         // (Not conforming to rfc2445, Microsoft Exchange quotes timezone references.)
-        if ("true".equals(System.getProperty(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY))) {
+        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY)) {
             this.value = Strings.unquote(aValue);
         }
         else {

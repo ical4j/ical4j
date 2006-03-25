@@ -79,7 +79,7 @@ public class UnfoldingReader extends PushbackReader {
      * @param in the reader to unfold from
      */
     public UnfoldingReader(final Reader in) {
-        this(in, "true".equals(System.getProperty(CompatibilityHints.KEY_RELAXED_UNFOLDING)));
+        this(in, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING));
     }
     
     /**

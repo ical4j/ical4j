@@ -69,7 +69,7 @@ public class WeekDayList extends ArrayList implements Serializable {
      */
     public WeekDayList(final String aString) {
         boolean outlookCompatibility =
-            "true".equals(System.getProperty(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY));
+            CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
         
         for (StringTokenizer t = new StringTokenizer(aString, ","); t
                 .hasMoreTokens();) {
