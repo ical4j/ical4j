@@ -130,6 +130,11 @@ public final class Strings {
 
     private static final Pattern UNESCAPE_PATTERN_3 =
         Pattern.compile("\\\\\\\\");
+    
+    /**
+     * A string used to denote the start (and end) of iCalendar content lines.
+     */
+    public static final String LINE_SEPARATOR = "\r\n";
 
     /**
      * Constructor made private to prevent instantiation.

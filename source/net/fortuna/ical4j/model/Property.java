@@ -218,7 +218,7 @@ public abstract class Property extends Content {
         else {
             buffer.append(Strings.valueOf(getValue()));
         }
-        buffer.append("\r\n");
+        buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
     }

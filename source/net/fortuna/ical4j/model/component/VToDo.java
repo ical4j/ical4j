@@ -64,6 +64,7 @@ import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an iCalendar VTODO component.
@@ -209,13 +210,13 @@ public class VToDo extends CalendarComponent {
         buffer.append(BEGIN);
         buffer.append(':');
         buffer.append(getName());
-        buffer.append("\r\n");
+        buffer.append(Strings.LINE_SEPARATOR);
         buffer.append(getProperties());
         buffer.append(getAlarms());
         buffer.append(END);
         buffer.append(':');
         buffer.append(getName());
-        buffer.append("\r\n");
+        buffer.append(Strings.LINE_SEPARATOR);
         return buffer.toString();
     }
 

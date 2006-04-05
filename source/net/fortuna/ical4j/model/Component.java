@@ -36,6 +36,8 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import net.fortuna.ical4j.util.Strings;
+
 /**
  * Defines an iCalendar component. Subclasses of this class provide additional
  * validation and typed values for specific iCalendar components.
@@ -93,12 +95,12 @@ public abstract class Component implements Serializable {
         buffer.append(BEGIN);
         buffer.append(':');
         buffer.append(getName());
-        buffer.append("\r\n");
+        buffer.append(Strings.LINE_SEPARATOR);
         buffer.append(getProperties());
         buffer.append(END);
         buffer.append(':');
         buffer.append(getName());
-        buffer.append("\r\n");
+        buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
     }

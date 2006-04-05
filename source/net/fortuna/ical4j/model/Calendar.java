@@ -43,6 +43,7 @@ import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an iCalendar calendar.
@@ -161,13 +162,13 @@ public class Calendar implements Serializable {
         buffer.append(BEGIN);
         buffer.append(':');
         buffer.append(VCALENDAR);
-        buffer.append("\r\n");
+        buffer.append(Strings.LINE_SEPARATOR);
         buffer.append(getProperties());
         buffer.append(getComponents());
         buffer.append(END);
         buffer.append(':');
         buffer.append(VCALENDAR);
-        buffer.append("\r\n");
+        buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
     }

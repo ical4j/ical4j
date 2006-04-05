@@ -73,6 +73,7 @@ import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.util.Strings;
 
 
 /**
@@ -304,9 +305,18 @@ public class VEvent extends CalendarComponent {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-
-        return BEGIN + ":" + getName() + "\r\n" + getProperties() + getAlarms()
-                + END + ":" + getName() + "\r\n";
+        StringBuffer b = new StringBuffer();
+        b.append(BEGIN);
+        b.append(':');
+        b.append(getName());
+        b.append(Strings.LINE_SEPARATOR);
+        b.append(getProperties());
+        b.append(getAlarms());
+        b.append(END);
+        b.append(':');
+        b.append(getName());
+        b.append(Strings.LINE_SEPARATOR);
+        return b.toString();
     }
 
     /**

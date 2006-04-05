@@ -44,6 +44,7 @@ import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an iCalendar VTIMEZONE component.
@@ -170,8 +171,18 @@ public class VTimeZone extends CalendarComponent {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        return BEGIN + ":" + getName() + "\r\n" + getProperties() + observances + END
-                + ":" + getName() + "\r\n";
+        StringBuffer b = new StringBuffer();
+        b.append(BEGIN);
+        b.append(':');
+        b.append(getName());
+        b.append(Strings.LINE_SEPARATOR);
+        b.append(getProperties());
+        b.append(observances);
+        b.append(END);
+        b.append(':');
+        b.append(getName());
+        b.append(Strings.LINE_SEPARATOR);
+        return b.toString();
     }
 
     /*
