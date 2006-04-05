@@ -2,22 +2,47 @@
  RFC2445 Deviations
 ====================
 
- Most RFC2445 (iCalendar) implementations deviate from the specification in one form or another.
- These deviations may be a result of ambiguous or missing requirements, or just poor interpretation
- of the specification. Below we attempt to document known assumptions and deviations for specific
- RFC2445 implementations.
+ Most RFC2445 (iCalendar) implementations deviate from the specification in one
+ form or another. These deviations may be a result of ambiguous or missing
+ requirements, or just poor interpretation of the specification. Below we
+ attempt to document known assumptions and deviations for specific RFC2445
+ implementations.
  
  
- * Dates: some implementations relax parsing of date values to allow invalid date
- representations in iCalendar files. These are as follows:
+ MS Outlook:
  
-   - Outlook: allows DATE-TIME representation without specifying a VALUE=DATE-TIME parameter.
-   
-   - Mozilla Calendar (Sunbird): as above (unconfirmed).
-   
- * Apple iCal uses VALUE=TEXT on some X-properties
+   - allows DATE-TIME representation without specifying a VALUE=DATE-TIME
+   parameter
 
- * Microsoft Outlook 2003 demands that the UID property must be present
+   - Outlook 2003 demands that the UID property must be present
+   
+   - provides quoted TZID parameters, and as such does not conform with RFC2445
+   
+   - generates additional spaces in recurrence rules containing a BYDAY
+   component
  
- * TZIDs: Microsoft Outlook provides quoted TZID parameters, and as such does
- not conform with RFC2445
+ 
+ Mozilla Calendar/Sunbird:
+ 
+   - long content lines are folded with a single LF character (should be CRLF)
+   
+   - folds all property parameters and values
+ 
+   - Generates non-standard "X" properties
+ 
+ 
+ phpicalendar:
+
+   - long content lines are folded with a single LF character (should be CRLF)
+ 
+ 
+ KOrganizer:
+ 
+   - long content lines are folded with a single LF character (should be CRLF)
+   
+   - folds all property parameters and values
+  
+ 
+ Apple iCal:
+ 
+   - uses VALUE=TEXT on some X-properties (NOTE: this is valid behaviour)
