@@ -40,7 +40,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Provides indexing of components on property names.
+ * Provides indexing of components on a specific property.
  * @author Ben Fortuna
  */
 public class IndexedComponentList {
@@ -48,62 +48,47 @@ public class IndexedComponentList {
     private Map index;
     
     /**
-     * Creates a new instance indexed on the specified property name.
-     * @param list
-     * @param indexProperty
+     * Creates a new instance indexed on properties with the specified name.
+     * @param list a list of components
+     * @param propertyName the name of the properties to index on
      */
-    public IndexedComponentList(final ComponentList list, final String indexProperty) {
+    public IndexedComponentList(final ComponentList list, final String propertyName) {
         index = new HashMap();
         for (Iterator i = list.iterator(); i.hasNext();) {
             Component component = (Component) i.next();
-            for (Iterator j = component.getProperties(indexProperty).iterator(); j.hasNext();) {
+            for (Iterator j = component.getProperties(propertyName).iterator(); j.hasNext();) {
                 Property property = (Property) j.next();
-                getComponents(property.getName()).add(component);
-            }
-        }
-    }
-    
-    /**
-     * Creates a new instance indexed on all properties.
-     * @param list
-     */
-    public IndexedComponentList(final ComponentList list) {
-        index = new HashMap();
-        for (Iterator i = list.iterator(); i.hasNext();) {
-            Component component = (Component) i.next();
-            for (Iterator j = component.getProperties().iterator(); j.hasNext();) {
-                Property property = (Property) j.next();
-                getComponents(property.getName()).add(component);
+                getComponents(property.getValue()).add(component);
             }
         }
     }
     
     /**
      * Returns a list of components containing a property with the
-     * specified name
-     * @param propertyName the name of the property contained in the
+     * specified value.
+     * @param propertyValue the value of the property contained in the
      * returned components
      * @return a component list
      */
-    public ComponentList getComponents(final String propertyName) {
-        ComponentList components = (ComponentList) index.get(propertyName);
+    public ComponentList getComponents(final String propertyValue) {
+        ComponentList components = (ComponentList) index.get(propertyValue);
         if (components == null) {
             components = new ComponentList();
-            index.put(propertyName, components);
+            index.put(propertyValue, components);
         }
         return components;
     }
     
     /**
      * Returns the first component containing a property with the specified
-     * name
-     * @param propertyName the name of the property identified in the returned
+     * value.
+     * @param propertyValue the value of the property identified in the returned
      * component
      * @return a component or null if no component is found containing a property
-     * with the specified name
+     * with the specified value
      */
-    public Component getComponent(final String propertyName) {
-        ComponentList components = getComponents(propertyName);
+    public Component getComponent(final String propertyValue) {
+        ComponentList components = getComponents(propertyValue);
         if (!components.isEmpty()) {
             return (Component) components.iterator().next();
         }

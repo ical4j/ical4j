@@ -40,7 +40,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Provides indexing of properties on parameter names.
+ * Provides indexing of properties on a specific parameter.
  * @author Ben Fortuna
  */
 public class IndexedPropertyList {
@@ -48,62 +48,47 @@ public class IndexedPropertyList {
     private Map index;
     
     /**
-     * Creates a new instance indexed on the specified parameter name.
-     * @param list
-     * @param indexParameter
+     * Creates a new instance indexed on the parameters with the specified name.
+     * @param list a list of properties
+     * @param parameterName the name of parameters on which to index
      */
-    public IndexedPropertyList(final PropertyList list, final String indexParameter) {
+    public IndexedPropertyList(final PropertyList list, final String parameterName) {
         index = new HashMap();
         for (Iterator i = list.iterator(); i.hasNext();) {
             Property property = (Property) i.next();
-            for (Iterator j = property.getParameters(indexParameter).iterator(); j.hasNext();) {
+            for (Iterator j = property.getParameters(parameterName).iterator(); j.hasNext();) {
                 Parameter parameter = (Parameter) j.next();
-                getProperties(parameter.getName()).add(property);
-            }
-        }
-    }
-    
-    /**
-     * Creates a new instance indexed on all parameters.
-     * @param list
-     */
-    public IndexedPropertyList(final PropertyList list) {
-        index = new HashMap();
-        for (Iterator i = list.iterator(); i.hasNext();) {
-            Property property = (Property) i.next();
-            for (Iterator j = property.getParameters().iterator(); j.hasNext();) {
-                Parameter parameter = (Parameter) j.next();
-                getProperties(parameter.getName()).add(property);
+                getProperties(parameter.getValue()).add(property);
             }
         }
     }
     
     /**
      * Returns a list of properties containing a parameter with the
-     * specified name
-     * @param paramName the name of the parameter contained in the
+     * specified value.
+     * @param paramValue the value of the parameter contained in the
      * returned properties
      * @return a property list
      */
-    public PropertyList getProperties(final String paramName) {
-        PropertyList properties = (PropertyList) index.get(paramName);
+    public PropertyList getProperties(final String paramValue) {
+        PropertyList properties = (PropertyList) index.get(paramValue);
         if (properties == null) {
             properties = new PropertyList();
-            index.put(paramName, properties);
+            index.put(paramValue, properties);
         }
         return properties;
     }
     
     /**
      * Returns the first property containing a parameter with the specified
-     * name
-     * @param paramName the name of the parameter identified in the returned
+     * value.
+     * @param paramValue the value of the parameter identified in the returned
      * property
      * @return a property or null if no property is found containing a parameter
-     * with the specified name
+     * with the specified value
      */
-    public Property getProperty(final String paramName) {
-        PropertyList properties = getProperties(paramName);
+    public Property getProperty(final String paramValue) {
+        PropertyList properties = getProperties(paramValue);
         if (!properties.isEmpty()) {
             return (Property) properties.iterator().next();
         }
