@@ -14,6 +14,7 @@ import java.util.Iterator;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
@@ -33,6 +34,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.ExDate;
+import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.util.TimeZones;
@@ -518,6 +520,26 @@ public class VEventTest extends ComponentTest {
         Date end = new Date("20050107");
         PeriodList list = event1.getConsumedTime(start, end);
         assertTrue(list.isEmpty());
+    }
+    
+    /**
+     * Test to ensure that EXDATE properties are correctly applied.
+     * @throws ParseException
+     */
+    public void testGetConsumedTimeWithExDate2() throws IOException, ParserException {
+        FileInputStream fin = new FileInputStream("etc/samples/valid/friday13.ics");
+        net.fortuna.ical4j.model.Calendar calendar = new CalendarBuilder().build(fin);
+        
+        VEvent event = (VEvent) calendar.getComponent(Component.VEVENT);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.set(1997, 9, 2);
+        Date start = new Date(cal.getTime());
+        cal.set(1997, 9, 4);
+        Date end = new Date(cal.getTime());
+        
+        PeriodList periods = event.getConsumedTime(start, end);
+        assertTrue(periods.isEmpty());
     }
 
     /* (non-Javadoc)
