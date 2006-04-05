@@ -57,7 +57,7 @@ public class CalendarBuilderTest extends TestCase {
     /**
      * Class to test for Calendar build(InputStream).
      */
-    public final void testBuildInputStream() throws Exception {
+    public final void testBuildInputStream() throws IOException {
 
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
 
@@ -75,9 +75,6 @@ public class CalendarBuilderTest extends TestCase {
                 log.warn("Calendar file [" + filename + "] is invalid.", e);
                 assertFalse("File [" + filename + "] invalid", valid);
             }
-        } catch (IOException e) {
-            log.warn("File: " + filename, e);
-            assertFalse("File [" + filename + "] invalid", valid);
         } catch (ParserException e) {
             log.warn("File: " + filename, e);
             assertFalse("File [" + filename + "] invalid", valid);
