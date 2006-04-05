@@ -8,7 +8,7 @@
 <project name="iCal4j" basedir="." default="package">
 
 	<!-- Project details -->
-    <property name="project.version" value="0.9.18"/>
+    <property name="project.version" value="0.9.19"/>
 	
 	<!-- Load overrides for library paths -->
 	<property file="build.properties"/>
@@ -27,11 +27,22 @@
 
 	<!-- Library paths -->
     <property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/"/>
-    <property name="jakarta-commons-logging.apiurl" value="http://jakarta.apache.org/commons/logging/api/"/>
+    <property name="jakarta-commons-logging.apiurl" value="http://jakarta.apache.org/commons/logging/apidocs/"/>
+	
+	<!-- External tools -->
+	<property name="vzic.home" location="C:/Libs/vzic-1.3/"/>
 	
 	<path id="project.classpath">
 		<pathelement location="lib/commons-logging.jar"/>
+		<!--
 		<pathelement location="${output.dir}"/>
+		-->
+	</path>
+	
+	<path id="coverage.classpath">
+      	<path refid="project.classpath" />
+		<pathelement location="${output.dir}"/>
+        <pathelement location="etc" />
 	</path>
 
 	  <!-- output directory used for EMMA coverage reports: -->
@@ -68,6 +79,17 @@
             <fileset dir="${output.dir}"/>
         </delete>
     </target>
+
+	<target name="clean-coverage">
+        <mkdir dir="${coverage.dir}"/>
+        <delete>
+            <fileset dir="${coverage.dir}"/>
+        </delete>
+        <mkdir dir="${out.instr.dir}"/>
+        <delete>
+            <fileset dir="${out.instr.dir}"/>
+        </delete>
+    </target>
     
     <target name="compile">
     	<echo message="Compiling source from classpath: ${project.classpath}"/>
@@ -79,7 +101,8 @@
     
     <target name="compile-tests">
     	<echo message="Compiling tests from classpath: ${project.classpath}"/>
-        <javac srcdir="${test.source.dir}" destdir="${output.dir}" debug="false" deprecation="true" classpathref="project.classpath"/>
+        <javac srcdir="${test.source.dir}" destdir="${output.dir}"
+        	debug="false" deprecation="true" classpathref="project.classpath"/>
     </target>
     
     <target name="clean-package">
@@ -157,32 +180,32 @@
     	<echo message="Running unit tests with classpath: ${project.classpath}"/>
 
     	<emma enabled="${emma.enabled}" >
-          <instr instrpathref="project.classpath"
+          <instr instrpathref="coverage.classpath"
                  destdir="${out.instr.dir}"	
                  metadatafile="${coverage.dir}/metadata.emma"
                  merge="true"
           />
         </emma>
 
-        <junit printsummary="yes" showoutput="yes" fork="yes">
+        <junit printsummary="withOutAndErr" showoutput="yes" fork="yes">
         	<!--
             <classpath path="${project.classpath}"/>
             -->
             <classpath>
-              <pathelement location="${out.instr.dir}" />
-              <path refid="project.classpath" />
-              <path refid="emma.lib" />
+              	<pathelement location="${out.instr.dir}" />
+              	<path refid="coverage.classpath" />
+              	<path refid="emma.lib" />
             </classpath> 
             <jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
             <jvmarg value="-Demma.coverage.out.merge=false" />
             <test name="net.fortuna.ical4j.AllTests"/>
-<!--
+        	<!--
             <batchtest>
                 <fileset dir="${test.source.dir}">
-                    <include name="**/*Test*.java"/>
+                    <include name="**/*Test.java"/>
                 </fileset>
             </batchtest>
--->
+            -->
             
             <!--
             <test name="net.fortuna.ical4j.data.CalendarOutputterTest"/>
@@ -203,4 +226,21 @@
           </report>
         </emma>
     </target>
+	
+	<!-- Generate timezone data -->
+	<target name="generateTzData">
+		<!-- Default -->
+		<echo message="Executing: ${vzic.home}/vzic.exe"/>
+		<exec executable="${vzic.home}/vzic.exe" dir="${vzic.home}"
+			output="${basedir}/etc/vzic.log">
+			<arg value="--output-dir ${basedir}/etc/zoneinfo"/>
+			<arg value="--pure"/>
+		</exec>
+
+		<!-- Outlook-compatible -->
+		<exec executable="${vzic.home}/vzic.exe" dir="${vzic.home}"
+			output="${basedir}/etc/vzic.log">
+			<arg value="--output-dir ${basedir}/etc/zoneinfo-outlook"/>
+		</exec>
+	</target>
 </project>
