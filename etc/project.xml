@@ -1,9 +1,8 @@
 <project>
     <groupId>ical4j</groupId>
-    <id>ical4j</id>
     <artifactId>ical4j</artifactId>
     <name>iCal4j</name>
-    <currentVersion>0.9.18</currentVersion>
+    <currentVersion>0.9.19</currentVersion>
 
     <organization>
         <name>Ben Fortuna</name>
@@ -26,13 +25,23 @@
     
     <build>
         <sourceDirectory>source</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>source</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
         <unitTestSourceDirectory>test</unitTestSourceDirectory>
-        
         <unitTest>
             <includes>
                 <include>**/*Test.java</include>
             </includes>
             <excludes>
+                <exclude>net/fortuna/ical4j/model/ComponentTest.java</exclude>
+                <exclude>net/fortuna/ical4j/model/PropertyTest.java</exclude>
                 <exclude>**/*Abstract*Test.java</exclude>
             </excludes>
             <resources>
@@ -44,14 +53,5 @@
                 </resource>
             </resources>
         </unitTest>
-    
-        <resources>
-            <resource>
-                <directory>source</directory>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </resource>
-        </resources>
     </build>
 </project>
