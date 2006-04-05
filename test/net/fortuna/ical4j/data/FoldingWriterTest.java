@@ -38,6 +38,8 @@ package net.fortuna.ical4j.data;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import net.fortuna.ical4j.util.Strings;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -58,9 +60,9 @@ public class FoldingWriterTest extends TestCase {
         StringWriter sw = new StringWriter();
         FoldingWriter writer = new FoldingWriter(sw);
         writer.write("BEGIN:VCALENDAR");
-        writer.write("\r\n");
+        writer.write(Strings.LINE_SEPARATOR);
         writer.write("PRODID:-//Open Source Applications Foundation//NONSGML Scooby Server//EN");
-        writer.write("\r\n");
+        writer.write(Strings.LINE_SEPARATOR);
         writer.write("VERSION:2.0");
         LOG.info(sw.getBuffer());
     }
