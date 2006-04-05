@@ -11,6 +11,8 @@ import net.fortuna.ical4j.model.CalendarTest;
 import net.fortuna.ical4j.model.DateTest;
 import net.fortuna.ical4j.model.DateTimeTest;
 import net.fortuna.ical4j.model.DurTest;
+import net.fortuna.ical4j.model.IndexedComponentListTest;
+import net.fortuna.ical4j.model.IndexedPropertyListTest;
 import net.fortuna.ical4j.model.NumberListTest;
 import net.fortuna.ical4j.model.ParameterFactoryImplTest;
 import net.fortuna.ical4j.model.PeriodListTest;
@@ -30,6 +32,8 @@ import net.fortuna.ical4j.model.parameter.TzIdTest;
 import net.fortuna.ical4j.model.property.AttachTest;
 import net.fortuna.ical4j.model.property.CalScaleTest;
 import net.fortuna.ical4j.model.property.DtEndTest;
+import net.fortuna.ical4j.model.property.DtStartTest;
+import net.fortuna.ical4j.model.property.ExDateTest;
 import net.fortuna.ical4j.model.property.LocationTest;
 import net.fortuna.ical4j.model.property.SummaryTest;
 import net.fortuna.ical4j.model.property.TriggerTest;
@@ -54,9 +58,9 @@ public class AllTests extends TestSuite{
 //        suite.addTest(CalendarOutputterTest.suite());
 
         // filter tests..
+        suite.addTestSuite(FilterTest.class);
         suite.addTestSuite(HasPropertyRuleTest.class);
         suite.addTestSuite(PeriodRuleTest.class);
-        suite.addTestSuite(FilterTest.class);
         
         // model tests
         suite.addTestSuite(AddressListTest.class);
@@ -64,6 +68,8 @@ public class AllTests extends TestSuite{
         suite.addTestSuite(DateTest.class);
         suite.addTestSuite(DateTimeTest.class);
         suite.addTestSuite(DurTest.class);
+        suite.addTestSuite(IndexedComponentListTest.class);
+        suite.addTestSuite(IndexedPropertyListTest.class);
         suite.addTestSuite(NumberListTest.class);
         suite.addTestSuite(ParameterFactoryImplTest.class);
         suite.addTestSuite(PeriodListTest.class);
@@ -74,11 +80,11 @@ public class AllTests extends TestSuite{
         suite.addTestSuite(WeekDayTest.class);
 
         // component tests
+        suite.addTestSuite(VAlarmTest.class);
         suite.addTestSuite(VEventTest.class);
         suite.addTestSuite(VFreeBusyTest.class);
         suite.addTestSuite(VTimeZoneTest.class);
         suite.addTestSuite(XComponentTest.class);
-        suite.addTestSuite(VAlarmTest.class);
 
         // parameter tests
         suite.addTestSuite(AltRepTest.class);
@@ -89,10 +95,12 @@ public class AllTests extends TestSuite{
         suite.addTestSuite(AttachTest.class);
         suite.addTestSuite(CalScaleTest.class);
         suite.addTestSuite(DtEndTest.class);
-        suite.addTestSuite(TriggerTest.class);
-        suite.addTestSuite(VersionTest.class);
+        suite.addTestSuite(DtStartTest.class);
+        suite.addTestSuite(ExDateTest.class);
         suite.addTestSuite(LocationTest.class);
         suite.addTestSuite(SummaryTest.class);
+        suite.addTestSuite(TriggerTest.class);
+        suite.addTestSuite(VersionTest.class);
 
         // util tests
         suite.addTestSuite(StringsTest.class);
