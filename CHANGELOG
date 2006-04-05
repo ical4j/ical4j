@@ -2,6 +2,38 @@
  iCal4j - Changes
 ==================
 
+0.9.19
+
+ - Added filter package to allow for filtering of collections
+ based on filtering rules
+ 
+ - Added convenience methods to calendar, components and properties
+ 
+ - Fixed unfolding bug
+ 
+ - Added support for relaxed parsing
+ 
+ - Improved use of date formats in DateTime
+ 
+ - Added replace() method to ParameterList
+ 
+ - Added convenience method to calculate recurrences from a period
+ 
+ - Removed quote character from escape patterns
+ 
+ - Applied patches: #1434747
+ 
+ - Added CalendarComponent superclass for components added directly to a
+ calendar (removed redundant Component.isCalendarComponent() method)
+ 
+ - Improved javadoc documentation
+ 
+ - Improved caching of timezone observance onsets
+ 
+ - Updated timezone definitions (Olson tzdata2006b)
+ 
+ - Bug fixes: #1460795, #1446120, #1434734, #1434291
+
 
 0.9.18
 
