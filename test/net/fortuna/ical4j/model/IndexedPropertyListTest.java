@@ -39,6 +39,7 @@ import java.io.FileReader;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.parameter.CuType;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,7 +59,7 @@ public class IndexedPropertyListTest extends TestCase {
      */
     protected void setUp() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
-        calendar = builder.build(new FileReader("etc/samples/valid/Australian_TV_Melbourne.ics"));
+        calendar = builder.build(new FileReader("etc/samples/valid/incoming.ics"));
     }
 
     /**
@@ -67,9 +68,8 @@ public class IndexedPropertyListTest extends TestCase {
     public void testIndexing() {
         // a VEvent for more interesting data.. 
         Component component = (Component) calendar.getComponents(Component.VEVENT).iterator().next();
-        IndexedPropertyList list = new IndexedPropertyList(component.getProperties());
+        IndexedPropertyList list = new IndexedPropertyList(component.getProperties(), Parameter.CUTYPE);
 
-        LOG.info(list.getProperties(Parameter.TZID).size() + " property(s) with timezones.");
-        LOG.info(list.getProperties(Parameter.ALTREP).size() + " property(s) with alt. rep.");
+        LOG.info(list.getProperties(CuType.INDIVIDUAL.getValue()).size() + " individual attendees.");
     }
 }

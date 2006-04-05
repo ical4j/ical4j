@@ -68,24 +68,27 @@ public class IndexedComponentListTest extends TestCase {
      * Indexing with IndexedComponentList.
      */
     public void testIndexing() {
-        IndexedComponentList list = new IndexedComponentList(calendar.getComponents());
-
-        LOG.info(list.getComponents(Property.RRULE).size() + " component(s) with recurrences.");
-        LOG.info(list.getComponents(Property.DURATION).size() + " component(s) with duration.");
+        long start = System.currentTimeMillis();
+        IndexedComponentList list = new IndexedComponentList(calendar.getComponents(),
+                Property.LOCATION);
+        LOG.info(list.getComponents("ABC").size() + " programs on ABC."
+            + " (" + (System.currentTimeMillis() - start) + "ms)");
     }
     
     /**
      * Perform manual indexing.
      */
     public void testManualIndexing() {
+        long start = System.currentTimeMillis();
         List list = new ArrayList();
         for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
             Component c = (Component) i.next();
-            if (c.getProperty(Property.RRULE) != null) {
+            if (c.getProperty(Property.LOCATION) != null
+                    && "ABC".equals(c.getProperty(Property.LOCATION).getValue())) {
                 list.add(c);
             }
         }
-        
-        LOG.info(list.size() + " component(s) with recurrences.");
+        LOG.info(list.size() + " programs on ABC."
+            + " (" + (System.currentTimeMillis() - start) + "ms)");
     }
 }
