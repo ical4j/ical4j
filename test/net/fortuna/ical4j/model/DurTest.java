@@ -37,16 +37,35 @@ package net.fortuna.ical4j.model;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+
+import junit.framework.TestCase;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
 
 public class DurTest extends TestCase {
     
     private static Log log = LogFactory.getLog(DurTest.class);
 
+    private TimeZone originalDefault;
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        originalDefault = TimeZone.getDefault();
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        TimeZone.setDefault(originalDefault);
+    }
+    
     /*
      * Class under test for void Dur(String)
      */
@@ -109,4 +128,21 @@ public class DurTest extends TestCase {
         assertEquals("-P94W", new Dur(start, cal.getTime()).toString());
     }
 
+    /**
+     * 
+     */
+    public void testAdjacentWeeks() {
+        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
+        TimeZoneRegistry tzreg = TimeZoneRegistryFactory.getInstance().createRegistry();
+        Calendar cal = Calendar.getInstance();
+        cal.clear(Calendar.SECOND);
+        cal.set(2005, 0, 1, 12, 00);
+        Date start = cal.getTime();
+        DtStart dtStart = new DtStart(new DateTime(start));
+        dtStart.setTimeZone(tzreg.getTimeZone("America/Los_Angeles"));
+        cal.set(2005, 0, 2, 11, 59);
+        Date end = cal.getTime();
+        DtEnd dtEnd = new DtEnd(new DateTime(end));
+        assertEquals("PT23H59M", new Dur(dtStart.getDate(), dtEnd.getDate()).toString());
+    }
 }
