@@ -533,9 +533,9 @@ public class VEventTest extends ComponentTest {
         VEvent event = (VEvent) calendar.getComponent(Component.VEVENT);
         
         Calendar cal = Calendar.getInstance();
-        cal.set(1997, 9, 2);
+        cal.set(1997, 8, 2);
         Date start = new Date(cal.getTime());
-        cal.set(1997, 9, 4);
+        cal.set(1997, 8, 4);
         Date end = new Date(cal.getTime());
         
         PeriodList periods = event.getConsumedTime(start, end);
