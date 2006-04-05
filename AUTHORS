@@ -13,7 +13,15 @@
  Thanks also to the developers of the following applications/libraries:
  
   - eclipse [http://eclipse.org/]
+  
   - eclipse checkstyle plugin [http://eclipse-cs.sourceforge.net/]
+  
   - Apache Commons Logging/Log4j [http://jakarta.apache.org/commons/logging/]
+  
   - Apache Ant [http://ant.apache.org/]
+  
+  - JUnit [http://junit.org/]
+  
   - Base64 [http://iharder.sourceforge.net/base64/]
+  
+  - Vzic [http://dspace.dial.pipex.com/prod/dialspace/town/pipexdsl/s/asbm26/vzic/]
