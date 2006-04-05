@@ -90,8 +90,11 @@
  To allow for compatibility with such iCalendar files you should specify the
  following system property:
  
-   ical4j.tzid.compatibility=true
-   
+   ical4j.compatibility.outlook=true
+ 
+ The full set of system properties may be found in
+ net.fortuna.ical4j.util.CompatibilityHints.
+
 
 ======================
  iCal4j and Timezones
