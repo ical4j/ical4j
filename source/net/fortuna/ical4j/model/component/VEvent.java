@@ -515,6 +515,18 @@ public class VEvent extends CalendarComponent {
                 periods.add(new Period(new DateTime(startDate), rDuration));
             }
         }
+        // add first instance if included in range..
+        if (start.getDate().before(rangeEnd)) {
+            if (end != null && end.getDate().after(rangeStart)) {
+                periods.add(new Period(new DateTime(start.getDate()), new DateTime(end.getDate())));
+            }
+            else if (duration != null) {
+                Period period = new Period(new DateTime(start.getDate()), duration.getDuration());
+                if (period.getEnd().after(rangeStart)) {
+                    periods.add(period);
+                }
+            }
+        }
         // exception dates..
         PropertyList exDates = getProperties(Property.EXDATE);
         for (Iterator i = exDates.iterator(); i.hasNext();) {
@@ -553,18 +565,6 @@ public class VEvent extends CalendarComponent {
             }
             else {
                 return periods;
-            }
-        }
-        // add first instance if included in range..
-        if (start.getDate().before(rangeEnd)) {
-            if (end != null && end.getDate().after(rangeStart)) {
-                periods.add(new Period(new DateTime(start.getDate()), new DateTime(end.getDate())));
-            }
-            else if (duration != null) {
-                Period period = new Period(new DateTime(start.getDate()), duration.getDuration());
-                if (period.getEnd().after(rangeStart)) {
-                    periods.add(period);
-                }
             }
         }
         return periods;
