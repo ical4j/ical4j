@@ -491,8 +491,13 @@ public class Recur implements Serializable {
     public final DateList getDates(final Date seed, final Date periodStart,
             final Date periodEnd, final Value value) {
         DateList dates = new DateList(value);
-        if ((seed instanceof DateTime) && ((DateTime) seed).isUtc()) {
-            dates.setUtc(true);
+        if (seed instanceof DateTime) {
+            if (((DateTime) seed).isUtc()) {
+                dates.setUtc(true);
+            }
+            else {
+                dates.setTimeZone(((DateTime) seed).getTimeZone());
+            }
         }
         Calendar cal = Dates.getCalendarInstance(seed);
         cal.setTime(seed);
@@ -511,7 +516,16 @@ public class Recur implements Serializable {
         while (!((getUntil() != null && cal.getTime().after(getUntil()))
                 || (periodEnd != null && cal.getTime().after(periodEnd))
                 || (getCount() >= 1 && (dates.size() + invalidCandidateCount) >= getCount()))) {
-            DateList candidates = getCandidates(Dates.getInstance(cal.getTime(), value), value);
+            Date candidateSeed = Dates.getInstance(cal.getTime(), value);
+            if (Value.DATE_TIME.equals(value)) {
+                if (dates.isUtc()) {
+                    ((DateTime) candidateSeed).setUtc(true);
+                }
+                else {
+                    ((DateTime) candidateSeed).setTimeZone(dates.getTimeZone());
+                }
+            }
+            DateList candidates = getCandidates(candidateSeed, value);
             for (Iterator i = candidates.iterator(); i.hasNext();) {
                 Date candidate = (Date) i.next();
                 // don't count candidates that occur before the seed date..
@@ -576,6 +590,14 @@ public class Recur implements Serializable {
      */
     private DateList getCandidates(final Date date, final Value value) {
         DateList dates = new DateList(value);
+        if (date instanceof DateTime) {
+            if (((DateTime) date).isUtc()) {
+                dates.setUtc(true);
+            }
+            else {
+                dates.setTimeZone(((DateTime) date).getTimeZone());
+            }
+        }
         dates.add(date);
         dates = getMonthVariants(dates);
         // debugging..
@@ -638,7 +660,7 @@ public class Recur implements Serializable {
         }
         // sort the list before processing..
         Collections.sort(dates);
-        DateList setPosDates = new DateList(dates.getType());
+        DateList setPosDates = new DateList(dates.getType(), dates.getTimeZone());
         int size = dates.size();
         for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
             Integer setPos = (Integer) i.next();
@@ -664,7 +686,7 @@ public class Recur implements Serializable {
         if (getMonthList().isEmpty()) {
             return dates;
         }
-        DateList monthlyDates = new DateList(dates.getType());
+        DateList monthlyDates = new DateList(dates.getType(), dates.getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
@@ -690,7 +712,7 @@ public class Recur implements Serializable {
         if (getWeekNoList().isEmpty()) {
             return dates;
         }
-        DateList weekNoDates = new DateList(dates.getType());
+        DateList weekNoDates = new DateList(dates.getType(), dates.getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
@@ -715,7 +737,7 @@ public class Recur implements Serializable {
         if (getYearDayList().isEmpty()) {
             return dates;
         }
-        DateList yearDayDates = new DateList(dates.getType());
+        DateList yearDayDates = new DateList(dates.getType(), dates.getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
@@ -740,7 +762,7 @@ public class Recur implements Serializable {
         if (getMonthDayList().isEmpty()) {
             return dates;
         }
-        DateList monthDayDates = new DateList(dates.getType());
+        DateList monthDayDates = new DateList(dates.getType(), dates.getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
@@ -765,12 +787,23 @@ public class Recur implements Serializable {
         if (getDayList().isEmpty()) {
             return dates;
         }
-        DateList weekDayDates = new DateList(dates.getType());
+        DateList weekDayDates = new DateList(dates.getType(), dates.getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             for (Iterator j = getDayList().iterator(); j.hasNext();) {
                 WeekDay weekDay = (WeekDay) j.next();
-                weekDayDates.addAll(getAbsWeekDays(date, dates.getType(), weekDay));
+                // if BYYEARDAY or BYMONTHDAY is specified filter existing list..
+                if (!getYearDayList().isEmpty() || !getMonthDayList().isEmpty()) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(date);
+                    if (weekDay.equals(WeekDay.getWeekDay(cal))) {
+                        weekDayDates.add(date);
+                    }
+                }
+                else {
+                    weekDayDates.addAll(
+                            getAbsWeekDays(date, dates.getType(), weekDay));
+                }
             }
         }
         return weekDayDates;
@@ -788,6 +821,14 @@ public class Recur implements Serializable {
         Calendar cal = Dates.getCalendarInstance(date);
         cal.setTime(date);
         DateList days = new DateList(type);
+        if (date instanceof DateTime) {
+            if (((DateTime) date).isUtc()) {
+                days.setUtc(true);
+            }
+            else {
+                days.setTimeZone(((DateTime) date).getTimeZone());
+            }
+        }
         int calDay = WeekDay.getCalendarDay(weekDay);
         if (calDay == -1) {
             // a matching weekday cannot be identified..
@@ -835,9 +876,7 @@ public class Recur implements Serializable {
                 cal.add(Calendar.DAY_OF_YEAR, Dates.DAYS_PER_WEEK);
             }
         }
-        DateList weekDays = new DateList(days.getType());
-        sublist(days, weekDay.getOffset(), weekDays);
-        return weekDays;
+        return getOffsetDates(days, weekDay.getOffset());
     }
 
     /**
@@ -850,15 +889,19 @@ public class Recur implements Serializable {
      * @param offset
      * @param sublist
      */
-    private void sublist(final List list, final int offset, final List sublist) {
-        int size = list.size();
-        if (offset < 0 && offset >= -size) {
-            sublist.add(list.get(size + offset));
-        } else if (offset > 0 && offset <= size) {
-            sublist.add(list.get(offset - 1));
-        } else {
-            sublist.addAll(list);
+    private List getOffsetDates(final DateList dates, final int offset) {
+        if (offset == 0) {
+            return dates;
         }
+        List offsetDates = new DateList(dates.getType(), dates.getTimeZone());
+        int size = dates.size();
+        if (offset < 0 && offset >= -size) {
+            offsetDates.add(dates.get(size + offset));
+        }
+        else if (offset > 0 && offset <= size) {
+            offsetDates.add(dates.get(offset - 1));
+        }
+        return offsetDates;
     }
     
     /**
@@ -873,7 +916,7 @@ public class Recur implements Serializable {
         if (getHourList().isEmpty()) {
             return dates;
         }
-        DateList hourlyDates = new DateList(dates.getType());
+        DateList hourlyDates = new DateList(dates.getType(), dates.getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
@@ -898,7 +941,7 @@ public class Recur implements Serializable {
         if (getMinuteList().isEmpty()) {
             return dates;
         }
-        DateList minutelyDates = new DateList(dates.getType());
+        DateList minutelyDates = new DateList(dates.getType(), dates.getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
@@ -923,7 +966,7 @@ public class Recur implements Serializable {
         if (getSecondList().isEmpty()) {
             return dates;
         }
-        DateList secondlyDates = new DateList(dates.getType());
+        DateList secondlyDates = new DateList(dates.getType(), dates.getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
