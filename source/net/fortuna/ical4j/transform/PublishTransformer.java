@@ -45,11 +45,14 @@ import net.fortuna.ical4j.model.property.Sequence;
 
 /**
  * Transforms a calendar for publishing.
+ * 
  * @author benfortuna
  */
 public class PublishTransformer extends Transformer {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see net.fortuna.ical4j.transform.Transformer#transform(net.fortuna.ical4j.model.Calendar)
      */
     public final Calendar transform(final Calendar calendar) {
@@ -58,28 +61,28 @@ public class PublishTransformer extends Transformer {
         Property method = calProps.getProperty(Property.METHOD);
 
         if (method != null) {
-			calProps.remove(method);
-		}
+            calProps.remove(method);
+        }
 
         calProps.add(Method.PUBLISH);
 
-		// if a calendar component has already been published previously
-		// update the sequence number..
-		for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-			Component component = (Component) i.next();
+        // if a calendar component has already been published previously
+        // update the sequence number..
+        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
+            Component component = (Component) i.next();
 
-			PropertyList compProps = component.getProperties();
+            PropertyList compProps = component.getProperties();
 
-			Sequence sequence = (Sequence) compProps.getProperty(Property.SEQUENCE);
+            Sequence sequence = (Sequence) compProps
+                    .getProperty(Property.SEQUENCE);
 
-			if (sequence == null) {
-				compProps.add(new Sequence(0));
-			}
-			else {
-				compProps.remove(sequence);
-				compProps.add(new Sequence(sequence.getSequenceNo() + 1));
-			}
-		}
+            if (sequence == null) {
+                compProps.add(new Sequence(0));
+            } else {
+                compProps.remove(sequence);
+                compProps.add(new Sequence(sequence.getSequenceNo() + 1));
+            }
+        }
 
         return calendar;
     }

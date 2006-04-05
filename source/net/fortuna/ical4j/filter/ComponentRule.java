@@ -47,7 +47,7 @@ public abstract class ComponentRule implements Rule {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.filter.Rule#match(java.lang.Object)
      */
-    public boolean match(Object o) {
+    public final boolean match(final Object o) {
         return match((Component) o);
     }
 

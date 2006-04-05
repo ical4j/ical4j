@@ -40,7 +40,6 @@ import java.util.Iterator;
 import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.TimeZones;
 
 /**
  * Defines a list of iCalendar dates. If no value type is specified a list

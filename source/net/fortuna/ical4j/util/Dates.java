@@ -198,7 +198,7 @@ public final class Dates {
      * @param time the time value to round
      * @return a round time value
      */
-    public static final long round(final long time, final int precision) {
+    public static long round(final long time, final int precision) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(time);
         if (precision == PRECISION_DAY) {

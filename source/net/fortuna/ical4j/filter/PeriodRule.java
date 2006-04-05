@@ -74,7 +74,7 @@ public class PeriodRule extends ComponentRule {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)
      */
-    public boolean match(final Component component) {
+    public final boolean match(final Component component) {
         DtStart start = (DtStart) component.getProperty(Property.DTSTART);
         if (start != null && period.includes(start.getDate())) {
             debug(start.getDate(), "start date");

@@ -156,14 +156,14 @@ public class Filter {
     /**
      * @return Returns the rules.
      */
-    public Rule[] getRules() {
+    public final Rule[] getRules() {
         return rules;
     }
     
     /**
      * @param rules The rules to set.
      */
-    public void setRules(Rule[] rules) {
+    public final void setRules(final Rule[] rules) {
         this.rules = rules;
     }
 }
