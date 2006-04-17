@@ -46,12 +46,24 @@ public class CalendarOutputterTest extends TestCase {
         this.filename = file;
     }
 
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected final void setUp() throws Exception {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected final void tearDown() throws Exception {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+    }
+
     /**
      * @throws Exception
      */
     public void testOutput() throws Exception {
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
-
         try {
             CalendarBuilder builder = new CalendarBuilder();
             FileInputStream fin = new FileInputStream(filename);

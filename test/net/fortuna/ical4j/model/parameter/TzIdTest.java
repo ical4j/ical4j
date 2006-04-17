@@ -55,13 +55,21 @@ import net.fortuna.ical4j.util.CompatibilityHints;
  */
 public class TzIdTest extends TestCase {
 
-    protected void setUp() throws Exception {
-        super.setUp();
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected final void setUp() throws Exception {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, true);
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected final void tearDown() throws Exception {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, false);
     }
 
     public void testTzIdCompatibility() throws IOException, ParserException {
-        // enable TZID compatibility mode..
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, true);
         
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(new FileInputStream("etc/samples/valid/tmeher.ics"));

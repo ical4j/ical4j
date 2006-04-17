@@ -26,6 +26,20 @@ import java.util.List;
  */
 public class CalendarEqualsTest extends TestCase {
 
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected final void setUp() throws Exception {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected final void tearDown() throws Exception {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+    }
+
     public final void testValidFiles() throws Exception {
 
         List testFiles = new ArrayList(Arrays.asList(new File("etc/samples/valid").listFiles(new FileOnlyFilter())));
@@ -41,10 +55,8 @@ public class CalendarEqualsTest extends TestCase {
      * @param valid true if file is supposed to be valid
      * @throws Exception
      */ 
-    private void doTestCalendarEquals(File file, boolean valid) throws Exception
-    {
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
-
+    private void doTestCalendarEquals(File file, boolean valid) throws Exception {
+        
         FileInputStream fin = new FileInputStream(file);
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = null;
