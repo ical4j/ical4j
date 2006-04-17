@@ -74,6 +74,13 @@ public final class CompatibilityHints {
     public static final String KEY_OUTLOOK_COMPATIBILITY = "ical4j.compatibility.outlook";
     
     /**
+     * A system property key used to enable compatibility with
+     * Lotus Notes-generated iCalendar files. Notes compatibility is
+     * enabled by setting this system property to "true".
+     */
+    public static final String KEY_NOTES_COMPATIBILITY = "ical4j.compatibility.notes";
+    
+    /**
      * @param key
      * @param value
      */
