@@ -26,7 +26,7 @@ public class AltRepTest extends TestCase {
     public void testAltRepString() throws URISyntaxException {
         
         try {
-            new AltRep("::...invalid...");
+            new AltRep("<mailto:../:...invalid...>");
             
             fail("URISyntaxException not thrown!");
         }
