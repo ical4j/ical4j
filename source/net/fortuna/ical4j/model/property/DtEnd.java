@@ -122,6 +122,17 @@ public class DtEnd extends DateProperty {
     }
     
     /**
+     * Creates a new instance initialised with the parsed value.
+     * @param value the DTEND value string to parse
+     * @throws ParseException where the specified string is not a valid
+     * DTEND value representation
+     */
+    public DtEnd(final String value) throws ParseException {
+        super(DTEND);
+        setValue(value);
+    }
+    
+    /**
      * @param aList
      *            a list of parameters for this component
      * @param aValue
