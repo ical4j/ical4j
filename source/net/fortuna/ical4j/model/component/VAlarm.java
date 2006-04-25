@@ -188,7 +188,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * reminder.getProperties().add(new Duration(1000 * 60 * 15));
  * 
  * // display a message..
- * reminder.getProperties().add(new Action(Action.DISPLAY));
+ * reminder.getProperties().add(Action.DISPLAY);
  * reminder.getProperties().add(new Description("Progress Meeting at 9:30am"));
  * </code></pre>
  * 
