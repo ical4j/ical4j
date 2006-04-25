@@ -56,7 +56,7 @@ public class CalendarParserImpl implements CalendarParser {
 
     private static final int WORD_CHAR_START = 32;
 
-    private static final int WORD_CHAR_END = 126;
+    private static final int WORD_CHAR_END = 255;
 
     private static final int WHITESPACE_CHAR_START = 0;
 
@@ -445,7 +445,8 @@ public class CalendarParserImpl implements CalendarParser {
         }
         catch (ParserException pe) {
             if (log.isDebugEnabled()) {
-                log.debug("Caught exception absorbing extra whitespace", pe);
+                log.debug("Aborting absorbing extra whitespace ["
+                        + pe.getMessage() + "]");
             }
         }
     }
