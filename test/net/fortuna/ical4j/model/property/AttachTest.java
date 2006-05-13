@@ -67,9 +67,12 @@ public class AttachTest extends TestCase {
      * Class under test for void Attach(ParameterList, String)
      */
     public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException {
-        FileInputStream fin = new FileInputStream("etc/FAQ");
+        FileInputStream fin = new FileInputStream("etc/artwork/logo.png");
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        int i;
+        for (int i = fin.read(); i >= 0;) {
+            bout.write(i);
+            i = fin.read();
+        }
 
         ParameterList params = new ParameterList();
         params.add(Encoding.BASE64);
