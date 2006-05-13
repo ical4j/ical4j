@@ -46,6 +46,8 @@ package net.fortuna.ical4j.util;
  * @author Robert Harder
  * @author rob@iharder.net
  * @version 2.1
+ * @deprecated Use Apache Commons Codec-based {@link net.fortuna.ical4j.util.EncoderFactory}
+ * and {@link net.fortuna.ical4j.util.DecoderFactory} instead.
  */
 public class Base64
 {
