@@ -34,6 +34,7 @@
 	
 	<path id="project.classpath">
 		<pathelement location="lib/commons-logging.jar"/>
+		<pathelement location="lib/commons-codec.jar"/>
 		<!--
 		<pathelement location="${output.dir}"/>
 		-->
@@ -115,7 +116,7 @@
     <target name="package" depends="compile, clean-package">
         <manifest file="etc/manifest.mf">
             <!-- Add manifest attributes here.. -->
-            <attribute name="Class-Path" value="commons-logging.jar" />
+            <attribute name="Class-Path" value="commons-logging.jar,commons-codec.jar" />
         </manifest>
         <jar basedir="${output.dir}" compress="true" jarfile="${package.dir}/${package.file}" manifest="etc/manifest.mf">
 			<zipfileset dir="etc/zoneinfo" prefix="zoneinfo" excludes="zones.h,zones.tab"/>
