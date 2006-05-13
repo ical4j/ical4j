@@ -36,6 +36,7 @@
 package net.fortuna.ical4j.model.property;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -45,10 +46,18 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.Base64;
+import net.fortuna.ical4j.util.DecoderFactory;
+import net.fortuna.ical4j.util.EncoderFactory;
 import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
+
+import org.apache.commons.codec.BinaryDecoder;
+import org.apache.commons.codec.BinaryEncoder;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.EncoderException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Defines an ATTACH iCalendar component property.
@@ -103,6 +112,8 @@ import net.fortuna.ical4j.util.Uris;
 public class Attach extends Property {
     
     private static final long serialVersionUID = 4439949507756383452L;
+    
+    private static final Log LOG = LogFactory.getLog(Attach.class);
 
     private URI uri;
 
@@ -129,29 +140,6 @@ public class Attach extends Property {
             throws IOException, URISyntaxException {
         super(ATTACH, aList);
         setValue(aValue);
-    }
-    
-    
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
-     */
-    public void setValue(final String aValue) throws IOException, URISyntaxException {
-        // determine if ATTACH is a URI or an embedded
-        // binary..
-        if (Encoding.BASE64.equals(getParameter(Parameter.ENCODING))
-                && Value.BINARY.equals(getParameter(Parameter.VALUE))) {
-            /*
-            ByteArrayOutputStream bout = new ByteArrayOutputStream(aValue.length());
-            OutputStreamWriter writer = new OutputStreamWriter(bout);
-            writer.write(aValue);
-            binary = bout.toByteArray();
-            */            
-            binary = Base64.decode(aValue);
-        }
-        // assume URI..
-        else {
-            uri = new URI(Uris.encode(aValue));
-        }
     }
 
     /**
@@ -215,6 +203,21 @@ public class Attach extends Property {
          *
          * (";" xparam)
          */
+        
+        /*
+         * If the value type parameter is ";VALUE=BINARY", then the inline
+         * encoding parameter MUST be specified with the value
+         * ";ENCODING=BASE64".
+         */
+        if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
+            ParameterValidator.getInstance().assertOne(Parameter.ENCODING,
+                    getParameters());
+            if (!Encoding.BASE64.equals(getParameter(Parameter.ENCODING))) {
+                throw new ValidationException(
+                        "If the value type parameter is [BINARY], the inline"
+                        + "encoding parameter MUST be specified with the value [BASE64]");
+            }
+        }
     }
 
     /**
@@ -230,6 +233,32 @@ public class Attach extends Property {
     public final URI getUri() {
         return uri;
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+     */
+    public void setValue(final String aValue) throws IOException, URISyntaxException {
+        // determine if ATTACH is a URI or an embedded
+        // binary..
+        if (getParameter(Parameter.ENCODING) != null) {
+//            binary = Base64.decode(aValue);
+            try {
+                BinaryDecoder decoder = DecoderFactory.getInstance()
+                    .createBinaryDecoder((Encoding) getParameter(Parameter.ENCODING)); 
+                binary = decoder.decode(getBinary());
+            }
+            catch (UnsupportedEncodingException uee) {
+                LOG.error("Error encoding binary data", uee);
+            }
+            catch (DecoderException de) {
+                LOG.error("Error decoding binary data", de);
+            }
+        }
+        // assume URI..
+        else {
+            uri = new URI(Uris.encode(aValue));
+        }
+    }
 
     /*
      * (non-Javadoc)
@@ -241,7 +270,18 @@ public class Attach extends Property {
             return Uris.decode(Strings.valueOf(getUri()));
         }
         else if (getBinary() != null) {
-            return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
+//          return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
+            try {
+                BinaryEncoder encoder = EncoderFactory.getInstance()
+                    .createBinaryEncoder((Encoding) getParameter(Parameter.ENCODING)); 
+                return new String(encoder.encode(getBinary()));
+            }
+            catch (UnsupportedEncodingException uee) {
+                LOG.error("Error encoding binary data", uee);
+            }
+            catch (EncoderException ee) {
+                LOG.error("Error encoding binary data", ee);
+            }
         }
         return null;
     }
