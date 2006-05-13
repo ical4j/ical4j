@@ -36,19 +36,70 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Parameter;
 
 /**
- * Defines an Inline Encoding parameter.
+ * Defines an Inline Encoding parameter. Constants are provided for all encodings
+ * specified in <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC2045</a>.
  * 
- * @author benfortuna
+ * <pre>
+ * 4.2.7 Inline Encoding
+ * 
+ *    Parameter Name: ENCODING
+ * 
+ *    Purpose: To specify an alternate inline encoding for the property
+ *    value.
+ * 
+ *    Format Definition: The property parameter is defined by the following
+ *    notation:
+ * 
+ *      encodingparam      = "ENCODING" "="
+ *                           ("8BIT"
+ *         ; "8bit" text encoding is defined in [RFC 2045]
+ *                         / "BASE64"
+ *         ; "BASE64" binary encoding format is defined in [RFC 2045]
+ *                         / iana-token
+ *         ; Some other IANA registered iCalendar encoding type
+ *                         / x-name)
+ *         ; A non-standard, experimental encoding type
+ * 
+ *    Description: The property parameter identifies the inline encoding
+ *    used in a property value. The default encoding is "8BIT",
+ *    corresponding to a property value consisting of text. The "BASE64"
+ *    encoding type corresponds to a property value encoded using the
+ *    "BASE64" encoding defined in [RFC 2045].
+ * 
+ *    If the value type parameter is ";VALUE=BINARY", then the inline
+ *    encoding parameter MUST be specified with the value
+ *    ";ENCODING=BASE64".
+ * 
+ *    Example:
+ * 
+ *      ATTACH;FMTYPE=IMAGE/JPEG;ENCODING=BASE64;VALUE=BINARY:MIICajC
+ *       CAdOgAwIBAgICBEUwDQYJKoZIhvcNAQEEBQAwdzELMAkGA1UEBhMCVVMxLDA
+ *       qBgNVBAoTI05ldHNjYXBlIENvbW11bmljYXRpb25zIENvcnBvcmF0aW9uMRw
+ *       <...remainder of "BASE64" encoded binary data...>
+ * </pre>
+ * @author Ben Fortuna
  */
 public class Encoding extends Parameter {
     
     private static final long serialVersionUID = 7536336461076399077L;
 
+    private static final String VALUE_SEVEN_BIT = "7BIT";
+
     private static final String VALUE_EIGHT_BIT = "8BIT";
+
+    private static final String VALUE_BINARY = "BINARY";
+
+    private static final String VALUE_QUOTED_PRINTABLE = "QUOTED-PRINTABLE";
     
     private static final String VALUE_BASE64 = "BASE64";
 
+    public static final Encoding SEVEN_BIT = new Encoding(VALUE_SEVEN_BIT);
+
     public static final Encoding EIGHT_BIT = new Encoding(VALUE_EIGHT_BIT);
+
+    public static final Encoding BINARY = new Encoding(VALUE_BINARY);
+
+    public static final Encoding QUOTED_PRINTABLE = new Encoding(VALUE_QUOTED_PRINTABLE);
     
     public static final Encoding BASE64 = new Encoding(VALUE_BASE64);
 
