@@ -28,6 +28,7 @@
 	<!-- Library paths -->
     <property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/"/>
     <property name="jakarta-commons-logging.apiurl" value="http://jakarta.apache.org/commons/logging/apidocs/"/>
+    <property name="jakarta-commons-codec.apiurl" value="http://jakarta.apache.org/commons/codec/apidocs/"/>
 	
 	<!-- External tools -->
 	<property name="vzic.home" location="C:/Libs/vzic-1.3/"/>
@@ -141,6 +142,7 @@
                  classpathref="project.classpath">
      		<link href="${j2se.apiurl}"/>
      		<link href="${jakarta-commons-logging.apiurl}"/>
+     		<link href="${jakarta-commons-codec.apiurl}"/>
         </javadoc>
     </target>
 
