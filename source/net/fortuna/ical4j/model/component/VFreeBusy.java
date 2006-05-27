@@ -224,7 +224,7 @@ public class VFreeBusy extends CalendarComponent {
     
     private static final long serialVersionUID = 1046534053331139832L;
     
-    private static Log log = LogFactory.getLog(VFreeBusy.class);
+    private Log log = LogFactory.getLog(VFreeBusy.class);
 
     /**
      * Default constructor.

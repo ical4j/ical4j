@@ -64,7 +64,7 @@ public class Filter {
      */
     public static final int MATCH_ALL = 2;
     
-    private static Log log = LogFactory.getLog(Filter.class);
+    private Log log = LogFactory.getLog(Filter.class);
 
     private Rule[] rules;
 

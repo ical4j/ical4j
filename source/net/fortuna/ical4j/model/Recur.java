@@ -101,7 +101,7 @@ public class Recur implements Serializable {
 
     public static final String YEARLY = "YEARLY";
 
-    private static Log log = LogFactory.getLog(Recur.class);
+    private Log log = LogFactory.getLog(Recur.class);
 
     private String frequency;
 

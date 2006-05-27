@@ -75,7 +75,7 @@ public class CalendarBuilder implements ContentHandler {
     
     private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
     
-    private static Log log = LogFactory.getLog(CalendarBuilder.class);
+    private Log log = LogFactory.getLog(CalendarBuilder.class);
 
     private CalendarParser parser;
     

@@ -55,7 +55,7 @@ public class FoldingWriter extends FilterWriter {
 
     private static final char[] FOLD_PATTERN = {'\r', '\n', ' '};
 
-    private static Log log = LogFactory.getLog(FoldingWriter.class);
+    private Log log = LogFactory.getLog(FoldingWriter.class);
 
     private int lineLength;
 

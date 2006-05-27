@@ -57,7 +57,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private static final String DEFAULT_RESOURCE_PREFIX = "/zoneinfo/";
     
-    private static Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
+    private Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
     
     private static final Map DEFAULT_TIMEZONES = new HashMap();
     

@@ -113,7 +113,7 @@ public class Attach extends Property {
     
     private static final long serialVersionUID = 4439949507756383452L;
     
-    private static final Log LOG = LogFactory.getLog(Attach.class);
+    private Log log = LogFactory.getLog(Attach.class);
 
     private URI uri;
 
@@ -248,10 +248,10 @@ public class Attach extends Property {
                 binary = decoder.decode(getBinary());
             }
             catch (UnsupportedEncodingException uee) {
-                LOG.error("Error encoding binary data", uee);
+                log.error("Error encoding binary data", uee);
             }
             catch (DecoderException de) {
-                LOG.error("Error decoding binary data", de);
+                log.error("Error decoding binary data", de);
             }
         }
         // assume URI..
@@ -277,10 +277,10 @@ public class Attach extends Property {
                 return new String(encoder.encode(getBinary()));
             }
             catch (UnsupportedEncodingException uee) {
-                LOG.error("Error encoding binary data", uee);
+                log.error("Error encoding binary data", uee);
             }
             catch (EncoderException ee) {
-                LOG.error("Error encoding binary data", ee);
+                log.error("Error encoding binary data", ee);
             }
         }
         return null;

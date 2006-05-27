@@ -71,7 +71,7 @@ public class UtcOffset implements Serializable {
 
     private static final NumberFormat SECOND_FORMAT = new DecimalFormat("00");
 
-    private static Log log = LogFactory.getLog(UtcOffset.class);
+    private Log log = LogFactory.getLog(UtcOffset.class);
 
     private long offset;
 

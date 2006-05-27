@@ -62,7 +62,7 @@ public class CalendarParserImpl implements CalendarParser {
 
     private static final int WHITESPACE_CHAR_END = 20;
 
-    private static Log log = LogFactory.getLog(CalendarParserImpl.class);
+    private Log log = LogFactory.getLog(CalendarParserImpl.class);
 
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.data.CalendarParser#parse(java.io.InputStream, net.fortuna.ical4j.data.ContentHandler)
@@ -371,7 +371,7 @@ public class CalendarParserImpl implements CalendarParser {
      *             when next token in the stream does not match the expected
      *             token
      */
-    private static void assertToken(final StreamTokenizer tokeniser, final int token)
+    private void assertToken(final StreamTokenizer tokeniser, final int token)
             throws IOException, ParserException {
 
         if (tokeniser.nextToken() != token) {
@@ -392,7 +392,7 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws IOException
      * @throws ParserException
      */
-    private static void assertToken(final StreamTokenizer tokeniser, final String token) throws IOException, ParserException {
+    private void assertToken(final StreamTokenizer tokeniser, final String token) throws IOException, ParserException {
         assertToken(tokeniser, token, false);
     }
     
@@ -409,7 +409,7 @@ public class CalendarParserImpl implements CalendarParser {
      *             when next token in the stream does not match the expected
      *             token
      */
-    private static void assertToken(final StreamTokenizer tokeniser, final String token, final boolean ignoreCase)
+    private void assertToken(final StreamTokenizer tokeniser, final String token, final boolean ignoreCase)
             throws IOException, ParserException {
 
         // ensure next token is a word token..

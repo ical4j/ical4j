@@ -87,7 +87,7 @@ public class Dur implements Comparable, Serializable {
     
     private static final int DAYS_PER_YEAR = 365;
     
-    private static Log log = LogFactory.getLog(Dur.class);
+    private Log log = LogFactory.getLog(Dur.class);
 
     private boolean negative;
     

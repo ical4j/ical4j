@@ -76,7 +76,7 @@ public abstract class Observance extends Component implements Comparable {
 
     public static final String DAYLIGHT = "DAYLIGHT";
     
-    private static final Log LOG = LogFactory.getLog(Observance.class);
+    private Log log = LogFactory.getLog(Observance.class);
     
     // TODO: clear cache when observance definition changes (??)
     private Map onsets = new TreeMap();
@@ -152,8 +152,8 @@ public abstract class Observance extends Component implements Comparable {
         
         Date onset = getCachedOnset(date);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Cache " + ((onset != null) ? "hit" : "miss") + " - retrieval time: " + (System.currentTimeMillis() - start) + "ms");
+        if (log.isDebugEnabled()) {
+            log.debug("Cache " + ((onset != null) ? "hit" : "miss") + " - retrieval time: " + (System.currentTimeMillis() - start) + "ms");
         }
         
         if (onset == null) {

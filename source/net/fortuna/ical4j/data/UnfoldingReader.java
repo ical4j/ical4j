@@ -54,7 +54,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class UnfoldingReader extends PushbackReader {
 
-    private static Log log = LogFactory.getLog(UnfoldingReader.class);
+    private Log log = LogFactory.getLog(UnfoldingReader.class);
 
     /**
      * The pattern used to identify a fold in an iCalendar data stream.
