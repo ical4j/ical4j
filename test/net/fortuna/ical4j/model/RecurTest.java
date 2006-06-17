@@ -505,4 +505,24 @@ public class RecurTest extends TestCase {
             assertEquals(Calendar.FRIDAY, cal.get(Calendar.DAY_OF_WEEK));
         }
     }
+    
+    public void testNoFrequency() throws ParseException {
+        String rrule = "BYDAY=MO,TU,WE,TH,FR";
+        try {
+            new Recur(rrule);
+            fail("IllegalArgumentException not thrown!");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+    
+    public void testUnknownFrequency() throws ParseException {
+        String rrule = "FREQ=FORTNIGHTLY;BYDAY=MO,TU,WE,TH,FR";
+        try {
+            new Recur(rrule);
+            fail("IllegalArgumentException not thrown!");
+        } catch (IllegalArgumentException e) {
+            // expected
+        }       
+    }      
 }

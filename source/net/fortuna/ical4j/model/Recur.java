@@ -140,6 +140,7 @@ public class Recur implements Serializable {
      * @throws ParseException
      *             thrown when the specified string contains an invalid
      *             representation of an UNTIL date value
+     * @throws IllegalArgumentException if the <code>frequency</code> is <code>null</code> or unrecognized.
      */
     public Recur(final String aValue) throws ParseException {
         for (StringTokenizer t = new StringTokenizer(aValue, ";="); t
@@ -200,24 +201,29 @@ public class Recur implements Serializable {
                 experimentalValues.put(token, t.nextToken());
             }
         }
+        validateFrequency();
     }
 
     /**
      * @param frequency
      * @param until
+     * @throws IllegalArgumentException if the <code>frequency</code> is <code>null</code> or unrecognized.
      */
     public Recur(final String frequency, final Date until) {
         this.frequency = frequency;
         this.until = until;
+        validateFrequency();
     }
 
     /**
      * @param frequency
      * @param count
+     * @throws IllegalArgumentException if the <code>frequency</code> is <code>null</code> or unrecognized.
      */
     public Recur(final String frequency, final int count) {
         this.frequency = frequency;
         this.count = count;
+        validateFrequency();
     }
 
     /**
@@ -980,6 +986,20 @@ public class Recur implements Serializable {
         return secondlyDates;
     }
     
+    private void validateFrequency() {
+        if (frequency == null) {
+            throw new IllegalArgumentException("A recurrence rule MUST contain a FREQ rule part.");
+        } else if (!frequency.equals(SECONDLY)
+                && !frequency.equals(MINUTELY)
+                && !frequency.equals(HOURLY)
+                && !frequency.equals(DAILY)
+                && !frequency.equals(WEEKLY)
+                && !frequency.equals(MONTHLY)
+                && !frequency.equals(YEARLY)) {
+            throw new IllegalArgumentException("Invalid FREQ rule part '" + frequency + "' in recurrence rule");
+        }
+    }
+    
     /**
      * @param count The count to set.
      */
@@ -990,9 +1010,11 @@ public class Recur implements Serializable {
     
     /**
      * @param frequency The frequency to set.
+     * @throws IllegalArgumentException if the <code>frequency</code> is <code>null</code> or unrecognized.
      */
     public final void setFrequency(final String frequency) {
         this.frequency = frequency;
+        validateFrequency();
     }
     
     /**
