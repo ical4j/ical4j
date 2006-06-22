@@ -96,7 +96,10 @@ public class XProperty extends Property implements Escapable {
      */
     public final void validate() throws ValidationException {
         if (!getName().startsWith(EXPERIMENTAL_PREFIX)) {
-            throw new ValidationException("Experimental properties must have the following prefix: " + EXPERIMENTAL_PREFIX);
+            throw new ValidationException("Invalid name ["
+                    + getName()
+                    + "]. Experimental properties must have the following prefix: "
+                    + EXPERIMENTAL_PREFIX);
         }
     }
 }

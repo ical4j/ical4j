@@ -39,11 +39,8 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a DUE iCalendar component property.
@@ -158,27 +155,6 @@ public class Due extends DateProperty {
          *
          * (";" "VALUE" "=" ("DATE-TIME" / "DATE")) / (";" tzidparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
-                getParameters());
-
-        Parameter valueParam = getParameter(Parameter.VALUE);
-
-        if (valueParam != null
-                && !Value.DATE_TIME.equals(valueParam)
-                && !Value.DATE.equals(valueParam)) {
-            throw new ValidationException(
-                "Parameter [" + Parameter.VALUE + "] is invalid");
-        }
-
-        if (isUtc()) {
-            ParameterValidator.getInstance().assertNone(Parameter.TZID,
-                    getParameters());
-            
-        }
-        else {
-            ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
-                    getParameters());
-        }
 
         /*
          *  ; the following is optional, ; and MAY occur more than once

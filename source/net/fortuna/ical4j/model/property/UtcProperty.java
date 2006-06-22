@@ -86,12 +86,17 @@ public abstract class UtcProperty extends DateProperty {
      */
     public void validate() throws ValidationException {
         super.validate();
+        
         if (getDate() != null && !(getDate() instanceof DateTime)) {
-            throw new ValidationException("Property must have a DATE-TIME value");
+            throw new ValidationException(
+                    "Property must have a DATE-TIME value");
         }
+        
         DateTime dateTime = (DateTime) getDate();
+        
         if (dateTime != null && !dateTime.isUtc()) {
-            throw new ValidationException("DATE-TIME value must be specified in UTC time");
+            throw new ValidationException(
+                    "DATE-TIME value must be specified in UTC time");
         }
     }
 }

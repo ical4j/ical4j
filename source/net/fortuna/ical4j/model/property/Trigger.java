@@ -215,24 +215,29 @@ public class Trigger extends UtcProperty {
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
+        super.validate();
+        
         Parameter relParam = getParameter(Parameter.RELATED);
         Parameter valueParam = getParameter(Parameter.VALUE);
+        
         if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
-            ParameterValidator.getInstance().assertOneOrLess(Parameter.RELATED,
-                    getParameters());
-            ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
-                    getParameters());
+            
+            ParameterValidator.getInstance().assertOneOrLess(
+                    Parameter.RELATED, getParameters());
+            
             if (valueParam != null && !Value.DURATION.equals(valueParam)) {
                 throw new ValidationException(
                     "Parameter [" + valueParam + "] is invalid");
             }
+            
             if (getDuration() == null) {
                 throw new ValidationException("Duration value not specified");
             }
         }
         else {
-            ParameterValidator.getInstance().assertOne(Parameter.VALUE,
-                    getParameters());
+            ParameterValidator.getInstance().assertOne(
+                    Parameter.VALUE, getParameters());
+            
             if (valueParam != null && !Value.DATE_TIME.equals(valueParam)) {
                 throw new ValidationException(
                         "Parameter [" + valueParam + "] is invalid");
@@ -240,7 +245,6 @@ public class Trigger extends UtcProperty {
             if (getDateTime() == null) {
                 throw new ValidationException("DATE-TIME value not specified");
             }
-            super.validate();
         }
     }
 

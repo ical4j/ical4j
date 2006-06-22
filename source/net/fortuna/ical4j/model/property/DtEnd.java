@@ -38,11 +38,8 @@ package net.fortuna.ical4j.model.property;
 import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a DTEND iCalendar component property.
@@ -194,25 +191,6 @@ public class DtEnd extends DateProperty {
          *
          * (";" "VALUE" "=" ("DATE-TIME" / "DATE")) / (";" tzidparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
-                getParameters());
-
-        Parameter valueParam = getParameter(Parameter.VALUE);
-
-        if (valueParam == null && !(getDate() instanceof DateTime)) {
-            throw new ValidationException("VALUE parameter is invalid for time instance");
-        }
-        if (getDate() instanceof DateTime) {
-            DateTime dateTime = (DateTime) getDate();
-            if (dateTime.isUtc()) {
-                ParameterValidator.getInstance().assertNone(Parameter.TZID,
-                        getParameters());
-            }
-            else {
-                ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
-                        getParameters());
-            }
-        }
 
         /*
          * ; the following is optional, ; and MAY occur more than once

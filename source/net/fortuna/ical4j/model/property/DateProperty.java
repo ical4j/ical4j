@@ -46,6 +46,7 @@ import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -178,21 +179,54 @@ public abstract class DateProperty extends Property {
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public void validate() throws ValidationException {
+        
+        ParameterValidator.getInstance().assertOneOrLess(
+                Parameter.VALUE, getParameters());
+
+        if (isUtc()) {
+            ParameterValidator.getInstance().assertNone(
+                    Parameter.TZID, getParameters());
+        }
+        else {
+            ParameterValidator.getInstance().assertOneOrLess(
+                    Parameter.TZID, getParameters());
+        }
+        
         Value value = (Value) getParameter(Parameter.VALUE);
-        if (value != null && !Value.DATE.equals(value) && !Value.DATE_TIME.equals(value)) {
-            throw new ValidationException("Invalid VALUE parameter [" + value + "]");
-        }
-        if ((Value.DATE.equals(value) && getDate() instanceof DateTime)
-                || (Value.DATE_TIME.equals(value) && !(getDate() instanceof DateTime))) {
-            throw new ValidationException("VALUE parameter [" + value + "] is invalid for date instance");
-        }
+        
         if (getDate() instanceof DateTime) {
+            
+            if (value != null && !Value.DATE_TIME.equals(value)) {
+                throw new ValidationException(
+                        "VALUE parameter [" + value
+                        + "] is invalid for DATE-TIME instance");
+            }
+            
             DateTime dateTime = (DateTime) date;
+            
             // ensure tzid matches date-time timezone..
             Parameter tzId = getParameter(Parameter.TZID);
             if (dateTime.getTimeZone() != null
-                    && (tzId == null || !tzId.getValue().equals(dateTime.getTimeZone().getID()))) {
-                throw new ValidationException("TZID parameter [" + tzId + "] does not match the timezone [" + dateTime.getTimeZone().getID() + "]");
+                    && (tzId == null || !tzId.getValue().equals(
+                            dateTime.getTimeZone().getID()))) {
+                
+                throw new ValidationException(
+                        "TZID parameter [" + tzId
+                        + "] does not match the timezone ["
+                        + dateTime.getTimeZone().getID() + "]");
+            }
+        }
+        else if (getDate() != null) {
+            
+            if (value == null) {
+                throw new ValidationException(
+                        "VALUE parameter [" + Value.DATE
+                        + "] must be specified for DATE instance");
+            }
+            else if (!Value.DATE.equals(value)) {
+                throw new ValidationException(
+                        "VALUE parameter [" + value
+                        + "] is invalid for DATE instance");
             }
         }
     }
