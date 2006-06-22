@@ -41,6 +41,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.RRule;
@@ -93,10 +94,14 @@ public class CalendarTest extends TestCase {
         calEnd.setTime(calStart.getTime());
         calEnd.add(java.util.Calendar.YEAR, 1);
         
-        VEvent week1UserA = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 1 - User A");
+        VEvent week1UserA = new VEvent(
+                new Date(calStart.getTime().getTime()),
+                new Dur(0, 8, 0, 0), "Week 1 - User A");
         week1UserA.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week1UserA.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
         
-        Recur week1UserARecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
+        Recur week1UserARecur = new Recur(
+                Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week1UserARecur.setInterval(3);
         week1UserARecur.getDayList().add(WeekDay.MO);
         week1UserARecur.getDayList().add(WeekDay.TU);
@@ -109,10 +114,14 @@ public class CalendarTest extends TestCase {
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         
-        VEvent week2UserB = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 2 - User B");
+        VEvent week2UserB = new VEvent(
+                new Date(calStart.getTime().getTime()),
+                new Dur(0, 8, 0, 0), "Week 2 - User B");
         week2UserB.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week2UserB.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
         
-        Recur week2UserBRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
+        Recur week2UserBRecur = new Recur(
+                Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week2UserBRecur.setInterval(3);
         week2UserBRecur.getDayList().add(WeekDay.MO);
         week2UserBRecur.getDayList().add(WeekDay.TU);
@@ -125,10 +134,14 @@ public class CalendarTest extends TestCase {
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         
-        VEvent week3UserC = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 3 - User C");
+        VEvent week3UserC = new VEvent(
+                new Date(calStart.getTime().getTime()),
+                new Dur(0, 8, 0, 0), "Week 3 - User C");
         week3UserC.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week3UserC.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
         
-        Recur week3UserCRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
+        Recur week3UserCRecur = new Recur(
+                Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week3UserCRecur.setInterval(3);
         week3UserCRecur.getDayList().add(WeekDay.MO);
         week3UserCRecur.getDayList().add(WeekDay.TU);
@@ -167,10 +180,14 @@ public class CalendarTest extends TestCase {
         calEnd.setTime(calStart.getTime());
         calEnd.add(java.util.Calendar.YEAR, 1);
 
-        VEvent week1UserA = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 1 - User A");
+        VEvent week1UserA = new VEvent(
+                new Date(calStart.getTime().getTime()),
+                new Dur(0, 8, 0, 0), "Week 1 - User A");
         week1UserA.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week1UserA.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
-        Recur week1UserARecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
+        Recur week1UserARecur = new Recur(
+                Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week1UserARecur.setInterval(3);
         week1UserARecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
         week1UserARecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
@@ -183,10 +200,14 @@ public class CalendarTest extends TestCase {
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
 
-        VEvent week2UserB = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 2 - User B");
+        VEvent week2UserB = new VEvent(
+                new Date(calStart.getTime().getTime()),
+                new Dur(0, 8, 0, 0), "Week 2 - User B");
         week2UserB.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week2UserB.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
-        Recur week2UserBRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
+        Recur week2UserBRecur = new Recur(
+                Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week2UserBRecur.setInterval(3);
         week2UserBRecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
         week2UserBRecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
@@ -199,10 +220,14 @@ public class CalendarTest extends TestCase {
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
 
-        VEvent week3UserC = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 3 - User C");
+        VEvent week3UserC = new VEvent(
+                new Date(calStart.getTime().getTime()),
+                new Dur(0, 8, 0, 0), "Week 3 - User C");
         week3UserC.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week3UserC.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
-        Recur week3UserCRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
+        Recur week3UserCRecur = new Recur(
+                Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week3UserCRecur.setInterval(3);
         week3UserCRecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
         week3UserCRecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
@@ -226,7 +251,9 @@ public class CalendarTest extends TestCase {
         queryStartCal.set(2006, java.util.Calendar.JULY, 1, 9, 0, 0);
         queryEndCal.set(2006, java.util.Calendar.AUGUST, 1, 9, 0, 0);
         
-        VFreeBusy request = new VFreeBusy(new DateTime(queryStartCal.getTime()), new DateTime(queryEndCal.getTime()));
+        VFreeBusy request = new VFreeBusy(
+                new DateTime(queryStartCal.getTime()),
+                new DateTime(queryEndCal.getTime()));
 
         VFreeBusy reply = new VFreeBusy(request, calendar.getComponents());
         /*
