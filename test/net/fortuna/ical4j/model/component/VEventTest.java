@@ -128,7 +128,6 @@ public class VEventTest extends ComponentTest {
 //        dtEnd.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.getProperties().add(dtEnd);
         weekdayNineToFiveEvents.getProperties().add(new Uid("000001@modularity.net.au"));
-        weekdayNineToFiveEvents.getProperties().add(new DtStamp());
         // ensure event is valid..
         weekdayNineToFiveEvents.validate();
 
@@ -144,7 +143,6 @@ public class VEventTest extends ComponentTest {
 //        dtEnd2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.getProperties().add(dtEnd2);
         dailyWeekdayEvents.getProperties().add(new Uid("000002@modularity.net.au"));
-        dailyWeekdayEvents.getProperties().add(new DtStamp());
         // ensure event is valid..
         dailyWeekdayEvents.validate();
 
@@ -160,7 +158,6 @@ public class VEventTest extends ComponentTest {
 //        dtEnd3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.getProperties().add(dtEnd3);
         monthlyWeekdayEvents.getProperties().add(new Uid("000003@modularity.net.au"));
-        monthlyWeekdayEvents.getProperties().add(new DtStamp());
         // ensure event is valid..
         monthlyWeekdayEvents.validate();
     }

@@ -98,7 +98,6 @@ public class AttachTest extends TestCase {
         christmas.getProperties().add(summary);
         christmas.getProperties().add(attach);
         christmas.getProperties().add(new Uid("000001@modularity.net.au"));
-        christmas.getProperties().add(new DtStamp());
         
         Calendar calendar = new Calendar();
         calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
