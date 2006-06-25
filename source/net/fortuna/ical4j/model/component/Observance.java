@@ -106,6 +106,18 @@ public abstract class Observance extends Component implements Comparable {
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
     public final void validate(final boolean recurse) throws ValidationException {
+        
+        // From "4.8.3.3 Time Zone Offset From":
+        // Conformance: This property MUST be specified in a "VTIMEZONE"
+        // calendar component.
+        PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM,
+                getProperties());
+
+        // From "4.8.3.4 Time Zone Offset To":
+        // Conformance: This property MUST be specified in a "VTIMEZONE"
+        // calendar component.
+        PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO,
+                getProperties());
 
         /*
 
@@ -115,10 +127,6 @@ public abstract class Observance extends Component implements Comparable {
                 dtstart / tzoffsetto / tzoffsetfrom /
          */
         PropertyValidator.getInstance().assertOne(Property.DTSTART,
-                getProperties());
-        PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO,
-                getProperties());
-        PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM,
                 getProperties());
 
         /*
