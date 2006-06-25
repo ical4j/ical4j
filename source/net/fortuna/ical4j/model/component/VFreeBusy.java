@@ -54,6 +54,7 @@ import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Url;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 import org.apache.commons.logging.Log;
@@ -428,6 +429,23 @@ public class VFreeBusy extends CalendarComponent {
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
     public final void validate(final boolean recurse) throws ValidationException {
+
+        if (!CompatibilityHints.isHintEnabled(
+                CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            
+            // From "4.8.4.7 Unique Identifier":
+            // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
+            // "VJOURNAL" or "VFREEBUSY" calendar components.
+            PropertyValidator.getInstance().assertOne(Property.UID,
+                    getProperties());
+
+            // From "4.8.7.2 Date/Time Stamp":
+            // Conformance: This property MUST be included in the "VEVENT", "VTODO",
+            // "VJOURNAL" or "VFREEBUSY" calendar components.
+            PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
+                    getProperties());
+        }
+
         PropertyValidator validator = PropertyValidator.getInstance();
 
         /*

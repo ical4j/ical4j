@@ -71,6 +71,7 @@ import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Url;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
@@ -335,6 +336,22 @@ public class VEvent extends CalendarComponent {
             }
         }
 
+        if (!CompatibilityHints.isHintEnabled(
+                CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            
+            // From "4.8.4.7 Unique Identifier":
+            // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
+            // "VJOURNAL" or "VFREEBUSY" calendar components.
+            PropertyValidator.getInstance().assertOne(Property.UID,
+                    getProperties());
+
+            // From "4.8.7.2 Date/Time Stamp":
+            // Conformance: This property MUST be included in the "VEVENT", "VTODO",
+            // "VJOURNAL" or "VFREEBUSY" calendar components.
+            PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
+                    getProperties());
+        }
+
         /*
          * ; the following are optional, ; but MUST NOT occur more than once
          *
@@ -559,13 +576,8 @@ public class VEvent extends CalendarComponent {
         }
         // if periods already specified through recurrence, return..
         // ..also normalise before returning.
-        if (!periods.isEmpty()) {
-            if (normalise) {
-                return periods.normalise();
-            }
-            else {
-                return periods;
-            }
+        if (!periods.isEmpty() && normalise) {
+            return periods.normalise();
         }
         return periods;
     }
