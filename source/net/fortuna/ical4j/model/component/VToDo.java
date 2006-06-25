@@ -38,7 +38,6 @@ import java.util.Iterator;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
@@ -140,6 +139,7 @@ public class VToDo extends CalendarComponent {
      */
     public VToDo() {
         super(VTODO);
+        getProperties().add(new DtStamp());
     }
 
     /**
@@ -160,7 +160,6 @@ public class VToDo extends CalendarComponent {
      */
     public VToDo(final Date start, final String summary) {
         this();
-        getProperties().add(new DtStamp(new DateTime()));
         getProperties().add(new DtStart(start));
         getProperties().add(new Summary(summary));
     }
@@ -174,7 +173,6 @@ public class VToDo extends CalendarComponent {
      */
     public VToDo(final Date start, final Date due, final String summary) {
         this();
-        getProperties().add(new DtStamp(new DateTime()));
         getProperties().add(new DtStart(start));
         getProperties().add(new Due(due));
         getProperties().add(new Summary(summary));
@@ -189,7 +187,6 @@ public class VToDo extends CalendarComponent {
      */
     public VToDo(final Date start, final Dur duration, final String summary) {
         this();
-        getProperties().add(new DtStamp(new DateTime()));
         getProperties().add(new DtStart(start));
         getProperties().add(new Duration(duration));
         getProperties().add(new Summary(summary));

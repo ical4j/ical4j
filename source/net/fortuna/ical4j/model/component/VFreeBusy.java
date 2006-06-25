@@ -232,6 +232,7 @@ public class VFreeBusy extends CalendarComponent {
      */
     public VFreeBusy() {
         super(VFREEBUSY);
+        getProperties().add(new DtStamp());
     }
 
     /**
@@ -260,7 +261,6 @@ public class VFreeBusy extends CalendarComponent {
         getProperties().add(new DtStart(start, true));
         // dtend MUST be specified in UTC..
         getProperties().add(new DtEnd(end, true));
-        getProperties().add(new DtStamp(new DateTime()));
     }
 
     /**
@@ -283,7 +283,6 @@ public class VFreeBusy extends CalendarComponent {
         // dtend MUST be specified in UTC..
         getProperties().add(new DtEnd(end, true));
         getProperties().add(new Duration(duration));
-        getProperties().add(new DtStamp(new DateTime()));
     }
 
     /**
@@ -304,7 +303,6 @@ public class VFreeBusy extends CalendarComponent {
         getProperties().add(new DtStart(start.getDate(), true));
         // dtend MUST be specified in UTC..
         getProperties().add(new DtEnd(end.getDate(), true));
-        getProperties().add(new DtStamp(new DateTime()));
         if (duration != null) {
             getProperties().add(new Duration(duration.getDuration()));
             // Initialise with all free time of at least the specified
