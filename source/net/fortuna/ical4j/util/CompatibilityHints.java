@@ -43,14 +43,6 @@ import java.util.Map;
  * @author Ben Fortuna
  */
 public final class CompatibilityHints {
-
-    private static final Map HINTS = new HashMap();
-    
-    /**
-     * Constructor made private to enforce static nature.
-     */
-    private CompatibilityHints() {
-    }
     
     /**
      * A system property key to enable relaxed unfolding. Relaxed
@@ -65,6 +57,14 @@ public final class CompatibilityHints {
      * "true".
      */
     public static final String KEY_RELAXED_PARSING = "ical4j.parsing.relaxed";
+    
+    /**
+     * A system property key to enable relaxed validation. Relaxed validation
+     * disables validation of certain conformance rules that many iCalendar
+     * implementations do not conform to. Relaxed validation is enabled by
+     * setting this system property to "true".
+     */
+    public static final String KEY_RELAXED_VALIDATION = "ical4j.validation.relaxed";
 
     /**
      * A system property key used to enable compatibility with
@@ -79,6 +79,14 @@ public final class CompatibilityHints {
      * enabled by setting this system property to "true".
      */
     public static final String KEY_NOTES_COMPATIBILITY = "ical4j.compatibility.notes";
+
+    private static final Map HINTS = new HashMap();
+    
+    /**
+     * Constructor made private to enforce static nature.
+     */
+    private CompatibilityHints() {
+    }
     
     /**
      * @param key
