@@ -14,7 +14,6 @@ import java.util.Iterator;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
@@ -32,12 +31,12 @@ import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.ExDate;
-import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
-import net.fortuna.ical4j.util.TimeZones;
+import net.fortuna.ical4j.model.property.Uid;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -128,6 +127,8 @@ public class VEventTest extends ComponentTest {
         DtEnd dtEnd = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
 //        dtEnd.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.getProperties().add(dtEnd);
+        weekdayNineToFiveEvents.getProperties().add(new Uid("000001@modularity.net.au"));
+        weekdayNineToFiveEvents.getProperties().add(new DtStamp());
         // ensure event is valid..
         weekdayNineToFiveEvents.validate();
 
@@ -142,6 +143,8 @@ public class VEventTest extends ComponentTest {
         DtEnd dtEnd2 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
 //        dtEnd2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.getProperties().add(dtEnd2);
+        dailyWeekdayEvents.getProperties().add(new Uid("000002@modularity.net.au"));
+        dailyWeekdayEvents.getProperties().add(new DtStamp());
         // ensure event is valid..
         dailyWeekdayEvents.validate();
 
@@ -156,6 +159,8 @@ public class VEventTest extends ComponentTest {
         DtEnd dtEnd3 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
 //        dtEnd3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.getProperties().add(dtEnd3);
+        monthlyWeekdayEvents.getProperties().add(new Uid("000003@modularity.net.au"));
+        monthlyWeekdayEvents.getProperties().add(new DtStamp());
         // ensure event is valid..
         monthlyWeekdayEvents.validate();
     }

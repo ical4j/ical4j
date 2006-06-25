@@ -79,7 +79,7 @@ public class AttachTest extends TestCase {
         params.add(Value.BINARY);
 
 //        Attach attach = new Attach(params, Base64.encodeBytes(bout.toByteArray(), Base64.DONT_BREAK_LINES));
-        Attach attach = new Attach(bout.toByteArray());
+        Attach attach = new Attach(params, bout.toByteArray());
 
         log.info(attach);
         
@@ -97,6 +97,8 @@ public class AttachTest extends TestCase {
         christmas.getProperties().add(start);
         christmas.getProperties().add(summary);
         christmas.getProperties().add(attach);
+        christmas.getProperties().add(new Uid("000001@modularity.net.au"));
+        christmas.getProperties().add(new DtStamp());
         
         Calendar calendar = new Calendar();
         calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
