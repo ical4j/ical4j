@@ -225,6 +225,7 @@ public class VEvent extends CalendarComponent {
     public VEvent() {
         super(VEVENT);
         this.alarms = new ComponentList();
+        getProperties().add(new DtStamp());
     }
 
     /**
@@ -259,7 +260,6 @@ public class VEvent extends CalendarComponent {
      */
     public VEvent(final Date start, final String summary) {
         this();
-        getProperties().add(new DtStamp(new DateTime()));
         getProperties().add(new DtStart(start));
         getProperties().add(new Summary(summary));
     }
@@ -273,7 +273,6 @@ public class VEvent extends CalendarComponent {
      */
     public VEvent(final Date start, final Date end, final String summary) {
         this();
-        getProperties().add(new DtStamp(new DateTime()));
         getProperties().add(new DtStart(start));
         getProperties().add(new DtEnd(end));
         getProperties().add(new Summary(summary));
@@ -288,7 +287,6 @@ public class VEvent extends CalendarComponent {
      */
     public VEvent(final Date start, final Dur duration, final String summary) {
         this();
-        getProperties().add(new DtStamp(new DateTime()));
         getProperties().add(new DtStart(start));
         getProperties().add(new Duration(duration));
         getProperties().add(new Summary(summary));
