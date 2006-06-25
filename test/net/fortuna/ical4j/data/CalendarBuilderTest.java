@@ -58,16 +58,24 @@ public class CalendarBuilderTest extends TestCase {
      * @see junit.framework.TestCase#setUp()
      */
     protected final void setUp() throws Exception {
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_VALIDATION, true);
     }
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
     protected final void tearDown() throws Exception {
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, false);
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_NOTES_COMPATIBILITY, false);
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_VALIDATION, false);
     }
     
     /**
