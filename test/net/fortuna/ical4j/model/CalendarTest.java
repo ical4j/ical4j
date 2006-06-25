@@ -45,6 +45,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 
 import org.apache.commons.logging.Log;
@@ -110,6 +111,7 @@ public class CalendarTest extends TestCase {
         week1UserARecur.getDayList().add(WeekDay.FR);
         week1UserARecur.getHourList().add(new Integer(9));
         week1UserA.getProperties().add(new RRule(week1UserARecur));
+        week1UserA.getProperties().add(new Uid("000001@modularity.net.au"));
 
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
@@ -130,6 +132,7 @@ public class CalendarTest extends TestCase {
         week2UserBRecur.getDayList().add(WeekDay.FR);
         week2UserBRecur.getHourList().add(new Integer(9));
         week2UserB.getProperties().add(new RRule(week2UserBRecur));
+        week2UserB.getProperties().add(new Uid("000002@modularity.net.au"));
 
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
@@ -150,6 +153,7 @@ public class CalendarTest extends TestCase {
         week3UserCRecur.getDayList().add(WeekDay.FR);
         week3UserCRecur.getHourList().add(new Integer(9));
         week3UserC.getProperties().add(new RRule(week3UserCRecur));
+        week3UserC.getProperties().add(new Uid("000003@modularity.net.au"));
         
         calendar.getComponents().add(week1UserA);
         calendar.getComponents().add(week2UserB);
@@ -196,6 +200,7 @@ public class CalendarTest extends TestCase {
         week1UserARecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
         week1UserARecur.getHourList().add(new Integer(9));
         week1UserA.getProperties().add(new RRule(week1UserARecur));
+        week1UserA.getProperties().add(new Uid("000001@modularity.net.au"));
 
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
@@ -216,6 +221,7 @@ public class CalendarTest extends TestCase {
         week2UserBRecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
         week2UserBRecur.getHourList().add(new Integer(9));
         week2UserB.getProperties().add(new RRule(week2UserBRecur));
+        week2UserB.getProperties().add(new Uid("000002@modularity.net.au"));
 
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
@@ -236,6 +242,7 @@ public class CalendarTest extends TestCase {
         week3UserCRecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
         week3UserCRecur.getHourList().add(new Integer(9));
         week3UserC.getProperties().add(new RRule(week3UserCRecur));
+        week3UserC.getProperties().add(new Uid("000003@modularity.net.au"));
 
         calendar.getComponents().add(week1UserA);
         calendar.getComponents().add(week2UserB);
