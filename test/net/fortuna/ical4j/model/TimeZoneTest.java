@@ -109,11 +109,12 @@ public class TimeZoneTest extends TestCase {
 
     /**
      * A test to ensure the method TimeZone.inDaylightTime() is working
-     * correctly.
+     * correctly (for the last 10 years).
      */
     public void testInDaylightTime() {
         Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -2);
+        cal.clear(Calendar.DAY_OF_YEAR);
+        cal.add(Calendar.YEAR, -10);
         /*
         cal.set(Calendar.MONTH, 12);
         assertEquals(tz.inDaylightTime(cal.getTime()), timezone.inDaylightTime(cal.getTime()));
@@ -122,14 +123,17 @@ public class TimeZoneTest extends TestCase {
         assertEquals(tz.inDaylightTime(cal.getTime()), timezone.inDaylightTime(cal.getTime()));
         */
         long start, stop;
-        for (int i = 0; i < 365; i++) {
-            cal.add(Calendar.DAY_OF_YEAR, 1);
-            start = System.currentTimeMillis();
-            assertEquals("inDaylightTime() invalid: [" + cal.getTime() + "]",
-                    tz.inDaylightTime(cal.getTime()),
-                    timezone.inDaylightTime(cal.getTime()));
-            stop = System.currentTimeMillis();
-            LOG.debug("Time: " + (stop - start) + "ms");
+        for (int y = 0; y < 10; y++) {
+            for (int i = 0; i < 365; i++) {
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                start = System.currentTimeMillis();
+                assertEquals("inDaylightTime() invalid: [" + cal.getTime() + "]",
+                        tz.inDaylightTime(cal.getTime()),
+                        timezone.inDaylightTime(cal.getTime()));
+                stop = System.currentTimeMillis();
+                LOG.debug("Time: " + (stop - start) + "ms");
+            }
+            cal.add(Calendar.YEAR, 1);
         }
     }
     
@@ -168,5 +172,16 @@ public class TimeZoneTest extends TestCase {
         DateTime dtStart = new DateTime(cal.getTime()); 
         DtStart pDtStart = new DtStart(dtStart); 
         pDtStart.setTimeZone(registry.getTimeZone("America/Indiana/Indianapolis"));
+    }
+    
+    public void testAustraliaSydney() {
+//        java.util.TimeZone sydneyTz = java.util.TimeZone.getTimeZone("Australia/Sydney");
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(2003, 7, 31, 23, 00, 00);
+        
+        assertEquals("inDaylightTime() invalid: [" + cal.getTime() + "]",
+                tz.inDaylightTime(cal.getTime()),
+                timezone.inDaylightTime(cal.getTime()));
     }
 }
