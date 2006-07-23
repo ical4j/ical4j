@@ -2,6 +2,31 @@
  iCal4j - Changes
 ==================
 
+0.9.20
+
+ - Updated commons logging to 1.1
+ 
+ - Refactored logging to use local Log instances to avoid classloader issues
+ 
+ - Updated parser to include word chars up to 255 (was 127)
+ 
+ - Updated PeriodRule to check if date falls within period range (exclusive of
+ period start and end)
+ 
+ - Added commons codec dependency to support QUOTED-PRINTABLE encoding
+ 
+ - Added compatibility hint for Lotus Notes
+ 
+ - Additional component validation from RFC2445 implemented. Additional
+ Compatibility Hint for relaxed validation, which skips this extra validation.
+ 
+ - Provide a default DTSTAMP property in VEvent, VToDo, VJournal and VFreeBusy
+
+ - Updated timzone definitions (Olson 2006g)
+ 
+ - More bug fixes.
+
+
 0.9.19
 
  - Added filter package to allow for filtering of collections

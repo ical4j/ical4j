@@ -8,7 +8,7 @@
 <project name="iCal4j" basedir="." default="package">
 
 	<!-- Project details -->
-    <property name="project.version" value="0.9.19"/>
+    <property name="project.version" value="0.9.20"/>
 	
 	<!-- Load overrides for library paths -->
 	<property file="build.properties"/>
