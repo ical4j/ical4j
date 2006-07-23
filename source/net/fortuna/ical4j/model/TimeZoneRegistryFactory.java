@@ -43,12 +43,17 @@ package net.fortuna.ical4j.model;
  * @author Ben Fortuna
  */
 public abstract class TimeZoneRegistryFactory {
+    
+    /**
+     * The system property used to specify an alternate
+     * <code>TimeZoneRegistryFactory</code> implementation.
+     */
+    public static final String KEY_FACTORY_CLASS = "net.fortuna.ical4j.timezone.registry";
 
     private static TimeZoneRegistryFactory instance;
     static {
         try {
-            Class factoryClass = Class.forName(
-                    System.getProperty("net.fortuna.ical4j.timezone.registry"));
+            Class factoryClass = Class.forName(System.getProperty(KEY_FACTORY_CLASS));
             instance = (TimeZoneRegistryFactory) factoryClass.newInstance();
         }
         catch (Exception e) {
