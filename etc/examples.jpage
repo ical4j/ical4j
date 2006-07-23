@@ -67,3 +67,15 @@ period = new net.fortuna.ical4j.model.Period("20050303T090301Z/20050604T090301Z"
 periods.add(period); 
 recDate = new net.fortuna.ical4j.model.property.RDate(new net.fortuna.ical4j.model.ParameterList(),periods);
 recDate
+
+
+// Test string escaping..
+String value = "Churchill delivers his \"Iron Curtain\" speech\, 1947";
+return net.fortuna.ical4j.util.Strings.unescape(value);
+
+String UTC_PATTERN = "yyyyMMdd'T'HHmmss'Z'";
+String DEFAULT_PATTERN = "yyyyMMdd'T'HHmmss";
+java.text.DateFormat df = new java.text.SimpleDateFormat(DEFAULT_PATTERN);
+df.setLenient(false);
+return df.parse("20030731T230000");
+
