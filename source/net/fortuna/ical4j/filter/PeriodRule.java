@@ -59,7 +59,7 @@ import net.fortuna.ical4j.model.property.RRule;
  */
 public class PeriodRule extends ComponentRule {
 
-    private static final Log LOG = LogFactory.getLog(PeriodRule.class);
+    private Log log = LogFactory.getLog(PeriodRule.class);
 
     private Period period;
     
@@ -81,7 +81,7 @@ public class PeriodRule extends ComponentRule {
             return true;
         }
         DtEnd end = (DtEnd) component.getProperty(Property.DTEND);
-        if (end != null && period.includes(end.getDate())) {
+        if (end != null && period.includes(end.getDate(), false)) {
             debug(end.getDate(), "end date");
             return true;
         }
@@ -110,7 +110,9 @@ public class PeriodRule extends ComponentRule {
         // recurrence rules..
         for (Iterator i = component.getProperties(Property.RRULE).iterator(); i.hasNext();) {
             RRule rrule = (RRule) i.next();
-            DateList startDates = rrule.getRecur().getDates(start.getDate(), period, (Value) start.getParameter(Parameter.VALUE));
+            DateList startDates = rrule.getRecur().getDates(start.getDate(),
+                    period,
+                    (Value) start.getParameter(Parameter.VALUE));
             for (Iterator j = startDates.iterator(); j.hasNext();) {
                 Date recurDate = (Date) j.next();
                 if (period.includes(recurDate)) {
@@ -127,8 +129,8 @@ public class PeriodRule extends ComponentRule {
      * @param date
      */
     private void debug(final Date date, final String type) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Matching date: " + date + " (" + type + ")");
+        if (log.isDebugEnabled()) {
+            log.debug("Matching date: " + date + " (" + type + ")");
         }
     }
 }
