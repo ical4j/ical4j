@@ -61,12 +61,18 @@ public class DateTime extends Date {
     private static final DateFormat UTC_FORMAT = new SimpleDateFormat(UTC_PATTERN);
     static {
         UTC_FORMAT.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+        UTC_FORMAT.setLenient(false);
     }
     
     /**
      * Used for parsing times in a local date-time representation.
      */
     private static final DateFormat DEFAULT_FORMAT = new SimpleDateFormat(DEFAULT_PATTERN);
+    static {
+        DEFAULT_FORMAT.setLenient(false);
+    }
+
+    private static final DateFormat LENIENT_DEFAULT_FORMAT = new SimpleDateFormat(DEFAULT_PATTERN);
     
     private Time time;
     
@@ -120,7 +126,8 @@ public class DateTime extends Date {
      * @param value
      */
     public DateTime(final String value) throws ParseException {
-        this();
+        this(value, null);
+        /*
         long time = 0;
         try {
             synchronized (UTC_FORMAT) {
@@ -136,9 +143,13 @@ public class DateTime extends Date {
             this.time = new Time(time, getFormat().getTimeZone());
         }
         setTime(time);
+        */
     }
     
     /**
+     * Creates a new date-time instance from the specified value in the given
+     * timezone. If a timezone is not specified, the default timezone (as
+     * returned by {@link java.util.TimeZone#getDefault()}) is used.
      * @param value
      * @throws ParseException
      */
@@ -154,11 +165,15 @@ public class DateTime extends Date {
             synchronized (DEFAULT_FORMAT) {
                 if (timezone != null) {
                     DEFAULT_FORMAT.setTimeZone(timezone);
+                    setTime(DEFAULT_FORMAT.parse(value).getTime());
                 }
                 else {
-                    DEFAULT_FORMAT.setTimeZone(getFormat().getTimeZone());
+                    // Use lenient parsing for floating times. This is to overcome
+                    // the problem of parsing VTimeZone dates that specify dates
+                    // that the strict parser does not accept.
+                    LENIENT_DEFAULT_FORMAT.setTimeZone(getFormat().getTimeZone());
+                    setTime(LENIENT_DEFAULT_FORMAT.parse(value).getTime());
                 }
-                setTime(DEFAULT_FORMAT.parse(value).getTime());
             }
             setTimeZone(timezone);
         }
