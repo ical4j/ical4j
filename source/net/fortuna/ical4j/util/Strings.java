@@ -120,10 +120,11 @@ public final class Strings {
     private static final Pattern ESCAPE_PATTERN_3 =
         Pattern.compile("\\\\");
 
-//    private static final Pattern UNESCAPE_PATTERN_1 =
-//        Pattern.compile("\\\\([,;\"])");
+    // include escaped quotes for backwards compatibility..
     private static final Pattern UNESCAPE_PATTERN_1 =
-        Pattern.compile("\\\\([,;])");
+        Pattern.compile("\\\\([,;\"])");
+//    private static final Pattern UNESCAPE_PATTERN_1 =
+//        Pattern.compile("\\\\([,;])");
 
     private static final Pattern UNESCAPE_PATTERN_2 =
         Pattern.compile("\\\\n", Pattern.CASE_INSENSITIVE);

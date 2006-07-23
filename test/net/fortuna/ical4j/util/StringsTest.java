@@ -78,12 +78,15 @@ public class StringsTest extends TestCase {
     public void testEscapeQuote() {
         assertEquals("EscapeQuote", ESCAPED_QUOTE, Strings.escape(QUOTE));
     }
+    */
 
+    /**
+     * Test un-escaping of quotes (not part of spec, but remains for
+     * backwards compatibility.
+     */
     public void testUnEscapeQuote() {
         assertEquals("UnEscapeQuote", QUOTE, Strings.unescape(ESCAPED_QUOTE));
     }
-    */
-
 
     public void testEscapeDoubleBackSlash() {
         assertEquals("EscapeDoubleBackSlash", ESCAPED_DOUBLE_BACKSLASH, 
