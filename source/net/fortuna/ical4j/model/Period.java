@@ -123,7 +123,9 @@ public class Period implements Serializable, Comparable {
      */
     public final DateTime getEnd() {
         if (end == null) {
-            return new DateTime(duration.getTime(start).getTime());
+            DateTime derived = new DateTime(duration.getTime(start).getTime());
+            derived.setUtc(start.isUtc());
+            return derived;
         }
         return end;
     }
@@ -136,14 +138,28 @@ public class Period implements Serializable, Comparable {
     }
 
     /**
-     * Decides whether a date falls within this period.
-     * 
+     * Determines if the specified date occurs within this period (inclusive of
+     * period start and end).
      * @param date
-     *            the date to be tested
-     * @return true if the date is in the perod, false otherwise
+     * @return true if the specified date occurs within the current period
+     * 
      */
     public final boolean includes(final Date date) {
-        return (!getStart().after(date) && !getEnd().before(date));
+        return includes(date, true);
+    }
+
+    /**
+     * Decides whether a date falls within this period.
+     * @param date the date to be tested
+     * @param inclusive specifies whether period start and end are included
+     * in the calculation
+     * @return true if the date is in the perod, false otherwise
+     */
+    public final boolean includes(final Date date, final boolean inclusive) {
+        if (inclusive) {
+            return (!getStart().after(date) && !getEnd().before(date));
+        }
+        return (getStart().before(date) && getEnd().after(date));
     }
 
     /**
