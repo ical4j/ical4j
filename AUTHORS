@@ -10,13 +10,15 @@
   Mike Douglass, Fredrik Bertilsson ...
  
  
- Thanks also to the developers of the following applications/libraries:
+ Thanks also to the developers of the following tools/libraries:
  
   - eclipse [http://eclipse.org/]
   
   - eclipse checkstyle plugin [http://eclipse-cs.sourceforge.net/]
   
   - Apache Commons Logging/Log4j [http://jakarta.apache.org/commons/logging/]
+  
+  - Apache Commons Codec [http://jakarta.apache.org/commons/codec/]
   
   - Apache Ant [http://ant.apache.org/]
   
