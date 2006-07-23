@@ -235,6 +235,18 @@ public abstract class Observance extends Component implements Comparable {
                     onsets.put(new Period(new DateTime(cacheableOnset), new DateTime(nextOnset)), cacheableOnset);
                 }
             }
+            
+            // as we don't have an onset following the final onset, we must
+            // cache it with an arbitrary period length..
+            if (nextOnset != null) {
+                Calendar finalOnsetPeriodEnd = Calendar.getInstance();
+                finalOnsetPeriodEnd.setTime(nextOnset);
+                finalOnsetPeriodEnd.add(Calendar.YEAR, 100);
+                onsets.put(new Period(new DateTime(nextOnset),
+                                new DateTime(finalOnsetPeriodEnd.getTime())),
+                        nextOnset);
+            }
+            
             /*
             Period onsetPeriod = null;
             if (nextOnset != null) {
