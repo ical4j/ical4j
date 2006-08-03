@@ -2,3 +2,4 @@ bin
 build
 coverage
 coverage.ec
+target
