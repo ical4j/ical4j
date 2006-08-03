@@ -711,18 +711,14 @@ public class VEvent extends CalendarComponent {
      */
     public final DtEnd getEndDate(final boolean deriveFromDuration) {
         DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
-        if (deriveFromDuration) {
-            // No DTEND?  No problem, we'll use the DURATION.
-            if (dtEnd == null) {
-                DtStart dtStart = getStartDate();
-                Duration vEventDuration = getDuration();
-                if (vEventDuration != null) {
-                    dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration().getTime(dtStart.getDate()),
-                            (Value) dtStart.getParameter(Parameter.VALUE)));
-                    if (dtStart.isUtc()) {
-                        dtEnd.setUtc(true);
-                    }
-                }
+        // No DTEND?  No problem, we'll use the DURATION.
+        if (dtEnd == null && deriveFromDuration && getDuration() != null) {
+            DtStart dtStart = getStartDate();
+            Duration vEventDuration = getDuration();
+            dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration().getTime(dtStart.getDate()),
+                    (Value) dtStart.getParameter(Parameter.VALUE)));
+            if (dtStart.isUtc()) {
+                dtEnd.setUtc(true);
             }
         }
         return dtEnd;

@@ -93,7 +93,7 @@ public final class CompatibilityHints {
      * @param value
      */
     public static void setHintEnabled(final String key, final boolean enabled) {
-        HINTS.put(key, new Boolean(enabled));
+        HINTS.put(key, Boolean.valueOf(enabled));
     }
     
     /**
