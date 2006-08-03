@@ -1,143 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	This configuration file was written by the eclipse-cs plugin configuration editor
+-->
+<!--
+Checkstyle-Configuration: Default Checks
+Description:
+
+-->
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
-<property name="severity" value="warning"/>
-<module name="TreeWalker">
-<module name="FileContentsHolder">
-</module>
-<module name="JavadocMethod">
-<property name="severity" value="ignore"/>
-</module>
-<module name="JavadocType">
-</module>
-<module name="JavadocVariable">
-<property name="severity" value="ignore"/>
-</module>
-<module name="JavadocStyle">
-</module>
-<module name="ConstantName">
-</module>
-<module name="LocalFinalVariableName">
-</module>
-<module name="LocalVariableName">
-</module>
-<module name="MemberName">
-</module>
-<module name="MethodName">
-</module>
-<module name="PackageName">
-</module>
-<module name="ParameterName">
-</module>
-<module name="StaticVariableName">
-</module>
-<module name="TypeName">
-</module>
-<module name="AvoidStarImport">
-</module>
-<module name="IllegalImport">
-</module>
-<module name="RedundantImport">
-</module>
-<module name="UnusedImports">
-</module>
-<module name="FileLength">
-</module>
-<module name="LineLength">
-<property name="severity" value="ignore"/>
-</module>
-<module name="MethodLength">
-</module>
-<module name="ParameterNumber">
-</module>
-<module name="EmptyForIteratorPad">
-</module>
-<module name="MethodParamPad">
-</module>
-<module name="NoWhitespaceAfter">
-</module>
-<module name="NoWhitespaceBefore">
-</module>
-<module name="OperatorWrap">
-</module>
-<module name="ParenPad">
-</module>
-<module name="TypecastParenPad">
-</module>
-<module name="TabCharacter">
-</module>
-<module name="WhitespaceAfter">
-</module>
-<module name="WhitespaceAround">
-</module>
-<module name="ModifierOrder">
-</module>
-<module name="RedundantModifier">
-</module>
-<module name="AvoidNestedBlocks">
-</module>
-<module name="EmptyBlock">
-</module>
-<module name="LeftCurly">
-</module>
-<module name="NeedBraces">
-</module>
-<module name="RightCurly">
-<property name="severity" value="ignore"/>
-</module>
-<module name="AvoidInlineConditionals">
-</module>
-<module name="DoubleCheckedLocking">
-</module>
-<module name="EmptyStatement">
-</module>
-<module name="EqualsHashCode">
-</module>
-<module name="HiddenField">
-<property name="severity" value="ignore"/>
-</module>
-<module name="IllegalInstantiation">
-</module>
-<module name="InnerAssignment">
-</module>
-<module name="MagicNumber">
-</module>
-<module name="MissingSwitchDefault">
-</module>
-<module name="RedundantThrows">
-</module>
-<module name="SimplifyBooleanExpression">
-</module>
-<module name="SimplifyBooleanReturn">
-</module>
-<module name="DesignForExtension">
-</module>
-<module name="FinalClass">
-</module>
-<module name="HideUtilityClassConstructor">
-</module>
-<module name="InterfaceIsType">
-</module>
-<module name="VisibilityModifier">
-</module>
-<module name="ArrayTypeStyle">
-</module>
-<module name="FinalParameters">
-</module>
-<module name="GenericIllegalRegexp">
-<property name="severity" value="ignore"/>
-<property name="format" value="\s+$"/>
-<property name="message" value="Line has trailing spaces."/>
-</module>
-<module name="TodoComment">
-</module>
-<module name="UpperEll">
-</module>
-</module>
-<module name="PackageHtml">
-</module>
-<module name="NewlineAtEndOfFile">
-</module>
-<module name="Translation">
-</module>
+    <property name="severity" value="warning"/>
+    <module name="TreeWalker">
+        <module name="JavadocMethod"/>
+        <module name="JavadocType"/>
+        <module name="JavadocVariable">
+            <property name="severity" value="info"/>
+        </module>
+        <module name="JavadocStyle"/>
+        <module name="ConstantName"/>
+        <module name="LocalFinalVariableName"/>
+        <module name="LocalVariableName"/>
+        <module name="MemberName"/>
+        <module name="MethodName"/>
+        <module name="PackageName"/>
+        <module name="ParameterName"/>
+        <module name="StaticVariableName"/>
+        <module name="TypeName"/>
+        <module name="AvoidStarImport"/>
+        <module name="IllegalImport"/>
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+        <module name="FileLength"/>
+        <module name="LineLength"/>
+        <module name="MethodLength"/>
+        <module name="ParameterNumber"/>
+        <module name="EmptyForIteratorPad"/>
+        <module name="MethodParamPad"/>
+        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="OperatorWrap"/>
+        <module name="ParenPad"/>
+        <module name="TypecastParenPad"/>
+        <module name="TabCharacter"/>
+        <module name="WhitespaceAfter"/>
+        <module name="WhitespaceAround"/>
+        <module name="ModifierOrder"/>
+        <module name="RedundantModifier"/>
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock"/>
+        <module name="LeftCurly"/>
+        <module name="NeedBraces"/>
+        <module name="RightCurly"/>
+        <module name="AvoidInlineConditionals"/>
+        <module name="DoubleCheckedLocking"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsHashCode"/>
+        <module name="HiddenField"/>
+        <module name="IllegalInstantiation"/>
+        <module name="InnerAssignment"/>
+        <module name="MagicNumber"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="RedundantThrows"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="DesignForExtension"/>
+        <module name="FinalClass"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="InterfaceIsType"/>
+        <module name="VisibilityModifier"/>
+        <module name="ArrayTypeStyle"/>
+        <module name="FinalParameters"/>
+        <module name="GenericIllegalRegexp">
+            <property name="format" value="\s+$"/>
+            <property name="message" value="Line has trailing spaces."/>
+        </module>
+        <module name="TodoComment"/>
+        <module name="UpperEll"/>
+    </module>
+    <module name="PackageHtml"/>
+    <module name="NewlineAtEndOfFile"/>
+    <module name="Translation"/>
 </module>
