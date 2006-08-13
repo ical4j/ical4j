@@ -16,12 +16,6 @@
   	<system>SourceForge.net</system>
   	<url>https://sourceforge.net/tracker/?group_id=107024</url>
   </issueManagement>
-  <distributionManagement>
-    <site>
-      <id>ical4j-site</id>
-      <url>scp://modularity.net.au/home/.parker/modularity/modularity.net.au/ical4j</url>
-    </site>
-  </distributionManagement>
   <licenses>
     <license>
       <name>iCal4j License</name>
@@ -90,6 +84,15 @@
             </excludes>
 	      </configuration>
 	    </plugin>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <configuration>
+            <descriptors>
+            	<descriptor>etc/bin-assembly.xml</descriptor>
+            	<descriptor>etc/src-assembly.xml</descriptor>
+            </descriptors>
+          </configuration>
+        </plugin>
      </plugins>
   </build>
   <dependencies>
