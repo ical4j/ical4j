@@ -36,6 +36,14 @@
       <directory>target/site/apidocs</directory>
       <outputDirectory>docs/apidocs</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>docs</directory>
+      <outputDirectory>docs</outputDirectory>
+      <includes>
+        <include>*.html</include>
+        <include>css/*.css</include>
+      </includes>
+    </fileSet>
   </fileSets>
   <dependencySets>
     <dependencySet>
