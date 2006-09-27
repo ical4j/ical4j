@@ -499,11 +499,7 @@ public class VEvent extends CalendarComponent {
 //        FIXME: See bug #1325558..
         Date adjustedRangeStart = new DateTime(rangeStart);
         adjustedRangeStart.setTime(rDuration.negate().getTime(rangeStart).getTime());
-        // if start/end specified as anniversary-type (i.e. uses DATE values
-        // rather than DATE-TIME), return empty list..
-        if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
-            return periods;
-        }
+
         // recurrence dates..
         PropertyList rDates = getProperties(Property.RDATE);
         for (Iterator i = rDates.iterator(); i.hasNext();) {
