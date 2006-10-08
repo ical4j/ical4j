@@ -53,8 +53,8 @@ public class StringsTest extends TestCase {
     private static final String DOUBLE_BACKSLASH = "\\\\XXX\\\\";
     private static final String ESCAPED_DOUBLE_BACKSLASH = "\\\\\\\\XXX\\\\\\\\";
     
-    private static final String NEWLINE = "\nXXX\n";
-    private static final String ESCAPED_NEWLINE = "\\nXXX\\n";
+    private static final String NEWLINE = "\nXXX\n\n";
+    private static final String ESCAPED_NEWLINE = "\\nXXX\\n\\n";
 
     public void testEscapeSemiColon() {
         assertEquals("EscapeSemiColon", ESCAPED_SEMI_COLON, 
