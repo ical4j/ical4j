@@ -4,4 +4,5 @@
         <file-match-pattern match-pattern=".java$" include-pattern="true"/>
     </fileset>
     <filter name="WriteProtectedFiles" enabled="true"/>
+    <filter name="NonSrcDirs" enabled="true"/>
 </fileset-config>
