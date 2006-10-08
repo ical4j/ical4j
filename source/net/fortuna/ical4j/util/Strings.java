@@ -131,6 +131,12 @@ public final class Strings {
 
     private static final Pattern UNESCAPE_PATTERN_3 =
         Pattern.compile("\\\\\\\\");
+
+    /**
+     * Defines a regular expression representing all parameter strings that
+     * should be quoted.
+     */
+    public static final Pattern PARAM_QUOTE_PATTERN = Pattern.compile("[:;,]");
     
     /**
      * A string used to denote the start (and end) of iCalendar content lines.
