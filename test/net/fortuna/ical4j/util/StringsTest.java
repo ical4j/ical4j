@@ -105,5 +105,16 @@ public class StringsTest extends TestCase {
     public void testUnEscapeNewline() {
         assertEquals("UnEscapeNewline", NEWLINE, Strings.unescape(ESCAPED_NEWLINE));
     }
-        
+
+    /**
+     * Unit testing of quotable parameter value strings.
+     */
+    public void testQuotableParamString() {
+        assertFalse(Strings.PARAM_QUOTE_PATTERN.matcher("").find());
+        assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(":").find());
+        assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(";").find());
+        assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(",").find());
+        assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(
+                "Pacific Time (US & Canada), Tijuana").find());
+    }
 }
