@@ -47,7 +47,6 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * Unit tests for the TzId parameter.
@@ -55,20 +54,10 @@ import net.fortuna.ical4j.util.CompatibilityHints;
  */
 public class TzIdTest extends TestCase {
 
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * @throws IOException
+     * @throws ParserException
      */
-    protected final void setUp() throws Exception {
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, true);
-    }
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    protected final void tearDown() throws Exception {
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, false);
-    }
-
     public void testTzIdCompatibility() throws IOException, ParserException {
         
         CalendarBuilder builder = new CalendarBuilder();
