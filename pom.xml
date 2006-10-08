@@ -95,6 +95,24 @@
         </plugin>
      </plugins>
   </build>
+  <reporting>
+      <plugins>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-checkstyle-plugin</artifactId>
+              <configuration>
+                  <configLocation>etc/checkstyle.xml</configLocation>
+              </configuration>
+          </plugin>
+	      <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-clover-plugin</artifactId>
+	        <configuration>
+		        <licenseLocation>etc/clover.license</licenseLocation>
+	        </configuration>
+	      </plugin>
+      </plugins>
+  </reporting>
   <dependencies>
     <dependency>
       <groupId>commons-logging</groupId>
