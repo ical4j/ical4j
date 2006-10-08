@@ -166,14 +166,23 @@ public abstract class Parameter extends Content {
         b.append(getName());
         b.append('=');
 
-        if (this instanceof Escapable) {
-            b.append(Strings.escape(Strings.valueOf(getValue())));
+        if (isQuotable()) {
+            b.append(Strings.quote(Strings.valueOf(getValue())));
         }
         else {
             b.append(Strings.valueOf(getValue()));
         }
 
         return b.toString();
+    }
+
+    /**
+     * Indicates whether the current parameter value should be quoted.
+     * @return true if the value should be quoted, otherwise false
+     */
+    private boolean isQuotable() {
+        return Strings.PARAM_QUOTE_PATTERN.matcher(
+                Strings.valueOf(getValue())).find();
     }
 
     /**
@@ -190,20 +199,21 @@ public abstract class Parameter extends Content {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Parameter) {
             Parameter p = (Parameter) arg0;
-            return getName().equals(p.getName()) && getValue().equals(p.getValue());
+            return getName().equals(p.getName())
+                && getValue().equals(p.getValue());
         }
         return super.equals(arg0);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     public final int hashCode() {
