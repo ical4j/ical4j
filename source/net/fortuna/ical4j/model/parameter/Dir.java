@@ -83,6 +83,6 @@ public class Dir extends Parameter {
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {
-        return Strings.quote(Uris.decode(Strings.valueOf(getUri())));
+        return Uris.decode(Strings.valueOf(getUri()));
     }
 }

@@ -34,14 +34,15 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an extension parameter.
- * 
+ *
  * @author benfortuna
  */
 public class XParameter extends Parameter {
-    
+
     private static final long serialVersionUID = -3372153616695145903L;
 
     private String value;
@@ -55,12 +56,12 @@ public class XParameter extends Parameter {
     public XParameter(final String aName, final String aValue) {
         super(aName);
 
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

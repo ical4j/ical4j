@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Common Name parameter.
@@ -53,7 +54,7 @@ public class Cn extends Parameter {
     public Cn(final String aValue) {
         super(CN);
 
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
     }
 
     /*

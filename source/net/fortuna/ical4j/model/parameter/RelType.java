@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Relationship Type parameter.
@@ -64,7 +65,7 @@ public class RelType extends Parameter {
      */
     public RelType(final String aValue) {
         super(RELTYPE);
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
     }
 
     /*

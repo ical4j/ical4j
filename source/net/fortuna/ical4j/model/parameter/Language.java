@@ -34,14 +34,15 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Language parameter.
- * 
+ *
  * @author benfortuna
  */
 public class Language extends Parameter {
-    
+
     private static final long serialVersionUID = 4864176270266226608L;
 
     private String value;
@@ -53,7 +54,7 @@ public class Language extends Parameter {
     public Language(final String aValue) {
         super(LANGUAGE);
 
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
     }
 
     /*

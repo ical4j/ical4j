@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Value Data Type parameter.
@@ -108,7 +109,7 @@ public class Value extends Parameter {
      */
     public Value(final String aValue) {
         super(VALUE);
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
     }
 
     /*

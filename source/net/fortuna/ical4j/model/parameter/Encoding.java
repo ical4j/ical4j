@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an Inline Encoding parameter. Constants are provided for all encodings
@@ -99,7 +100,8 @@ public class Encoding extends Parameter {
 
     public static final Encoding BINARY = new Encoding(VALUE_BINARY);
 
-    public static final Encoding QUOTED_PRINTABLE = new Encoding(VALUE_QUOTED_PRINTABLE);
+    public static final Encoding QUOTED_PRINTABLE = new Encoding(
+            VALUE_QUOTED_PRINTABLE);
     
     public static final Encoding BASE64 = new Encoding(VALUE_BASE64);
 
@@ -111,7 +113,7 @@ public class Encoding extends Parameter {
      */
     public Encoding(final String aValue) {
         super(ENCODING);
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
     }
 
     /*

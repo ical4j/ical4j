@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Calendar User Type.
@@ -72,7 +73,7 @@ public class CuType extends Parameter {
      */
     public CuType(final String aValue) {
         super(CUTYPE);
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
     }
 
     /*

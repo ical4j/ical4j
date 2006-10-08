@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Participation Status parameter.
@@ -58,7 +59,8 @@ public class PartStat extends Parameter {
     
     private static final String VALUE_IN_PROCESS = "IN-PROCESS";
 
-    public static final PartStat NEEDS_ACTION = new PartStat(VALUE_NEEDS_ACTION);
+    public static final PartStat NEEDS_ACTION = new PartStat(
+            VALUE_NEEDS_ACTION);
     
     public static final PartStat ACCEPTED = new PartStat(VALUE_ACCEPTED);
     
@@ -80,7 +82,7 @@ public class PartStat extends Parameter {
      */
     public PartStat(final String aValue) {
         super(PARTSTAT);
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
     }
 
     /*

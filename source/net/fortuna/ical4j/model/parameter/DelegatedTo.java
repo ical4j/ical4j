@@ -37,6 +37,7 @@ import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.AddressList;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Delegatees parameter.
@@ -57,7 +58,7 @@ public class DelegatedTo extends Parameter {
      *             cal-addresses
      */
     public DelegatedTo(final String aValue) throws URISyntaxException {
-        this(new AddressList(aValue));
+        this(new AddressList(Strings.unquote(aValue)));
     }
 
     /**

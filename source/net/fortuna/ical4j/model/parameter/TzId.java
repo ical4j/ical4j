@@ -35,7 +35,6 @@ package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -56,14 +55,9 @@ public class TzId extends Parameter implements Escapable {
      */
     public TzId(final String aValue) {
         super(TZID);
-        // Work around a Microsoft Bug
-        // (Not conforming to rfc2445, Microsoft Exchange quotes timezone references.)
-        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY)) {
-            this.value = Strings.unquote(aValue);
-        }
-        else {
-            this.value = aValue;
-        }
+        // parameter values may be quoted if they contain characters in the
+        // set [:;,]..
+        this.value = Strings.unquote(aValue);
     }
 
     /*

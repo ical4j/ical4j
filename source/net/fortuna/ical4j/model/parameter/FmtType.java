@@ -34,14 +34,15 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Format Type parameter.
- * 
+ *
  * @author benfortuna
  */
 public class FmtType extends Parameter {
-    
+
     private static final long serialVersionUID = -8764966004966855480L;
 
     private String value;
@@ -52,7 +53,7 @@ public class FmtType extends Parameter {
      */
     public FmtType(final String aValue) {
         super(FMTTYPE);
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
     }
 
     /*

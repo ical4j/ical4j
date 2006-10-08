@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an Alarm Trigger Relationship parameter.
@@ -47,7 +48,7 @@ public class Related extends Parameter {
     private static final String VALUE_START = "START";
 
     private static final String VALUE_END = "END";
-    
+
     public static final Related START = new Related(VALUE_START);
 
     public static final Related END = new Related(VALUE_END);
@@ -60,7 +61,7 @@ public class Related extends Parameter {
      */
     public Related(final String aValue) {
         super(RELATED);
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
 
         // value must be one of finite list..
         if (!VALUE_START.equals(value)

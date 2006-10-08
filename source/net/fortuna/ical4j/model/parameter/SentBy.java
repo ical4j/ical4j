@@ -83,6 +83,6 @@ public class SentBy extends Parameter {
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {
-        return Strings.quote(Uris.decode(Strings.valueOf(getAddress())));
+        return Uris.decode(Strings.valueOf(getAddress()));
     }
 }

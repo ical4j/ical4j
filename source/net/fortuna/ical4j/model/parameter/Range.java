@@ -34,6 +34,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Recurrence Identifier Range parameter.
@@ -60,7 +61,7 @@ public class Range extends Parameter {
      */
     public Range(final String aValue) {
         super(RANGE);
-        this.value = aValue;
+        this.value = Strings.unquote(aValue);
 
         // value must be one of finite list..
         if (!VALUE_THISANDPRIOR.equals(value)
