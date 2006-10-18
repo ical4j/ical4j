@@ -35,6 +35,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.math.BigDecimal;
+
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
@@ -129,17 +131,26 @@ public class Geo extends Property {
     
     private static final long serialVersionUID = -902100715801867636L;
 
-    private float lattitude;
+    private BigDecimal lattitude;
 
-    private float longitude;
+    private BigDecimal longitude;
 
     /**
      * Default constructor.
      */
     public Geo() {
         super(GEO);
-        lattitude = 0;
-        longitude = 0;
+        lattitude = new BigDecimal(0);
+        longitude = new BigDecimal(0);
+    }
+    
+    /**
+     * Creates a new instance by parsing the specified string representation.
+     * @param value
+     */
+    public Geo(final String value) {
+        super(GEO);
+        setValue(value);
     }
     
     /**
@@ -159,7 +170,7 @@ public class Geo extends Property {
      * @param aLongitude
      *            a longitudinal value
      */
-    public Geo(final float aLattitude, final float aLongitude) {
+    public Geo(final BigDecimal aLattitude, final BigDecimal aLongitude) {
         super(GEO);
         lattitude = aLattitude;
         longitude = aLongitude;
@@ -173,8 +184,8 @@ public class Geo extends Property {
      * @param aLongitude
      *            a longitudinal value
      */
-    public Geo(final ParameterList aList, final float aLattitude,
-            final float aLongitude) {
+    public Geo(final ParameterList aList, final BigDecimal aLattitude,
+            final BigDecimal aLongitude) {
         super(GEO, aList);
         lattitude = aLattitude;
         longitude = aLongitude;
@@ -183,14 +194,14 @@ public class Geo extends Property {
     /**
      * @return Returns the lattitude.
      */
-    public final float getLattitude() {
+    public final BigDecimal getLattitude() {
         return lattitude;
     }
 
     /**
      * @return Returns the longitude.
      */
-    public final float getLongitude() {
+    public final BigDecimal getLongitude() {
         return longitude;
     }
     
@@ -199,8 +210,8 @@ public class Geo extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
-        lattitude = Float.parseFloat(aValue.substring(0, aValue.indexOf(';') - 1));
-        longitude =  Float.parseFloat(aValue.substring(aValue.indexOf(';')));
+        lattitude = new BigDecimal(aValue.substring(0, aValue.indexOf(';')));
+        longitude =  new BigDecimal(aValue.substring(aValue.indexOf(';') + 1));
     }
 
     /*
@@ -216,14 +227,14 @@ public class Geo extends Property {
     /**
      * @param lattitude The lattitude to set.
      */
-    public final void setLattitude(final float lattitude) {
+    public final void setLattitude(final BigDecimal lattitude) {
         this.lattitude = lattitude;
     }
     
     /**
      * @param longitude The longitude to set.
      */
-    public final void setLongitude(final float longitude) {
+    public final void setLongitude(final BigDecimal longitude) {
         this.longitude = longitude;
     }
     
