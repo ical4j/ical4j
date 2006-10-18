@@ -187,15 +187,15 @@ public class RequestStatus extends Property {
 
         if ((getStatusCode() != null)) {
             b.append(getStatusCode());
-            b.append(';');
         }
 
         if ((getDescription() != null)) {
-            b.append(getDescription());
             b.append(';');
+            b.append(getDescription());
         }
 
         if ((getExData() != null)) {
+            b.append(';');
             b.append(getExData());
         }
 
