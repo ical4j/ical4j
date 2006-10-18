@@ -36,6 +36,14 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>test</directory>
+      <outputDirectory>test</outputDirectory>
+      <includes>
+        <include>**/*.java</include>
+        <include>log4j.properties</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>target/site/apidocs</directory>
       <outputDirectory>docs/apidocs</outputDirectory>
     </fileSet>
