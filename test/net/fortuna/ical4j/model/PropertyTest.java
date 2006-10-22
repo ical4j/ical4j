@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 8/02/2006
+ * Created on 22/10/2006
  *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
@@ -35,49 +35,21 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
+import net.fortuna.ical4j.model.property.Transp;
 
 /**
- * Abstract base class for property unit tests.
+ * Unit tests for Property-specific functionality.
  * @author Ben Fortuna
  */
-public abstract class PropertyTest extends TestCase {
-
-    private static final Log LOG = LogFactory.getLog(PropertyTest.class);
-    
-    /**
-     * @param property
-     */
-    protected void assertValidationException(final Property property) {
-        try {
-            property.validate();
-        }
-        catch (ValidationException ve) {
-            LOG.debug("Exception caught", ve);
-            return;
-        }
-        fail("ValidationException should be thrown!");
-    }
+public class PropertyTest extends AbstractPropertyTest {
 
     /**
-     * Loads a calendar from the specified file.
-     * @param filename
-     * @return
-     * @throws IOException
-     * @throws ParserException
+     * Test equality of properties.
      */
-    protected Calendar loadCalendar(String filename) throws IOException, ParserException {
-        FileInputStream fin = new FileInputStream(filename);
-        CalendarBuilder builder = new CalendarBuilder();
-        return builder.build(fin);
+    public void testEquals() {
+        Property p = new Transp();
+        
+        assertFalse("Properties are not equal", Transp.TRANSPARENT.equals(p));
+        assertFalse("Properties are not equal", p.equals(Transp.TRANSPARENT));
     }
 }
