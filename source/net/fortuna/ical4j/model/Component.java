@@ -38,6 +38,9 @@ import java.util.Iterator;
 
 import net.fortuna.ical4j.util.Strings;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Defines an iCalendar component. Subclasses of this class provide additional
  * validation and typed values for specific iCalendar components.
@@ -170,23 +173,24 @@ public abstract class Component implements Serializable {
     }
 
     /**
+     * Uses {@link ObjectUtils} to test equality.
      * Two components are equal if and only if their
      * name and property lists are equal.
-     * @see java.lang.Object#equals(java.lang.Object)
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Component) {
             Component c = (Component) arg0;
-            return getName().equals(c.getName())
-                    && getProperties().equals(c.getProperties());
+            return ObjectUtils.equals(getName(), c.getName())
+                    && ObjectUtils.equals(getProperties(), c.getProperties());
         }
         return super.equals(arg0);
     }
 
-    /*
-     * @see java.lang.Object#hashCode()
+    /**
+     * Uses {@link HashCodeBuilder} to build hashcode.
      */
     public final int hashCode() {
-        return getName().hashCode() + getProperties().hashCode();
+        return new HashCodeBuilder().append(getName())
+            .append(getProperties()).toHashCode();
     }
 }

@@ -37,6 +37,9 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Defines a period of time. A period may be specified as either a start date
  * and end date, or a start date and duration. NOTE: End dates and durations are
@@ -321,10 +324,8 @@ public class Period implements Serializable, Comparable {
     }
 
     /**
-     * Overrides the equality test, compares fields of instances for equality.
-     * 
-     * @param o
-     *            object being compared for equality
+     * Uses {@link ObjectUtils} to test equality.
+     * @param o object being compared for equality
      * @return true if the objects are equal, false otherwise
      */
     public final boolean equals(final Object o) {
@@ -336,24 +337,15 @@ public class Period implements Serializable, Comparable {
         }
 
         final Period period = (Period) o;
-
-        if (!getStart().equals(period.getStart())) {
-            return false;
-        } else if (!getEnd().equals(period.getEnd())) {
-            return false;
-        }
-        return true;
+        return ObjectUtils.equals(getStart(), period.getStart())
+            && ObjectUtils.equals(getEnd(), period.getEnd());
     }
 
     /**
-     * Override hashCode() with code that checks fields in this object.
-     * 
-     * @return hascode for this object
+     * Uses {@link HashCodeBuilder} to build hashcode.
      */
     public final int hashCode() {
-        int result;
-        result = getStart().hashCode();
-        result = 29 * result + getEnd().hashCode();
-        return result;
+        return new HashCodeBuilder().append(start)
+            .append((end != null) ? (Object) end : duration).toHashCode();
     }
 }

@@ -41,6 +41,7 @@ import java.text.NumberFormat;
 
 import net.fortuna.ical4j.util.Dates;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -160,6 +161,6 @@ public class UtcOffset implements Serializable {
      * @see java.lang.Object#hashCode()
      */
     public final int hashCode() {
-        return (int) getOffset();
+        return new HashCodeBuilder().append(getOffset()).toHashCode();
     }
 }

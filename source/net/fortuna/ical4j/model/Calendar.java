@@ -36,6 +36,9 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.Method;
@@ -344,23 +347,24 @@ public class Calendar implements Serializable {
     }
     
     /**
+     * Uses {@link ObjectUtils} to test equality.
      * Two calendars are equal if and only if their
      * property lists and component lists are equal.
-     * @see java.lang.Object#equals(java.lang.Object)
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Calendar) {
             Calendar calendar = (Calendar) arg0;
-            return getProperties().equals(calendar.getProperties())
-                    && getComponents().equals(calendar.getComponents());
+            return ObjectUtils.equals(getProperties(), calendar.getProperties())
+                    && ObjectUtils.equals(getComponents(), calendar.getComponents());
         }
         return super.equals(arg0);
     }
 
     /**
-     * @see java.lang.Object#hashCode()
+     * Uses {@link HashCodeBuilder} to build hashcode.
      */
     public final int hashCode() {
-        return getProperties().hashCode() + getComponents().hashCode();
+        return new HashCodeBuilder().append(getProperties())
+            .append(getComponents()).hashCode();
     }
 }

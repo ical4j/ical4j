@@ -42,6 +42,9 @@ import java.text.SimpleDateFormat;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Represents a time of day on a specific date.
  * 
@@ -245,22 +248,23 @@ public class DateTime extends Date {
         return b.toString();
     }
     
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * Uses {@link ObjectUtils} to test equality.
      */
     public boolean equals(final Object arg0) {
         //TODO: what about compareTo, before, after, etc.?
         
         if (arg0 instanceof DateTime) {
-            return time.equals(((DateTime) arg0).time) && super.equals(arg0);
+            return ObjectUtils.equals(time, ((DateTime) arg0).time);
         }
         return super.equals(arg0);
     }
     
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
+    /**
+     * Uses {@link HashCodeBuilder} to build hashcode.
      */
     public int hashCode() {
-        return time.hashCode() + super.hashCode();
+        return new HashCodeBuilder().append(time)
+            .append(timezone).hashCode();
     }
 }

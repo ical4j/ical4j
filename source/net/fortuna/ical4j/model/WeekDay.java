@@ -40,6 +40,9 @@ import java.util.Calendar;
 
 import net.fortuna.ical4j.util.Numbers;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Defines a day of the week with a possible offset related to
  * a MONTHLY or YEARLY occurrence.
@@ -205,8 +208,8 @@ public class WeekDay implements Serializable {
         return -1;
     }
     
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * Uses {@link ObjectUtils} to test equality.
      */
     public final boolean equals(final Object arg0) {
         if (arg0 == null) {
@@ -216,13 +219,15 @@ public class WeekDay implements Serializable {
             return false;
         }
         WeekDay wd = (WeekDay) arg0;
-        return wd.getDay().equals(getDay()) && wd.getOffset() == getOffset();
+        return ObjectUtils.equals(wd.getDay(), getDay())
+            && wd.getOffset() == getOffset();
     }
     
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
+    /**
+     * Uses {@link HashCodeBuilder} to build hashcode.
      */
     public final int hashCode() {
-        return getDay().hashCode() + getOffset();
+        return new HashCodeBuilder().append(getDay())
+            .append(getOffset()).toHashCode();
     }
 }

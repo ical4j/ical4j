@@ -39,6 +39,9 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.util.Strings;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional
  * validation and typed values for specific iCalendar properties.
@@ -304,12 +307,8 @@ public abstract class Property extends Content {
      */
     public abstract void validate() throws ValidationException;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     /**
+     * Uses {@link ObjectUtils} to test equality.
      * Two properties are equal if and only if their
      * name, value and parameter list are equal.
      * @see java.lang.Object#equals(java.lang.Object)
@@ -317,23 +316,19 @@ public abstract class Property extends Content {
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
             Property p = (Property) arg0;
-            return getName().equals(p.getName())
-                    && ((getValue() != null && getValue().equals(p.getValue()))
-                            || (getValue() == null && p.getValue() == null))
-                    && getParameters().equals(p.getParameters());
+            return ObjectUtils.equals(getName(), p.getName())
+                    && ObjectUtils.equals(getValue(), p.getValue())
+                    && ObjectUtils.equals(getParameters(), p.getParameters());
         }
         return super.equals(arg0);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
+    /**
+     * Uses {@link HashCodeBuilder} to build hashcode.
      */
     public final int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
-        return getName().toUpperCase().hashCode()
-                + getValue().hashCode()
-                + getParameters().hashCode();
+        return new HashCodeBuilder().append(getName().toUpperCase())
+            .append(getValue()).append(getParameters()).hashCode();
     }
 }

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?><project>
   <parent>
-    <groupId>net.modularity</groupId>
     <artifactId>modularity-parent</artifactId>
+    <groupId>net.modularity</groupId>
     <version>1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.fortuna</groupId>
   <artifactId>ical4j</artifactId>
   <name>iCal4j</name>
-  <url>http://ical4j.sourceforge.net</url>
-  <inceptionYear>2004</inceptionYear>
   <version>1.0-beta1-SNAPSHOT</version>
   <description>A Java library for reading and writing iCalendar (*.ics) files</description>
+  <url>http://ical4j.sourceforge.net</url>
   <issueManagement>
-  	<system>SourceForge.net</system>
-  	<url>https://sourceforge.net/tracker/?group_id=107024</url>
+    <system>SourceForge.net</system>
+    <url>https://sourceforge.net/tracker/?group_id=107024</url>
   </issueManagement>
+  <inceptionYear>2004</inceptionYear>
   <licenses>
     <license>
       <name>iCal4j License</name>
@@ -50,69 +50,48 @@
       </testResource>
     </testResources>
     <plugins>
-       <plugin>
-         <groupId>org.apache.maven.plugins</groupId>
-         <artifactId>maven-compiler-plugin</artifactId>
-         <configuration>
-             <source>1.4</source>
-             <target>1.4</target>
-         </configuration>
-        </plugin>
-	    <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-surefire-plugin</artifactId>
-	      <configuration>
-	        <systemProperties>
-	          <property>
-	            <name>ical4j.unfolding.relaxed</name>
-	            <value>true</value>
-	          </property>
-	          <property>
-	            <name>ical4j.parsing.relaxed</name>
-	            <value>true</value>
-	          </property>
-	        </systemProperties>
-            <excludes>
-              <exclude>**/AllTests.java</exclude>
-              <exclude>**/CalendarEqualsTest.java</exclude>
-              <exclude>**/CalendarOutputterTest.java</exclude>
-              <exclude>**/FoldingWriterTest.java</exclude>
-              <exclude>**/ComponentTest.java</exclude>
-              <exclude>**/PropertyTest.java</exclude>
-              <!-- Temporary exclusion.. -->
-              <exclude>**/TimeZoneTest.java</exclude>
-            </excludes>
-	      </configuration>
-	    </plugin>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <configuration>
-            <descriptors>
-            	<descriptor>etc/bin-assembly.xml</descriptor>
-            	<descriptor>etc/src-assembly.xml</descriptor>
-            </descriptors>
-          </configuration>
-        </plugin>
-     </plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.4</source>
+          <target>1.4</target>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>ical4j.unfolding.relaxed</name>
+              <value>true</value>
+            </property>
+            <property>
+              <name>ical4j.parsing.relaxed</name>
+              <value>true</value>
+            </property>
+          </systemProperties>
+          <excludes>
+            <exclude>**/AllTests.java</exclude>
+            <exclude>**/CalendarEqualsTest.java</exclude>
+            <exclude>**/CalendarOutputterTest.java</exclude>
+            <exclude>**/FoldingWriterTest.java</exclude>
+            <exclude>**/ComponentTest.java</exclude>
+            <exclude>**/AbstractPropertyTest.java</exclude>
+            <exclude>**/TimeZoneTest.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>etc/bin-assembly.xml</descriptor>
+            <descriptor>etc/src-assembly.xml</descriptor>
+          </descriptors>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
-  <reporting>
-      <plugins>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-checkstyle-plugin</artifactId>
-              <configuration>
-                  <configLocation>etc/checkstyle.xml</configLocation>
-              </configuration>
-          </plugin>
-	      <plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-clover-plugin</artifactId>
-	        <configuration>
-		        <licenseLocation>etc/clover.license</licenseLocation>
-	        </configuration>
-	      </plugin>
-      </plugins>
-  </reporting>
   <dependencies>
     <dependency>
       <groupId>commons-logging</groupId>
@@ -130,5 +109,26 @@
       <version>3.8.2</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.1</version>
+    </dependency>
   </dependencies>
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <configLocation>etc/checkstyle.xml</configLocation>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clover-plugin</artifactId>
+        <configuration>
+          <licenseLocation>etc/clover.license</licenseLocation>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>

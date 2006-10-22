@@ -33,6 +33,9 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -197,27 +200,24 @@ public abstract class Parameter extends Content {
      */
     public abstract String getValue();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * Uses {@link ObjectUtils} to test equality.
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Parameter) {
             Parameter p = (Parameter) arg0;
-            return getName().equals(p.getName())
-                && getValue().equals(p.getValue());
+            return ObjectUtils.equals(getName(), p.getName())
+                && ObjectUtils.equals(getValue(), p.getValue());
         }
         return super.equals(arg0);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
+    /**
+     * Uses {@link HashCodeBuilder} to build hashcode.
      */
     public final int hashCode() {
         // as parameter name is case-insensitive generate hash for uppercase..
-        return getName().toUpperCase().hashCode() + getValue().hashCode();
+        return new HashCodeBuilder().append(getName().toUpperCase())
+            .append(getValue()).toHashCode();
     }
 }

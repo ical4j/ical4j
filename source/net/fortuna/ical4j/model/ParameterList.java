@@ -40,6 +40,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Defines a list of iCalendar parameters. A parameter list may be specified as
  * unmodifiable at instantiation - useful for constant properties that you don't
@@ -204,6 +207,7 @@ public class ParameterList implements Serializable {
     }
 
     /**
+     * Uses {@link ObjectUtils} to test equality.
      * Two parameter lists are equals if and only if
      * they contain the same set of parameters.
      * @see java.lang.Object#equals(java.lang.Object)
@@ -211,26 +215,15 @@ public class ParameterList implements Serializable {
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof ParameterList) {
             ParameterList p = (ParameterList) arg0;
-            for (Iterator i = p.iterator(); i.hasNext();) {
-                if (!parameters.contains(i.next())) {
-                    return false;
-                }
-            }
-            return true;
+            return ObjectUtils.equals(parameters, p.parameters);
         }
         return super.equals(arg0);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
+    /**
+     * Uses {@link HashCodeBuilder} to build hashcode.
      */
     public final int hashCode() {
-        int hash = 0;
-        for (Iterator i = iterator(); i.hasNext();) {
-            hash += i.next().hashCode();
-        }
-        return hash;
+        return new HashCodeBuilder().append(parameters).toHashCode();
     }
 }
