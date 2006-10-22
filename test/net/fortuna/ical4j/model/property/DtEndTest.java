@@ -37,7 +37,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.AbstractPropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
 
 import org.apache.commons.logging.Log;
@@ -47,7 +47,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Ben Fortuna
  *
  */
-public class DtEndTest extends PropertyTest {
+public class DtEndTest extends AbstractPropertyTest {
     
     private static Log log = LogFactory.getLog(DtEndTest.class);
 

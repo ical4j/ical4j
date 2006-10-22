@@ -27,7 +27,7 @@ import java.util.Date;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.AbstractPropertyTest;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 
@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
  * @author Ben Fortuna
  *
  */
-public class TriggerTest extends PropertyTest {
+public class TriggerTest extends AbstractPropertyTest {
     
     private static Log log = LogFactory.getLog(TriggerTest.class);
 

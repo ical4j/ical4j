@@ -41,13 +41,13 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.AbstractPropertyTest;
 
 /**
  * Unit tests for Summary property.
  * @author Ben Fortuna
  */
-public class SummaryTest extends PropertyTest {
+public class SummaryTest extends AbstractPropertyTest {
 
     /**
      * Test correct parsing of quoted text.

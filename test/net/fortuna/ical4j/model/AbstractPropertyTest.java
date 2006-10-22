@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Created on 20/02/2006
+ * Created on 8/02/2006
  *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
@@ -33,30 +33,51 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model.property;
+package net.fortuna.ical4j.model;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
+import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.AbstractPropertyTest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import junit.framework.TestCase;
 
 /**
- * Unit tests for Location property.
+ * Abstract base class for property unit tests.
  * @author Ben Fortuna
  */
-public class LocationTest extends AbstractPropertyTest {
+public abstract class AbstractPropertyTest extends TestCase {
+
+    private static final Log LOG = LogFactory.getLog(AbstractPropertyTest.class);
+    
+    /**
+     * @param property
+     */
+    protected void assertValidationException(final Property property) {
+        try {
+            property.validate();
+        }
+        catch (ValidationException ve) {
+            LOG.debug("Exception caught", ve);
+            return;
+        }
+        fail("ValidationException should be thrown!");
+    }
 
     /**
-     * Test correct parsing of quoted text.
+     * Loads a calendar from the specified file.
+     * @param filename
+     * @return
      * @throws IOException
      * @throws ParserException
      */
-    public void testQuotedText() throws IOException, ParserException {
-        Calendar calendar = loadCalendar("etc/samples/valid/mansour.ics");
-        Component event = calendar.getComponent(Component.VEVENT);
-        assertEquals("At \"The Terrace\" Complex > Melbourne", event.getProperty(Property.LOCATION).getValue());
+    protected Calendar loadCalendar(String filename) throws IOException, ParserException {
+        FileInputStream fin = new FileInputStream(filename);
+        CalendarBuilder builder = new CalendarBuilder();
+        return builder.build(fin);
     }
 }
