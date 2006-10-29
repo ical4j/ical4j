@@ -36,7 +36,9 @@ Description:
         <module name="ParameterNumber"/>
         <module name="EmptyForIteratorPad"/>
         <module name="MethodParamPad"/>
-        <module name="NoWhitespaceAfter"/>
+        <module name="NoWhitespaceAfter">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="NoWhitespaceBefore"/>
         <module name="OperatorWrap"/>
         <module name="ParenPad"/>
@@ -50,7 +52,9 @@ Description:
         <module name="EmptyBlock"/>
         <module name="LeftCurly"/>
         <module name="NeedBraces"/>
-        <module name="RightCurly"/>
+        <module name="RightCurly">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="AvoidInlineConditionals"/>
         <module name="DoubleCheckedLocking"/>
         <module name="EmptyStatement"/>
