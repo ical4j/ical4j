@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  * Created: 23/09/2004
  *
  * Copyright (c) 2004, Ben Fortuna
@@ -24,7 +24,8 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER
+ * OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -41,16 +42,13 @@ import net.fortuna.ical4j.model.ComponentList;
 
 /**
  * Base class of calendar transformations.
- * 
  * @author benfortuna
  */
 public abstract class Transformer {
 
     /**
      * Wraps a component in a calendar.
-     * 
-     * @param component
-     *            the component to wrap with a calendar
+     * @param component the component to wrap with a calendar
      * @return a calendar containing the specified component
      */
     public final Calendar wrap(final Component component) {
@@ -59,20 +57,17 @@ public abstract class Transformer {
 
         return new Calendar(components);
     }
-    
+
     /**
-     * Transforms the specified calendar according to the
-     * implementation of this method. By definition this
-     * method will modify the existing calendar instance
-     * and return it for convenience.
+     * Transforms the specified calendar according to the implementation of this method. By definition this method will
+     * modify the existing calendar instance and return it for convenience.
      * @param calendar a calendar to transform
      * @return a transformed calendar
      */
     public abstract Calendar transform(final Calendar calendar);
-    
+
     /**
-     * Transforms the specified component according to the
-     * transformer implementation.
+     * Transforms the specified component according to the transformer implementation.
      * @param component a component to transform
      * @return a calendar containing the transformed component
      */

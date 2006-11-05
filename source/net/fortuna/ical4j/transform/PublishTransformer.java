@@ -24,7 +24,8 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER
+ * OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -45,14 +46,12 @@ import net.fortuna.ical4j.model.property.Sequence;
 
 /**
  * Transforms a calendar for publishing.
- * 
  * @author benfortuna
  */
 public class PublishTransformer extends Transformer {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.transform.Transformer#transform(net.fortuna.ical4j.model.Calendar)
      */
     public final Calendar transform(final Calendar calendar) {
@@ -78,7 +77,8 @@ public class PublishTransformer extends Transformer {
 
             if (sequence == null) {
                 compProps.add(new Sequence(0));
-            } else {
+            }
+            else {
                 compProps.remove(sequence);
                 compProps.add(new Sequence(sequence.getSequenceNo() + 1));
             }
