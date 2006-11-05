@@ -1,134 +1,250 @@
-<?xml version="1.0" encoding="UTF-8"?><project>
-  <parent>
-    <artifactId>modularity-parent</artifactId>
-    <groupId>net.modularity</groupId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>net.fortuna</groupId>
-  <artifactId>ical4j</artifactId>
-  <name>iCal4j</name>
-  <version>1.0-beta1-SNAPSHOT</version>
-  <description>A Java library for reading and writing iCalendar (*.ics) files</description>
-  <url>http://ical4j.sourceforge.net</url>
-  <issueManagement>
-    <system>SourceForge.net</system>
-    <url>https://sourceforge.net/tracker/?group_id=107024</url>
-  </issueManagement>
-  <inceptionYear>2004</inceptionYear>
-  <licenses>
-    <license>
-      <name>iCal4j License</name>
-      <url>http://ical4j.cvs.sourceforge.net/*checkout*/ical4j/iCal4j/LICENSE</url>
-    </license>
-  </licenses>
-  <scm>
-    <connection>scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j</connection>
-    <url>http://ical4j.cvs.sourceforge.net/ical4j</url>
-  </scm>
-  <build>
-    <sourceDirectory>source</sourceDirectory>
-    <testSourceDirectory>test</testSourceDirectory>
-    <resources>
-      <resource>
-        <directory>etc</directory>
-        <includes>
-          <include>zoneinfo/**</include>
-        </includes>
-        <excludes>
-          <exclude>zoneinfo/zones.h</exclude>
-          <exclude>zoneinfo/zones.tab</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <testResources>
-      <testResource>
-        <directory>test</directory>
-        <includes>
-          <include>log4j.properties</include>
-        </includes>
-      </testResource>
-    </testResources>
-    <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.4</source>
-          <target>1.4</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <systemProperties>
-            <property>
-              <name>ical4j.unfolding.relaxed</name>
-              <value>true</value>
-            </property>
-            <property>
-              <name>ical4j.parsing.relaxed</name>
-              <value>true</value>
-            </property>
-          </systemProperties>
-          <excludes>
-            <exclude>**/AllTests.java</exclude>
-            <exclude>**/CalendarEqualsTest.java</exclude>
-            <exclude>**/CalendarOutputterTest.java</exclude>
-            <exclude>**/FoldingWriterTest.java</exclude>
-            <exclude>**/ComponentTest.java</exclude>
-            <exclude>**/AbstractPropertyTest.java</exclude>
-            <exclude>**/TimeZoneTest.java</exclude>
-          </excludes>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>etc/bin-assembly.xml</descriptor>
-            <descriptor>etc/src-assembly.xml</descriptor>
-          </descriptors>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  <dependencies>
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
-      <version>1.1</version>
-    </dependency>
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-      <version>1.3</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.2</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.1</version>
-    </dependency>
-  </dependencies>
-  <reporting>
-    <plugins>
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <configLocation>etc/checkstyle.xml</configLocation>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-clover-plugin</artifactId>
-        <configuration>
-          <licenseLocation>etc/clover.license</licenseLocation>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<parent>
+		<artifactId>modularity-parent</artifactId>
+		<groupId>net.modularity</groupId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.fortuna</groupId>
+	<artifactId>ical4j</artifactId>
+	<name>iCal4j</name>
+	<version>1.0-beta1-SNAPSHOT</version>
+	<description>
+		A Java library for reading and writing iCalendar (*.ics) files
+	</description>
+	<url>http://ical4j.sourceforge.net</url>
+	<issueManagement>
+		<system>SourceForge.net</system>
+		<url>https://sourceforge.net/tracker/?group_id=107024</url>
+	</issueManagement>
+	<inceptionYear>2004</inceptionYear>
+	<licenses>
+		<license>
+			<name>iCal4j License</name>
+			<url>LICENSE</url>
+		</license>
+	</licenses>
+	<scm>
+		<connection>
+			scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
+		</connection>
+		<url>http://ical4j.cvs.sourceforge.net/ical4j</url>
+	</scm>
+	<contributors>
+		<contributor>
+			<name>Heladito</name>
+		</contributor>
+		<contributor>
+			<name>Darkwave</name>
+		</contributor>
+		<contributor>
+			<name>twinkle</name>
+		</contributor>
+		<contributor>
+			<name>Outmyth</name>
+		</contributor>
+		<contributor>
+			<name>Ralph Schaer</name>
+		</contributor>
+		<contributor>
+			<name>Chris Borrill</name>
+		</contributor>
+		<contributor>
+			<name>Meher Tendjoukian</name>
+		</contributor>
+		<contributor>
+			<name>John Casey</name>
+		</contributor>
+		<contributor>
+			<name>Harrie Hazewinkel</name>
+		</contributor>
+		<contributor>
+			<name>Markus Rahlff</name>
+		</contributor>
+		<contributor>
+			<name>Marcus Hauer</name>
+		</contributor>
+		<contributor>
+			<name>Mike Douglass</name>
+			<organization>Rensselaer Polytechnic Institute</organization>
+			<organizationUrl>http://www.rpi.edu</organizationUrl>
+		</contributor>
+		<contributor>
+			<name>Dustin (calibre)</name>
+		</contributor>
+		<contributor>
+			<name>Tobias Lidskog</name>
+		</contributor>
+		<contributor>
+			<name>Anders Wisch</name>
+		</contributor>
+		<contributor>
+			<name>Nate (nlipke)</name>
+		</contributor>
+		<contributor>
+			<name>Max Kubierschky</name>
+		</contributor>
+		<contributor>
+			<name>Craig W Gulliver</name>
+		</contributor>
+		<contributor>
+			<name>Tom White</name>
+		</contributor>
+		<contributor>
+			<name>Antoni Mylka</name>
+		</contributor>
+		<contributor>
+			<name>Bruce Atherton</name>
+		</contributor>
+		<contributor>
+			<name>Fredrik Bertilsson</name>
+		</contributor>
+		<contributor>
+			<name>Bjoern (bjoernatsf)</name>
+		</contributor>
+		<contributor>
+			<name>Aimar (atellitu)</name>
+		</contributor>
+		<contributor>
+			<name>Ivo van Dongen</name>
+		</contributor>
+		<contributor>
+			<name>Ralph Schaer</name>
+		</contributor>
+		<contributor>
+			<name>(hilt2)</name>
+		</contributor>
+		<contributor>
+			<name>Bill Schneider</name>
+		</contributor>
+		<contributor>
+			<name>froggy (frog007)</name>
+		</contributor>
+		<contributor>
+			<name>David Peterson</name>
+		</contributor>
+		<contributor>
+			<name>Scott J Brickner</name>
+		</contributor>
+		<contributor>
+			<name>Flavia Paganelli</name>
+		</contributor>
+		<contributor>
+			<name>Norman Kraemer</name>
+		</contributor>
+		<contributor>
+			<name>Mathew McBride</name>
+		</contributor>
+		<contributor>
+			<name>Román Sosa</name>
+		</contributor>
+	</contributors>
+	<build>
+		<sourceDirectory>source</sourceDirectory>
+		<testSourceDirectory>test</testSourceDirectory>
+		<resources>
+			<resource>
+				<directory>etc</directory>
+				<includes>
+					<include>zoneinfo/**</include>
+				</includes>
+				<excludes>
+					<exclude>zoneinfo/zones.h</exclude>
+					<exclude>zoneinfo/zones.tab</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>test</directory>
+				<includes>
+					<include>log4j.properties</include>
+				</includes>
+			</testResource>
+		</testResources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.4</source>
+					<target>1.4</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemProperties>
+						<property>
+							<name>ical4j.unfolding.relaxed</name>
+							<value>true</value>
+						</property>
+						<property>
+							<name>ical4j.parsing.relaxed</name>
+							<value>true</value>
+						</property>
+					</systemProperties>
+					<excludes>
+						<exclude>**/AllTests.java</exclude>
+						<exclude>**/CalendarEqualsTest.java</exclude>
+						<exclude>**/CalendarOutputterTest.java</exclude>
+						<exclude>**/FoldingWriterTest.java</exclude>
+						<exclude>**/ComponentTest.java</exclude>
+						<exclude>**/AbstractPropertyTest.java</exclude>
+						<exclude>**/TimeZoneTest.java</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>etc/bin-assembly.xml</descriptor>
+						<descriptor>etc/src-assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.1</version>
+		</dependency>
+	</dependencies>
+	<reporting>
+		<plugins>
+			<plugin>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<configLocation>etc/checkstyle.xml</configLocation>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-clover-plugin</artifactId>
+				<configuration>
+					<licenseLocation>
+						etc/clover.license
+					</licenseLocation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
