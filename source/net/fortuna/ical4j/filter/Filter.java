@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  * Created: Feb 1, 2006
  *
  * Copyright (c) 2006, Ben Fortuna
@@ -46,24 +46,22 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Performs collection filtering based on a set of rules. A filter may dictate
- * whether at least one rule or all rules are matched.
+ * Performs collection filtering based on a set of rules. A filter may dictate whether at least one rule or all rules
+ * are matched.
  * @author Ben Fortuna
  */
 public class Filter {
-    
+
     /**
-     * Indicates that any rule may be matched to include an object in
-     * the filtered collection.
+     * Indicates that any rule may be matched to include an object in the filtered collection.
      */
     public static final int MATCH_ANY = 1;
-    
+
     /**
-     * Indicates that all rules must be matched to include an object in
-     * the filtered collection.
+     * Indicates that all rules must be matched to include an object in the filtered collection.
      */
     public static final int MATCH_ALL = 2;
-    
+
     private Log log = LogFactory.getLog(Filter.class);
 
     private Rule[] rules;
@@ -75,7 +73,7 @@ public class Filter {
      * @param rule a rule that defines this filter
      */
     public Filter(final Rule rule) {
-        this(new Rule[] {rule}, MATCH_ANY);
+        this(new Rule[] { rule }, MATCH_ANY);
     }
 
     /**
@@ -92,7 +90,7 @@ public class Filter {
      * @param c a collection to filter
      * @return a filtered collection
      */
-    public final Collection filter(final Collection c) {        
+    public final Collection filter(final Collection c) {
         if (getRules() != null && getRules().length > 0) {
             // attempt to use the same concrete collection type
             // as is passed in..
@@ -132,7 +130,7 @@ public class Filter {
                 }
             }
             return filtered;
-        }       
+        }
         return c;
     }
 
@@ -144,22 +142,22 @@ public class Filter {
     public final Object[] filter(final Object[] objects) {
         Collection filtered = filter(Arrays.asList(objects));
         try {
-            return filtered.toArray((Object[]) Array.newInstance(
-                    objects.getClass(), filtered.size()));
+            return filtered.toArray((Object[]) Array.newInstance(objects
+                    .getClass(), filtered.size()));
         }
         catch (ArrayStoreException ase) {
             log.warn("Error converting to array - using default approach", ase);
-        }        
+        }
         return filtered.toArray();
     }
-    
+
     /**
      * @return Returns the rules.
      */
     public final Rule[] getRules() {
         return rules;
     }
-    
+
     /**
      * @param rules The rules to set.
      */

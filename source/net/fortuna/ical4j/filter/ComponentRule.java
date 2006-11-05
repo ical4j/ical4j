@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -38,13 +38,13 @@ package net.fortuna.ical4j.filter;
 import net.fortuna.ical4j.model.Component;
 
 /**
- * An abstract rule implementation serving as the base class for component
- * matching rule implementations.
+ * An abstract rule implementation serving as the base class for component matching rule implementations.
  * @author Ben Fortuna
  */
 public abstract class ComponentRule implements Rule {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.filter.Rule#match(java.lang.Object)
      */
     public final boolean match(final Object o) {

@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -42,37 +42,38 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 
 /**
- * A rule that matches any component containing the specified property. Note that
- * this rule ignores any parameters matching only on the value of the property.
+ * A rule that matches any component containing the specified property. Note that this rule ignores any parameters
+ * matching only on the value of the property.
  * @author Ben Fortuna
  */
 public class HasPropertyRule extends ComponentRule {
 
     private Property property;
-    
+
     private boolean matchEquals;
 
     /**
-     * Constructs a new instance with the specified property. Ignores any
-     * parameters matching only on the value of the property.
+     * Constructs a new instance with the specified property. Ignores any parameters matching only on the value of the
+     * property.
      * @param property
      */
     public HasPropertyRule(final Property property) {
         this(property, false);
     }
-    
+
     /**
      * Constructs a new instance with the specified property.
      * @param property the property to match
-     * @param matchEquals if true, matches must contain an identical property
-     * (as indicated by <code>Property.equals()</code>
+     * @param matchEquals if true, matches must contain an identical property (as indicated by
+     * <code>Property.equals()</code>
      */
     public HasPropertyRule(final Property property, final boolean matchEquals) {
         this.property = property;
         this.matchEquals = matchEquals;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)
      */
     public final boolean match(final Component component) {

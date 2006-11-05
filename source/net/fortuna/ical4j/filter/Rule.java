@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  * Created: Feb 1, 2006
  *
  * Copyright (c) 2006, Ben Fortuna
@@ -36,18 +36,15 @@
 package net.fortuna.ical4j.filter;
 
 /**
- * Implementors dictate whether a given object is classified as a "match"
- * for the enclosing filter.
+ * Implementors dictate whether a given object is classified as a "match" for the enclosing filter.
  * @author Ben Fortuna
  */
 public interface Rule {
 
     /**
-     * Indicates whether the specified object passes the
-     * conditions required to match this rule.
+     * Indicates whether the specified object passes the conditions required to match this rule.
      * @param o an object to match
-     * @return boolean indicated if the specified object matches
-     * this rule
+     * @return boolean indicated if the specified object matches this rule
      */
     boolean match(Object o);
 }
