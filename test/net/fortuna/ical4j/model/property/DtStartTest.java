@@ -37,12 +37,10 @@ package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.TimeZone;
 
+import junit.framework.TestCase;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.TimeZones;
-import junit.framework.TestCase;
 
 public class DtStartTest extends TestCase {
 

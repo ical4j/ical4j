@@ -37,14 +37,11 @@ package net.fortuna.ical4j.model;
 
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.TimeZone;
 
-import net.fortuna.ical4j.util.TimeZones;
+import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
 
 /**
  * @author Ben Fortuna
