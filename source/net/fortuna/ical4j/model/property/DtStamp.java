@@ -44,64 +44,59 @@ import net.fortuna.ical4j.model.ParameterList;
  * Defines a DTSTAMP iCalendar component property.
  * 
  * <pre>
- * 4.8.7.2 Date/Time Stamp
- * 
- *    Property Name: DTSTAMP
- * 
- *    Purpose: The property indicates the date/time that the instance of
- *    the iCalendar object was created.
- * 
- *    Value Type: DATE-TIME
- * 
- *    Property Parameters: Non-standard property parameters can be
- *    specified on this property.
- * 
- *    Conformance: This property MUST be included in the "VEVENT", "VTODO",
- *    "VJOURNAL" or "VFREEBUSY" calendar components.
- * 
- *    Description: The value MUST be specified in the UTC time format.
- * 
- *    This property is also useful to protocols such as [IMIP] that have
- *    inherent latency issues with the delivery of content. This property
- *    will assist in the proper sequencing of messages containing iCalendar
- *    objects.
- * 
- *    This property is different than the "CREATED" and "LAST-MODIFIED"
- *    properties. These two properties are used to specify when the
- *    particular calendar data in the calendar store was created and last
- *    modified. This is different than when the iCalendar object
- *    representation of the calendar service information was created or
- *    last modified.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      dtstamp    = "DTSTAMP" stmparam ":" date-time CRLF
- * 
- *      stmparam   = *(";" xparam)
+ *     4.8.7.2 Date/Time Stamp
+ *     
+ *        Property Name: DTSTAMP
+ *     
+ *        Purpose: The property indicates the date/time that the instance of
+ *        the iCalendar object was created.
+ *     
+ *        Value Type: DATE-TIME
+ *     
+ *        Property Parameters: Non-standard property parameters can be
+ *        specified on this property.
+ *     
+ *        Conformance: This property MUST be included in the &quot;VEVENT&quot;, &quot;VTODO&quot;,
+ *        &quot;VJOURNAL&quot; or &quot;VFREEBUSY&quot; calendar components.
+ *     
+ *        Description: The value MUST be specified in the UTC time format.
+ *     
+ *        This property is also useful to protocols such as [IMIP] that have
+ *        inherent latency issues with the delivery of content. This property
+ *        will assist in the proper sequencing of messages containing iCalendar
+ *        objects.
+ *     
+ *        This property is different than the &quot;CREATED&quot; and &quot;LAST-MODIFIED&quot;
+ *        properties. These two properties are used to specify when the
+ *        particular calendar data in the calendar store was created and last
+ *        modified. This is different than when the iCalendar object
+ *        representation of the calendar service information was created or
+ *        last modified.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          dtstamp    = &quot;DTSTAMP&quot; stmparam &quot;:&quot; date-time CRLF
+ *     
+ *          stmparam   = *(&quot;;&quot; xparam)
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class DtStamp extends UtcProperty {
-    
+
     private static final long serialVersionUID = 7581197869433744070L;
 
     /**
-     * Default constructor. Initialises the dateTime value to the time
-     * of instantiation.
+     * Default constructor. Initialises the dateTime value to the time of instantiation.
      */
     public DtStamp() {
         super(DTSTAMP);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             where the specified value string is not a valid
-     *             date-time/date representation
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
     public DtStamp(final ParameterList aList, final String aValue)
             throws ParseException {
@@ -110,8 +105,7 @@ public class DtStamp extends UtcProperty {
     }
 
     /**
-     * @param aDate
-     *            a date representing a date-time
+     * @param aDate a date representing a date-time
      */
     public DtStamp(final DateTime aDate) {
         super(DTSTAMP);
@@ -121,10 +115,8 @@ public class DtStamp extends UtcProperty {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aDate
-     *            a date representing a date-time
+     * @param aList a list of parameters for this component
+     * @param aDate a date representing a date-time
      */
     public DtStamp(final ParameterList aList, final DateTime aDate) {
         super(DTSTAMP, aList);

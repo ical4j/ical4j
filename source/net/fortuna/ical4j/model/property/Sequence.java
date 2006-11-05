@@ -43,90 +43,90 @@ import net.fortuna.ical4j.model.ValidationException;
  * Defines a SEQUENCE iCalendar component property.
  * 
  * <pre>
- * 4.8.7.4 Sequence Number
- * 
- *    Property Name: SEQUENCE
- * 
- *    Purpose: This property defines the revision sequence number of the
- *    calendar component within a sequence of revisions.
- * 
- *    Value Type: integer
- * 
- *    Property Parameters: Non-standard property parameters can be
- *    specified on this property.
- * 
- *    Conformance: The property can be specified in "VEVENT", "VTODO" or
- *    "VJOURNAL" calendar component.
- * 
- *    Description: When a calendar component is created, its sequence
- *    number is zero (US-ASCII decimal 48). It is monotonically incremented
- *    by the "Organizer's" CUA each time the "Organizer" makes a
- *    significant revision to the calendar component. When the "Organizer"
- *    makes changes to one of the following properties, the sequence number
- *    MUST be incremented:
- * 
- *      .  "DTSTART"
- * 
- *      .  "DTEND"
- * 
- *      .  "DUE"
- * 
- *      .  "RDATE"
- * 
- *      .  "RRULE"
- * 
- *      .  "EXDATE"
- * 
- *      .  "EXRULE"
- * 
- *      .  "STATUS"
- * 
- *    In addition, changes made by the "Organizer" to other properties can
- *    also force the sequence number to be incremented. The "Organizer" CUA
- *    MUST increment the sequence number when ever it makes changes to
- *    properties in the calendar component that the "Organizer" deems will
- *    jeopardize the validity of the participation status of the
- *    "Attendees". For example, changing the location of a meeting from one
- *    locale to another distant locale could effectively impact the
- *    participation status of the "Attendees".
- * 
- *    The "Organizer" includes this property in an iCalendar object that it
- *    sends to an "Attendee" to specify the current version of the calendar
- *    component.
- * 
- *    The "Attendee" includes this property in an iCalendar object that it
- *    sends to the "Organizer" to specify the version of the calendar
- *    component that the "Attendee" is referring to.
- * 
- *    A change to the sequence number is not the mechanism that an
- *    "Organizer" uses to request a response from the "Attendees". The
- *    "RSVP" parameter on the "ATTENDEE" property is used by the
- *    "Organizer" to indicate that a response from the "Attendees" is
- *    requested.
- * 
- *    Format Definition: This property is defined by the following
- *    notation:
- * 
- *      seq = "SEQUENCE" seqparam ":" integer CRLF
- *      ; Default is "0"
- * 
- *      seqparam   = *(";" xparam)
- * 
- *    Example: The following is an example of this property for a calendar
- *    component that was just created by the "Organizer".
- * 
- *      SEQUENCE:0
- * 
- *    The following is an example of this property for a calendar component
- *    that has been revised two different times by the "Organizer".
- * 
- *      SEQUENCE:2
+ *     4.8.7.4 Sequence Number
+ *     
+ *        Property Name: SEQUENCE
+ *     
+ *        Purpose: This property defines the revision sequence number of the
+ *        calendar component within a sequence of revisions.
+ *     
+ *        Value Type: integer
+ *     
+ *        Property Parameters: Non-standard property parameters can be
+ *        specified on this property.
+ *     
+ *        Conformance: The property can be specified in &quot;VEVENT&quot;, &quot;VTODO&quot; or
+ *        &quot;VJOURNAL&quot; calendar component.
+ *     
+ *        Description: When a calendar component is created, its sequence
+ *        number is zero (US-ASCII decimal 48). It is monotonically incremented
+ *        by the &quot;Organizer's&quot; CUA each time the &quot;Organizer&quot; makes a
+ *        significant revision to the calendar component. When the &quot;Organizer&quot;
+ *        makes changes to one of the following properties, the sequence number
+ *        MUST be incremented:
+ *     
+ *          .  &quot;DTSTART&quot;
+ *     
+ *          .  &quot;DTEND&quot;
+ *     
+ *          .  &quot;DUE&quot;
+ *     
+ *          .  &quot;RDATE&quot;
+ *     
+ *          .  &quot;RRULE&quot;
+ *     
+ *          .  &quot;EXDATE&quot;
+ *     
+ *          .  &quot;EXRULE&quot;
+ *     
+ *          .  &quot;STATUS&quot;
+ *     
+ *        In addition, changes made by the &quot;Organizer&quot; to other properties can
+ *        also force the sequence number to be incremented. The &quot;Organizer&quot; CUA
+ *        MUST increment the sequence number when ever it makes changes to
+ *        properties in the calendar component that the &quot;Organizer&quot; deems will
+ *        jeopardize the validity of the participation status of the
+ *        &quot;Attendees&quot;. For example, changing the location of a meeting from one
+ *        locale to another distant locale could effectively impact the
+ *        participation status of the &quot;Attendees&quot;.
+ *     
+ *        The &quot;Organizer&quot; includes this property in an iCalendar object that it
+ *        sends to an &quot;Attendee&quot; to specify the current version of the calendar
+ *        component.
+ *     
+ *        The &quot;Attendee&quot; includes this property in an iCalendar object that it
+ *        sends to the &quot;Organizer&quot; to specify the version of the calendar
+ *        component that the &quot;Attendee&quot; is referring to.
+ *     
+ *        A change to the sequence number is not the mechanism that an
+ *        &quot;Organizer&quot; uses to request a response from the &quot;Attendees&quot;. The
+ *        &quot;RSVP&quot; parameter on the &quot;ATTENDEE&quot; property is used by the
+ *        &quot;Organizer&quot; to indicate that a response from the &quot;Attendees&quot; is
+ *        requested.
+ *     
+ *        Format Definition: This property is defined by the following
+ *        notation:
+ *     
+ *          seq = &quot;SEQUENCE&quot; seqparam &quot;:&quot; integer CRLF
+ *          ; Default is &quot;0&quot;
+ *     
+ *          seqparam   = *(&quot;;&quot; xparam)
+ *     
+ *        Example: The following is an example of this property for a calendar
+ *        component that was just created by the &quot;Organizer&quot;.
+ *     
+ *          SEQUENCE:0
+ *     
+ *        The following is an example of this property for a calendar component
+ *        that has been revised two different times by the &quot;Organizer&quot;.
+ *     
+ *          SEQUENCE:2
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Sequence extends Property {
-    
+
     private static final long serialVersionUID = -1606972893204822853L;
 
     private int sequenceNo;
@@ -138,10 +138,9 @@ public class Sequence extends Property {
         super(SEQUENCE);
         sequenceNo = 0;
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public Sequence(final String aValue) {
         super(SEQUENCE);
@@ -149,10 +148,8 @@ public class Sequence extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Sequence(final ParameterList aList, final String aValue) {
         super(SEQUENCE, aList);
@@ -160,8 +157,7 @@ public class Sequence extends Property {
     }
 
     /**
-     * @param aSequenceNo
-     *            a sequence number
+     * @param aSequenceNo a sequence number
      */
     public Sequence(final int aSequenceNo) {
         super(SEQUENCE);
@@ -169,10 +165,8 @@ public class Sequence extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aSequenceNo
-     *            a sequence number
+     * @param aList a list of parameters for this component
+     * @param aSequenceNo a sequence number
      */
     public Sequence(final ParameterList aList, final int aSequenceNo) {
         super(SEQUENCE, aList);
@@ -185,8 +179,9 @@ public class Sequence extends Property {
     public final int getSequenceNo() {
         return sequenceNo;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -195,14 +190,14 @@ public class Sequence extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return String.valueOf(getSequenceNo());
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

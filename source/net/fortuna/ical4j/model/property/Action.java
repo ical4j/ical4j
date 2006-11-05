@@ -41,11 +41,10 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines an ACTION iCalendar component property.
- *
  * @author benf
  */
 public class Action extends Property {
-    
+
     private static final long serialVersionUID = -2353353838411753712L;
 
     public static final Action AUDIO = new ImmutableAction("AUDIO");
@@ -55,27 +54,28 @@ public class Action extends Property {
     public static final Action EMAIL = new ImmutableAction("EMAIL");
 
     public static final Action PROCEDURE = new ImmutableAction("PROCEDURE");
-    
+
     /**
-     * @author Ben Fortuna
-     * An immutable instance of Action.
+     * @author Ben Fortuna An immutable instance of Action.
      */
     private static final class ImmutableAction extends Action {
-        
+
         private static final long serialVersionUID = -2752235951243969905L;
-        
+
         /**
          * @param value
          */
         private ImmutableAction(final String value) {
             super(new ParameterList(true), value);
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
         public void setValue(final String aValue) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
+            throw new UnsupportedOperationException(
+                    "Cannot modify constant instances");
         }
     }
 
@@ -87,10 +87,9 @@ public class Action extends Property {
     public Action() {
         super(ACTION);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public Action(final String aValue) {
         super(ACTION);
@@ -98,18 +97,16 @@ public class Action extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Action(final ParameterList aList, final String aValue) {
         super(ACTION, aList);
         this.value = aValue;
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) {
@@ -118,14 +115,14 @@ public class Action extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return value;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

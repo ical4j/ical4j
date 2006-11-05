@@ -43,81 +43,82 @@ import net.fortuna.ical4j.model.ValidationException;
  * Defines a TRANSP iCalendar component property.
  * 
  * <pre>
- * 4.8.2.7 Time Transparency
- * 
- *    Property Name: TRANSP
- * 
- *    Purpose: This property defines whether an event is transparent or not
- *    to busy time searches.
- * 
- *    Value Type: TEXT
- * 
- *    Property Parameters: Non-standard property parameters can be
- *    specified on this property.
- * 
- *    Conformance: This property can be specified once in a "VEVENT"
- *    calendar component.
- * 
- *    Description: Time Transparency is the characteristic of an event that
- *    determines whether it appears to consume time on a calendar. Events
- *    that consume actual time for the individual or resource associated
- *    with the calendar SHOULD be recorded as OPAQUE, allowing them to be
- *    detected by free-busy time searches. Other events, which do not take
- *    up the individual's (or resource's) time SHOULD be recorded as
- *    TRANSPARENT, making them invisible to free-busy time searches.
- * 
- *    Format Definition: The property is specified by the following
- *    notation:
- * 
- *      transp     = "TRANSP" tranparam ":" transvalue CRLF
- * 
- *      tranparam  = *(";" xparam)
- * 
- *      transvalue = "OPAQUE"      ;Blocks or opaque on busy time searches.
- *                 / "TRANSPARENT" ;Transparent on busy time searches.
- *         ;Default value is OPAQUE
- * 
- *    Example: The following is an example of this property for an event
- *    that is transparent or does not block on free/busy time searches:
- * 
- *      TRANSP:TRANSPARENT
- * 
- *    The following is an example of this property for an event that is
- *    opaque or blocks on free/busy time searches:
- * 
- *      TRANSP:OPAQUE
+ *     4.8.2.7 Time Transparency
+ *     
+ *        Property Name: TRANSP
+ *     
+ *        Purpose: This property defines whether an event is transparent or not
+ *        to busy time searches.
+ *     
+ *        Value Type: TEXT
+ *     
+ *        Property Parameters: Non-standard property parameters can be
+ *        specified on this property.
+ *     
+ *        Conformance: This property can be specified once in a &quot;VEVENT&quot;
+ *        calendar component.
+ *     
+ *        Description: Time Transparency is the characteristic of an event that
+ *        determines whether it appears to consume time on a calendar. Events
+ *        that consume actual time for the individual or resource associated
+ *        with the calendar SHOULD be recorded as OPAQUE, allowing them to be
+ *        detected by free-busy time searches. Other events, which do not take
+ *        up the individual's (or resource's) time SHOULD be recorded as
+ *        TRANSPARENT, making them invisible to free-busy time searches.
+ *     
+ *        Format Definition: The property is specified by the following
+ *        notation:
+ *     
+ *          transp     = &quot;TRANSP&quot; tranparam &quot;:&quot; transvalue CRLF
+ *     
+ *          tranparam  = *(&quot;;&quot; xparam)
+ *     
+ *          transvalue = &quot;OPAQUE&quot;      ;Blocks or opaque on busy time searches.
+ *                     / &quot;TRANSPARENT&quot; ;Transparent on busy time searches.
+ *             ;Default value is OPAQUE
+ *     
+ *        Example: The following is an example of this property for an event
+ *        that is transparent or does not block on free/busy time searches:
+ *     
+ *          TRANSP:TRANSPARENT
+ *     
+ *        The following is an example of this property for an event that is
+ *        opaque or blocks on free/busy time searches:
+ *     
+ *          TRANSP:OPAQUE
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Transp extends Property {
-    
+
     private static final long serialVersionUID = 3801479657311785518L;
 
     public static final Transp OPAQUE = new ImmutableTransp("OPAQUE");
 
     public static final Transp TRANSPARENT = new ImmutableTransp("TRANSPARENT");
-    
+
     /**
-     * @author Ben Fortuna
-     * An immutable instance of Transp.
+     * @author Ben Fortuna An immutable instance of Transp.
      */
     private static final class ImmutableTransp extends Transp {
-        
+
         private static final long serialVersionUID = -6595830107310111996L;
-        
+
         /**
          * @param value
          */
         private ImmutableTransp(final String value) {
             super(new ParameterList(true), value);
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
         public void setValue(final String aValue) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
+            throw new UnsupportedOperationException(
+                    "Cannot modify constant instances");
         }
     }
 
@@ -129,10 +130,9 @@ public class Transp extends Property {
     public Transp() {
         super(TRANSP);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public Transp(final String aValue) {
         super(TRANSP);
@@ -140,17 +140,16 @@ public class Transp extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Transp(final ParameterList aList, final String aValue) {
         super(TRANSP, aList);
         this.value = aValue;
     }
-        
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) {
@@ -159,14 +158,14 @@ public class Transp extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return value;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

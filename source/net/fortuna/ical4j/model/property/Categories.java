@@ -44,11 +44,10 @@ import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a CATEGORIES iCalendar component property.
- *
  * @author benf
  */
 public class Categories extends Property {
-    
+
     private static final long serialVersionUID = -7769987073466681634L;
 
     private CategoryList categories;
@@ -60,10 +59,9 @@ public class Categories extends Property {
         super(CATEGORIES);
         categories = new CategoryList();
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public Categories(final String aValue) {
         super(CATEGORIES);
@@ -71,10 +69,8 @@ public class Categories extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Categories(final ParameterList aList, final String aValue) {
         super(CATEGORIES, aList);
@@ -82,8 +78,7 @@ public class Categories extends Property {
     }
 
     /**
-     * @param cList
-     *            a list of categories
+     * @param cList a list of categories
      */
     public Categories(final CategoryList cList) {
         super(CATEGORIES);
@@ -91,18 +86,16 @@ public class Categories extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param cList
-     *            a list of categories
+     * @param aList a list of parameters for this component
+     * @param cList a list of categories
      */
     public Categories(final ParameterList aList, final CategoryList cList) {
         super(CATEGORIES, aList);
         categories = cList;
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -115,17 +108,13 @@ public class Categories extends Property {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following is optional, ; but MUST NOT occur more than once
-         *
-         * (";" languageparam ) /
+         * ; the following is optional, ; but MUST NOT occur more than once (";" languageparam ) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
 
@@ -138,7 +127,6 @@ public class Categories extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {

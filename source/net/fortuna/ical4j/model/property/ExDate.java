@@ -46,11 +46,10 @@ import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a EXDATE iCalendar component property.
- *
  * @author benf
  */
 public class ExDate extends DateListProperty {
-    
+
     private static final long serialVersionUID = 2635730172243974463L;
 
     /**
@@ -59,15 +58,11 @@ public class ExDate extends DateListProperty {
     public ExDate() {
         super(EXDATE);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             where the specified value string is not a valid
-     *             date-time/date representation
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
     public ExDate(final ParameterList aList, final String aValue)
             throws ParseException {
@@ -76,18 +71,15 @@ public class ExDate extends DateListProperty {
     }
 
     /**
-     * @param dList
-     *            a list of dates
+     * @param dList a list of dates
      */
     public ExDate(final DateList dList) {
         super(EXDATE, dList);
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param dList
-     *            a list of dates
+     * @param aList a list of parameters for this component
+     * @param dList a list of dates
      */
     public ExDate(final ParameterList aList, final DateList dList) {
         super(EXDATE, aList, dList);
@@ -99,29 +91,25 @@ public class ExDate extends DateListProperty {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following are optional, ; but MUST NOT occur more than once
-         *
-         * (";" "VALUE" "=" ("DATE-TIME" / "DATE")) / (";" tzidparam) /
+         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+         * (";" tzidparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
         Parameter valueParam = getParameter(Parameter.VALUE);
 
-        if (valueParam != null
-                && !Value.DATE_TIME.equals(valueParam)
+        if (valueParam != null && !Value.DATE_TIME.equals(valueParam)
                 && !Value.DATE.equals(valueParam)) {
-            throw new ValidationException(
-                "Parameter [" + Parameter.VALUE + "] is invalid");
+            throw new ValidationException("Parameter [" + Parameter.VALUE
+                    + "] is invalid");
         }
 
         ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
 }

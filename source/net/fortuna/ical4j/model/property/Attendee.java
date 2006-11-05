@@ -48,11 +48,10 @@ import net.fortuna.ical4j.util.Uris;
 
 /**
  * Defines an ATTENDEE iCalendar component property.
- *
  * @author benf
  */
 public class Attendee extends Property {
-    
+
     private static final long serialVersionUID = 8430929418723298803L;
 
     private URI calAddress;
@@ -63,26 +62,20 @@ public class Attendee extends Property {
     public Attendee() {
         super(ATTENDEE);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
-     * @throws URISyntaxException
-     *             where the specified value string is not a valid uri
+     * @param aValue a value string for this component
+     * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public Attendee(final String aValue)
-            throws URISyntaxException {
+    public Attendee(final String aValue) throws URISyntaxException {
         super(ATTENDEE);
         setValue(aValue);
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws URISyntaxException
-     *             where the specified value string is not a valid uri
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public Attendee(final ParameterList aList, final String aValue)
             throws URISyntaxException {
@@ -91,8 +84,7 @@ public class Attendee extends Property {
     }
 
     /**
-     * @param aUri
-     *            a URI
+     * @param aUri a URI
      */
     public Attendee(final URI aUri) {
         super(ATTENDEE);
@@ -100,18 +92,16 @@ public class Attendee extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aUri
-     *            a URI
+     * @param aList a list of parameters for this component
+     * @param aUri a URI
      */
     public Attendee(final ParameterList aList, final URI aUri) {
         super(ATTENDEE, aList);
         calAddress = aUri;
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) throws URISyntaxException {
@@ -124,12 +114,9 @@ public class Attendee extends Property {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following are optional, ; but MUST NOT occur more than once
-         *
-         * (";" cutypeparam) / (";"memberparam) / (";" roleparam) / (";"
-         * partstatparam) / (";" rsvpparam) / (";" deltoparam) / (";"
-         * delfromparam) / (";" sentbyparam) / (";"cnparam) / (";" dirparam) /
-         * (";" languageparam) /
+         * ; the following are optional, ; but MUST NOT occur more than once (";" cutypeparam) / (";"memberparam) / (";"
+         * roleparam) / (";" partstatparam) / (";" rsvpparam) / (";" deltoparam) / (";" delfromparam) / (";"
+         * sentbyparam) / (";"cnparam) / (";" dirparam) / (";" languageparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.CUTYPE,
                 getParameters());
@@ -155,9 +142,7 @@ public class Attendee extends Property {
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
 
@@ -170,13 +155,12 @@ public class Attendee extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getCalAddress()));
     }
-    
+
     /**
      * @param calAddress The calAddress to set.
      */

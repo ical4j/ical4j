@@ -50,86 +50,86 @@ import net.fortuna.ical4j.util.Uris;
  * Defines an ORGANIZER iCalendar component property.
  * 
  * <pre>
- * 4.8.4.3 Organizer
- * 
- *    Property Name: ORGANIZER
- * 
- *    Purpose: The property defines the organizer for a calendar component.
- * 
- *    Value Type: CAL-ADDRESS
- * 
- *    Property Parameters: Non-standard, language, common name, directory
- *    entry reference, sent by property parameters can be specified on this
- *    property.
- * 
- *    Conformance: This property MUST be specified in an iCalendar object
- *    that specifies a group scheduled calendar entity. This property MUST
- *    be specified in an iCalendar object that specifies the publication of
- *    a calendar user's busy time. This property MUST NOT be specified in
- *    an iCalendar object that specifies only a time zone definition or
- *    that defines calendar entities that are not group scheduled entities,
- *    but are entities only on a single user's calendar.
- * 
- *    Description: The property is specified within the "VEVENT", "VTODO",
- *    "VJOURNAL calendar components to specify the organizer of a group
- *    scheduled calendar entity. The property is specified within the
- *    "VFREEBUSY" calendar component to specify the calendar user
- *    requesting the free or busy time. When publishing a "VFREEBUSY"
- *    calendar component, the property is used to specify the calendar that
- *    the published busy time came from.
- * 
- *    The property has the property parameters CN, for specifying the
- *    common or display name associated with the "Organizer", DIR, for
- *    specifying a pointer to the directory information associated with the
- *    "Organizer", SENT-BY, for specifying another calendar user that is
- *    acting on behalf of the "Organizer". The non-standard parameters may
- *    also be specified on this property. If the LANGUAGE property
- *    parameter is specified, the identified language applies to the CN
- *    parameter value.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      organizer  = "ORGANIZER" orgparam ":"
- *                   cal-address CRLF
- * 
- *      orgparam   = *(
- * 
- *                 ; the following are optional,
- *                 ; but MUST NOT occur more than once
- * 
- *                 (";" cnparam) / (";" dirparam) / (";" sentbyparam) /
- *                 (";" languageparam) /
- * 
- *                 ; the following is optional,
- *                 ; and MAY occur more than once
- * 
- *                 (";" xparam)
- * 
- *                 )
- * 
- *    Example: The following is an example of this property:
- * 
- *      ORGANIZER;CN=John Smith:MAILTO:jsmith@host1.com
- * 
- *    The following is an example of this property with a pointer to the
- *    directory information associated with the organizer:
- * 
- *      ORGANIZER;CN=JohnSmith;DIR="ldap://host.com:6666/o=3DDC%20Associ
- *       ates,c=3DUS??(cn=3DJohn%20Smith)":MAILTO:jsmith@host1.com
- * 
- *    The following is an example of this property used by another calendar
- *    user who is acting on behalf of the organizer, with responses
- *    intended to be sent back to the organizer, not the other calendar
- *    user:
- * 
- *      ORGANIZER;SENT-BY="MAILTO:jane_doe@host.com":
- *       MAILTO:jsmith@host1.com
+ *     4.8.4.3 Organizer
+ *     
+ *        Property Name: ORGANIZER
+ *     
+ *        Purpose: The property defines the organizer for a calendar component.
+ *     
+ *        Value Type: CAL-ADDRESS
+ *     
+ *        Property Parameters: Non-standard, language, common name, directory
+ *        entry reference, sent by property parameters can be specified on this
+ *        property.
+ *     
+ *        Conformance: This property MUST be specified in an iCalendar object
+ *        that specifies a group scheduled calendar entity. This property MUST
+ *        be specified in an iCalendar object that specifies the publication of
+ *        a calendar user's busy time. This property MUST NOT be specified in
+ *        an iCalendar object that specifies only a time zone definition or
+ *        that defines calendar entities that are not group scheduled entities,
+ *        but are entities only on a single user's calendar.
+ *     
+ *        Description: The property is specified within the &quot;VEVENT&quot;, &quot;VTODO&quot;,
+ *        &quot;VJOURNAL calendar components to specify the organizer of a group
+ *        scheduled calendar entity. The property is specified within the
+ *        &quot;VFREEBUSY&quot; calendar component to specify the calendar user
+ *        requesting the free or busy time. When publishing a &quot;VFREEBUSY&quot;
+ *        calendar component, the property is used to specify the calendar that
+ *        the published busy time came from.
+ *     
+ *        The property has the property parameters CN, for specifying the
+ *        common or display name associated with the &quot;Organizer&quot;, DIR, for
+ *        specifying a pointer to the directory information associated with the
+ *        &quot;Organizer&quot;, SENT-BY, for specifying another calendar user that is
+ *        acting on behalf of the &quot;Organizer&quot;. The non-standard parameters may
+ *        also be specified on this property. If the LANGUAGE property
+ *        parameter is specified, the identified language applies to the CN
+ *        parameter value.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          organizer  = &quot;ORGANIZER&quot; orgparam &quot;:&quot;
+ *                       cal-address CRLF
+ *     
+ *          orgparam   = *(
+ *     
+ *                     ; the following are optional,
+ *                     ; but MUST NOT occur more than once
+ *     
+ *                     (&quot;;&quot; cnparam) / (&quot;;&quot; dirparam) / (&quot;;&quot; sentbyparam) /
+ *                     (&quot;;&quot; languageparam) /
+ *     
+ *                     ; the following is optional,
+ *                     ; and MAY occur more than once
+ *     
+ *                     (&quot;;&quot; xparam)
+ *     
+ *                     )
+ *     
+ *        Example: The following is an example of this property:
+ *     
+ *          ORGANIZER;CN=John Smith:MAILTO:jsmith@host1.com
+ *     
+ *        The following is an example of this property with a pointer to the
+ *        directory information associated with the organizer:
+ *     
+ *          ORGANIZER;CN=JohnSmith;DIR=&quot;ldap://host.com:6666/o=3DDC%20Associ
+ *           ates,c=3DUS??(cn=3DJohn%20Smith)&quot;:MAILTO:jsmith@host1.com
+ *     
+ *        The following is an example of this property used by another calendar
+ *        user who is acting on behalf of the organizer, with responses
+ *        intended to be sent back to the organizer, not the other calendar
+ *        user:
+ *     
+ *          ORGANIZER;SENT-BY=&quot;MAILTO:jane_doe@host.com&quot;:
+ *           MAILTO:jsmith@host1.com
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Organizer extends Property {
-    
+
     private static final long serialVersionUID = -5216965653165090725L;
 
     private URI calAddress;
@@ -140,14 +140,11 @@ public class Organizer extends Property {
     public Organizer() {
         super(ORGANIZER);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws URISyntaxException
-     *             where the specified value string is not a valid uri
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public Organizer(final ParameterList aList, final String aValue)
             throws URISyntaxException {
@@ -156,8 +153,7 @@ public class Organizer extends Property {
     }
 
     /**
-     * @param aUri
-     *            a URI representation of a calendar address
+     * @param aUri a URI representation of a calendar address
      */
     public Organizer(final URI aUri) {
         super(ORGANIZER);
@@ -165,10 +161,8 @@ public class Organizer extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aUri
-     *            a URI representation of a calendar address
+     * @param aList a list of parameters for this component
+     * @param aUri a URI representation of a calendar address
      */
     public Organizer(final ParameterList aList, final URI aUri) {
         super(ORGANIZER, aList);
@@ -181,10 +175,8 @@ public class Organizer extends Property {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following are optional, ; but MUST NOT occur more than once
-         *
-         * (";" cnparam) / (";" dirparam) / (";" sentbyparam) / (";"
-         * languageparam) /
+         * ; the following are optional, ; but MUST NOT occur more than once (";" cnparam) / (";" dirparam) / (";"
+         * sentbyparam) / (";" languageparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.CN,
                 getParameters());
@@ -196,9 +188,7 @@ public class Organizer extends Property {
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
 
@@ -208,8 +198,9 @@ public class Organizer extends Property {
     public final URI getCalAddress() {
         return calAddress;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws URISyntaxException {
@@ -218,13 +209,12 @@ public class Organizer extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getCalAddress()));
     }
-    
+
     /**
      * @param calAddress The calAddress to set.
      */

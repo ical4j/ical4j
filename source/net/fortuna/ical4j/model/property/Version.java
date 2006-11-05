@@ -40,56 +40,57 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
- * Defines a VERSION iCalendar property.
- *
- * When creating a new calendar you should always add a version property with value "2.0".
- * There is actually a constant defined in the Version class for this. e.g:
- *
+ * Defines a VERSION iCalendar property. When creating a new calendar you should always add a version property with
+ * value "2.0". There is actually a constant defined in the Version class for this. e.g:
  * <code>    Calendar calendar = new Calendar();</code>
  * <code>    calendar.getProperties().add(Version.VERSION_2_0);</code>
- *
  * @author Ben Fortuna
  */
 public class Version extends Property {
-    
+
     private static final long serialVersionUID = 8872508067309087704L;
 
     public static final Version VERSION_2_0 = new ImmutableVersion("2.0");
-    
+
     /**
-     * @author Ben Fortuna
-     * An immutable instance of Version.
+     * @author Ben Fortuna An immutable instance of Version.
      */
     private static final class ImmutableVersion extends Version {
-        
+
         private static final long serialVersionUID = -5040679357859594835L;
-        
+
         /**
          * @param value
          */
         private ImmutableVersion(final String value) {
             super(new ParameterList(true), value);
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
         public void setValue(final String aValue) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
+            throw new UnsupportedOperationException(
+                    "Cannot modify constant instances");
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
          * @see net.fortuna.ical4j.model.property.Version#setMaxVersion(java.lang.String)
          */
         public void setMaxVersion(final String maxVersion) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
+            throw new UnsupportedOperationException(
+                    "Cannot modify constant instances");
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
          * @see net.fortuna.ical4j.model.property.Version#setMinVersion(java.lang.String)
          */
         public void setMinVersion(final String minVersion) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
+            throw new UnsupportedOperationException(
+                    "Cannot modify constant instances");
         }
     }
 
@@ -105,10 +106,8 @@ public class Version extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Version(final ParameterList aList, final String aValue) {
         super(VERSION, aList);
@@ -122,10 +121,8 @@ public class Version extends Property {
     }
 
     /**
-     * @param minVersion
-     *            a string representation of the minimum version
-     * @param maxVersion
-     *            a string representation of the maximum version
+     * @param minVersion a string representation of the minimum version
+     * @param maxVersion a string representation of the maximum version
      */
     public Version(final String minVersion, final String maxVersion) {
         super(VERSION);
@@ -134,12 +131,9 @@ public class Version extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aVersion1
-     *            a string representation of the minimum version
-     * @param aVersion2
-     *            a string representation of the maximum version
+     * @param aList a list of parameters for this component
+     * @param aVersion1 a string representation of the minimum version
+     * @param aVersion2 a string representation of the maximum version
      */
     public Version(final ParameterList aList, final String aVersion1,
             final String aVersion2) {
@@ -162,7 +156,8 @@ public class Version extends Property {
         return minVersion;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) {
@@ -177,7 +172,6 @@ public class Version extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
@@ -207,8 +201,9 @@ public class Version extends Property {
     public void setMinVersion(final String minVersion) {
         this.minVersion = minVersion;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

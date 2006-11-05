@@ -44,11 +44,10 @@ import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a RESOURCES iCalendar component property.
- *
  * @author benf
  */
 public class Resources extends Property {
-    
+
     private static final long serialVersionUID = -848562477226746807L;
 
     private ResourceList resources;
@@ -60,12 +59,10 @@ public class Resources extends Property {
         super(RESOURCES);
         resources = new ResourceList();
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Resources(final ParameterList aList, final String aValue) {
         super(RESOURCES, aList);
@@ -73,8 +70,7 @@ public class Resources extends Property {
     }
 
     /**
-     * @param rList
-     *            a list of resources
+     * @param rList a list of resources
      */
     public Resources(final ResourceList rList) {
         super(RESOURCES);
@@ -82,10 +78,8 @@ public class Resources extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param rList
-     *            a list of resources
+     * @param aList a list of parameters for this component
+     * @param rList a list of resources
      */
     public Resources(final ParameterList aList, final ResourceList rList) {
         super(RESOURCES, aList);
@@ -98,9 +92,7 @@ public class Resources extends Property {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following are optional, ; but MUST NOT occur more than once
-         *
-         * (";" altrepparam) / (";" languageparam) /
+         * ; the following are optional, ; but MUST NOT occur more than once (";" altrepparam) / (";" languageparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
                 getParameters());
@@ -108,9 +100,7 @@ public class Resources extends Property {
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
 
@@ -120,8 +110,9 @@ public class Resources extends Property {
     public final ResourceList getResources() {
         return resources;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -130,7 +121,6 @@ public class Resources extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {

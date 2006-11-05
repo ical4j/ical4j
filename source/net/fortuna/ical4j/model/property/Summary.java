@@ -46,55 +46,55 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * Defines a SUMMARY iCalendar component property.
  * 
  * <pre>
- * 4.8.1.12 Summary
- * 
- *    Property Name: SUMMARY
- * 
- *    Purpose: This property defines a short summary or subject for the
- *    calendar component.
- * 
- *    Value Type: TEXT
- * 
- *    Property Parameters: Non-standard, alternate text representation and
- *    language property parameters can be specified on this property.
- * 
- *    Conformance: The property can be specified in "VEVENT", "VTODO",
- *    "VJOURNAL" or "VALARM" calendar components.
- * 
- *    Description: This property is used in the "VEVENT", "VTODO" and
- *    "VJOURNAL" calendar components to capture a short, one line summary
- *    about the activity or journal entry.
- * 
- *    This property is used in the "VALARM" calendar component to capture
- *    the subject of an EMAIL category of alarm.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      summary    = "SUMMARY" summparam ":" text CRLF
- * 
- *      summparam  = *(
- * 
- *                 ; the following are optional,
- *                 ; but MUST NOT occur more than once
- * 
- *                 (";" altrepparam) / (";" languageparam) /
- * 
- *                 ; the following is optional,
- *                 ; and MAY occur more than once
- * 
- *                 (";" xparam)
- * 
- *                 )
- * 
- *    Example: The following is an example of this property:
- * 
- *      SUMMARY:Department Party
+ *     4.8.1.12 Summary
+ *     
+ *        Property Name: SUMMARY
+ *     
+ *        Purpose: This property defines a short summary or subject for the
+ *        calendar component.
+ *     
+ *        Value Type: TEXT
+ *     
+ *        Property Parameters: Non-standard, alternate text representation and
+ *        language property parameters can be specified on this property.
+ *     
+ *        Conformance: The property can be specified in &quot;VEVENT&quot;, &quot;VTODO&quot;,
+ *        &quot;VJOURNAL&quot; or &quot;VALARM&quot; calendar components.
+ *     
+ *        Description: This property is used in the &quot;VEVENT&quot;, &quot;VTODO&quot; and
+ *        &quot;VJOURNAL&quot; calendar components to capture a short, one line summary
+ *        about the activity or journal entry.
+ *     
+ *        This property is used in the &quot;VALARM&quot; calendar component to capture
+ *        the subject of an EMAIL category of alarm.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          summary    = &quot;SUMMARY&quot; summparam &quot;:&quot; text CRLF
+ *     
+ *          summparam  = *(
+ *     
+ *                     ; the following are optional,
+ *                     ; but MUST NOT occur more than once
+ *     
+ *                     (&quot;;&quot; altrepparam) / (&quot;;&quot; languageparam) /
+ *     
+ *                     ; the following is optional,
+ *                     ; and MAY occur more than once
+ *     
+ *                     (&quot;;&quot; xparam)
+ *     
+ *                     )
+ *     
+ *        Example: The following is an example of this property:
+ *     
+ *          SUMMARY:Department Party
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Summary extends Property implements Escapable {
-    
+
     private static final long serialVersionUID = 7709437653910363024L;
 
     private String value;
@@ -105,10 +105,9 @@ public class Summary extends Property implements Escapable {
     public Summary() {
         super(SUMMARY);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public Summary(final String aValue) {
         super(SUMMARY);
@@ -116,10 +115,8 @@ public class Summary extends Property implements Escapable {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Summary(final ParameterList aList, final String aValue) {
         super(SUMMARY, aList);
@@ -132,9 +129,7 @@ public class Summary extends Property implements Escapable {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following are optional, ; but MUST NOT occur more than once
-         *
-         * (";" altrepparam) / (";" languageparam) /
+         * ; the following are optional, ; but MUST NOT occur more than once (";" altrepparam) / (";" languageparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
                 getParameters());
@@ -142,14 +137,12 @@ public class Summary extends Property implements Escapable {
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -158,7 +151,6 @@ public class Summary extends Property implements Escapable {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {

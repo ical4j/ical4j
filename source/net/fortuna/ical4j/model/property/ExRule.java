@@ -44,11 +44,10 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a EXRULE iCalendar component property.
- *
  * @author benf
  */
 public class ExRule extends Property {
-    
+
     private static final long serialVersionUID = -9171193801247139294L;
 
     private Recur recur;
@@ -60,15 +59,11 @@ public class ExRule extends Property {
         super(EXRULE);
         recur = new Recur(Recur.DAILY, 1);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             thrown when the specified string is not a valid representaton
-     *             of a recurrence
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws ParseException thrown when the specified string is not a valid representaton of a recurrence
      * @see Recur#Recur(String)
      */
     public ExRule(final ParameterList aList, final String aValue)
@@ -78,8 +73,7 @@ public class ExRule extends Property {
     }
 
     /**
-     * @param aRecur
-     *            a recurrence
+     * @param aRecur a recurrence
      */
     public ExRule(final Recur aRecur) {
         super(EXRULE);
@@ -87,10 +81,8 @@ public class ExRule extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aRecur
-     *            a recurrence
+     * @param aList a list of parameters for this component
+     * @param aRecur a recurrence
      */
     public ExRule(final ParameterList aList, final Recur aRecur) {
         super(EXRULE, aList);
@@ -104,31 +96,31 @@ public class ExRule extends Property {
         return recur;
     }
 
-    
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
         recur = new Recur(aValue);
     }
-    
+
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return getRecur().toString();
     }
-    
+
     /**
      * @param recur The recur to set.
      */
     public final void setRecur(final Recur recur) {
         this.recur = recur;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

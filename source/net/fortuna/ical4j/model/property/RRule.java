@@ -44,11 +44,10 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines an RRULE iCalendar component property.
- *
  * @author benf
  */
 public class RRule extends Property {
-    
+
     private static final long serialVersionUID = -9188265089143001164L;
 
     private Recur recur;
@@ -60,15 +59,11 @@ public class RRule extends Property {
         super(RRULE);
         recur = new Recur(Recur.DAILY, 1);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             thrown when the specified string is not a valid representaton
-     *             of a recurrence
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws ParseException thrown when the specified string is not a valid representaton of a recurrence
      * @see Recur#Recur(String)
      */
     public RRule(final ParameterList aList, final String aValue)
@@ -78,8 +73,7 @@ public class RRule extends Property {
     }
 
     /**
-     * @param aRecur
-     *            a recurrence value
+     * @param aRecur a recurrence value
      */
     public RRule(final Recur aRecur) {
         super(RRULE);
@@ -87,10 +81,8 @@ public class RRule extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aRecur
-     *            a recurrence value
+     * @param aList a list of parameters for this component
+     * @param aRecur a recurrence value
      */
     public RRule(final ParameterList aList, final Recur aRecur) {
         super(RRULE, aList);
@@ -103,8 +95,9 @@ public class RRule extends Property {
     public final Recur getRecur() {
         return recur;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
@@ -113,14 +106,14 @@ public class RRule extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return getRecur().toString();
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

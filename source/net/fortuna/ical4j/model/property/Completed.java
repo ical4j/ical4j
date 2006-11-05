@@ -44,34 +44,34 @@ import net.fortuna.ical4j.model.ParameterList;
  * Defines a COMPLETED iCalendar component property.
  * 
  * <pre>
- * 4.8.2.1 Date/Time Completed
- * 
- *    Property Name: COMPLETED
- * 
- *    Purpose: This property defines the date and time that a to-do was
- *    actually completed.
- * 
- *    Value Type: DATE-TIME
- * 
- *    Property Parameters: Non-standard property parameters can be
- *    specified on this property.
- * 
- *    Conformance: The property can be specified in a "VTODO" calendar
- *    component.
- * 
- *    Description: The date and time MUST be in a UTC format.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      completed  = "COMPLETED" compparam ":" date-time CRLF
- * 
- *      compparam  = *(";" xparam)
+ *     4.8.2.1 Date/Time Completed
+ *     
+ *        Property Name: COMPLETED
+ *     
+ *        Purpose: This property defines the date and time that a to-do was
+ *        actually completed.
+ *     
+ *        Value Type: DATE-TIME
+ *     
+ *        Property Parameters: Non-standard property parameters can be
+ *        specified on this property.
+ *     
+ *        Conformance: The property can be specified in a &quot;VTODO&quot; calendar
+ *        component.
+ *     
+ *        Description: The date and time MUST be in a UTC format.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          completed  = &quot;COMPLETED&quot; compparam &quot;:&quot; date-time CRLF
+ *     
+ *          compparam  = *(&quot;;&quot; xparam)
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Completed extends UtcProperty {
-    
+
     private static final long serialVersionUID = 6824213281785639181L;
 
     /**
@@ -80,28 +80,20 @@ public class Completed extends UtcProperty {
     public Completed() {
         super(COMPLETED);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             when the specified string is not a valid date-time
-     *             represenation
+     * @param aValue a value string for this component
+     * @throws ParseException when the specified string is not a valid date-time represenation
      */
-    public Completed(final String aValue)
-            throws ParseException {
+    public Completed(final String aValue) throws ParseException {
         super(COMPLETED);
         setValue(aValue);
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             when the specified string is not a valid date-time
-     *             represenation
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws ParseException when the specified string is not a valid date-time represenation
      */
     public Completed(final ParameterList aList, final String aValue)
             throws ParseException {
@@ -110,8 +102,7 @@ public class Completed extends UtcProperty {
     }
 
     /**
-     * @param aDate
-     *            a date
+     * @param aDate a date
      */
     public Completed(final DateTime aDate) {
         super(COMPLETED);
@@ -121,10 +112,8 @@ public class Completed extends UtcProperty {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aDate
-     *            a date
+     * @param aList a list of parameters for this component
+     * @param aDate a date
      */
     public Completed(final ParameterList aList, final DateTime aDate) {
         super(COMPLETED, aList);

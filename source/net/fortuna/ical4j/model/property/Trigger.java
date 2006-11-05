@@ -49,102 +49,102 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * Defines a TRIGGER iCalendar component property.
  * 
  * <pre>
- * 4.8.6.3 Trigger
- * 
- *    Property Name: TRIGGER
- * 
- *    Purpose: This property specifies when an alarm will trigger.
- * 
- *    Value Type: The default value type is DURATION. The value type can be
- *    set to a DATE-TIME value type, in which case the value MUST specify a
- *    UTC formatted DATE-TIME value.
- * 
- *    Property Parameters: Non-standard, value data type, time zone
- *    identifier or trigger relationship property parameters can be
- *    specified on this property. The trigger relationship property
- *    parameter MUST only be specified when the value type is DURATION.
- * 
- *    Conformance: This property MUST be specified in the "VALARM" calendar
- *    component.
- * 
- *    Description: Within the "VALARM" calendar component, this property
- *    defines when the alarm will trigger. The default value type is
- *    DURATION, specifying a relative time for the trigger of the alarm.
- *    The default duration is relative to the start of an event or to-do
- *    that the alarm is associated with. The duration can be explicitly set
- * 
- *    to trigger from either the end or the start of the associated event
- *    or to-do with the "RELATED" parameter. A value of START will set the
- *    alarm to trigger off the start of the associated event or to-do. A
- *    value of END will set the alarm to trigger off the end of the
- *    associated event or to-do.
- * 
- *    Either a positive or negative duration may be specified for the
- *    "TRIGGER" property. An alarm with a positive duration is triggered
- *    after the associated start or end of the event or to-do. An alarm
- *    with a negative duration is triggered before the associated start or
- *    end of the event or to-do.
- * 
- *    The "RELATED" property parameter is not valid if the value type of
- *    the property is set to DATE-TIME (i.e., for an absolute date and time
- *    alarm trigger). If a value type of DATE-TIME is specified, then the
- *    property value MUST be specified in the UTC time format. If an
- *    absolute trigger is specified on an alarm for a recurring event or
- *    to-do, then the alarm will only trigger for the specified absolute
- *    date/time, along with any specified repeating instances.
- * 
- *    If the trigger is set relative to START, then the "DTSTART" property
- *    MUST be present in the associated "VEVENT" or "VTODO" calendar
- *    component. If an alarm is specified for an event with the trigger set
- *    relative to the END, then the "DTEND" property or the "DSTART" and
- *    "DURATION' properties MUST be present in the associated "VEVENT"
- *    calendar component. If the alarm is specified for a to-do with a
- *    trigger set relative to the END, then either the "DUE" property or
- *    the "DSTART" and "DURATION' properties MUST be present in the
- *    associated "VTODO" calendar component.
- * 
- *    Alarms specified in an event or to-do which is defined in terms of a
- *    DATE value type will be triggered relative to 00:00:00 UTC on the
- *    specified date. For example, if "DTSTART:19980205, then the duration
- *    trigger will be relative to19980205T000000Z.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      trigger    = "TRIGGER" (trigrel / trigabs)
- * 
- *      trigrel    = *(
- * 
- *                 ; the following are optional,
- *                 ; but MUST NOT occur more than once
- * 
- *                   (";" "VALUE" "=" "DURATION") /
- *                   (";" trigrelparam) /
- * 
- *                 ; the following is optional,
- *                 ; and MAY occur more than once
- * 
- *                   (";" xparam)
- *                   ) ":"  dur-value
- * 
- *      trigabs    = 1*(
- * 
- *                 ; the following is REQUIRED,
- *                 ; but MUST NOT occur more than once
- * 
- *                   (";" "VALUE" "=" "DATE-TIME") /
- * 
- *                 ; the following is optional,
- *                 ; and MAY occur more than once
- * 
- *                   (";" xparam)
- * 
- *                   ) ":" date-time
+ *     4.8.6.3 Trigger
+ *     
+ *        Property Name: TRIGGER
+ *     
+ *        Purpose: This property specifies when an alarm will trigger.
+ *     
+ *        Value Type: The default value type is DURATION. The value type can be
+ *        set to a DATE-TIME value type, in which case the value MUST specify a
+ *        UTC formatted DATE-TIME value.
+ *     
+ *        Property Parameters: Non-standard, value data type, time zone
+ *        identifier or trigger relationship property parameters can be
+ *        specified on this property. The trigger relationship property
+ *        parameter MUST only be specified when the value type is DURATION.
+ *     
+ *        Conformance: This property MUST be specified in the &quot;VALARM&quot; calendar
+ *        component.
+ *     
+ *        Description: Within the &quot;VALARM&quot; calendar component, this property
+ *        defines when the alarm will trigger. The default value type is
+ *        DURATION, specifying a relative time for the trigger of the alarm.
+ *        The default duration is relative to the start of an event or to-do
+ *        that the alarm is associated with. The duration can be explicitly set
+ *     
+ *        to trigger from either the end or the start of the associated event
+ *        or to-do with the &quot;RELATED&quot; parameter. A value of START will set the
+ *        alarm to trigger off the start of the associated event or to-do. A
+ *        value of END will set the alarm to trigger off the end of the
+ *        associated event or to-do.
+ *     
+ *        Either a positive or negative duration may be specified for the
+ *        &quot;TRIGGER&quot; property. An alarm with a positive duration is triggered
+ *        after the associated start or end of the event or to-do. An alarm
+ *        with a negative duration is triggered before the associated start or
+ *        end of the event or to-do.
+ *     
+ *        The &quot;RELATED&quot; property parameter is not valid if the value type of
+ *        the property is set to DATE-TIME (i.e., for an absolute date and time
+ *        alarm trigger). If a value type of DATE-TIME is specified, then the
+ *        property value MUST be specified in the UTC time format. If an
+ *        absolute trigger is specified on an alarm for a recurring event or
+ *        to-do, then the alarm will only trigger for the specified absolute
+ *        date/time, along with any specified repeating instances.
+ *     
+ *        If the trigger is set relative to START, then the &quot;DTSTART&quot; property
+ *        MUST be present in the associated &quot;VEVENT&quot; or &quot;VTODO&quot; calendar
+ *        component. If an alarm is specified for an event with the trigger set
+ *        relative to the END, then the &quot;DTEND&quot; property or the &quot;DSTART&quot; and
+ *        &quot;DURATION' properties MUST be present in the associated &quot;VEVENT&quot;
+ *        calendar component. If the alarm is specified for a to-do with a
+ *        trigger set relative to the END, then either the &quot;DUE&quot; property or
+ *        the &quot;DSTART&quot; and &quot;DURATION' properties MUST be present in the
+ *        associated &quot;VTODO&quot; calendar component.
+ *     
+ *        Alarms specified in an event or to-do which is defined in terms of a
+ *        DATE value type will be triggered relative to 00:00:00 UTC on the
+ *        specified date. For example, if &quot;DTSTART:19980205, then the duration
+ *        trigger will be relative to19980205T000000Z.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          trigger    = &quot;TRIGGER&quot; (trigrel / trigabs)
+ *     
+ *          trigrel    = *(
+ *     
+ *                     ; the following are optional,
+ *                     ; but MUST NOT occur more than once
+ *     
+ *                       (&quot;;&quot; &quot;VALUE&quot; &quot;=&quot; &quot;DURATION&quot;) /
+ *                       (&quot;;&quot; trigrelparam) /
+ *     
+ *                     ; the following is optional,
+ *                     ; and MAY occur more than once
+ *     
+ *                       (&quot;;&quot; xparam)
+ *                       ) &quot;:&quot;  dur-value
+ *     
+ *          trigabs    = 1*(
+ *     
+ *                     ; the following is REQUIRED,
+ *                     ; but MUST NOT occur more than once
+ *     
+ *                       (&quot;;&quot; &quot;VALUE&quot; &quot;=&quot; &quot;DATE-TIME&quot;) /
+ *     
+ *                     ; the following is optional,
+ *                     ; and MAY occur more than once
+ *     
+ *                       (&quot;;&quot; xparam)
+ *     
+ *                       ) &quot;:&quot; date-time
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Trigger extends UtcProperty {
-    
+
     private static final long serialVersionUID = 5049421499261722194L;
 
     private Dur duration;
@@ -155,12 +155,10 @@ public class Trigger extends UtcProperty {
     public Trigger() {
         super(TRIGGER);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Trigger(final ParameterList aList, final String aValue) {
         super(TRIGGER, aList);
@@ -168,8 +166,7 @@ public class Trigger extends UtcProperty {
     }
 
     /**
-     * @param aDuration
-     *            a duration in milliseconds
+     * @param aDuration a duration in milliseconds
      */
     public Trigger(final Dur duration) {
         super(TRIGGER);
@@ -178,10 +175,8 @@ public class Trigger extends UtcProperty {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aDuration
-     *            a duration in milliseconds
+     * @param aList a list of parameters for this component
+     * @param aDuration a duration in milliseconds
      */
     public Trigger(final ParameterList aList, final Dur duration) {
         super(TRIGGER, aList);
@@ -190,8 +185,7 @@ public class Trigger extends UtcProperty {
     }
 
     /**
-     * @param aDate
-     *            a date representation of a date-time
+     * @param aDate a date representation of a date-time
      */
     public Trigger(final DateTime dateTime) {
         super(TRIGGER);
@@ -200,10 +194,8 @@ public class Trigger extends UtcProperty {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aDate
-     *            a date representation of a date-time
+     * @param aList a list of parameters for this component
+     * @param aDate a date representation of a date-time
      */
     public Trigger(final ParameterList aList, final DateTime dateTime) {
         super(TRIGGER, aList);
@@ -216,31 +208,31 @@ public class Trigger extends UtcProperty {
      */
     public final void validate() throws ValidationException {
         super.validate();
-        
+
         Parameter relParam = getParameter(Parameter.RELATED);
         Parameter valueParam = getParameter(Parameter.VALUE);
-        
+
         if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
-            
-            ParameterValidator.getInstance().assertOneOrLess(
-                    Parameter.RELATED, getParameters());
-            
+
+            ParameterValidator.getInstance().assertOneOrLess(Parameter.RELATED,
+                    getParameters());
+
             if (valueParam != null && !Value.DURATION.equals(valueParam)) {
-                throw new ValidationException(
-                    "Parameter [" + valueParam + "] is invalid");
+                throw new ValidationException("Parameter [" + valueParam
+                        + "] is invalid");
             }
-            
+
             if (getDuration() == null) {
                 throw new ValidationException("Duration value not specified");
             }
         }
         else {
-            ParameterValidator.getInstance().assertOne(
-                    Parameter.VALUE, getParameters());
-            
+            ParameterValidator.getInstance().assertOne(Parameter.VALUE,
+                    getParameters());
+
             if (valueParam != null && !Value.DATE_TIME.equals(valueParam)) {
-                throw new ValidationException(
-                        "Parameter [" + valueParam + "] is invalid");
+                throw new ValidationException("Parameter [" + valueParam
+                        + "] is invalid");
             }
             if (getDateTime() == null) {
                 throw new ValidationException("DATE-TIME value not specified");
@@ -254,8 +246,9 @@ public class Trigger extends UtcProperty {
     public final Dur getDuration() {
         return duration;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -279,7 +272,7 @@ public class Trigger extends UtcProperty {
         }
         return super.getValue();
     }
-    
+
     /**
      * @param dateTime The dateTime to set.
      */
@@ -287,7 +280,7 @@ public class Trigger extends UtcProperty {
         super.setDateTime(dateTime);
         duration = null;
     }
-    
+
     /**
      * @param duration The duration to set.
      */

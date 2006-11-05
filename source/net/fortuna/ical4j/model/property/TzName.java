@@ -44,11 +44,10 @@ import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a TZNAME iCalendar component property.
- *
  * @author benf
  */
 public class TzName extends Property implements Escapable {
-    
+
     private static final long serialVersionUID = -6930099834219160086L;
 
     private String value;
@@ -59,10 +58,9 @@ public class TzName extends Property implements Escapable {
     public TzName() {
         super(TZNAME);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public TzName(final String aValue) {
         super(TZNAME);
@@ -70,10 +68,8 @@ public class TzName extends Property implements Escapable {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public TzName(final ParameterList aList, final String aValue) {
         super(TZNAME, aList);
@@ -86,21 +82,18 @@ public class TzName extends Property implements Escapable {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following is optional, ; but MUST NOT occur more than once
-         *
-         * (";" languageparam) /
+         * ; the following is optional, ; but MUST NOT occur more than once (";" languageparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -109,7 +102,6 @@ public class TzName extends Property implements Escapable {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {

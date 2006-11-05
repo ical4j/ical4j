@@ -46,60 +46,60 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * Defines a LOCATION iCalendar component property.
  * 
  * <pre>
- * 4.8.1.7 Location
- * 
- *    Property Name: LOCATION
- * 
- *    Purpose: The property defines the intended venue for the activity
- *    defined by a calendar component.
- * 
- *    Value Type: TEXT
- * 
- *    Property Parameters: Non-standard, alternate text representation and
- *    language property parameters can be specified on this property.
- * 
- *    Conformance: This property can be specified in "VEVENT" or "VTODO"
- *    calendar component.
- * 
- *    Description: Specific venues such as conference or meeting rooms may
- *    be explicitly specified using this property. An alternate
- *    representation may be specified that is a URI that points to
- *    directory information with more structured specification of the
- *    location. For example, the alternate representation may specify
- *    either an LDAP URI pointing to an LDAP server entry or a CID URI
- *    pointing to a MIME body part containing a vCard [RFC 2426] for the
- *    location.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      location   = "LOCATION locparam ":" text CRLF
- * 
- *      locparam   = *(
- * 
- *                 ; the following are optional,
- *                 ; but MUST NOT occur more than once
- * 
- *                 (";" altrepparam) / (";" languageparam) /
- * 
- *                 ; the following is optional,
- *                 ; and MAY occur more than once
- * 
- *                 (";" xparam)
- * 
- *                 )
- * 
- *    Example: The following are some examples of this property:
- * 
- *      LOCATION:Conference Room - F123, Bldg. 002
- * 
- *      LOCATION;ALTREP="http://xyzcorp.com/conf-rooms/f123.vcf":
- *       Conference Room - F123, Bldg. 002
+ *     4.8.1.7 Location
+ *     
+ *        Property Name: LOCATION
+ *     
+ *        Purpose: The property defines the intended venue for the activity
+ *        defined by a calendar component.
+ *     
+ *        Value Type: TEXT
+ *     
+ *        Property Parameters: Non-standard, alternate text representation and
+ *        language property parameters can be specified on this property.
+ *     
+ *        Conformance: This property can be specified in &quot;VEVENT&quot; or &quot;VTODO&quot;
+ *        calendar component.
+ *     
+ *        Description: Specific venues such as conference or meeting rooms may
+ *        be explicitly specified using this property. An alternate
+ *        representation may be specified that is a URI that points to
+ *        directory information with more structured specification of the
+ *        location. For example, the alternate representation may specify
+ *        either an LDAP URI pointing to an LDAP server entry or a CID URI
+ *        pointing to a MIME body part containing a vCard [RFC 2426] for the
+ *        location.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          location   = &quot;LOCATION locparam &quot;:&quot; text CRLF
+ *     
+ *          locparam   = *(
+ *     
+ *                     ; the following are optional,
+ *                     ; but MUST NOT occur more than once
+ *     
+ *                     (&quot;;&quot; altrepparam) / (&quot;;&quot; languageparam) /
+ *     
+ *                     ; the following is optional,
+ *                     ; and MAY occur more than once
+ *     
+ *                     (&quot;;&quot; xparam)
+ *     
+ *                     )
+ *     
+ *        Example: The following are some examples of this property:
+ *     
+ *          LOCATION:Conference Room - F123, Bldg. 002
+ *     
+ *          LOCATION;ALTREP=&quot;http://xyzcorp.com/conf-rooms/f123.vcf&quot;:
+ *           Conference Room - F123, Bldg. 002
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Location extends Property implements Escapable {
-    
+
     private static final long serialVersionUID = 8651881536125682401L;
 
     private String value;
@@ -110,10 +110,9 @@ public class Location extends Property implements Escapable {
     public Location() {
         super(LOCATION);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public Location(final String aValue) {
         super(LOCATION);
@@ -121,10 +120,8 @@ public class Location extends Property implements Escapable {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Location(final ParameterList aList, final String aValue) {
         super(LOCATION, aList);
@@ -137,9 +134,7 @@ public class Location extends Property implements Escapable {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following are optional, ; but MUST NOT occur more than once
-         *
-         * (";" altrepparam) / (";" languageparam) /
+         * ; the following are optional, ; but MUST NOT occur more than once (";" altrepparam) / (";" languageparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
                 getParameters());
@@ -147,14 +142,12 @@ public class Location extends Property implements Escapable {
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -163,7 +156,6 @@ public class Location extends Property implements Escapable {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {

@@ -41,11 +41,10 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a PERCENT-COMPLETE iCalendar component property.
- *
  * @author benf
  */
 public class PercentComplete extends Property {
-    
+
     private static final long serialVersionUID = 7788138484983240112L;
 
     private int percentage;
@@ -56,12 +55,10 @@ public class PercentComplete extends Property {
     public PercentComplete() {
         super(PERCENT_COMPLETE);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public PercentComplete(final ParameterList aList, final String aValue) {
         super(PERCENT_COMPLETE, aList);
@@ -69,8 +66,7 @@ public class PercentComplete extends Property {
     }
 
     /**
-     * @param aPercentage
-     *            an int representation of a percentage
+     * @param aPercentage an int representation of a percentage
      */
     public PercentComplete(final int aPercentage) {
         super(PERCENT_COMPLETE);
@@ -78,10 +74,8 @@ public class PercentComplete extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aPercentage
-     *            an int representation of a percentage
+     * @param aList a list of parameters for this component
+     * @param aPercentage an int representation of a percentage
      */
     public PercentComplete(final ParameterList aList, final int aPercentage) {
         super(PERCENT_COMPLETE, aList);
@@ -94,9 +88,9 @@ public class PercentComplete extends Property {
     public final int getPercentage() {
         return percentage;
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -105,21 +99,21 @@ public class PercentComplete extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return String.valueOf(getPercentage());
     }
-    
+
     /**
      * @param percentage The percentage to set.
      */
     public final void setPercentage(final int percentage) {
         this.percentage = percentage;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

@@ -45,11 +45,10 @@ import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a REQUEST-STATUS iCalendar component property.
- *
  * @author benf
  */
 public class RequestStatus extends Property {
-    
+
     public static final long serialVersionUID = -3273944031884755345L;
 
     public static final String PRELIM_SUCCESS = "1";
@@ -72,12 +71,10 @@ public class RequestStatus extends Property {
     public RequestStatus() {
         super(REQUEST_STATUS);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public RequestStatus(final ParameterList aList, final String aValue) {
         super(REQUEST_STATUS, aList);
@@ -85,14 +82,12 @@ public class RequestStatus extends Property {
     }
 
     /**
-     * @param aStatusCode
-     *            a string representation of a status code
-     * @param aDescription
-     *            a description
-     * @param data
-     *            a string representation of extension data
+     * @param aStatusCode a string representation of a status code
+     * @param aDescription a description
+     * @param data a string representation of extension data
      */
-    public RequestStatus(final String aStatusCode, final String aDescription, final String data) {
+    public RequestStatus(final String aStatusCode, final String aDescription,
+            final String data) {
         super(REQUEST_STATUS);
         statusCode = aStatusCode;
         description = aDescription;
@@ -100,14 +95,10 @@ public class RequestStatus extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aStatusCode
-     *            a string representation of a status code
-     * @param aDescription
-     *            a description
-     * @param data
-     *            a string representation of extension data
+     * @param aList a list of parameters for this component
+     * @param aStatusCode a string representation of a status code
+     * @param aDescription a description
+     * @param data a string representation of extension data
      */
     public RequestStatus(final ParameterList aList, final String aStatusCode,
             final String aDescription, final String data) {
@@ -123,17 +114,13 @@ public class RequestStatus extends Property {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following is optional, ; but MUST NOT occur more than once
-         *
-         * (";" languageparm) /
+         * ; the following is optional, ; but MUST NOT occur more than once (";" languageparm) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
 
@@ -157,8 +144,9 @@ public class RequestStatus extends Property {
     public final String getStatusCode() {
         return statusCode;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -179,7 +167,6 @@ public class RequestStatus extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
@@ -201,21 +188,21 @@ public class RequestStatus extends Property {
 
         return b.toString();
     }
-    
+
     /**
      * @param description The description to set.
      */
     public final void setDescription(final String description) {
         this.description = description;
     }
-    
+
     /**
      * @param exData The exData to set.
      */
     public final void setExData(final String exData) {
         this.exData = exData;
     }
-    
+
     /**
      * @param statusCode The statusCode to set.
      */

@@ -46,48 +46,48 @@ import net.fortuna.ical4j.model.ValidationException;
  * Defines a DURATION iCalendar component property.
  * 
  * <pre>
- * 4.3.6   Duration
- * 
- *    Value Name: DURATION
- * 
- *    Purpose: This value type is used to identify properties that contain
- *    a duration of time.
- * 
- *    Formal Definition: The value type is defined by the following
- *    notation:
- * 
- *      dur-value  = (["+"] / "-") "P" (dur-date / dur-time / dur-week)
- * 
- *      dur-date   = dur-day [dur-time]
- *      dur-time   = "T" (dur-hour / dur-minute / dur-second)
- *      dur-week   = 1*DIGIT "W"
- *      dur-hour   = 1*DIGIT "H" [dur-minute]
- *      dur-minute = 1*DIGIT "M" [dur-second]
- *      dur-second = 1*DIGIT "S"
- *      dur-day    = 1*DIGIT "D"
- * 
- *    Description: If the property permits, multiple "duration" values are
- *    specified by a COMMA character (US-ASCII decimal 44) separated list
- *    of values. The format is expressed as the [ISO 8601] basic format for
- *    the duration of time. The format can represent durations in terms of
- *    weeks, days, hours, minutes, and seconds.
- * 
- *    No additional content value encoding (i.e., BACKSLASH character
- *    encoding) are defined for this value type.
- * 
- *    Example: A duration of 15 days, 5 hours and 20 seconds would be:
- * 
- *      P15DT5H0M20S
- * 
- *    A duration of 7 weeks would be:
- * 
- *      P7W
+ *     4.3.6   Duration
+ *     
+ *        Value Name: DURATION
+ *     
+ *        Purpose: This value type is used to identify properties that contain
+ *        a duration of time.
+ *     
+ *        Formal Definition: The value type is defined by the following
+ *        notation:
+ *     
+ *          dur-value  = ([&quot;+&quot;] / &quot;-&quot;) &quot;P&quot; (dur-date / dur-time / dur-week)
+ *     
+ *          dur-date   = dur-day [dur-time]
+ *          dur-time   = &quot;T&quot; (dur-hour / dur-minute / dur-second)
+ *          dur-week   = 1*DIGIT &quot;W&quot;
+ *          dur-hour   = 1*DIGIT &quot;H&quot; [dur-minute]
+ *          dur-minute = 1*DIGIT &quot;M&quot; [dur-second]
+ *          dur-second = 1*DIGIT &quot;S&quot;
+ *          dur-day    = 1*DIGIT &quot;D&quot;
+ *     
+ *        Description: If the property permits, multiple &quot;duration&quot; values are
+ *        specified by a COMMA character (US-ASCII decimal 44) separated list
+ *        of values. The format is expressed as the [ISO 8601] basic format for
+ *        the duration of time. The format can represent durations in terms of
+ *        weeks, days, hours, minutes, and seconds.
+ *     
+ *        No additional content value encoding (i.e., BACKSLASH character
+ *        encoding) are defined for this value type.
+ *     
+ *        Example: A duration of 15 days, 5 hours and 20 seconds would be:
+ *     
+ *          P15DT5H0M20S
+ *     
+ *        A duration of 7 weeks would be:
+ *     
+ *          P7W
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Duration extends Property {
-    
+
     private static final long serialVersionUID = 9144969653829796798L;
 
     private Dur duration;
@@ -98,18 +98,16 @@ public class Duration extends Property {
     public Duration() {
         super(DURATION);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Duration(final ParameterList aList, final String aValue) {
         super(DURATION, aList);
         setValue(aValue);
     }
-    
+
     /**
      * @param duration
      */
@@ -119,19 +117,16 @@ public class Duration extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aDuration
-     *            a duration specified in milliseconds
+     * @param aList a list of parameters for this component
+     * @param aDuration a duration specified in milliseconds
      */
     public Duration(final ParameterList aList, final Dur duration) {
         super(DURATION, aList);
         setDuration(duration);
     }
-    
+
     /**
-     * Constructs a new duration representing the time
-     * between the specified start date and end date.
+     * Constructs a new duration representing the time between the specified start date and end date.
      * @param start the starting time for the duration
      * @param end the end time for the duration
      */
@@ -146,34 +141,34 @@ public class Duration extends Property {
     public final Dur getDuration() {
         return duration;
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
-//        duration = DurationFormat.getInstance().parse(aValue);
+        // duration = DurationFormat.getInstance().parse(aValue);
         duration = new Dur(aValue);
     }
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
-//        return DurationFormat.getInstance().format(getDuration());
+        // return DurationFormat.getInstance().format(getDuration());
         return duration.toString();
     }
-    
+
     /**
      * @param duration The duration to set.
      */
     public final void setDuration(final Dur duration) {
         this.duration = duration;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

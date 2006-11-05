@@ -46,67 +46,67 @@ import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a FREEBUSY iCalendar component property.
- *
+ * 
  * <pre>
- * 4.8.2.6 Free/Busy Time
- * 
- *    Property Name: FREEBUSY
- * 
- *    Purpose: The property defines one or more free or busy time
- *    intervals.
- * 
- *    Value Type: PERIOD. The date and time values MUST be in an UTC time
- *    format.
- * 
- *    Property Parameters: Non-standard or free/busy time type property
- *    parameters can be specified on this property.
- * 
- *    Conformance: The property can be specified in a "VFREEBUSY" calendar
- *    component.
- * 
- *    Property Parameter: "FBTYPE" and non-standard parameters can be
- *    specified on this property.
- * 
- *    Description: These time periods can be specified as either a start
- *    and end date-time or a start date-time and duration. The date and
- *    time MUST be a UTC time format.
- * 
- *    "FREEBUSY" properties within the "VFREEBUSY" calendar component
- *    SHOULD be sorted in ascending order, based on start time and then end
- *    time, with the earliest periods first.
- * 
- *    The "FREEBUSY" property can specify more than one value, separated by
- *    the COMMA character (US-ASCII decimal 44). In such cases, the
- *    "FREEBUSY" property values SHOULD all be of the same "FBTYPE"
- *    property parameter type (e.g., all values of a particular "FBTYPE"
- *    listed together in a single property).
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      freebusy   = "FREEBUSY" fbparam ":" fbvalue
- *                   CRLF
- * 
- *      fbparam    = *(
- *                 ; the following is optional,
- *                 ; but MUST NOT occur more than once
- * 
- *                 (";" fbtypeparam) /
- * 
- *                 ; the following is optional,
- *                 ; and MAY occur more than once
- * 
- *                 (";" xparam)
- * 
- *                 )
- * 
- *      fbvalue    = period *["," period]
- *      ;Time value MUST be in the UTC time format.
+ *     4.8.2.6 Free/Busy Time
+ *     
+ *        Property Name: FREEBUSY
+ *     
+ *        Purpose: The property defines one or more free or busy time
+ *        intervals.
+ *     
+ *        Value Type: PERIOD. The date and time values MUST be in an UTC time
+ *        format.
+ *     
+ *        Property Parameters: Non-standard or free/busy time type property
+ *        parameters can be specified on this property.
+ *     
+ *        Conformance: The property can be specified in a &quot;VFREEBUSY&quot; calendar
+ *        component.
+ *     
+ *        Property Parameter: &quot;FBTYPE&quot; and non-standard parameters can be
+ *        specified on this property.
+ *     
+ *        Description: These time periods can be specified as either a start
+ *        and end date-time or a start date-time and duration. The date and
+ *        time MUST be a UTC time format.
+ *     
+ *        &quot;FREEBUSY&quot; properties within the &quot;VFREEBUSY&quot; calendar component
+ *        SHOULD be sorted in ascending order, based on start time and then end
+ *        time, with the earliest periods first.
+ *     
+ *        The &quot;FREEBUSY&quot; property can specify more than one value, separated by
+ *        the COMMA character (US-ASCII decimal 44). In such cases, the
+ *        &quot;FREEBUSY&quot; property values SHOULD all be of the same &quot;FBTYPE&quot;
+ *        property parameter type (e.g., all values of a particular &quot;FBTYPE&quot;
+ *        listed together in a single property).
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          freebusy   = &quot;FREEBUSY&quot; fbparam &quot;:&quot; fbvalue
+ *                       CRLF
+ *     
+ *          fbparam    = *(
+ *                     ; the following is optional,
+ *                     ; but MUST NOT occur more than once
+ *     
+ *                     (&quot;;&quot; fbtypeparam) /
+ *     
+ *                     ; the following is optional,
+ *                     ; and MAY occur more than once
+ *     
+ *                     (&quot;;&quot; xparam)
+ *     
+ *                     )
+ *     
+ *          fbvalue    = period *[&quot;,&quot; period]
+ *          ;Time value MUST be in the UTC time format.
  * </pre>
  * 
  * @author Ben Fortuna
  */
 public class FreeBusy extends Property {
-    
+
     private static final long serialVersionUID = -6415954847619338567L;
 
     private PeriodList periods;
@@ -118,14 +118,11 @@ public class FreeBusy extends Property {
         super(FREEBUSY);
         periods = new PeriodList();
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             when the specified string is not a valid list of periods
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws ParseException when the specified string is not a valid list of periods
      */
     public FreeBusy(final ParameterList aList, final String aValue)
             throws ParseException {
@@ -134,8 +131,7 @@ public class FreeBusy extends Property {
     }
 
     /**
-     * @param pList
-     *            a list of periods
+     * @param pList a list of periods
      */
     public FreeBusy(final PeriodList pList) {
         super(FREEBUSY);
@@ -143,10 +139,8 @@ public class FreeBusy extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param pList
-     *            a list of periods
+     * @param aList a list of parameters for this component
+     * @param pList a list of periods
      */
     public FreeBusy(final ParameterList aList, final PeriodList pList) {
         super(FREEBUSY, aList);
@@ -159,17 +153,13 @@ public class FreeBusy extends Property {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following is optional, ; but MUST NOT occur more than once
-         *
-         * (";" fbtypeparam) /
+         * ; the following is optional, ; but MUST NOT occur more than once (";" fbtypeparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.FBTYPE,
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
 
@@ -179,9 +169,9 @@ public class FreeBusy extends Property {
     public final PeriodList getPeriods() {
         return periods;
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws ParseException {
@@ -190,7 +180,6 @@ public class FreeBusy extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {

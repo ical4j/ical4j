@@ -42,11 +42,10 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a TZOFFSETTO iCalendar component property.
- *
  * @author benf
  */
 public class TzOffsetTo extends Property {
-    
+
     private static final long serialVersionUID = 8213874575051177732L;
 
     private UtcOffset offset;
@@ -57,12 +56,10 @@ public class TzOffsetTo extends Property {
     public TzOffsetTo() {
         super(TZOFFSETTO);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public TzOffsetTo(final ParameterList aList, final String aValue) {
         super(TZOFFSETTO, aList);
@@ -70,8 +67,7 @@ public class TzOffsetTo extends Property {
     }
 
     /**
-     * @param anOffset
-     *            a timezone offset in milliseconds
+     * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final UtcOffset anOffset) {
         super(TZOFFSETTO);
@@ -79,10 +75,8 @@ public class TzOffsetTo extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param anOffset
-     *            a timezone offset in milliseconds
+     * @param aList a list of parameters for this component
+     * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final ParameterList aList, final UtcOffset anOffset) {
         super(TZOFFSETTO, aList);
@@ -95,8 +89,9 @@ public class TzOffsetTo extends Property {
     public final UtcOffset getOffset() {
         return offset;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -105,7 +100,6 @@ public class TzOffsetTo extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
@@ -114,15 +108,16 @@ public class TzOffsetTo extends Property {
         }
         return "";
     }
-    
+
     /**
      * @param offset The offset to set.
      */
     public final void setOffset(final UtcOffset offset) {
         this.offset = offset;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

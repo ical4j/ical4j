@@ -43,100 +43,91 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a DTSTART iCalendar component property.
- *
+ * 
  * <pre>
- * 4.8.2.4 Date/Time Start
- * 
- *    Property Name: DTSTART
- * 
- *    Purpose: This property specifies when the calendar component begins.
- * 
- *    Value Type: The default value type is DATE-TIME. The time value MUST
- *    be one of the forms defined for the DATE-TIME value type. The value
- *    type can be set to a DATE value type.
- * 
- *    Property Parameters: Non-standard, value data type, time zone
- *    identifier property parameters can be specified on this property.
- * 
- *    Conformance: This property can be specified in the "VEVENT", "VTODO",
- *    "VFREEBUSY", or "VTIMEZONE" calendar components.
- * 
- *    Description: Within the "VEVENT" calendar component, this property
- *    defines the start date and time for the event. The property is
- *    REQUIRED in "VEVENT" calendar components. Events can have a start
- *    date/time but no end date/time. In that case, the event does not take
- *    up any time.
- * 
- *    Within the "VFREEBUSY" calendar component, this property defines the
- *    start date and time for the free or busy time information. The time
- *    MUST be specified in UTC time.
- * 
- *    Within the "VTIMEZONE" calendar component, this property defines the
- *    effective start date and time for a time zone specification. This
- *    property is REQUIRED within each STANDARD and DAYLIGHT part included
- *    in "VTIMEZONE" calendar components and MUST be specified as a local
- *    DATE-TIME without the "TZID" property parameter.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      dtstart    = "DTSTART" dtstparam ":" dtstval CRLF
- * 
- *      dtstparam  = *(
- * 
- *                 ; the following are optional,
- *                 ; but MUST NOT occur more than once
- * 
- *                 (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
- *                 (";" tzidparam) /
- * 
- *                 ; the following is optional,
- *                 ; and MAY occur more than once
- * 
- *                   *(";" xparam)
- * 
- *                 )
- * 
- * 
- * 
- *      dtstval    = date-time / date
- *      ;Value MUST match value type
+ *     4.8.2.4 Date/Time Start
+ *     
+ *        Property Name: DTSTART
+ *     
+ *        Purpose: This property specifies when the calendar component begins.
+ *     
+ *        Value Type: The default value type is DATE-TIME. The time value MUST
+ *        be one of the forms defined for the DATE-TIME value type. The value
+ *        type can be set to a DATE value type.
+ *     
+ *        Property Parameters: Non-standard, value data type, time zone
+ *        identifier property parameters can be specified on this property.
+ *     
+ *        Conformance: This property can be specified in the &quot;VEVENT&quot;, &quot;VTODO&quot;,
+ *        &quot;VFREEBUSY&quot;, or &quot;VTIMEZONE&quot; calendar components.
+ *     
+ *        Description: Within the &quot;VEVENT&quot; calendar component, this property
+ *        defines the start date and time for the event. The property is
+ *        REQUIRED in &quot;VEVENT&quot; calendar components. Events can have a start
+ *        date/time but no end date/time. In that case, the event does not take
+ *        up any time.
+ *     
+ *        Within the &quot;VFREEBUSY&quot; calendar component, this property defines the
+ *        start date and time for the free or busy time information. The time
+ *        MUST be specified in UTC time.
+ *     
+ *        Within the &quot;VTIMEZONE&quot; calendar component, this property defines the
+ *        effective start date and time for a time zone specification. This
+ *        property is REQUIRED within each STANDARD and DAYLIGHT part included
+ *        in &quot;VTIMEZONE&quot; calendar components and MUST be specified as a local
+ *        DATE-TIME without the &quot;TZID&quot; property parameter.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          dtstart    = &quot;DTSTART&quot; dtstparam &quot;:&quot; dtstval CRLF
+ *     
+ *          dtstparam  = *(
+ *     
+ *                     ; the following are optional,
+ *                     ; but MUST NOT occur more than once
+ *     
+ *                     (&quot;;&quot; &quot;VALUE&quot; &quot;=&quot; (&quot;DATE-TIME&quot; / &quot;DATE&quot;)) /
+ *                     (&quot;;&quot; tzidparam) /
+ *     
+ *                     ; the following is optional,
+ *                     ; and MAY occur more than once
+ *     
+ *                       *(&quot;;&quot; xparam)
+ *     
+ *                     )
+ *     
+ *     
+ *     
+ *          dtstval    = date-time / date
+ *          ;Value MUST match value type
  * </pre>
  * 
  * @author Ben Fortuna
  */
 public class DtStart extends DateProperty {
-    
+
     private static final long serialVersionUID = -5707097476081111815L;
 
     /**
-     * Default constructor. The time value is initialised to the
-     * time of instantiation.
+     * Default constructor. The time value is initialised to the time of instantiation.
      */
     public DtStart() {
         super(DTSTART);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             where the specified value string is not a valid
-     *             date-time/date representation
+     * @param aValue a value string for this component
+     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public DtStart(final String aValue)
-            throws ParseException {
+    public DtStart(final String aValue) throws ParseException {
         super(DTSTART);
         setValue(aValue);
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             where the specified value string is not a valid
-     *             date-time/date representation
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
     public DtStart(final ParameterList aList, final String aValue)
             throws ParseException {
@@ -145,16 +136,14 @@ public class DtStart extends DateProperty {
     }
 
     /**
-     * Constructor. Date or Date-Time format is determined based
-     * on the presence of a VALUE parameter.
-     * @param aDate
-     *            a date
+     * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+     * @param aDate a date
      */
     public DtStart(final Date aDate) {
         super(DTSTART);
         setDate(aDate);
     }
-    
+
     /**
      * Constructs a new DtStart with the specified time.
      * @param time the time of the DtStart
@@ -167,12 +156,9 @@ public class DtStart extends DateProperty {
     }
 
     /**
-     * Constructor. Date or Date-Time format is determined based
-     * on the presence of a VALUE parameter.
-     * @param aList
-     *            a list of parameters for this component
-     * @param aDate
-     *            a date
+     * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+     * @param aList a list of parameters for this component
+     * @param aDate a date
      */
     public DtStart(final ParameterList aList, final Date aDate) {
         super(DTSTART, aList);
@@ -184,17 +170,14 @@ public class DtStart extends DateProperty {
      */
     public final void validate() throws ValidationException {
         super.validate();
-        
+
         /*
-         * ; the following are optional, ; but MUST NOT occur more than once
-         *
-         * (";" "VALUE" "=" ("DATE-TIME" / "DATE")) / (";" tzidparam) /
+         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+         * (";" tzidparam) /
          */
 
         /*
-         *  ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
 }

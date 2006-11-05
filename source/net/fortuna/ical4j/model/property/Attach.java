@@ -63,56 +63,56 @@ import org.apache.commons.logging.LogFactory;
  * Defines an ATTACH iCalendar component property.
  * 
  * <pre>
- *   4.8.1.1 Attachment
- *   
- *      Property Name: ATTACH
- *   
- *      Purpose: The property provides the capability to associate a document
- *      object with a calendar component.
- *   
- *      Value Type: The default value type for this property is URI. The
- *      value type can also be set to BINARY to indicate inline binary
- *      encoded content information.
- *   
- *      Property Parameters: Non-standard, inline encoding, format type and
- *      value data type property parameters can be specified on this
- *      property.
- *    
- *      Conformance: The property can be specified in a "VEVENT", "VTODO",
- *      "VJOURNAL" or "VALARM" calendar components.
- *   
- *      Description: The property can be specified within "VEVENT", "VTODO",
- *      "VJOURNAL", or "VALARM" calendar components. This property can be
- *      specified multiple times within an iCalendar object.
- *   
- *      Format Definition: The property is defined by the following notation:
- *   
- *        attach     = "ATTACH" attparam ":" uri  CRLF
- *   
- *        attach     =/ "ATTACH" attparam ";" "ENCODING" "=" "BASE64"
- *                      ";" "VALUE" "=" "BINARY" ":" binary
- *   
- *        attparam   = *(
- *   
- *                   ; the following is optional,
- *                   ; but MUST NOT occur more than once
- *   
- *                   (";" fmttypeparam) /
- *   
- *                   ; the following is optional,
- *                   ; and MAY occur more than once
- *   
- *                   (";" xparam)
- *   
- *                   )
+ *       4.8.1.1 Attachment
+ *       
+ *          Property Name: ATTACH
+ *       
+ *          Purpose: The property provides the capability to associate a document
+ *          object with a calendar component.
+ *       
+ *          Value Type: The default value type for this property is URI. The
+ *          value type can also be set to BINARY to indicate inline binary
+ *          encoded content information.
+ *       
+ *          Property Parameters: Non-standard, inline encoding, format type and
+ *          value data type property parameters can be specified on this
+ *          property.
+ *        
+ *          Conformance: The property can be specified in a &quot;VEVENT&quot;, &quot;VTODO&quot;,
+ *          &quot;VJOURNAL&quot; or &quot;VALARM&quot; calendar components.
+ *       
+ *          Description: The property can be specified within &quot;VEVENT&quot;, &quot;VTODO&quot;,
+ *          &quot;VJOURNAL&quot;, or &quot;VALARM&quot; calendar components. This property can be
+ *          specified multiple times within an iCalendar object.
+ *       
+ *          Format Definition: The property is defined by the following notation:
+ *       
+ *            attach     = &quot;ATTACH&quot; attparam &quot;:&quot; uri  CRLF
+ *       
+ *            attach     =/ &quot;ATTACH&quot; attparam &quot;;&quot; &quot;ENCODING&quot; &quot;=&quot; &quot;BASE64&quot;
+ *                          &quot;;&quot; &quot;VALUE&quot; &quot;=&quot; &quot;BINARY&quot; &quot;:&quot; binary
+ *       
+ *            attparam   = *(
+ *       
+ *                       ; the following is optional,
+ *                       ; but MUST NOT occur more than once
+ *       
+ *                       (&quot;;&quot; fmttypeparam) /
+ *       
+ *                       ; the following is optional,
+ *                       ; and MAY occur more than once
+ *       
+ *                       (&quot;;&quot; xparam)
+ *       
+ *                       )
  * </pre>
- *
+ * 
  * @author benf
  */
 public class Attach extends Property {
-    
+
     private static final long serialVersionUID = 4439949507756383452L;
-    
+
     private Log log = LogFactory.getLog(Attach.class);
 
     private URI uri;
@@ -125,16 +125,12 @@ public class Attach extends Property {
     public Attach() {
         super(ATTACH);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws IOException
-     *             when there is an error reading the binary stream
-     * @throws URISyntaxException
-     *             where the specified string is not a valid uri
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws IOException when there is an error reading the binary stream
+     * @throws URISyntaxException where the specified string is not a valid uri
      */
     public Attach(final ParameterList aList, final String aValue)
             throws IOException, URISyntaxException {
@@ -143,8 +139,7 @@ public class Attach extends Property {
     }
 
     /**
-     * @param data
-     *            binary data
+     * @param data binary data
      */
     public Attach(final byte[] data) {
         super(ATTACH);
@@ -155,10 +150,8 @@ public class Attach extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param data
-     *            binary data
+     * @param aList a list of parameters for this component
+     * @param data binary data
      */
     public Attach(final ParameterList aList, final byte[] data) {
         super(ATTACH, aList);
@@ -166,8 +159,7 @@ public class Attach extends Property {
     }
 
     /**
-     * @param aUri
-     *            a URI
+     * @param aUri a URI
      */
     public Attach(final URI aUri) {
         super(ATTACH);
@@ -175,10 +167,8 @@ public class Attach extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aUri
-     *            a URI
+     * @param aList a list of parameters for this component
+     * @param aUri a URI
      */
     public Attach(final ParameterList aList, final URI aUri) {
         super(ATTACH, aList);
@@ -191,23 +181,18 @@ public class Attach extends Property {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following is optional, ; but MUST NOT occur more than once
-         *
-         * (";" fmttypeparam) /
+         * ; the following is optional, ; but MUST NOT occur more than once (";" fmttypeparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.FMTTYPE,
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
-        
+
         /*
-         * If the value type parameter is ";VALUE=BINARY", then the inline
-         * encoding parameter MUST be specified with the value
-         * ";ENCODING=BASE64".
+         * If the value type parameter is ";VALUE=BINARY", then the inline encoding parameter MUST be specified with the
+         * value ";ENCODING=BASE64".
          */
         if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
             ParameterValidator.getInstance().assertOne(Parameter.ENCODING,
@@ -215,7 +200,7 @@ public class Attach extends Property {
             if (!Encoding.BASE64.equals(getParameter(Parameter.ENCODING))) {
                 throw new ValidationException(
                         "If the value type parameter is [BINARY], the inline"
-                        + "encoding parameter MUST be specified with the value [BASE64]");
+                                + "encoding parameter MUST be specified with the value [BASE64]");
             }
         }
     }
@@ -233,18 +218,21 @@ public class Attach extends Property {
     public final URI getUri() {
         return uri;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
-    public void setValue(final String aValue) throws IOException, URISyntaxException {
+    public void setValue(final String aValue) throws IOException,
+            URISyntaxException {
         // determine if ATTACH is a URI or an embedded
         // binary..
         if (getParameter(Parameter.ENCODING) != null) {
-//            binary = Base64.decode(aValue);
+            // binary = Base64.decode(aValue);
             try {
                 BinaryDecoder decoder = DecoderFactory.getInstance()
-                    .createBinaryDecoder((Encoding) getParameter(Parameter.ENCODING)); 
+                        .createBinaryDecoder(
+                                (Encoding) getParameter(Parameter.ENCODING));
                 binary = decoder.decode(getBinary());
             }
             catch (UnsupportedEncodingException uee) {
@@ -262,7 +250,6 @@ public class Attach extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
@@ -270,10 +257,11 @@ public class Attach extends Property {
             return Uris.decode(Strings.valueOf(getUri()));
         }
         else if (getBinary() != null) {
-//          return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
+            // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
             try {
                 BinaryEncoder encoder = EncoderFactory.getInstance()
-                    .createBinaryEncoder((Encoding) getParameter(Parameter.ENCODING)); 
+                        .createBinaryEncoder(
+                                (Encoding) getParameter(Parameter.ENCODING));
                 return new String(encoder.encode(getBinary()));
             }
             catch (UnsupportedEncodingException uee) {
@@ -285,7 +273,7 @@ public class Attach extends Property {
         }
         return null;
     }
-    
+
     /**
      * @param binary The binary to set.
      */
@@ -294,7 +282,7 @@ public class Attach extends Property {
         // unset uri..
         this.uri = null;
     }
-    
+
     /**
      * @param uri The uri to set.
      */

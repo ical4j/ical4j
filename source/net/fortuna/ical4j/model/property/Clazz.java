@@ -43,55 +43,55 @@ import net.fortuna.ical4j.model.ValidationException;
  * Defines a CLASS iCalendar property.
  * 
  * <pre>
- * 4.8.1.3 Classification
- * 
- *    Property Name: CLASS
- * 
- *    Purpose: This property defines the access classification for a
- *    calendar component.
- * 
- *    Value Type: TEXT
- * 
- *    Property Parameters: Non-standard property parameters can be
- *    specified on this property.
- * 
- *    Conformance: The property can be specified once in a "VEVENT",
- *    "VTODO" or "VJOURNAL" calendar components.
- * 
- *    Description: An access classification is only one component of the
- *    general security system within a calendar application. It provides a
- *    method of capturing the scope of the access the calendar owner
- *    intends for information within an individual calendar entry. The
- *    access classification of an individual iCalendar component is useful
- *    when measured along with the other security components of a calendar
- *    system (e.g., calendar user authentication, authorization, access
- *    rights, access role, etc.). Hence, the semantics of the individual
- *    access classifications cannot be completely defined by this memo
- *    alone. Additionally, due to the "blind" nature of most exchange
- *    processes using this memo, these access classifications cannot serve
- *    as an enforcement statement for a system receiving an iCalendar
- *    object. Rather, they provide a method for capturing the intention of
- *    the calendar owner for the access to the calendar component.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      class      = "CLASS" classparam ":" classvalue CRLF
- * 
- *      classparam = *(";" xparam)
- * 
- *      classvalue = "PUBLIC" / "PRIVATE" / "CONFIDENTIAL" / iana-token
- *                 / x-name
- *      ;Default is PUBLIC
- * 
- *    Example: The following is an example of this property:
- * 
- *      CLASS:PUBLIC
+ *     4.8.1.3 Classification
+ *     
+ *        Property Name: CLASS
+ *     
+ *        Purpose: This property defines the access classification for a
+ *        calendar component.
+ *     
+ *        Value Type: TEXT
+ *     
+ *        Property Parameters: Non-standard property parameters can be
+ *        specified on this property.
+ *     
+ *        Conformance: The property can be specified once in a &quot;VEVENT&quot;,
+ *        &quot;VTODO&quot; or &quot;VJOURNAL&quot; calendar components.
+ *     
+ *        Description: An access classification is only one component of the
+ *        general security system within a calendar application. It provides a
+ *        method of capturing the scope of the access the calendar owner
+ *        intends for information within an individual calendar entry. The
+ *        access classification of an individual iCalendar component is useful
+ *        when measured along with the other security components of a calendar
+ *        system (e.g., calendar user authentication, authorization, access
+ *        rights, access role, etc.). Hence, the semantics of the individual
+ *        access classifications cannot be completely defined by this memo
+ *        alone. Additionally, due to the &quot;blind&quot; nature of most exchange
+ *        processes using this memo, these access classifications cannot serve
+ *        as an enforcement statement for a system receiving an iCalendar
+ *        object. Rather, they provide a method for capturing the intention of
+ *        the calendar owner for the access to the calendar component.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          class      = &quot;CLASS&quot; classparam &quot;:&quot; classvalue CRLF
+ *     
+ *          classparam = *(&quot;;&quot; xparam)
+ *     
+ *          classvalue = &quot;PUBLIC&quot; / &quot;PRIVATE&quot; / &quot;CONFIDENTIAL&quot; / iana-token
+ *                     / x-name
+ *          ;Default is PUBLIC
+ *     
+ *        Example: The following is an example of this property:
+ *     
+ *          CLASS:PUBLIC
  * </pre>
  * 
  * @author Ben Fortuna
  */
 public class Clazz extends Property {
-    
+
     private static final long serialVersionUID = 4939943639175551481L;
 
     public static final Clazz PUBLIC = new ImmutableClazz("PUBLIC");
@@ -99,27 +99,28 @@ public class Clazz extends Property {
     public static final Clazz PRIVATE = new ImmutableClazz("PRIVATE");
 
     public static final Clazz CONFIDENTIAL = new ImmutableClazz("CONFIDENTIAL");
-    
+
     /**
-     * @author Ben Fortuna
-     * An immutable instance of Clazz.
+     * @author Ben Fortuna An immutable instance of Clazz.
      */
     private static final class ImmutableClazz extends Clazz {
-        
+
         private static final long serialVersionUID = 5978394762293365042L;
-        
+
         /**
          * @param value
          */
         private ImmutableClazz(final String value) {
             super(new ParameterList(true), value);
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
         public void setValue(final String aValue) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
+            throw new UnsupportedOperationException(
+                    "Cannot modify constant instances");
         }
     }
 
@@ -131,10 +132,9 @@ public class Clazz extends Property {
     public Clazz() {
         super(CLASS);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public Clazz(final String aValue) {
         super(CLASS);
@@ -142,18 +142,16 @@ public class Clazz extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Clazz(final ParameterList aList, final String aValue) {
         super(CLASS, aList);
         this.value = aValue;
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) {
@@ -162,14 +160,14 @@ public class Clazz extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return value;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

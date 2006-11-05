@@ -43,121 +43,130 @@ import net.fortuna.ical4j.model.ValidationException;
  * Defines a STATUS iCalendar component property.
  * 
  * <pre>
- * 4.8.1.11 Status
- * 
- *    Property Name: STATUS
- * 
- *    Purpose: This property defines the overall status or confirmation for
- *    the calendar component.
- * 
- *    Value Type: TEXT
- * 
- *    Property Parameters: Non-standard property parameters can be
- *    specified on this property.
- * 
- *    Conformance: This property can be specified in "VEVENT", "VTODO" or
- *    "VJOURNAL" calendar components.
- * 
- *    Description: In a group scheduled calendar component, the property is
- *    used by the "Organizer" to provide a confirmation of the event to the
- *    "Attendees". For example in a "VEVENT" calendar component, the
- *    "Organizer" can indicate that a meeting is tentative, confirmed or
- *    cancelled. In a "VTODO" calendar component, the "Organizer" can
- *    indicate that an action item needs action, is completed, is in
- *    process or being worked on, or has been cancelled. In a "VJOURNAL"
- *    calendar component, the "Organizer" can indicate that a journal entry
- *    is draft, final or has been cancelled or removed.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      status     = "STATUS" statparam] ":" statvalue CRLF
- * 
- *      statparam  = *(";" xparam)
- * 
- *      statvalue  = "TENTATIVE"           ;Indicates event is
- *                                         ;tentative.
- *                 / "CONFIRMED"           ;Indicates event is
- *                                         ;definite.
- *                 / "CANCELLED"           ;Indicates event was
- *                                         ;cancelled.
- *         ;Status values for a "VEVENT"
- * 
- *      statvalue  =/ "NEEDS-ACTION"       ;Indicates to-do needs action.
- *                 / "COMPLETED"           ;Indicates to-do completed.
- *                 / "IN-PROCESS"          ;Indicates to-do in process of
- *                 / "CANCELLED"           ;Indicates to-do was cancelled.
- *         ;Status values for "VTODO".
- * 
- *      statvalue  =/ "DRAFT"              ;Indicates journal is draft.
- *                 / "FINAL"               ;Indicates journal is final.
- *                 / "CANCELLED"           ;Indicates journal is removed.
- *         ;Status values for "VJOURNAL".
- * 
- *    Example: The following is an example of this property for a "VEVENT"
- *    calendar component:
- * 
- *      STATUS:TENTATIVE
- * 
- *    The following is an example of this property for a "VTODO" calendar
- *    component:
- * 
- *      STATUS:NEEDS-ACTION
- * 
- *    The following is an example of this property for a "VJOURNAL"
- *    calendar component:
- * 
- *      STATUS:DRAFT
+ *     4.8.1.11 Status
+ *     
+ *        Property Name: STATUS
+ *     
+ *        Purpose: This property defines the overall status or confirmation for
+ *        the calendar component.
+ *     
+ *        Value Type: TEXT
+ *     
+ *        Property Parameters: Non-standard property parameters can be
+ *        specified on this property.
+ *     
+ *        Conformance: This property can be specified in &quot;VEVENT&quot;, &quot;VTODO&quot; or
+ *        &quot;VJOURNAL&quot; calendar components.
+ *     
+ *        Description: In a group scheduled calendar component, the property is
+ *        used by the &quot;Organizer&quot; to provide a confirmation of the event to the
+ *        &quot;Attendees&quot;. For example in a &quot;VEVENT&quot; calendar component, the
+ *        &quot;Organizer&quot; can indicate that a meeting is tentative, confirmed or
+ *        cancelled. In a &quot;VTODO&quot; calendar component, the &quot;Organizer&quot; can
+ *        indicate that an action item needs action, is completed, is in
+ *        process or being worked on, or has been cancelled. In a &quot;VJOURNAL&quot;
+ *        calendar component, the &quot;Organizer&quot; can indicate that a journal entry
+ *        is draft, final or has been cancelled or removed.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          status     = &quot;STATUS&quot; statparam] &quot;:&quot; statvalue CRLF
+ *     
+ *          statparam  = *(&quot;;&quot; xparam)
+ *     
+ *          statvalue  = &quot;TENTATIVE&quot;           ;Indicates event is
+ *                                             ;tentative.
+ *                     / &quot;CONFIRMED&quot;           ;Indicates event is
+ *                                             ;definite.
+ *                     / &quot;CANCELLED&quot;           ;Indicates event was
+ *                                             ;cancelled.
+ *             ;Status values for a &quot;VEVENT&quot;
+ *     
+ *          statvalue  =/ &quot;NEEDS-ACTION&quot;       ;Indicates to-do needs action.
+ *                     / &quot;COMPLETED&quot;           ;Indicates to-do completed.
+ *                     / &quot;IN-PROCESS&quot;          ;Indicates to-do in process of
+ *                     / &quot;CANCELLED&quot;           ;Indicates to-do was cancelled.
+ *             ;Status values for &quot;VTODO&quot;.
+ *     
+ *          statvalue  =/ &quot;DRAFT&quot;              ;Indicates journal is draft.
+ *                     / &quot;FINAL&quot;               ;Indicates journal is final.
+ *                     / &quot;CANCELLED&quot;           ;Indicates journal is removed.
+ *             ;Status values for &quot;VJOURNAL&quot;.
+ *     
+ *        Example: The following is an example of this property for a &quot;VEVENT&quot;
+ *        calendar component:
+ *     
+ *          STATUS:TENTATIVE
+ *     
+ *        The following is an example of this property for a &quot;VTODO&quot; calendar
+ *        component:
+ *     
+ *          STATUS:NEEDS-ACTION
+ *     
+ *        The following is an example of this property for a &quot;VJOURNAL&quot;
+ *        calendar component:
+ *     
+ *          STATUS:DRAFT
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Status extends Property {
-    
+
     private static final long serialVersionUID = 7401102230299289898L;
 
     // Status values for a "VEVENT"
-    public static final Status VEVENT_TENTATIVE = new ImmutableStatus("TENTATIVE");
+    public static final Status VEVENT_TENTATIVE = new ImmutableStatus(
+            "TENTATIVE");
 
-    public static final Status VEVENT_CONFIRMED = new ImmutableStatus("CONFIRMED");
+    public static final Status VEVENT_CONFIRMED = new ImmutableStatus(
+            "CONFIRMED");
 
-    public static final Status VEVENT_CANCELLED = new ImmutableStatus("CANCELLED");
+    public static final Status VEVENT_CANCELLED = new ImmutableStatus(
+            "CANCELLED");
 
     // Status values for "VTODO"
-    public static final Status VTODO_NEEDS_ACTION = new ImmutableStatus("NEEDS-ACTION");
+    public static final Status VTODO_NEEDS_ACTION = new ImmutableStatus(
+            "NEEDS-ACTION");
 
-    public static final Status VTODO_COMPLETED = new ImmutableStatus("COMPLETED");
+    public static final Status VTODO_COMPLETED = new ImmutableStatus(
+            "COMPLETED");
 
-    public static final Status VTODO_IN_PROCESS = new ImmutableStatus("IN-PROCESS");
+    public static final Status VTODO_IN_PROCESS = new ImmutableStatus(
+            "IN-PROCESS");
 
-    public static final Status VTODO_CANCELLED = new ImmutableStatus("CANCELLED");
+    public static final Status VTODO_CANCELLED = new ImmutableStatus(
+            "CANCELLED");
 
     // Status values for "VJOURNAL"
     public static final Status VJOURNAL_DRAFT = new ImmutableStatus("DRAFT");
 
     public static final Status VJOURNAL_FINAL = new ImmutableStatus("FINAL");
 
-    public static final Status VJOURNAL_CANCELLED = new ImmutableStatus("CANCELLED");
-    
+    public static final Status VJOURNAL_CANCELLED = new ImmutableStatus(
+            "CANCELLED");
+
     /**
-     * @author Ben Fortuna
-     * An immutable instance of Status.
+     * @author Ben Fortuna An immutable instance of Status.
      */
     private static final class ImmutableStatus extends Status {
-        
+
         private static final long serialVersionUID = 7771868877237685612L;
-        
+
         /**
          * @param value
          */
         private ImmutableStatus(final String value) {
             super(new ParameterList(true), value);
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
         public void setValue(final String aValue) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
+            throw new UnsupportedOperationException(
+                    "Cannot modify constant instances");
         }
     }
 
@@ -169,10 +178,9 @@ public class Status extends Property {
     public Status() {
         super(STATUS);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public Status(final String aValue) {
         super(STATUS);
@@ -180,17 +188,16 @@ public class Status extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Status(final ParameterList aList, final String aValue) {
         super(STATUS, aList);
         this.value = aValue;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) {
@@ -199,14 +206,14 @@ public class Status extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return value;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

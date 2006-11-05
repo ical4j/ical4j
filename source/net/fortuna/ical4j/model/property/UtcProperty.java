@@ -40,8 +40,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
- * Superclass for all properties with date-time values that must
- * be specified in UTC time.
+ * Superclass for all properties with date-time values that must be specified in UTC time.
  * @author Ben Fortuna
  */
 public abstract class UtcProperty extends DateProperty {
@@ -69,7 +68,7 @@ public abstract class UtcProperty extends DateProperty {
     public final DateTime getDateTime() {
         return (DateTime) getDate();
     }
-    
+
     /**
      * @param dateTime The dateTime to set.
      */
@@ -81,19 +80,20 @@ public abstract class UtcProperty extends DateProperty {
         setDate(dateTime);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public void validate() throws ValidationException {
         super.validate();
-        
+
         if (getDate() != null && !(getDate() instanceof DateTime)) {
             throw new ValidationException(
                     "Property must have a DATE-TIME value");
         }
-        
+
         DateTime dateTime = (DateTime) getDate();
-        
+
         if (dateTime != null && !dateTime.isUtc()) {
             throw new ValidationException(
                     "DATE-TIME value must be specified in UTC time");

@@ -42,11 +42,10 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines an extension property.
- *
  * @author benfortuna
  */
 public class XProperty extends Property implements Escapable {
-    
+
     private static final long serialVersionUID = 2331763266954894541L;
 
     private String value;
@@ -57,7 +56,7 @@ public class XProperty extends Property implements Escapable {
     public XProperty(final String name) {
         super(name);
     }
-    
+
     /**
      * @param aName
      */
@@ -70,12 +69,14 @@ public class XProperty extends Property implements Escapable {
      * @param aName
      * @param aList
      */
-    public XProperty(final String aName, final ParameterList aList, final String aValue) {
+    public XProperty(final String aName, final ParameterList aList,
+            final String aValue) {
         super(aName, aList);
         setValue(aValue);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -84,22 +85,23 @@ public class XProperty extends Property implements Escapable {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return value;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
         if (!getName().startsWith(EXPERIMENTAL_PREFIX)) {
-            throw new ValidationException("Invalid name ["
-                    + getName()
-                    + "]. Experimental properties must have the following prefix: "
-                    + EXPERIMENTAL_PREFIX);
+            throw new ValidationException(
+                    "Invalid name ["
+                            + getName()
+                            + "]. Experimental properties must have the following prefix: "
+                            + EXPERIMENTAL_PREFIX);
         }
     }
 }

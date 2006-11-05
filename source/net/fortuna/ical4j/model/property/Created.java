@@ -42,40 +42,40 @@ import net.fortuna.ical4j.model.ParameterList;
 
 /**
  * Defines a CREATED iCalendar component property.
- *
+ * 
  * <pre>
- * 4.8.7.1 Date/Time Created
- * 
- *    Property Name: CREATED
- * 
- *    Purpose: This property specifies the date and time that the calendar
- *    information was created by the calendar user agent in the calendar
- *    store.
- * 
- *         Note: This is analogous to the creation date and time for a file
- *         in the file system.
- * 
- *    Value Type: DATE-TIME
- * 
- *    Property Parameters: Non-standard property parameters can be
- *    specified on this property.
- * 
- *    Conformance: The property can be specified once in "VEVENT", "VTODO"
- *    or "VJOURNAL" calendar components.
- * 
- *    Description: The date and time is a UTC value.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      created    = "CREATED" creaparam ":" date-time CRLF
- * 
- *      creaparam  = *(";" xparam)
+ *     4.8.7.1 Date/Time Created
+ *     
+ *        Property Name: CREATED
+ *     
+ *        Purpose: This property specifies the date and time that the calendar
+ *        information was created by the calendar user agent in the calendar
+ *        store.
+ *     
+ *             Note: This is analogous to the creation date and time for a file
+ *             in the file system.
+ *     
+ *        Value Type: DATE-TIME
+ *     
+ *        Property Parameters: Non-standard property parameters can be
+ *        specified on this property.
+ *     
+ *        Conformance: The property can be specified once in &quot;VEVENT&quot;, &quot;VTODO&quot;
+ *        or &quot;VJOURNAL&quot; calendar components.
+ *     
+ *        Description: The date and time is a UTC value.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          created    = &quot;CREATED&quot; creaparam &quot;:&quot; date-time CRLF
+ *     
+ *          creaparam  = *(&quot;;&quot; xparam)
  * </pre>
  * 
  * @author Ben Fortuna
  */
 public class Created extends UtcProperty {
-    
+
     private static final long serialVersionUID = -8658935097721652961L;
 
     /**
@@ -84,28 +84,20 @@ public class Created extends UtcProperty {
     public Created() {
         super(CREATED);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             where the specified value string is not a valid
-     *             date-time/date representation
+     * @param aValue a value string for this component
+     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public Created(final String aValue)
-            throws ParseException {
+    public Created(final String aValue) throws ParseException {
         super(CREATED);
         setValue(aValue);
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             where the specified value string is not a valid
-     *             date-time/date representation
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
     public Created(final ParameterList aList, final String aValue)
             throws ParseException {
@@ -114,8 +106,7 @@ public class Created extends UtcProperty {
     }
 
     /**
-     * @param aDate
-     *            a date
+     * @param aDate a date
      */
     public Created(final DateTime aDate) {
         super(CREATED);
@@ -125,10 +116,8 @@ public class Created extends UtcProperty {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aDate
-     *            a date
+     * @param aList a list of parameters for this component
+     * @param aDate a date
      */
     public Created(final ParameterList aList, final DateTime aDate) {
         super(CREATED, aList);

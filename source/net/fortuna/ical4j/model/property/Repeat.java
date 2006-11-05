@@ -41,11 +41,10 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a REPEAT iCalendar component property.
- *
  * @author benf
  */
 public class Repeat extends Property {
-    
+
     private static final long serialVersionUID = -1765522613173314831L;
 
     private int count;
@@ -56,12 +55,10 @@ public class Repeat extends Property {
     public Repeat() {
         super(REPEAT);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Repeat(final ParameterList aList, final String aValue) {
         super(REPEAT, aList);
@@ -69,8 +66,7 @@ public class Repeat extends Property {
     }
 
     /**
-     * @param aCount
-     *            a repetition count
+     * @param aCount a repetition count
      */
     public Repeat(final int aCount) {
         super(REPEAT);
@@ -78,10 +74,8 @@ public class Repeat extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aCount
-     *            a repetition count
+     * @param aList a list of parameters for this component
+     * @param aCount a repetition count
      */
     public Repeat(final ParameterList aList, final int aCount) {
         super(REPEAT, aList);
@@ -94,8 +88,9 @@ public class Repeat extends Property {
     public final int getCount() {
         return count;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -104,21 +99,21 @@ public class Repeat extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return String.valueOf(getCount());
     }
-    
+
     /**
      * @param count The count to set.
      */
     public final void setCount(final int count) {
         this.count = count;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

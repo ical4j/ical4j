@@ -46,73 +46,68 @@ import net.fortuna.ical4j.model.ValidationException;
  * Defines a DUE iCalendar component property.
  * 
  * <pre>
- * 4.8.2.3 Date/Time Due
- * 
- *    Property Name: DUE
- * 
- *    Purpose: This property defines the date and time that a to-do is
- *    expected to be completed.
- * 
- *    Value Type: The default value type is DATE-TIME. The value type can
- *    be set to a DATE value type.
- * 
- *    Property Parameters: Non-standard, value data type, time zone
- *    identifier property parameters can be specified on this property.
- * 
- *    Conformance: The property can be specified once in a "VTODO" calendar
- *    component.
- * 
- *    Description: The value MUST be a date/time equal to or after the
- *    DTSTART value, if specified.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      due        = "DUE" dueparam":" dueval CRLF
- * 
- *      dueparam   = *(
- *                 ; the following are optional,
- *                 ; but MUST NOT occur more than once
- * 
- *                 (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
- *                 (";" tzidparam) /
- * 
- *                 ; the following is optional,
- *                 ; and MAY occur more than once
- * 
- *                   *(";" xparam)
- * 
- *                 )
- * 
- * 
- * 
- *      dueval     = date-time / date
- *      ;Value MUST match value type
+ *     4.8.2.3 Date/Time Due
+ *     
+ *        Property Name: DUE
+ *     
+ *        Purpose: This property defines the date and time that a to-do is
+ *        expected to be completed.
+ *     
+ *        Value Type: The default value type is DATE-TIME. The value type can
+ *        be set to a DATE value type.
+ *     
+ *        Property Parameters: Non-standard, value data type, time zone
+ *        identifier property parameters can be specified on this property.
+ *     
+ *        Conformance: The property can be specified once in a &quot;VTODO&quot; calendar
+ *        component.
+ *     
+ *        Description: The value MUST be a date/time equal to or after the
+ *        DTSTART value, if specified.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          due        = &quot;DUE&quot; dueparam&quot;:&quot; dueval CRLF
+ *     
+ *          dueparam   = *(
+ *                     ; the following are optional,
+ *                     ; but MUST NOT occur more than once
+ *     
+ *                     (&quot;;&quot; &quot;VALUE&quot; &quot;=&quot; (&quot;DATE-TIME&quot; / &quot;DATE&quot;)) /
+ *                     (&quot;;&quot; tzidparam) /
+ *     
+ *                     ; the following is optional,
+ *                     ; and MAY occur more than once
+ *     
+ *                       *(&quot;;&quot; xparam)
+ *     
+ *                     )
+ *     
+ *     
+ *     
+ *          dueval     = date-time / date
+ *          ;Value MUST match value type
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Due extends DateProperty {
-    
+
     private static final long serialVersionUID = -2965312347832730406L;
 
     /**
-     * Default constructor. The time value is initialised to
-     * the time of instantiation.
+     * Default constructor. The time value is initialised to the time of instantiation.
      */
     public Due() {
         super(DUE);
         // defaults to UTC time..
         setDate(new DateTime(true));
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             when the specified string is not a valid date/date-time
-     *             representation
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws ParseException when the specified string is not a valid date/date-time representation
      */
     public Due(final ParameterList aList, final String aValue)
             throws ParseException {
@@ -121,10 +116,8 @@ public class Due extends DateProperty {
     }
 
     /**
-     * Constructor. Date or Date-Time format is determined based
-     * on the presence of a VALUE parameter.
-     * @param aDate
-     *            a date
+     * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+     * @param aDate a date
      */
     public Due(final Date aDate) {
         super(DUE);
@@ -132,12 +125,9 @@ public class Due extends DateProperty {
     }
 
     /**
-     * Constructor. Date or Date-Time format is determined based
-     * on the presence of a VALUE parameter.
-     * @param aList
-     *            a list of parameters for this component
-     * @param aDate
-     *            a date
+     * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+     * @param aList a list of parameters for this component
+     * @param aDate a date
      */
     public Due(final ParameterList aList, final Date aDate) {
         super(DUE, aList);
@@ -151,15 +141,12 @@ public class Due extends DateProperty {
         super.validate();
 
         /*
-         * ; the following are optional, ; but MUST NOT occur more than once
-         *
-         * (";" "VALUE" "=" ("DATE-TIME" / "DATE")) / (";" tzidparam) /
+         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+         * (";" tzidparam) /
          */
 
         /*
-         *  ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
 }

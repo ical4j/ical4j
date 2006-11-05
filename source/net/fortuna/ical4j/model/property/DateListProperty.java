@@ -53,7 +53,7 @@ import net.fortuna.ical4j.util.Strings;
 public abstract class DateListProperty extends Property {
 
     private DateList dates;
-    
+
     private TimeZone timezone;
 
     /**
@@ -85,7 +85,8 @@ public abstract class DateListProperty extends Property {
      * @param name
      * @param dates
      */
-    public DateListProperty(final String name, final ParameterList parameters, final DateList dates) {
+    public DateListProperty(final String name, final ParameterList parameters,
+            final DateList dates) {
         super(name, parameters);
         this.dates = dates;
     }
@@ -97,20 +98,23 @@ public abstract class DateListProperty extends Property {
         return dates;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) throws ParseException {
-        dates = new DateList(aValue, (Value) getParameter(Parameter.VALUE), timezone);
+        dates = new DateList(aValue, (Value) getParameter(Parameter.VALUE),
+                timezone);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public String getValue() {
         return Strings.valueOf(dates);
     }
-    
+
     /**
      * Sets the timezone associated with this property.
      * @param timezone a timezone to associate with this property
@@ -119,7 +123,8 @@ public abstract class DateListProperty extends Property {
         this.timezone = timezone;
         if (timezone != null) {
             if (!Value.DATE_TIME.equals(getDates().getType())) {
-                throw new UnsupportedOperationException("TimeZone is not applicable to current value");
+                throw new UnsupportedOperationException(
+                        "TimeZone is not applicable to current value");
             }
             dates.setTimeZone(timezone);
             getParameters().remove(getParameter(Parameter.TZID));
@@ -131,18 +136,17 @@ public abstract class DateListProperty extends Property {
             setUtc(false);
         }
     }
-    
+
     /**
-     * Resets the timezone associated with the property. If utc is true,
-     * any TZID parameters are removed and the Java timezone is updated
-     * to UTC time. If utc is false, TZID parameters are removed and the
-     * Java timezone is set to the default timezone (i.e. represents a
-     * "floating" local time)
+     * Resets the timezone associated with the property. If utc is true, any TZID parameters are removed and the Java
+     * timezone is updated to UTC time. If utc is false, TZID parameters are removed and the Java timezone is set to the
+     * default timezone (i.e. represents a "floating" local time)
      * @param utc
      */
     public final void setUtc(final boolean utc) {
         if (!Value.DATE_TIME.equals(dates.getType())) {
-            throw new UnsupportedOperationException("TimeZone is not applicable to current value");
+            throw new UnsupportedOperationException(
+                    "TimeZone is not applicable to current value");
         }
         dates.setUtc(utc);
         getParameters().remove(getParameter(Parameter.TZID));

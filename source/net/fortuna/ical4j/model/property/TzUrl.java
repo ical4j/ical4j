@@ -48,44 +48,44 @@ import net.fortuna.ical4j.util.Uris;
  * Defines a TZURL iCalendar component property.
  * 
  * <pre>
- * 4.8.3.5 Time Zone URL
- * 
- *    Property Name: TZURL
- * 
- *    Purpose: The TZURL provides a means for a VTIMEZONE component to
- *    point to a network location that can be used to retrieve an up-to-
- *    date version of itself.
- * 
- *    Value Type: URI
- * 
- *    Property Parameters: Non-standard property parameters can be
- *    specified on this property.
- * 
- *    Conformance: This property can be specified in a "VTIMEZONE" calendar
- *    component.
- * 
- *    Description: The TZURL provides a means for a VTIMEZONE component to
- *    point to a network location that can be used to retrieve an up-to-
- *    date version of itself. This provides a hook to handle changes
- *    government bodies impose upon time zone definitions. Retrieval of
- *    this resource results in an iCalendar object containing a single
- *    VTIMEZONE component and a METHOD property set to PUBLISH.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      tzurl      = "TZURL" tzurlparam ":" uri CRLF
- * 
- *      tzurlparam = *(";" xparam)
- * 
- *    Example: The following is an example of this property:
- * 
- *      TZURL:http://timezones.r.us.net/tz/US-California-Los_Angeles
+ *     4.8.3.5 Time Zone URL
+ *     
+ *        Property Name: TZURL
+ *     
+ *        Purpose: The TZURL provides a means for a VTIMEZONE component to
+ *        point to a network location that can be used to retrieve an up-to-
+ *        date version of itself.
+ *     
+ *        Value Type: URI
+ *     
+ *        Property Parameters: Non-standard property parameters can be
+ *        specified on this property.
+ *     
+ *        Conformance: This property can be specified in a &quot;VTIMEZONE&quot; calendar
+ *        component.
+ *     
+ *        Description: The TZURL provides a means for a VTIMEZONE component to
+ *        point to a network location that can be used to retrieve an up-to-
+ *        date version of itself. This provides a hook to handle changes
+ *        government bodies impose upon time zone definitions. Retrieval of
+ *        this resource results in an iCalendar object containing a single
+ *        VTIMEZONE component and a METHOD property set to PUBLISH.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          tzurl      = &quot;TZURL&quot; tzurlparam &quot;:&quot; uri CRLF
+ *     
+ *          tzurlparam = *(&quot;;&quot; xparam)
+ *     
+ *        Example: The following is an example of this property:
+ *     
+ *          TZURL:http://timezones.r.us.net/tz/US-California-Los_Angeles
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class TzUrl extends Property {
-    
+
     private static final long serialVersionUID = 9106100107954797406L;
 
     private URI uri;
@@ -96,14 +96,11 @@ public class TzUrl extends Property {
     public TzUrl() {
         super(TZURL);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws URISyntaxException
-     *             where the specified value string is not a valid uri
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public TzUrl(final ParameterList aList, final String aValue)
             throws URISyntaxException {
@@ -112,8 +109,7 @@ public class TzUrl extends Property {
     }
 
     /**
-     * @param aUri
-     *            a URI
+     * @param aUri a URI
      */
     public TzUrl(final URI aUri) {
         super(TZURL);
@@ -121,10 +117,8 @@ public class TzUrl extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aUri
-     *            a URI
+     * @param aList a list of parameters for this component
+     * @param aUri a URI
      */
     public TzUrl(final ParameterList aList, final URI aUri) {
         super(TZURL, aList);
@@ -137,8 +131,9 @@ public class TzUrl extends Property {
     public final URI getUri() {
         return uri;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws URISyntaxException {
@@ -147,21 +142,21 @@ public class TzUrl extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getUri()));
     }
-    
+
     /**
      * @param uri The uri to set.
      */
     public final void setUri(final URI uri) {
         this.uri = uri;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

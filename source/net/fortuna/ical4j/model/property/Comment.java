@@ -44,11 +44,10 @@ import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a COMMENT iCalendar component property.
- *
  * @author benf
  */
 public class Comment extends Property implements Escapable {
-    
+
     private static final long serialVersionUID = 7519125697719626308L;
 
     private String value;
@@ -59,10 +58,9 @@ public class Comment extends Property implements Escapable {
     public Comment() {
         super(COMMENT);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public Comment(final String aValue) {
         super(COMMENT);
@@ -70,10 +68,8 @@ public class Comment extends Property implements Escapable {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public Comment(final ParameterList aList, final String aValue) {
         super(COMMENT, aList);
@@ -86,9 +82,7 @@ public class Comment extends Property implements Escapable {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following are optional, ; but MUST NOT occur more than once
-         *
-         * (";" altrepparam) / (";" languageparam) /
+         * ; the following are optional, ; but MUST NOT occur more than once (";" altrepparam) / (";" languageparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
                 getParameters());
@@ -96,14 +90,12 @@ public class Comment extends Property implements Escapable {
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparam)
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -112,7 +104,6 @@ public class Comment extends Property implements Escapable {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {

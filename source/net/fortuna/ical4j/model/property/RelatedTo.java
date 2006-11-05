@@ -44,11 +44,10 @@ import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a RELATED-TO iCalendar component property.
- *
  * @author benf
  */
 public class RelatedTo extends Property implements Escapable {
-    
+
     private static final long serialVersionUID = -109375299147319752L;
 
     private String value;
@@ -59,10 +58,9 @@ public class RelatedTo extends Property implements Escapable {
     public RelatedTo() {
         super(RELATED_TO);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public RelatedTo(final String aValue) {
         super(RELATED_TO);
@@ -70,10 +68,8 @@ public class RelatedTo extends Property implements Escapable {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public RelatedTo(final ParameterList aList, final String aValue) {
         super(RELATED_TO, aList);
@@ -86,28 +82,26 @@ public class RelatedTo extends Property implements Escapable {
     public final void validate() throws ValidationException {
 
         /*
-         *  ; the following is optional, ; but MUST NOT occur more than once
-         *
-         * (";" reltypeparam) /
+         * ; the following is optional, ; but MUST NOT occur more than once (";" reltypeparam) /
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.RELTYPE,
                 getParameters());
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         *
-         * (";" xparm)
+         * ; the following is optional, ; and MAY occur more than once (";" xparm)
          */
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {

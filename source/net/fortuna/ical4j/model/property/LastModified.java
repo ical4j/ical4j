@@ -44,39 +44,39 @@ import net.fortuna.ical4j.model.ParameterList;
  * Defines a LAST-MODIFIED iCalendar component property.
  * 
  * <pre>
- * 4.8.7.3 Last Modified
- * 
- *    Property Name: LAST-MODIFIED
- * 
- *    Purpose: The property specifies the date and time that the
- *    information associated with the calendar component was last revised
- *    in the calendar store.
- * 
- *         Note: This is analogous to the modification date and time for a
- *         file in the file system.
- * 
- *    Value Type: DATE-TIME
- * 
- *    Property Parameters: Non-standard property parameters can be
- *    specified on this property.
- * 
- *    Conformance: This property can be specified in the "EVENT", "VTODO",
- *    "VJOURNAL" or "VTIMEZONE" calendar components.
- * 
- *    Description: The property value MUST be specified in the UTC time
- *    format.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      last-mod   = "LAST-MODIFIED" lstparam ":" date-time CRLF
- * 
- *      lstparam   = *(";" xparam)
+ *     4.8.7.3 Last Modified
+ *     
+ *        Property Name: LAST-MODIFIED
+ *     
+ *        Purpose: The property specifies the date and time that the
+ *        information associated with the calendar component was last revised
+ *        in the calendar store.
+ *     
+ *             Note: This is analogous to the modification date and time for a
+ *             file in the file system.
+ *     
+ *        Value Type: DATE-TIME
+ *     
+ *        Property Parameters: Non-standard property parameters can be
+ *        specified on this property.
+ *     
+ *        Conformance: This property can be specified in the &quot;EVENT&quot;, &quot;VTODO&quot;,
+ *        &quot;VJOURNAL&quot; or &quot;VTIMEZONE&quot; calendar components.
+ *     
+ *        Description: The property value MUST be specified in the UTC time
+ *        format.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          last-mod   = &quot;LAST-MODIFIED&quot; lstparam &quot;:&quot; date-time CRLF
+ *     
+ *          lstparam   = *(&quot;;&quot; xparam)
  * </pre>
- *
+ * 
  * @author benf
  */
 public class LastModified extends UtcProperty {
-    
+
     private static final long serialVersionUID = 5288572652052836062L;
 
     /**
@@ -85,15 +85,11 @@ public class LastModified extends UtcProperty {
     public LastModified() {
         super(LAST_MODIFIED);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws ParseException
-     *             where the specified value string is not a valid
-     *             date-time/date representation
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
     public LastModified(final ParameterList aList, final String aValue)
             throws ParseException {
@@ -102,8 +98,7 @@ public class LastModified extends UtcProperty {
     }
 
     /**
-     * @param aDate
-     *            a date representation of a date-time value
+     * @param aDate a date representation of a date-time value
      */
     public LastModified(final DateTime aDate) {
         super(LAST_MODIFIED);
@@ -113,10 +108,8 @@ public class LastModified extends UtcProperty {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aDate
-     *            a date representation of a date-time value
+     * @param aList a list of parameters for this component
+     * @param aDate a date representation of a date-time value
      */
     public LastModified(final ParameterList aList, final DateTime aDate) {
         super(LAST_MODIFIED, aList);

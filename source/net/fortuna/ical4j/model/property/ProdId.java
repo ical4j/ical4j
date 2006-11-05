@@ -42,11 +42,10 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a PRODID iCalendar property.
- *
  * @author benf
  */
 public class ProdId extends Property implements Escapable {
-    
+
     private static final long serialVersionUID = -2433059917714523286L;
 
     private String value;
@@ -57,10 +56,9 @@ public class ProdId extends Property implements Escapable {
     public ProdId() {
         super(PRODID);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public ProdId(final String aValue) {
         super(PRODID);
@@ -68,17 +66,16 @@ public class ProdId extends Property implements Escapable {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public ProdId(final ParameterList aList, final String aValue) {
         super(PRODID, aList);
         setValue(aValue);
-    }    
-    
-    /* (non-Javadoc)
+    }
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) {
@@ -87,14 +84,14 @@ public class ProdId extends Property implements Escapable {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return value;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

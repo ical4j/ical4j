@@ -48,44 +48,44 @@ import net.fortuna.ical4j.util.Uris;
  * Defines a URL iCalendar component property.
  * 
  * <pre>
- * 4.8.4.6 Uniform Resource Locator
- * 
- *    Property Name: URL
- * 
- *    Purpose: This property defines a Uniform Resource Locator (URL)
- *    associated with the iCalendar object.
- * 
- *    Value Type: URI
- * 
- *    Property Parameters: Non-standard property parameters can be
- *    specified on this property.
- * 
- *    Conformance: This property can be specified once in the "VEVENT",
- *    "VTODO", "VJOURNAL" or "VFREEBUSY" calendar components.
- * 
- *    Description: This property may be used in a calendar component to
- *    convey a location where a more dynamic rendition of the calendar
- *    information associated with the calendar component can be found. This
- *    memo does not attempt to standardize the form of the URI, nor the
- *    format of the resource pointed to by the property value. If the URL
- *    property and Content-Location MIME header are both specified, they
- *    MUST point to the same resource.
- * 
- *    Format Definition: The property is defined by the following notation:
- * 
- *      url        = "URL" urlparam ":" uri CRLF
- * 
- *      urlparam   = *(";" xparam)
- * 
- *    Example: The following is an example of this property:
- * 
- *      URL:http://abc.com/pub/calendars/jsmith/mytime.ics
+ *     4.8.4.6 Uniform Resource Locator
+ *     
+ *        Property Name: URL
+ *     
+ *        Purpose: This property defines a Uniform Resource Locator (URL)
+ *        associated with the iCalendar object.
+ *     
+ *        Value Type: URI
+ *     
+ *        Property Parameters: Non-standard property parameters can be
+ *        specified on this property.
+ *     
+ *        Conformance: This property can be specified once in the &quot;VEVENT&quot;,
+ *        &quot;VTODO&quot;, &quot;VJOURNAL&quot; or &quot;VFREEBUSY&quot; calendar components.
+ *     
+ *        Description: This property may be used in a calendar component to
+ *        convey a location where a more dynamic rendition of the calendar
+ *        information associated with the calendar component can be found. This
+ *        memo does not attempt to standardize the form of the URI, nor the
+ *        format of the resource pointed to by the property value. If the URL
+ *        property and Content-Location MIME header are both specified, they
+ *        MUST point to the same resource.
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          url        = &quot;URL&quot; urlparam &quot;:&quot; uri CRLF
+ *     
+ *          urlparam   = *(&quot;;&quot; xparam)
+ *     
+ *        Example: The following is an example of this property:
+ *     
+ *          URL:http://abc.com/pub/calendars/jsmith/mytime.ics
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class Url extends Property {
-    
+
     private static final long serialVersionUID = 1092576402256525737L;
 
     private URI uri;
@@ -96,14 +96,11 @@ public class Url extends Property {
     public Url() {
         super(URL);
     }
-    
+
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
-     * @throws URISyntaxException
-     *             where the specified value string is not a valid uri
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
+     * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public Url(final ParameterList aList, final String aValue)
             throws URISyntaxException {
@@ -112,8 +109,7 @@ public class Url extends Property {
     }
 
     /**
-     * @param aUri
-     *            a URI
+     * @param aUri a URI
      */
     public Url(final URI aUri) {
         super(URL);
@@ -121,10 +117,8 @@ public class Url extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aUri
-     *            a URI
+     * @param aList a list of parameters for this component
+     * @param aUri a URI
      */
     public Url(final ParameterList aList, final URI aUri) {
         super(URL, aList);
@@ -137,8 +131,9 @@ public class Url extends Property {
     public final URI getUri() {
         return uri;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws URISyntaxException {
@@ -147,21 +142,21 @@ public class Url extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getUri()));
     }
-    
+
     /**
      * @param uri The uri to set.
      */
     public final void setUri(final URI uri) {
         this.uri = uri;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {

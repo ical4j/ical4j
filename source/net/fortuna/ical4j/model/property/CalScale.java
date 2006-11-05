@@ -41,35 +41,35 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Defines a CALSCALE iCalendar property.
- *
  * @author benf
  */
 public class CalScale extends Property {
-    
+
     private static final long serialVersionUID = 7446184786984981423L;
 
     public static final CalScale GREGORIAN = new ImmutableCalScale("GREGORIAN");
-    
+
     /**
-     * @author Ben Fortuna
-     * An immutable instance of CalScale.
+     * @author Ben Fortuna An immutable instance of CalScale.
      */
     private static final class ImmutableCalScale extends CalScale {
-        
+
         private static final long serialVersionUID = 1750949550694413878L;
-        
+
         /**
          * @param value
          */
         private ImmutableCalScale(final String value) {
             super(new ParameterList(true), value);
         }
-        
-        /* (non-Javadoc)
+
+        /*
+         * (non-Javadoc)
          * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
          */
         public void setValue(final String aValue) {
-            throw new UnsupportedOperationException("Cannot modify constant instances");
+            throw new UnsupportedOperationException(
+                    "Cannot modify constant instances");
         }
     }
 
@@ -79,12 +79,11 @@ public class CalScale extends Property {
      * Default constructor.
      */
     public CalScale() {
-       super(CALSCALE); 
+        super(CALSCALE);
     }
-    
+
     /**
-     * @param aValue
-     *            a value string for this component
+     * @param aValue a value string for this component
      */
     public CalScale(final String aValue) {
         super(CALSCALE);
@@ -92,18 +91,16 @@ public class CalScale extends Property {
     }
 
     /**
-     * @param aList
-     *            a list of parameters for this component
-     * @param aValue
-     *            a value string for this component
+     * @param aList a list of parameters for this component
+     * @param aValue a value string for this component
      */
     public CalScale(final ParameterList aList, final String aValue) {
         super(CALSCALE, aList);
         this.value = aValue;
     }
-    
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) {
@@ -112,7 +109,6 @@ public class CalScale extends Property {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Property#getValue()
      */
     public final String getValue() {
