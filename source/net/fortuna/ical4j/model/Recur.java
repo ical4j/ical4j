@@ -135,11 +135,8 @@ public class Recur implements Serializable {
 
     /**
      * Constructs a new instance from the specified string value.
-     * @param aValue
-     *            a string representation of a recurrence.
-     * @throws ParseException
-     *             thrown when the specified string contains an invalid
-     *             representation of an UNTIL date value
+     * @param aValue a string representation of a recurrence.
+     * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
      * @throws IllegalArgumentException if the <code>frequency</code> is <code>null</code> or unrecognized.
      */
     public Recur(final String aValue) throws ParseException {
@@ -454,48 +451,47 @@ public class Recur implements Serializable {
         }
         return b.toString();
     }
-    
+
     /**
-     * Returns a list of start dates in the specified period represented by this recur.
-     * Any date fields not specified by this recur are retained from the period start,
-     * and as such you should ensure the period start is initialised correctly.
+     * Returns a list of start dates in the specified period represented by this recur. Any date fields not specified by
+     * this recur are retained from the period start, and as such you should ensure the period start is initialised
+     * correctly.
      * @param periodStart the start of the period
      * @param periodEnd the end of the period
      * @param value the type of dates to generate (i.e. date/date-time)
      * @return a list of dates
      */
-    public final DateList getDates(final Date periodStart, final Date periodEnd, final Value value) {
+    public final DateList getDates(final Date periodStart,
+            final Date periodEnd, final Value value) {
         return getDates(periodStart, periodStart, periodEnd, value);
     }
-    
+
     /**
      * Convenience method for retrieving recurrences in a specified period.
      * @param period the period of returned recurrence dates
      * @param value type of dates to generate
      * @return a list of dates
      */
-    public final DateList getDates(final Date seed, final Period period, final Value value) {
+    public final DateList getDates(final Date seed, final Period period,
+            final Value value) {
         return getDates(seed, period.getStart(), period.getEnd(), value);
     }
 
     /**
-     * Returns a list of start dates in the specified period represented
-     * by this recur.  This method includes a base date argument, which
-     * indicates the start of the fist occurrence of this recurrence.
-     *
-     * The base date is used to inject default values to return a set of dates in
-     * the correct format.  For example, if the search start date (start) is
-     * Wed, Mar 23, 12:19PM, but the recurrence is Mon - Fri, 9:00AM - 5:00PM,
-     * the start dates returned should all be at 9:00AM, and not 12:19PM.
-     *
+     * Returns a list of start dates in the specified period represented by this recur. This method includes a base date
+     * argument, which indicates the start of the fist occurrence of this recurrence. The base date is used to inject
+     * default values to return a set of dates in the correct format. For example, if the search start date (start) is
+     * Wed, Mar 23, 12:19PM, but the recurrence is Mon - Fri, 9:00AM - 5:00PM, the start dates returned should all be at
+     * 9:00AM, and not 12:19PM.
      * @return a list of dates represented by this recur instance
-     * @param base the start date of this Recurrence's first instance
+     * @param seed the start date of this Recurrence's first instance
      * @param periodStart the start of the period
      * @param periodEnd the end of the period
      * @param value the type of dates to generate (i.e. date/date-time)
      */
     public final DateList getDates(final Date seed, final Date periodStart,
             final Date periodEnd, final Value value) {
+
         DateList dates = new DateList(value);
         if (seed instanceof DateTime) {
             if (((DateTime) seed).isUtc()) {
@@ -507,7 +503,7 @@ public class Recur implements Serializable {
         }
         Calendar cal = Dates.getCalendarInstance(seed);
         cal.setTime(seed);
-        
+
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
         if (getCount() < 1) {
@@ -517,12 +513,28 @@ public class Recur implements Serializable {
                 increment(seededCal);
             }
         }
-        
+
         int invalidCandidateCount = 0;
-        while (!((getUntil() != null && cal.getTime().after(getUntil()))
-                || (periodEnd != null && cal.getTime().after(periodEnd))
-                || (getCount() >= 1 && (dates.size() + invalidCandidateCount) >= getCount()))) {
+        Date candidate = null;
+        while (true) {
             Date candidateSeed = Dates.getInstance(cal.getTime(), value);
+
+            if (getUntil() != null && candidate != null
+                    && candidate.after(getUntil())) {
+
+                break;
+            }
+            if (periodEnd != null && candidate != null
+                    && candidate.after(periodEnd)) {
+
+                break;
+            }
+            if (getCount() >= 1
+                    && (dates.size() + invalidCandidateCount) >= getCount()) {
+
+                break;
+            }
+
             if (Value.DATE_TIME.equals(value)) {
                 if (dates.isUtc()) {
                     ((DateTime) candidateSeed).setUtc(true);
@@ -531,19 +543,25 @@ public class Recur implements Serializable {
                     ((DateTime) candidateSeed).setTimeZone(dates.getTimeZone());
                 }
             }
+
             DateList candidates = getCandidates(candidateSeed, value);
+            // sort candidates for identifying when UNTIL date is exceeded..
+            Collections.sort(candidates);
             for (Iterator i = candidates.iterator(); i.hasNext();) {
-                Date candidate = (Date) i.next();
+                candidate = (Date) i.next();
                 // don't count candidates that occur before the seed date..
                 if (!candidate.before(seed)) {
                     // candidates exclusive of periodEnd..
-                    if (candidate.before(periodStart) || !candidate.before(periodEnd)) {
+                    if (candidate.before(periodStart)
+                            || !candidate.before(periodEnd)) {
                         invalidCandidateCount++;
                     }
-                    else if (getCount() >= 1 && (dates.size() + invalidCandidateCount) >= getCount()) {
+                    else if (getCount() >= 1
+                            && (dates.size() + invalidCandidateCount) >= getCount()) {
                         break;
                     }
-                    else if (!(getUntil() != null && candidate.after(getUntil()))) {
+                    else if (!(getUntil() != null && candidate
+                            .after(getUntil()))) {
                         dates.add(candidate);
                     }
                 }
@@ -556,9 +574,7 @@ public class Recur implements Serializable {
     }
 
     /**
-     * Increments the specified calendar according to the
-     * frequency and interval specified in this recurrence
-     * rule.
+     * Increments the specified calendar according to the frequency and interval specified in this recurrence rule.
      * @param cal a java.util.Calendar to increment
      */
     private void increment(final Calendar cal) {
@@ -586,10 +602,9 @@ public class Recur implements Serializable {
             cal.add(Calendar.YEAR, calInterval);
         }
     }
-    
+
     /**
-     * Returns a list of possible dates generated from the applicable
-     * BY* rules, using the specified date as a seed.
+     * Returns a list of possible dates generated from the applicable BY* rules, using the specified date as a seed.
      * @param date the seed date
      * @param value the type of date list to return
      * @return a DateList
@@ -654,9 +669,8 @@ public class Recur implements Serializable {
     }
 
     /**
-     * Applies BYSETPOS rules to <code>dates</code>. Valid positions are from
-     * 1 to the size of the date list. Invalid positions are ignored.
-     * 
+     * Applies BYSETPOS rules to <code>dates</code>. Valid positions are from 1 to the size of the date list. Invalid
+     * positions are ignored.
      * @param dates
      */
     private DateList applySetPosRules(final DateList dates) {
@@ -666,7 +680,8 @@ public class Recur implements Serializable {
         }
         // sort the list before processing..
         Collections.sort(dates);
-        DateList setPosDates = new DateList(dates.getType(), dates.getTimeZone());
+        DateList setPosDates = new DateList(dates.getType(), dates
+                .getTimeZone());
         int size = dates.size();
         for (Iterator i = getSetPosList().iterator(); i.hasNext();) {
             Integer setPos = (Integer) i.next();
@@ -680,11 +695,10 @@ public class Recur implements Serializable {
         }
         return setPosDates;
     }
-    
+
     /**
-     * Applies BYMONTH rules specified in this Recur instance to the
-     * specified date list. If no BYMONTH rules are specified the
-     * date list is returned unmodified.
+     * Applies BYMONTH rules specified in this Recur instance to the specified date list. If no BYMONTH rules are
+     * specified the date list is returned unmodified.
      * @param dates
      * @return
      */
@@ -692,7 +706,8 @@ public class Recur implements Serializable {
         if (getMonthList().isEmpty()) {
             return dates;
         }
-        DateList monthlyDates = new DateList(dates.getType(), dates.getTimeZone());
+        DateList monthlyDates = new DateList(dates.getType(), dates
+                .getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
@@ -701,16 +716,16 @@ public class Recur implements Serializable {
                 Integer month = (Integer) j.next();
                 // Java months are zero-based..
                 cal.set(Calendar.MONTH, month.intValue() - 1);
-                monthlyDates.add(Dates.getInstance(cal.getTime(), monthlyDates.getType()));
+                monthlyDates.add(Dates.getInstance(cal.getTime(), monthlyDates
+                        .getType()));
             }
         }
         return monthlyDates;
     }
 
     /**
-     * Applies BYWEEKNO rules specified in this Recur instance to the
-     * specified date list. If no BYWEEKNO rules are specified the
-     * date list is returned unmodified.
+     * Applies BYWEEKNO rules specified in this Recur instance to the specified date list. If no BYWEEKNO rules are
+     * specified the date list is returned unmodified.
      * @param dates
      * @return
      */
@@ -718,24 +733,26 @@ public class Recur implements Serializable {
         if (getWeekNoList().isEmpty()) {
             return dates;
         }
-        DateList weekNoDates = new DateList(dates.getType(), dates.getTimeZone());
+        DateList weekNoDates = new DateList(dates.getType(), dates
+                .getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
             cal.setTime(date);
             for (Iterator j = getWeekNoList().iterator(); j.hasNext();) {
                 Integer weekNo = (Integer) j.next();
-                cal.set(Calendar.WEEK_OF_YEAR, Dates.getAbsWeekNo(cal.getTime(), weekNo.intValue()));
-                weekNoDates.add(Dates.getInstance(cal.getTime(), weekNoDates.getType()));
+                cal.set(Calendar.WEEK_OF_YEAR, Dates.getAbsWeekNo(
+                        cal.getTime(), weekNo.intValue()));
+                weekNoDates.add(Dates.getInstance(cal.getTime(), weekNoDates
+                        .getType()));
             }
         }
         return weekNoDates;
     }
 
     /**
-     * Applies BYYEARDAY rules specified in this Recur instance to the
-     * specified date list. If no BYYEARDAY rules are specified the
-     * date list is returned unmodified.
+     * Applies BYYEARDAY rules specified in this Recur instance to the specified date list. If no BYYEARDAY rules are
+     * specified the date list is returned unmodified.
      * @param dates
      * @return
      */
@@ -743,24 +760,26 @@ public class Recur implements Serializable {
         if (getYearDayList().isEmpty()) {
             return dates;
         }
-        DateList yearDayDates = new DateList(dates.getType(), dates.getTimeZone());
+        DateList yearDayDates = new DateList(dates.getType(), dates
+                .getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
             cal.setTime(date);
             for (Iterator j = getYearDayList().iterator(); j.hasNext();) {
                 Integer yearDay = (Integer) j.next();
-                cal.set(Calendar.DAY_OF_YEAR, Dates.getAbsYearDay(cal.getTime(), yearDay.intValue()));
-                yearDayDates.add(Dates.getInstance(cal.getTime(), yearDayDates.getType()));
+                cal.set(Calendar.DAY_OF_YEAR, Dates.getAbsYearDay(
+                        cal.getTime(), yearDay.intValue()));
+                yearDayDates.add(Dates.getInstance(cal.getTime(), yearDayDates
+                        .getType()));
             }
         }
         return yearDayDates;
     }
 
     /**
-     * Applies BYMONTHDAY rules specified in this Recur instance to the
-     * specified date list. If no BYMONTHDAY rules are specified the
-     * date list is returned unmodified.
+     * Applies BYMONTHDAY rules specified in this Recur instance to the specified date list. If no BYMONTHDAY rules are
+     * specified the date list is returned unmodified.
      * @param dates
      * @return
      */
@@ -768,24 +787,26 @@ public class Recur implements Serializable {
         if (getMonthDayList().isEmpty()) {
             return dates;
         }
-        DateList monthDayDates = new DateList(dates.getType(), dates.getTimeZone());
+        DateList monthDayDates = new DateList(dates.getType(), dates
+                .getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
             cal.setTime(date);
             for (Iterator j = getMonthDayList().iterator(); j.hasNext();) {
                 Integer monthDay = (Integer) j.next();
-                cal.set(Calendar.DAY_OF_MONTH, Dates.getAbsMonthDay(cal.getTime(), monthDay.intValue()));
-                monthDayDates.add(Dates.getInstance(cal.getTime(), monthDayDates.getType()));
+                cal.set(Calendar.DAY_OF_MONTH, Dates.getAbsMonthDay(cal
+                        .getTime(), monthDay.intValue()));
+                monthDayDates.add(Dates.getInstance(cal.getTime(),
+                        monthDayDates.getType()));
             }
         }
         return monthDayDates;
     }
 
     /**
-     * Applies BYDAY rules specified in this Recur instance to the
-     * specified date list. If no BYDAY rules are specified the
-     * date list is returned unmodified.
+     * Applies BYDAY rules specified in this Recur instance to the specified date list. If no BYDAY rules are specified
+     * the date list is returned unmodified.
      * @param dates
      * @return
      */
@@ -793,12 +814,14 @@ public class Recur implements Serializable {
         if (getDayList().isEmpty()) {
             return dates;
         }
-        DateList weekDayDates = new DateList(dates.getType(), dates.getTimeZone());
+        DateList weekDayDates = new DateList(dates.getType(), dates
+                .getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             for (Iterator j = getDayList().iterator(); j.hasNext();) {
                 WeekDay weekDay = (WeekDay) j.next();
-                // if BYYEARDAY or BYMONTHDAY is specified filter existing list..
+                // if BYYEARDAY or BYMONTHDAY is specified filter existing
+                // list..
                 if (!getYearDayList().isEmpty() || !getMonthDayList().isEmpty()) {
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(date);
@@ -807,8 +830,8 @@ public class Recur implements Serializable {
                     }
                 }
                 else {
-                    weekDayDates.addAll(
-                            getAbsWeekDays(date, dates.getType(), weekDay));
+                    weekDayDates.addAll(getAbsWeekDays(date, dates.getType(),
+                            weekDay));
                 }
             }
         }
@@ -816,14 +839,14 @@ public class Recur implements Serializable {
     }
 
     /**
-     * Returns a list of applicable dates corresponding to the specified
-     * week day in accordance with the frequency specified by this recurrence
-     * rule.
+     * Returns a list of applicable dates corresponding to the specified week day in accordance with the frequency
+     * specified by this recurrence rule.
      * @param date
      * @param weekDay
      * @return
      */
-    private List getAbsWeekDays(final Date date, final Value type, final WeekDay weekDay) {
+    private List getAbsWeekDays(final Date date, final Value type,
+            final WeekDay weekDay) {
         Calendar cal = Dates.getCalendarInstance(date);
         cal.setTime(date);
         DateList days = new DateList(type);
@@ -845,10 +868,10 @@ public class Recur implements Serializable {
                 days.add(Dates.getInstance(cal.getTime(), type));
             }
         }
-        else if (WEEKLY.equals(getFrequency())  || !getWeekNoList().isEmpty()) {
-            //int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
+        else if (WEEKLY.equals(getFrequency()) || !getWeekNoList().isEmpty()) {
+            // int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
             // construct a list of possible week days..
-//            cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, 1);
+            // cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, 1);
             while (cal.get(Calendar.DAY_OF_WEEK) != calDay) {
                 cal.add(Calendar.DAY_OF_WEEK, 1);
             }
@@ -858,7 +881,7 @@ public class Recur implements Serializable {
                 cal.add(Calendar.DAY_OF_WEEK, Dates.DAYS_PER_WEEK);
             }
         }
-        else if (MONTHLY.equals(getFrequency())  || !getMonthList().isEmpty()) {
+        else if (MONTHLY.equals(getFrequency()) || !getMonthList().isEmpty()) {
             int month = cal.get(Calendar.MONTH);
             // construct a list of possible month days..
             cal.set(Calendar.DAY_OF_MONTH, 1);
@@ -886,11 +909,9 @@ public class Recur implements Serializable {
     }
 
     /**
-     * Returns a single-element sublist containing the element of
-     * <code>list</code> at <code>offset</code>. Valid offsets are from 1
-     * to the size of the list. If an invalid offset is supplied, all elements
-     * from <code>list</code> are added to <code>sublist</code>.
-     * 
+     * Returns a single-element sublist containing the element of <code>list</code> at <code>offset</code>. Valid
+     * offsets are from 1 to the size of the list. If an invalid offset is supplied, all elements from <code>list</code>
+     * are added to <code>sublist</code>.
      * @param list
      * @param offset
      * @param sublist
@@ -909,12 +930,10 @@ public class Recur implements Serializable {
         }
         return offsetDates;
     }
-    
+
     /**
-     * Applies BYHOUR rules specified in this Recur instance to the specified
-     * date list. If no BYHOUR rules are specified the date list is returned
-     * unmodified.
-     * 
+     * Applies BYHOUR rules specified in this Recur instance to the specified date list. If no BYHOUR rules are
+     * specified the date list is returned unmodified.
      * @param dates
      * @return
      */
@@ -922,7 +941,8 @@ public class Recur implements Serializable {
         if (getHourList().isEmpty()) {
             return dates;
         }
-        DateList hourlyDates = new DateList(dates.getType(), dates.getTimeZone());
+        DateList hourlyDates = new DateList(dates.getType(), dates
+                .getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
@@ -930,16 +950,16 @@ public class Recur implements Serializable {
             for (Iterator j = getHourList().iterator(); j.hasNext();) {
                 Integer hour = (Integer) j.next();
                 cal.set(Calendar.HOUR_OF_DAY, hour.intValue());
-                hourlyDates.add(Dates.getInstance(cal.getTime(), hourlyDates.getType()));
+                hourlyDates.add(Dates.getInstance(cal.getTime(), hourlyDates
+                        .getType()));
             }
         }
         return hourlyDates;
     }
-    
+
     /**
-     * Applies BYMINUTE rules specified in this Recur instance to the
-     * specified date list. If no BYMINUTE rules are specified the
-     * date list is returned unmodified.
+     * Applies BYMINUTE rules specified in this Recur instance to the specified date list. If no BYMINUTE rules are
+     * specified the date list is returned unmodified.
      * @param dates
      * @return
      */
@@ -947,7 +967,8 @@ public class Recur implements Serializable {
         if (getMinuteList().isEmpty()) {
             return dates;
         }
-        DateList minutelyDates = new DateList(dates.getType(), dates.getTimeZone());
+        DateList minutelyDates = new DateList(dates.getType(), dates
+                .getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
@@ -955,16 +976,16 @@ public class Recur implements Serializable {
             for (Iterator j = getMinuteList().iterator(); j.hasNext();) {
                 Integer minute = (Integer) j.next();
                 cal.set(Calendar.MINUTE, minute.intValue());
-                minutelyDates.add(Dates.getInstance(cal.getTime(), minutelyDates.getType()));
+                minutelyDates.add(Dates.getInstance(cal.getTime(),
+                        minutelyDates.getType()));
             }
         }
         return minutelyDates;
     }
-    
+
     /**
-     * Applies BYSECOND rules specified in this Recur instance to the
-     * specified date list. If no BYSECOND rules are specified the
-     * date list is returned unmodified.
+     * Applies BYSECOND rules specified in this Recur instance to the specified date list. If no BYSECOND rules are
+     * specified the date list is returned unmodified.
      * @param dates
      * @return
      */
@@ -972,7 +993,8 @@ public class Recur implements Serializable {
         if (getSecondList().isEmpty()) {
             return dates;
         }
-        DateList secondlyDates = new DateList(dates.getType(), dates.getTimeZone());
+        DateList secondlyDates = new DateList(dates.getType(), dates
+                .getTimeZone());
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
@@ -980,26 +1002,27 @@ public class Recur implements Serializable {
             for (Iterator j = getSecondList().iterator(); j.hasNext();) {
                 Integer second = (Integer) j.next();
                 cal.set(Calendar.SECOND, second.intValue());
-                secondlyDates.add(Dates.getInstance(cal.getTime(), secondlyDates.getType()));
+                secondlyDates.add(Dates.getInstance(cal.getTime(),
+                        secondlyDates.getType()));
             }
         }
         return secondlyDates;
     }
-    
+
     private void validateFrequency() {
         if (frequency == null) {
-            throw new IllegalArgumentException("A recurrence rule MUST contain a FREQ rule part.");
-        } else if (!frequency.equals(SECONDLY)
-                && !frequency.equals(MINUTELY)
-                && !frequency.equals(HOURLY)
-                && !frequency.equals(DAILY)
-                && !frequency.equals(WEEKLY)
-                && !frequency.equals(MONTHLY)
+            throw new IllegalArgumentException(
+                    "A recurrence rule MUST contain a FREQ rule part.");
+        }
+        else if (!frequency.equals(SECONDLY) && !frequency.equals(MINUTELY)
+                && !frequency.equals(HOURLY) && !frequency.equals(DAILY)
+                && !frequency.equals(WEEKLY) && !frequency.equals(MONTHLY)
                 && !frequency.equals(YEARLY)) {
-            throw new IllegalArgumentException("Invalid FREQ rule part '" + frequency + "' in recurrence rule");
+            throw new IllegalArgumentException("Invalid FREQ rule part '"
+                    + frequency + "' in recurrence rule");
         }
     }
-    
+
     /**
      * @param count The count to set.
      */
@@ -1007,7 +1030,7 @@ public class Recur implements Serializable {
         this.count = count;
         this.until = null;
     }
-    
+
     /**
      * @param frequency The frequency to set.
      * @throws IllegalArgumentException if the <code>frequency</code> is <code>null</code> or unrecognized.
@@ -1016,14 +1039,14 @@ public class Recur implements Serializable {
         this.frequency = frequency;
         validateFrequency();
     }
-    
+
     /**
      * @param interval The interval to set.
      */
     public final void setInterval(final int interval) {
         this.interval = interval;
     }
-    
+
     /**
      * @param until The until to set.
      */
