@@ -60,32 +60,28 @@ import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
- * Defines an iCalendar sub-component representing a timezone observance.
- * Class made abstract such that only Standard and Daylight instances are
- * valid.
- *
+ * Defines an iCalendar sub-component representing a timezone observance. Class made abstract such that only Standard
+ * and Daylight instances are valid.
  * @author Ben Fortuna
  */
 public abstract class Observance extends Component implements Comparable {
 
     /**
-     * one of 'standardc' or 'daylightc' MUST occur and each MAY occur more than
-     * once.
+     * one of 'standardc' or 'daylightc' MUST occur and each MAY occur more than once.
      */
     public static final String STANDARD = "STANDARD";
 
     public static final String DAYLIGHT = "DAYLIGHT";
-    
+
     private Log log = LogFactory.getLog(Observance.class);
-    
+
     // TODO: clear cache when observance definition changes (??)
     private Map onsets = new TreeMap();
-    
+
     private boolean rdatesCached = false;
 
     /**
-     * Constructs a timezone observance with the specified name
-     * and no properties.
+     * Constructs a timezone observance with the specified name and no properties.
      * @param name the name of this observance component
      */
     protected Observance(final String name) {
@@ -93,8 +89,7 @@ public abstract class Observance extends Component implements Comparable {
     }
 
     /**
-     * Constructor protected to enforce use of sub-classes
-     * from this library.
+     * Constructor protected to enforce use of sub-classes from this library.
      * @param name the name of the time type
      * @param properties a list of properties
      */
@@ -105,8 +100,9 @@ public abstract class Observance extends Component implements Comparable {
     /**
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
-    public final void validate(final boolean recurse) throws ValidationException {
-        
+    public final void validate(final boolean recurse)
+            throws ValidationException {
+
         // From "4.8.3.3 Time Zone Offset From":
         // Conformance: This property MUST be specified in a "VTIMEZONE"
         // calendar component.
@@ -120,56 +116,50 @@ public abstract class Observance extends Component implements Comparable {
                 getProperties());
 
         /*
-
-                ; the following are each REQUIRED,
-                ; but MUST NOT occur more than once
-
-                dtstart / tzoffsetto / tzoffsetfrom /
+         * ; the following are each REQUIRED, ; but MUST NOT occur more than once dtstart / tzoffsetto / tzoffsetfrom /
          */
         PropertyValidator.getInstance().assertOne(Property.DTSTART,
                 getProperties());
 
         /*
-
-                ; the following are optional,
-                ; and MAY occur more than once
-
-                comment / rdate / rrule / tzname / x-prop
+         * ; the following are optional, ; and MAY occur more than once comment / rdate / rrule / tzname / x-prop
          */
 
         if (recurse) {
             validateProperties();
         }
     }
-    
+
     /**
      * Returns the latest applicable onset of this observance for the specified date.
      * @param date the latest date that an observance onset may occur
-     * @return the latest applicable observance date or null if there is no applicable
-     * observance onset for the specified date
+     * @return the latest applicable observance date or null if there is no applicable observance onset for the
+     * specified date
      */
     public final Date getLatestOnset(final Date date) {
         Date initialOnset = ((DtStart) getProperty(Property.DTSTART)).getDate();
-        
+
         // observance not applicable if date is before the effective date of this observance..
         if (date.before(initialOnset)) {
             return null;
         }
-        
+
         long start = System.currentTimeMillis();
-        
+
         Date onset = getCachedOnset(date);
 
         if (log.isDebugEnabled()) {
-            log.debug("Cache " + ((onset != null) ? "hit" : "miss") + " - retrieval time: " + (System.currentTimeMillis() - start) + "ms");
+            log.debug("Cache " + ((onset != null) ? "hit" : "miss")
+                    + " - retrieval time: "
+                    + (System.currentTimeMillis() - start) + "ms");
         }
-        
+
         if (onset == null) {
             onset = initialOnset;
             // collect all onsets for the purposes of caching..
             DateList cacheableOnsets = new DateList();
-//            Date nextOnset = null;
-            
+            // Date nextOnset = null;
+
             if (!rdatesCached) {
                 // check rdates for latest applicable onset..
                 PropertyList rdates = getProperties(Property.RDATE);
@@ -181,17 +171,15 @@ public abstract class Observance extends Component implements Comparable {
                             onset = rdateOnset;
                         }
                         /*
-                        else if (rdateOnset.after(date) && rdateOnset.after(onset)
-                                && (nextOnset == null || rdateOnset.before(nextOnset))) {
-                            nextOnset = rdateOnset;
-                        }
-                        */
+                         * else if (rdateOnset.after(date) && rdateOnset.after(onset) && (nextOnset == null ||
+                         * rdateOnset.before(nextOnset))) { nextOnset = rdateOnset; }
+                         */
                         cacheableOnsets.add(rdateOnset);
                     }
                 }
                 rdatesCached = true;
             }
-            
+
             // check recurrence rules for latest applicable onset..
             PropertyList rrules = getProperties(Property.RRULE);
             Value dateType;
@@ -208,22 +196,21 @@ public abstract class Observance extends Component implements Comparable {
                 cal.setTime(date);
                 cal.add(Calendar.YEAR, 1);
                 Date endRecur = Dates.getInstance(cal.getTime(), dateType);
-                DateList recurrenceDates = rrule.getRecur().getDates(onset, endRecur, dateType);
+                DateList recurrenceDates = rrule.getRecur().getDates(onset,
+                        endRecur, dateType);
                 for (Iterator j = recurrenceDates.iterator(); j.hasNext();) {
                     Date rruleOnset = (Date) j.next();
                     if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
                         onset = rruleOnset;
                     }
                     /*
-                    else if (rruleOnset.after(date) && rruleOnset.after(onset)
-                            && (nextOnset == null || rruleOnset.before(nextOnset))) {
-                        nextOnset = rruleOnset;
-                    }
-                    */
+                     * else if (rruleOnset.after(date) && rruleOnset.after(onset) && (nextOnset == null ||
+                     * rruleOnset.before(nextOnset))) { nextOnset = rruleOnset; }
+                     */
                     cacheableOnsets.add(rruleOnset);
                 }
             }
-            
+
             // cache onsets..
             Collections.sort(cacheableOnsets);
             Date cacheableOnset = null;
@@ -232,40 +219,34 @@ public abstract class Observance extends Component implements Comparable {
                 cacheableOnset = nextOnset;
                 nextOnset = (Date) i.next();
                 if (cacheableOnset != null) {
-                    onsets.put(new Period(new DateTime(cacheableOnset), new DateTime(nextOnset)), cacheableOnset);
+                    onsets.put(new Period(new DateTime(cacheableOnset),
+                            new DateTime(nextOnset)), cacheableOnset);
                 }
             }
-            
+
             // as we don't have an onset following the final onset, we must
             // cache it with an arbitrary period length..
             if (nextOnset != null) {
                 Calendar finalOnsetPeriodEnd = Calendar.getInstance();
                 finalOnsetPeriodEnd.setTime(nextOnset);
                 finalOnsetPeriodEnd.add(Calendar.YEAR, 100);
-                onsets.put(new Period(new DateTime(nextOnset),
-                                new DateTime(finalOnsetPeriodEnd.getTime())),
-                        nextOnset);
+                onsets.put(new Period(new DateTime(nextOnset), new DateTime(
+                        finalOnsetPeriodEnd.getTime())), nextOnset);
             }
-            
+
             /*
-            Period onsetPeriod = null;
-            if (nextOnset != null) {
-                onsetPeriod = new Period(new DateTime(onset), new DateTime(nextOnset));
-            }
-            else {
-                onsetPeriod = new Period(new DateTime(onset), new DateTime(date));
-            }
-            onsets.put(onsetPeriod, onset);
-            */
+             * Period onsetPeriod = null; if (nextOnset != null) { onsetPeriod = new Period(new DateTime(onset), new
+             * DateTime(nextOnset)); } else { onsetPeriod = new Period(new DateTime(onset), new DateTime(date)); }
+             * onsets.put(onsetPeriod, onset);
+             */
         }
         return onset;
     }
-    
+
     /**
      * Returns a cached onset for the specified date.
      * @param date
-     * @return a cached onset date or null if no cached onset is applicable
-     * for the specified date
+     * @return a cached onset date or null if no cached onset is applicable for the specified date
      */
     private Date getCachedOnset(final Date date) {
         for (Iterator i = onsets.keySet().iterator(); i.hasNext();) {
@@ -276,7 +257,7 @@ public abstract class Observance extends Component implements Comparable {
         }
         return null;
     }
-    
+
     /**
      * Returns the mandatory dtstart property.
      * @return
@@ -284,7 +265,7 @@ public abstract class Observance extends Component implements Comparable {
     public final DtStart getStartDate() {
         return (DtStart) getProperty(Property.DTSTART);
     }
-    
+
     /**
      * Returns the mandatory tzoffsetfrom property.
      * @return
@@ -292,7 +273,7 @@ public abstract class Observance extends Component implements Comparable {
     public final TzOffsetFrom getOffsetFrom() {
         return (TzOffsetFrom) getProperty(Property.TZOFFSETFROM);
     }
-    
+
     /**
      * Returns the mandatory tzoffsetto property.
      * @return
@@ -301,13 +282,14 @@ public abstract class Observance extends Component implements Comparable {
         return (TzOffsetTo) getProperty(Property.TZOFFSETTO);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     public final int compareTo(final Object arg0) {
         return compareTo((Observance) arg0);
     }
-    
+
     /**
      * @param arg0
      * @return

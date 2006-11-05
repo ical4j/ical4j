@@ -39,32 +39,32 @@ import net.fortuna.ical4j.model.PropertyList;
  * Defines an iCalendar standard timezone observance component.
  *
  * <pre>
- * 
- *      standardc  = "BEGIN" ":" "STANDARD" CRLF
- * 
- *                   tzprop
- * 
- *                   "END" ":" "STANDARD" CRLF
- * 
- *      tzprop     = 3*(
- * 
- *                 ; the following are each REQUIRED,
- *                 ; but MUST NOT occur more than once
- * 
- *                 dtstart / tzoffsetto / tzoffsetfrom /
- * 
- *                 ; the following are optional,
- *                 ; and MAY occur more than once
- * 
- *                 comment / rdate / rrule / tzname / x-prop
- * 
- *                 )
+ *
+ *       standardc  = &quot;BEGIN&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
+ *
+ *                    tzprop
+ *
+ *                    &quot;END&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
+ *
+ *       tzprop     = 3*(
+ *
+ *                  ; the following are each REQUIRED,
+ *                  ; but MUST NOT occur more than once
+ *
+ *                  dtstart / tzoffsetto / tzoffsetfrom /
+ *
+ *                  ; the following are optional,
+ *                  ; and MAY occur more than once
+ *
+ *                  comment / rdate / rrule / tzname / x-prop
+ *
+ *                  )
  * </pre>
  *
  * @author Ben Fortuna
  */
 public class Standard extends Observance {
-    
+
     private static final long serialVersionUID = -4750910013406451159L;
 
     /**

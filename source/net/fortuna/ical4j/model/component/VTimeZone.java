@@ -48,73 +48,73 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an iCalendar VTIMEZONE component.
- * 
+ *
  * <pre>
- *    4.6.5 Time Zone Component
- *    
- *       Component Name: VTIMEZONE
- *    
- *       Purpose: Provide a grouping of component properties that defines a
- *       time zone.
- *    
- *       Formal Definition: A &quot;VTIMEZONE&quot; calendar component is defined by the
- *       following notation:
- *    
- *         timezonec  = &quot;BEGIN&quot; &quot;:&quot; &quot;VTIMEZONE&quot; CRLF
- *    
- *                      2*(
- *    
- *                      ; 'tzid' is required, but MUST NOT occur more
- *                      ; than once
- *    
- *                    tzid /
- *    
- *                      ; 'last-mod' and 'tzurl' are optional,
- *                    but MUST NOT occur more than once
- *    
- *                    last-mod / tzurl /
- *    
- *                      ; one of 'standardc' or 'daylightc' MUST occur
- *                    ..; and each MAY occur more than once.
- *    
- *                    standardc / daylightc /
- *    
- *                    ; the following is optional,
- *                    ; and MAY occur more than once
- *    
- *                      x-prop
- *    
- *                      )
- *    
- *                      &quot;END&quot; &quot;:&quot; &quot;VTIMEZONE&quot; CRLF
- *    
- *         standardc  = &quot;BEGIN&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
- *    
- *                      tzprop
- *    
- *                      &quot;END&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
- *    
- *         daylightc  = &quot;BEGIN&quot; &quot;:&quot; &quot;DAYLIGHT&quot; CRLF
- *    
- *                      tzprop
- *    
- *                      &quot;END&quot; &quot;:&quot; &quot;DAYLIGHT&quot; CRLF
- *    
- *         tzprop     = 3*(
- *    
- *                    ; the following are each REQUIRED,
- *                    ; but MUST NOT occur more than once
- *    
- *                    dtstart / tzoffsetto / tzoffsetfrom /
- *    
- *                    ; the following are optional,
- *                    ; and MAY occur more than once
- *    
- *                    comment / rdate / rrule / tzname / x-prop
- *    
- *                    )
+ *     4.6.5 Time Zone Component
+ *
+ *        Component Name: VTIMEZONE
+ *
+ *        Purpose: Provide a grouping of component properties that defines a
+ *        time zone.
+ *
+ *        Formal Definition: A &quot;VTIMEZONE&quot; calendar component is defined by the
+ *        following notation:
+ *
+ *          timezonec  = &quot;BEGIN&quot; &quot;:&quot; &quot;VTIMEZONE&quot; CRLF
+ *
+ *                       2*(
+ *
+ *                       ; 'tzid' is required, but MUST NOT occur more
+ *                       ; than once
+ *
+ *                     tzid /
+ *
+ *                       ; 'last-mod' and 'tzurl' are optional,
+ *                     but MUST NOT occur more than once
+ *
+ *                     last-mod / tzurl /
+ *
+ *                       ; one of 'standardc' or 'daylightc' MUST occur
+ *                     ..; and each MAY occur more than once.
+ *
+ *                     standardc / daylightc /
+ *
+ *                     ; the following is optional,
+ *                     ; and MAY occur more than once
+ *
+ *                       x-prop
+ *
+ *                       )
+ *
+ *                       &quot;END&quot; &quot;:&quot; &quot;VTIMEZONE&quot; CRLF
+ *
+ *          standardc  = &quot;BEGIN&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
+ *
+ *                       tzprop
+ *
+ *                       &quot;END&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
+ *
+ *          daylightc  = &quot;BEGIN&quot; &quot;:&quot; &quot;DAYLIGHT&quot; CRLF
+ *
+ *                       tzprop
+ *
+ *                       &quot;END&quot; &quot;:&quot; &quot;DAYLIGHT&quot; CRLF
+ *
+ *          tzprop     = 3*(
+ *
+ *                     ; the following are each REQUIRED,
+ *                     ; but MUST NOT occur more than once
+ *
+ *                     dtstart / tzoffsetto / tzoffsetfrom /
+ *
+ *                     ; the following are optional,
+ *                     ; and MAY occur more than once
+ *
+ *                     comment / rdate / rrule / tzname / x-prop
+ *
+ *                     )
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class VTimeZone extends CalendarComponent {
@@ -130,12 +130,10 @@ public class VTimeZone extends CalendarComponent {
         super(VTIMEZONE);
         this.observances = new ComponentList();
     }
-    
+
     /**
      * Constructs a new instance containing the specified properties.
-     * 
-     * @param properties
-     *            a list of properties
+     * @param properties a list of properties
      */
     public VTimeZone(final PropertyList properties) {
         super(VTIMEZONE, properties);
@@ -143,11 +141,8 @@ public class VTimeZone extends CalendarComponent {
     }
 
     /**
-     * Constructs a new vtimezone component with no properties and the specified
-     * list of type components.
-     * 
-     * @param observances
-     *            a list of type components
+     * Constructs a new vtimezone component with no properties and the specified list of type components.
+     * @param observances a list of type components
      */
     public VTimeZone(final ComponentList observances) {
         super(VTIMEZONE);
@@ -156,13 +151,11 @@ public class VTimeZone extends CalendarComponent {
 
     /**
      * Constructor.
-     * 
-     * @param properties
-     *            a list of properties
-     * @param observances
-     *            a list of timezone types
+     * @param properties a list of properties
+     * @param observances a list of timezone types
      */
-    public VTimeZone(final PropertyList properties, final ComponentList observances) {
+    public VTimeZone(final PropertyList properties,
+            final ComponentList observances) {
         super(VTIMEZONE, properties);
         this.observances = observances;
     }
@@ -187,34 +180,27 @@ public class VTimeZone extends CalendarComponent {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
     public final void validate(final boolean recurse)
             throws ValidationException {
 
         /*
-         * ; 'tzid' is required, but MUST NOT occur more ; than once
-         * 
-         * tzid /
+         * ; 'tzid' is required, but MUST NOT occur more ; than once tzid /
          */
         PropertyValidator.getInstance().assertOne(Property.TZID,
                 getProperties());
 
         /*
-         * ; 'last-mod' and 'tzurl' are optional, but MUST NOT occur more than
-         * once last-mod / tzurl /
+         * ; 'last-mod' and 'tzurl' are optional, but MUST NOT occur more than once last-mod / tzurl /
          */
-        PropertyValidator.getInstance().assertOneOrLess(
-                Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
+                getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.TZURL,
                 getProperties());
 
         /*
-         * ; one of 'standardc' or 'daylightc' MUST occur ..; and each MAY occur
-         * more than once.
-         * 
-         * standardc / daylightc /
+         * ; one of 'standardc' or 'daylightc' MUST occur ..; and each MAY occur more than once. standardc / daylightc /
          */
         if (getObservances().getComponent(Observance.STANDARD) == null
                 && getObservances().getComponent(Observance.DAYLIGHT) == null) {
@@ -224,9 +210,7 @@ public class VTimeZone extends CalendarComponent {
         }
 
         /*
-         * ; the following is optional, ; and MAY occur more than once
-         * 
-         * x-prop
+         * ; the following is optional, ; and MAY occur more than once x-prop
          */
 
         if (recurse) {
@@ -240,13 +224,12 @@ public class VTimeZone extends CalendarComponent {
     public final ComponentList getObservances() {
         return observances;
     }
-    
+
     /**
-     * Returns the latest applicable timezone observance for the specified
-     * date.
+     * Returns the latest applicable timezone observance for the specified date.
      * @param date the latest possible date for a timezone observance onset
-     * @return the latest applicable timezone observance for the specified
-     * date or null if there are no applicable observances
+     * @return the latest applicable timezone observance for the specified date or null if there are no applicable
+     * observances
      */
     public final Observance getApplicableObservance(final Date date) {
         Observance latestObservance = null;
@@ -254,28 +237,29 @@ public class VTimeZone extends CalendarComponent {
         for (Iterator i = getObservances().iterator(); i.hasNext();) {
             Observance observance = (Observance) i.next();
             Date onset = observance.getLatestOnset(date);
-            if (latestOnset == null || (onset != null && onset.after(latestOnset))) {
+            if (latestOnset == null
+                    || (onset != null && onset.after(latestOnset))) {
                 latestOnset = onset;
                 latestObservance = observance;
             }
         }
         return latestObservance;
     }
-    
+
     /**
      * @return the mandatory timezone identifier property
      */
     public final TzId getTimeZoneId() {
         return (TzId) getProperty(Property.TZID);
     }
-    
+
     /**
      * @return the optional last-modified property
      */
     public final LastModified getLastModified() {
         return (LastModified) getProperty(Property.LAST_MODIFIED);
     }
-    
+
     /**
      * @return the optional timezone url property
      */

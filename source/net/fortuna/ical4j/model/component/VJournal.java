@@ -57,58 +57,61 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * Defines an iCalendar VJOURNAL component.
  *
  * <pre>
- *   4.6.3 Journal Component
- *   
- *      Component Name: VJOURNAL
- *   
- *      Purpose: Provide a grouping of component properties that describe a
- *      journal entry.
- *   
- *      Formal Definition: A "VJOURNAL" calendar component is defined by the
- *      following notation:
- *   
- *        journalc   = "BEGIN" ":" "VJOURNAL" CRLF
- *                     jourprop
- *                     "END" ":" "VJOURNAL" CRLF
- *   
- *        jourprop   = *(
- *   
- *                   ; the following are optional,
- *                   ; but MUST NOT occur more than once
- *   
- *                   class / created / description / dtstart / dtstamp /
- *                   last-mod / organizer / recurid / seq / status /
- *                   summary / uid / url /
- *   
- *                   ; the following are optional,
- *                   ; and MAY occur more than once
- *   
- *                   attach / attendee / categories / comment /
- *                   contact / exdate / exrule / related / rdate /
- *                   rrule / rstatus / x-prop
- *   
- *                   )
+ *    4.6.3 Journal Component
+ *
+ *       Component Name: VJOURNAL
+ *
+ *       Purpose: Provide a grouping of component properties that describe a
+ *       journal entry.
+ *
+ *       Formal Definition: A &quot;VJOURNAL&quot; calendar component is defined by the
+ *       following notation:
+ *
+ *         journalc   = &quot;BEGIN&quot; &quot;:&quot; &quot;VJOURNAL&quot; CRLF
+ *                      jourprop
+ *                      &quot;END&quot; &quot;:&quot; &quot;VJOURNAL&quot; CRLF
+ *
+ *         jourprop   = *(
+ *
+ *                    ; the following are optional,
+ *                    ; but MUST NOT occur more than once
+ *
+ *                    class / created / description / dtstart / dtstamp /
+ *                    last-mod / organizer / recurid / seq / status /
+ *                    summary / uid / url /
+ *
+ *                    ; the following are optional,
+ *                    ; and MAY occur more than once
+ *
+ *                    attach / attendee / categories / comment /
+ *                    contact / exdate / exrule / related / rdate /
+ *                    rrule / rstatus / x-prop
+ *
+ *                    )
  * </pre>
- * 
+ *
  * Example 1 - Creating a journal associated with an event:
- * 
+ *
  * <pre><code>
- * DtStart meetingDate = (DtStart) meeting.getProperties().getProperty(Property.DTSTART);
- * 
- * VJournal minutes = new VJournal(meetingDate.getTime(), "Progress Meeting - Minutes");
- * 
+ * DtStart meetingDate = (DtStart) meeting.getProperties().getProperty(
+ *         Property.DTSTART);
+ *
+ * VJournal minutes = new VJournal(meetingDate.getTime(),
+ *         &quot;Progress Meeting - Minutes&quot;);
+ *
  * // add timezone information..
  * TzId tzParam = meetingDate.getParameters().getParmaeter(Parameter.TZID);
- * minutes.getProperties().getProperty(Property.DTSTART).getParameters().add(tzParam);
- * 
+ * minutes.getProperties().getProperty(Property.DTSTART).getParameters().add(
+ *         tzParam);
+ *
  * // add description..
- * minutes.getProperties().add(new Description("1. Agenda.., 2. Action Items.."));
+ * minutes.getProperties().add(new Description(&quot;1. Agenda.., 2. Action Items..&quot;));
  * </code></pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class VJournal extends CalendarComponent {
-    
+
     private static final long serialVersionUID = -7635140949183238830L;
 
     /**
@@ -121,17 +124,14 @@ public class VJournal extends CalendarComponent {
 
     /**
      * Constructor.
-     *
-     * @param properties
-     *            a list of properties
+     * @param properties a list of properties
      */
     public VJournal(final PropertyList properties) {
         super(VJOURNAL, properties);
     }
-    
+
     /**
-     * Constructs a new VJOURNAL instance associated with the specified
-     * time with the specified summary.
+     * Constructs a new VJOURNAL instance associated with the specified time with the specified summary.
      * @param start the date the journal entry is associated with
      * @param summary the journal summary
      */
@@ -141,14 +141,16 @@ public class VJournal extends CalendarComponent {
         getProperties().add(new Summary(summary));
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
-    public final void validate(final boolean recurse) throws ValidationException {
+    public final void validate(final boolean recurse)
+            throws ValidationException {
 
-        if (!CompatibilityHints.isHintEnabled(
-                CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            
+        if (!CompatibilityHints
+                .isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+
             // From "4.8.4.7 Unique Identifier":
             // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
             // "VJOURNAL" or "VFREEBUSY" calendar components.
@@ -163,10 +165,8 @@ public class VJournal extends CalendarComponent {
         }
 
         /*
-         *  ; the following are optional, ; but MUST NOT occur more than once
-         *
-         * class / created / description / dtstart / dtstamp / last-mod /
-         * organizer / recurid / seq / status / summary / uid / url /
+         * ; the following are optional, ; but MUST NOT occur more than once class / created / description / dtstart /
+         * dtstamp / last-mod / organizer / recurid / seq / status / summary / uid / url /
          */
         PropertyValidator.getInstance().assertOneOrLess(Property.CLASS,
                 getProperties());
@@ -199,36 +199,34 @@ public class VJournal extends CalendarComponent {
         if (status != null && !Status.VJOURNAL_DRAFT.equals(status)
                 && !Status.VJOURNAL_FINAL.equals(status)
                 && !Status.VJOURNAL_CANCELLED.equals(status)) {
-                throw new ValidationException(
-                        "Status property [" + status.toString() + "] may not occur in VJOURNAL");
+            throw new ValidationException("Status property ["
+                    + status.toString() + "] may not occur in VJOURNAL");
         }
 
         /*
-         * ; the following are optional, ; and MAY occur more than once
-         *
-         * attach / attendee / categories / comment / contact / exdate / exrule /
-         * related / rdate / rrule / rstatus / x-prop
+         * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
+         * contact / exdate / exrule / related / rdate / rrule / rstatus / x-prop
          */
 
         if (recurse) {
             validateProperties();
         }
     }
-    
+
     /**
      * @return the optional access classification property for a journal entry
      */
     public final Clazz getClassification() {
         return (Clazz) getProperty(Property.CLASS);
     }
-    
+
     /**
      * @return the optional creation-time property for a journal entry
      */
     public final Created getCreated() {
         return (Created) getProperty(Property.CREATED);
     }
-    
+
     /**
      * @return the optional description property for a journal entry
      */
@@ -243,63 +241,63 @@ public class VJournal extends CalendarComponent {
     public final DtStart getStartDate() {
         return (DtStart) getProperty(Property.DTSTART);
     }
-    
+
     /**
      * @return the optional last-modified property for a journal entry
      */
     public final LastModified getLastModified() {
         return (LastModified) getProperty(Property.LAST_MODIFIED);
     }
-    
+
     /**
      * @return the optional organizer property for a journal entry
      */
     public final Organizer getOrganizer() {
         return (Organizer) getProperty(Property.ORGANIZER);
     }
-    
+
     /**
      * @return the optional date-stamp property
      */
     public final DtStamp getDateStamp() {
         return (DtStamp) getProperty(Property.DTSTAMP);
     }
-    
+
     /**
      * @return the optional sequence number property for a journal entry
      */
     public final Sequence getSequence() {
         return (Sequence) getProperty(Property.SEQUENCE);
     }
-    
+
     /**
      * @return the optional status property for a journal entry
      */
     public final Status getStatus() {
         return (Status) getProperty(Property.STATUS);
     }
-    
+
     /**
      * @return the optional summary property for a journal entry
      */
     public final Summary getSummary() {
         return (Summary) getProperty(Property.SUMMARY);
     }
-    
+
     /**
      * @return the optional URL property for a journal entry
      */
     public final Url getUrl() {
         return (Url) getProperty(Property.URL);
     }
-    
+
     /**
      * @return the optional recurrence identifier property for a journal entry
      */
     public final RecurrenceId getRecurrenceId() {
         return (RecurrenceId) getProperty(Property.RECURRENCE_ID);
     }
-    
+
     /**
      * Returns the UID property of this component if available.
      * @return a Uid instance, or null if no UID property exists

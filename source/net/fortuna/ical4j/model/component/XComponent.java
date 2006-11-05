@@ -24,7 +24,8 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER
+ * OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -40,13 +41,12 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Implementation of an experimental component as defined in RFC2445.
- * 
  * @author Ben Fortuna
  */
 public class XComponent extends CalendarComponent {
 
     private static final long serialVersionUID = -3622674849097714927L;
-    
+
     /**
      * Creates a new experimental component with the specified name.
      * @param name the name of the experimental component
@@ -56,8 +56,7 @@ public class XComponent extends CalendarComponent {
     }
 
     /**
-     * Creates a new experimental component with the specified name and
-     * properties.
+     * Creates a new experimental component with the specified name and properties.
      * @param name the name of the experimental component
      * @param properties a list of properties
      */
@@ -65,16 +64,19 @@ public class XComponent extends CalendarComponent {
         super(name, properties);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
-    public final void validate(final boolean recurse) throws ValidationException {
+    public final void validate(final boolean recurse)
+            throws ValidationException {
         if (!getName().startsWith(EXPERIMENTAL_PREFIX)) {
-            throw new ValidationException("Experimental components must have the following prefix: " + EXPERIMENTAL_PREFIX);
+            throw new ValidationException(
+                    "Experimental components must have the following prefix: "
+                            + EXPERIMENTAL_PREFIX);
         }
         if (recurse) {
             validateProperties();
         }
     }
-
 }
