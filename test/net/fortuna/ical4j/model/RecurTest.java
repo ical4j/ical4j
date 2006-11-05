@@ -36,7 +36,6 @@
 package net.fortuna.ical4j.model;
 
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
@@ -245,13 +244,13 @@ public class RecurTest extends TestCase {
         DateList expectedList = asDateList(expected);
         assertEquals(expectedList, recur.applySetPosRules(asDateList(dates)));
     }
-    */
 
     private DateList asDateList(Date[] dates) {
         DateList dateList = new DateList(Value.DATE);
         dateList.addAll(Arrays.asList(dates));
         return dateList;
     }
+    */
     
     /**
      * This test creates a rule outside of the specified boundaries to
@@ -456,6 +455,7 @@ public class RecurTest extends TestCase {
         cal.add(Calendar.YEAR, 1);
         
         DateList recurrences = recur.getDates(start, new Date(cal.getTime()), Value.DATE);
+        assertTrue(!recurrences.isEmpty());
     }
     
     /**
@@ -524,5 +524,29 @@ public class RecurTest extends TestCase {
         } catch (IllegalArgumentException e) {
             // expected
         }       
-    }      
+    }
+    
+    /**
+     * Unit test for recurrence every 4th february.
+     */
+    public void testRecur4Feb() throws ParseException {
+        String rrule = "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=4;BYDAY=MO,TU,WE,TH,FR,SA,SU";
+        Recur recur = new Recur(rrule);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.clear(Calendar.SECOND);
+        cal.set(2006, 3, 10);
+        java.util.Date start = cal.getTime();
+        cal.set(2008, 1, 6);
+        java.util.Date end = cal.getTime();
+        
+        DateList recurrences = recur.getDates(new Date(start), new Date(end), Value.DATE);
+        assertEquals(2, recurrences.size());
+        for (Iterator i = recurrences.iterator(); i.hasNext();) {
+            Date recurrence = (Date) i.next();
+            cal.setTime(recurrence);
+            assertEquals(4, cal.get(Calendar.DAY_OF_MONTH));
+            assertEquals(1, cal.get(Calendar.MONTH));
+        }
+    }
 }
