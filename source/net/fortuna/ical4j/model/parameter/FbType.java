@@ -38,36 +38,33 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Free/Busy Time Type parameter.
- * 
  * @author benfortuna
  */
 public class FbType extends Parameter {
-    
+
     private static final long serialVersionUID = -2217689716824679375L;
 
     private static final String VALUE_FREE = "FREE";
-    
+
     private static final String VALUE_BUSY = "BUSY";
-    
+
     private static final String VALUE_BUSY_UNAVAILABLE = "BUSY-UNAVAILABLE";
-    
+
     private static final String VALUE_BUSY_TENTATIVE = "BUSY-TENTATIVE";
 
     public static final FbType FREE = new FbType(VALUE_FREE);
-    
+
     public static final FbType BUSY = new FbType(VALUE_BUSY);
-    
+
     public static final FbType BUSY_UNAVAILABLE = new FbType(
             VALUE_BUSY_UNAVAILABLE);
-    
-    public static final FbType BUSY_TENTATIVE = new FbType(
-            VALUE_BUSY_TENTATIVE);
+
+    public static final FbType BUSY_TENTATIVE = new FbType(VALUE_BUSY_TENTATIVE);
 
     private String value;
 
     /**
-     * @param aValue
-     *            a string representation of a format type
+     * @param aValue a string representation of a format type
      */
     public FbType(final String aValue) {
         super(FBTYPE);
@@ -77,7 +74,6 @@ public class FbType extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

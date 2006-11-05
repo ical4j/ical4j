@@ -37,34 +37,31 @@ import net.fortuna.ical4j.model.Parameter;
 
 /**
  * Defines an RSVP parameter.
- * 
  * @author benfortuna
  */
 public class Rsvp extends Parameter {
-    
+
     private static final long serialVersionUID = -5381653882942018012L;
 
     private static final String VALUE_TRUE = "TRUE";
-    
+
     private static final String VALUE_FALSE = "FALSE";
 
     public static final Rsvp TRUE = new Rsvp(VALUE_TRUE);
-    
+
     public static final Rsvp FALSE = new Rsvp(VALUE_FALSE);
 
     private Boolean rsvp;
 
     /**
-     * @param aValue
-     *            a string representation of an RSVP
+     * @param aValue a string representation of an RSVP
      */
     public Rsvp(final String aValue) {
         this(Boolean.valueOf(aValue));
     }
 
     /**
-     * @param aValue
-     *            a boolean value
+     * @param aValue a boolean value
      */
     public Rsvp(final Boolean aValue) {
         super(RSVP);
@@ -80,7 +77,6 @@ public class Rsvp extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

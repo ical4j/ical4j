@@ -44,12 +44,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A reader which performs iCalendar unfolding as it reads.
- * Note that unfolding rules may be "relaxed" to allow unfolding of
- * non-conformant *.ics files. By specifying the system property
- * "ical4j.unfolding.relaxed=true" iCalendar files created with
- * Mozilla Calendar/Sunbird may be correctly unfolded.
- *
+ * A reader which performs iCalendar unfolding as it reads. Note that unfolding rules may be "relaxed" to allow
+ * unfolding of non-conformant *.ics files. By specifying the system property "ical4j.unfolding.relaxed=true" iCalendar
+ * files created with Mozilla Calendar/Sunbird may be correctly unfolded.
  * @author Ben Fortuna
  */
 public class UnfoldingReader extends PushbackReader {
@@ -59,29 +56,28 @@ public class UnfoldingReader extends PushbackReader {
     /**
      * The pattern used to identify a fold in an iCalendar data stream.
      */
-    private static final char[] DEFAULT_FOLD_PATTERN = {'\r', '\n', ' '};
-    
+    private static final char[] DEFAULT_FOLD_PATTERN = { '\r', '\n', ' ' };
+
     /**
-     * The pattern used to identify a fold in Mozilla Calendar/Sunbird
-     * and KOrganizer.
+     * The pattern used to identify a fold in Mozilla Calendar/Sunbird and KOrganizer.
      */
-    private static final char[] RELAXED_FOLD_PATTERN = {'\n', ' '};
+    private static final char[] RELAXED_FOLD_PATTERN = { '\n', ' ' };
 
     private char[][] patterns;
-    
+
     private char[][] buffers;
-    
+
     private int linesUnfolded;
 
     /**
-     * Creates a new unfolding reader instance. Relaxed unfolding flag is
-     * read from system property.
+     * Creates a new unfolding reader instance. Relaxed unfolding flag is read from system property.
      * @param in the reader to unfold from
      */
     public UnfoldingReader(final Reader in) {
-        this(in, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING));
+        this(in, CompatibilityHints
+                .isHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING));
     }
-    
+
     /**
      * Creates a new unfolding reader instance.
      * @param in a reader to read from
@@ -139,7 +135,8 @@ public class UnfoldingReader extends PushbackReader {
                     return read;
                 }
             }
-        } while (didUnfold);
+        }
+        while (didUnfold);
 
         return super.read();
     }

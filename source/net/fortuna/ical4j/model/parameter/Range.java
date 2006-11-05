@@ -38,11 +38,10 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Recurrence Identifier Range parameter.
- * 
  * @author benfortuna
  */
 public class Range extends Parameter {
-    
+
     private static final long serialVersionUID = -3057531444558393776L;
 
     private static final String VALUE_THISANDPRIOR = "THISANDPRIOR";
@@ -56,8 +55,7 @@ public class Range extends Parameter {
     private String value;
 
     /**
-     * @param aValue
-     *            a string representation of a recurrence identifier range
+     * @param aValue a string representation of a recurrence identifier range
      */
     public Range(final String aValue) {
         super(RANGE);
@@ -72,7 +70,6 @@ public class Range extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

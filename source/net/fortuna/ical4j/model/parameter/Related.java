@@ -38,11 +38,10 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an Alarm Trigger Relationship parameter.
- * 
  * @author benfortuna
  */
 public class Related extends Parameter {
-    
+
     private static final long serialVersionUID = 1570525804115869565L;
 
     private static final String VALUE_START = "START";
@@ -56,23 +55,20 @@ public class Related extends Parameter {
     private String value;
 
     /**
-     * @param aValue
-     *            a string representation of an alarm trigger relationship
+     * @param aValue a string representation of an alarm trigger relationship
      */
     public Related(final String aValue) {
         super(RELATED);
         this.value = Strings.unquote(aValue);
 
         // value must be one of finite list..
-        if (!VALUE_START.equals(value)
-                && !VALUE_END.equals(value)) {
+        if (!VALUE_START.equals(value) && !VALUE_END.equals(value)) {
             throw new IllegalArgumentException("Invalid value [" + value + "]");
         }
     }
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

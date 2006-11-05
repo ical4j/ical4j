@@ -38,30 +38,28 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Relationship Type parameter.
- * 
  * @author benfortuna
  */
 public class RelType extends Parameter {
-    
+
     private static final long serialVersionUID = 5346030888832899016L;
 
     private static final String VALUE_PARENT = "PARENT";
-    
+
     private static final String VALUE_CHILD = "CHILD";
-    
+
     private static final String VALUE_SIBLING = "SIBLING";
 
     public static final RelType PARENT = new RelType(VALUE_PARENT);
-    
+
     public static final RelType CHILD = new RelType(VALUE_CHILD);
-    
+
     public static final RelType SIBLING = new RelType(VALUE_SIBLING);
 
     private String value;
 
     /**
-     * @param aValue
-     *            a string representation of a relationship type
+     * @param aValue a string representation of a relationship type
      */
     public RelType(final String aValue) {
         super(RELTYPE);
@@ -70,7 +68,6 @@ public class RelType extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

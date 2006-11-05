@@ -38,38 +38,36 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Calendar User Type.
- * 
  * @author benfortuna
  */
 public class CuType extends Parameter {
-    
+
     private static final long serialVersionUID = -3134064324693983052L;
 
     private static final String VALUE_INDIVIDUAL = "INDIVIDUAL";
-    
+
     private static final String VALUE_GROUP = "GROUP";
-    
+
     private static final String VALUE_RESOURCE = "RESOURCE";
-    
+
     private static final String VALUE_ROOM = "ROOM";
-    
+
     private static final String VALUE_UNKNOWN = "UNKNOWN";
 
     public static final CuType INDIVIDUAL = new CuType(VALUE_INDIVIDUAL);
-    
+
     public static final CuType GROUP = new CuType(VALUE_GROUP);
-    
+
     public static final CuType RESOURCE = new CuType(VALUE_RESOURCE);
-    
+
     public static final CuType ROOM = new CuType(VALUE_ROOM);
-    
+
     public static final CuType UNKNOWN = new CuType(VALUE_UNKNOWN);
 
     private String value;
 
     /**
-     * @param aValue
-     *            a string representation of a Calendar User Type
+     * @param aValue a string representation of a Calendar User Type
      */
     public CuType(final String aValue) {
         super(CUTYPE);
@@ -78,7 +76,6 @@ public class CuType extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

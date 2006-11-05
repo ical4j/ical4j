@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -35,11 +35,10 @@ package net.fortuna.ical4j.data;
 
 /**
  * An exception thrown when an error ocurrs in parsing iCalendar data.
- *
  * @author Ben Fortuna
  */
 public class ParserException extends Exception {
-    
+
     private static final long serialVersionUID = 6116644246112002214L;
 
     /**
@@ -62,8 +61,7 @@ public class ParserException extends Exception {
     /**
      * Constructor with message and cause.
      * @param message a descriptive message for the exception
-     * @param cause a throwable that is the cause of this
-     * exception
+     * @param cause a throwable that is the cause of this exception
      */
     public ParserException(final String message, final Throwable cause) {
 

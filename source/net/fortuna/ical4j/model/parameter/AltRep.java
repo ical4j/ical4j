@@ -42,28 +42,24 @@ import net.fortuna.ical4j.util.Uris;
 
 /**
  * Defines an Alternate Text Representation parameter.
- * 
  * @author benfortuna
  */
 public class AltRep extends Parameter {
-    
+
     private static final long serialVersionUID = -2445932592596993470L;
 
     private URI uri;
 
     /**
-     * @param aValue
-     *            a string representation of an alternate text represenation
-     * @throws URISyntaxException
-     *             when the specified string is not a value (quoted) uri
+     * @param aValue a string representation of an alternate text represenation
+     * @throws URISyntaxException when the specified string is not a value (quoted) uri
      */
     public AltRep(final String aValue) throws URISyntaxException {
         this(new URI(Uris.encode(Strings.unquote(aValue))));
     }
 
     /**
-     * @param aUri
-     *            a URI representing an alternate text representation
+     * @param aUri a URI representing an alternate text representation
      */
     public AltRep(final URI aUri) {
         super(ALTREP);
@@ -80,7 +76,6 @@ public class AltRep extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

@@ -41,7 +41,6 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Delegators parameter.
- *
  * @author benfortuna
  */
 public class DelegatedFrom extends Parameter {
@@ -51,19 +50,15 @@ public class DelegatedFrom extends Parameter {
     private AddressList delegators;
 
     /**
-     * @param aValue
-     *            a string representation of Delegators
-     * @throws URISyntaxException
-     *             when the specified string is not a valid list of
-     *             cal-addresses
+     * @param aValue a string representation of Delegators
+     * @throws URISyntaxException when the specified string is not a valid list of cal-addresses
      */
     public DelegatedFrom(final String aValue) throws URISyntaxException {
         this(new AddressList(Strings.unquote(aValue)));
     }
 
     /**
-     * @param aList
-     *            a list of addresses
+     * @param aList a list of addresses
      */
     public DelegatedFrom(final AddressList aList) {
         super(DELEGATED_FROM);
@@ -80,7 +75,6 @@ public class DelegatedFrom extends Parameter {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -44,15 +44,14 @@ import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * Writes an iCalendar model to an output stream.
- *
  * @author Ben Fortuna
  */
 public class CalendarOutputter {
-    
+
     private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
     private boolean validating;
-    
+
     private int foldLength;
 
     /**
@@ -63,18 +62,15 @@ public class CalendarOutputter {
     }
 
     /**
-     * @param validating indicates whether to validate
-     * calendar when outputting to stream
+     * @param validating indicates whether to validate calendar when outputting to stream
      */
     public CalendarOutputter(final boolean validating) {
         this(validating, FoldingWriter.REDUCED_FOLD_LENGTH);
     }
 
     /**
-     * @param validating indicates whether to validate
-     * calendar when outputting to stream
-     * @param foldLength maximum number of characters before a line
-     * is folded
+     * @param validating indicates whether to validate calendar when outputting to stream
+     * @param foldLength maximum number of characters before a line is folded
      */
     public CalendarOutputter(final boolean validating, final int foldLength) {
         this.validating = validating;
@@ -83,13 +79,9 @@ public class CalendarOutputter {
 
     /**
      * Outputs an iCalender string to the specified output stream.
-     *
-     * @param calendar
-     *            calendar to write to ouput stream
-     * @param out
-     *            an output stream
-     * @throws IOException
-     *             thrown when unable to write to output stream
+     * @param calendar calendar to write to ouput stream
+     * @param out an output stream
+     * @throws IOException thrown when unable to write to output stream
      */
     public final void output(final Calendar calendar, final OutputStream out)
             throws IOException, ValidationException {
@@ -99,13 +91,9 @@ public class CalendarOutputter {
 
     /**
      * Outputs an iCalender string to the specified writer.
-     *
-     * @param calendar
-     *            calendar to write to writer
-     * @param out
-     *            a writer
-     * @throws IOException
-     *             thrown when unable to write to writer
+     * @param calendar calendar to write to writer
+     * @param out a writer
+     * @throws IOException thrown when unable to write to writer
      */
     public final void output(final Calendar calendar, final Writer out)
             throws IOException, ValidationException {

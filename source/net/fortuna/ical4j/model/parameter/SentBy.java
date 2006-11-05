@@ -42,28 +42,24 @@ import net.fortuna.ical4j.util.Uris;
 
 /**
  * Defines a Sent By parameter.
- * 
  * @author benfortuna
  */
 public class SentBy extends Parameter {
-    
+
     private static final long serialVersionUID = -1169413145174029391L;
 
     private URI address;
 
     /**
-     * @param aValue
-     *            a string representation of a sent by
-     * @throws URISyntaxException
-     *             when the specified string is not a valid (quoted) uri
+     * @param aValue a string representation of a sent by
+     * @throws URISyntaxException when the specified string is not a valid (quoted) uri
      */
     public SentBy(final String aValue) throws URISyntaxException {
         this(new URI(Uris.encode(Strings.unquote(aValue))));
     }
 
     /**
-     * @param aUri
-     *            a URI representing a sent by
+     * @param aUri a URI representing a sent by
      */
     public SentBy(final URI aUri) {
         super(SENT_BY);
@@ -79,7 +75,6 @@ public class SentBy extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

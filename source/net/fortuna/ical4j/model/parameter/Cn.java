@@ -38,18 +38,16 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Common Name parameter.
- * 
  * @author benfortuna
  */
 public class Cn extends Parameter {
-    
+
     private static final long serialVersionUID = -8087119055007093293L;
 
     private String value;
 
     /**
-     * @param aValue
-     *            a string representation of a Common Name
+     * @param aValue a string representation of a Common Name
      */
     public Cn(final String aValue) {
         super(CN);
@@ -59,7 +57,6 @@ public class Cn extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

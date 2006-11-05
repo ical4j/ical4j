@@ -39,11 +39,10 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Time Zone Identifier parameter.
- * 
  * @author benfortuna
  */
 public class TzId extends Parameter implements Escapable {
-    
+
     private static final long serialVersionUID = 2366516258055857879L;
 
     public static final String PREFIX = "/";
@@ -62,7 +61,6 @@ public class TzId extends Parameter implements Escapable {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

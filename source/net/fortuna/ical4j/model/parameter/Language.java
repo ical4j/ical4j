@@ -38,7 +38,6 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Language parameter.
- *
  * @author benfortuna
  */
 public class Language extends Parameter {
@@ -48,8 +47,7 @@ public class Language extends Parameter {
     private String value;
 
     /**
-     * @param aValue
-     *            a string representation of a Language
+     * @param aValue a string representation of a Language
      */
     public Language(final String aValue) {
         super(LANGUAGE);
@@ -59,7 +57,6 @@ public class Language extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

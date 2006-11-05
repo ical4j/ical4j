@@ -41,29 +41,24 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Group or List Membership parameter.
- * 
  * @author benfortuna
  */
 public class Member extends Parameter {
-    
+
     private static final long serialVersionUID = 287348849443687499L;
 
     private AddressList groups;
 
     /**
-     * @param aValue
-     *            a string representation of a group or list membership
-     * @throws URISyntaxException
-     *             when the specified string is not a valid list of (quoted)
-     *             cal-addresses
+     * @param aValue a string representation of a group or list membership
+     * @throws URISyntaxException when the specified string is not a valid list of (quoted) cal-addresses
      */
     public Member(final String aValue) throws URISyntaxException {
         this(new AddressList(Strings.unquote(aValue)));
     }
 
     /**
-     * @param aList
-     *            a list of groups
+     * @param aList a list of groups
      */
     public Member(final AddressList aList) {
         super(MEMBER);
@@ -80,7 +75,6 @@ public class Member extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

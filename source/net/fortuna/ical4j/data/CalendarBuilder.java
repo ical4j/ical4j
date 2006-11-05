@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  * Created: Apr 5, 2004
  *
  * Copyright (c) 2004, Ben Fortuna
@@ -65,69 +65,66 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Parses and builds an iCalendar model from an input stream.
- * Note that this class is not thread-safe.
- *
+ * Parses and builds an iCalendar model from an input stream. Note that this class is not thread-safe.
  * @version 2.0
  * @author Ben Fortuna
  */
 public class CalendarBuilder implements ContentHandler {
-    
+
     private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
-    
+
     private Log log = LogFactory.getLog(CalendarBuilder.class);
 
     private CalendarParser parser;
-    
+
     private TimeZoneRegistry registry;
-    
+
     protected Calendar calendar;
-    
+
     protected Component component;
-    
+
     protected Component subComponent;
-    
+
     protected Property property;
-    
+
     /**
      * Default constructor.
      */
     public CalendarBuilder() {
-        this(new CalendarParserImpl(), TimeZoneRegistryFactory.getInstance().createRegistry());
+        this(new CalendarParserImpl(), TimeZoneRegistryFactory.getInstance()
+                .createRegistry());
     }
-    
+
     /**
-     * Constructs a new calendar builder using the specified
-     * calendar parser.
+     * Constructs a new calendar builder using the specified calendar parser.
      * @param parser a calendar parser used to parse calendar files
      */
     public CalendarBuilder(final CalendarParser parser) {
         this(parser, TimeZoneRegistryFactory.getInstance().createRegistry());
     }
-    
+
     /**
-     * Constructs a new calendar builder using the specified
-     * timezone registry.
+     * Constructs a new calendar builder using the specified timezone registry.
      * @param parser a calendar parser used to parse calendar files
      */
     public CalendarBuilder(final TimeZoneRegistry registry) {
         this(new CalendarParserImpl(), registry);
     }
-    
+
     /**
      * Constructs a new instance using the specified parser and registry.
      * @param parser a calendar parser used to construct the calendar
-     * @param registry a timezone registry used to retrieve timezones and
-     * register additional timezone information found in the calendar
+     * @param registry a timezone registry used to retrieve timezones and register additional timezone information found
+     * in the calendar
      */
-    public CalendarBuilder(final CalendarParser parser, final TimeZoneRegistry registry) {
+    public CalendarBuilder(final CalendarParser parser,
+            final TimeZoneRegistry registry) {
         this.parser = parser;
         this.registry = registry;
     }
 
     /**
      * Builds an iCalendar model from the specified input stream.
-     *
      * @param in
      * @return a calendar
      * @throws IOException
@@ -139,11 +136,8 @@ public class CalendarBuilder implements ContentHandler {
     }
 
     /**
-     * Builds an iCalendar model from the specified reader.
-     * An <code>UnfoldingReader</code> is applied to the specified
-     * reader to ensure the data stream is correctly unfolded where
-     * appropriate.
-     *
+     * Builds an iCalendar model from the specified reader. An <code>UnfoldingReader</code> is applied to the
+     * specified reader to ensure the data stream is correctly unfolded where appropriate.
      * @param in
      * @return a calendar
      * @throws IOException
@@ -152,7 +146,7 @@ public class CalendarBuilder implements ContentHandler {
     public Calendar build(final Reader in) throws IOException, ParserException {
         return build(new UnfoldingReader(in));
     }
-    
+
     /**
      * Build an iCalendar model by parsing data from the specified reader.
      * @param uin an unfolding reader to read data from
@@ -160,26 +154,29 @@ public class CalendarBuilder implements ContentHandler {
      * @throws IOException
      * @throws ParserException
      */
-    public Calendar build(final UnfoldingReader uin) throws IOException, ParserException {
+    public Calendar build(final UnfoldingReader uin) throws IOException,
+            ParserException {
         // re-initialise..
         calendar = null;
         component = null;
         subComponent = null;
         property = null;
-        
+
         parser.parse(uin, this);
-        
+
         return calendar;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#endCalendar()
      */
     public void endCalendar() {
         // do nothing..
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#endComponent(java.lang.String)
      */
     public void endComponent(final String name) {
@@ -206,8 +203,9 @@ public class CalendarBuilder implements ContentHandler {
             }
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#endProperty(java.lang.String)
      */
     public void endProperty(final String name) {
@@ -225,18 +223,21 @@ public class CalendarBuilder implements ContentHandler {
             else if (calendar != null) {
                 calendar.getProperties().add(property);
             }
-            
+
             property = null;
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#parameter(java.lang.String, java.lang.String)
      */
-    public void parameter(final String name, final String value) throws URISyntaxException {
+    public void parameter(final String name, final String value)
+            throws URISyntaxException {
         if (property != null) {
             // parameter names are case-insensitive, but convert to upper case to simplify further processing
-            Parameter param = ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value);
+            Parameter param = ParameterFactoryImpl.getInstance()
+                    .createParameter(name.toUpperCase(), value);
             property.getParameters().add(param);
             if (param instanceof TzId && registry != null) {
                 TimeZone timezone = registry.getTimeZone(param.getValue());
@@ -249,31 +250,37 @@ public class CalendarBuilder implements ContentHandler {
                             ((DateListProperty) property).setTimeZone(timezone);
                         }
                         catch (Exception e2) {
-                            log.warn("Error setting timezone [" + param + "] on property [" + property.getName() + "]", e);
+                            log.warn("Error setting timezone [" + param
+                                    + "] on property [" + property.getName()
+                                    + "]", e);
                         }
                     }
                 }
             }
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#propertyValue(java.lang.String)
      */
-    public void propertyValue(final String value) throws URISyntaxException, ParseException, IOException {
+    public void propertyValue(final String value) throws URISyntaxException,
+            ParseException, IOException {
         if (property != null) {
             property.setValue(value);
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#startCalendar()
      */
     public void startCalendar() {
         calendar = new Calendar();
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#startComponent(java.lang.String)
      */
     public void startComponent(final String name) {
@@ -284,13 +291,15 @@ public class CalendarBuilder implements ContentHandler {
             component = ComponentFactory.getInstance().createComponent(name);
         }
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#startProperty(java.lang.String)
      */
     public void startProperty(final String name) {
         // property names are case-insensitive, but convert to upper case to simplify further processing
-        property = PropertyFactoryImpl.getInstance().createProperty(name.toUpperCase());
+        property = PropertyFactoryImpl.getInstance().createProperty(
+                name.toUpperCase());
     }
 
     /**

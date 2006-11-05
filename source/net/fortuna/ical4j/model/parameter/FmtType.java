@@ -38,7 +38,6 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a Format Type parameter.
- *
  * @author benfortuna
  */
 public class FmtType extends Parameter {
@@ -48,8 +47,7 @@ public class FmtType extends Parameter {
     private String value;
 
     /**
-     * @param aValue
-     *            a string representation of a format type
+     * @param aValue a string representation of a format type
      */
     public FmtType(final String aValue) {
         super(FMTTYPE);
@@ -58,7 +56,6 @@ public class FmtType extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

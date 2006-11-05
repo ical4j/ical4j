@@ -42,28 +42,24 @@ import net.fortuna.ical4j.util.Uris;
 
 /**
  * Defines a Directory Entry Reference parameter.
- * 
  * @author benfortuna
  */
 public class Dir extends Parameter {
-    
+
     private static final long serialVersionUID = -8581904779721020689L;
 
     private URI uri;
 
     /**
-     * @param aValue
-     *            a string representation of a directory entry reference
-     * @throws URISyntaxException
-     *             when the specified string is not a valid (quoted) uri
+     * @param aValue a string representation of a directory entry reference
+     * @throws URISyntaxException when the specified string is not a valid (quoted) uri
      */
     public Dir(final String aValue) throws URISyntaxException {
         this(new URI(Uris.encode(Strings.unquote(aValue))));
     }
 
     /**
-     * @param aUri
-     *            a URI representing a directory entry reference
+     * @param aUri a URI representing a directory entry reference
      */
     public Dir(final URI aUri) {
         super(DIR);
@@ -79,7 +75,6 @@ public class Dir extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

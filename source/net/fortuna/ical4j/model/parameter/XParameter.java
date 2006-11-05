@@ -38,7 +38,6 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an extension parameter.
- *
  * @author benfortuna
  */
 public class XParameter extends Parameter {
@@ -48,10 +47,8 @@ public class XParameter extends Parameter {
     private String value;
 
     /**
-     * @param aName
-     *            parameter name
-     * @param aValue
-     *            parameter value
+     * @param aName parameter name
+     * @param aValue parameter value
      */
     public XParameter(final String aName, final String aValue) {
         super(aName);
@@ -61,7 +58,6 @@ public class XParameter extends Parameter {
 
     /*
      * (non-Javadoc)
-     *
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

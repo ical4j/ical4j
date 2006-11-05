@@ -37,51 +37,52 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.util.Strings;
 
 /**
- * Defines an Inline Encoding parameter. Constants are provided for all encodings
- * specified in <a href="http://www.ietf.org/rfc/rfc2045.txt">RFC2045</a>.
- * 
+ * Defines an Inline Encoding parameter. Constants are provided for all encodings specified in <a
+ * href="http://www.ietf.org/rfc/rfc2045.txt">RFC2045</a>.
+ *
  * <pre>
- * 4.2.7 Inline Encoding
- * 
- *    Parameter Name: ENCODING
- * 
- *    Purpose: To specify an alternate inline encoding for the property
- *    value.
- * 
- *    Format Definition: The property parameter is defined by the following
- *    notation:
- * 
- *      encodingparam      = "ENCODING" "="
- *                           ("8BIT"
- *         ; "8bit" text encoding is defined in [RFC 2045]
- *                         / "BASE64"
- *         ; "BASE64" binary encoding format is defined in [RFC 2045]
- *                         / iana-token
- *         ; Some other IANA registered iCalendar encoding type
- *                         / x-name)
- *         ; A non-standard, experimental encoding type
- * 
- *    Description: The property parameter identifies the inline encoding
- *    used in a property value. The default encoding is "8BIT",
- *    corresponding to a property value consisting of text. The "BASE64"
- *    encoding type corresponds to a property value encoded using the
- *    "BASE64" encoding defined in [RFC 2045].
- * 
- *    If the value type parameter is ";VALUE=BINARY", then the inline
- *    encoding parameter MUST be specified with the value
- *    ";ENCODING=BASE64".
- * 
- *    Example:
- * 
- *      ATTACH;FMTYPE=IMAGE/JPEG;ENCODING=BASE64;VALUE=BINARY:MIICajC
- *       CAdOgAwIBAgICBEUwDQYJKoZIhvcNAQEEBQAwdzELMAkGA1UEBhMCVVMxLDA
- *       qBgNVBAoTI05ldHNjYXBlIENvbW11bmljYXRpb25zIENvcnBvcmF0aW9uMRw
- *       <...remainder of "BASE64" encoded binary data...>
+ *  4.2.7 Inline Encoding
+ *
+ *     Parameter Name: ENCODING
+ *
+ *     Purpose: To specify an alternate inline encoding for the property
+ *     value.
+ *
+ *     Format Definition: The property parameter is defined by the following
+ *     notation:
+ *
+ *       encodingparam      = &quot;ENCODING&quot; &quot;=&quot;
+ *                            (&quot;8BIT&quot;
+ *          ; &quot;8bit&quot; text encoding is defined in [RFC 2045]
+ *                          / &quot;BASE64&quot;
+ *          ; &quot;BASE64&quot; binary encoding format is defined in [RFC 2045]
+ *                          / iana-token
+ *          ; Some other IANA registered iCalendar encoding type
+ *                          / x-name)
+ *          ; A non-standard, experimental encoding type
+ *
+ *     Description: The property parameter identifies the inline encoding
+ *     used in a property value. The default encoding is &quot;8BIT&quot;,
+ *     corresponding to a property value consisting of text. The &quot;BASE64&quot;
+ *     encoding type corresponds to a property value encoded using the
+ *     &quot;BASE64&quot; encoding defined in [RFC 2045].
+ *
+ *     If the value type parameter is &quot;;VALUE=BINARY&quot;, then the inline
+ *     encoding parameter MUST be specified with the value
+ *     &quot;;ENCODING=BASE64&quot;.
+ *
+ *     Example:
+ *
+ *       ATTACH;FMTYPE=IMAGE/JPEG;ENCODING=BASE64;VALUE=BINARY:MIICajC
+ *        CAdOgAwIBAgICBEUwDQYJKoZIhvcNAQEEBQAwdzELMAkGA1UEBhMCVVMxLDA
+ *        qBgNVBAoTI05ldHNjYXBlIENvbW11bmljYXRpb25zIENvcnBvcmF0aW9uMRw
+ *        &lt;...remainder of &quot;BASE64&quot; encoded binary data...&gt;
  * </pre>
+ *
  * @author Ben Fortuna
  */
 public class Encoding extends Parameter {
-    
+
     private static final long serialVersionUID = 7536336461076399077L;
 
     private static final String VALUE_SEVEN_BIT = "7BIT";
@@ -91,7 +92,7 @@ public class Encoding extends Parameter {
     private static final String VALUE_BINARY = "BINARY";
 
     private static final String VALUE_QUOTED_PRINTABLE = "QUOTED-PRINTABLE";
-    
+
     private static final String VALUE_BASE64 = "BASE64";
 
     public static final Encoding SEVEN_BIT = new Encoding(VALUE_SEVEN_BIT);
@@ -102,14 +103,13 @@ public class Encoding extends Parameter {
 
     public static final Encoding QUOTED_PRINTABLE = new Encoding(
             VALUE_QUOTED_PRINTABLE);
-    
+
     public static final Encoding BASE64 = new Encoding(VALUE_BASE64);
 
     private String value;
 
     /**
-     * @param aValue
-     *            a string representation of an Inline Encoding
+     * @param aValue a string representation of an Inline Encoding
      */
     public Encoding(final String aValue) {
         super(ENCODING);
@@ -118,7 +118,6 @@ public class Encoding extends Parameter {
 
     /*
      * (non-Javadoc)
-     * 
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
     public final String getValue() {

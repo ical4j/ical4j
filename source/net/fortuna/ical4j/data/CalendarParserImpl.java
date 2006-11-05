@@ -1,23 +1,23 @@
 /*
  * $Id$ [Nov
  * 5, 2004]
- * 
+ *
  * Copyright (c) 2004, Ben Fortuna All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * o Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- * 
+ *
  * o Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * o Neither the name of Ben Fortuna nor the names of any other contributors may
  * be used to endorse or promote products derived from this software without
  * specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -49,7 +49,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * The default implementation of a calendar parser.
- * 
  * @author Ben Fortuna
  */
 public class CalendarParserImpl implements CalendarParser {
@@ -64,7 +63,8 @@ public class CalendarParserImpl implements CalendarParser {
 
     private Log log = LogFactory.getLog(CalendarParserImpl.class);
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.data.CalendarParser#parse(java.io.InputStream, net.fortuna.ical4j.data.ContentHandler)
      */
     public final void parse(final InputStream in, final ContentHandler handler)
@@ -72,7 +72,8 @@ public class CalendarParserImpl implements CalendarParser {
         parse(new InputStreamReader(in), handler);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.data.CalendarParser#parse(java.io.Reader, net.fortuna.ical4j.data.ContentHandler)
      */
     public final void parse(final Reader in, final ContentHandler handler)
@@ -111,21 +112,23 @@ public class CalendarParserImpl implements CalendarParser {
             parseComponentList(tokeniser, handler);
 
             // END:VCALENDAR
-            //assertToken(tokeniser,Calendar.END);
+            // assertToken(tokeniser,Calendar.END);
 
             assertToken(tokeniser, ':');
 
             assertToken(tokeniser, Calendar.VCALENDAR, true);
 
             handler.endCalendar();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
 
             if (e instanceof IOException) {
                 throw (IOException) e;
             }
             if (e instanceof ParserException) {
                 throw (ParserException) e;
-            } else {
+            }
+            else {
                 String error = "An error ocurred during parsing";
 
                 if (tokeniser != null) {
@@ -146,7 +149,6 @@ public class CalendarParserImpl implements CalendarParser {
 
     /**
      * Parses an iCalendar property list from the specified stream tokeniser.
-     * 
      * @param tokeniser
      * @throws IOException
      * @throws ParseException
@@ -160,8 +162,9 @@ public class CalendarParserImpl implements CalendarParser {
 
         assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
-        while (/*!Component.BEGIN.equals(tokeniser.sval)
-                && */!Component.END.equals(tokeniser.sval)) {
+        while (/*
+                 * !Component.BEGIN.equals(tokeniser.sval) &&
+                 */!Component.END.equals(tokeniser.sval)) {
             // check for timezones observances or vevent/vtodo alarms..
             if (Component.BEGIN.equals(tokeniser.sval)) {
                 parseComponent(tokeniser, handler);
@@ -170,13 +173,12 @@ public class CalendarParserImpl implements CalendarParser {
                 parseProperty(tokeniser, handler);
             }
             absorbWhitespace(tokeniser);
-//            assertToken(tokeniser, StreamTokenizer.TT_WORD);
+            // assertToken(tokeniser, StreamTokenizer.TT_WORD);
         }
     }
 
     /**
      * Parses an iCalendar property from the specified stream tokeniser.
-     * 
      * @param tokeniser
      * @throws IOException
      * @throws ParserException
@@ -202,12 +204,12 @@ public class CalendarParserImpl implements CalendarParser {
         // after the first instance on a line is used.. as such
         // we must continue appending to value until EOL is
         // reached..
-        //assertToken(tokeniser, StreamTokenizer.TT_WORD);
+        // assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
-        //String value = tokeniser.sval;
+        // String value = tokeniser.sval;
         StringBuffer value = new StringBuffer();
 
-        //assertToken(tokeniser,StreamTokenizer.TT_EOL);
+        // assertToken(tokeniser,StreamTokenizer.TT_EOL);
 
         int nextToken = tokeniser.nextToken();
 
@@ -216,11 +218,13 @@ public class CalendarParserImpl implements CalendarParser {
 
             if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
                 value.append(tokeniser.sval);
-            } else if (tokeniser.ttype == '"') {
+            }
+            else if (tokeniser.ttype == '"') {
                 value.append((char) tokeniser.ttype);
                 value.append(tokeniser.sval);
                 value.append((char) tokeniser.ttype);
-            } else {
+            }
+            else {
                 value.append((char) tokeniser.ttype);
             }
 
@@ -228,7 +232,8 @@ public class CalendarParserImpl implements CalendarParser {
         }
 
         if (nextToken == StreamTokenizer.TT_EOF) {
-            throw new ParserException("Unexpected end of file at line " + tokeniser.lineno());
+            throw new ParserException("Unexpected end of file at line "
+                    + tokeniser.lineno());
         }
 
         handler.propertyValue(Strings.unescape(value.toString()));
@@ -236,9 +241,7 @@ public class CalendarParserImpl implements CalendarParser {
     }
 
     /**
-     * Parses a list of iCalendar parameters by parsing the specified stream
-     * tokeniser.
-     * 
+     * Parses a list of iCalendar parameters by parsing the specified stream tokeniser.
      * @param tokeniser
      * @throws IOException
      * @throws ParserException
@@ -282,17 +285,16 @@ public class CalendarParserImpl implements CalendarParser {
             paramValue.append('"');
             paramValue.append(tokeniser.sval);
             paramValue.append('"');
-        } else {
+        }
+        else {
             paramValue.append(tokeniser.sval);
         }
 
-        handler.parameter(paramName, Strings
-                .unescape(paramValue.toString()));
+        handler.parameter(paramName, Strings.unescape(paramValue.toString()));
     }
 
     /**
      * Parses an iCalendar component list from the specified stream tokeniser.
-     * 
      * @param tokeniser
      * @throws IOException
      * @throws ParseException
@@ -306,13 +308,12 @@ public class CalendarParserImpl implements CalendarParser {
         while (Component.BEGIN.equals(tokeniser.sval)) {
             parseComponent(tokeniser, handler);
             absorbWhitespace(tokeniser);
-//            assertToken(tokeniser, StreamTokenizer.TT_WORD);
+            // assertToken(tokeniser, StreamTokenizer.TT_WORD);
         }
     }
 
     /**
      * Parses an iCalendar component from the specified stream tokeniser.
-     * 
      * @param tokeniser
      * @throws IOException
      * @throws ParseException
@@ -336,18 +337,18 @@ public class CalendarParserImpl implements CalendarParser {
         parsePropertyList(tokeniser, handler);
 
         /*
-        // a special case for VTIMEZONE component which contains
-        // sub-components..
-        if (Component.VTIMEZONE.equals(name)) {
-            parseComponentList(tokeniser, handler);
-        }
-        // VEVENT/VTODO components may optionally have embedded VALARM
-        // components..
-        else if ((Component.VEVENT.equals(name) || Component.VTODO.equals(name))
-                && Component.BEGIN.equals(tokeniser.sval)) {
-            parseComponentList(tokeniser, handler);
-        }
-        */
+         * // a special case for VTIMEZONE component which contains
+         * // sub-components.. 
+         * if (Component.VTIMEZONE.equals(name)) {
+         *     parseComponentList(tokeniser, handler);
+         * }
+         * // VEVENT/VTODO components may optionally have embedded VALARM
+         * // components.. 
+         * else if ((Component.VEVENT.equals(name) || Component.VTODO.equals(name))
+         *         &amp;&amp; Component.BEGIN.equals(tokeniser.sval)) {
+         *     parseComponentList(tokeniser, handler);
+         * }
+         */
 
         assertToken(tokeniser, ':');
 
@@ -360,16 +361,10 @@ public class CalendarParserImpl implements CalendarParser {
 
     /**
      * Asserts that the next token in the stream matches the specified token.
-     * 
-     * @param tokeniser
-     *            stream tokeniser to perform assertion on
-     * @param token
-     *            expected token
-     * @throws IOException
-     *             when unable to read from stream
-     * @throws ParserException
-     *             when next token in the stream does not match the expected
-     *             token
+     * @param tokeniser stream tokeniser to perform assertion on
+     * @param token expected token
+     * @throws IOException when unable to read from stream
+     * @throws ParserException when next token in the stream does not match the expected token
      */
     private void assertToken(final StreamTokenizer tokeniser, final int token)
             throws IOException, ParserException {
@@ -385,32 +380,27 @@ public class CalendarParserImpl implements CalendarParser {
     }
 
     /**
-     * Asserts that the next token in the stream matches the specified token. This method
-     * is case-sensitive.
+     * Asserts that the next token in the stream matches the specified token. This method is case-sensitive.
      * @param tokeniser
      * @param token
      * @throws IOException
      * @throws ParserException
      */
-    private void assertToken(final StreamTokenizer tokeniser, final String token) throws IOException, ParserException {
+    private void assertToken(final StreamTokenizer tokeniser, final String token)
+            throws IOException, ParserException {
         assertToken(tokeniser, token, false);
     }
-    
+
     /**
      * Asserts that the next token in the stream matches the specified token.
-     * 
-     * @param tokeniser
-     *            stream tokeniser to perform assertion on
-     * @param token
-     *            expected token
-     * @throws IOException
-     *             when unable to read from stream
-     * @throws ParserException
-     *             when next token in the stream does not match the expected
-     *             token
+     * @param tokeniser stream tokeniser to perform assertion on
+     * @param token expected token
+     * @throws IOException when unable to read from stream
+     * @throws ParserException when next token in the stream does not match the expected token
      */
-    private void assertToken(final StreamTokenizer tokeniser, final String token, final boolean ignoreCase)
-            throws IOException, ParserException {
+    private void assertToken(final StreamTokenizer tokeniser,
+            final String token, final boolean ignoreCase) throws IOException,
+            ParserException {
 
         // ensure next token is a word token..
         assertToken(tokeniser, StreamTokenizer.TT_WORD);
@@ -430,13 +420,14 @@ public class CalendarParserImpl implements CalendarParser {
             log.debug("[" + token + "]");
         }
     }
-    
+
     /**
      * Absorbs extraneous newlines.
      * @param tokeniser
      * @throws IOException
      */
-    private void absorbWhitespace(final StreamTokenizer tokeniser) throws IOException {
+    private void absorbWhitespace(final StreamTokenizer tokeniser)
+            throws IOException {
         // HACK: absorb extraneous whitespace between components (KOrganizer)..
         try {
             while (true) {
