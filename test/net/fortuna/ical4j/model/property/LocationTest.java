@@ -42,6 +42,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.AbstractPropertyTest;
+import net.fortuna.ical4j.util.Calendars;
 
 /**
  * Unit tests for Location property.
@@ -55,7 +56,7 @@ public class LocationTest extends AbstractPropertyTest {
      * @throws ParserException
      */
     public void testQuotedText() throws IOException, ParserException {
-        Calendar calendar = loadCalendar("etc/samples/valid/mansour.ics");
+        Calendar calendar = Calendars.load("etc/samples/valid/mansour.ics");
         Component event = calendar.getComponent(Component.VEVENT);
         assertEquals("At \"The Terrace\" Complex > Melbourne", event.getProperty(Property.LOCATION).getValue());
     }

@@ -35,16 +35,10 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
+import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
 
 /**
  * Abstract base class for property unit tests.
@@ -66,18 +60,5 @@ public abstract class AbstractPropertyTest extends TestCase {
             return;
         }
         fail("ValidationException should be thrown!");
-    }
-
-    /**
-     * Loads a calendar from the specified file.
-     * @param filename
-     * @return
-     * @throws IOException
-     * @throws ParserException
-     */
-    protected Calendar loadCalendar(String filename) throws IOException, ParserException {
-        FileInputStream fin = new FileInputStream(filename);
-        CalendarBuilder builder = new CalendarBuilder();
-        return builder.build(fin);
     }
 }
