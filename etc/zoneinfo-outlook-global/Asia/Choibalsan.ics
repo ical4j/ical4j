@@ -1,8 +1,8 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 0.9.20//EN
+PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta1//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_0_9_20/Asia/Choibalsan
+TZID:/ical4j_1_0_beta1/Asia/Choibalsan
 X-LIC-LOCATION:Asia/Choibalsan
 BEGIN:STANDARD
 TZOFFSETFROM:+1000
