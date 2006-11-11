@@ -3,6 +3,7 @@ package net.fortuna.ical4j;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilderTest;
+import net.fortuna.ical4j.data.CalendarParserImplTest;
 import net.fortuna.ical4j.filter.FilterTest;
 import net.fortuna.ical4j.filter.HasPropertyRuleTest;
 import net.fortuna.ical4j.filter.PeriodRuleTest;
@@ -58,6 +59,7 @@ public class AllTests extends TestSuite{
         // data tests
         suite.addTest(CalendarBuilderTest.suite());
 //        suite.addTest(CalendarOutputterTest.suite());
+        suite.addTestSuite(CalendarParserImplTest.class);
 
         // filter tests..
         suite.addTestSuite(FilterTest.class);
