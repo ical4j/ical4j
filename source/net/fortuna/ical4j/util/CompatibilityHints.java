@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -43,51 +43,46 @@ import java.util.Map;
  * @author Ben Fortuna
  */
 public final class CompatibilityHints {
-    
+
     /**
-     * A system property key to enable relaxed unfolding. Relaxed
-     * unfolding is enabled by setting this system property to
-     * "true".
+     * A system property key to enable relaxed unfolding. Relaxed unfolding is enabled by setting this system property
+     * to "true".
      */
     public static final String KEY_RELAXED_UNFOLDING = "ical4j.unfolding.relaxed";
-    
+
     /**
-     * A system property key to enable relaxed parsing. Relaxed
-     * parsing is enabled by setting this system property to
+     * A system property key to enable relaxed parsing. Relaxed parsing is enabled by setting this system property to
      * "true".
      */
     public static final String KEY_RELAXED_PARSING = "ical4j.parsing.relaxed";
-    
+
     /**
-     * A system property key to enable relaxed validation. Relaxed validation
-     * disables validation of certain conformance rules that many iCalendar
-     * implementations do not conform to. Relaxed validation is enabled by
-     * setting this system property to "true".
+     * A system property key to enable relaxed validation. Relaxed validation disables validation of certain conformance
+     * rules that many iCalendar implementations do not conform to. Relaxed validation is enabled by setting this system
+     * property to "true".
      */
     public static final String KEY_RELAXED_VALIDATION = "ical4j.validation.relaxed";
 
     /**
-     * A system property key used to enable compatibility with
-     * Outlook/Exchange-generated iCalendar files. Outlook compatibility is
-     * enabled by setting this system property to "true".
+     * A system property key used to enable compatibility with Outlook/Exchange-generated iCalendar files. Outlook
+     * compatibility is enabled by setting this system property to "true".
      */
     public static final String KEY_OUTLOOK_COMPATIBILITY = "ical4j.compatibility.outlook";
-    
+
     /**
-     * A system property key used to enable compatibility with
-     * Lotus Notes-generated iCalendar files. Notes compatibility is
-     * enabled by setting this system property to "true".
+     * A system property key used to enable compatibility with Lotus Notes-generated iCalendar files. Notes
+     * compatibility is enabled by setting this system property to "true".
      */
     public static final String KEY_NOTES_COMPATIBILITY = "ical4j.compatibility.notes";
 
     private static final Map HINTS = new HashMap();
-    
+
     /**
      * Constructor made private to enforce static nature.
      */
     private CompatibilityHints() {
     }
-    
+
     /**
      * @param key
      * @param value
@@ -95,7 +90,7 @@ public final class CompatibilityHints {
     public static void setHintEnabled(final String key, final boolean enabled) {
         HINTS.put(key, Boolean.valueOf(enabled));
     }
-    
+
     /**
      * @param key
      * @return
