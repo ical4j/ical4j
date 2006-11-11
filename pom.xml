@@ -67,7 +67,9 @@
 		</contributor>
 		<contributor>
 			<name>Mike Douglass</name>
-			<organization>Rensselaer Polytechnic Institute</organization>
+			<organization>
+				Rensselaer Polytechnic Institute
+			</organization>
 			<organizationUrl>http://www.rpi.edu</organizationUrl>
 		</contributor>
 		<contributor>
@@ -185,7 +187,7 @@
 							<value>true</value>
 						</property>
 					</systemProperties>
-					 -->
+					-->
 					<excludes>
 						<exclude>**/AllTests.java</exclude>
 						<exclude>**/CalendarEqualsTest.java</exclude>
@@ -245,6 +247,13 @@
 					<licenseLocation>
 						etc/clover.license
 					</licenseLocation>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>clirr-maven-plugin</artifactId>
+				<configuration>
+					<min4everity>info</min4everity>
 				</configuration>
 			</plugin>
 		</plugins>
