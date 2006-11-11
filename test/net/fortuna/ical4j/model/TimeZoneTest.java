@@ -113,7 +113,6 @@ public class TimeZoneTest extends TestCase {
      */
     public void testInDaylightTime() {
         Calendar cal = Calendar.getInstance();
-        cal.clear(Calendar.DAY_OF_YEAR);
         cal.add(Calendar.YEAR, -10);
         /*
         cal.set(Calendar.MONTH, 12);
@@ -124,6 +123,7 @@ public class TimeZoneTest extends TestCase {
         */
         long start, stop;
         for (int y = 0; y < 10; y++) {
+            cal.clear(Calendar.DAY_OF_YEAR);
             for (int i = 0; i < 365; i++) {
                 cal.add(Calendar.DAY_OF_YEAR, 1);
                 start = System.currentTimeMillis();
@@ -133,7 +133,6 @@ public class TimeZoneTest extends TestCase {
                 stop = System.currentTimeMillis();
                 LOG.debug("Time: " + (stop - start) + "ms");
             }
-            cal.add(Calendar.YEAR, 1);
         }
     }
     
