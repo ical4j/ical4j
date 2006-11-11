@@ -79,10 +79,8 @@ public class CalendarParserImpl implements CalendarParser {
     public final void parse(final Reader in, final ContentHandler handler)
             throws IOException, ParserException {
 
-        StreamTokenizer tokeniser = null;
-
+        StreamTokenizer tokeniser = new StreamTokenizer(in);
         try {
-            tokeniser = new StreamTokenizer(in);
             tokeniser.resetSyntax();
             tokeniser.wordChars(WORD_CHAR_START, WORD_CHAR_END);
             tokeniser.whitespaceChars(WHITESPACE_CHAR_START,
@@ -129,20 +127,16 @@ public class CalendarParserImpl implements CalendarParser {
                 throw (ParserException) e;
             }
             else {
-                String error = "An error ocurred during parsing";
-
-                if (tokeniser != null) {
-                    int line = tokeniser.lineno();
-
-                    if (in instanceof UnfoldingReader) {
-                        // need to take unfolded lines into account
-                        line += ((UnfoldingReader) in).getLinesUnfolded();
-                    }
-
-                    error += " - line: " + line;
+                int line = tokeniser.lineno();
+                if (tokeniser.ttype == StreamTokenizer.TT_EOL) {
+                    line -= 1;
                 }
-
-                throw new ParserException(error, e);
+                if (in instanceof UnfoldingReader) {
+                    // need to take unfolded lines into account
+                    int unfolded = ((UnfoldingReader) in).getLinesUnfolded();
+                    line += unfolded;
+                }
+                throw new ParserException(e.getMessage(), line, e);
             }
         }
     }
@@ -232,8 +226,8 @@ public class CalendarParserImpl implements CalendarParser {
         }
 
         if (nextToken == StreamTokenizer.TT_EOF) {
-            throw new ParserException("Unexpected end of file at line "
-                    + tokeniser.lineno());
+            throw new ParserException("Unexpected end of file",
+                    tokeniser.lineno());
         }
 
         handler.propertyValue(Strings.unescape(value.toString()));
@@ -370,8 +364,9 @@ public class CalendarParserImpl implements CalendarParser {
             throws IOException, ParserException {
 
         if (tokeniser.nextToken() != token) {
-            throw new ParserException("Expected [" + token + "], read ["
-                    + tokeniser.ttype + "] at line " + tokeniser.lineno());
+            throw new ParserException(
+                    "Expected [" + token + "], read [" + tokeniser.ttype + "]",
+                    tokeniser.lineno());
         }
 
         if (log.isDebugEnabled()) {
@@ -407,13 +402,15 @@ public class CalendarParserImpl implements CalendarParser {
 
         if (ignoreCase) {
             if (!token.equalsIgnoreCase(tokeniser.sval)) {
-                throw new ParserException("Expected [" + token + "], read ["
-                        + tokeniser.sval + "] at line " + tokeniser.lineno());
+                throw new ParserException(
+                        "Expected [" + token + "], read [" + tokeniser.sval + "]",
+                        tokeniser.lineno());
             }
         }
         else if (!token.equals(tokeniser.sval)) {
-            throw new ParserException("Expected [" + token + "], read ["
-                    + tokeniser.sval + "] at line " + tokeniser.lineno());
+            throw new ParserException(
+                    "Expected [" + token + "], read [" + tokeniser.sval + "]",
+                    tokeniser.lineno());
         }
 
         if (log.isDebugEnabled()) {

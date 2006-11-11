@@ -41,30 +41,44 @@ public class ParserException extends Exception {
 
     private static final long serialVersionUID = 6116644246112002214L;
 
-    /**
-     * Default constructor.
-     */
-    public ParserException() {
+    private static final String ERROR_MESSAGE_PREFIX = "Error at line ";
 
-        super();
+    private int lineNo;
+
+    /**
+     * @param lineNo line number where parsing error ocurred
+     */
+    public ParserException(final int lineNo) {
+        this.lineNo = lineNo;
     }
 
     /**
      * Constructor with message.
      * @param message a descriptive message for the exception
+     * @param lineNo line number where parsing error ocurred
      */
-    public ParserException(final String message) {
-
-        super(message);
+    public ParserException(final String message, final int lineNo) {
+        super(ERROR_MESSAGE_PREFIX + lineNo + ": " + message);
+        this.lineNo = lineNo;
     }
 
     /**
      * Constructor with message and cause.
      * @param message a descriptive message for the exception
+     * @param lineNo line number where parsing error ocurred
      * @param cause a throwable that is the cause of this exception
      */
-    public ParserException(final String message, final Throwable cause) {
+    public ParserException(final String message, final int lineNo,
+            final Throwable cause) {
 
-        super(message, cause);
+        super(ERROR_MESSAGE_PREFIX + lineNo + ": " + message, cause);
+        this.lineNo = lineNo;
+    }
+
+    /**
+     * @return the lineNo
+     */
+    public final int getLineNo() {
+        return lineNo;
     }
 }
