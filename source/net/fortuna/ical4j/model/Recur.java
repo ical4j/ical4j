@@ -715,7 +715,9 @@ public class Recur implements Serializable {
             for (Iterator j = getMonthList().iterator(); j.hasNext();) {
                 Integer month = (Integer) j.next();
                 // Java months are zero-based..
-                cal.set(Calendar.MONTH, month.intValue() - 1);
+//                cal.set(Calendar.MONTH, month.intValue() - 1);
+                cal.roll(Calendar.MONTH,
+                        (month.intValue() - 1) - cal.get(Calendar.MONTH));
                 monthlyDates.add(Dates.getInstance(cal.getTime(), monthlyDates
                         .getType()));
             }

@@ -549,4 +549,29 @@ public class RecurTest extends TestCase {
             assertEquals(1, cal.get(Calendar.MONTH));
         }
     }
+    
+    /**
+     * Unit test for recurrence generation where seed month-date specified is
+     * not valid for recurrence instances (e.g. feb 31).
+     */
+    public void testRecur4Feb2() throws ParseException {
+        String rrule = "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=4;BYDAY=MO,TU,WE,TH,FR,SA,SU";
+        Recur recur = new Recur(rrule);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.clear(Calendar.SECOND);
+        cal.set(2006, 11, 31);
+        java.util.Date start = cal.getTime();
+        cal.set(2008, 11, 31);
+        java.util.Date end = cal.getTime();
+        
+        DateList recurrences = recur.getDates(new Date(start), new Date(end), Value.DATE);
+        assertEquals(2, recurrences.size());
+        for (Iterator i = recurrences.iterator(); i.hasNext();) {
+            Date recurrence = (Date) i.next();
+            cal.setTime(recurrence);
+            assertEquals(4, cal.get(Calendar.DAY_OF_MONTH));
+            assertEquals(1, cal.get(Calendar.MONTH));
+        }
+    }
 }
