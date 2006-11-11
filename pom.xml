@@ -29,6 +29,9 @@
 		<connection>
 			scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
 		</connection>
+		<developerConnection>
+			scm:cvs:pserver:fortuna:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
+		</developerConnection>
 		<url>http://ical4j.cvs.sourceforge.net/ical4j</url>
 	</scm>
 	<contributors>
