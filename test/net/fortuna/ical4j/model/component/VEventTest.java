@@ -31,12 +31,12 @@ import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.ExDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.util.Calendars;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -169,6 +169,25 @@ public class VEventTest extends ComponentTest {
         return Calendar.getInstance(); //java.util.TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 
+    /**
+     * @param filename
+     * @return
+     */
+    private net.fortuna.ical4j.model.Calendar loadCalendar(String filename)
+        throws IOException, ParserException, ValidationException {
+        
+        net.fortuna.ical4j.model.Calendar calendar = Calendars.load(
+                filename);
+        calendar.validate();
+
+        log.info("File: " + filename);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Calendar:\n=========\n" + calendar.toString());
+        }
+        return calendar;
+    }
+    
     /**
      *  
      */
@@ -408,34 +427,8 @@ public class VEventTest extends ComponentTest {
 
     public final void testGetConsumedTime2() throws Exception {
         String filename = "etc/samples/valid/derryn.ics";
-        
-        FileInputStream fin = new FileInputStream(filename);
-        
-        CalendarBuilder builder = new CalendarBuilder();
 
-        net.fortuna.ical4j.model.Calendar calendar = null;
-
-        try {
-            calendar = builder.build(fin);
-        } catch (IOException e) {
-            log.warn("File: " + filename, e);
-        } catch (ParserException e) {
-            log.warn("File: " + filename, e);
-        }
-
-        assertNotNull(calendar);
-
-        try {
-            calendar.validate();
-        } catch (ValidationException e) {
-            assertTrue("Calendar file " + filename + " isn't valid:\n" + e.getMessage(), false);
-        }
-
-        log.info("File: " + filename);
-
-        if (log.isDebugEnabled()) {
-            log.debug("Calendar:\n=========\n" + calendar.toString());
-        }
+        net.fortuna.ical4j.model.Calendar calendar = loadCalendar(filename);
 
         Date start = new Date();
         Calendar endCal = getCalendarInstance();
@@ -452,6 +445,23 @@ public class VEventTest extends ComponentTest {
                 log.debug("Consumed time [" + consumed + "]");
             }
         }
+    }
+    
+    public final void testGetConsumedTime3() throws Exception {
+        String filename = "etc/samples/valid/calconnect10.ics";
+
+        net.fortuna.ical4j.model.Calendar calendar = loadCalendar(filename);
+        
+        VEvent vev = (VEvent) calendar.getComponent(Component.VEVENT);
+        
+        Date start = vev.getStartDate().getDate();
+        Calendar cal = getCalendarInstance();
+        cal.add(Calendar.YEAR, 1);
+        Date latest = new Date(cal.getTime());
+        
+        PeriodList pl = vev.getConsumedTime(start, latest);
+        Iterator it = pl.iterator();
+        assertTrue(it.hasNext());
     }
     
     /**
