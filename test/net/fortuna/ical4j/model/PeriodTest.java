@@ -49,7 +49,6 @@ import junit.framework.TestSuite;
  */
 public class PeriodTest extends TestCase
 {
-    private DateTime today;
     private DateTime past;
     private DateTime future;
     private DateTime begin1994;
@@ -109,13 +108,11 @@ public class PeriodTest extends TestCase
         marchToMay = new Period(mar1994, jun1994);
         marchToApril = new Period(mar1994, may1994);
         duplicateRange = new Period(begin1994, end1994);
-        today = new DateTime();
     }
 
     public void tearDown() throws Exception
     {
         super.tearDown();
-        today = null;
         past = null;
         future = null;
     }
@@ -138,12 +135,12 @@ public class PeriodTest extends TestCase
      */
     public void testGetStartEndDate() throws Exception
     {
-        long testMillis;
-        long todayMillis;
-        todayMillis = today.getTime();
         Period testPeriod;
 
         /*
+        long testMillis;
+        long todayMillis;
+        todayMillis = today.getTime();
         testPeriod = new DateRange();
         testMillis = testRange.getStartDate().getTime();
         assertTrue("Uninitialized start date should have been set to NOW",

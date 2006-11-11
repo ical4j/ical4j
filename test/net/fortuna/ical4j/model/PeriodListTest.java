@@ -64,7 +64,6 @@ public class PeriodListTest extends TestCase {
     private DateTime oct1994;
     private DateTime nov1994;
     private DateTime dec1994;
-    private Period year1994;
     private Period monthJanuary;
     private Period monthFebruary;
     private Period monthMarch;
@@ -79,21 +78,6 @@ public class PeriodListTest extends TestCase {
     private Period monthDecember;
     private Period head1994;
     private Period tail1994;
-    private Period firstHalf; // from year begin to jun
-    private Period lastHalf; // jul to year end
-    private Period firstQuarter; // jan feb mar
-    private Period secondQuarter; // apr may jun
-    private Period thirdQuarter; // jul aug sep
-    private Period fourthQuarter; // oct nov dec
-    private Period fiscal1994; //jan - dec
-    private Period winter; // head jan feb
-    private Period spring; // mar apr may jun
-    private Period summer; // jul aug sep oct
-    private Period fall; // nov dec tail
-    private Period marchToMay; // mar apr may
-    private Period aprilToJune; // apr may jun
-    private Period marchToApril; // mar apr
-    private Period februaryToMay; //feb mar apr may
     private PeriodList oddMonths;
     private PeriodList evenMonths;
     private PeriodList headSet;
@@ -132,7 +116,6 @@ public class PeriodListTest extends TestCase {
         nov1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.DECEMBER, 2);
         dec1994 = new DateTime(cal.getTime().getTime());
-        year1994 = new Period(begin1994, end1994);
         monthJanuary = new Period(jan1994, feb1994);
         monthFebruary = new Period(feb1994, mar1994);
         monthMarch = new Period(mar1994, apr1994);
@@ -147,21 +130,6 @@ public class PeriodListTest extends TestCase {
         monthDecember = new Period(dec1994, end1994);
         head1994 = new Period(begin1994, jan1994);
         tail1994 = new Period(dec1994, end1994);
-        firstHalf = new Period(begin1994, jun1994);
-        lastHalf = new Period(jul1994, end1994);
-        firstQuarter = new Period(jan1994, apr1994);
-        secondQuarter = new Period(apr1994, jul1994);
-        thirdQuarter = new Period(jul1994, oct1994);
-        fourthQuarter = new Period(oct1994, dec1994);
-        fiscal1994 = new Period(jan1994, dec1994);
-        winter = new Period(begin1994, mar1994);
-        spring = new Period(mar1994, jul1994);
-        summer = new Period(jul1994, nov1994);
-        fall = new Period(nov1994, end1994);
-        marchToMay = new Period(mar1994, jun1994);
-        marchToApril = new Period(mar1994, may1994);
-        aprilToJune = new Period(apr1994, jul1994);
-        februaryToMay = new Period(feb1994, jun1994);
 
         // create sets that contain the ranges
         oddMonths = new PeriodList();

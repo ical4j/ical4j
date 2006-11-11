@@ -217,8 +217,6 @@ public class VFreeBusyTest extends ComponentTest {
         java.util.Calendar start = java.util.Calendar.getInstance();
         java.util.Calendar end = java.util.Calendar.getInstance();
         start.add(java.util.Calendar.DATE, -1);
-        VEvent dteStartOnly = new VEvent(new Date(start.getTime().getTime()),
-                "DATE START ONLY");
         VEvent dteEnd = new VEvent(new Date(start.getTime().getTime()),
                 new Date(end.getTime().getTime()), "DATE END INCLUDED");
         VEvent duration = new VEvent(new Date(start.getTime().getTime()),
