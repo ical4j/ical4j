@@ -16,14 +16,27 @@
  be compatible with prior versions of eclipse.
 
 
-==============
- How to build
-==============
+=======================
+ How to build - Maven2
+=======================
+
+ After installing Maven2 and adding to your path, open a command prompt to the
+ location of the iCal4j source and execute the following:
+ 
+  [iCal4j-1.0-beta1-src] >mvn clean install
+ 
+ This will build and install iCal4j in your local repository. Build artifacts
+ are generated in the 'target' directory.
+
+
+====================
+ How to build - Ant
+====================
  
  If you have downloaded the source distribution, you should be able to package a JAR
  file simply by running ant in the root directory. e.g:
  
-   C:\Libs\iCal4j-0.9.16-src\>ant
+   C:\Libs\iCal4j-1.0-beta1-src\>ant
  
  If for some reason you would like to override the default build classpath, I would
  suggest creating a "build.properties" file (see the provided sample) in the root directory
