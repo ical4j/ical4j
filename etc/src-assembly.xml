@@ -25,6 +25,7 @@
         <include>standard_deviations.txt</include>
         <include>samples/**</include>
         <include>checkstyle.xml</include>
+        <include>zoneinfo*/**</include>
       </includes>
     </fileSet>
     <fileSet>
