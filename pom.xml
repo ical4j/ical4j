@@ -252,7 +252,7 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
-					<min4everity>info</min4everity>
+					<minSeverity>info</minSeverity>
 				</configuration>
 			</plugin>
 		</plugins>
