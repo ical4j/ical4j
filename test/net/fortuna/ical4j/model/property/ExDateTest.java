@@ -44,6 +44,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * Unit tests for the ExDate property.
@@ -51,6 +52,22 @@ import net.fortuna.ical4j.model.PropertyList;
  */
 public class ExDateTest extends TestCase {
 
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+    }
+    
     /**
      * Ensure timezones are correctly parsed for this property.
      * @throws Exception
