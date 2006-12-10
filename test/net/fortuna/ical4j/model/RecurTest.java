@@ -574,4 +574,25 @@ public class RecurTest extends TestCase {
             assertEquals(1, cal.get(Calendar.MONTH));
         }
     }
+    
+    /**
+     * Unit test for recurrence representing each half-hour.
+     * @throws ParseException
+     */
+    public void testRecurHalfHour() throws ParseException {
+        String rrule = "FREQ=DAILY;BYHOUR=9,10,11,12,13,14,15,16;BYMINUTE=0,30";
+        Recur recur = new Recur(rrule);
+
+        Calendar cal = Calendar.getInstance();
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.HOUR);
+        java.util.Date start = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        java.util.Date end = cal.getTime();
+
+        DateList recurrences = recur.getDates(new DateTime(start),
+                new DateTime(end), Value.DATE_TIME);
+        assertEquals(16, recurrences.size());
+    }
 }
