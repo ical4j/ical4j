@@ -120,6 +120,10 @@ public abstract class DateListProperty extends Property {
      * @param timezone a timezone to associate with this property
      */
     public final void setTimeZone(final TimeZone timezone) {
+        if (dates == null) {
+            throw new UnsupportedOperationException(
+                    "TimeZone is not applicable to current value");
+        }
         this.timezone = timezone;
         if (timezone != null) {
             if (!Value.DATE_TIME.equals(getDates().getType())) {
@@ -144,7 +148,7 @@ public abstract class DateListProperty extends Property {
      * @param utc
      */
     public final void setUtc(final boolean utc) {
-        if (!Value.DATE_TIME.equals(dates.getType())) {
+        if (dates == null || !Value.DATE_TIME.equals(dates.getType())) {
             throw new UnsupportedOperationException(
                     "TimeZone is not applicable to current value");
         }
