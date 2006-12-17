@@ -36,6 +36,9 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import junit.framework.TestCase;
 
 /**
@@ -51,5 +54,16 @@ public class GeoTest extends TestCase {
         Geo geo = new Geo("37.386013;-122.082932");
         
         assertEquals("37.386013;-122.082932", geo.getValue());
+    }
+    
+    /**
+     * Unit testing for {@link Geo#Geo(BigDecimal, BigDecimal)}.
+     */
+    public void testGeoBigDecimal() {
+        BigDecimal latitude = BigDecimal.valueOf(65.35);
+        BigDecimal longitude = BigDecimal.valueOf(22.01);
+        
+        Geo geo = new Geo(latitude, longitude);
+        assertEquals("65.35;22.01", geo.getValue());
     }
 }
