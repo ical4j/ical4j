@@ -119,7 +119,7 @@ public abstract class DateListProperty extends Property {
      * Sets the timezone associated with this property.
      * @param timezone a timezone to associate with this property
      */
-    public final void setTimeZone(final TimeZone timezone) {
+    public void setTimeZone(final TimeZone timezone) {
         if (dates == null) {
             throw new UnsupportedOperationException(
                     "TimeZone is not applicable to current value");

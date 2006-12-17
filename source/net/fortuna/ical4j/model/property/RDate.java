@@ -41,6 +41,7 @@ import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PeriodList;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
@@ -245,5 +246,17 @@ public class RDate extends DateListProperty {
             return Strings.valueOf(getPeriods());
         }
         return super.getValue();
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.property.DateListProperty#setTimeZone(net.fortuna.ical4j.model.TimeZone)
+     */
+    public final void setTimeZone(TimeZone timezone) {
+        if (periods != null) {
+            periods.setTimeZone(timezone);
+        }
+        else {
+            super.setTimeZone(timezone);
+        }
     }
 }

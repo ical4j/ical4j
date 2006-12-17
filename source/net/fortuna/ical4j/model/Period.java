@@ -73,7 +73,8 @@ public class Period implements Serializable, Comparable {
         // period may end in either a date-time or a duration..
         try {
             end = new DateTime(aValue.substring(aValue.indexOf('/') + 1));
-        } catch (ParseException pe) {
+        }
+        catch (ParseException pe) {
             // duration = DurationFormat.getInstance().parse(aValue);
             duration = new Dur(aValue);
         }
@@ -90,6 +91,16 @@ public class Period implements Serializable, Comparable {
     public Period(final DateTime start, final DateTime end) {
         this.start = start;
         this.end = end;
+        
+        // ensure the end timezone is the same as the start..
+        if (end != null) {
+            if (start.isUtc()) {
+                end.setUtc(true);
+            }
+            else {
+                end.setTimeZone(start.getTimeZone());
+            }
+        }
     }
 
     /**
@@ -271,7 +282,41 @@ public class Period implements Serializable, Comparable {
 
         return new Period(newPeriodStart, newPeriodEnd);
     }
-
+    
+    /**
+     * Updates the start and (possible) end times of this period to reflect
+     * the specified UTC timezone status.
+     * @param utc
+     */
+    public void setUtc(boolean utc) {
+        if (utc) {
+            start.setUtc(true);
+            if (end != null) {
+                getEnd().setUtc(true);
+            }
+        }
+        else {
+            start.setTimeZone(null);
+            if (end != null) {
+                getEnd().setTimeZone(null);
+            }
+        }
+    }
+    
+    /**
+     * Updates the start and (possible) end times of this period to reflect
+     * the specified timezone status.
+     * @param timezone
+     */
+    public final void setTimeZone(final TimeZone timezone) {
+        start.setUtc(false);
+        start.setTimeZone(timezone);
+        if (end != null) {
+            getEnd().setUtc(false);
+            getEnd().setTimeZone(timezone);
+        }
+    }
+    
     /**
      * @see java.lang.Object#toString()
      */

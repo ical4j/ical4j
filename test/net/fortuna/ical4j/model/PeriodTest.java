@@ -34,11 +34,15 @@
 
 package net.fortuna.ical4j.model;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>Period Tester.</p>
@@ -47,8 +51,10 @@ import junit.framework.TestSuite;
  * the expected way.</p>
  * @see net.fortuna.ical4j.model.Period
  */
-public class PeriodTest extends TestCase
-{
+public class PeriodTest extends TestCase {
+    
+    private static final Log LOG = LogFactory.getLog(PeriodTest.class);
+    
     private DateTime past;
     private DateTime future;
     private DateTime begin1994;
@@ -75,9 +81,9 @@ public class PeriodTest extends TestCase
         super(name);
     }
 
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         super.setUp();
+
         java.util.Calendar cal = new GregorianCalendar(1980,
                 java.util.Calendar.JANUARY, 23);
         past = new DateTime(cal.getTime().getTime());
@@ -493,6 +499,51 @@ public class PeriodTest extends TestCase
 
     }
 
+    /**
+     * Testing of timezone functionality.
+     */
+    public void testTimezone() {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        DateTime start = new DateTime(cal.getTime());
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+//        cal.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+        DateTime end = new DateTime(cal.getTime());
+        end.setUtc(true);
+        
+        Period p = new Period(start, end);
+        
+        LOG.info("Timezone test - period: [" + p + "]");
+        
+        assertFalse(p.getStart().isUtc());
+        assertFalse(p.getEnd().isUtc());
+        
+        start.setUtc(true);
+        p = new Period(start, end);
+        
+        LOG.info("Timezone test - period: [" + p + "]");
+        
+        assertTrue(p.getStart().isUtc());
+        assertTrue(p.getEnd().isUtc());
+        
+        p.setUtc(false);
+        
+        LOG.info("Timezone test - period: [" + p + "]");
+        
+        assertFalse(p.getStart().isUtc());
+        assertFalse(p.getEnd().isUtc());
+        
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+        TimeZone timezone = registry.getTimeZone("Australia/Melbourne");
+        
+        p.setUtc(true);
+        p.setTimeZone(timezone);
+        
+        assertFalse(p.getStart().isUtc());
+        assertFalse(p.getEnd().isUtc());
+        assertEquals(timezone, p.getStart().getTimeZone());
+        assertEquals(timezone, p.getEnd().getTimeZone());
+    }
+    
     public static Test suite()
     {
         return new TestSuite(PeriodTest.class);

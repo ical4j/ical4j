@@ -247,7 +247,7 @@ public class DateList extends ArrayList implements Serializable {
             }
         }
         this.timeZone = null;
-        this.utc = true;
+        this.utc = utc;
     }
     
     /**

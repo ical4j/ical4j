@@ -50,12 +50,24 @@ public class PeriodList extends TreeSet implements Serializable {
 
     private static final long serialVersionUID = -6319585959747194724L;
 
+    private TimeZone timezone;
+    
+    private boolean utc;
+
     /**
      * Default constructor.
      */
     public PeriodList() {
+        this(true);
     }
 
+    /**
+     * @param utc
+     */
+    public PeriodList(boolean utc) {
+        this.utc = utc;
+    }
+    
     /**
      * Parses the specified string representation to create a list of periods.
      * 
@@ -95,6 +107,12 @@ public class PeriodList extends TreeSet implements Serializable {
      * @see java.util.List#add(java.lang.Object)
      */
     public final boolean add(final Period period) {
+        if (isUtc()) {
+            period.setUtc(true);
+        }
+        else {
+            period.setTimeZone(timezone);
+        }
         return add((Object) period);
     }
 
@@ -102,7 +120,7 @@ public class PeriodList extends TreeSet implements Serializable {
      * Overrides superclass to throw an <code>IllegalArgumentException</code>
      * where argument is not a <code>net.fortuna.ical4j.model.Period</code>.
      * 
-     * @see List#add(E)
+     * @see java.util.List#add(E)
      */
     public final boolean add(final Object arg0) {
         if (!(arg0 instanceof Period)) {
@@ -255,5 +273,48 @@ public class PeriodList extends TreeSet implements Serializable {
             }
         }
         return this;
+    }
+
+    /**
+     * Indicates whether this list is in local or UTC format.
+     * @return Returns true if in UTC format, otherwise false.
+     */
+    public final boolean isUtc() {
+        return utc;
+    }
+
+    /**
+     * Sets whether this list is in UTC or local time format.
+     * @param utc The utc to set.
+     */
+    public final void setUtc(final boolean utc) {
+        for (Iterator i = iterator(); i.hasNext();) {
+            Period period = (Period) i.next();
+            period.setUtc(utc);
+        }
+        this.timezone = null;
+        this.utc = utc;
+    }
+    
+    /**
+     * Applies the specified timezone to all dates in the list.
+     * All dates added to this list will also have this timezone
+     * applied.
+     * @param timezone
+     */
+    public final void setTimeZone(final TimeZone timeZone) {
+        for (Iterator i = iterator(); i.hasNext();) {
+            Period period = (Period) i.next();
+            period.setTimeZone(timeZone);
+        }
+        this.timezone = timeZone;
+        this.utc = false;
+    }
+
+    /**
+     * @return Returns the timeZone.
+     */
+    public final TimeZone getTimeZone() {
+        return timezone;
     }
 }
