@@ -44,6 +44,8 @@ public final class TimeZones {
     
     public static final String UTC_ID = "Etc/UTC";
     
+    public static final String IBM_UTC_ID = "GMT";
+    
     public static final String GMT_ID = "Etc/GMT";
 
     /**
@@ -61,6 +63,7 @@ public final class TimeZones {
     public static boolean isUtc(final TimeZone timezone) {
 //        return timezone.hasSameRules(TimeZone.getTimeZone(UTC_ID));
 //        return timezone.getRawOffset() == 0;
-        return UTC_ID.equals(timezone.getID());
+        return UTC_ID.equals(timezone.getID())
+            || IBM_UTC_ID.equals(timezone.getID());
     }
 }
