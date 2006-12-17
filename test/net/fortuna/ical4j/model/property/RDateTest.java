@@ -35,14 +35,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Unit tests for {@link RDate}.
@@ -68,6 +68,7 @@ public class RDateTest extends TestCase {
     public void testSetTimeZone() {
         RDate rDate = new RDate(new PeriodList());
         
+        /*
         try {
             rDate.setTimeZone(timezone);
             fail("Should throw UnsupportedOperationException");
@@ -83,6 +84,10 @@ public class RDateTest extends TestCase {
         catch (UnsupportedOperationException uoe) {
             LOG.info("Caught exception: " + uoe.getMessage());
         }
+        */
+        
+        rDate.setTimeZone(timezone);
+        assertEquals(timezone, rDate.getPeriods().getTimeZone());
     }
 
 }
