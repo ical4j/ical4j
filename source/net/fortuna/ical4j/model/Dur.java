@@ -35,6 +35,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
@@ -87,7 +88,7 @@ public class Dur implements Comparable, Serializable {
     
     private static final int DAYS_PER_YEAR = 365;
     
-    private Log log = LogFactory.getLog(Dur.class);
+    private transient Log log = LogFactory.getLog(Dur.class);
 
     private boolean negative;
     
@@ -444,5 +445,17 @@ public class Dur implements Comparable, Serializable {
      */
     public final int getWeeks() {
         return weeks;
+    }
+    
+    /**
+     * @param stream
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void readObject(java.io.ObjectInputStream stream)
+        throws IOException, ClassNotFoundException {
+        
+        stream.defaultReadObject();
+        log = LogFactory.getLog(Dur.class);
     }
 }

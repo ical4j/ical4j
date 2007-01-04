@@ -34,6 +34,7 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.io.IOException;
 import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Component;
@@ -225,7 +226,7 @@ public class VFreeBusy extends CalendarComponent {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
-    private Log log = LogFactory.getLog(VFreeBusy.class);
+    private transient Log log = LogFactory.getLog(VFreeBusy.class);
 
     /**
      * Default constructor.
@@ -532,5 +533,17 @@ public class VFreeBusy extends CalendarComponent {
      */
     public final Uid getUid() {
         return (Uid) getProperty(Property.UID);
+    }
+    
+    /**
+     * @param stream
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void readObject(java.io.ObjectInputStream stream)
+        throws IOException, ClassNotFoundException {
+        
+        stream.defaultReadObject();
+        log = LogFactory.getLog(VFreeBusy.class);
     }
 }

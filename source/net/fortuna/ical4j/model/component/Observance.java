@@ -33,14 +33,12 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
@@ -59,6 +57,9 @@ import net.fortuna.ical4j.model.property.TzOffsetTo;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Defines an iCalendar sub-component representing a timezone observance. Class made abstract such that only Standard
  * and Daylight instances are valid.
@@ -73,7 +74,7 @@ public abstract class Observance extends Component implements Comparable {
 
     public static final String DAYLIGHT = "DAYLIGHT";
 
-    private Log log = LogFactory.getLog(Observance.class);
+    private transient Log log = LogFactory.getLog(Observance.class);
 
     // TODO: clear cache when observance definition changes (??)
     private Map onsets = new TreeMap();
@@ -299,5 +300,17 @@ public abstract class Observance extends Component implements Comparable {
         DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
         DtStart dtStart0 = (DtStart) arg0.getProperty(Property.DTSTART);
         return dtStart.getDate().compareTo(dtStart0.getDate());
+    }
+    
+    /**
+     * @param stream
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void readObject(java.io.ObjectInputStream stream)
+        throws IOException, ClassNotFoundException {
+        
+        stream.defaultReadObject();
+        log = LogFactory.getLog(Observance.class);
     }
 }

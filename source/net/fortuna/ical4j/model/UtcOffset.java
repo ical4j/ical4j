@@ -35,6 +35,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -72,7 +73,7 @@ public class UtcOffset implements Serializable {
 
     private static final NumberFormat SECOND_FORMAT = new DecimalFormat("00");
 
-    private Log log = LogFactory.getLog(UtcOffset.class);
+    private transient Log log = LogFactory.getLog(UtcOffset.class);
 
     private long offset;
 
@@ -162,5 +163,17 @@ public class UtcOffset implements Serializable {
      */
     public final int hashCode() {
         return new HashCodeBuilder().append(getOffset()).toHashCode();
+    }
+    
+    /**
+     * @param stream
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void readObject(java.io.ObjectInputStream stream)
+        throws IOException, ClassNotFoundException {
+        
+        stream.defaultReadObject();
+        log = LogFactory.getLog(UtcOffset.class);
     }
 }

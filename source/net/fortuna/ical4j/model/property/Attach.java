@@ -113,7 +113,7 @@ public class Attach extends Property {
 
     private static final long serialVersionUID = 4439949507756383452L;
 
-    private Log log = LogFactory.getLog(Attach.class);
+    private transient Log log = LogFactory.getLog(Attach.class);
 
     private URI uri;
 
@@ -219,12 +219,15 @@ public class Attach extends Property {
         return uri;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * Sets the current value of the Attach instance. If the specified
+     * value is encoded binary data, the value is decoded and stored in
+     * the binary field. Otherwise the value is assumed to be a URI
+     * location to binary data and is stored as such.
      */
     public void setValue(final String aValue) throws IOException,
             URISyntaxException {
+        
         // determine if ATTACH is a URI or an embedded
         // binary..
         if (getParameter(Parameter.ENCODING) != null) {
@@ -233,7 +236,7 @@ public class Attach extends Property {
                 BinaryDecoder decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(
                                 (Encoding) getParameter(Parameter.ENCODING));
-                binary = decoder.decode(getBinary());
+                binary = decoder.decode(aValue.getBytes());
             }
             catch (UnsupportedEncodingException uee) {
                 log.error("Error encoding binary data", uee);
@@ -290,5 +293,17 @@ public class Attach extends Property {
         this.uri = uri;
         // unset binary..
         this.binary = null;
+    }
+    
+    /**
+     * @param stream
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void readObject(java.io.ObjectInputStream stream)
+        throws IOException, ClassNotFoundException {
+        
+        stream.defaultReadObject();
+        log = LogFactory.getLog(Attach.class);
     }
 }

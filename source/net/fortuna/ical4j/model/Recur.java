@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -101,7 +102,7 @@ public class Recur implements Serializable {
 
     public static final String YEARLY = "YEARLY";
 
-    private Log log = LogFactory.getLog(Recur.class);
+    private transient Log log = LogFactory.getLog(Recur.class);
 
     private String frequency;
 
@@ -1055,5 +1056,17 @@ public class Recur implements Serializable {
     public final void setUntil(final Date until) {
         this.until = until;
         this.count = -1;
+    }
+    
+    /**
+     * @param stream
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void readObject(java.io.ObjectInputStream stream)
+        throws IOException, ClassNotFoundException {
+        
+        stream.defaultReadObject();
+        log = LogFactory.getLog(Recur.class);
     }
 }
