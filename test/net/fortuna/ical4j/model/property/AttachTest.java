@@ -35,9 +35,12 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 
@@ -63,10 +66,13 @@ public class AttachTest extends TestCase {
     
     private static Log log = LogFactory.getLog(AttachTest.class);
 
-    /*
-     * Class under test for void Attach(ParameterList, String)
+    private Attach attach;
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
      */
-    public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException {
+    protected void setUp() throws Exception {
+        super.setUp();
         FileInputStream fin = new FileInputStream("etc/artwork/logo.png");
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         for (int i = fin.read(); i >= 0;) {
@@ -79,7 +85,13 @@ public class AttachTest extends TestCase {
         params.add(Value.BINARY);
 
 //        Attach attach = new Attach(params, Base64.encodeBytes(bout.toByteArray(), Base64.DONT_BREAK_LINES));
-        Attach attach = new Attach(params, bout.toByteArray());
+        attach = new Attach(params, bout.toByteArray());
+    }
+    
+    /*
+     * Class under test for void Attach(ParameterList, String)
+     */
+    public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException {
 
         log.info(attach);
         
@@ -112,4 +124,26 @@ public class AttachTest extends TestCase {
         log.info(sw.toString());
     }
 
+    /**
+     * Unit testing of serialization.
+     */
+    public void testSerialization() throws IOException, ClassNotFoundException,
+        URISyntaxException {
+        
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        ObjectOutputStream out = new ObjectOutputStream(bout);
+        out.writeObject(attach);
+        
+        ObjectInputStream in = new ObjectInputStream(
+                new ByteArrayInputStream(bout.toByteArray()));
+        
+        Attach clone = (Attach) in.readObject();
+        
+        assertNotNull(clone);
+        assertEquals(attach, clone);
+        
+        // set a bogus value to trigger logging..
+        clone.getParameters().replace(new Encoding("BOGUS"));
+        clone.setValue("");
+    }
 }
