@@ -451,6 +451,7 @@ public class RecurTest extends TestCase {
         Recur recur = new Recur(rrule);
 
         Calendar cal = Calendar.getInstance();
+        cal.set(2006, 11, 1);
         Date start = new Date(cal.getTime());
         cal.add(Calendar.YEAR, 1);
         
