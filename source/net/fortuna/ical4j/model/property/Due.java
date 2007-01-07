@@ -40,6 +40,7 @@ import java.text.ParseException;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -102,6 +103,36 @@ public class Due extends DateProperty {
         super(DUE);
         // defaults to UTC time..
         setDate(new DateTime(true));
+    }
+
+    /**
+     * Creates a new DUE property initialised with the specified timezone.
+     * @param timezone initial timezone
+     */
+    public Due(TimeZone timezone) {
+        super(DUE, timezone);
+    }
+
+    /**
+     * Creates a new instance initialised with the parsed value.
+     * @param value the DUE value string to parse
+     * @throws ParseException where the specified string is not a valid DUE value representation
+     */
+    public Due(final String value) throws ParseException {
+        super(DUE);
+        setValue(value);
+    }
+
+    /**
+     * Creates a new DUE property initialised with the specified timezone and value.
+     * @param value a string representation of a DUE value
+     * @param timezone initial timezone
+     * @throws ParseException where the specified value is not a valid string
+     * representation
+     */
+    public Due(String value, TimeZone timezone) throws ParseException {
+        super(DUE, timezone);
+        setValue(value);
     }
 
     /**

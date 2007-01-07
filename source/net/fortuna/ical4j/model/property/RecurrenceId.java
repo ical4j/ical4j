@@ -41,6 +41,7 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
@@ -136,6 +137,36 @@ public class RecurrenceId extends DateProperty {
     public RecurrenceId() {
         super(RECURRENCE_ID);
         setDate(new DateTime());
+    }
+
+    /**
+     * Creates a new RECURRENCE_ID property initialised with the specified timezone.
+     * @param timezone initial timezone
+     */
+    public RecurrenceId(TimeZone timezone) {
+        super(RECURRENCE_ID, timezone);
+    }
+
+    /**
+     * Creates a new instance initialised with the parsed value.
+     * @param value the RECURRENCE_ID value string to parse
+     * @throws ParseException where the specified string is not a valid RECURRENCE_ID value representation
+     */
+    public RecurrenceId(final String value) throws ParseException {
+        super(RECURRENCE_ID);
+        setValue(value);
+    }
+
+    /**
+     * Creates a new RECURRENCE_ID property initialised with the specified timezone and value.
+     * @param value a string representation of a RECURRENCE_ID value
+     * @param timezone initial timezone
+     * @throws ParseException where the specified value is not a valid string
+     * representation
+     */
+    public RecurrenceId(String value, TimeZone timezone) throws ParseException {
+        super(RECURRENCE_ID, timezone);
+        setValue(value);
     }
 
     /**

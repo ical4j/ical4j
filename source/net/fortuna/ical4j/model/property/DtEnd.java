@@ -39,6 +39,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -118,12 +119,32 @@ public class DtEnd extends DateProperty {
     }
 
     /**
+     * Creates a new DTEND property initialised with the specified timezone.
+     * @param timezone initial timezone
+     */
+    public DtEnd(TimeZone timezone) {
+        super(DTEND, timezone);
+    }
+
+    /**
      * Creates a new instance initialised with the parsed value.
      * @param value the DTEND value string to parse
      * @throws ParseException where the specified string is not a valid DTEND value representation
      */
     public DtEnd(final String value) throws ParseException {
         super(DTEND);
+        setValue(value);
+    }
+
+    /**
+     * Creates a new DTEND property initialised with the specified timezone and value.
+     * @param value a string representation of a DTEND value
+     * @param timezone initial timezone
+     * @throws ParseException where the specified value is not a valid string
+     * representation
+     */
+    public DtEnd(String value, TimeZone timezone) throws ParseException {
+        super(DTEND, timezone);
         setValue(value);
     }
 

@@ -39,6 +39,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -116,12 +117,32 @@ public class DtStart extends DateProperty {
     }
 
     /**
+     * Creates a new DTSTART property initialised with the specified timezone.
+     * @param timezone initial timezone
+     */
+    public DtStart(TimeZone timezone) {
+        super(DTSTART, timezone);
+    }
+
+    /**
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
     public DtStart(final String aValue) throws ParseException {
         super(DTSTART);
         setValue(aValue);
+    }
+
+    /**
+     * Creates a new DTSTART property initialised with the specified timezone and value.
+     * @param value a string representation of a DTSTART value
+     * @param timezone initial timezone
+     * @throws ParseException where the specified value is not a valid string
+     * representation
+     */
+    public DtStart(String value, TimeZone timezone) throws ParseException {
+        super(DTSTART, timezone);
+        setValue(value);
     }
 
     /**

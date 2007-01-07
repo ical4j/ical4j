@@ -76,6 +76,16 @@ public abstract class DateProperty extends Property {
     }
 
     /**
+     * Creates a new instance of the named property with an initial timezone.
+     * @param name property name
+     * @param timezone initial timezone
+     */
+    public DateProperty(final String name, TimeZone timezone) {
+        super(name);
+        setTimeZone(timezone);
+    }
+
+    /**
      * @return Returns the date.
      */
     public final Date getDate() {
@@ -90,19 +100,21 @@ public abstract class DateProperty extends Property {
         if (date instanceof DateTime) {
             setTimeZone(((DateTime) date).getTimeZone());
         }
+        else {
+            // ensure timezone is null for VALUE=DATE properties..
+            setTimeZone(null);
+        }
         this.date = date;
     }
 
     /**
      * Default setValue() implementation. Allows for either DATE or DATE-TIME values.
      */
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
-     */
     public void setValue(final String value) throws ParseException {
         // value can be either a date-time or a date..
         if (Value.DATE.equals(getParameter(Parameter.VALUE))) {
+            // ensure timezone is null for VALUE=DATE properties..
+            setTimeZone(null);
             this.date = new Date(value);
         }
         else {
@@ -135,7 +147,7 @@ public abstract class DateProperty extends Property {
             if (getDate() != null) {
                 ((DateTime) getDate()).setTimeZone(timezone);
             }
-            getParameters().remove(getParameter(Parameter.TZID));
+
             TzId tzId = new TzId(timezone.getID());
             getParameters().replace(tzId);
         }
