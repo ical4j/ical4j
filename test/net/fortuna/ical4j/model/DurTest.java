@@ -35,6 +35,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -94,7 +95,7 @@ public class DurTest extends TestCase {
         Date start = cal.getTime();
         
         cal.add(Calendar.YEAR, 1);
-        assertEquals("P52W", new Dur(start, cal.getTime()).toString());
+        assertEquals("P365D", new Dur(start, cal.getTime()).toString());
         
         cal.setTime(start);
         cal.add(Calendar.WEEK_OF_YEAR, -5);
@@ -125,7 +126,7 @@ public class DurTest extends TestCase {
         cal.setTime(start);
         cal.add(Calendar.YEAR, -2);
         cal.add(Calendar.WEEK_OF_YEAR, 11);
-        assertEquals("-P94W", new Dur(start, cal.getTime()).toString());
+        assertEquals("-P654D", new Dur(start, cal.getTime()).toString());
     }
 
     /**
@@ -144,5 +145,15 @@ public class DurTest extends TestCase {
         Date end = cal.getTime();
         DtEnd dtEnd = new DtEnd(new DateTime(end));
         assertEquals("PT23H59M", new Dur(dtStart.getDate(), dtEnd.getDate()).toString());
+    }
+    
+    /**
+     * @throws ParseException
+     */
+    public void testCrossYearDur() throws ParseException {
+        Dur duration = new Dur(new net.fortuna.ical4j.model.Date("20061231"),
+                new net.fortuna.ical4j.model.Date("20070101"));
+        
+        assertEquals("P1D", duration.toString());
     }
 }

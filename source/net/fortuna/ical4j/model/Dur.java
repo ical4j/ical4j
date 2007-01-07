@@ -45,63 +45,63 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Represents a duration of time in iCalendar. Note that according to RFC2445
- * durations represented in weeks are mutually exclusive of other duration
- * fields.
+ * Represents a duration of time in iCalendar. Note that according to RFC2445 durations represented in weeks are
+ * mutually exclusive of other duration fields.
+ * 
  * <pre>
- * 4.3.6   Duration
- * 
- *    Value Name: DURATION
- * 
- *    Purpose: This value type is used to identify properties that contain
- *    a duration of time.
- * 
- *    Formal Definition: The value type is defined by the following
- *    notation:
- * 
- *      dur-value  = (["+"] / "-") "P" (dur-date / dur-time / dur-week)
- * 
- *      dur-date   = dur-day [dur-time]
- *      dur-time   = "T" (dur-hour / dur-minute / dur-second)
- *      dur-week   = 1*DIGIT "W"
- *      dur-hour   = 1*DIGIT "H" [dur-minute]
- *      dur-minute = 1*DIGIT "M" [dur-second]
- *      dur-second = 1*DIGIT "S"
- *      dur-day    = 1*DIGIT "D"
+ *  4.3.6   Duration
+ *  
+ *     Value Name: DURATION
+ *  
+ *     Purpose: This value type is used to identify properties that contain
+ *     a duration of time.
+ *  
+ *     Formal Definition: The value type is defined by the following
+ *     notation:
+ *  
+ *       dur-value  = ([&quot;+&quot;] / &quot;-&quot;) &quot;P&quot; (dur-date / dur-time / dur-week)
+ *  
+ *       dur-date   = dur-day [dur-time]
+ *       dur-time   = &quot;T&quot; (dur-hour / dur-minute / dur-second)
+ *       dur-week   = 1*DIGIT &quot;W&quot;
+ *       dur-hour   = 1*DIGIT &quot;H&quot; [dur-minute]
+ *       dur-minute = 1*DIGIT &quot;M&quot; [dur-second]
+ *       dur-second = 1*DIGIT &quot;S&quot;
+ *       dur-day    = 1*DIGIT &quot;D&quot;
  * </pre>
  * 
  * @author Ben Fortuna
  */
 public class Dur implements Comparable, Serializable {
-    
+
     private static final long serialVersionUID = 5013232281547134583L;
-    
+
     private static final int DAYS_PER_WEEK = 7;
-    
+
     private static final int WEEKS_PER_YEAR = 52;
-    
+
     private static final int SECONDS_PER_MINUTE = 60;
-    
+
     private static final int MINUTES_PER_HOUR = 60;
-    
+
     private static final int HOURS_PER_DAY = 24;
-    
+
     private static final int DAYS_PER_YEAR = 365;
-    
+
     private transient Log log = LogFactory.getLog(Dur.class);
 
     private boolean negative;
-    
+
     private int weeks;
-    
+
     private int days;
-    
+
     private int hours;
-    
+
     private int minutes;
-    
+
     private int seconds;
-    
+
     /**
      * Constructs a new duration instance from a string representation.
      * @param value a string representation of a duration
@@ -117,7 +117,8 @@ public class Dur implements Comparable, Serializable {
         String token = null;
         String prevToken = null;
 
-        for (StringTokenizer t = new StringTokenizer(value, "+-PWDTHMS", true); t.hasMoreTokens();) {
+        for (StringTokenizer t = new StringTokenizer(value, "+-PWDTHMS", true); t
+                .hasMoreTokens();) {
             prevToken = token;
             token = t.nextToken();
 
@@ -156,7 +157,7 @@ public class Dur implements Comparable, Serializable {
             }
         }
     }
-    
+
     /**
      * Constructs a new duration from the specified weeks.
      * @param weeks a duration in weeks.
@@ -168,7 +169,7 @@ public class Dur implements Comparable, Serializable {
         this.minutes = 0;
         this.seconds = 0;
     }
-    
+
     /**
      * Constructs a new duration from the specified arguments.
      * @param days duration in days
@@ -176,125 +177,87 @@ public class Dur implements Comparable, Serializable {
      * @param minutes duration in minutes
      * @param seconds duration in seconds
      */
-    public Dur(final int days, final int hours, final int minutes, final int seconds) {
+    public Dur(final int days, final int hours, final int minutes,
+            final int seconds) {
         this.weeks = 0;
         this.days = days;
         this.hours = hours;
         this.minutes = minutes;
         this.seconds = seconds;
     }
-    
+
     /**
-     * Constructs a new duration representing the time between the two
-     * specified dates. The end date may precede the start date in order
-     * to represent a negative duration.
+     * Constructs a new duration representing the time between the two specified dates. The end date may precede the
+     * start date in order to represent a negative duration.
      * @param start the start date of the duration
      * @param end the end date of the duration
      */
-    public Dur(final Date start, final Date end) {
+    public Dur(Date start, Date end) {
+        // Negative range? (start occurs after end)
+        negative = start.compareTo(end) > 0;
+        if (negative) {
+            // Swap the dates (which eliminates the need to bother with
+            // negative after this!)
+            Date t = start;
+            start = end;
+            end = t;
+        }
+
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(start);
         Calendar endCal = Calendar.getInstance();
         endCal.setTime(end);
-        
-        int yearDelta = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
-        int weekDelta = endCal.get(Calendar.WEEK_OF_YEAR) - startCal.get(Calendar.WEEK_OF_YEAR);
-        int dayDelta = endCal.get(Calendar.DAY_OF_YEAR) - startCal.get(Calendar.DAY_OF_YEAR);
-        int hourDelta = endCal.get(Calendar.HOUR_OF_DAY) - startCal.get(Calendar.HOUR_OF_DAY);
-        int minuteDelta = endCal.get(Calendar.MINUTE) - startCal.get(Calendar.MINUTE);
-        int secondDelta = endCal.get(Calendar.SECOND) - startCal.get(Calendar.SECOND);
-        
-        // test for negativity..
-        if (yearDelta < 0
-                || (yearDelta == 0 && dayDelta < 0)
-                || (yearDelta == 0 && dayDelta == 0 && hourDelta < 0)
-                || (yearDelta == 0 && dayDelta == 0 && hourDelta == 0 && minuteDelta < 0)
-                || (yearDelta == 0 && dayDelta == 0 && hourDelta == 0 && minuteDelta == 0 && secondDelta < 0)) {
-            negative = true;
+
+        // Init our duration interval (which is in units that evolve as we
+        // compute, below)
+        int dur = 0;
+
+        // Count days to get to the right year (loop in the very rare chance
+        // that a leap year causes us to come up short)
+        int nYears = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
+        while (nYears > 0) {
+            startCal.add(Calendar.DATE, 365 * nYears);
+            dur += 365 * nYears;
+            nYears = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
         }
-        
-        if ((dayDelta % DAYS_PER_WEEK) + hourDelta + minuteDelta + secondDelta == 0) {
-            // weeks..
-            while (startCal.get(Calendar.YEAR) != endCal.get(Calendar.YEAR)) {
-                weekDelta = WEEKS_PER_YEAR * (endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR));
-//                if (weekDelta < 0) {
-//                    negative = true;
-//                }
-                weeks += weekDelta;
-                startCal.add(Calendar.WEEK_OF_YEAR, weekDelta);
-            }
-            if (startCal.get(Calendar.WEEK_OF_YEAR) != endCal.get(Calendar.WEEK_OF_YEAR)) {
-                weekDelta = endCal.get(Calendar.WEEK_OF_YEAR) - startCal.get(Calendar.WEEK_OF_YEAR);
-//                if (weeks == 0 && weekDelta < 0) {
-//                    negative = true;
-//                }
-                weeks += weekDelta;
-            }
-            weeks = Math.abs(weeks);
+
+        // Count days to get to the right day
+        dur += endCal.get(Calendar.DAY_OF_YEAR)
+                - startCal.get(Calendar.DAY_OF_YEAR);
+
+        // Count hours to get to right hour
+        dur *= 24; // days -> hours
+        dur += endCal.get(Calendar.HOUR_OF_DAY)
+                - startCal.get(Calendar.HOUR_OF_DAY);
+
+        // ... to the right minute
+        dur *= 60; // hours -> minutes
+        dur += endCal.get(Calendar.MINUTE) - startCal.get(Calendar.MINUTE);
+
+        // ... and second
+        dur *= 60; // minutes -> seconds
+        dur += endCal.get(Calendar.SECOND) - startCal.get(Calendar.SECOND);
+
+        // Now unwind our units
+        seconds = dur % 60;
+        dur = dur / 60; // seconds -> minutes (drop remainder seconds)
+        minutes = dur % 60;
+        dur /= 60; // minutes -> hours (drop remainder minutes)
+        hours = dur % 24;
+        dur /= 24; // hours -> days (drop remainder hours)
+        days = dur;
+        weeks = 0;
+
+        // Special case for week-only representation
+        if (seconds == 0 && minutes == 0 && hours == 0
+                && (days % DAYS_PER_WEEK) == 0) {
+            weeks = days / DAYS_PER_WEEK;
             days = 0;
-            hours = 0;
-            minutes = 0;
-            seconds = 0;
-        }
-        else {
-            // seconds..
-            if (secondDelta > 0 && negative) {
-                startCal.add(Calendar.MINUTE, -1);
-                seconds = SECONDS_PER_MINUTE - secondDelta;
-            }
-            else if (secondDelta < 0 && !negative) {
-                startCal.add(Calendar.MINUTE, 1);
-                seconds = SECONDS_PER_MINUTE + secondDelta;
-            }
-            else {
-                seconds = Math.abs(secondDelta);
-            }
-
-            // minutes..
-            minuteDelta = endCal.get(Calendar.MINUTE) - startCal.get(Calendar.MINUTE);
-            if (minuteDelta > 0 && negative) {
-                startCal.add(Calendar.HOUR, -1);
-                minutes = MINUTES_PER_HOUR - minuteDelta;
-            }
-            else if (minuteDelta < 0 && !negative) {
-                startCal.add(Calendar.HOUR, 1);
-                minutes = MINUTES_PER_HOUR + minuteDelta;
-            }
-            else {
-                minutes = Math.abs(minuteDelta);
-            }
-
-            // hours..
-            hourDelta = endCal.get(Calendar.HOUR_OF_DAY) - startCal.get(Calendar.HOUR_OF_DAY);
-            if (hourDelta > 0 && negative) {
-                startCal.add(Calendar.DAY_OF_YEAR, -1);
-                hours = HOURS_PER_DAY - hourDelta;
-            }
-            else if (hourDelta < 0 && !negative) {
-                startCal.add(Calendar.DAY_OF_YEAR, 1);
-                hours = HOURS_PER_DAY + hourDelta;
-            }
-            else {
-                hours = Math.abs(hourDelta);
-            }
-            
-            // days..
-            while (startCal.get(Calendar.YEAR) != endCal.get(Calendar.YEAR)) {
-                dayDelta = DAYS_PER_YEAR * (endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR));
-                days += dayDelta;
-                startCal.add(Calendar.DAY_OF_YEAR, dayDelta);
-            }
-            if (startCal.get(Calendar.DAY_OF_YEAR) != endCal.get(Calendar.DAY_OF_YEAR)) {
-                days += endCal.get(Calendar.DAY_OF_YEAR) - startCal.get(Calendar.DAY_OF_YEAR);
-            }
-            days = Math.abs(days);
-            weeks = 0;
         }
     }
-    
+
     /**
-     * Returns a date representing the end of this duration from
-     * the specified start date.
+     * Returns a date representing the end of this duration from the specified start date.
      * @param start the date to start the duration
      * @return the end of the duration as a date
      */
@@ -317,7 +280,7 @@ public class Dur implements Comparable, Serializable {
         }
         return cal.getTime();
     }
-    
+
     /**
      * Provides a negation of this instance.
      * @return a Dur instance that represents a negation of this instance
@@ -328,8 +291,9 @@ public class Dur implements Comparable, Serializable {
         negated.negative = !negative;
         return negated;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     public final String toString() {
@@ -365,7 +329,7 @@ public class Dur implements Comparable, Serializable {
         }
         return b.toString();
     }
-    
+
     /**
      * @param arg0
      * @return
@@ -373,7 +337,7 @@ public class Dur implements Comparable, Serializable {
     public final int compareTo(final Object arg0) {
         return compareTo((Dur) arg0);
     }
-    
+
     /**
      * Compares this duration with another.
      * @param arg0
@@ -381,7 +345,7 @@ public class Dur implements Comparable, Serializable {
      */
     public final int compareTo(final Dur arg0) {
         if (isNegative() != arg0.isNegative()) {
-//            return Boolean.valueOf(isNegative()).compareTo(Boolean.valueOf(arg0.isNegative()));
+            // return Boolean.valueOf(isNegative()).compareTo(Boolean.valueOf(arg0.isNegative()));
             // for pre-java 1.5 compatibility..
             if (isNegative()) {
                 return Integer.MAX_VALUE;
@@ -446,15 +410,15 @@ public class Dur implements Comparable, Serializable {
     public final int getWeeks() {
         return weeks;
     }
-    
+
     /**
      * @param stream
      * @throws IOException
      * @throws ClassNotFoundException
      */
     private void readObject(java.io.ObjectInputStream stream)
-        throws IOException, ClassNotFoundException {
-        
+            throws IOException, ClassNotFoundException {
+
         stream.defaultReadObject();
         log = LogFactory.getLog(Dur.class);
     }
