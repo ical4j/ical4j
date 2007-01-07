@@ -141,8 +141,8 @@ public class Geo extends Property {
      */
     public Geo() {
         super(GEO);
-        latitude = new BigDecimal(0);
-        longitude = new BigDecimal(0);
+        latitude = BigDecimal.valueOf(0);
+        longitude = BigDecimal.valueOf(0);
     }
 
     /**
