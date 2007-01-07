@@ -82,10 +82,10 @@ public class DtStartTest extends TestCase {
     /**
      * Unit tests for timezone constructor.
      */
-    public void testDtStartTimezone() {
+    public void testDtStartTimezone() throws ParseException {
         DtStart dtStart = new DtStart(timezone);
 
-        dtStart.setDate(new DateTime());
+        dtStart.setValue(new DateTime().toString());
         assertEquals(timezone, dtStart.timezone);
 
         // initialising with DATE value should reset timezone..
