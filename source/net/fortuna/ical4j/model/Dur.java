@@ -78,8 +78,6 @@ public class Dur implements Comparable, Serializable {
 
     private static final int DAYS_PER_WEEK = 7;
 
-    private static final int WEEKS_PER_YEAR = 52;
-
     private static final int SECONDS_PER_MINUTE = 60;
 
     private static final int MINUTES_PER_HOUR = 60;
@@ -216,8 +214,8 @@ public class Dur implements Comparable, Serializable {
         // that a leap year causes us to come up short)
         int nYears = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
         while (nYears > 0) {
-            startCal.add(Calendar.DATE, 365 * nYears);
-            dur += 365 * nYears;
+            startCal.add(Calendar.DATE, DAYS_PER_YEAR * nYears);
+            dur += DAYS_PER_YEAR * nYears;
             nYears = endCal.get(Calendar.YEAR) - startCal.get(Calendar.YEAR);
         }
 
@@ -226,25 +224,25 @@ public class Dur implements Comparable, Serializable {
                 - startCal.get(Calendar.DAY_OF_YEAR);
 
         // Count hours to get to right hour
-        dur *= 24; // days -> hours
+        dur *= HOURS_PER_DAY; // days -> hours
         dur += endCal.get(Calendar.HOUR_OF_DAY)
                 - startCal.get(Calendar.HOUR_OF_DAY);
 
         // ... to the right minute
-        dur *= 60; // hours -> minutes
+        dur *= MINUTES_PER_HOUR; // hours -> minutes
         dur += endCal.get(Calendar.MINUTE) - startCal.get(Calendar.MINUTE);
 
         // ... and second
-        dur *= 60; // minutes -> seconds
+        dur *= SECONDS_PER_MINUTE; // minutes -> seconds
         dur += endCal.get(Calendar.SECOND) - startCal.get(Calendar.SECOND);
 
         // Now unwind our units
-        seconds = dur % 60;
-        dur = dur / 60; // seconds -> minutes (drop remainder seconds)
-        minutes = dur % 60;
-        dur /= 60; // minutes -> hours (drop remainder minutes)
-        hours = dur % 24;
-        dur /= 24; // hours -> days (drop remainder hours)
+        seconds = dur % SECONDS_PER_MINUTE;
+        dur = dur / SECONDS_PER_MINUTE; // seconds -> minutes (drop remainder seconds)
+        minutes = dur % MINUTES_PER_HOUR;
+        dur /= MINUTES_PER_HOUR; // minutes -> hours (drop remainder minutes)
+        hours = dur % HOURS_PER_DAY;
+        dur /= HOURS_PER_DAY; // hours -> days (drop remainder hours)
         days = dur;
         weeks = 0;
 
