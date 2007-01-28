@@ -596,4 +596,17 @@ public class RecurTest extends TestCase {
                 new DateTime(end), Value.DATE_TIME);
         assertEquals(16, recurrences.size());
     }
+    
+    /**
+     * Test creation of recur instances.
+     */
+    public void testCreate() throws ParseException {
+        Recur recur = new Recur("FREQ=MONTHLY;INTERVAL=2;BYDAY=3MO");
+        
+        assertEquals(Recur.MONTHLY, recur.getFrequency());
+        assertEquals(2, recur.getInterval());
+        
+        WeekDay day = new WeekDay(WeekDay.MO, 3);
+        assertEquals(day, recur.getDayList().get(0));
+    }
 }
