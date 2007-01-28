@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -44,14 +44,12 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Defines a list of iCalendar parameters. A parameter list may be specified as
- * unmodifiable at instantiation - useful for constant properties that you don't
- * want modified.
- *
+ * Defines a list of iCalendar parameters. A parameter list may be specified as unmodifiable at instantiation - useful
+ * for constant properties that you don't want modified.
  * @author Ben Fortuna
  */
 public class ParameterList implements Serializable {
-    
+
     private static final long serialVersionUID = -1913059830016450169L;
 
     private List parameters;
@@ -62,7 +60,7 @@ public class ParameterList implements Serializable {
     public ParameterList() {
         this(false);
     }
-    
+
     /**
      * Constructor.
      */
@@ -74,19 +72,20 @@ public class ParameterList implements Serializable {
             parameters = new ArrayList();
         }
     }
-    
+
     /**
-     * Creates a deep copy of the specified parameter list. That is,
-     * copies of all parameters in the specified list are added to
-     * this list.
+     * Creates a deep copy of the specified parameter list. That is, copies of all parameters in the specified list are
+     * added to this list.
      * @param list a parameter list to copy parameters from
      * @throws URISyntaxException
      */
-    public ParameterList(final ParameterList list, final boolean unmodifiable) throws URISyntaxException {
+    public ParameterList(final ParameterList list, final boolean unmodifiable)
+            throws URISyntaxException {
         parameters = new ArrayList();
         for (Iterator i = list.iterator(); i.hasNext();) {
             Parameter parameter = (Parameter) i.next();
-            parameters.add(ParameterFactoryImpl.getInstance().createParameter(parameter.getName(), parameter.getValue()));
+            parameters.add(ParameterFactoryImpl.getInstance().createParameter(
+                    parameter.getName(), parameter.getValue()));
         }
         if (unmodifiable) {
             parameters = Collections.unmodifiableList(parameters);
@@ -111,9 +110,7 @@ public class ParameterList implements Serializable {
 
     /**
      * Returns the first parameter with the specified name.
-     *
-     * @param aName
-     *            name of the parameter
+     * @param aName name of the parameter
      * @return the first matching parameter or null if no matching parameters
      */
     public final Parameter getParameter(final String aName) {
@@ -121,7 +118,7 @@ public class ParameterList implements Serializable {
         for (Iterator i = parameters.iterator(); i.hasNext();) {
             Parameter p = (Parameter) i.next();
 
-            if (aName.equals(p.getName())) {
+            if (aName.equalsIgnoreCase(p.getName())) {
                 return p;
             }
         }
@@ -131,8 +128,7 @@ public class ParameterList implements Serializable {
 
     /**
      * Returns a list of parameters with the specified name.
-     * @param name
-     *            name of parameters to return
+     * @param name name of parameters to return
      * @return a parameter list
      */
     public final ParameterList getParameters(final String name) {
@@ -141,7 +137,7 @@ public class ParameterList implements Serializable {
         for (Iterator i = parameters.iterator(); i.hasNext();) {
             Parameter p = (Parameter) i.next();
 
-            if (p.getName().equals(name)) {
+            if (p.getName().equalsIgnoreCase(name)) {
                 list.add(p);
             }
         }
@@ -149,8 +145,9 @@ public class ParameterList implements Serializable {
     }
 
     /**
-     * Add a parameter to the list. Note that this method will not remove existing
-     * parameters of the same type. To achieve this use { @link ParameterList#replace(Parameter) } 
+     * Add a parameter to the list. Note that this method will not remove existing parameters of the same type. To
+     * achieve this use {
+     * @link ParameterList#replace(Parameter) }
      * @param parameter the parameter to add
      * @return true
      * @see List#add(java.lang.Object)
@@ -158,15 +155,15 @@ public class ParameterList implements Serializable {
     public final boolean add(final Parameter parameter) {
         return parameters.add(parameter);
     }
-    
+
     /**
      * Replace any parameters of the same type with the one specified.
-     * @param parameter parameter to add to this list in place of all others with
-     * the same name
+     * @param parameter parameter to add to this list in place of all others with the same name
      * @return true if successfully added to this list
      */
     public final boolean replace(final Parameter parameter) {
-        for (Iterator i = getParameters(parameter.getName()).iterator(); i.hasNext();) {
+        for (Iterator i = getParameters(parameter.getName()).iterator(); i
+                .hasNext();) {
             remove((Parameter) i.next());
         }
         return add(parameter);
@@ -207,9 +204,8 @@ public class ParameterList implements Serializable {
     }
 
     /**
-     * Uses {@link ObjectUtils} to test equality.
-     * Two parameter lists are equals if and only if
-     * they contain the same set of parameters.
+     * Uses {@link ObjectUtils} to test equality. Two parameter lists are equals if and only if they contain the same
+     * set of parameters.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public final boolean equals(final Object arg0) {
