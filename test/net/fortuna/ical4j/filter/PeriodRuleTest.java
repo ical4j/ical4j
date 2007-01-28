@@ -42,9 +42,11 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
+import net.fortuna.ical4j.model.component.VEvent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -87,5 +89,45 @@ public class PeriodRuleTest extends TestCase {
             }
         }
         LOG.info(filtered.size() + " matching component(s).");
+    }
+    
+    /**
+     * Test filtering of all-day events.
+     */
+    public void testFilteringAllDayEvents() {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(java.util.Calendar.MONTH, java.util.Calendar.JANUARY);
+        cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
+        
+        Date start = new Date(cal.getTime());
+        
+        cal.set(java.util.Calendar.DAY_OF_MONTH, 26);
+        Date end = new Date(cal.getTime());
+        
+        VEvent event = new VEvent(start, end, "mid jan event");
+        
+        ComponentList components = new ComponentList();
+        components.add(event);
+        
+        cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+        cal.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        cal.clear(java.util.Calendar.MINUTE);
+        cal.clear(java.util.Calendar.SECOND);
+        cal.clear(java.util.Calendar.MILLISECOND);
+        
+        Dur dur = new Dur(1, 0, 0, 0);
+        
+        while (cal.get(java.util.Calendar.MONTH) == java.util.Calendar.JANUARY) {
+            PeriodRule rule = new PeriodRule(
+                    new Period(new DateTime(cal.getTime()), dur));
+            Filter filter = new Filter(rule);
+            if (cal.get(java.util.Calendar.DAY_OF_MONTH) == 25) {
+                assertEquals(1, filter.filter(components).size());
+            }
+            else {
+                assertEquals(0, filter.filter(components).size());
+            }
+            cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
+        }
     }
 }

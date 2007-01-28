@@ -51,6 +51,10 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class Period implements Serializable, Comparable {
 
+    public static final int INCLUSIVE_START = 1;
+
+    public static final int INCLUSIVE_END = 2;
+    
     private static final long serialVersionUID = 7321090422911676490L;
 
     private DateTime start;
@@ -159,7 +163,22 @@ public class Period implements Serializable, Comparable {
      * 
      */
     public final boolean includes(final Date date) {
-        return includes(date, true);
+        return includes(date, INCLUSIVE_START | INCLUSIVE_END);
+    }
+
+    /**
+     * @param date
+     * @param inclusive
+     * @return
+     * @deprecated use {@link Period#includes(Date, int)} instead.
+     */
+    public final boolean includes(final Date date, boolean inclusive) {
+        if (inclusive) {
+            return includes(date, INCLUSIVE_START | INCLUSIVE_END);
+        }
+        else {
+            return includes(date, 0);
+        }
     }
 
     /**
@@ -169,11 +188,21 @@ public class Period implements Serializable, Comparable {
      * in the calculation
      * @return true if the date is in the perod, false otherwise
      */
-    public final boolean includes(final Date date, final boolean inclusive) {
-        if (inclusive) {
-            return (!getStart().after(date) && !getEnd().before(date));
+    public final boolean includes(final Date date, final int inclusiveMask) {
+        boolean includes = true;
+        if ((inclusiveMask & INCLUSIVE_START) > 0) {
+            includes = includes && !getStart().after(date);
         }
-        return (getStart().before(date) && getEnd().after(date));
+        else {
+            includes = includes && getStart().before(date);
+        }
+        if ((inclusiveMask & INCLUSIVE_END) > 0) {
+            includes = includes && !getEnd().before(date);
+        }
+        else {
+            includes = includes && getEnd().after(date);
+        }
+        return includes;
     }
 
     /**

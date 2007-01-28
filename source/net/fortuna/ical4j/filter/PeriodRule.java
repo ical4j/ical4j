@@ -77,12 +77,12 @@ public class PeriodRule extends ComponentRule {
      */
     public final boolean match(final Component component) {
         DtStart start = (DtStart) component.getProperty(Property.DTSTART);
-        if (start != null && period.includes(start.getDate())) {
+        if (start != null && period.includes(start.getDate(), Period.INCLUSIVE_START)) {
             debug(start.getDate(), "start date");
             return true;
         }
         DtEnd end = (DtEnd) component.getProperty(Property.DTEND);
-        if (end != null && period.includes(end.getDate(), false)) {
+        if (end != null && period.includes(end.getDate(), Period.INCLUSIVE_END)) {
             debug(end.getDate(), "end date");
             return true;
         }
