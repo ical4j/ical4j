@@ -180,7 +180,7 @@ public class DateTime extends Date {
                     setTime(value, RELAXED_FORMAT, timezone);
                 }
                 else {
-                    throw pe;
+                    throw pe2;
                 }
             }
             setTimeZone(timezone);
