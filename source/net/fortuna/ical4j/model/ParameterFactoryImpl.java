@@ -1,6 +1,6 @@
 /*
  * $Id $
- * 
+ *
  * [05-Apr-2004]
  *
  * Copyright (c) 2004, Ben Fortuna
@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -36,8 +36,6 @@
 package net.fortuna.ical4j.model;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.fortuna.ical4j.model.parameter.AltRep;
 import net.fortuna.ical4j.model.parameter.Cn;
@@ -63,20 +61,17 @@ import net.fortuna.ical4j.model.parameter.XParameter;
 
 /**
  * A factory for creating iCalendar parameters.
- *
  * @author Ben Fortuna
  */
-public final class ParameterFactoryImpl implements ParameterFactory {
+public final class ParameterFactoryImpl extends AbstractContentFactory
+    implements ParameterFactory {
 
     private static ParameterFactoryImpl instance = new ParameterFactoryImpl();
-    
-    private Map factories;
 
     /**
      * Constructor made private to prevent instantiation.
      */
     private ParameterFactoryImpl() {
-        factories = new HashMap();
         factories.put(Parameter.ALTREP, createAltRepFactory());
         factories.put(Parameter.CN, createCnFactory());
         factories.put(Parameter.CUTYPE, createCuTypeFactory());
@@ -98,47 +93,51 @@ public final class ParameterFactoryImpl implements ParameterFactory {
         factories.put(Parameter.TZID, createTzIdFactory());
         factories.put(Parameter.VALUE, createValueFactory());
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createAltRepFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value) throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 return new AltRep(value);
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createCnFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 return new Cn(value);
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createCuTypeFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
-                CuType parameter =  new CuType(value);
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
+                CuType parameter = new CuType(value);
                 if (CuType.INDIVIDUAL.equals(parameter)) {
                     return CuType.INDIVIDUAL;
                 }
@@ -158,62 +157,66 @@ public final class ParameterFactoryImpl implements ParameterFactory {
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createDelegatedFromFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 return new DelegatedFrom(value);
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createDelegatedToFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 return new DelegatedTo(value);
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createDirFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 return new Dir(value);
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createEncodingFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 Encoding parameter = new Encoding(value);
                 if (Encoding.EIGHT_BIT.equals(parameter)) {
                     return Encoding.EIGHT_BIT;
@@ -225,32 +228,34 @@ public final class ParameterFactoryImpl implements ParameterFactory {
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createFmtTypeFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 return new FmtType(value);
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createFbTypeFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 FbType parameter = new FbType(value);
                 if (FbType.FREE.equals(parameter)) {
                     return FbType.FREE;
@@ -268,47 +273,50 @@ public final class ParameterFactoryImpl implements ParameterFactory {
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createLanguageFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 return new Language(value);
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createMemberFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 return new Member(value);
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createPartStatFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 PartStat parameter = new PartStat(value);
                 if (PartStat.NEEDS_ACTION.equals(parameter)) {
                     return PartStat.NEEDS_ACTION;
@@ -335,17 +343,18 @@ public final class ParameterFactoryImpl implements ParameterFactory {
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createRangeFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 Range parameter = new Range(value);
                 if (Range.THISANDFUTURE.equals(parameter)) {
                     return Range.THISANDFUTURE;
@@ -357,17 +366,18 @@ public final class ParameterFactoryImpl implements ParameterFactory {
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createRelatedFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 Related parameter = new Related(value);
                 if (Related.START.equals(parameter)) {
                     return Related.START;
@@ -379,17 +389,18 @@ public final class ParameterFactoryImpl implements ParameterFactory {
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createRelTypeFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 RelType parameter = new RelType(value);
                 if (RelType.PARENT.equals(parameter)) {
                     return RelType.PARENT;
@@ -404,17 +415,18 @@ public final class ParameterFactoryImpl implements ParameterFactory {
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createRoleFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 Role parameter = new Role(value);
                 if (Role.CHAIR.equals(parameter)) {
                     return Role.CHAIR;
@@ -432,17 +444,18 @@ public final class ParameterFactoryImpl implements ParameterFactory {
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createRsvpFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 Rsvp parameter = new Rsvp(value);
                 if (Rsvp.TRUE.equals(parameter)) {
                     return Rsvp.TRUE;
@@ -460,41 +473,44 @@ public final class ParameterFactoryImpl implements ParameterFactory {
      */
     private ParameterFactory createSentByFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 return new SentBy(value);
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createTzIdFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 return new TzId(value);
             }
         };
     }
-    
+
     /**
      * @return
      */
     private ParameterFactory createValueFactory() {
         return new ParameterFactory() {
-            /* (non-Javadoc)
+            /*
+             * (non-Javadoc)
              * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
              */
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
                 Value parameter = new Value(value);
                 if (Value.BINARY.equals(parameter)) {
                     return Value.BINARY;
@@ -542,7 +558,7 @@ public final class ParameterFactoryImpl implements ParameterFactory {
             }
         };
     }
-    
+
     /**
      * @return Returns the instance.
      */
@@ -552,14 +568,11 @@ public final class ParameterFactoryImpl implements ParameterFactory {
 
     /**
      * Creates a parameter.
-     *
-     * @param name
-     *            name of the parameter
-     * @param value
-     *            a parameter value
+     * @param name name of the parameter
+     * @param value a parameter value
      * @return a component
-     * @throws URISyntaxException thrown when the specified string
-     * is not a valid representation of a URI for selected parameters
+     * @throws URISyntaxException thrown when the specified string is not a valid representation of a URI for selected
+     * parameters
      */
     public Parameter createParameter(final String name, final String value)
             throws URISyntaxException {
@@ -570,11 +583,15 @@ public final class ParameterFactoryImpl implements ParameterFactory {
         else if (isExperimentalName(name)) {
             return new XParameter(name, value);
         }
+        else if (allowIllegalNames()) {
+            return new XParameter(name, value);
+        }
         else {
-            throw new IllegalArgumentException("Invalid parameter name: " + name);
+            throw new IllegalArgumentException("Invalid parameter name: "
+                    + name);
         }
     }
-    
+
     /**
      * @param name
      * @return

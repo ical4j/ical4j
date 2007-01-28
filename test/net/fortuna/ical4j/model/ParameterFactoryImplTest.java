@@ -6,6 +6,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -15,23 +17,25 @@ import junit.framework.TestCase;
  * @author Ben_Fortuna
  */
 public class ParameterFactoryImplTest extends TestCase {
-    
+
     private static Log log = LogFactory.getLog(ParameterFactoryImplTest.class);
 
-	/**
-	 * @throws Exception
-	 */
-	public void testCreateParameter() throws Exception {
-        Parameter p = ParameterFactoryImpl.getInstance().createParameter(Parameter.ALTREP, "Test");
+    /**
+     * @throws Exception
+     */
+    public void testCreateParameter() throws Exception {
+        Parameter p = ParameterFactoryImpl.getInstance().createParameter(
+                Parameter.ALTREP, "Test");
         assertNotNull(p);
         log.info(p);
-	}
+    }
 
     /**
      * @throws Exception
      */
     public void testCreateExperimentalParameter() throws Exception {
-        Parameter p = ParameterFactoryImpl.getInstance().createParameter("X-my-param", "Test");
+        Parameter p = ParameterFactoryImpl.getInstance().createParameter(
+                "X-my-param", "Test");
         assertNotNull(p);
         log.info(p);
     }
@@ -41,11 +45,25 @@ public class ParameterFactoryImplTest extends TestCase {
      */
     public void testInvalidParameter() throws Exception {
         try {
-            ParameterFactoryImpl.getInstance().createParameter("my-param", "Test");
+            ParameterFactoryImpl.getInstance().createParameter("my-param",
+                    "Test");
             fail("Should throw an IllegalArgumentException");
         }
         catch (IllegalArgumentException iae) {
-            log.info("Invalid parameter", iae);
+            log.debug("Invalid parameter", iae);
         }
+    }
+    
+    /**
+     * @throws Exception
+     */
+    public void testRelaxedParsing() throws Exception {
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_PARSING, true);
+        
+        ParameterFactoryImpl.getInstance().createParameter("VVENUE", "My Place");
+        
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
 }

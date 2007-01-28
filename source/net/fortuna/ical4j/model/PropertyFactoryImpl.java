@@ -36,8 +36,6 @@ package net.fortuna.ical4j.model;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
 
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.Attach;
@@ -87,28 +85,21 @@ import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
-import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * A factory for creating iCalendar properties. Note that if relaxed parsing is enabled (via specifying the system
  * property: icalj.parsing.relaxed=true) illegal property names are allowed.
  * @author Ben Fortuna
  */
-public final class PropertyFactoryImpl implements PropertyFactory {
+public final class PropertyFactoryImpl extends AbstractContentFactory implements
+        PropertyFactory {
 
     private static PropertyFactoryImpl instance = new PropertyFactoryImpl();
-
-    private Map factories;
-
-    private boolean allowIllegalNames;
 
     /**
      * Constructor made private to prevent instantiation.
      */
     private PropertyFactoryImpl() {
-        allowIllegalNames = CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
-        factories = new HashMap();
         factories.put(Property.ACTION, createActionFactory());
         factories.put(Property.ATTACH, createAttachFactory());
         factories.put(Property.ATTENDEE, createAttendeeFactory());
@@ -1401,7 +1392,7 @@ public final class PropertyFactoryImpl implements PropertyFactory {
         else if (isExperimentalName(name)) {
             return new XProperty(name);
         }
-        else if (allowIllegalNames) {
+        else if (allowIllegalNames()) {
             return new XProperty(name);
         }
         else {
@@ -1420,6 +1411,7 @@ public final class PropertyFactoryImpl implements PropertyFactory {
     public Property createProperty(final String name,
             final ParameterList parameters, final String value)
             throws IOException, URISyntaxException, ParseException {
+
         PropertyFactory factory = (PropertyFactory) factories.get(name);
         if (factory != null) {
             return factory.createProperty(name, parameters, value);
@@ -1427,7 +1419,7 @@ public final class PropertyFactoryImpl implements PropertyFactory {
         else if (isExperimentalName(name)) {
             return new XProperty(name, parameters, value);
         }
-        else if (allowIllegalNames) {
+        else if (allowIllegalNames()) {
             return new XProperty(name);
         }
         else {
