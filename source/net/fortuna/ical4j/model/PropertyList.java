@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -39,11 +39,10 @@ import java.util.Iterator;
 
 /**
  * Defines a list of iCalendar properties.
- *
  * @author Ben Fortuna
  */
 public class PropertyList extends ArrayList implements Serializable {
-    
+
     private static final long serialVersionUID = -8875923766224921031L;
 
     /**
@@ -79,7 +78,7 @@ public class PropertyList extends ArrayList implements Serializable {
     public final Property getProperty(final String aName) {
         for (Iterator i = iterator(); i.hasNext();) {
             Property p = (Property) i.next();
-            if (p.getName().equals(aName)) {
+            if (p.getName().equalsIgnoreCase(aName)) {
                 return p;
             }
         }
@@ -88,15 +87,14 @@ public class PropertyList extends ArrayList implements Serializable {
 
     /**
      * Returns a list of properties with the specified name.
-     * @param name
-     *            name of properties to return
+     * @param name name of properties to return
      * @return a property list
      */
     public final PropertyList getProperties(final String name) {
         PropertyList list = new PropertyList();
         for (Iterator i = iterator(); i.hasNext();) {
             Property p = (Property) i.next();
-            if (p.getName().equals(name)) {
+            if (p.getName().equalsIgnoreCase(name)) {
                 list.add(p);
             }
         }
@@ -107,55 +105,32 @@ public class PropertyList extends ArrayList implements Serializable {
      * Add a property to the list.
      * @param property the property to add
      * @return true
-     * @see List#add(java.lang.Object)
+     * @see java.util.List#add(java.lang.Object)
      */
     public final boolean add(final Property property) {
         return add((Object) property);
     }
-    
+
     /**
-     * Overrides superclass to throw an <code>IllegalArgumentException</code>
-     * where argument is not a <code>net.fortuna.ical4j.model.Property</code>.
-     * @see List#add(E)
+     * Overrides superclass to throw an <code>IllegalArgumentException</code> where argument is not a
+     * <code>net.fortuna.ical4j.model.Property</code>.
+     * @see java.util.List#add(E)
      */
     public final boolean add(final Object arg0) {
         if (!(arg0 instanceof Property)) {
-            throw new IllegalArgumentException("Argument not a " + Property.class.getName());
+            throw new IllegalArgumentException("Argument not a "
+                    + Property.class.getName());
         }
         return super.add(arg0);
     }
 
     /**
-     * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
-     */
-//    public final boolean isEmpty() {
-//        return properties.isEmpty();
-//    }
-
-    /**
-     * @return an iterator
-     * @see List#iterator()
-     */
-//    public final Iterator iterator() {
-//        return properties.iterator();
-//    }
-
-    /**
      * Remove a property from the list.
      * @param property the property to remove
      * @return true if the list contained the specified property
-     * @see List#remove(java.lang.Object)
+     * @see java.util.List#remove(java.lang.Object)
      */
     public final boolean remove(final Property property) {
         return remove((Object) property);
     }
-
-    /**
-     * @return the number of properties in the list
-     * @see List#size()
-     */
-//    public final int size() {
-//        return properties.size();
-//    }
 }
