@@ -79,6 +79,9 @@ public abstract class Observance extends Component implements Comparable {
     // TODO: clear cache when observance definition changes (??)
     private Map onsets = new TreeMap();
 
+    /* If this is set we have rrules. If we get a date after this rebuild onsets */
+    private Date onsetLimit;
+
     private boolean rdatesCached = false;
 
     /**
@@ -147,6 +150,11 @@ public abstract class Observance extends Component implements Comparable {
 
         long start = System.currentTimeMillis();
 
+        if ((onsetLimit != null) && (date.after(onsetLimit))) {
+            onsets.clear();
+            rdatesCached = false;
+        }
+
         Date onset = getCachedOnset(date);
 
         if (log.isDebugEnabled()) {
@@ -195,10 +203,10 @@ public abstract class Observance extends Component implements Comparable {
                 // include future onsets to determine onset period..
                 Calendar cal = Dates.getCalendarInstance(date);
                 cal.setTime(date);
-                cal.add(Calendar.YEAR, 1);
-                Date endRecur = Dates.getInstance(cal.getTime(), dateType);
+                cal.add(Calendar.YEAR, 10);
+                onsetLimit = Dates.getInstance(cal.getTime(), dateType);
                 DateList recurrenceDates = rrule.getRecur().getDates(onset,
-                        endRecur, dateType);
+                         onsetLimit, dateType);
                 for (Iterator j = recurrenceDates.iterator(); j.hasNext();) {
                     Date rruleOnset = (Date) j.next();
                     if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
@@ -252,7 +260,7 @@ public abstract class Observance extends Component implements Comparable {
     private Date getCachedOnset(final Date date) {
         for (Iterator i = onsets.keySet().iterator(); i.hasNext();) {
             Period onsetPeriod = (Period) i.next();
-            if (onsetPeriod.includes(date)) {
+            if (onsetPeriod.includes(date, Period.INCLUSIVE_START)) {
                 return (Date) onsets.get(onsetPeriod);
             }
         }
@@ -301,7 +309,7 @@ public abstract class Observance extends Component implements Comparable {
         DtStart dtStart0 = (DtStart) arg0.getProperty(Property.DTSTART);
         return dtStart.getDate().compareTo(dtStart0.getDate());
     }
-    
+
     /**
      * @param stream
      * @throws IOException
@@ -309,7 +317,6 @@ public abstract class Observance extends Component implements Comparable {
      */
     private void readObject(java.io.ObjectInputStream stream)
         throws IOException, ClassNotFoundException {
-        
         stream.defaultReadObject();
         log = LogFactory.getLog(Observance.class);
     }
