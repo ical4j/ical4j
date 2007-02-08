@@ -91,8 +91,8 @@ public class CalendarBuilder implements ContentHandler {
      * Default constructor.
      */
     public CalendarBuilder() {
-        this(new CalendarParserImpl(), TimeZoneRegistryFactory.getInstance()
-                .createRegistry());
+        this(CalendarParserFactory.getInstance().createParser(),
+                TimeZoneRegistryFactory.getInstance().createRegistry());
     }
 
     /**
@@ -108,7 +108,7 @@ public class CalendarBuilder implements ContentHandler {
      * @param parser a calendar parser used to parse calendar files
      */
     public CalendarBuilder(final TimeZoneRegistry registry) {
-        this(new CalendarParserImpl(), registry);
+        this(CalendarParserFactory.getInstance().createParser(), registry);
     }
 
     /**
