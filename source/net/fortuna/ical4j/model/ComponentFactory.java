@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -46,21 +46,18 @@ import net.fortuna.ical4j.model.component.XComponent;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
- * A factory for creating iCalendar components. Note that if relaxed parsing is enabled (via
- * specifying the system property: icalj.parsing.relaxed=true) illegal component names are allowed.
+ * A factory for creating iCalendar components. Note that if relaxed parsing is enabled (via specifying the system
+ * property: icalj.parsing.relaxed=true) illegal component names are allowed.
  * @author Ben Fortuna
  */
 public final class ComponentFactory {
 
     private static ComponentFactory instance = new ComponentFactory();
 
-    private boolean allowIllegalNames;
-    
     /**
      * Constructor made private to prevent instantiation.
      */
     private ComponentFactory() {
-        allowIllegalNames = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 
     /**
@@ -69,21 +66,23 @@ public final class ComponentFactory {
     public static ComponentFactory getInstance() {
         return instance;
     }
-    
+
+    /**
+     * @param name
+     * @return
+     */
     public Component createComponent(final String name) {
         return createComponent(name, new PropertyList());
     }
 
     /**
      * Creates a component.
-     *
-     * @param name
-     *            name of the component
-     * @param properties
-     *            a list of component properties
+     * @param name name of the component
+     * @param properties a list of component properties
      * @return a component
      */
-    public Component createComponent(final String name, final PropertyList properties) {
+    public Component createComponent(final String name,
+            final PropertyList properties) {
         if (Component.VALARM.equals(name)) {
             return new VAlarm(properties);
         }
@@ -111,24 +110,20 @@ public final class ComponentFactory {
         else if (isExperimentalName(name)) {
             return new XComponent(name, properties);
         }
-        else if (allowIllegalNames) {
+        else if (allowIllegalNames()) {
             return new XComponent(name, properties);
         }
         else {
-            throw new IllegalArgumentException("Illegal component [" + name + "]");
+            throw new IllegalArgumentException("Illegal component [" + name
+                    + "]");
         }
     }
 
     /**
-     * Creates a component which contains sub-components. Currently the only
-     * such component is VTIMEZONE.
-     *
-     * @param name
-     *            name of the component
-     * @param properties
-     *            a list of component properties
-     * @param components
-     *            a list of sub-components (namely standard/daylight timezones)
+     * Creates a component which contains sub-components. Currently the only such component is VTIMEZONE.
+     * @param name name of the component
+     * @param properties a list of component properties
+     * @param components a list of sub-components (namely standard/daylight timezones)
      * @return a component
      */
     public Component createComponent(final String name,
@@ -141,12 +136,13 @@ public final class ComponentFactory {
                 return new VEvent(properties, components);
             }
             else {
-                throw new IllegalArgumentException("Illegal component [" + name + "]");
+                throw new IllegalArgumentException("Illegal component [" + name
+                        + "]");
             }
         }
         return createComponent(name, properties);
     }
-    
+
     /**
      * @param name
      * @return
@@ -154,5 +150,13 @@ public final class ComponentFactory {
     private boolean isExperimentalName(final String name) {
         return name.startsWith(Component.EXPERIMENTAL_PREFIX)
                 && name.length() > Component.EXPERIMENTAL_PREFIX.length();
+    }
+
+    /**
+     * @return
+     */
+    protected boolean allowIllegalNames() {
+        return CompatibilityHints
+                .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 }
