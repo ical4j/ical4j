@@ -9,7 +9,7 @@
 	<groupId>net.fortuna</groupId>
 	<artifactId>ical4j</artifactId>
 	<name>iCal4j</name>
-	<version>1.0-beta2</version>
+	<version>1.0-beta3-SNAPSHOT</version>
 	<description>
 		A Java library for reading and writing iCalendar (*.ics) files
 	</description>
@@ -29,7 +29,6 @@
 		<connection>scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j</connection>
 		<developerConnection>scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j</developerConnection>
 		<url>http://ical4j.cvs.sourceforge.net/ical4j</url>
-    <tag>ical4j-1_0-beta2</tag>
   </scm>
 	<contributors>
 		<contributor>
@@ -253,6 +252,7 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
+					<comparisonVersion>1.0-beta2</comparisonVersion>
 				</configuration>
 			</plugin>
 		</plugins>
