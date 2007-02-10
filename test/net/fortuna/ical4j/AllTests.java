@@ -29,6 +29,7 @@ import net.fortuna.ical4j.model.component.VFreeBusyTest;
 import net.fortuna.ical4j.model.component.VTimeZoneTest;
 import net.fortuna.ical4j.model.component.XComponentTest;
 import net.fortuna.ical4j.model.parameter.AltRepTest;
+import net.fortuna.ical4j.model.parameter.CnTest;
 import net.fortuna.ical4j.model.parameter.CuTypeTest;
 import net.fortuna.ical4j.model.parameter.TzIdTest;
 import net.fortuna.ical4j.model.property.AttachTest;
@@ -93,6 +94,7 @@ public class AllTests extends TestSuite{
 
         // parameter tests
         suite.addTestSuite(AltRepTest.class);
+        suite.addTestSuite(CnTest.class);
         suite.addTestSuite(CuTypeTest.class);
         suite.addTestSuite(TzIdTest.class);
 
