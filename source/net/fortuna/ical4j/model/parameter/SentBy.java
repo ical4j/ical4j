@@ -55,7 +55,7 @@ public class SentBy extends Parameter {
      * @throws URISyntaxException when the specified string is not a valid (quoted) uri
      */
     public SentBy(final String aValue) throws URISyntaxException {
-        this(new URI(Uris.encode(Strings.unquote(aValue))));
+        this(Uris.create(Strings.unquote(aValue)));
     }
 
     /**

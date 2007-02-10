@@ -247,7 +247,7 @@ public class Attach extends Property {
         }
         // assume URI..
         else {
-            uri = new URI(Uris.encode(aValue));
+            uri = Uris.create(aValue);
         }
     }
 

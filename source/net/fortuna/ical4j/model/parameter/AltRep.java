@@ -55,7 +55,7 @@ public class AltRep extends Parameter {
      * @throws URISyntaxException when the specified string is not a value (quoted) uri
      */
     public AltRep(final String aValue) throws URISyntaxException {
-        this(new URI(Uris.encode(Strings.unquote(aValue))));
+        this(Uris.create(Strings.unquote(aValue)));
     }
 
     /**

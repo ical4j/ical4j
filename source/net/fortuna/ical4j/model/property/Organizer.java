@@ -204,7 +204,7 @@ public class Organizer extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws URISyntaxException {
-        calAddress = new URI(Uris.encode(aValue));
+        calAddress = Uris.create(aValue);
     }
 
     /*

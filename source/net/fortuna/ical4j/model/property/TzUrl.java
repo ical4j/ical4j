@@ -137,7 +137,7 @@ public class TzUrl extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public final void setValue(final String aValue) throws URISyntaxException {
-        uri = new URI(Uris.encode(aValue));
+        uri = Uris.create(aValue);
     }
 
     /*

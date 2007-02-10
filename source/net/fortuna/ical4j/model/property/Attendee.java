@@ -105,7 +105,7 @@ public class Attendee extends Property {
      * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
      */
     public void setValue(final String aValue) throws URISyntaxException {
-        calAddress = new URI(Uris.encode(aValue));
+        calAddress = Uris.create(aValue);
     }
 
     /**
