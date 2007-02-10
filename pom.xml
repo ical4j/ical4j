@@ -194,7 +194,6 @@
 						<exclude>**/FoldingWriterTest.java</exclude>
 						<exclude>**/ComponentTest.java</exclude>
 						<exclude>**/AbstractPropertyTest.java</exclude>
-						<exclude>**/TimeZoneTest.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
