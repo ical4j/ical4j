@@ -142,6 +142,15 @@ public class Organizer extends Property {
     }
 
     /**
+     * Constructs a new instance with the specified value.
+     * @param value
+     */
+    public Organizer(String value) throws URISyntaxException {
+        super(ORGANIZER);
+        setValue(value);
+    }
+    
+    /**
      * @param aList a list of parameters for this component
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
