@@ -35,10 +35,19 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.net.URISyntaxException;
+
+import net.fortuna.ical4j.util.CompatibilityHints;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import junit.framework.TestCase;
 
 public class AddressListTest extends TestCase {
 
+    private static final Log LOG = LogFactory.getLog(AddressListTest.class);
+    
     private static final String VALUE_ADDRESS_LIST = "\"address1@example.com\",\"address2@example.com\",\"address3@example.com\"";
     
     private AddressList addresses;
@@ -63,5 +72,34 @@ public class AddressListTest extends TestCase {
      */
     public void testToString() {
         assertEquals(VALUE_ADDRESS_LIST, addresses.toString());
+    }
+    
+    /**
+     * Test invalid addresses are correctly handled.
+     */
+    public void testInvalidAddressList() throws URISyntaxException {
+        String value = "address1@example.com,<address2@example.com>,address3@example.com";
+        
+        try {
+            new AddressList(value);
+            fail("Should throw URISyntaxException");
+        }
+        catch (URISyntaxException use) {
+            LOG.info("Caught exception: " + use.getMessage());
+        }
+        
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_PARSING, true);
+        
+        AddressList list = new AddressList(value);
+        assertEquals(2, list.size());
+        
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_PARSING, false);
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
+        
+        list = new AddressList(value);
+        assertEquals(3, list.size());
     }
 }

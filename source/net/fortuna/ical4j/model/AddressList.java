@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -41,19 +41,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
-
 /**
  * Defines a list of iCalendar addresses.
- * 
  * @author Ben Fortuna
  */
 public class AddressList implements Serializable {
-    
+
     private static final long serialVersionUID = 81383256078213569L;
-    
+
     private List addresses;
 
     /**
@@ -64,18 +63,27 @@ public class AddressList implements Serializable {
     }
 
     /**
-     * Parses the specified string representation to create
-     * a list of addresses.
-     * @param aValue a string representation of a list of
-     * addresses
-     * @throws URISyntaxException where the specified string
-     * is not a valid representation
+     * Parses the specified string representation to create a list of addresses.
+     * @param aValue a string representation of a list of addresses
+     * @throws URISyntaxException where the specified string is not a valid representation
      */
     public AddressList(final String aValue) throws URISyntaxException {
         addresses = new ArrayList();
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {
-            addresses.add(new URI(Uris.encode(Strings.unquote(t.nextToken()))));
+
+            try {
+                addresses.add(new URI(Uris.encode(Strings
+                        .unquote(t.nextToken()))));
+            }
+            catch (URISyntaxException use) {
+                // ignore invalid addresses if relaxed parsing is enabled..
+                if (!CompatibilityHints.isHintEnabled(
+                        CompatibilityHints.KEY_RELAXED_PARSING)) {
+
+                    throw use;
+                }
+            }
         }
     }
 
