@@ -2,6 +2,11 @@
  iCal4j - Changes
 ==================
 
+1.0-beta2
+
+ - Second beta. General bug fixes. No changes to API. Retains binary
+ compatibility with previous release.
+ 
 1.0-beta1
 
  - First iCal4j beta. Expect little API changes until the final release, as
