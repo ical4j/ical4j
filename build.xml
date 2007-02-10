@@ -8,7 +8,7 @@
 <project name="iCal4j" basedir="." default="package">
 
 	<!-- Project details -->
-    <property name="project.version" value="0.9.20"/>
+    <property name="project.version" value="1.0-beta2"/>
 	
 	<!-- Load overrides for library paths -->
 	<property file="build.properties"/>
@@ -118,7 +118,7 @@
     <target name="package" depends="compile, clean-package">
         <manifest file="etc/manifest.mf">
             <!-- Add manifest attributes here.. -->
-            <attribute name="Class-Path" value="commons-logging.jar,commons-codec.jar" />
+            <attribute name="Class-Path" value="commons-logging.jar,commons-codec.jar,commons-lang.jar" />
         </manifest>
         <jar basedir="${output.dir}" compress="true" jarfile="${package.dir}/${package.file}" manifest="etc/manifest.mf">
 			<zipfileset dir="etc/zoneinfo" prefix="zoneinfo" excludes="zones.h,zones.tab"/>
