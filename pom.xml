@@ -252,6 +252,7 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
+					<comparisonVersion>1.0-beta2</comparisonVersion>
 				</configuration>
 			</plugin>
 		</plugins>
