@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import junit.framework.TestCase;
 
@@ -20,6 +21,17 @@ import junit.framework.TestCase;
  */
 public class AltRepTest extends TestCase {
 
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_PARSING, false);
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_NOTES_COMPATIBILITY, false);
+    }
+    
     /*
      * Class to test for void AltRep(String)
      */
