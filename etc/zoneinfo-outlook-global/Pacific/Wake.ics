@@ -1,8 +1,8 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta1//EN
+PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta2//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_beta1/Pacific/Wake
+TZID:/ical4j_1_0_beta2/Pacific/Wake
 X-LIC-LOCATION:Pacific/Wake
 BEGIN:STANDARD
 TZOFFSETFROM:+1200
