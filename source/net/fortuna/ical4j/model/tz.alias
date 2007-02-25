@@ -93,6 +93,25 @@ Africa/Timbuktu=Africa/Bamako
 
 Iceland=Atlantic/Reykjavik
 
+## Unsupported timezone identifiers..
+Etc/GMT+0=Etc/GMT
+Etc/GMT-0=Etc/GMT
+Etc/GMT0=Etc/GMT
+Etc/Greenwich=Etc/GMT
+GMT=Etc/GMT
+GMT+0=Etc/GMT
+GMT-0=Etc/GMT
+GMT0=Etc/GMT
+Greenwich=Etc/GMT
+
+UCT=Etc/UCT
+
+Etc/Universal=Etc/UTC
+Etc/Zulu=Etc/UTC
+Universal=Etc/UTC
+Zulu=Etc/UTC
+##
+
 Eire=Europe/Dublin
 
 Portugal=Europe/Lisbon
