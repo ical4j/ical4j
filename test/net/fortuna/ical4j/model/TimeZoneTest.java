@@ -183,4 +183,13 @@ public class TimeZoneTest extends TestCase {
                 tz.inDaylightTime(cal.getTime()),
                 timezone.inDaylightTime(cal.getTime()));
     }
+    
+    /**
+     * Test alias functionality for deprecated timezone identifiers.
+     */
+    public void testAlias() {
+        TimeZone tz = registry.getTimeZone("US/Mountain");
+        assertNotNull(tz);
+        assertEquals(tz, registry.getTimeZone("America/Denver"));
+    }
 }

@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
@@ -48,55 +49,68 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * The default implementation of a <code>TimeZoneRegistry</code>. This
- * implementation will search the classpath for applicable VTimeZone definitions
- * used to back the provided TimeZone instances.
+ * The default implementation of a <code>TimeZoneRegistry</code>. This implementation will search the classpath for
+ * applicable VTimeZone definitions used to back the provided TimeZone instances.
  * @author Ben Fortuna
  */
 public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private static final String DEFAULT_RESOURCE_PREFIX = "/zoneinfo/";
-    
+
     private Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
-    
+
     private static final Map DEFAULT_TIMEZONES = new HashMap();
-    
+
+    private static final Properties ALIASES = new Properties();
+    static {
+        try {
+            ALIASES.load(TimeZoneRegistryImpl.class
+                    .getResourceAsStream("/net/fortuna/ical4j/model/tz.alias"));
+        }
+        catch (IOException ioe) {
+            LogFactory.getLog(TimeZoneRegistryImpl.class).warn(
+                    "Error loading timezone aliases: " + ioe.getMessage());
+        }
+    }
+
     private Map timezones;
-    
+
     private String resourcePrefix;
-    
+
     /**
      * Default constructor.
      */
     public TimeZoneRegistryImpl() {
         this(DEFAULT_RESOURCE_PREFIX);
     }
-    
+
     /**
      * Creates a new instance using the specified resource prefix.
-     * @param resourcePrefix a prefix prepended to classpath resource lookups
-     * for default timezones
+     * @param resourcePrefix a prefix prepended to classpath resource lookups for default timezones
      */
     public TimeZoneRegistryImpl(final String resourcePrefix) {
         this.resourcePrefix = resourcePrefix;
         timezones = new HashMap();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.TimeZoneRegistry#register(net.fortuna.ical4j.model.TimeZone)
      */
     public final void register(final TimeZone timezone) {
         timezones.put(timezone.getID(), timezone);
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.TimeZoneRegistry#clear()
      */
     public final void clear() {
         timezones.clear();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see net.fortuna.ical4j.model.TimeZoneRegistry#getTimeZone(java.lang.String)
      */
     public final TimeZone getTimeZone(final String id) {
@@ -104,18 +118,25 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         if (timezone == null) {
             timezone = (TimeZone) DEFAULT_TIMEZONES.get(id);
             if (timezone == null) {
-                synchronized (DEFAULT_TIMEZONES) {
-                    try {
-                        VTimeZone vTimeZone = loadVTimeZone(id);
-                        if (vTimeZone != null) {
-                            // XXX: temporary kludge..
-//                            ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
-                            timezone = new TimeZone(vTimeZone);
-                            DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
+                // if timezone not found with identifier, try loading an alias..
+                String alias = ALIASES.getProperty(id);
+                if (alias != null) {
+                    return getTimeZone(alias);
+                }
+                else {
+                    synchronized (DEFAULT_TIMEZONES) {
+                        try {
+                            VTimeZone vTimeZone = loadVTimeZone(id);
+                            if (vTimeZone != null) {
+                                // XXX: temporary kludge..
+                                // ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
+                                timezone = new TimeZone(vTimeZone);
+                                DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
+                            }
                         }
-                    }
-                    catch (Exception e) {
-                        log.warn("Error occurred loading VTimeZone", e);
+                        catch (Exception e) {
+                            log.warn("Error occurred loading VTimeZone", e);
+                        }
                     }
                 }
             }
@@ -124,12 +145,13 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     }
 
     /**
-     * Loads an existing VTimeZone from the classpath corresponding to the
-     * specified Java timezone.
+     * Loads an existing VTimeZone from the classpath corresponding to the specified Java timezone.
      */
     private VTimeZone loadVTimeZone(final String id) throws IOException,
             ParserException {
-        URL resource = TimeZoneRegistryImpl.class.getResource(resourcePrefix + id + ".ics");
+        
+        URL resource = TimeZoneRegistryImpl.class.getResource(resourcePrefix
+                + id + ".ics");
         if (resource != null) {
             CalendarBuilder builder = new CalendarBuilder();
             Calendar calendar = builder.build(resource.openStream());

@@ -146,6 +146,12 @@
 		<testSourceDirectory>test</testSourceDirectory>
 		<resources>
 			<resource>
+				<directory>source</directory>
+				<includes>
+					<include>**/tz.alias</include>
+				</includes>
+			</resource>
+			<resource>
 				<directory>etc</directory>
 				<includes>
 					<include>zoneinfo/**</include>
