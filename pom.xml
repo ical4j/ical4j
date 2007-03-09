@@ -261,6 +261,10 @@
 					<comparisonVersion>1.0-beta2</comparisonVersion>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</reporting>
 </project>
