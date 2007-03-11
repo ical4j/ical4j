@@ -22,6 +22,7 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
@@ -559,5 +560,25 @@ public class VEventTest extends ComponentTest {
      */
     public void testIsCalendarComponent() {
         assertIsCalendarComponent(new VEvent());
-    }    
+    }
+    
+    /**
+     * Test equality of events with different alarm sub-components.
+     */
+    public void testEquals() {
+        Date date = new Date();
+        String summary = "test event";
+        PropertyList props = new PropertyList();
+        props.add(new DtStart(date));
+        props.add(new Summary(summary));
+
+        VEvent e1 = new VEvent(props);
+        VEvent e2 = new VEvent(props);
+        
+        assertTrue(e1.equals(e2));
+        
+        e2.getAlarms().add(new VAlarm());
+        
+        assertFalse(e1.equals(e2));
+    }
 }
