@@ -33,7 +33,10 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.Iterator;
 
 import net.fortuna.ical4j.util.Strings;
@@ -42,9 +45,8 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Defines an iCalendar component. Subclasses of this class provide additional
- * validation and typed values for specific iCalendar components.
- *
+ * Defines an iCalendar component. Subclasses of this class provide additional validation and typed values for specific
+ * iCalendar components.
  * @author Ben Fortuna
  */
 public abstract class Component implements Serializable {
@@ -80,8 +82,7 @@ public abstract class Component implements Serializable {
     }
 
     /**
-     * Constructor made protected to enforce the use of
-     * <code>ComponentFactory</code> for component instantiation.
+     * Constructor made protected to enforce the use of <code>ComponentFactory</code> for component instantiation.
      * @param s component name
      * @param p a list of properties
      */
@@ -121,22 +122,20 @@ public abstract class Component implements Serializable {
     public final PropertyList getProperties() {
         return properties;
     }
-    
+
     /**
      * Convenience method for retrieving a list of named properties.
      * @param name name of properties to retrieve
-     * @return a property list containing only properties with the specified
-     * name
+     * @return a property list containing only properties with the specified name
      */
     public final PropertyList getProperties(final String name) {
         return getProperties().getProperties(name);
     }
-    
+
     /**
      * Convenience method for retrieving a named property.
      * @param name name of the property to retrieve
-     * @return the first matching property in the property list with the specified
-     * name
+     * @return the first matching property in the property list with the specified name
      */
     public final Property getProperty(final String name) {
         return getProperties().getProperty(name);
@@ -144,8 +143,7 @@ public abstract class Component implements Serializable {
 
     /**
      * Perform validation on a component and its properties.
-     * @throws ValidationException
-     *             where the component is not in a valid state
+     * @throws ValidationException where the component is not in a valid state
      */
     public final void validate() throws ValidationException {
         validate(true);
@@ -153,17 +151,15 @@ public abstract class Component implements Serializable {
 
     /**
      * Perform validation on a component.
-     * @param recurse indicates whether to validate the component's
-     * properties
-     * @throws ValidationException
-     *             where the component is not in a valid state
+     * @param recurse indicates whether to validate the component's properties
+     * @throws ValidationException where the component is not in a valid state
      */
-    public abstract void validate(final boolean recurse) throws ValidationException;
+    public abstract void validate(final boolean recurse)
+            throws ValidationException;
 
     /**
      * Invoke validation on the component properties in its current state.
-     * @throws ValidationException
-     *             where any of the component properties is not in a valid state
+     * @throws ValidationException where any of the component properties is not in a valid state
      */
     protected final void validateProperties() throws ValidationException {
         for (Iterator i = getProperties().iterator(); i.hasNext();) {
@@ -173,11 +169,10 @@ public abstract class Component implements Serializable {
     }
 
     /**
-     * Uses {@link ObjectUtils} to test equality.
-     * Two components are equal if and only if their
-     * name and property lists are equal.
+     * Uses {@link ObjectUtils} to test equality. Two components are equal if and only if their name and property lists
+     * are equal.
      */
-    public final boolean equals(final Object arg0) {
+    public boolean equals(final Object arg0) {
         if (arg0 instanceof Component) {
             Component c = (Component) arg0;
             return ObjectUtils.equals(getName(), c.getName())
@@ -189,8 +184,22 @@ public abstract class Component implements Serializable {
     /**
      * Uses {@link HashCodeBuilder} to build hashcode.
      */
-    public final int hashCode() {
-        return new HashCodeBuilder().append(getName())
-            .append(getProperties()).toHashCode();
+    public int hashCode() {
+        return new HashCodeBuilder().append(getName()).append(getProperties())
+                .toHashCode();
+    }
+
+    /**
+     * Create a (deep) copy of this component.
+     * @return the component copy
+     */
+    public Component copy() throws ParseException, IOException,
+            URISyntaxException {
+
+        // Deep copy properties..
+        PropertyList newprops = new PropertyList(getProperties());
+
+        return ComponentFactory.getInstance().createComponent(getName(),
+                newprops);
     }
 }

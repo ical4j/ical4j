@@ -43,9 +43,8 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * Defines an iCalendar property. Subclasses of this class provide additional
- * validation and typed values for specific iCalendar properties.
- *
+ * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
+ * iCalendar properties.
  * @author Ben Fortuna
  */
 public abstract class Property extends Content {
@@ -53,8 +52,7 @@ public abstract class Property extends Content {
     // iCalendar properties..
 
     /**
-     * 'prodid' and 'version' are both REQUIRED, but MUST NOT occur more than
-     * once.
+     * 'prodid' and 'version' are both REQUIRED, but MUST NOT occur more than once.
      */
     public static final String PRODID = "PRODID";
 
@@ -133,8 +131,8 @@ public abstract class Property extends Content {
     public static final String REQUEST_STATUS = "REQUEST-STATUS";
 
     /**
-     * either 'dtend' or 'duration' may appear in a 'eventprop', but 'dtend' and
-     * 'duration' MUST NOT occur in the same 'eventprop'.
+     * either 'dtend' or 'duration' may appear in a 'eventprop', but 'dtend' and 'duration' MUST NOT occur in the same
+     * 'eventprop'.
      */
     public static final String DTEND = "DTEND";
 
@@ -173,35 +171,31 @@ public abstract class Property extends Content {
 
     /**
      * Constructor.
-     * @param aName
-     *            property name
+     * @param aName property name
      */
     protected Property(final String aName) {
         this(aName, new ParameterList());
     }
 
     /**
-     * Constructor made protected to enforce the use of
-     * <code>PropertyFactory</code> for property instantiation.
-     * @param aName
-     *            property name
-     * @param aList
-     *            a list of parameters
+     * Constructor made protected to enforce the use of <code>PropertyFactory</code> for property instantiation.
+     * @param aName property name
+     * @param aList a list of parameters
      */
     protected Property(final String aName, final ParameterList aList) {
         this.name = aName;
         this.parameters = aList;
     }
-    
+
     /**
-     * Creates a deep copy of the specified property. That is, the name,
-     * parameter list, and value are duplicated from the specified property.
-     * This constructor should only be called from sub-classes to ensure
-     * type integrity is maintained.
+     * Creates a deep copy of the specified property. That is, the name, parameter list, and value are duplicated from
+     * the specified property. This constructor should only be called from sub-classes to ensure type integrity is
+     * maintained.
      * @param property a property to copy
      * @throws URISyntaxException
      */
-    protected Property(final Property property) throws IOException, URISyntaxException, ParseException {
+    protected Property(final Property property) throws IOException,
+            URISyntaxException, ParseException {
         this.name = property.getName();
         this.parameters = new ParameterList(property.getParameters(), false);
         setValue(property.getValue());
@@ -227,19 +221,19 @@ public abstract class Property extends Content {
     }
 
     /**
-     * Indicates whether this property is a
-     * calendar property.
+     * Indicates whether this property is a calendar property.
      * @return boolean
      */
     public boolean isCalendarProperty() {
 
-        return PRODID.equalsIgnoreCase(getName()) || VERSION.equalsIgnoreCase(getName())
-                || CALSCALE.equalsIgnoreCase(getName()) || METHOD.equalsIgnoreCase(getName());
+        return PRODID.equalsIgnoreCase(getName())
+                || VERSION.equalsIgnoreCase(getName())
+                || CALSCALE.equalsIgnoreCase(getName())
+                || METHOD.equalsIgnoreCase(getName());
     }
 
     /**
-     * Indicates whether this property is a
-     * component property.
+     * Indicates whether this property is a component property.
      * @return boolean
      */
     public final boolean isComponentProperty() {
@@ -260,39 +254,34 @@ public abstract class Property extends Content {
     public final ParameterList getParameters() {
         return parameters;
     }
-    
+
     /**
      * Convenience method for retrieving a list of named parameters.
      * @param name name of parameters to retrieve
-     * @return a parameter list containing only parameters with the specified
-     * name
+     * @return a parameter list containing only parameters with the specified name
      */
     public final ParameterList getParameters(final String name) {
         return getParameters().getParameters(name);
     }
-    
+
     /**
      * Convenience method for retrieving a single parameter.
      * @param name name of the parameter to retrieve
-     * @return the first parameter from the parameter list with the specified
-     * name
+     * @return the first parameter from the parameter list with the specified name
      */
     public final Parameter getParameter(final String name) {
         return getParameters().getParameter(name);
     }
-    
+
     /**
      * Sets the current value of the property.
-     * @param aValue a string representation of the property
-     * value
-     * @throws IOException possibly thrown by setting the value
-     * of certain properties
-     * @throws URISyntaxException possibly thrown by setting the value
-     * of certain properties
-     * @throws ParseException possibly thrown by setting the value
-     * of certain properties
+     * @param aValue a string representation of the property value
+     * @throws IOException possibly thrown by setting the value of certain properties
+     * @throws URISyntaxException possibly thrown by setting the value of certain properties
+     * @throws ParseException possibly thrown by setting the value of certain properties
      */
-    public abstract void setValue(String aValue) throws IOException, URISyntaxException, ParseException;
+    public abstract void setValue(String aValue) throws IOException,
+            URISyntaxException, ParseException;
 
     /**
      * @return Returns the value.
@@ -301,16 +290,13 @@ public abstract class Property extends Content {
 
     /**
      * Perform validation on a property.
-     *
-     * @throws ValidationException
-     *             where the property is not in a valid state
+     * @throws ValidationException where the property is not in a valid state
      */
     public abstract void validate() throws ValidationException;
 
     /**
-     * Uses {@link ObjectUtils} to test equality.
-     * Two properties are equal if and only if their
-     * name, value and parameter list are equal.
+     * Uses {@link ObjectUtils} to test equality. Two properties are equal if and only if their name, value and
+     * parameter list are equal.
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public final boolean equals(final Object arg0) {
@@ -328,7 +314,20 @@ public abstract class Property extends Content {
      */
     public final int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
-        return new HashCodeBuilder().append(getName().toUpperCase())
-            .append(getValue()).append(getParameters()).hashCode();
+        return new HashCodeBuilder().append(getName().toUpperCase()).append(
+                getValue()).append(getParameters()).hashCode();
+    }
+
+    /**
+     * Create a (deep) copy of this property.
+     * @return the copy of the property
+     */
+    public final Property copy() throws IOException, URISyntaxException,
+            ParseException {
+        
+        // Deep copy parameter list..
+        ParameterList params = new ParameterList(getParameters(), false);
+        return PropertyFactoryImpl.getInstance().createProperty(getName(),
+                params, getValue());
     }
 }

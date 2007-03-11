@@ -84,8 +84,7 @@ public class ParameterList implements Serializable {
         parameters = new ArrayList();
         for (Iterator i = list.iterator(); i.hasNext();) {
             Parameter parameter = (Parameter) i.next();
-            parameters.add(ParameterFactoryImpl.getInstance().createParameter(
-                    parameter.getName(), parameter.getValue()));
+            parameters.add(parameter.copy());
         }
         if (unmodifiable) {
             parameters = Collections.unmodifiableList(parameters);

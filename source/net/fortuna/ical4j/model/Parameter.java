@@ -33,15 +33,16 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.util.Strings;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
- * Defines an iCalendar parameter. Subclasses of this class provide additional
- * validation and typed values for specific iCalendar parameters.
- *
+ * Defines an iCalendar parameter. Subclasses of this class provide additional validation and typed values for specific
+ * iCalendar parameters.
  * @author Ben Fortuna
  */
 public abstract class Parameter extends Content {
@@ -184,8 +185,8 @@ public abstract class Parameter extends Content {
      * @return true if the value should be quoted, otherwise false
      */
     private boolean isQuotable() {
-        return Strings.PARAM_QUOTE_PATTERN.matcher(
-                Strings.valueOf(getValue())).find();
+        return Strings.PARAM_QUOTE_PATTERN.matcher(Strings.valueOf(getValue()))
+                .find();
     }
 
     /**
@@ -207,7 +208,7 @@ public abstract class Parameter extends Content {
         if (arg0 instanceof Parameter) {
             Parameter p = (Parameter) arg0;
             return ObjectUtils.equals(getName(), p.getName())
-                && ObjectUtils.equals(getValue(), p.getValue());
+                    && ObjectUtils.equals(getValue(), p.getValue());
         }
         return super.equals(arg0);
     }
@@ -217,7 +218,16 @@ public abstract class Parameter extends Content {
      */
     public final int hashCode() {
         // as parameter name is case-insensitive generate hash for uppercase..
-        return new HashCodeBuilder().append(getName().toUpperCase())
-            .append(getValue()).toHashCode();
+        return new HashCodeBuilder().append(getName().toUpperCase()).append(
+                getValue()).toHashCode();
+    }
+
+    /**
+     * Deep copy of parameter.
+     * @return new parameter
+     */
+    public final Parameter copy() throws URISyntaxException {
+        return ParameterFactoryImpl.getInstance().createParameter(
+                getName(), getValue());
     }
 }
