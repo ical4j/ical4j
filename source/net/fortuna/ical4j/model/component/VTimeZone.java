@@ -33,8 +33,12 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.Iterator;
 
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.Property;
@@ -46,75 +50,78 @@ import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Defines an iCalendar VTIMEZONE component.
- *
+ * 
  * <pre>
- *     4.6.5 Time Zone Component
- *
- *        Component Name: VTIMEZONE
- *
- *        Purpose: Provide a grouping of component properties that defines a
- *        time zone.
- *
- *        Formal Definition: A &quot;VTIMEZONE&quot; calendar component is defined by the
- *        following notation:
- *
- *          timezonec  = &quot;BEGIN&quot; &quot;:&quot; &quot;VTIMEZONE&quot; CRLF
- *
- *                       2*(
- *
- *                       ; 'tzid' is required, but MUST NOT occur more
- *                       ; than once
- *
- *                     tzid /
- *
- *                       ; 'last-mod' and 'tzurl' are optional,
- *                     but MUST NOT occur more than once
- *
- *                     last-mod / tzurl /
- *
- *                       ; one of 'standardc' or 'daylightc' MUST occur
- *                     ..; and each MAY occur more than once.
- *
- *                     standardc / daylightc /
- *
- *                     ; the following is optional,
- *                     ; and MAY occur more than once
- *
- *                       x-prop
- *
+ *       4.6.5 Time Zone Component
+ *  
+ *          Component Name: VTIMEZONE
+ *  
+ *          Purpose: Provide a grouping of component properties that defines a
+ *          time zone.
+ *  
+ *          Formal Definition: A &quot;VTIMEZONE&quot; calendar component is defined by the
+ *          following notation:
+ *  
+ *            timezonec  = &quot;BEGIN&quot; &quot;:&quot; &quot;VTIMEZONE&quot; CRLF
+ *  
+ *                         2*(
+ *  
+ *                         ; 'tzid' is required, but MUST NOT occur more
+ *                         ; than once
+ *  
+ *                       tzid /
+ *  
+ *                         ; 'last-mod' and 'tzurl' are optional,
+ *                       but MUST NOT occur more than once
+ *  
+ *                       last-mod / tzurl /
+ *  
+ *                         ; one of 'standardc' or 'daylightc' MUST occur
+ *                       ..; and each MAY occur more than once.
+ *  
+ *                       standardc / daylightc /
+ *  
+ *                       ; the following is optional,
+ *                       ; and MAY occur more than once
+ *  
+ *                         x-prop
+ *  
+ *                         )
+ *  
+ *                         &quot;END&quot; &quot;:&quot; &quot;VTIMEZONE&quot; CRLF
+ *  
+ *            standardc  = &quot;BEGIN&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
+ *  
+ *                         tzprop
+ *  
+ *                         &quot;END&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
+ *  
+ *            daylightc  = &quot;BEGIN&quot; &quot;:&quot; &quot;DAYLIGHT&quot; CRLF
+ *  
+ *                         tzprop
+ *  
+ *                         &quot;END&quot; &quot;:&quot; &quot;DAYLIGHT&quot; CRLF
+ *  
+ *            tzprop     = 3*(
+ *  
+ *                       ; the following are each REQUIRED,
+ *                       ; but MUST NOT occur more than once
+ *  
+ *                       dtstart / tzoffsetto / tzoffsetfrom /
+ *  
+ *                       ; the following are optional,
+ *                       ; and MAY occur more than once
+ *  
+ *                       comment / rdate / rrule / tzname / x-prop
+ *  
  *                       )
- *
- *                       &quot;END&quot; &quot;:&quot; &quot;VTIMEZONE&quot; CRLF
- *
- *          standardc  = &quot;BEGIN&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
- *
- *                       tzprop
- *
- *                       &quot;END&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
- *
- *          daylightc  = &quot;BEGIN&quot; &quot;:&quot; &quot;DAYLIGHT&quot; CRLF
- *
- *                       tzprop
- *
- *                       &quot;END&quot; &quot;:&quot; &quot;DAYLIGHT&quot; CRLF
- *
- *          tzprop     = 3*(
- *
- *                     ; the following are each REQUIRED,
- *                     ; but MUST NOT occur more than once
- *
- *                     dtstart / tzoffsetto / tzoffsetfrom /
- *
- *                     ; the following are optional,
- *                     ; and MAY occur more than once
- *
- *                     comment / rdate / rrule / tzname / x-prop
- *
- *                     )
  * </pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class VTimeZone extends CalendarComponent {
@@ -265,5 +272,38 @@ public class VTimeZone extends CalendarComponent {
      */
     public final TzUrl getTimeZoneUrl() {
         return (TzUrl) getProperty(Property.TZURL);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Component#equals(java.lang.Object)
+     */
+    public boolean equals(Object arg0) {
+        if (arg0 instanceof VTimeZone) {
+            return super.equals(arg0)
+                    && ObjectUtils.equals(observances, ((VTimeZone) arg0)
+                            .getObservances());
+        }
+        return super.equals(arg0);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Component#hashCode()
+     */
+    public int hashCode() {
+        return new HashCodeBuilder().append(getName()).append(getProperties())
+                .append(getObservances()).toHashCode();
+    }
+
+    /**
+     * Overrides default copy method to add support for copying observance sub-components.
+     * @see net.fortuna.ical4j.model.Component#copy()
+     */
+    public Component copy() throws ParseException, IOException,
+            URISyntaxException {
+        VTimeZone copy = (VTimeZone) super.copy();
+        copy.observances = new ComponentList(observances);
+        return copy;
     }
 }

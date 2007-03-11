@@ -33,7 +33,13 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.Iterator;
+
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -78,61 +84,61 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines an iCalendar VEVENT component.
- *
+ * 
  * <pre>
- *    4.6.1 Event Component
- *
- *       Component Name: &quot;VEVENT&quot;
- *
- *       Purpose: Provide a grouping of component properties that describe an
- *       event.
- *
- *       Format Definition: A &quot;VEVENT&quot; calendar component is defined by the
- *       following notation:
- *
- *         eventc     = &quot;BEGIN&quot; &quot;:&quot; &quot;VEVENT&quot; CRLF
- *                      eventprop *alarmc
- *                      &quot;END&quot; &quot;:&quot; &quot;VEVENT&quot; CRLF
- *
- *         eventprop  = *(
- *
- *                    ; the following are optional,
- *                    ; but MUST NOT occur more than once
- *
- *                    class / created / description / dtstart / geo /
- *                    last-mod / location / organizer / priority /
- *                    dtstamp / seq / status / summary / transp /
- *                    uid / url / recurid /
- *
- *                    ; either 'dtend' or 'duration' may appear in
- *                    ; a 'eventprop', but 'dtend' and 'duration'
- *                    ; MUST NOT occur in the same 'eventprop'
- *
- *                    dtend / duration /
- *
- *                    ; the following are optional,
- *                    ; and MAY occur more than once
- *
- *                    attach / attendee / categories / comment /
- *                    contact / exdate / exrule / rstatus / related /
- *                    resources / rdate / rrule / x-prop
- *
- *                    )
+ *       4.6.1 Event Component
+ *   
+ *          Component Name: &quot;VEVENT&quot;
+ *   
+ *          Purpose: Provide a grouping of component properties that describe an
+ *          event.
+ *   
+ *          Format Definition: A &quot;VEVENT&quot; calendar component is defined by the
+ *          following notation:
+ *   
+ *            eventc     = &quot;BEGIN&quot; &quot;:&quot; &quot;VEVENT&quot; CRLF
+ *                         eventprop *alarmc
+ *                         &quot;END&quot; &quot;:&quot; &quot;VEVENT&quot; CRLF
+ *   
+ *            eventprop  = *(
+ *   
+ *                       ; the following are optional,
+ *                       ; but MUST NOT occur more than once
+ *   
+ *                       class / created / description / dtstart / geo /
+ *                       last-mod / location / organizer / priority /
+ *                       dtstamp / seq / status / summary / transp /
+ *                       uid / url / recurid /
+ *   
+ *                       ; either 'dtend' or 'duration' may appear in
+ *                       ; a 'eventprop', but 'dtend' and 'duration'
+ *                       ; MUST NOT occur in the same 'eventprop'
+ *   
+ *                       dtend / duration /
+ *   
+ *                       ; the following are optional,
+ *                       ; and MAY occur more than once
+ *   
+ *                       attach / attendee / categories / comment /
+ *                       contact / exdate / exrule / rstatus / related /
+ *                       resources / rdate / rrule / x-prop
+ *   
+ *                       )
  * </pre>
- *
+ * 
  * Example 1 - Creating a new all-day event:
- *
+ * 
  * <pre><code>
  * java.util.Calendar cal = java.util.Calendar.getInstance();
  * cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
  * cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
- *
+ * 
  * VEvent christmas = new VEvent(cal.getTime(), &quot;Christmas Day&quot;);
- *
+ * 
  * // initialise as an all-day event..
  * christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(
  *         Value.DATE);
- *
+ * 
  * // add timezone information..
  * VTimeZone tz = VTimeZone.getDefault();
  * TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID)
@@ -140,18 +146,18 @@ import net.fortuna.ical4j.util.Strings;
  * christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(
  *         tzParam);
  * </code></pre>
- *
+ * 
  * Example 2 - Creating an event of one (1) hour duration:
- *
+ * 
  * <pre><code>
  * java.util.Calendar cal = java.util.Calendar.getInstance();
  * // tomorrow..
  * cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
  * cal.set(java.util.Calendar.HOUR_OF_DAY, 9);
  * cal.set(java.util.Calendar.MINUTE, 30);
- *
+ * 
  * VEvent meeting = new VEvent(cal.getTime(), 1000 * 60 * 60, &quot;Progress Meeting&quot;);
- *
+ * 
  * // add timezone information..
  * VTimeZone tz = VTimeZone.getDefault();
  * TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID)
@@ -159,23 +165,23 @@ import net.fortuna.ical4j.util.Strings;
  * meeting.getProperties().getProperty(Property.DTSTART).getParameters().add(
  *         tzParam);
  * </code></pre>
- *
+ * 
  * Example 3 - Retrieve a list of periods representing a recurring event in a specified range:
- *
+ * 
  * <pre><code>
  * Calendar weekday9AM = Calendar.getInstance();
  * weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
  * weekday9AM.set(Calendar.MILLISECOND, 0);
- *
+ * 
  * Calendar weekday5PM = Calendar.getInstance();
  * weekday5PM.set(2005, Calendar.MARCH, 7, 17, 0, 0);
  * weekday5PM.set(Calendar.MILLISECOND, 0);
- *
+ * 
  * // Do the recurrence until December 31st.
  * Calendar untilCal = Calendar.getInstance();
  * untilCal.set(2005, Calendar.DECEMBER, 31);
  * untilCal.set(Calendar.MILLISECOND, 0);
- *
+ * 
  * // 9:00AM to 5:00PM Rule
  * Recur recur = new Recur(Recur.WEEKLY, untilCal.getTime());
  * recur.getDayList().add(WeekDay.MO);
@@ -186,15 +192,15 @@ import net.fortuna.ical4j.util.Strings;
  * recur.setInterval(3);
  * recur.setWeekStartDay(WeekDay.MO.getDay());
  * RRule rrule = new RRule(recur);
- *
+ * 
  * Summary summary = new Summary(&quot;TEST EVENTS THAT HAPPEN 9-5 MON-FRI&quot;);
- *
+ * 
  * weekdayNineToFiveEvents = new VEvent();
  * weekdayNineToFiveEvents.getProperties().add(rrule);
  * weekdayNineToFiveEvents.getProperties().add(summary);
  * weekdayNineToFiveEvents.getProperties().add(new DtStart(weekday9AM.getTime()));
  * weekdayNineToFiveEvents.getProperties().add(new DtEnd(weekday5PM.getTime()));
- *
+ * 
  * // Test Start 04/01/2005, End One month later.
  * // Query Calendar Start and End Dates.
  * Calendar queryStartDate = Calendar.getInstance();
@@ -203,14 +209,14 @@ import net.fortuna.ical4j.util.Strings;
  * Calendar queryEndDate = Calendar.getInstance();
  * queryEndDate.set(2005, Calendar.MAY, 1, 11, 15, 0);
  * queryEndDate.set(Calendar.MILLISECOND, 0);
- *
+ * 
  * // This range is monday to friday every three weeks, starting from
  * // March 7th 2005, which means for our query dates we need
  * // April 18th through to the 22nd.
  * PeriodList periods = weekdayNineToFiveEvents.getPeriods(queryStartDate
  *         .getTime(), queryEndDate.getTime());
  * </code></pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class VEvent extends CalendarComponent {
@@ -732,5 +738,36 @@ public class VEvent extends CalendarComponent {
      */
     public final Uid getUid() {
         return (Uid) getProperty(Property.UID);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Component#equals(java.lang.Object)
+     */
+    public boolean equals(Object arg0) {
+        if (arg0 instanceof VEvent) {
+            return super.equals(arg0)
+                    && ObjectUtils.equals(alarms, ((VEvent) arg0).getAlarms());
+        }
+        return super.equals(arg0);
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Component#hashCode()
+     */
+    public int hashCode() {
+        return new HashCodeBuilder().append(getName()).append(getProperties())
+                .append(getAlarms()).toHashCode();
+    }
+
+    /**
+     * Overrides default copy method to add support for copying alarm sub-components.
+     * @see net.fortuna.ical4j.model.Component#copy()
+     */
+    public Component copy() throws ParseException, IOException,
+            URISyntaxException {
+        VEvent copy = (VEvent) super.copy();
+        copy.alarms = new ComponentList(alarms);
+        return copy;
     }
 }

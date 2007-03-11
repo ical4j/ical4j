@@ -33,6 +33,9 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Component;
@@ -66,61 +69,64 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
 
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * Defines an iCalendar VTODO component.
- *
+ * 
  * <pre>
- *     4.6.2 To-do Component
- *
- *        Component Name: VTODO
- *
- *        Purpose: Provide a grouping of calendar properties that describe a
- *        to-do.
- *
- *        Formal Definition: A &quot;VTODO&quot; calendar component is defined by the
- *        following notation:
- *
- *          todoc      = &quot;BEGIN&quot; &quot;:&quot; &quot;VTODO&quot; CRLF
- *                       todoprop *alarmc
- *                       &quot;END&quot; &quot;:&quot; &quot;VTODO&quot; CRLF
- *
- *          todoprop   = *(
- *
- *                     ; the following are optional,
- *                     ; but MUST NOT occur more than once
- *
- *                     class / completed / created / description / dtstamp /
- *                     dtstart / geo / last-mod / location / organizer /
- *                     percent / priority / recurid / seq / status /
- *                     summary / uid / url /
- *
- *                     ; either 'due' or 'duration' may appear in
- *                     ; a 'todoprop', but 'due' and 'duration'
- *                     ; MUST NOT occur in the same 'todoprop'
- *
- *                     due / duration /
- *
- *                     ; the following are optional,
- *                     ; and MAY occur more than once
- *                     attach / attendee / categories / comment / contact /
- *                     exdate / exrule / rstatus / related / resources /
- *                     rdate / rrule / x-prop
- *
- *                     )
+ *       4.6.2 To-do Component
+ *  
+ *          Component Name: VTODO
+ *  
+ *          Purpose: Provide a grouping of calendar properties that describe a
+ *          to-do.
+ *  
+ *          Formal Definition: A &quot;VTODO&quot; calendar component is defined by the
+ *          following notation:
+ *  
+ *            todoc      = &quot;BEGIN&quot; &quot;:&quot; &quot;VTODO&quot; CRLF
+ *                         todoprop *alarmc
+ *                         &quot;END&quot; &quot;:&quot; &quot;VTODO&quot; CRLF
+ *  
+ *            todoprop   = *(
+ *  
+ *                       ; the following are optional,
+ *                       ; but MUST NOT occur more than once
+ *  
+ *                       class / completed / created / description / dtstamp /
+ *                       dtstart / geo / last-mod / location / organizer /
+ *                       percent / priority / recurid / seq / status /
+ *                       summary / uid / url /
+ *  
+ *                       ; either 'due' or 'duration' may appear in
+ *                       ; a 'todoprop', but 'due' and 'duration'
+ *                       ; MUST NOT occur in the same 'todoprop'
+ *  
+ *                       due / duration /
+ *  
+ *                       ; the following are optional,
+ *                       ; and MAY occur more than once
+ *                       attach / attendee / categories / comment / contact /
+ *                       exdate / exrule / rstatus / related / resources /
+ *                       rdate / rrule / x-prop
+ *  
+ *                       )
  * </pre>
- *
+ * 
  * Example 1 - Creating a todo of two (2) hour duration starting tomorrow:
- *
+ * 
  * <pre><code>
  * java.util.Calendar cal = java.util.Calendar.getInstance();
  * // tomorrow..
  * cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
  * cal.set(java.util.Calendar.HOUR_OF_DAY, 11);
  * cal.set(java.util.Calendar.MINUTE, 00);
- *
+ * 
  * VToDo documentation = new VEvent(cal.getTime(), 1000 * 60 * 60 * 2,
  *         &quot;Document calendar component usage&quot;);
- *
+ * 
  * // add timezone information..
  * VTimeZone tz = VTimeZone.getDefault();
  * TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID)
@@ -128,7 +134,7 @@ import net.fortuna.ical4j.util.Strings;
  * documentation.getProperties().getProperty(Property.DTSTART).getParameters()
  *         .add(tzParam);
  * </code></pre>
- *
+ * 
  * @author Ben Fortuna
  */
 public class VToDo extends CalendarComponent {
@@ -465,5 +471,36 @@ public class VToDo extends CalendarComponent {
      */
     public final Uid getUid() {
         return (Uid) getProperty(Property.UID);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Component#equals(java.lang.Object)
+     */
+    public boolean equals(Object arg0) {
+        if (arg0 instanceof VToDo) {
+            return super.equals(arg0)
+                    && ObjectUtils.equals(alarms, ((VToDo) arg0).getAlarms());
+        }
+        return super.equals(arg0);
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Component#hashCode()
+     */
+    public int hashCode() {
+        return new HashCodeBuilder().append(getName()).append(getProperties())
+                .append(getAlarms()).toHashCode();
+    }
+
+    /**
+     * Overrides default copy method to add support for copying alarm sub-components.
+     * @see net.fortuna.ical4j.model.Component#copy()
+     */
+    public Component copy() throws ParseException, IOException,
+            URISyntaxException {
+        VToDo copy = (VToDo) super.copy();
+        copy.alarms = new ComponentList(alarms);
+        return copy;
     }
 }
