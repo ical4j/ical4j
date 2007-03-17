@@ -36,10 +36,12 @@
 package net.fortuna.ical4j.filter;
 
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
@@ -47,6 +49,7 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.util.Calendars;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -129,5 +132,37 @@ public class PeriodRuleTest extends TestCase {
             }
             cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
         }
+    }
+    
+    /**
+     * Test exclusion of particular dates.
+     */
+    public void testExceptionDates() throws ParserException, IOException {
+        Calendar exCal = Calendars.load("etc/samples/valid/friday13.ics");
+        
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(1997, 8, 2, 9, 0, 0);
+        DateTime start = new DateTime(cal.getTime());
+        Period period = new Period(start, new Dur(1));
+        
+        Filter filter = new Filter(new PeriodRule(period));
+        
+        assertTrue(filter.filter(exCal.getComponents()).isEmpty());
+    }
+    
+    /**
+     * Test exclusion of particular date patterns.
+     */
+    public void testExceptionRules() throws ParserException, IOException {
+        Calendar exCal = Calendars.load("etc/samples/valid/friday13-NOT.ics");
+        
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        cal.set(1997, 8, 2, 9, 0, 0);
+        DateTime start = new DateTime(cal.getTime());
+        Period period = new Period(start, new Dur(52));
+        
+        Filter filter = new Filter(new PeriodRule(period));
+        
+        assertTrue(filter.filter(exCal.getComponents()).isEmpty());
     }
 }
