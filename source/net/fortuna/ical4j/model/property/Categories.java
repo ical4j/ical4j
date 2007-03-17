@@ -36,6 +36,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.CategoryList;
+import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
@@ -46,7 +47,7 @@ import net.fortuna.ical4j.util.ParameterValidator;
  * Defines a CATEGORIES iCalendar component property.
  * @author benf
  */
-public class Categories extends Property {
+public class Categories extends Property implements Escapable {
 
     private static final long serialVersionUID = -7769987073466681634L;
 
