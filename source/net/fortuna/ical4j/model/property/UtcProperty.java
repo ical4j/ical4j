@@ -37,6 +37,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -80,6 +81,13 @@ public abstract class UtcProperty extends DateProperty {
         setDate(dateTime);
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.property.DateProperty#setTimeZone(net.fortuna.ical4j.model.TimeZone)
+     */
+    public void setTimeZone(TimeZone timezone) {
+        throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
+    }
+    
     /*
      * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Property#validate()
