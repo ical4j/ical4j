@@ -35,6 +35,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Date;
@@ -49,6 +51,9 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Base class for properties with a DATE or DATE-TIME value. Note that some sub-classes may only allow either a DATE or
  * a DATE-TIME value, for which additional rules/validation should be specified.
@@ -56,6 +61,8 @@ import net.fortuna.ical4j.util.Strings;
  */
 public abstract class DateProperty extends Property {
 
+    private Log log = LogFactory.getLog(DateProperty.class);
+    
     private Date date;
 
     protected TimeZone timezone;
@@ -82,7 +89,7 @@ public abstract class DateProperty extends Property {
      */
     public DateProperty(final String name, TimeZone timezone) {
         super(name);
-        setTimeZone(timezone);
+        updateTimeZone(timezone);
     }
 
     /**
@@ -98,11 +105,11 @@ public abstract class DateProperty extends Property {
      */
     public final void setDate(final Date date) {
         if (date instanceof DateTime) {
-            setTimeZone(((DateTime) date).getTimeZone());
+            updateTimeZone(((DateTime) date).getTimeZone());
         }
         else {
             // ensure timezone is null for VALUE=DATE properties..
-            setTimeZone(null);
+            updateTimeZone(null);
         }
         this.date = date;
     }
@@ -114,7 +121,7 @@ public abstract class DateProperty extends Property {
         // value can be either a date-time or a date..
         if (Value.DATE.equals(getParameter(Parameter.VALUE))) {
             // ensure timezone is null for VALUE=DATE properties..
-            setTimeZone(null);
+            updateTimeZone(null);
             this.date = new Date(value);
         }
         else {
@@ -131,13 +138,21 @@ public abstract class DateProperty extends Property {
     }
 
     /**
+     * Publically available method to update the current timezone.
+     * @param timezone
+     */
+    public void setTimeZone(final TimeZone timezone) {
+        updateTimeZone(timezone);
+    }
+    
+    /**
      * Updates the timezone associated with the property's value. If the specified timezone is equivalent to UTC any
      * existing TZID parameters will be removed. Note that this method is only applicable where the current date is an
      * instance of <code>DateTime</code>. For all other cases an <code>UnsupportedOperationException</code> will be
      * thrown.
      * @param vTimeZone
      */
-    public final void setTimeZone(final TimeZone timezone) {
+    private void updateTimeZone(final TimeZone timezone) {
         this.timezone = timezone;
         if (timezone != null) {
             if (getDate() != null && !(getDate() instanceof DateTime)) {
@@ -149,9 +164,19 @@ public abstract class DateProperty extends Property {
             }
 
             TzId tzId = new TzId(timezone.getID());
+            
+            if (log.isDebugEnabled()) {
+                log.debug("Replacing current timezone ["
+                        + getParameter(Parameter.TZID) + "] with [" + tzId + "]");
+            }
+            
             getParameters().replace(tzId);
         }
         else {
+            if (log.isDebugEnabled()) {
+                log.debug("Clearing timezone [" + getParameter(Parameter.TZID) + "]");
+            }
+            
             // use setUtc() to reset timezone..
             setUtc(false);
         }
@@ -236,5 +261,14 @@ public abstract class DateProperty extends Property {
                         + "] is invalid for DATE instance");
             }
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.Property#copy()
+     */
+    public Property copy() throws IOException, URISyntaxException, ParseException {
+        Property copy = super.copy();
+        ((DateProperty) copy).timezone = timezone;
+        return copy;
     }
 }
