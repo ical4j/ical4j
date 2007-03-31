@@ -423,12 +423,22 @@ public class VEvent extends CalendarComponent {
             DtStart start = (DtStart) getProperty(Property.DTSTART);
             DtEnd end = (DtEnd) getProperty(Property.DTEND);
             if (start != null) {
-                Parameter value = start.getParameter(Parameter.VALUE);
-                if (value != null
-                        && !value.equals(end.getParameter(Parameter.VALUE))) {
-                    throw new ValidationException("Property [" + Property.DTEND
+                Parameter startValue = start.getParameter(Parameter.VALUE);
+                Parameter endValue = end.getParameter(Parameter.VALUE);
+                if (startValue != null) {
+                    if(startValue.equals(Value.DATE_TIME) && endValue==null) {
+                        // DATE-TIME is the default so this is ok
+                    } else if (!startValue.equals(endValue)) {
+                        throw new ValidationException("Property [" + Property.DTEND
                             + "] must have the same [" + Parameter.VALUE
                             + "] as [" + Property.DTSTART + "]");
+                    }
+                } else if(endValue!=null) {
+                    // if DTSTART's VALUE is null then DTEND's must be DATE-TIME
+                    if(!endValue.equals(Value.DATE_TIME))
+                        throw new ValidationException("Property [" + Property.DTEND
+                                + "] must have the same [" + Parameter.VALUE
+                                + "] as [" + Property.DTSTART + "]");
                 }
             }
         }
