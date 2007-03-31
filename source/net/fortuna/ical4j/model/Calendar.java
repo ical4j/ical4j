@@ -369,6 +369,6 @@ public class Calendar implements Serializable {
      */
     public final int hashCode() {
         return new HashCodeBuilder().append(getProperties()).append(
-                getComponents()).hashCode();
+                getComponents()).toHashCode();
     }
 }

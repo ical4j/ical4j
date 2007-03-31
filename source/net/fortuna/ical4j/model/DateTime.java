@@ -287,6 +287,6 @@ public class DateTime extends Date {
      * Uses {@link HashCodeBuilder} to build hashcode.
      */
     public int hashCode() {
-        return new HashCodeBuilder().append(time).append(timezone).hashCode();
+        return new HashCodeBuilder().append(time).append(timezone).toHashCode();
     }
 }
