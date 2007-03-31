@@ -322,7 +322,7 @@ public abstract class Property extends Content {
      * Create a (deep) copy of this property.
      * @return the copy of the property
      */
-    public final Property copy() throws IOException, URISyntaxException,
+    public Property copy() throws IOException, URISyntaxException,
             ParseException {
         
         // Deep copy parameter list..
