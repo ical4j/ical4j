@@ -35,14 +35,20 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
+import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Transp;
+import net.fortuna.ical4j.model.property.XProperty;
 
 /**
  * Unit tests for Property-specific functionality.
  * @author Ben Fortuna
  */
 public class PropertyTest extends AbstractPropertyTest {
-
+    
     /**
      * Test equality of properties.
      */
@@ -51,5 +57,17 @@ public class PropertyTest extends AbstractPropertyTest {
         
         assertFalse("Properties are not equal", Transp.TRANSPARENT.equals(p));
         assertFalse("Properties are not equal", p.equals(Transp.TRANSPARENT));
+    }
+    
+    /**
+     * Test deep copy of properties.
+     */
+    public void testCopy() throws IOException, URISyntaxException, ParseException {
+        ParameterList params = new ParameterList();
+        params.add(Value.BOOLEAN);
+        Property p = new XProperty("X-test", params, "value1");
+        
+        Property copy = p.copy();
+        assertEquals(p, copy);
     }
 }
