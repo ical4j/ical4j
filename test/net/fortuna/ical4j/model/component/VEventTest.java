@@ -7,6 +7,7 @@ package net.fortuna.ical4j.model.component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.SocketException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -38,6 +39,7 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.Calendars;
+import net.fortuna.ical4j.util.UidGenerator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -580,5 +582,69 @@ public class VEventTest extends ComponentTest {
         e2.getAlarms().add(new VAlarm());
         
         assertFalse(e1.equals(e2));
+    }
+    
+    /**
+     * Test VEvent validation.
+     */
+    public void testValidation() throws SocketException, ValidationException {
+        UidGenerator ug = new UidGenerator("1");
+        Uid uid = ug.generateUid();
+        
+        DtStart start = new DtStart();
+        
+        DtEnd end = new DtEnd();
+        VEvent event = new VEvent();
+        
+        event.getProperties().add(uid);
+        event.getProperties().add(start);
+        event.getProperties().add(end);
+        
+        event.validate();
+        start.getParameters().replace(Value.DATE_TIME);
+        event.validate();
+        start.getParameters().remove(Value.DATE_TIME);
+        end.getParameters().replace(Value.DATE_TIME);
+        event.validate();
+        
+        // test 1..
+        start.getParameters().replace(Value.DATE);
+        try {
+            event.validate();
+        }
+        catch (ValidationException ve) {
+            log.info("Caught exception: [" + ve.getMessage() + "]");
+        }
+        
+        // test 2..
+        start.getParameters().replace(Value.DATE_TIME);
+        end.getParameters().replace(Value.DATE);
+        try {
+            event.validate();
+        }
+        catch (ValidationException ve) {
+            log.info("Caught exception: [" + ve.getMessage() + "]");
+        }
+        
+        // test 3..
+        start.getParameters().replace(Value.DATE);
+        end.getParameters().replace(Value.DATE_TIME);
+        try {
+            event.validate();
+        }
+        catch (ValidationException ve) {
+            log.info("Caught exception: [" + ve.getMessage() + "]");
+        }
+        
+        // test 3..
+        start.getParameters().remove(Value.DATE);
+        end.getParameters().replace(Value.DATE);
+        try {
+            event.validate();
+        }
+        catch (ValidationException ve) {
+            log.info("Caught exception: [" + ve.getMessage() + "]");
+        }
+        
     }
 }
