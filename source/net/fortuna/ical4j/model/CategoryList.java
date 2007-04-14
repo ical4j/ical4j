@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -37,15 +37,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a list of iCalendar categories.
- * 
  * @author Ben Fortuna
  */
 public class CategoryList implements Serializable {
-    
+
     private static final long serialVersionUID = 4387692697196974638L;
 
     private List categories;
@@ -58,17 +60,25 @@ public class CategoryList implements Serializable {
     }
 
     /**
-     * Parses the specified string representation to create
-     * a list of categories.
-     * @param aValue a string representation of a list of
-     * categories
+     * Parses the specified string representation to create a list of categories.
+     * @param aValue a string representation of a list of categories
      */
     public CategoryList(final String aValue) {
         categories = new ArrayList();
 
-        for (StringTokenizer t = new StringTokenizer(aValue, ","); t
-                .hasMoreTokens();) {
-            categories.add(t.nextToken());
+        Pattern pattern = Pattern.compile("([^\\\\](\\\\){2}?),");
+        Matcher matcher = pattern.matcher(aValue);
+        String[] categoryValues = null;
+
+        if (matcher.find()) {
+            categoryValues = matcher.replaceAll("$1&quot;").split("&quot;");
+        }
+        else {
+            categoryValues = aValue.split(",");
+        }
+
+        for (int i = 0; i < categoryValues.length; i++) {
+            categories.add(Strings.unescape(categoryValues[i]));
         }
     }
 
@@ -78,16 +88,12 @@ public class CategoryList implements Serializable {
     public final String toString() {
 
         StringBuffer b = new StringBuffer();
-
         for (Iterator i = categories.iterator(); i.hasNext();) {
-
-            b.append(i.next());
-
+            b.append(Strings.escape((String) i.next()));
             if (i.hasNext()) {
                 b.append(',');
             }
         }
-
         return b.toString();
     }
 
