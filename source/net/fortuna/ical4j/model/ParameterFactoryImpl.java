@@ -58,6 +58,7 @@ import net.fortuna.ical4j.model.parameter.SentBy;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.parameter.XParameter;
+import net.fortuna.ical4j.util.Strings;
 
 /**
  * A factory for creating iCalendar parameters.
@@ -495,7 +496,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                return new TzId(value);
+                return new TzId(Strings.unescape(value));
             }
         };
     }
