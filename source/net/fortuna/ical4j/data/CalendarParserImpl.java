@@ -42,7 +42,6 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.util.Strings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -230,7 +229,7 @@ public class CalendarParserImpl implements CalendarParser {
                     tokeniser.lineno());
         }
 
-        handler.propertyValue(Strings.unescape(value.toString()));
+        handler.propertyValue(value.toString());
         handler.endProperty(name);
     }
 
@@ -284,7 +283,7 @@ public class CalendarParserImpl implements CalendarParser {
             paramValue.append(tokeniser.sval);
         }
 
-        handler.parameter(paramName, Strings.unescape(paramValue.toString()));
+        handler.parameter(paramName, paramValue.toString());
     }
 
     /**
