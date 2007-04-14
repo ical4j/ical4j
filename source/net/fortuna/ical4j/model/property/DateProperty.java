@@ -268,7 +268,7 @@ public abstract class DateProperty extends Property {
      */
     public Property copy() throws IOException, URISyntaxException, ParseException {
         Property copy = super.copy();
-        ((DateProperty) copy).timezone = timezone;
+        ((DateProperty) copy).updateTimeZone(timezone);
         return copy;
     }
 }
