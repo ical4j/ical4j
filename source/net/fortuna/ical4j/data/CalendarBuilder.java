@@ -46,6 +46,7 @@ import java.text.ParseException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentFactory;
+import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.model.Property;
@@ -60,6 +61,7 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.util.Constants;
+import net.fortuna.ical4j.util.Strings;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -266,8 +268,14 @@ public class CalendarBuilder implements ContentHandler {
      */
     public void propertyValue(final String value) throws URISyntaxException,
             ParseException, IOException {
+        
         if (property != null) {
-            property.setValue(value);
+            if (property instanceof Escapable) {
+                property.setValue(Strings.unescape(value));
+            }
+            else {
+                property.setValue(value);
+            }
         }
     }
 
