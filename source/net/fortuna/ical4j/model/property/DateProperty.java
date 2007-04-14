@@ -189,11 +189,7 @@ public abstract class DateProperty extends Property {
      * @param utc
      */
     public final void setUtc(final boolean utc) {
-        if (getDate() != null && !(getDate() instanceof DateTime)) {
-            throw new UnsupportedOperationException(
-                    "UTC time is not applicable to current value");
-        }
-        if (getDate() != null) {
+        if (getDate() != null && (getDate() instanceof DateTime)) {
             ((DateTime) getDate()).setUtc(utc);
         }
         getParameters().remove(getParameter(Parameter.TZID));
@@ -268,7 +264,10 @@ public abstract class DateProperty extends Property {
      */
     public Property copy() throws IOException, URISyntaxException, ParseException {
         Property copy = super.copy();
-        ((DateProperty) copy).updateTimeZone(timezone);
+        // only update timezone if not UTC..
+        if (!isUtc()) {
+            ((DateProperty) copy).updateTimeZone(timezone);
+        }
         return copy;
     }
 }
