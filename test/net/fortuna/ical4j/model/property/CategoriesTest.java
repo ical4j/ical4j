@@ -57,6 +57,15 @@ import net.fortuna.ical4j.util.Calendars;
 public class CategoriesTest extends TestCase {
 
     /**
+     * Test construction of category list.
+     */
+    public void testCategoryList() {
+        String list = "one,two,three";
+        Categories categories = new Categories(list);
+        assertEquals(list, categories.getCategories().toString());
+    }
+    
+    /**
      * Test escaping of categories string representation.
      */
     public void testStringEscaping() throws ParserException, IOException,
