@@ -20,10 +20,13 @@
  How to build - Maven2
 =======================
 
- After installing Maven2 and adding to your path, open a command prompt to the
- location of the iCal4j source and execute the following:
+ After installing Maven2 and adding to your path, you need to modify your local
+ profiles http://wiki.modularity.net.au/ical4j/index.php?title=Maven2. Then 
+ open a command prompt to the location of the iCal4j source and execute the following:
  
   [iCal4j-1.0-beta1-src] >mvn clean install
+  or
+  [iCal4j-1.0-beta1-src] >mvn clean install -P modularity-snapshots
  
  This will build and install iCal4j in your local repository. Build artifacts
  are generated in the 'target' directory.
