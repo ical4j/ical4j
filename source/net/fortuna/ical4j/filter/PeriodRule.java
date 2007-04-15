@@ -126,7 +126,7 @@ public class PeriodRule extends ComponentRule {
         if (start != null && duration != null) {
             Date startPlusDuration = duration.getDuration().getTime(
                     start.getDate());
-            if (period.includes(startPlusDuration)) {
+            if (period.includes(startPlusDuration, Period.INCLUSIVE_END)) {
                 debug(startPlusDuration, "duration");
                 return true;
             }
