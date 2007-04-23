@@ -104,6 +104,7 @@ public abstract class DateProperty extends Property {
      * @param date The date to set.
      */
     public final void setDate(final Date date) {
+        this.date = date;
         if (date instanceof DateTime) {
             updateTimeZone(((DateTime) date).getTimeZone());
         }
@@ -111,7 +112,6 @@ public abstract class DateProperty extends Property {
             // ensure timezone is null for VALUE=DATE properties..
             updateTimeZone(null);
         }
-        this.date = date;
     }
 
     /**
@@ -264,10 +264,10 @@ public abstract class DateProperty extends Property {
      */
     public Property copy() throws IOException, URISyntaxException, ParseException {
         Property copy = super.copy();
-        // only update timezone if not UTC..
-        if (!isUtc()) {
-            ((DateProperty) copy).updateTimeZone(timezone);
-        }
+        
+       ((DateProperty) copy).timezone = timezone;
+       ((DateProperty) copy).setValue(getValue());
+       
         return copy;
     }
 }
