@@ -324,6 +324,9 @@ public class Dur implements Comparable, Serializable {
                     b.append('S');
                 }
             }
+            // handle case of zero length duration
+            if ((hours + minutes + seconds + days + weeks) == 0)
+                b.append("T0S");
         }
         return b.toString();
     }
