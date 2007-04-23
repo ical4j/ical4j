@@ -11,10 +11,25 @@
  - Detailed descriptions of changes included in each release may be found
  in the CHANGELOG.
  
- - iCal4j was created with the help of eclipse version 3.1 [http://eclipse.org].
+ - iCal4j was created with the help of eclipse version 3.2 [http://eclipse.org].
  Note that the project metadata included in the source version of iCal4j may not
  be compatible with prior versions of eclipse.
 
+
+=====================
+ System Requirements
+=====================
+
+ - Java 1.4.2 or later
+ 
+ - commons-codec 1.3
+ 
+ - commons-lang 2.1
+ 
+ - commons-logging 1.1
+ 
+ - junit 3.8.2 (for unit testing only)
+ 
 
 =======================
  How to build - Maven2
