@@ -104,6 +104,7 @@ public abstract class DateProperty extends Property {
      * @param date The date to set.
      */
     public final void setDate(final Date date) {
+        this.date = date;
         if (date instanceof DateTime) {
             updateTimeZone(((DateTime) date).getTimeZone());
         }
@@ -111,7 +112,6 @@ public abstract class DateProperty extends Property {
             // ensure timezone is null for VALUE=DATE properties..
             updateTimeZone(null);
         }
-        this.date = date;
     }
 
     /**
@@ -178,7 +178,7 @@ public abstract class DateProperty extends Property {
             }
             
             // use setUtc() to reset timezone..
-            setUtc(false);
+            setUtc(isUtc());
         }
     }
 
