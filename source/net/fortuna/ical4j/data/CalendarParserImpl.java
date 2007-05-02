@@ -204,6 +204,11 @@ public class CalendarParserImpl implements CalendarParser {
 
         // assertToken(tokeniser,StreamTokenizer.TT_EOL);
 
+        // DQUOTE is ordinary char for property value
+        // From sec 4.3.11 of rfc-2445:
+        // text       = *(TSAFE-CHAR / ":" / DQUOTE / ESCAPED-CHAR)
+        //
+        tokeniser.ordinaryChar('"');
         int nextToken = tokeniser.nextToken();
 
         while (nextToken != StreamTokenizer.TT_EOL
@@ -212,18 +217,16 @@ public class CalendarParserImpl implements CalendarParser {
             if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
                 value.append(tokeniser.sval);
             }
-            else if (tokeniser.ttype == '"') {
-                value.append((char) tokeniser.ttype);
-                value.append(tokeniser.sval);
-                value.append((char) tokeniser.ttype);
-            }
             else {
                 value.append((char) tokeniser.ttype);
             }
 
             nextToken = tokeniser.nextToken();
         }
-
+        
+        // reset DQUOTE to be quote char
+        tokeniser.quoteChar('"');
+        
         if (nextToken == StreamTokenizer.TT_EOF) {
             throw new ParserException("Unexpected end of file",
                     tokeniser.lineno());

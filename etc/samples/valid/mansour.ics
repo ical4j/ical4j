@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 PRODID:-//Life Lint//LifeLintCalendar 0.5//EN
 VERSION:2.0
 BEGIN:VEVENT
-LOCATION:At "The Terrace" Complex > Melbourne
+LOCATION:At "The Terrace" Complex > Melbourne "\\\,
 SUMMARY:A colon with spaces on either side : like that
 END:VEVENT
 END:VCALENDAR
