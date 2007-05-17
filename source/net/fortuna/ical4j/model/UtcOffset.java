@@ -86,8 +86,17 @@ public class UtcOffset implements Serializable {
             log.debug("Parsing string [" + value + "]");
         }
 
+        if (value.length() < MINUTE_END_INDEX) {
+            throw new IllegalArgumentException("Invalid UTC offset [" + value
+                    + "] - must be of the form: (+/-)HHMM[SS]");
+        }
+        
         boolean negative = value.startsWith("-");
 
+        if (!negative && !value.startsWith("+")) {
+            throw new IllegalArgumentException("UTC offset value must be signed");
+        }
+        
         offset = 0;
         offset += Integer.parseInt(value.substring(HOUR_START_INDEX,
                 HOUR_END_INDEX))
