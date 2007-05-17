@@ -22,6 +22,7 @@ import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.RecurTest;
 import net.fortuna.ical4j.model.ResourceListTest;
 import net.fortuna.ical4j.model.TimeZoneTest;
+import net.fortuna.ical4j.model.UtcOffsetTest;
 import net.fortuna.ical4j.model.WeekDayTest;
 import net.fortuna.ical4j.model.component.VAlarmTest;
 import net.fortuna.ical4j.model.component.VEventTest;
@@ -85,6 +86,7 @@ public class AllTests extends TestSuite{
         suite.addTestSuite(TimeZoneTest.class);
         suite.addTestSuite(WeekDayTest.class);
         suite.addTestSuite(PropertyTest.class);
+        suite.addTestSuite(UtcOffsetTest.class);
 
         // component tests
         suite.addTestSuite(VAlarmTest.class);
