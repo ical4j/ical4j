@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -39,6 +39,14 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Iterator;
 
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.ExDate;
+import net.fortuna.ical4j.model.property.ExRule;
+import net.fortuna.ical4j.model.property.RDate;
+import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.util.Strings;
 
 import org.apache.commons.lang.ObjectUtils;
@@ -201,5 +209,127 @@ public abstract class Component implements Serializable {
 
         return ComponentFactory.getInstance().createComponent(getName(),
                 newprops);
+    }
+    
+    /**
+     * Calculates the recurrence set for this event using the specified period.
+     * The recurrence set is derived from a combination of the event start date,
+     * recurrence rules and dates, and exception rules and dates. Note that component
+     * transparency and anniversary-style dates do not affect the resulting
+     * intersection.
+     * @param period
+     * @return
+     */
+    public final PeriodList calculateRecurrenceSet(Period period) {
+        PeriodList recurrenceSet = new PeriodList();
+
+        DtStart start = (DtStart) getProperty(Property.DTSTART);
+        DtEnd end = (DtEnd) getProperty(Property.DTEND);
+        Duration duration = (Duration) getProperty(Property.DURATION);
+        // if no start date or duration specified return empty list..
+        if (start == null || (duration == null && end == null)) {
+            return recurrenceSet;
+        }
+        
+        // initialise timezone..
+        if (Value.DATE_TIME.equals(start.getParameter(Parameter.VALUE))) {
+            recurrenceSet.setTimeZone(((DateTime) start.getDate()).getTimeZone());
+        }
+        
+        // if an explicit event duration is not specified, derive a value for recurring
+        // periods from the end date..
+        Dur rDuration;
+        if (duration == null) {
+            rDuration = new Dur(start.getDate(), end.getDate());
+        }
+        else {
+            rDuration = duration.getDuration();
+        }
+        
+        // add recurrence dates..
+        for (Iterator i = getProperties(Property.RDATE).iterator(); i.hasNext();) {
+            RDate rdate = (RDate) i.next();
+            Value rdateValue = (Value) rdate.getParameter(Parameter.VALUE);
+            if (Value.PERIOD.equals(rdateValue)) {
+                for (Iterator j = rdate.getPeriods().iterator(); j.hasNext();) {
+                    Period rdatePeriod = (Period) j.next();
+                    if (period.intersects(rdatePeriod)) {
+                        recurrenceSet.add(period);
+                    }
+                }
+            }
+            else if (Value.DATE_TIME.equals(rdateValue)) {
+                for (Iterator j = rdate.getDates().iterator(); j.hasNext();) {
+                    DateTime rdateTime = (DateTime) j.next();
+                    if (period.includes(rdateTime)) {
+                        recurrenceSet.add(new Period(rdateTime, rDuration));
+                    }
+                }
+            }
+            // ignore VALUE=DATE rdates..
+        }
+        
+        // allow for recurrence rules that start prior to the specified period
+        // but still intersect with it..
+        DateTime startMinusDuration = new DateTime(period.getStart());
+        startMinusDuration.setTime(rDuration.negate().getTime(
+                period.getStart()).getTime());
+        
+        // add recurrence rules..
+        for (Iterator i = getProperties(Property.RRULE).iterator(); i.hasNext();) {
+            RRule rrule = (RRule) i.next();
+            Value startValue = (Value) start.getParameter(Parameter.VALUE);
+            DateList rruleDates = rrule.getRecur().getDates(start.getDate(),
+                    new Period(startMinusDuration, period.getEnd()), startValue);
+            for (Iterator j = rruleDates.iterator(); j.hasNext();) {
+                Date rruleDate = (Date) j.next();
+                recurrenceSet.add(new Period(new DateTime(rruleDate), rDuration));
+            }
+        }
+        
+        // add initial instance if intersection with the specified period..
+        Period startPeriod = null;
+        if (end != null) {
+            startPeriod = new Period(new DateTime(start.getDate()),
+                    new DateTime(end.getDate()));
+        }
+        else {
+            startPeriod = new Period(new DateTime(start.getDate()),
+                    duration.getDuration());
+        }
+        if (period.intersects(startPeriod)) {
+            recurrenceSet.add(startPeriod);
+        }
+        
+        // subtract exception dates..
+        for (Iterator i = getProperties(Property.EXDATE).iterator(); i.hasNext();) {
+            ExDate exdate = (ExDate) i.next();
+            for (Iterator j = recurrenceSet.iterator(); j.hasNext();) {
+                Period recurrence = (Period) j.next();
+                // for DATE-TIME instances check for DATE-based exclusions also..
+                if (exdate.getDates().contains(recurrence.getStart())
+                        || exdate.getDates().contains(new Date(recurrence.getStart()))) {
+                    j.remove();
+                }
+            }
+        }
+        
+        // subtract exception rules..
+        for (Iterator i = getProperties(Property.EXRULE).iterator(); i.hasNext();) {
+            ExRule exrule = (ExRule) i.next();
+            Value startValue = (Value) start.getParameter(Parameter.VALUE);
+            DateList exruleDates = exrule.getRecur().getDates(start.getDate(),
+                    period, startValue);
+            for (Iterator j = recurrenceSet.iterator(); j.hasNext();) {
+                Period recurrence = (Period) j.next();
+                // for DATE-TIME instances check for DATE-based exclusions also..
+                if (exruleDates.contains(recurrence.getStart())
+                        || exruleDates.contains(new Date(recurrence.getStart()))) {
+                    j.remove();
+                }
+            }
+        }
+
+        return recurrenceSet;
     }
 }
