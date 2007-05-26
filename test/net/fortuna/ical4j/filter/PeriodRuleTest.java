@@ -37,12 +37,15 @@ package net.fortuna.ical4j.filter;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Collection;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
@@ -163,6 +166,25 @@ public class PeriodRuleTest extends TestCase {
         
         Filter filter = new Filter(new PeriodRule(period));
         
-        assertTrue(filter.filter(exCal.getComponents()).isEmpty());
+        assertTrue(!filter.filter(exCal.getComponents()).isEmpty());
     }
+    
+    /**
+     * Test handling of recurrence rules.
+     * @throws ParserException
+     * @throws IOException
+     * @throws ParseException
+     */
+    /*
+    public void testRecurrenceRules() throws ParserException, IOException, ParseException {
+        Calendar rCal = Calendars.load("etc/samples/valid/LH1.ics");
+        Period period = new Period(new DateTime("20060831T000000Z"), new DateTime("20070831T230000Z")); 
+        Filter filter = new Filter(new PeriodRule(period)); 
+        Collection tz = rCal.getComponents(Component.VTIMEZONE); 
+        Collection zz = filter.filter(rCal.getComponents(Component.VEVENT));
+        
+        assertTrue(!zz.isEmpty());
+//        assertEquals(26, zz.size());
+    }
+    */
 }
