@@ -296,20 +296,68 @@ public class Period implements Serializable, Comparable {
         if (period == null) {
             newPeriodStart = getStart();
             newPeriodEnd = getEnd();
-        } else {
+        }
+        else {
             if (getStart().before(period.getStart())) {
                 newPeriodStart = getStart();
-            } else {
+            }
+            else {
                 newPeriodStart = period.getStart();
             }
             if (getEnd().after(period.getEnd())) {
                 newPeriodEnd = getEnd();
-            } else {
+            }
+            else {
                 newPeriodEnd = period.getEnd();
             }
         }
 
         return new Period(newPeriodStart, newPeriodEnd);
+    }
+    
+    /**
+     * Creates a set of periods resulting from the subtraction of the specified
+     * period from this one. If the specified period is completely contained
+     * in this period, the resulting list will contain two periods. Otherwise
+     * it will contain one. If the specified period does not interest this period
+     * a list containing this period is returned. If this period is completely
+     * contained within the specified period an empty period list is returned.
+     * @param period
+     * @return a list containing zero, one or two periods.
+     */
+    public final PeriodList subtract(Period period) {
+        PeriodList result = new PeriodList();
+        
+        if (period.contains(this)) {
+            return result;
+        }
+        else if (!period.intersects(this)) {
+            result.add(this);
+            return result;
+        }
+        
+        DateTime newPeriodStart;
+        DateTime newPeriodEnd;
+        if (!period.getStart().after(getStart())) {
+            newPeriodStart = period.getEnd();
+            newPeriodEnd = getEnd();
+        }
+        else if (!period.getEnd().before(getEnd())) {
+            newPeriodStart = getStart();
+            newPeriodEnd = period.getStart();
+        }
+        else {
+            // subtraction consumed by this period..
+            // initialise and add head period..
+            newPeriodStart = getStart();
+            newPeriodEnd = period.getStart();
+            result.add(new Period(newPeriodStart, newPeriodEnd));
+            // initialise tail period..
+            newPeriodStart = period.getEnd();
+            newPeriodEnd = getEnd();
+        }
+        result.add(new Period(newPeriodStart, newPeriodEnd));
+        return result;
     }
     
     /**

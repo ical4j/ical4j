@@ -444,6 +444,26 @@ public class PeriodTest extends TestCase {
         assertEquals(winter, winter.add(monthMarch));
         assertEquals(winter,  monthMarch.add(winter));
     }
+    
+    /**
+     * Unit tests for {@link Period#subtract(Period)}.
+     */
+    public void testSubtract() {
+        // test period contained by subtraction..
+        assertTrue(firstHalf.subtract(year1994).isEmpty());
+        assertTrue(winter.subtract(winter).isEmpty());
+        
+        // test non-intersecting periods..
+        assertTrue(winter.subtract(spring).contains(winter));
+        assertEquals(1, winter.subtract(spring).size());
+        
+        // test intersecting periods..
+        PeriodList aprToMay = marchToMay.subtract(marchToApril);
+        assertEquals(1, aprToMay.size());
+        
+        // test subtraction contained by period..
+        assertEquals(2, year1994.subtract(monthApril).size());
+    }
 
     /**
      * test dissimilar types
