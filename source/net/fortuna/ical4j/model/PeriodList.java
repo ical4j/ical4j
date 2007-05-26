@@ -222,57 +222,24 @@ public class PeriodList extends TreeSet implements Serializable {
      * @return a period list
      */
     public final PeriodList subtract(final PeriodList subtractions) {
-        if (subtractions != null) {
-            // intialise result list as identical to this..
-            PeriodList result = new PeriodList();
-            result.addAll(this);
-            boolean intersects = false;
-            // for each subtracted period update the resulting period
-            // list..
-            for (Iterator i = subtractions.iterator(); i.hasNext();) {
-                Period subtraction = (Period) i.next();
-                PeriodList tempResult = new PeriodList();
-                for (Iterator j = result.iterator(); j.hasNext();) {
-                    Period period = (Period) j.next();
-                    if (subtraction.contains(period)) {
-                        intersects = true;
-                        // period is consumed by subtraction..
-                        continue;
-                    } else if (subtraction.intersects(period)) {
-                        DateTime newPeriodStart;
-                        DateTime newPeriodEnd;
-                        if (subtraction.getStart().before(period.getStart())) {
-                            newPeriodStart = subtraction.getEnd();
-                            newPeriodEnd = period.getEnd();
-                        } else if (subtraction.getEnd().before(period.getEnd())) {
-                            newPeriodStart = period.getStart();
-                            newPeriodEnd = subtraction.getStart();
-                        } else {
-                            // subtraction consumed by period..
-                            // initialise head period..
-                            newPeriodStart = period.getStart();
-                            newPeriodEnd = subtraction.getStart();
-                            tempResult.add(new Period(newPeriodStart,
-                                    newPeriodEnd));
-                            // initialise tail period..
-                            newPeriodStart = subtraction.getEnd();
-                            newPeriodEnd = period.getEnd();
-                        }
-                        tempResult
-                                .add(new Period(newPeriodStart, newPeriodEnd));
-                        intersects = true;
-                    } else {
-                        tempResult.add(period);
-                    }
-                }
-                result = tempResult;
-            }
-            // only return new list if intersection has ocurred..
-            if (intersects) {
-                return result;
-            }
+        if (subtractions == null || subtractions.isEmpty()) {
+            return this;
         }
-        return this;
+        
+        PeriodList result = this;
+        PeriodList tmpResult = new PeriodList();
+
+        for (Iterator i = subtractions.iterator(); i.hasNext();) {
+            Period subtraction = (Period) i.next();
+            for (Iterator j = result.iterator(); j.hasNext();) {
+                Period period = (Period) j.next();
+                tmpResult.addAll(period.subtract(subtraction));
+            }
+            result = tmpResult;
+            tmpResult = new PeriodList();
+        }
+
+        return result;
     }
 
     /**

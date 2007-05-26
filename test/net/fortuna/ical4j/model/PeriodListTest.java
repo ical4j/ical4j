@@ -430,7 +430,7 @@ public class PeriodListTest extends TestCase {
          */
         PeriodList sum = periodList1.subtract(periodList2);
 
-        assertEquals(sum.size(), 2);
+        assertEquals(2, sum.size());
         Period lonePeriod1 = (Period) sum.toArray()[0];
         assertEquals(lonePeriod1.getStart(), sep1994);
         assertEquals(lonePeriod1.getEnd(), oct1994);
