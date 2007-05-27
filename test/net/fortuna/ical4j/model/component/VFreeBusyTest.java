@@ -54,6 +54,7 @@ import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -78,12 +79,25 @@ public class VFreeBusyTest extends ComponentTest {
      */
     protected void setUp() throws Exception {
         super.setUp();
+        // relax validation to avoid UID requirement..
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_VALIDATION, true);
+        
         registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         // create timezone property..
         tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         // create tzid parameter..
         tzParam = new TzId(tz.getProperty(Property.TZID)
                 .getValue());
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_VALIDATION, false);
+        super.tearDown();
     }
 
     /*
@@ -147,14 +161,13 @@ public class VFreeBusyTest extends ComponentTest {
     public final void testVFreeBusyComponentList3() throws Exception {
         ComponentList components = new ComponentList();
 
-        DateTime startDate = new DateTime(0);
-        DateTime endDate = new DateTime();
+        DateTime eventStart = new DateTime(0);
 
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        cal.setTime(startDate);
-        cal.add(java.util.Calendar.HOUR_OF_DAY, 1);
+//        java.util.Calendar cal = java.util.Calendar.getInstance();
+//        cal.setTime(eventStart);
+//        cal.add(java.util.Calendar.HOUR_OF_DAY, 1);
 
-        VEvent event = new VEvent(startDate, new Dur(0, 1, 0, 0),
+        VEvent event = new VEvent(eventStart, new Dur(0, 1, 0, 0),
                 "Progress Meeting");
         // VEvent event = new VEvent(startDate, cal.getTime(), "Progress
         // Meeting");
@@ -172,8 +185,11 @@ public class VFreeBusyTest extends ComponentTest {
         event.getProperties().add(new RRule(recur));
 
         log.debug("\n==\n" + event.toString());
+        
+        DateTime requestStart = new DateTime(eventStart);
+        DateTime requestEnd = new DateTime();
 
-        VFreeBusy request = new VFreeBusy(startDate, endDate);
+        VFreeBusy request = new VFreeBusy(requestStart, requestEnd);
 
         VFreeBusy fb = new VFreeBusy(request, components);
 
@@ -211,19 +227,22 @@ public class VFreeBusyTest extends ComponentTest {
     public final void testAngelites() {
         log.info("angelites test:\n================");
 
-        Calendar FreeBusyTest = new Calendar();
+        Calendar freeBusyTest = new Calendar();
 
         // add an event
         java.util.Calendar start = java.util.Calendar.getInstance();
         java.util.Calendar end = java.util.Calendar.getInstance();
         start.add(java.util.Calendar.DATE, -1);
+        
         VEvent dteEnd = new VEvent(new Date(start.getTime().getTime()),
                 new Date(end.getTime().getTime()), "DATE END INCLUDED");
+        
         VEvent duration = new VEvent(new Date(start.getTime().getTime()),
                 new Dur(0, 1, 0, 0), "DURATION");
-        FreeBusyTest.getComponents().add(dteEnd);
-        FreeBusyTest.getComponents().add(duration);
-
+        
+        freeBusyTest.getComponents().add(dteEnd);
+        freeBusyTest.getComponents().add(duration);
+        
         java.util.Calendar dtstart = java.util.Calendar.getInstance();
         java.util.Calendar dtend = java.util.Calendar.getInstance();
         dtstart.add(java.util.Calendar.DATE, -2);
@@ -237,9 +256,9 @@ public class VFreeBusyTest extends ComponentTest {
 
         Calendar FreeBusyTest2 = new Calendar();
 
-        VFreeBusy replyBusy = new VFreeBusy(getBusy, FreeBusyTest
+        VFreeBusy replyBusy = new VFreeBusy(getBusy, freeBusyTest
                 .getComponents());
-        VFreeBusy replyFree = new VFreeBusy(requestFree, FreeBusyTest
+        VFreeBusy replyFree = new VFreeBusy(requestFree, freeBusyTest
                 .getComponents());
 
         log.debug("REPLY BUSY: \n" + replyBusy.toString());
