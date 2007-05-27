@@ -43,6 +43,7 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Property;
 
 /**
@@ -97,5 +98,17 @@ public final class Calendars {
             }
         }
         return result;
+    }
+
+    /**
+     * Wraps a component in a calendar.
+     * @param component the component to wrap with a calendar
+     * @return a calendar containing the specified component
+     */
+    public static Calendar wrap(final Component component) {
+        ComponentList components = new ComponentList();
+        components.add(component);
+
+        return new Calendar(components);
     }
 }
