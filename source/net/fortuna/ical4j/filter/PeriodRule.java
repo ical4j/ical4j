@@ -35,22 +35,15 @@
  */
 package net.fortuna.ical4j.filter;
 
-import java.util.Date;
-
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * A rule that matches any component that occurs in the specified time period.
  * @author Ben Fortuna
  */
 public class PeriodRule extends ComponentRule {
-
-    private Log log = LogFactory.getLog(PeriodRule.class);
 
     private Period period;
 
@@ -93,15 +86,5 @@ public class PeriodRule extends ComponentRule {
 //            log.error("Invalid component data", ve);
 //            return false;
 //        }
-    }
-
-    /**
-     * Log the matching date instance.
-     * @param date
-     */
-    private void debug(final Date date, final String type) {
-        if (log.isDebugEnabled()) {
-            log.debug("Matching date: " + date + " (" + type + ")");
-        }
     }
 }

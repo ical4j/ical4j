@@ -41,7 +41,6 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.Strings;
 
 /**
  * Defines a CATEGORIES iCalendar component property.

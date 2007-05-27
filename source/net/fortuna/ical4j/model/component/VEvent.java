@@ -76,8 +76,6 @@ import net.fortuna.ical4j.util.Strings;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Defines an iCalendar VEVENT component.
@@ -219,8 +217,6 @@ import org.apache.commons.logging.LogFactory;
 public class VEvent extends CalendarComponent {
 
     private static final long serialVersionUID = 2547948989200697335L;
-
-    private Log log = LogFactory.getLog(VEvent.class);
 
     private ComponentList alarms;
 
@@ -421,23 +417,17 @@ public class VEvent extends CalendarComponent {
              */
             DtStart start = (DtStart) getProperty(Property.DTSTART);
             DtEnd end = (DtEnd) getProperty(Property.DTEND);
+
             if (start != null) {
                 Parameter startValue = start.getParameter(Parameter.VALUE);
                 Parameter endValue = end.getParameter(Parameter.VALUE);
-                if (startValue != null) {
-                    if(startValue.equals(Value.DATE_TIME) && endValue==null) {
-                        // DATE-TIME is the default so this is ok
-                    } else if (!startValue.equals(endValue)) {
-                        throw new ValidationException("Property [" + Property.DTEND
+
+                if ((startValue == null || Value.DATE_TIME.equals(startValue))
+                        && !(endValue == null || Value.DATE_TIME.equals(endValue))) {
+
+                    throw new ValidationException("Property [" + Property.DTEND
                             + "] must have the same [" + Parameter.VALUE
                             + "] as [" + Property.DTSTART + "]");
-                    }
-                } else if(endValue!=null) {
-                    // if DTSTART's VALUE is null then DTEND's must be DATE-TIME
-                    if(!endValue.equals(Value.DATE_TIME))
-                        throw new ValidationException("Property [" + Property.DTEND
-                                + "] must have the same [" + Parameter.VALUE
-                                + "] as [" + Property.DTSTART + "]");
                 }
             }
         }
