@@ -220,26 +220,37 @@ public abstract class Component implements Serializable {
      * @param period
      * @return
      */
-    public final PeriodList calculateRecurrenceSet(Period period) {
+    public final PeriodList calculateRecurrenceSet(Period period) throws ValidationException {
+        
+//        validate();
+        
         PeriodList recurrenceSet = new PeriodList();
 
         DtStart start = (DtStart) getProperty(Property.DTSTART);
         DtEnd end = (DtEnd) getProperty(Property.DTEND);
         Duration duration = (Duration) getProperty(Property.DURATION);
-        // if no start date or duration specified return empty list..
-        if (start == null || (duration == null && end == null)) {
+        
+        // if no start date specified return empty list..
+        if (start == null) {
             return recurrenceSet;
         }
+
+        Value startValue = (Value) start.getParameter(Parameter.VALUE);
         
         // initialise timezone..
-        if (Value.DATE_TIME.equals(start.getParameter(Parameter.VALUE))) {
+//        if (startValue == null || Value.DATE_TIME.equals(startValue)) {
+        if (start.getDate() instanceof DateTime) {
             recurrenceSet.setTimeZone(((DateTime) start.getDate()).getTimeZone());
         }
         
         // if an explicit event duration is not specified, derive a value for recurring
         // periods from the end date..
         Dur rDuration;
-        if (duration == null) {
+        // if no end or duration specified, end date equals start date..
+        if (end == null && duration == null) {
+            rDuration = new Dur(start.getDate(), start.getDate());
+        }
+        else if (duration == null) {
             rDuration = new Dur(start.getDate(), end.getDate());
         }
         else {
@@ -266,7 +277,15 @@ public abstract class Component implements Serializable {
                     }
                 }
             }
-            // ignore VALUE=DATE rdates..
+            else {
+                for (Iterator j = rdate.getDates().iterator(); j.hasNext();) {
+                    Date rdateDate = (DateTime) j.next();
+                    if (period.includes(rdateDate)) {
+                        recurrenceSet.add(new Period(new DateTime(rdateDate),
+                                rDuration));
+                    }
+                }
+            }
         }
         
         // allow for recurrence rules that start prior to the specified period
@@ -274,11 +293,10 @@ public abstract class Component implements Serializable {
         DateTime startMinusDuration = new DateTime(period.getStart());
         startMinusDuration.setTime(rDuration.negate().getTime(
                 period.getStart()).getTime());
-        
+            
         // add recurrence rules..
         for (Iterator i = getProperties(Property.RRULE).iterator(); i.hasNext();) {
             RRule rrule = (RRule) i.next();
-            Value startValue = (Value) start.getParameter(Parameter.VALUE);
             DateList rruleDates = rrule.getRecur().getDates(start.getDate(),
                     new Period(startMinusDuration, period.getEnd()), startValue);
             for (Iterator j = rruleDates.iterator(); j.hasNext();) {
@@ -286,7 +304,7 @@ public abstract class Component implements Serializable {
                 recurrenceSet.add(new Period(new DateTime(rruleDate), rDuration));
             }
         }
-        
+    
         // add initial instance if intersection with the specified period..
         Period startPeriod = null;
         if (end != null) {
@@ -317,7 +335,6 @@ public abstract class Component implements Serializable {
         // subtract exception rules..
         for (Iterator i = getProperties(Property.EXRULE).iterator(); i.hasNext();) {
             ExRule exrule = (ExRule) i.next();
-            Value startValue = (Value) start.getParameter(Parameter.VALUE);
             DateList exruleDates = exrule.getRecur().getDates(start.getDate(),
                     period, startValue);
             for (Iterator j = recurrenceSet.iterator(); j.hasNext();) {
