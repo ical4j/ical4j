@@ -100,15 +100,20 @@ public abstract class DateProperty extends Property {
     }
 
     /**
-     * Sets the date value of this property. The timezone of this instance will also be updated accordingly.
+     * Sets the date value of this property. The timezone and value of this
+     * instance will also be updated accordingly.
      * @param date The date to set.
      */
     public final void setDate(final Date date) {
         this.date = date;
         if (date instanceof DateTime) {
+            if (getParameter(Parameter.VALUE) != null) {
+                getParameters().replace(Value.DATE_TIME);
+            }
             updateTimeZone(((DateTime) date).getTimeZone());
         }
         else {
+            getParameters().replace(Value.DATE);
             // ensure timezone is null for VALUE=DATE properties..
             updateTimeZone(null);
         }

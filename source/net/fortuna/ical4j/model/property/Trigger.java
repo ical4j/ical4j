@@ -171,7 +171,6 @@ public class Trigger extends UtcProperty {
     public Trigger(final Dur duration) {
         super(TRIGGER);
         setDuration(duration);
-        getParameters().add(Value.DURATION);
     }
 
     /**
@@ -181,7 +180,6 @@ public class Trigger extends UtcProperty {
     public Trigger(final ParameterList aList, final Dur duration) {
         super(TRIGGER, aList);
         setDuration(duration);
-        getParameters().add(Value.DURATION);
     }
 
     /**
@@ -190,7 +188,6 @@ public class Trigger extends UtcProperty {
     public Trigger(final DateTime dateTime) {
         super(TRIGGER);
         setDateTime(dateTime);
-        getParameters().add(Value.DATE_TIME);
     }
 
     /**
@@ -200,7 +197,6 @@ public class Trigger extends UtcProperty {
     public Trigger(final ParameterList aList, final DateTime dateTime) {
         super(TRIGGER, aList);
         setDateTime(dateTime);
-        getParameters().add(Value.DATE_TIME);
     }
 
     /**
@@ -287,5 +283,9 @@ public class Trigger extends UtcProperty {
     public final void setDuration(final Dur duration) {
         this.duration = duration;
         super.setDateTime(null);
+        // duration is the default value type for Trigger..
+        if (getParameter(Parameter.VALUE) != null) {
+            getParameters().replace(Value.DURATION);
+        }
     }
 }
