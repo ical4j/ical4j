@@ -39,6 +39,7 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.Calendars;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.UidGenerator;
 
 import org.apache.commons.logging.Log;
@@ -66,6 +67,10 @@ public class VEventTest extends ComponentTest {
 
     public void setUp() throws Exception {
         super.setUp();
+        // relax validation to avoid UID requirement..
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_VALIDATION, true);
+        
         registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         // create timezone property..
         tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
@@ -163,6 +168,16 @@ public class VEventTest extends ComponentTest {
         monthlyWeekdayEvents.getProperties().add(new Uid("000003@modularity.net.au"));
         // ensure event is valid..
         monthlyWeekdayEvents.validate();
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        // relax validation to avoid UID requirement..
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_VALIDATION, false);
+        super.tearDown();
     }
     
     /**
@@ -463,8 +478,7 @@ public class VEventTest extends ComponentTest {
         Date latest = new Date(cal.getTime());
         
         PeriodList pl = vev.getConsumedTime(start, latest);
-        Iterator it = pl.iterator();
-        assertTrue(it.hasNext());
+        assertTrue(!pl.isEmpty());
     }
     
     /**
@@ -646,5 +660,17 @@ public class VEventTest extends ComponentTest {
             log.info("Caught exception: [" + ve.getMessage() + "]");
         }
         
+    }
+    
+    /**
+     * Unit tests for {@link Component#calculateRecurrenceSet(Period)}.
+     */
+    public void testCalculateRecurrenceSet() throws ParseException, ValidationException {
+        DateTime periodStart = new DateTime("20050101T000000");
+        DateTime periodEnd = new DateTime("20051231T235959");
+        Period period = new Period(periodStart, periodEnd);
+        PeriodList recurrenceSet = weekdayNineToFiveEvents.calculateRecurrenceSet(period);
+        
+        assertTrue(!recurrenceSet.isEmpty());
     }
 }
