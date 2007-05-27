@@ -220,7 +220,7 @@ public abstract class Component implements Serializable {
      * @param period
      * @return
      */
-    public final PeriodList calculateRecurrenceSet(Period period) throws ValidationException {
+    public final PeriodList calculateRecurrenceSet(Period period) {
         
 //        validate();
         
