@@ -36,25 +36,13 @@
 package net.fortuna.ical4j.filter;
 
 import java.util.Date;
-import java.util.Iterator;
+
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Period;
+import net.fortuna.ical4j.model.PeriodList;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.PeriodList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.ExDate;
-import net.fortuna.ical4j.model.property.ExRule;
-import net.fortuna.ical4j.model.property.RDate;
-import net.fortuna.ical4j.model.property.RRule;
 
 /**
  * A rule that matches any component that occurs in the specified time period.
@@ -80,105 +68,31 @@ public class PeriodRule extends ComponentRule {
      */
     public final boolean match(final Component component) {
 
-        PeriodList recurrenceSet = component.calculateRecurrenceSet(period);
-        return (!recurrenceSet.isEmpty());
-        
         /*
-        boolean includesStart = false;
-        boolean includesEnd = false;
-        boolean includesDuration = false;
-        
         DtStart start = (DtStart) component.getProperty(Property.DTSTART);
-        if (start != null && period.includes(start.getDate(), Period.INCLUSIVE_START)) {
-            debug(start.getDate(), "start date");
-            includesStart = true;
-        }
-        
         DtEnd end = (DtEnd) component.getProperty(Property.DTEND);
-        if (end != null && period.includes(end.getDate(), Period.INCLUSIVE_END)) {
-            debug(end.getDate(), "end date");
-            includesEnd = true;
-        }
-        
         Duration duration = (Duration) component.getProperty(Property.DURATION);
-        if (start != null && duration != null) {
-            Date startPlusDuration = duration.getDuration().getTime(
-                    start.getDate());
-            if (period.includes(startPlusDuration, Period.INCLUSIVE_END)) {
-                debug(startPlusDuration, "duration");
-                includesDuration = true;
-            }
-        }
         
-        // period must include at least one of start, end or start + duration..
-        if (!includesStart && !includesEnd && !includesDuration) {
+        if (start == null) {
             return false;
         }
-
-        boolean includesException = false;
         
-        // exception dates..
-        for (Iterator i = component.getProperties(Property.EXDATE).iterator(); i
-            .hasNext();) {
-
-            ExDate exDate = (ExDate) i.next();
-            for (Iterator j = exDate.getDates().iterator(); j.hasNext();) {
-                Date exDateDate = (Date) j.next();
-                if (period.includes(exDateDate)) {
-                    debug(exDateDate, "exception date");
-                    includesException = true;
-                }
+        // detect events that consume no time..
+        if (end == null && duration == null) {
+            if (period.includes(start.getDate(), Period.INCLUSIVE_START)) {
+                return true;
             }
         }
-
-        // exception rules..
-        for (Iterator i = component.getProperties(Property.EXRULE).iterator(); i
-            .hasNext();) {
-
-            ExRule exRule = (ExRule) i.next();
-            DateList startDates = exRule.getRecur().getDates(start.getDate(),
-                    period, (Value) start.getParameter(Parameter.VALUE));
-            for (Iterator j = startDates.iterator(); j.hasNext();) {
-                Date recurDate = (Date) j.next();
-                if (period.includes(recurDate)) {
-                    debug(recurDate, "exception rule");
-                    includesException = true;
-                }
-            }
-        }
-
-        // recurrence dates..
-        for (Iterator i = component.getProperties(Property.RDATE).iterator(); i
-                .hasNext();) {
-            RDate rdate = (RDate) i.next();
-            if (Value.PERIOD.equals(rdate.getParameter(Parameter.VALUE))) {
-                for (Iterator j = rdate.getPeriods().iterator(); j.hasNext();) {
-                    Period rdatePeriod = (Period) j.next();
-                    if (period.intersects(rdatePeriod)) {
-                        debug(rdatePeriod.getStart(), "recurrence date");
-                        debug(rdatePeriod.getEnd(), "recurrence date");
-                        return true;
-                    }
-                }
-            }
-        }
-
-        // recurrence rules..
-        for (Iterator i = component.getProperties(Property.RRULE).iterator(); i
-                .hasNext();) {
-            RRule rrule = (RRule) i.next();
-            DateList startDates = rrule.getRecur().getDates(start.getDate(),
-                    period, (Value) start.getParameter(Parameter.VALUE));
-            for (Iterator j = startDates.iterator(); j.hasNext();) {
-                Date recurDate = (Date) j.next();
-                if (period.includes(recurDate)) {
-                    debug(recurDate, "recurrence rule");
-                    return true;
-                }
-            }
-        }
-        return false;
         */
+        
+//        try {
+        PeriodList recurrenceSet = component.calculateRecurrenceSet(period);
+        return (!recurrenceSet.isEmpty());
+//        }
+//        catch (ValidationException ve) {
+//            log.error("Invalid component data", ve);
+//            return false;
+//        }
     }
 
     /**
