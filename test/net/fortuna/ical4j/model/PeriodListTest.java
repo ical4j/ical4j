@@ -527,4 +527,18 @@ public class PeriodListTest extends TestCase {
             assertTrue(p.getEnd().isUtc());
         }
     }
+    
+    /**
+     * Unit tests for {@link PeriodList#normalise()}.
+     */
+    public void testNormalise() {
+        // test a list of periods consuming no time..
+        PeriodList periods = new PeriodList();
+        DateTime start = new DateTime();
+        periods.add(new Period(start, start));
+        DateTime start2 = new DateTime();
+        periods.add(new Period(start2, start2));
+        
+        assertTrue(periods.normalise().isEmpty());
+    }
 }

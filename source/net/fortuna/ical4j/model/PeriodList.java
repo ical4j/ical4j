@@ -22,7 +22,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -145,7 +145,8 @@ public class PeriodList extends TreeSet implements Serializable {
     /**
      * Returns a normalised version of this period list. Normalisation includes
      * combining overlapping periods, removing periods contained by other
-     * periods, and combining adjacent periods. NOTE: If the period list is
+     * periods, combining adjacent periods, and removing periods that consume
+     * no time. NOTE: If the period list is
      * already normalised then this period list is returned.
      * 
      * @return a period list
@@ -157,7 +158,11 @@ public class PeriodList extends TreeSet implements Serializable {
         boolean normalised = false;
         for (Iterator i = iterator(); i.hasNext();) {
             period = (Period) i.next();
-            if (prevPeriod != null) {
+            if (period.isEmpty()) {
+                period = prevPeriod;
+                normalised = true;
+            }
+            else if (prevPeriod != null) {
                 // ignore periods contained by other periods..
                 if (prevPeriod.contains(period)) {
                     period = prevPeriod;
@@ -172,7 +177,8 @@ public class PeriodList extends TreeSet implements Serializable {
                 else if (prevPeriod.adjacent(period)) {
                     period = prevPeriod.add(period);
                     normalised = true;
-                } else {
+                }
+                else {
                     // if current period is recognised as distinct
                     // from previous period, add the previous period
                     // to the list..
