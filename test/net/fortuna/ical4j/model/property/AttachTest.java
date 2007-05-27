@@ -101,7 +101,7 @@ public class AttachTest extends TestCase {
         cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
 
         DtStart start = new DtStart(new Date(cal.getTime().getTime()));
-        start.getParameters().add(Value.DATE);
+        start.getParameters().replace(Value.DATE);
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 

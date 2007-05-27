@@ -98,8 +98,8 @@ public class CalendarTest extends TestCase {
         VEvent week1UserA = new VEvent(
                 new Date(calStart.getTime().getTime()),
                 new Dur(0, 8, 0, 0), "Week 1 - User A");
-        week1UserA.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week1UserA.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
+        week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
         
         Recur week1UserARecur = new Recur(
                 Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
@@ -119,8 +119,8 @@ public class CalendarTest extends TestCase {
         VEvent week2UserB = new VEvent(
                 new Date(calStart.getTime().getTime()),
                 new Dur(0, 8, 0, 0), "Week 2 - User B");
-        week2UserB.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week2UserB.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
+        week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
         
         Recur week2UserBRecur = new Recur(
                 Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
@@ -140,8 +140,8 @@ public class CalendarTest extends TestCase {
         VEvent week3UserC = new VEvent(
                 new Date(calStart.getTime().getTime()),
                 new Dur(0, 8, 0, 0), "Week 3 - User C");
-        week3UserC.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week3UserC.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
+        week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
         
         Recur week3UserCRecur = new Recur(
                 Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
@@ -187,8 +187,8 @@ public class CalendarTest extends TestCase {
         VEvent week1UserA = new VEvent(
                 new Date(calStart.getTime().getTime()),
                 new Dur(0, 8, 0, 0), "Week 1 - User A");
-        week1UserA.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week1UserA.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
+        week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
         Recur week1UserARecur = new Recur(
                 Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
@@ -208,8 +208,8 @@ public class CalendarTest extends TestCase {
         VEvent week2UserB = new VEvent(
                 new Date(calStart.getTime().getTime()),
                 new Dur(0, 8, 0, 0), "Week 2 - User B");
-        week2UserB.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week2UserB.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
+        week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
         Recur week2UserBRecur = new Recur(
                 Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
@@ -229,8 +229,8 @@ public class CalendarTest extends TestCase {
         VEvent week3UserC = new VEvent(
                 new Date(calStart.getTime().getTime()),
                 new Dur(0, 8, 0, 0), "Week 3 - User C");
-        week3UserC.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week3UserC.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
+        week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
         Recur week3UserCRecur = new Recur(
                 Recur.WEEKLY, new Date(calEnd.getTime().getTime()));

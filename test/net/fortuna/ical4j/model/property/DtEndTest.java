@@ -56,7 +56,7 @@ public class DtEndTest extends AbstractPropertyTest {
      */
     public void testValidation() throws Exception {
         DtEnd dtEnd = new DtEnd(new DateTime());
-        dtEnd.getParameters().add(Value.DATE);
+        dtEnd.getParameters().replace(Value.DATE);
         
         // test validation..
         log.info(dtEnd);
@@ -74,6 +74,7 @@ public class DtEndTest extends AbstractPropertyTest {
         
         //
         dtEnd.setDate(new Date());
+        dtEnd.getParameters().remove(Value.DATE);
         log.info(dtEnd);
         assertValidationException(dtEnd);
         
