@@ -38,13 +38,9 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Iterator;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
@@ -61,15 +57,11 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.ExDate;
-import net.fortuna.ical4j.model.property.ExRule;
 import net.fortuna.ical4j.model.property.Geo;
 import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Priority;
-import net.fortuna.ical4j.model.property.RDate;
-import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Sequence;
 import net.fortuna.ical4j.model.property.Status;
@@ -81,6 +73,11 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
+
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Defines an iCalendar VEVENT component.
@@ -222,6 +219,8 @@ import net.fortuna.ical4j.util.Strings;
 public class VEvent extends CalendarComponent {
 
     private static final long serialVersionUID = 2547948989200697335L;
+
+    private Log log = LogFactory.getLog(VEvent.class);
 
     private ComponentList alarms;
 
@@ -481,112 +480,22 @@ public class VEvent extends CalendarComponent {
         if (Transp.TRANSPARENT.equals(getProperty(Property.TRANSP))) {
             return periods;
         }
-        DtStart start = (DtStart) getProperty(Property.DTSTART);
-        DtEnd end = (DtEnd) getProperty(Property.DTEND);
-        Duration duration = (Duration) getProperty(Property.DURATION);
-        // if no start date or duration specified return empty list..
-        if (start == null || (duration == null && end == null)) {
-            return periods;
-        }
-        // if an explicit event duration is not specified, derive a value for recurring
-        // periods from the end date..
-        Dur rDuration;
-        if (duration == null) {
-            rDuration = new Dur(start.getDate(), end.getDate());
-        }
-        else {
-            rDuration = duration.getDuration();
-        }
-        // adjust range start back by duration to allow for recurrences that
-        // start before the range but finish inside..
-        // FIXME: See bug #1325558..
-        Date adjustedRangeStart = new DateTime(rangeStart);
-        adjustedRangeStart.setTime(rDuration.negate().getTime(rangeStart)
-                .getTime());
 
-        // recurrence dates..
-        PropertyList rDates = getProperties(Property.RDATE);
-        for (Iterator i = rDates.iterator(); i.hasNext();) {
-            RDate rdate = (RDate) i.next();
-            // only period-based rdates are applicable..
-            // FIXME: ^^^ not true - date-time/date also applicable..
-            if (Value.PERIOD.equals(rdate.getParameter(Parameter.VALUE))) {
-                for (Iterator j = rdate.getPeriods().iterator(); j.hasNext();) {
-                    Period period = (Period) j.next();
-                    if (period.getStart().before(rangeEnd)
-                            && period.getEnd().after(rangeStart)) {
-                        periods.add(period);
-                    }
-                }
-            }
-        }
-        // recurrence rules..
-        PropertyList rRules = getProperties(Property.RRULE);
-        for (Iterator i = rRules.iterator(); i.hasNext();) {
-            RRule rrule = (RRule) i.next();
-            DateList startDates = rrule.getRecur().getDates(start.getDate(),
-                    adjustedRangeStart, rangeEnd,
-                    (Value) start.getParameter(Parameter.VALUE));
-            // DateList startDates = rrule.getRecur().getDates(start.getDate(), rangeStart, rangeEnd, (Value)
-            // start.getParameters().getParameter(Parameter.VALUE));
-            for (int j = 0; j < startDates.size(); j++) {
-                Date startDate = (Date) startDates.get(j);
-                periods.add(new Period(new DateTime(startDate), rDuration));
-            }
-        }
-        // add first instance if included in range..
-        if (start.getDate().before(rangeEnd)) {
-            if (end != null && end.getDate().after(rangeStart)) {
-                periods.add(new Period(new DateTime(start.getDate()),
-                        new DateTime(end.getDate())));
-            }
-            else if (duration != null) {
-                Period period = new Period(new DateTime(start.getDate()),
-                        duration.getDuration());
-                if (period.getEnd().after(rangeStart)) {
-                    periods.add(period);
-                }
-            }
-        }
-        // exception dates..
-        PropertyList exDates = getProperties(Property.EXDATE);
-        for (Iterator i = exDates.iterator(); i.hasNext();) {
-            ExDate exDate = (ExDate) i.next();
-            for (Iterator j = periods.iterator(); j.hasNext();) {
-                Period period = (Period) j.next();
-                // for DATE-TIME instances check for DATE-based exclusions also..
-                if (exDate.getDates().contains(period.getStart())
-                        || exDate.getDates().contains(
-                                new Date(period.getStart()))) {
-                    j.remove();
-                }
-            }
-        }
-        // exception rules..
-        // FIXME: exception rules should be consistent with exception dates (i.e. not use periods?)..
-        PropertyList exRules = getProperties(Property.EXRULE);
-        PeriodList exPeriods = new PeriodList();
-        for (Iterator i = exRules.iterator(); i.hasNext();) {
-            ExRule exrule = (ExRule) i.next();
-            // DateList startDates = exrule.getRecur().getDates(start.getDate(), adjustedRangeStart, rangeEnd, (Value)
-            // start.getParameters().getParameter(Parameter.VALUE));
-            DateList startDates = exrule.getRecur().getDates(start.getDate(),
-                    rangeStart, rangeEnd,
-                    (Value) start.getParameter(Parameter.VALUE));
-            for (Iterator j = startDates.iterator(); j.hasNext();) {
-                Date startDate = (Date) j.next();
-                exPeriods.add(new Period(new DateTime(startDate), rDuration));
-            }
-        }
-        // apply exceptions..
-        if (!exPeriods.isEmpty()) {
-            periods = periods.subtract(exPeriods);
-        }
+//        try {
+        periods = calculateRecurrenceSet(new Period(new DateTime(rangeStart),
+                new DateTime(rangeEnd)));
+//        }
+//        catch (ValidationException ve) {
+//            log.error("Invalid event data", ve);
+//            return periods;
+//        }
+
         // if periods already specified through recurrence, return..
         // ..also normalise before returning.
         if (!periods.isEmpty() && normalise) {
             return periods.normalise();
         }
+
         return periods;
     }
 
