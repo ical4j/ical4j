@@ -361,6 +361,14 @@ public class Period implements Serializable, Comparable {
     }
     
     /**
+     * An empty period is one that consumes no time.
+     * @return true if this period consumes no time, otherwise false
+     */
+    public final boolean isEmpty() {
+        return getStart().equals(getEnd());
+    }
+    
+    /**
      * Updates the start and (possible) end times of this period to reflect
      * the specified UTC timezone status.
      * @param utc

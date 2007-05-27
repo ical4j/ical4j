@@ -564,6 +564,23 @@ public class PeriodTest extends TestCase {
         assertEquals(timezone, p.getEnd().getTimeZone());
     }
     
+    /**
+     * Unit tests for {@link Period#isEmpty()}.
+     */
+    public void testIsEmpty() throws InterruptedException {
+        Calendar cal = Calendar.getInstance();
+        DateTime start = new DateTime(cal.getTime());
+        assertTrue(new Period(start, start).isEmpty());
+        assertTrue(new Period(start, new Dur(0)).isEmpty());
+        
+        cal.add(Calendar.SECOND, 1);
+        assertFalse(new Period(start, new DateTime(cal.getTime())).isEmpty());
+        assertFalse(new Period(start, new Dur(0, 0, 0, 1)).isEmpty());
+    }
+    
+    /**
+     * @return
+     */
     public static Test suite()
     {
         return new TestSuite(PeriodTest.class);
