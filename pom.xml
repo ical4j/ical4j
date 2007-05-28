@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
@@ -26,10 +28,14 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j</connection>
-		<developerConnection>scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j</developerConnection>
+		<connection>
+			scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
+		</connection>
+		<developerConnection>
+			scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
+		</developerConnection>
 		<url>http://ical4j.cvs.sourceforge.net/ical4j</url>
-  </scm>
+	</scm>
 	<contributors>
 		<contributor>
 			<name>Heladito</name>
@@ -140,6 +146,15 @@
 		<contributor>
 			<name>Román Sosa</name>
 		</contributor>
+		<contributor>
+			<name>Randy Letness</name>
+			<organization>
+				Open Source Applications Foundation
+			</organization>
+			<organizationUrl>
+				http://www.osafoundation.org
+			</organizationUrl>
+		</contributor>
 	</contributors>
 	<build>
 		<sourceDirectory>source</sourceDirectory>
@@ -182,16 +197,16 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<!-- 
-					<systemProperties>
+						<systemProperties>
 						<property>
-							<name>ical4j.unfolding.relaxed</name>
-							<value>true</value>
+						<name>ical4j.unfolding.relaxed</name>
+						<value>true</value>
 						</property>
 						<property>
-							<name>ical4j.parsing.relaxed</name>
-							<value>true</value>
+						<name>ical4j.parsing.relaxed</name>
+						<value>true</value>
 						</property>
-					</systemProperties>
+						</systemProperties>
 					-->
 					<excludes>
 						<exclude>**/AllTests.java</exclude>
@@ -211,6 +226,15 @@
 						<descriptor>etc/src-assembly.xml</descriptor>
 					</descriptors>
 				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>attached</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
