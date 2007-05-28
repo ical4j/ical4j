@@ -2,6 +2,22 @@
  iCal4j - Changes
 ==================
 
+1.0-beta3
+
+ - Third beta release.
+ 
+ - Added UidGenerator to help with creation of unique UID properties
+ 
+ - Added timezone aliases for deprecetated timezone ids
+ 
+ - Added support for calculating the recurrence set for components, to unify
+ PeriodRule and VEvent.getConsumedTime() functionality
+
+ - Updated timezone definitions (Olson 2007f)
+ 
+ - Bug fixes.
+
+
 1.0-beta2
 
  - Second beta. General bug fixes. No changes to API. Retains binary
