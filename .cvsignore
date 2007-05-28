@@ -3,3 +3,4 @@ build
 coverage
 coverage.ec
 target
+build.properties
