@@ -8,243 +8,231 @@
 <project name="iCal4j" basedir="." default="package">
 
 	<!-- Project details -->
-    <property name="project.version" value="1.0-beta2"/>
-	
+	<property name="project.version" value="1.0-beta2" />
+
 	<!-- Load overrides for library paths -->
-	<property file="build.properties"/>
-	
+	<property file="build.properties" />
+
 	<!-- Project paths -->
-    <property name="source.dir" location="source"/>
-    <property name="test.source.dir" location="test"/>
-    <property name="output.dir" location="bin"/>
-    <property name="package.dir" location="build"/>
-    <property name="package.file" value="ical4j.jar"/>
-    <property name="javadoc.dir" location="docs/api"/>
-    <property name="javadoc.packages" value="net.fortuna.ical4j.*"/>
-    <property name="dist.dir" location=".."/>
-    <property name="dist.name" value="ical4j"/>
-    <property name="dist.maven.file" value="${dist.name}-${project.version}-bundle.jar"/>
+	<property name="source.dir" location="source" />
+	<property name="test.source.dir" location="test" />
+	<property name="output.dir" location="bin" />
+	<property name="package.dir" location="build" />
+	<property name="package.file" value="ical4j.jar" />
+	<property name="javadoc.dir" location="docs/api" />
+	<property name="javadoc.packages" value="net.fortuna.ical4j.*" />
+	<property name="dist.dir" location=".." />
+	<property name="dist.name" value="ical4j" />
+	<property name="dist.maven.file" value="${dist.name}-${project.version}-bundle.jar" />
 
 	<!-- Library paths -->
-    <property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/"/>
-    <property name="jakarta-commons-logging.apiurl" value="http://jakarta.apache.org/commons/logging/apidocs/"/>
-    <property name="jakarta-commons-codec.apiurl" value="http://jakarta.apache.org/commons/codec/apidocs/"/>
-	
+	<property name="j2se.apiurl" value="http://java.sun.com/j2se/1.4/docs/api/" />
+	<property name="jakarta-commons-logging.apiurl" value="http://jakarta.apache.org/commons/logging/apidocs/" />
+	<property name="jakarta-commons-codec.apiurl" value="http://jakarta.apache.org/commons/codec/apidocs/" />
+
 	<!-- External tools -->
-	<property name="vzic.home" location="C:/Libs/vzic-1.3/"/>
-	
+	<property name="vzic.home" location="C:/Libs/vzic-1.3/" />
+
 	<path id="project.classpath">
-		<pathelement location="lib/commons-logging.jar"/>
-		<pathelement location="lib/commons-codec.jar"/>
-		<pathelement location="lib/commons-lang.jar"/>
+		<pathelement location="lib/commons-logging.jar" />
+		<pathelement location="lib/commons-codec.jar" />
+		<pathelement location="lib/commons-lang.jar" />
 		<!--
 		<pathelement location="${output.dir}"/>
 		-->
 	</path>
-	
+
 	<path id="coverage.classpath">
-      	<path refid="project.classpath" />
-		<pathelement location="${output.dir}"/>
-        <pathelement location="etc" />
+		<path refid="project.classpath" />
+		<pathelement location="${output.dir}" />
+		<pathelement location="etc" />
 	</path>
 
-	  <!-- output directory used for EMMA coverage reports: -->
-	  <property name="coverage.dir" value="${basedir}/coverage" />
-	  <property name="out.instr.dir" value="${coverage.dir}/instr" />
+	<!-- output directory used for EMMA coverage reports: -->
+	<property name="coverage.dir" value="${basedir}/coverage" />
+	<property name="out.instr.dir" value="${coverage.dir}/instr" />
 
-	  <!-- directory that contains emma.jar and emma_ant.jar: -->
-	  <property name="emma.dir" value="C:/Tools/emma-2.0.5312/lib" />
+	<!-- directory that contains emma.jar and emma_ant.jar: -->
+	<property name="emma.dir" value="C:/Tools/emma-2.0.5312/lib" />
 
-	  <!-- path element used by EMMA taskdef below: -->
-	  <path id="emma.lib" >
-	    <pathelement location="${emma.dir}/emma.jar" />
-	    <pathelement location="${emma.dir}/emma_ant.jar" />
-	  </path>
+	<!-- path element used by EMMA taskdef below: -->
+	<path id="emma.lib">
+		<pathelement location="${emma.dir}/emma.jar" />
+		<pathelement location="${emma.dir}/emma_ant.jar" />
+	</path>
 
-	  <!-- this loads <emma> and <emmajava> custom tasks: -->
-	  <taskdef resource="emma_ant.properties" classpathref="emma.lib" />
-    
+	<!-- this loads <emma> and <emmajava> custom tasks: -->
+	<taskdef resource="emma_ant.properties" classpathref="emma.lib" />
+
 	<!-- Targets -->
 
-	  <target name="emma" description="turns on EMMA's on-the-fly instrumentation mode" >
-	    <property name="emma.enabled" value="true" />
-	    
-	    <!-- this property, if overriden via -Demma.filter=<list of filter specs>
+	<target name="emma" description="turns on EMMA's on-the-fly instrumentation mode">
+		<property name="emma.enabled" value="true" />
+
+		<!-- this property, if overriden via -Demma.filter=<list of filter specs>
 	         on ANT's command line, will set the coverage filter; by default,
 	         all classes found in 'run.classpath' pathref will be instrumented:
 	    -->
-	    <property name="emma.filter" value="" />
-	  </target>
+		<property name="emma.filter" value="" />
+	</target>
 
 	<target name="clean-compile">
-        <mkdir dir="${output.dir}"/>
-        <delete>
-            <fileset dir="${output.dir}"/>
-        </delete>
-    </target>
+		<mkdir dir="${output.dir}" />
+		<delete>
+			<fileset dir="${output.dir}" />
+		</delete>
+	</target>
 
 	<target name="clean-coverage">
-        <mkdir dir="${coverage.dir}"/>
-        <delete>
-            <fileset dir="${coverage.dir}"/>
-        </delete>
-        <mkdir dir="${out.instr.dir}"/>
-        <delete>
-            <fileset dir="${out.instr.dir}"/>
-        </delete>
-    </target>
-    
-    <target name="compile">
-    	<echo message="Compiling source from classpath: ${project.classpath}"/>
-        <javac source="1.4" target="1.4"
-        	srcdir="${source.dir}" destdir="${output.dir}"
-        	debug="true" debuglevel="lines,source,vars" deprecation="true"
-        	classpathref="project.classpath"/>
-    </target>
-    
-    <target name="compile-tests">
-    	<echo message="Compiling tests from classpath: ${project.classpath}"/>
-        <javac srcdir="${test.source.dir}" destdir="${output.dir}"
-        	debug="false" deprecation="true" classpathref="project.classpath"/>
-    </target>
-    
-    <target name="clean-package">
-        <mkdir dir="${package.dir}"/>
-        <delete>
-            <fileset dir="${package.dir}"/>
-        </delete>
-    </target>
-    
-    <target name="package" depends="compile, clean-package">
-        <manifest file="etc/manifest.mf">
-            <!-- Add manifest attributes here.. -->
-            <attribute name="Class-Path" value="commons-logging.jar,commons-codec.jar,commons-lang.jar" />
-        </manifest>
-        <jar basedir="${output.dir}" compress="true" jarfile="${package.dir}/${package.file}" manifest="etc/manifest.mf">
-			<zipfileset dir="etc/zoneinfo" prefix="zoneinfo" excludes="zones.h,zones.tab"/>
-        </jar>
-    </target>
-    
-    <target name="clean-javadoc">
-        <mkdir dir="${javadoc.dir}"/>
-        <delete>
-            <fileset dir="${javadoc.dir}"/>
-        </delete>
-    </target>
-    
-    <target name="javadoc" depends="clean-javadoc">
-    	<echo message="Generating Javadocs from classpath: ${project.classpath}"/>
-        <javadoc sourcepath="${source.dir}"
-                 destdir="${javadoc.dir}"
-                 packagenames="${javadoc.packages}"
-                 Windowtitle="${ant.project.name}"
-                 Doctitle="${ant.project.name}"
-                 Overview="etc/overview.html"
-                 classpathref="project.classpath">
-     		<link href="${j2se.apiurl}"/>
-     		<link href="${jakarta-commons-logging.apiurl}"/>
-     		<link href="${jakarta-commons-codec.apiurl}"/>
-        </javadoc>
-    </target>
+		<mkdir dir="${coverage.dir}" />
+		<delete>
+			<fileset dir="${coverage.dir}" />
+		</delete>
+		<mkdir dir="${out.instr.dir}" />
+		<delete>
+			<fileset dir="${out.instr.dir}" />
+		</delete>
+	</target>
+
+	<target name="compile">
+		<echo message="Compiling source from classpath: ${project.classpath}" />
+		<mkdir dir="${output.dir}" />
+
+		<copy file="${source.dir}/net/fortuna/ical4j/model/tz.alias" todir="${output.dir}/net/fortuna/ical4j/model" />
+
+		<javac source="1.4" target="1.4" srcdir="${source.dir}" destdir="${output.dir}" debug="true" debuglevel="lines,source,vars" deprecation="true" classpathref="project.classpath" />
+	</target>
+
+	<target name="compile-tests">
+		<echo message="Compiling tests from classpath: ${project.classpath}" />
+		<javac srcdir="${test.source.dir}" destdir="${output.dir}" debug="false" deprecation="true" classpathref="project.classpath" />
+	</target>
+
+	<target name="clean-package">
+		<mkdir dir="${package.dir}" />
+		<delete>
+			<fileset dir="${package.dir}" />
+		</delete>
+	</target>
+
+	<target name="package" depends="compile, clean-package">
+		<manifest file="etc/manifest.mf">
+			<!-- Add manifest attributes here.. -->
+			<attribute name="Class-Path" value="commons-logging.jar,commons-codec.jar,commons-lang.jar" />
+		</manifest>
+		<jar basedir="${output.dir}" compress="true" jarfile="${package.dir}/${package.file}" manifest="etc/manifest.mf">
+			<zipfileset dir="etc/zoneinfo" prefix="zoneinfo" excludes="zones.h,zones.tab" />
+		</jar>
+	</target>
+
+	<target name="clean-javadoc">
+		<mkdir dir="${javadoc.dir}" />
+		<delete>
+			<fileset dir="${javadoc.dir}" />
+		</delete>
+	</target>
+
+	<target name="javadoc" depends="clean-javadoc">
+		<echo message="Generating Javadocs from classpath: ${project.classpath}" />
+		<javadoc sourcepath="${source.dir}" destdir="${javadoc.dir}" packagenames="${javadoc.packages}" Windowtitle="${ant.project.name}" Doctitle="${ant.project.name}" Overview="etc/overview.html" classpathref="project.classpath">
+			<link href="${j2se.apiurl}" />
+			<link href="${jakarta-commons-logging.apiurl}" />
+			<link href="${jakarta-commons-codec.apiurl}" />
+		</javadoc>
+	</target>
 
 	<!-- Source distribution -->
-    <target name="dist-src" depends="clean-compile, clean-package, javadoc">
-        <zip zipfile="${dist.dir}/${dist.name}-${project.version}-src.zip">
-            <zipfileset dir="." prefix="${dist.name}-${project.version}" excludes="coverage/**/*"/>
-        </zip>
-    </target>
+	<target name="dist-src" depends="clean-compile, clean-package, javadoc">
+		<zip zipfile="${dist.dir}/${dist.name}-${project.version}-src.zip">
+			<zipfileset dir="." prefix="${dist.name}-${project.version}" excludes="coverage/**/*" />
+		</zip>
+	</target>
 
 	<!-- Binary distribution -->
-    <target name="dist" depends="clean-compile, package, javadoc">
-        <zip zipfile="${dist.dir}/${dist.name}-${project.version}.zip">
-            <zipfileset dir="." prefix="${dist.name}-${project.version}" includes="LICENSE,CHANGELOG,README"/>
-            <zipfileset dir="docs" prefix="${dist.name}-${project.version}/docs"/>
-            <zipfileset dir="etc" prefix="${dist.name}-${project.version}/etc" includes="FAQ,TODO,rfc2445.txt,samples/**"/>
-            <zipfileset dir="${package.dir}" prefix="${dist.name}-${project.version}/lib"/>
-            <zipfileset dir="lib" prefix="${dist.name}-${project.version}/lib"/>
-        </zip>
-    </target>
+	<target name="dist" depends="clean-compile, package, javadoc">
+		<zip zipfile="${dist.dir}/${dist.name}-${project.version}.zip">
+			<zipfileset dir="." prefix="${dist.name}-${project.version}" includes="LICENSE,CHANGELOG,README" />
+			<zipfileset dir="docs" prefix="${dist.name}-${project.version}/docs" />
+			<zipfileset dir="etc" prefix="${dist.name}-${project.version}/etc" includes="FAQ,TODO,rfc2445.txt,samples/**" />
+			<zipfileset dir="${package.dir}" prefix="${dist.name}-${project.version}/lib" />
+			<zipfileset dir="lib" prefix="${dist.name}-${project.version}/lib" />
+		</zip>
+	</target>
 
 	<!-- Maven distribution -->
-    <target name="dist-maven" depends="clean-compile, package">
-        <jar jarfile="${dist.dir}/${dist.maven.file}">
-            <zipfileset dir="." includes="LICENSE" fullpath="LICENSE.txt"/>
-            <zipfileset dir="etc" includes="project.xml"/>
-            <zipfileset dir="build" includes="${package.file}" fullpath="${dist.name}-${project.version}.jar"/>
-        </jar>
-    </target>
-    
+	<target name="dist-maven" depends="clean-compile, package">
+		<jar jarfile="${dist.dir}/${dist.maven.file}">
+			<zipfileset dir="." includes="LICENSE" fullpath="LICENSE.txt" />
+			<zipfileset dir="etc" includes="project.xml" />
+			<zipfileset dir="build" includes="${package.file}" fullpath="${dist.name}-${project.version}.jar" />
+		</jar>
+	</target>
+
 	<!-- Detailed changelog -->
-    <target name="changelog">
-    	<cvschangelog destfile="CHANGES"/>
-    </target>
-    
+	<target name="changelog">
+		<cvschangelog destfile="CHANGES" />
+	</target>
+
 	<!-- JUnit tests -->
-    <target name="run-tests" depends="compile, compile-tests">
-    	<echo message="Running unit tests with classpath: ${project.classpath}"/>
+	<target name="run-tests" depends="compile, compile-tests">
+		<echo message="Running unit tests with classpath: ${project.classpath}" />
 
-    	<emma enabled="${emma.enabled}" >
-          <instr instrpathref="coverage.classpath"
-                 destdir="${out.instr.dir}"	
-                 metadatafile="${coverage.dir}/metadata.emma"
-                 merge="true"
-          />
-        </emma>
+		<emma enabled="${emma.enabled}">
+			<instr instrpathref="coverage.classpath" destdir="${out.instr.dir}" metadatafile="${coverage.dir}/metadata.emma" merge="true" />
+		</emma>
 
-        <junit printsummary="withOutAndErr" showoutput="yes" fork="yes">
-        	<!--
+		<junit printsummary="withOutAndErr" showoutput="yes" fork="yes">
+			<!--
             <classpath path="${project.classpath}"/>
             -->
-            <classpath>
-              	<pathelement location="${out.instr.dir}" />
-              	<path refid="coverage.classpath" />
-              	<path refid="emma.lib" />
-            </classpath> 
-            <jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
-            <jvmarg value="-Demma.coverage.out.merge=false" />
-            <test name="net.fortuna.ical4j.AllTests"/>
-        	<!--
+			<classpath>
+				<pathelement location="${out.instr.dir}" />
+				<path refid="coverage.classpath" />
+				<path refid="emma.lib" />
+			</classpath>
+			<jvmarg value="-Demma.coverage.out.file=${coverage.dir}/coverage.emma" />
+			<jvmarg value="-Demma.coverage.out.merge=false" />
+			<test name="net.fortuna.ical4j.AllTests" />
+			<!--
             <batchtest>
                 <fileset dir="${test.source.dir}">
                     <include name="**/*Test.java"/>
                 </fileset>
             </batchtest>
             -->
-            
-            <!--
+
+			<!--
             <test name="net.fortuna.ical4j.data.CalendarOutputterTest"/>
             <test name="net.fortuna.ical4j.model.component.VTimeZoneTest"/>
             <test name="net.fortuna.ical4j.model.component.VEventTest"/>
             <test name="net.fortuna.ical4j.data.CalendarBuilderTest"/>
             -->
-        </junit>
-    	
-        <emma enabled="${emma.enabled}" >
-           <report sourcepath="${src.dir}" >
-            <fileset dir="${coverage.dir}" >
-              <include name="*.emma" />
-            </fileset>
+		</junit>
 
-            <txt outfile="${coverage.dir}/coverage.txt" />
-            <html outfile="${coverage.dir}/coverage.html" />
-          </report>
-        </emma>
-    </target>
-	
+		<emma enabled="${emma.enabled}">
+			<report sourcepath="${src.dir}">
+				<fileset dir="${coverage.dir}">
+					<include name="*.emma" />
+				</fileset>
+
+				<txt outfile="${coverage.dir}/coverage.txt" />
+				<html outfile="${coverage.dir}/coverage.html" />
+			</report>
+		</emma>
+	</target>
+
 	<!-- Generate timezone data -->
 	<target name="generateTzData">
 		<!-- Default -->
-		<echo message="Executing: ${vzic.home}/vzic.exe"/>
-		<exec executable="${vzic.home}/vzic.exe" dir="${vzic.home}"
-			output="${basedir}/etc/vzic.log">
-			<arg value="--output-dir ${basedir}/etc/zoneinfo"/>
-			<arg value="--pure"/>
+		<echo message="Executing: ${vzic.home}/vzic.exe" />
+		<exec executable="${vzic.home}/vzic.exe" dir="${vzic.home}" output="${basedir}/etc/vzic.log">
+			<arg value="--output-dir ${basedir}/etc/zoneinfo" />
+			<arg value="--pure" />
 		</exec>
 
 		<!-- Outlook-compatible -->
-		<exec executable="${vzic.home}/vzic.exe" dir="${vzic.home}"
-			output="${basedir}/etc/vzic.log">
-			<arg value="--output-dir ${basedir}/etc/zoneinfo-outlook"/>
+		<exec executable="${vzic.home}/vzic.exe" dir="${vzic.home}" output="${basedir}/etc/vzic.log">
+			<arg value="--output-dir ${basedir}/etc/zoneinfo-outlook" />
 		</exec>
 	</target>
 </project>
