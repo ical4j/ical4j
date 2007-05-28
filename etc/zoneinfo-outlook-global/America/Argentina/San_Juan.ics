@@ -1,8 +1,8 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta2//EN
+PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta3//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_beta2/America/Argentina/San_Juan
+TZID:/ical4j_1_0_beta3/America/Argentina/San_Juan
 X-LIC-LOCATION:America/Argentina/San_Juan
 BEGIN:STANDARD
 TZOFFSETFROM:-0300
