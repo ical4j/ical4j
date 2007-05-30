@@ -229,7 +229,7 @@
 				<executions>
 					<execution>
 						<id>make-assembly</id>
-						<phase>post-site</phase>
+						<phase>site-deploy</phase>
 						<goals>
 							<goal>attached</goal>
 						</goals>
