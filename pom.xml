@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.fortuna</groupId>
