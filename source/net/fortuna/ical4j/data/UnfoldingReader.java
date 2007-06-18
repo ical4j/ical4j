@@ -61,8 +61,18 @@ public class UnfoldingReader extends PushbackReader {
     /**
      * The pattern used to identify a fold in Mozilla Calendar/Sunbird and KOrganizer.
      */
-    private static final char[] RELAXED_FOLD_PATTERN = { '\n', ' ' };
-
+    private static final char[] RELAXED_FOLD_PATTERN_1 = { '\n', ' ' };
+    
+    /** 
+     * The pattern used to identify a fold in Microsoft Outlook 2007. 
+     */ 
+    private static final char[] RELAXED_FOLD_PATTERN_2 = { '\r', '\n', '\t' };
+    
+    /** 
+     * The pattern used to identify a fold in Microsoft Outlook 2007. 
+     */ 
+    private static final char[] RELAXED_FOLD_PATTERN_3 = { '\n', '\t' };
+    
     private char[][] patterns;
 
     private char[][] buffers;
@@ -86,9 +96,11 @@ public class UnfoldingReader extends PushbackReader {
     public UnfoldingReader(final Reader in, final boolean relaxed) {
         super(in, DEFAULT_FOLD_PATTERN.length);
         if (relaxed) {
-            patterns = new char[2][];
+            patterns = new char[4][];
             patterns[0] = DEFAULT_FOLD_PATTERN;
-            patterns[1] = RELAXED_FOLD_PATTERN;
+            patterns[1] = RELAXED_FOLD_PATTERN_1;
+            patterns[2] = RELAXED_FOLD_PATTERN_2;
+            patterns[3] = RELAXED_FOLD_PATTERN_3;
         }
         else {
             patterns = new char[1][];
