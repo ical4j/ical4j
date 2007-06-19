@@ -66,12 +66,12 @@ public class UnfoldingReader extends PushbackReader {
     /** 
      * The pattern used to identify a fold in Microsoft Outlook 2007. 
      */ 
-//    private static final char[] RELAXED_FOLD_PATTERN_2 = { '\r', '\n', '\t' };
+    private static final char[] RELAXED_FOLD_PATTERN_2 = { '\r', '\n', '\t' };
     
     /** 
      * The pattern used to identify a fold in Microsoft Outlook 2007. 
      */ 
-    private static final char[] RELAXED_FOLD_PATTERN_2 = { '\n', '\t' };
+//    private static final char[] RELAXED_FOLD_PATTERN_2 = { '\n', '\t' };
     
     private char[][] patterns;
 
