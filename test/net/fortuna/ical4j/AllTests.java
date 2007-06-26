@@ -44,6 +44,7 @@ import net.fortuna.ical4j.model.property.OrganizerTest;
 import net.fortuna.ical4j.model.property.SummaryTest;
 import net.fortuna.ical4j.model.property.TriggerTest;
 import net.fortuna.ical4j.model.property.VersionTest;
+import net.fortuna.ical4j.model.property.XPropertyTest;
 import net.fortuna.ical4j.util.StringsTest;
 
 /**
@@ -113,6 +114,7 @@ public class AllTests extends TestSuite{
         suite.addTestSuite(TriggerTest.class);
         suite.addTestSuite(VersionTest.class);
         suite.addTestSuite(GeoTest.class);
+        suite.addTestSuite(XPropertyTest.class);
 
         // util tests
         suite.addTestSuite(StringsTest.class);
