@@ -40,6 +40,7 @@ import org.apache.commons.logging.LogFactory;
 
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * Unit tests for <code>XComponent</code>
@@ -55,6 +56,14 @@ public class XComponentTest extends ComponentTest {
     protected void setUp() throws Exception {
         super.setUp();
         component = new XComponent("X-TEST");
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION,
+                false);
     }
     
     /* (non-Javadoc)
@@ -78,5 +87,9 @@ public class XComponentTest extends ComponentTest {
             log.debug(ve);
         }
         new XComponent("X-TEST").validate();
+        
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION,
+                true);
+        new XComponent("TEST").validate();
     }
 }

@@ -39,6 +39,7 @@ import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * Defines an extension property.
@@ -96,12 +97,15 @@ public class XProperty extends Property implements Escapable {
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
-        if (!getName().startsWith(EXPERIMENTAL_PREFIX)) {
-            throw new ValidationException(
-                    "Invalid name ["
-                            + getName()
-                            + "]. Experimental properties must have the following prefix: "
-                            + EXPERIMENTAL_PREFIX);
+        
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            if (!getName().startsWith(EXPERIMENTAL_PREFIX)) {
+                throw new ValidationException(
+                        "Invalid name ["
+                                + getName()
+                                + "]. Experimental properties must have the following prefix: "
+                                + EXPERIMENTAL_PREFIX);
+            }
         }
     }
 }

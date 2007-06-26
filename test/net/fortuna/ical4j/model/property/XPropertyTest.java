@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 3/11/2005
+ * Created on 26/06/2007
  *
- * Copyright (c) 2005, Ben Fortuna
+ * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,8 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER
- * OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -34,54 +33,50 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model.component;
+package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.PropertyList;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import junit.framework.TestCase;
 
 /**
- * Implementation of an experimental component as defined in RFC2445.
- * @author Ben Fortuna
+ * @author Ben
+ *
  */
-public class XComponent extends CalendarComponent {
+public class XPropertyTest extends TestCase {
 
-    private static final long serialVersionUID = -3622674849097714927L;
-
-    /**
-     * Creates a new experimental component with the specified name.
-     * @param name the name of the experimental component
+    private static Log LOG = LogFactory.getLog(XPropertyTest.class);
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
      */
-    public XComponent(final String name) {
-        super(name);
+    protected void tearDown() throws Exception {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION,
+                false);
     }
-
+    
     /**
-     * Creates a new experimental component with the specified name and properties.
-     * @param name the name of the experimental component
-     * @param properties a list of properties
+     * Test method for {@link net.fortuna.ical4j.model.property.XProperty#validate()}.
      */
-    public XComponent(final String name, final PropertyList properties) {
-        super(name, properties);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#validate(boolean)
-     */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-        
-        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            if (!getName().startsWith(EXPERIMENTAL_PREFIX)) {
-                throw new ValidationException(
-                        "Experimental components must have the following prefix: "
-                                + EXPERIMENTAL_PREFIX);
-            }
+    public void testValidate() throws ValidationException {
+        XProperty p = new XProperty("TEST");
+        try {
+            p.validate();
+            fail("Should throw net.fortuna.ical4j.model.ValidationException");
+        }
+        catch (ValidationException ve) {
+            // success..
+            LOG.debug(ve.getMessage());
         }
         
-        if (recurse) {
-            validateProperties();
-        }
+        new XProperty("X-TEST").validate();
+        
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION,
+                true);
+        new XProperty("TEST").validate();
     }
+
 }
