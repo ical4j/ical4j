@@ -41,16 +41,13 @@ import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * Unit tests for {@link RDate}.
  * @author Ben Fortuna
  */
 public class RDateTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(RDateTest.class);
+//    private static final Log LOG = LogFactory.getLog(RDateTest.class);
     
     private TimeZone timezone;
     

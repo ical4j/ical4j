@@ -37,7 +37,6 @@
 package net.fortuna.ical4j.model.property;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 import junit.framework.TestCase;
 
