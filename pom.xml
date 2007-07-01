@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
@@ -13,6 +15,7 @@
 		A Java library for reading and writing iCalendar (*.ics) files
 	</description>
 	<url>http://ical4j.sourceforge.net</url>
+
 	<issueManagement>
 		<system>SourceForge.net</system>
 		<url>https://sourceforge.net/tracker/?group_id=107024</url>
@@ -24,11 +27,17 @@
 			<url>LICENSE</url>
 		</license>
 	</licenses>
+
 	<scm>
-		<connection>scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j</connection>
-		<developerConnection>scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j</developerConnection>
+		<connection>
+			scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
+		</connection>
+		<developerConnection>
+			scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
+		</developerConnection>
 		<url>http://ical4j.cvs.sourceforge.net/ical4j</url>
-  </scm>
+	</scm>
+
 	<contributors>
 		<contributor>
 			<name>Heladito</name>
@@ -149,9 +158,9 @@
 			</organizationUrl>
 		</contributor>
 	</contributors>
+
 	<build>
 		<sourceDirectory>source</sourceDirectory>
-		<testSourceDirectory>test</testSourceDirectory>
 		<resources>
 			<resource>
 				<directory>source</directory>
@@ -169,7 +178,16 @@
 					<exclude>zoneinfo/zones.tab</exclude>
 				</excludes>
 			</resource>
+			<resource>
+				<directory>source</directory>
+				<includes>
+					<include>overview.html</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
 		</resources>
+
+		<testSourceDirectory>test</testSourceDirectory>
 		<testResources>
 			<testResource>
 				<directory>test</directory>
@@ -178,6 +196,7 @@
 				</includes>
 			</testResource>
 		</testResources>
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -186,6 +205,7 @@
 					<target>1.4</target>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
@@ -211,6 +231,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clover-plugin</artifactId>
@@ -226,6 +247,7 @@
 					</execution>
 				</executions>
 			</plugin>
+
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -246,6 +268,7 @@
 			</plugin>
 		</plugins>
 	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>commons-logging</groupId>
@@ -269,6 +292,7 @@
 			<version>2.3</version>
 		</dependency>
 	</dependencies>
+
 	<reporting>
 		<plugins>
 			<plugin>
