@@ -56,6 +56,7 @@ import net.fortuna.ical4j.model.parameter.Related;
 import net.fortuna.ical4j.model.parameter.Role;
 import net.fortuna.ical4j.model.parameter.Rsvp;
 import net.fortuna.ical4j.model.parameter.SentBy;
+import net.fortuna.ical4j.model.parameter.Type;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.parameter.Vvenue;
@@ -94,7 +95,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
         factories.put(Parameter.ROLE, createRoleFactory());
         factories.put(Parameter.RSVP, createRsvpFactory());
         factories.put(Parameter.SENT_BY, createSentByFactory());
-        factories.put(Parameter.TYPE, createTzIdFactory());
+        factories.put(Parameter.TYPE, createTypeFactory());
         factories.put(Parameter.TZID, createTzIdFactory());
         factories.put(Parameter.VALUE, createValueFactory());
         factories.put(Parameter.VVENUE, createVvenueFactory());
@@ -515,6 +516,22 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
             public Parameter createParameter(final String name, final String value)
                     throws URISyntaxException {
                 return new Vvenue(value);
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
+    private ParameterFactory createTypeFactory() {
+        return new ParameterFactory() {
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
+             */
+            public Parameter createParameter(final String name,
+                    final String value) throws URISyntaxException {
+                return new Type(value);
             }
         };
     }

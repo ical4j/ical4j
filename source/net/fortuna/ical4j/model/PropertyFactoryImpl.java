@@ -62,6 +62,7 @@ import net.fortuna.ical4j.model.property.Geo;
 import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Locality;
 import net.fortuna.ical4j.model.property.Location;
+import net.fortuna.ical4j.model.property.LocationType;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Name;
 import net.fortuna.ical4j.model.property.Organizer;
@@ -133,6 +134,7 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
         factories.put(Property.LAST_MODIFIED, createLastModifiedFactory());
         factories.put(Property.LOCALITY, createLocalityFactory());
         factories.put(Property.LOCATION, createLocationFactory());
+        factories.put(Property.LOCATION_TYPE, createLocationTypeFactory());
         factories.put(Property.METHOD, createMethodFactory());
         factories.put(Property.NAME, createNameFactory());
         factories.put(Property.ORGANIZER, createOrganizerFactory());
@@ -812,6 +814,32 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
              */
             public Property createProperty(final String name) {
                 return new Location();
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
+    private PropertyFactory createLocationTypeFactory() {
+        return new PropertyFactory() {
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
+             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
+             */
+            public Property createProperty(final String name,
+                    final ParameterList parameters, final String value)
+                    throws IOException, URISyntaxException, ParseException {
+                return new LocationType(parameters, value);
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
+             */
+            public Property createProperty(final String name) {
+                return new LocationType();
             }
         };
     }
