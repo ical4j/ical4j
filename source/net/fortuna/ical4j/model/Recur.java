@@ -134,6 +134,9 @@ public class Recur implements Serializable {
 
     private Map experimentalValues = new HashMap();
 
+    // Calendar field we increment based on frequency.
+    private int calIncField;
+
     /**
      * Constructs a new instance from the specified string value.
      * @param aValue a string representation of a recurrence.
@@ -464,7 +467,7 @@ public class Recur implements Serializable {
      */
     public final DateList getDates(final Date periodStart,
             final Date periodEnd, final Value value) {
-        return getDates(periodStart, periodStart, periodEnd, value);
+        return getDates(periodStart, periodStart, periodEnd, value, -1);
     }
 
     /**
@@ -475,7 +478,7 @@ public class Recur implements Serializable {
      */
     public final DateList getDates(final Date seed, final Period period,
             final Value value) {
-        return getDates(seed, period.getStart(), period.getEnd(), value);
+        return getDates(seed, period.getStart(), period.getEnd(), value, -1);
     }
 
     /**
@@ -492,6 +495,26 @@ public class Recur implements Serializable {
      */
     public final DateList getDates(final Date seed, final Date periodStart,
             final Date periodEnd, final Value value) {
+         return getDates(seed, periodStart, periodEnd, value, -1);
+    }
+
+    /**
+     * Returns a list of start dates in the specified period represented by this recur. This method includes a base date
+     * argument, which indicates the start of the fist occurrence of this recurrence. The base date is used to inject
+     * default values to return a set of dates in the correct format. For example, if the search start date (start) is
+     * Wed, Mar 23, 12:19PM, but the recurrence is Mon - Fri, 9:00AM - 5:00PM, the start dates returned should all be at
+     * 9:00AM, and not 12:19PM.
+     * @return a list of dates represented by this recur instance
+     * @param seed the start date of this Recurrence's first instance
+     * @param periodStart the start of the period
+     * @param periodEnd the end of the period
+     * @param value the type of dates to generate (i.e. date/date-time)
+     * @param maxCount limits the number of instances returned. Up to one years
+     *       worth extra may be returned. Less than 0 means no limit
+     */
+    public final DateList getDates(final Date seed, final Date periodStart,
+                                   final Date periodEnd, final Value value,
+                                   final int maxCount) {
 
         DateList dates = new DateList(value);
         if (seed instanceof DateTime) {
@@ -517,7 +540,7 @@ public class Recur implements Serializable {
 
         int invalidCandidateCount = 0;
         Date candidate = null;
-        while (true) {
+        while ((maxCount < 0) || (dates.size() < maxCount)) {
             Date candidateSeed = Dates.getInstance(cal.getTime(), value);
 
             if (getUntil() != null && candidate != null
@@ -581,27 +604,7 @@ public class Recur implements Serializable {
     private void increment(final Calendar cal) {
         // initialise interval..
         int calInterval = (getInterval() >= 1) ? getInterval() : 1;
-        if (SECONDLY.equals(getFrequency())) {
-            cal.add(Calendar.SECOND, calInterval);
-        }
-        else if (MINUTELY.equals(getFrequency())) {
-            cal.add(Calendar.MINUTE, calInterval);
-        }
-        else if (HOURLY.equals(getFrequency())) {
-            cal.add(Calendar.HOUR_OF_DAY, calInterval);
-        }
-        else if (DAILY.equals(getFrequency())) {
-            cal.add(Calendar.DAY_OF_YEAR, calInterval);
-        }
-        else if (WEEKLY.equals(getFrequency())) {
-            cal.add(Calendar.WEEK_OF_YEAR, calInterval);
-        }
-        else if (MONTHLY.equals(getFrequency())) {
-            cal.add(Calendar.MONTH, calInterval);
-        }
-        else if (YEARLY.equals(getFrequency())) {
-            cal.add(Calendar.YEAR, calInterval);
-        }
+        cal.add(calIncField, calInterval);
     }
 
     /**
@@ -1017,10 +1020,28 @@ public class Recur implements Serializable {
             throw new IllegalArgumentException(
                     "A recurrence rule MUST contain a FREQ rule part.");
         }
-        else if (!frequency.equals(SECONDLY) && !frequency.equals(MINUTELY)
-                && !frequency.equals(HOURLY) && !frequency.equals(DAILY)
-                && !frequency.equals(WEEKLY) && !frequency.equals(MONTHLY)
-                && !frequency.equals(YEARLY)) {
+        if (SECONDLY.equals(getFrequency())) {
+            calIncField = Calendar.SECOND;
+        }
+        else if (MINUTELY.equals(getFrequency())) {
+            calIncField = Calendar.MINUTE;
+        }
+        else if (HOURLY.equals(getFrequency())) {
+            calIncField = Calendar.HOUR_OF_DAY;
+        }
+        else if (DAILY.equals(getFrequency())) {
+            calIncField = Calendar.DAY_OF_YEAR;
+        }
+        else if (WEEKLY.equals(getFrequency())) {
+            calIncField = Calendar.WEEK_OF_YEAR;
+        }
+        else if (MONTHLY.equals(getFrequency())) {
+            calIncField = Calendar.MONTH;
+        }
+        else if (YEARLY.equals(getFrequency())) {
+            calIncField = Calendar.YEAR;
+        }
+        else {
             throw new IllegalArgumentException("Invalid FREQ rule part '"
                     + frequency + "' in recurrence rule");
         }
