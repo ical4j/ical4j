@@ -48,6 +48,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 public abstract class Parameter extends Content {
 
     /**
+     * Region abbreviation.
+     */
+    public static final String ABBREV = "ABBREV";
+
+    /**
      * Alternate text representation.
      */
     public static final String ALTREP = "ALTREP";
@@ -138,6 +143,11 @@ public abstract class Parameter extends Content {
     public static final String SENT_BY = "SENT-BY";
 
     /**
+     * Type.
+     */
+    public static final String TYPE = "TYPE";
+
+    /**
      * Reference to time zone object.
      */
     public static final String TZID = "TZID";
@@ -146,6 +156,11 @@ public abstract class Parameter extends Content {
      * Property value data type.
      */
     public static final String VALUE = "VALUE";
+
+    /**
+     * Reference to vvenue component
+     */
+    public static final String VVENUE = "VVENUE";
 
     /**
      * Prefix to all experimental parameters.

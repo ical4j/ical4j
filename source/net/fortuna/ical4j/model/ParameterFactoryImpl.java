@@ -37,6 +37,7 @@ package net.fortuna.ical4j.model;
 
 import java.net.URISyntaxException;
 
+import net.fortuna.ical4j.model.parameter.Abbrev;
 import net.fortuna.ical4j.model.parameter.AltRep;
 import net.fortuna.ical4j.model.parameter.Cn;
 import net.fortuna.ical4j.model.parameter.CuType;
@@ -57,6 +58,7 @@ import net.fortuna.ical4j.model.parameter.Rsvp;
 import net.fortuna.ical4j.model.parameter.SentBy;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.parameter.Vvenue;
 import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.util.Strings;
 
@@ -73,6 +75,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
      * Constructor made private to prevent instantiation.
      */
     private ParameterFactoryImpl() {
+        factories.put(Parameter.ABBREV, createAbbrevFactory());
         factories.put(Parameter.ALTREP, createAltRepFactory());
         factories.put(Parameter.CN, createCnFactory());
         factories.put(Parameter.CUTYPE, createCuTypeFactory());
@@ -91,8 +94,24 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
         factories.put(Parameter.ROLE, createRoleFactory());
         factories.put(Parameter.RSVP, createRsvpFactory());
         factories.put(Parameter.SENT_BY, createSentByFactory());
+        factories.put(Parameter.TYPE, createTzIdFactory());
         factories.put(Parameter.TZID, createTzIdFactory());
         factories.put(Parameter.VALUE, createValueFactory());
+        factories.put(Parameter.VVENUE, createVvenueFactory());
+    }
+
+    /**
+     * @return
+     */
+    private ParameterFactory createAbbrevFactory() {
+        return new ParameterFactory() {
+            /* (non-Javadoc)
+             * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
+             */
+            public Parameter createParameter(final String name, final String value) throws URISyntaxException {
+                return new Abbrev(value);
+            }
+        };
     }
 
     /**
@@ -481,6 +500,21 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
                 return new SentBy(value);
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
+    private ParameterFactory createVvenueFactory() {
+        return new ParameterFactory() {
+            /* (non-Javadoc)
+             * @see net.fortuna.ical4j.model.ParameterFactory#createParameter(java.lang.String, java.lang.String)
+             */
+            public Parameter createParameter(final String name, final String value)
+                    throws URISyntaxException {
+                return new Vvenue(value);
             }
         };
     }

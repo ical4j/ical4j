@@ -46,6 +46,7 @@ import net.fortuna.ical4j.model.property.Clazz;
 import net.fortuna.ical4j.model.property.Comment;
 import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.Contact;
+import net.fortuna.ical4j.model.property.Country;
 import net.fortuna.ical4j.model.property.Created;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
@@ -55,25 +56,32 @@ import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.ExDate;
 import net.fortuna.ical4j.model.property.ExRule;
+import net.fortuna.ical4j.model.property.ExtendedAddress;
 import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.Geo;
 import net.fortuna.ical4j.model.property.LastModified;
+import net.fortuna.ical4j.model.property.Locality;
 import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Name;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.PercentComplete;
+import net.fortuna.ical4j.model.property.Postalcode;
 import net.fortuna.ical4j.model.property.Priority;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
+import net.fortuna.ical4j.model.property.Region;
 import net.fortuna.ical4j.model.property.RelatedTo;
 import net.fortuna.ical4j.model.property.Repeat;
 import net.fortuna.ical4j.model.property.RequestStatus;
 import net.fortuna.ical4j.model.property.Resources;
 import net.fortuna.ical4j.model.property.Sequence;
 import net.fortuna.ical4j.model.property.Status;
+import net.fortuna.ical4j.model.property.StreetAddress;
 import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.model.property.Tel;
 import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.model.property.TzId;
@@ -109,6 +117,7 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
         factories.put(Property.COMMENT, createCommentFactory());
         factories.put(Property.COMPLETED, createCompletedFactory());
         factories.put(Property.CONTACT, createContactFactory());
+        factories.put(Property.COUNTRY, createCountryFactory());
         factories.put(Property.CREATED, createCreatedFactory());
         factories.put(Property.DESCRIPTION, createDescriptionFactory());
         factories.put(Property.DTEND, createDtEndFactory());
@@ -118,18 +127,23 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
         factories.put(Property.DURATION, createDurationFactory());
         factories.put(Property.EXDATE, createExDateFactory());
         factories.put(Property.EXRULE, createExRuleFactory());
+        factories.put(Property.EXTENDED_ADDRESS, createExtendedAddressFactory());
         factories.put(Property.FREEBUSY, createFreeBusyFactory());
         factories.put(Property.GEO, createGeoFactory());
         factories.put(Property.LAST_MODIFIED, createLastModifiedFactory());
+        factories.put(Property.LOCALITY, createLocalityFactory());
         factories.put(Property.LOCATION, createLocationFactory());
         factories.put(Property.METHOD, createMethodFactory());
+        factories.put(Property.NAME, createNameFactory());
         factories.put(Property.ORGANIZER, createOrganizerFactory());
         factories
                 .put(Property.PERCENT_COMPLETE, createPercentCompleteFactory());
+        factories.put(Property.POSTALCODE, createPostalcodeFactory());
         factories.put(Property.PRIORITY, createPriorityFactory());
         factories.put(Property.PRODID, createProdIdFactory());
         factories.put(Property.RDATE, createRDateFactory());
         factories.put(Property.RECURRENCE_ID, createRecurrenceIdFactory());
+        factories.put(Property.REGION, createRegionFactory());
         factories.put(Property.RELATED_TO, createRelatedToFactory());
         factories.put(Property.REPEAT, createRepeatFactory());
         factories.put(Property.REQUEST_STATUS, createRequestStatusFactory());
@@ -137,7 +151,9 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
         factories.put(Property.RRULE, createRRuleFactory());
         factories.put(Property.SEQUENCE, createSequenceFactory());
         factories.put(Property.STATUS, createStatusFactory());
+        factories.put(Property.STREET_ADDRESS, createStreetAddressFactory());
         factories.put(Property.SUMMARY, createSummaryFactory());
+        factories.put(Property.TEL, createTelFactory());
         factories.put(Property.TRANSP, createTranspFactory());
         factories.put(Property.TRIGGER, createTriggerFactory());
         factories.put(Property.TZID, createTzIdFactory());
@@ -387,6 +403,32 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
     /**
      * @return
      */
+    private PropertyFactory createCountryFactory() {
+        return new PropertyFactory() {
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
+             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
+             */
+            public Property createProperty(final String name,
+                    final ParameterList parameters, final String value)
+                    throws IOException, URISyntaxException, ParseException {
+                return new Country(parameters, value);
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
+             */
+            public Property createProperty(final String name) {
+                return new Country();
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
     private PropertyFactory createCreatedFactory() {
         return new PropertyFactory() {
             /*
@@ -621,6 +663,32 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
     /**
      * @return
      */
+    private PropertyFactory createExtendedAddressFactory() {
+        return new PropertyFactory() {
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
+             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
+             */
+            public Property createProperty(final String name,
+                    final ParameterList parameters, final String value)
+                    throws IOException, URISyntaxException, ParseException {
+                return new ExtendedAddress(parameters, value);
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
+             */
+            public Property createProperty(final String name) {
+                return new ExtendedAddress();
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
     private PropertyFactory createFreeBusyFactory() {
         return new PropertyFactory() {
             /*
@@ -699,6 +767,32 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
     /**
      * @return
      */
+    private PropertyFactory createLocalityFactory() {
+        return new PropertyFactory() {
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
+             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
+             */
+            public Property createProperty(final String name,
+                    final ParameterList parameters, final String value)
+                    throws IOException, URISyntaxException, ParseException {
+                return new Locality(parameters, value);
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
+             */
+            public Property createProperty(final String name) {
+                return new Locality();
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
     private PropertyFactory createLocationFactory() {
         return new PropertyFactory() {
             /*
@@ -751,6 +845,32 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
     /**
      * @return
      */
+    private PropertyFactory createNameFactory() {
+        return new PropertyFactory() {
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
+             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
+             */
+            public Property createProperty(final String name,
+                    final ParameterList parameters, final String value)
+                    throws IOException, URISyntaxException, ParseException {
+                return new Name(parameters, value);
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
+             */
+            public Property createProperty(final String name) {
+                return new Name();
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
     private PropertyFactory createOrganizerFactory() {
         return new PropertyFactory() {
             /*
@@ -796,6 +916,32 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
              */
             public Property createProperty(final String name) {
                 return new PercentComplete();
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
+    private PropertyFactory createPostalcodeFactory() {
+        return new PropertyFactory() {
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
+             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
+             */
+            public Property createProperty(final String name,
+                    final ParameterList parameters, final String value)
+                    throws IOException, URISyntaxException, ParseException {
+                return new Postalcode(parameters, value);
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
+             */
+            public Property createProperty(final String name) {
+                return new Postalcode();
             }
         };
     }
@@ -900,6 +1046,32 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
              */
             public Property createProperty(final String name) {
                 return new RecurrenceId();
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
+    private PropertyFactory createRegionFactory() {
+        return new PropertyFactory() {
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
+             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
+             */
+            public Property createProperty(final String name,
+                    final ParameterList parameters, final String value)
+                    throws IOException, URISyntaxException, ParseException {
+                return new Region(parameters, value);
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
+             */
+            public Property createProperty(final String name) {
+                return new Region();
             }
         };
     }
@@ -1089,6 +1261,32 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
     /**
      * @return
      */
+    private PropertyFactory createStreetAddressFactory() {
+        return new PropertyFactory() {
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
+             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
+             */
+            public Property createProperty(final String name,
+                    final ParameterList parameters, final String value)
+                    throws IOException, URISyntaxException, ParseException {
+                return new StreetAddress(parameters, value);
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
+             */
+            public Property createProperty(final String name) {
+                return new StreetAddress();
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
     private PropertyFactory createSummaryFactory() {
         return new PropertyFactory() {
             /*
@@ -1108,6 +1306,32 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
              */
             public Property createProperty(final String name) {
                 return new Summary();
+            }
+        };
+    }
+
+    /**
+     * @return
+     */
+    private PropertyFactory createTelFactory() {
+        return new PropertyFactory() {
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
+             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
+             */
+            public Property createProperty(final String name,
+                    final ParameterList parameters, final String value)
+                    throws IOException, URISyntaxException, ParseException {
+                return new Tel(parameters, value);
+            }
+
+            /*
+             * (non-Javadoc)
+             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
+             */
+            public Property createProperty(final String name) {
+                return new Tel();
             }
         };
     }

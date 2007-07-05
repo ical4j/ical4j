@@ -95,7 +95,7 @@ public class Period implements Serializable, Comparable {
     public Period(final DateTime start, final DateTime end) {
         this.start = start;
         this.end = end;
-        
+
         // ensure the end timezone is the same as the start..
         if (end != null) {
             if (start.isUtc()) {

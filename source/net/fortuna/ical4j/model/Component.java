@@ -75,6 +75,8 @@ public abstract class Component implements Serializable {
 
     public static final String VALARM = "VALARM";
 
+    public static final String VVENUE = "VVENUE";
+
     public static final String EXPERIMENTAL_PREFIX = "X-";
 
     private String name;

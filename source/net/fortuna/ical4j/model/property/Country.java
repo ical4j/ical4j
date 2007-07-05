@@ -1,6 +1,6 @@
 /*
  * $Id$
- * 
+ *
  * Created: [Apr 6, 2004]
  *
  * Copyright (c) 2004, Ben Fortuna
@@ -43,79 +43,28 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
- * Defines a LOCATION iCalendar component property.
- * 
- * <pre>
- *     4.8.1.7 Location
- *     
- *        Property Name: LOCATION
- *     
- *        Purpose: The property defines the intended venue for the activity
- *        defined by a calendar component.
- *     
- *        Value Type: TEXT
- *     
- *        Property Parameters: Non-standard, alternate text representation and
- *        language property parameters can be specified on this property.
- *     
- *        Conformance: This property can be specified in &quot;VEVENT&quot; or &quot;VTODO&quot;
- *        calendar component.
- *     
- *        Description: Specific venues such as conference or meeting rooms may
- *        be explicitly specified using this property. An alternate
- *        representation may be specified that is a URI that points to
- *        directory information with more structured specification of the
- *        location. For example, the alternate representation may specify
- *        either an LDAP URI pointing to an LDAP server entry or a CID URI
- *        pointing to a MIME body part containing a vCard [RFC 2426] for the
- *        location.
- *     
- *        Format Definition: The property is defined by the following notation:
- *     
- *          location   = &quot;LOCATION locparam &quot;:&quot; text CRLF
- *     
- *          locparam   = *(
- *     
- *                     ; the following are optional,
- *                     ; but MUST NOT occur more than once
- *     
- *                     (&quot;;&quot; altrepparam) / (&quot;;&quot; languageparam) /
- *     
- *                     ; the following is optional,
- *                     ; and MAY occur more than once
- *     
- *                     (&quot;;&quot; xparam)
- *     
- *                     )
- *     
- *        Example: The following are some examples of this property:
- *     
- *          LOCATION:Conference Room - F123, Bldg. 002
- *     
- *          LOCATION;ALTREP=&quot;http://xyzcorp.com/conf-rooms/f123.vcf&quot;:
- *           Conference Room - F123, Bldg. 002
- * </pre>
- * 
- * @author Ben Fortuna
+ * Defines a REGION iCalendar component property.
+ * @author benf
+ * @author Mike Douglass
  */
-public class Location extends Property implements Escapable {
+public class Country extends Property implements Escapable {
 
-    private static final long serialVersionUID = 8651881536125682401L;
-
-    private String value;
+	private static final long serialVersionUID = -8091183292558005452L;
+	
+	private String value;
 
     /**
      * Default constructor.
      */
-    public Location() {
-        super(LOCATION);
+    public Country() {
+        super(COUNTRY);
     }
 
     /**
      * @param aValue a value string for this component
      */
-    public Location(final String aValue) {
-        super(LOCATION);
+    public Country(final String aValue) {
+        super(COUNTRY);
         setValue(aValue);
     }
 
@@ -123,8 +72,8 @@ public class Location extends Property implements Escapable {
      * @param aList a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Location(final ParameterList aList, final String aValue) {
-        super(LOCATION, aList);
+    public Country(final ParameterList aList, final String aValue) {
+        super(COUNTRY, aList);
         setValue(aValue);
     }
 
@@ -134,13 +83,9 @@ public class Location extends Property implements Escapable {
     public final void validate() throws ValidationException {
 
         /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" altrepparam) / (";" languageparam) /
+         * ; the following are optional, ; but MUST NOT occur more than once (";" abbrev
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.VVENUE,
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.ABBREV,
                 getParameters());
 
         /*

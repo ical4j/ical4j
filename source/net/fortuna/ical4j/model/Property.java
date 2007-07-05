@@ -165,6 +165,27 @@ public abstract class Property extends Content {
 
     public static final String EXPERIMENTAL_PREFIX = "X-";
 
+    /**
+     * the following are vvenue only properties.
+     */
+    public static final String COUNTRY = "COUNTRY";
+
+    public static final String EXTENDED_ADDRESS = "EXTENDED-ADDRESS";
+
+    public static final String LOCALITY = "LOCALITY";
+
+    public static final String LOCATION_TYPE = "LOCATION-TYPE";
+
+    public static final String NAME = "NAME";
+
+    public static final String POSTALCODE = "POSTAL-CODE";
+
+    public static final String REGION = "REGION";
+
+    public static final String STREET_ADDRESS = "STREET-ADDRESS";
+
+    public static final String TEL = "TEL";
+
     private String name;
 
     private ParameterList parameters;

@@ -42,6 +42,7 @@ import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
+import net.fortuna.ical4j.model.component.VVenue;
 import net.fortuna.ical4j.model.component.XComponent;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -106,6 +107,9 @@ public final class ComponentFactory {
         }
         else if (Component.VTIMEZONE.equals(name)) {
             return new VTimeZone(properties);
+        }
+        else if (Component.VVENUE.equals(name)) {
+            return new VVenue(properties);
         }
         else if (isExperimentalName(name)) {
             return new XComponent(name, properties);
