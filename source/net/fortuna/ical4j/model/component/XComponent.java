@@ -72,12 +72,12 @@ public class XComponent extends CalendarComponent {
     public final void validate(final boolean recurse)
             throws ValidationException {
         
-        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            if (!getName().startsWith(EXPERIMENTAL_PREFIX)) {
-                throw new ValidationException(
-                        "Experimental components must have the following prefix: "
-                                + EXPERIMENTAL_PREFIX);
-            }
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
+                && !getName().startsWith(EXPERIMENTAL_PREFIX)) {
+            
+            throw new ValidationException(
+                    "Experimental components must have the following prefix: "
+                            + EXPERIMENTAL_PREFIX);
         }
         
         if (recurse) {

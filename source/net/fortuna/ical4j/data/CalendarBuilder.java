@@ -62,7 +62,6 @@ import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.util.Constants;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.util.TimeZones;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -117,7 +116,7 @@ public class CalendarBuilder implements ContentHandler {
     /**
      * Constructs a new instance using the specified parser and registry.
      * @param parser a calendar parser used to construct the calendar
-     * @param registry a timezone registry used to retrieve {@link TimeZones} and register additional timezone information found
+     * @param registry a timezone registry used to retrieve {@link TimeZone}s and register additional timezone information found
      * in the calendar
      */
     public CalendarBuilder(final CalendarParser parser,

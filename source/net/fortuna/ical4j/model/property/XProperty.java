@@ -98,14 +98,14 @@ public class XProperty extends Property implements Escapable {
      */
     public final void validate() throws ValidationException {
         
-        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            if (!getName().startsWith(EXPERIMENTAL_PREFIX)) {
-                throw new ValidationException(
-                        "Invalid name ["
-                                + getName()
-                                + "]. Experimental properties must have the following prefix: "
-                                + EXPERIMENTAL_PREFIX);
-            }
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
+                && !getName().startsWith(EXPERIMENTAL_PREFIX)) {
+            
+            throw new ValidationException(
+                    "Invalid name ["
+                            + getName()
+                            + "]. Experimental properties must have the following prefix: "
+                            + EXPERIMENTAL_PREFIX);
         }
     }
 }
