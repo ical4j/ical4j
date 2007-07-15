@@ -23,7 +23,7 @@
 	<inceptionYear>2004</inceptionYear>
 	<licenses>
 		<license>
-			<name>iCal4j License</name>
+			<name>iCal4j - License</name>
 			<url>LICENSE</url>
 		</license>
 	</licenses>
@@ -314,12 +314,8 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
-					<comparisonVersion>1.0-beta2</comparisonVersion>
+					<comparisonVersion>1.0-beta3</comparisonVersion>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jxr-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</reporting>
