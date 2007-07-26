@@ -40,6 +40,8 @@ import java.util.Calendar;
 
 import junit.framework.TestCase;
 
+import net.fortuna.ical4j.util.TimeZones;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -50,6 +52,15 @@ import org.apache.commons.logging.LogFactory;
 public class DateTimeTest extends TestCase {
 
     private static Log log = LogFactory.getLog(DateTimeTest.class);
+    
+    private TimeZoneRegistry registry;
+
+    /**
+     * Default constructor.
+     */
+    public DateTimeTest() {
+        registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+    }
     
     /*
      * Class under test for void DateTime(long)
@@ -87,7 +98,7 @@ public class DateTimeTest extends TestCase {
             fail("Should throw ParseException");
         }
         catch (ParseException pe) {
-            log.error("Exception occurred", pe);
+            log.info("Exception occurred: " + pe.getMessage());
         }
         assertEquals("20050630T093000", new DateTime("20050630T093000").toString());
         assertEquals("20050630T093000Z", new DateTime("20050630T093000Z").toString());
@@ -110,4 +121,34 @@ public class DateTimeTest extends TestCase {
         assertEquals(date1, date2);
     }
 
+    /**
+     * Test UTC date-times.
+     */
+    public void testUtc() throws ParseException {
+        // ordinary date..
+        DateTime date1 = new DateTime("20050101T093000");
+        assertFalse(date1.isUtc());
+        
+        // UTC date..
+        DateTime date2 = new DateTime(true);
+        assertTrue(date2.isUtc());
+        
+        TimeZone utcTz = registry.getTimeZone(TimeZones.UTC_ID);
+        utcTz.setID(TimeZones.UTC_ID);
+        
+        // UTC timezone, but not UTC..
+        DateTime date3 = new DateTime("20050101T093000", utcTz);
+//        date3.setUtc(false);
+        assertFalse(date3.isUtc());
+        
+        DateTime date4 = new DateTime();
+        date4.setUtc(true);
+        assertTrue(date4.isUtc());
+        date4.setUtc(false);
+        assertFalse(date4.isUtc());
+
+        DateTime date5 = new DateTime(false);
+        date5.setTimeZone(utcTz);
+        assertFalse(date5.isUtc());
+    }
 }

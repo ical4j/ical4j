@@ -227,29 +227,40 @@ public class DateTime extends Date {
      */
     public final void setUtc(final boolean utc) {
         // reset the timezone associated with this instance..
-        setTimeZone(null);
+        this.timezone = null;
         if (utc) {
             getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
-            time = new Time(time, getFormat().getTimeZone());
         }
+        else {
+            resetTimeZone();
+        }
+        time = new Time(time, getFormat().getTimeZone(), utc);
     }
 
     /**
-     * Sets the timezone associated with this date-time instance. If the specified timezone is null
+     * Sets the timezone associated with this date-time instance. If the specified timezone is null, it will reset
+     * to the default timezone.
      * @param timezone
      */
     public final void setTimeZone(final TimeZone timezone) {
         this.timezone = timezone;
         if (timezone != null) {
-            getFormat().setTimeZone(timezone);
+            getFormat().setTimeZone(timezone);    
         }
         else {
-            // use GMT timezone to avoid daylight savings rules affecting floating
-            // time values..
-            getFormat().setTimeZone(TimeZone.getDefault());
-            // getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+            resetTimeZone();
         }
-        time = new Time(time, getFormat().getTimeZone());
+        time = new Time(time, getFormat().getTimeZone(), time.isUtc());
+    }
+    
+    /**
+     * Reset the timezone to default.
+     */
+    private void resetTimeZone() {
+        // use GMT timezone to avoid daylight savings rules affecting floating
+        // time values..
+        getFormat().setTimeZone(TimeZone.getDefault());
+        // getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 
     /**
