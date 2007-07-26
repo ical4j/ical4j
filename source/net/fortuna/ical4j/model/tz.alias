@@ -112,6 +112,12 @@ Universal=Etc/UTC
 Zulu=Etc/UTC
 ##
 
+### Temporary hack to support above timezones..
+Etc/UTC=Europe/London
+Etc/GMT=Europe/London
+Etc/UCT=Europe/London
+###
+
 Eire=Europe/Dublin
 
 Portugal=Europe/Lisbon
