@@ -98,10 +98,8 @@ public class Period implements Serializable, Comparable {
 
         // ensure the end timezone is the same as the start..
         if (end != null) {
-            if (start.isUtc()) {
-                end.setUtc(true);
-            }
-            else {
+            end.setUtc(start.isUtc());
+            if (!start.isUtc()) {
                 end.setTimeZone(start.getTimeZone());
             }
         }
@@ -374,17 +372,9 @@ public class Period implements Serializable, Comparable {
      * @param utc
      */
     public void setUtc(boolean utc) {
-        if (utc) {
-            start.setUtc(true);
-            if (end != null) {
-                getEnd().setUtc(true);
-            }
-        }
-        else {
-            start.setTimeZone(null);
-            if (end != null) {
-                getEnd().setTimeZone(null);
-            }
+        start.setUtc(utc);
+        if (end != null) {
+            getEnd().setUtc(utc);
         }
     }
     
