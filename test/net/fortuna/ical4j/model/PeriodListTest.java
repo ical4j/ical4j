@@ -504,9 +504,9 @@ public class PeriodListTest extends TestCase {
      * Test timezone functionality.
      */
     public void testTimezone() {
-        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance()
-                .createRegistry();
-        TimeZone timezone = registry.getTimeZone("Australia/Melbourne");
+//        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance()
+//                .createRegistry();
+//        TimeZone timezone = registry.getTimeZone("Australia/Melbourne");
 
         PeriodList list = new PeriodList(true);
         java.util.Calendar cal = java.util.Calendar.getInstance();

@@ -92,12 +92,14 @@ public class CalendarBuilderTest extends TestCase {
             try {
                 calendar.validate();
                 assertTrue("File [" + filename + "] valid", valid);
-            } catch (ValidationException e) {
-                log.warn("Calendar file [" + filename + "] is invalid.", e);
+            }
+            catch (ValidationException e) {
+                log.warn("Caught exception: [" + filename + "," + e.getMessage() + "]");
                 assertFalse("File [" + filename + "] invalid", valid);
             }
-        } catch (ParserException e) {
-            log.warn("File: " + filename, e);
+        }
+        catch (ParserException e) {
+            log.warn("Caught exception: [" + filename + "," + e.getMessage() + "]");
             assertFalse("File [" + filename + "] invalid", valid);
         }
 
@@ -138,6 +140,10 @@ public class CalendarBuilderTest extends TestCase {
         TestSuite suite = new TestSuite();
 
         File[] testFiles = null;
+
+        // single test..
+//        suite.addTest(new CalendarBuilderTest("testBuildInputStream",
+//                new File("etc/samples/valid/Session6.ics").getPath(), true));
 
         // valid tests..
         testFiles = new File("etc/samples/valid").listFiles(new FileOnlyFilter());
