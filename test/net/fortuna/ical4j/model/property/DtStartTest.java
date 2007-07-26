@@ -45,7 +45,9 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.Strings;
 
 public class DtStartTest extends TestCase {
 
@@ -102,5 +104,18 @@ public class DtStartTest extends TestCase {
 
         assertEquals(timezone, dtStart.timezone);
         assertEquals(value, dtStart.getValue());
+    }
+    
+    /**
+     * Test non-utc timezone works.
+     */
+    public void testNonUtcTimezone() throws ParseException {
+        DtStart start = new DtStart();
+        start.getParameters().add(Value.DATE_TIME);
+        start.getParameters().add(new TzId("GMT"));
+        start.setValue("20070101T080000");
+        
+        assertEquals("DTSTART;VALUE=DATE-TIME;TZID=GMT:20070101T080000" + Strings.LINE_SEPARATOR,
+                start.toString());
     }
 }
