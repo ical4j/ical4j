@@ -48,6 +48,8 @@ public class Time extends Iso8601 {
     
     private static final long serialVersionUID = -8401010870773304348L;
     
+    private boolean utc = false;
+    
     /**
      * FORM #1: LOCAL TIME.
      */
@@ -59,35 +61,64 @@ public class Time extends Iso8601 {
     private static final String UTC_PATTERN = "HHmmss'Z'";
 
     /**
-     * Default constructor.
+     * @param timezone
      */
     public Time(final TimeZone timezone) {
-        super(TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN, Dates.PRECISION_SECOND);
+        this(timezone, TimeZones.isUtc(timezone));
+    }
+    
+    /**
+     * @param timezone
+     * @param utc
+     */
+    public Time(final TimeZone timezone, boolean utc) {
+        super(utc ? UTC_PATTERN : DEFAULT_PATTERN, Dates.PRECISION_SECOND);
         getFormat().setTimeZone(timezone);
+        this.utc = utc;
     }
 
     /**
      * @param time
-     * @param utc
+     * @param timezone
      */
     public Time(final long time, final TimeZone timezone) {
-        super(time, (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN), Dates.PRECISION_SECOND);
+        this(time, timezone, TimeZones.isUtc(timezone));
+    }
+    
+    /**
+     * @param time
+     * @param timezone
+     * @param utc
+     */
+    public Time(final long time, final TimeZone timezone, boolean utc) {
+        super(time, (utc ? UTC_PATTERN : DEFAULT_PATTERN), Dates.PRECISION_SECOND);
         getFormat().setTimeZone(timezone);
+        this.utc = utc;
     }
 
     /**
      * @param time
-     * @param utc
+     * @param timezone
      */
     public Time(final java.util.Date time, final TimeZone timezone) {
-        super(time.getTime(), (TimeZones.isUtc(timezone) ? UTC_PATTERN : DEFAULT_PATTERN), Dates.PRECISION_SECOND);
-        getFormat().setTimeZone(timezone);
+        this(time, timezone, TimeZones.isUtc(timezone));
     }
-
+    
     /**
-     * @return Returns the utc.
+     * @param time
+     * @param timezone
+     * @param utc
+     */
+    public Time(final java.util.Date time, final TimeZone timezone, boolean utc) {
+        super(time.getTime(), (utc ? UTC_PATTERN : DEFAULT_PATTERN), Dates.PRECISION_SECOND);
+        getFormat().setTimeZone(timezone);
+        this.utc = utc;
+    }
+    
+    /**
+     * @return true if time is utc
      */
     public final boolean isUtc() {
-        return TimeZones.isUtc(getFormat().getTimeZone());
+        return utc;
     }
 }
