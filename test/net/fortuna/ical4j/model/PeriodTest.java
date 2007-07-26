@@ -535,6 +535,7 @@ public class PeriodTest extends TestCase {
         LOG.info("Timezone test - period: [" + p + "]");
         
         assertFalse(p.getStart().isUtc());
+        // end utc flag should be automatically set to same as start..
         assertFalse(p.getEnd().isUtc());
         
         start.setUtc(true);
