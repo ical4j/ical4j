@@ -114,10 +114,10 @@ public class DateList extends ArrayList implements Serializable {
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {
             if (Value.DATE.equals(type)) {
-                add(new Date(t.nextToken()));
+                add((Object) new Date(t.nextToken()));
             }
             else {
-                add(new DateTime(t.nextToken(), timezone));
+                add((Object) new DateTime(t.nextToken(), timezone));
             }
         }
     }
