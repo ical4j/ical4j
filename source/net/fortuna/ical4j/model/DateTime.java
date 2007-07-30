@@ -239,7 +239,8 @@ public class DateTime extends Date {
 
     /**
      * Sets the timezone associated with this date-time instance. If the specified timezone is null, it will reset
-     * to the default timezone.
+     * to the default timezone.  If the date-time instance is utc, it will turn into
+     * either a floating (no timezone) date-time, or a date-time with a timezone.
      * @param timezone
      */
     public final void setTimeZone(final TimeZone timezone) {
@@ -250,7 +251,7 @@ public class DateTime extends Date {
         else {
             resetTimeZone();
         }
-        time = new Time(time, getFormat().getTimeZone(), time.isUtc());
+        time = new Time(time, getFormat().getTimeZone(), false);
     }
     
     /**
