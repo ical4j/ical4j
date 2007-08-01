@@ -35,7 +35,7 @@
 		<developerConnection>
 			scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
 		</developerConnection>
-		<url>http://ical4j.cvs.sourceforge.net/ical4j</url>
+		<url>http://ical4j.cvs.sourceforge.net/ical4j/iCal4j</url>
 	</scm>
 
 	<contributors>
@@ -316,6 +316,32 @@
 					<minSeverity>info</minSeverity>
 					<comparisonVersion>1.0-beta3</comparisonVersion>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changelog-plugin</artifactId>
+				<version>2.1</version>
+				<reportSets>
+					<reportSet>
+						<id>changelog</id>
+						<configuration>
+							<type>tag</type>
+							<tags>
+								<tag
+									implementation="java.lang.String">
+									ical4j-1_0-beta2
+								</tag>
+								<tag
+									implementation="java.lang.String">
+									ical4j-1_0-beta3
+								</tag>
+							</tags>
+						</configuration>
+						<reports>
+							<report>changelog</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 		</plugins>
 	</reporting>
