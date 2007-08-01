@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-	This configuration file was written by the eclipse-cs plugin configuration editor
+    This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-Checkstyle-Configuration: Default Checks
-Description:
-
+    Checkstyle-Configuration: Default Checks
+    Description: none
 -->
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
     <property name="severity" value="warning"/>
     <module name="TreeWalker">
-        <module name="JavadocMethod"/>
+        <module name="JavadocMethod">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="JavadocType"/>
         <module name="JavadocVariable">
             <property name="severity" value="info"/>
@@ -31,7 +32,9 @@ Description:
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>
         <module name="FileLength"/>
-        <module name="LineLength"/>
+        <module name="LineLength">
+            <property name="severity" value="ignore"/>
+        </module>
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
         <module name="EmptyForIteratorPad"/>
@@ -77,6 +80,7 @@ Description:
         <module name="ArrayTypeStyle"/>
         <module name="FinalParameters"/>
         <module name="GenericIllegalRegexp">
+            <property name="severity" value="ignore"/>
             <property name="format" value="\s+$"/>
             <property name="message" value="Line has trailing spaces."/>
         </module>
