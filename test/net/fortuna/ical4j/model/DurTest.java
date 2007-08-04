@@ -181,7 +181,9 @@ public class DurTest extends TestCase {
         Dur oneHour = new Dur("P1H");
         Dur twoHours = new Dur("P2H");
         Dur oneMinute = new Dur("P1M");
+        Dur twoMinutes = new Dur("P2M");
         Dur oneSecond = new Dur("P1S");
+        Dur twoSeconds = new Dur("P2S");
         
         assertEquals(twoWeeks, oneWeek.add(oneWeek));
         assertEquals(twoDays, oneDay.add(oneDay));
@@ -192,5 +194,13 @@ public class DurTest extends TestCase {
         assertEquals(new Dur("-P1D1H"), oneDay.negate().add(oneHour.negate()));
         assertEquals(new Dur("-P1H1M"), oneHour.negate().add(oneMinute.negate()));
         assertEquals(new Dur("-P1M1S"), oneMinute.negate().add(oneSecond.negate()));
+        
+        assertEquals(new Dur("P1D1H"), new Dur(0, 23, 0, 0).add(twoHours));
+        assertEquals(new Dur("P1H1M"), new Dur(0, 0, 59, 0).add(twoMinutes));
+        assertEquals(new Dur("P1M1S"), new Dur(0, 0, 0, 59).add(twoSeconds));
+        
+        assertEquals(new Dur("-P1D1H"), new Dur(0, -23, 0, 0).add(twoHours.negate()));
+        assertEquals(new Dur("-P1H1M"), new Dur(0, 0, -59, 0).add(twoMinutes.negate()));
+        assertEquals(new Dur("-P1M1S"), new Dur(0, 0, 0, -59).add(twoSeconds.negate()));
     }
 }
