@@ -156,4 +156,41 @@ public class DurTest extends TestCase {
         
         assertEquals("P1D", duration.toString());
     }
+    
+    /**
+     * Test negative time.
+     */
+    public void testNegativeDuration() {
+        assertEquals("-P1W", new Dur(-1).toString());
+        assertEquals("-P1D", new Dur(-1, 0, 0, 0).toString());
+        assertEquals("-PT1H", new Dur(0, -1, 0, 0).toString());
+        assertEquals("-PT1M", new Dur(0, 0, -1, 0).toString());
+        assertEquals("-PT1S", new Dur(0, 0, 0, -1).toString());
+        assertEquals("-P1DT1S", new Dur(-1, 0, 0, -1).toString());
+//        assertEquals("PT23H59M59S", new Dur(-1, 0, 0, -1).toString());
+    }
+    
+    /**
+     * Test adding durations.
+     */
+    public void testAdd() {
+        Dur oneWeek = new Dur("P1W");
+        Dur twoWeeks = new Dur("P2W");
+        Dur oneDay = new Dur("P1D");
+        Dur twoDays = new Dur("P2D");
+        Dur oneHour = new Dur("P1H");
+        Dur twoHours = new Dur("P2H");
+        Dur oneMinute = new Dur("P1M");
+        Dur oneSecond = new Dur("P1S");
+        
+        assertEquals(twoWeeks, oneWeek.add(oneWeek));
+        assertEquals(twoDays, oneDay.add(oneDay));
+        assertEquals(twoHours, oneHour.add(oneHour));
+        assertEquals(new Dur("P8D"), oneWeek.add(oneDay));
+        assertEquals(new Dur("P1D1H"), oneDay.add(oneHour));
+        assertEquals(new Dur("-P8D"), oneWeek.negate().add(oneDay.negate()));
+        assertEquals(new Dur("-P1D1H"), oneDay.negate().add(oneHour.negate()));
+        assertEquals(new Dur("-P1H1M"), oneHour.negate().add(oneMinute.negate()));
+        assertEquals(new Dur("-P1M1S"), oneMinute.negate().add(oneSecond.negate()));
+    }
 }

@@ -41,6 +41,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -161,11 +162,12 @@ public class Dur implements Comparable, Serializable {
      * @param weeks a duration in weeks.
      */
     public Dur(final int weeks) {
-        this.weeks = weeks;
+        this.weeks = Math.abs(weeks);
         this.days = 0;
         this.hours = 0;
         this.minutes = 0;
         this.seconds = 0;
+        this.negative = weeks < 0;
     }
 
     /**
@@ -177,11 +179,20 @@ public class Dur implements Comparable, Serializable {
      */
     public Dur(final int days, final int hours, final int minutes,
             final int seconds) {
+
+        if (!(days >= 0 && hours >= 0 && minutes >= 0 && seconds >= 0)
+                && !(days <= 0 && hours <= 0 && minutes <= 0 && seconds <= 0)) {
+            
+            throw new IllegalArgumentException("Invalid duration representation");
+        }
+        
         this.weeks = 0;
-        this.days = days;
-        this.hours = hours;
-        this.minutes = minutes;
-        this.seconds = seconds;
+        this.days = Math.abs(days);
+        this.hours = Math.abs(hours);
+        this.minutes = Math.abs(minutes);
+        this.seconds = Math.abs(seconds);
+        
+        this.negative = days < 0 || hours < 0 || minutes < 0 || seconds < 0;
     }
 
     /**
@@ -289,7 +300,64 @@ public class Dur implements Comparable, Serializable {
         negated.negative = !negative;
         return negated;
     }
-
+    
+    /**
+     * Add two durations. Durations may only be added if they are both positive
+     * or both negative durations.
+     * @param duration the duration to add to this duration
+     * @return a new instance representing the sum of the two durations.
+     */
+    public final Dur add(Dur duration) {
+        if ((!isNegative() && duration.isNegative())
+                || (isNegative() && !duration.isNegative())) {
+            
+            throw new IllegalArgumentException(
+                    "Cannot add a negative and a positive duration");
+        }
+        
+        Dur sum = null;
+        if (weeks > 0 && duration.weeks > 0) {
+            sum = new Dur(weeks + duration.weeks);
+        }
+        else {
+            int daySum = (weeks > 0) ? weeks * DAYS_PER_WEEK + days : days;
+            int hourSum = hours;
+            int minuteSum = minutes;
+            int secondSum = seconds;
+            
+            if ((secondSum + duration.seconds) / SECONDS_PER_MINUTE > 0) {
+                minuteSum += (secondSum + duration.seconds) / SECONDS_PER_MINUTE;
+                secondSum = (secondSum + duration.seconds) % SECONDS_PER_MINUTE;
+            }
+            else {
+                secondSum += duration.seconds;
+            }
+            
+            if ((minuteSum + duration.minutes) / MINUTES_PER_HOUR > 0) {
+                hourSum += (minuteSum + duration.minutes) / MINUTES_PER_HOUR;
+                minuteSum = (minuteSum + duration.minutes) % MINUTES_PER_HOUR;
+            }
+            else {
+                minuteSum += duration.minutes;
+            }
+            
+            if ((hourSum + duration.hours) / HOURS_PER_DAY > 0) {
+                daySum += (hourSum + duration.hours) / HOURS_PER_DAY;
+                hourSum = (hourSum + duration.hours) % HOURS_PER_DAY;
+            }
+            else {
+                hourSum += duration.hours;
+            }
+            
+            daySum += (duration.weeks > 0) ? duration.weeks * DAYS_PER_WEEK
+                    + duration.days : duration.days;
+            
+            sum = new Dur(daySum, hourSum, minuteSum, secondSum);
+        }
+        sum.negative = negative;
+        return sum;
+    }
+    
     /*
      * (non-Javadoc)
      * @see java.lang.Object#toString()
@@ -370,6 +438,24 @@ public class Dur implements Comparable, Serializable {
         return getSeconds() - arg0.getSeconds();
     }
 
+    /* (non-Javadoc)
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    public boolean equals(Object obj) {
+        if (obj instanceof Dur) {
+            return ((Dur) obj).compareTo(this) == 0;
+        }
+        return super.equals(obj);
+    }
+    
+    /* (non-Javadoc)
+     * @see java.lang.Object#hashCode()
+     */
+    public int hashCode() {
+        return new HashCodeBuilder().append(weeks).append(days).append(
+                hours).append(minutes).append(seconds).append(negative).toHashCode();
+    }
+    
     /**
      * @return Returns the days.
      */
