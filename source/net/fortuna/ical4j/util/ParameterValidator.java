@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.util;
 
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
 
@@ -104,6 +105,18 @@ public final class ParameterValidator {
         }
     }
 
+    /**
+     * @param param
+     * @param parameters
+     * @throws ValidationException
+     */
+    public void assertNullOrEqual(Parameter param, ParameterList parameters) throws ValidationException {
+        Parameter p = parameters.getParameter(param.getName());
+        if (p != null && !param.equals(p)) {
+            throw new ValidationException("Parameter [" + p + "] is invalid");
+        }
+    }
+    
     /**
      * @return Returns the instance.
      */

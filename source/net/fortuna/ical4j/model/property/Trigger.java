@@ -212,11 +212,9 @@ public class Trigger extends UtcProperty {
 
             ParameterValidator.getInstance().assertOneOrLess(Parameter.RELATED,
                     getParameters());
-
-            if (valueParam != null && !Value.DURATION.equals(valueParam)) {
-                throw new ValidationException("Parameter [" + valueParam
-                        + "] is invalid");
-            }
+            
+            ParameterValidator.getInstance().assertNullOrEqual(Value.DURATION,
+                    getParameters());
 
             if (getDuration() == null) {
                 throw new ValidationException("Duration value not specified");
@@ -225,11 +223,10 @@ public class Trigger extends UtcProperty {
         else {
             ParameterValidator.getInstance().assertOne(Parameter.VALUE,
                     getParameters());
+            
+            ParameterValidator.getInstance().assertNullOrEqual(Value.DATE_TIME,
+                    getParameters());
 
-            if (valueParam != null && !Value.DATE_TIME.equals(valueParam)) {
-                throw new ValidationException("Parameter [" + valueParam
-                        + "] is invalid");
-            }
             if (getDateTime() == null) {
                 throw new ValidationException("DATE-TIME value not specified");
             }
