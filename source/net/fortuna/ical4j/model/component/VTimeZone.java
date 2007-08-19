@@ -216,6 +216,10 @@ public class VTimeZone extends CalendarComponent {
                     + "] must be specified at least once");
         }
 
+        for (Iterator i = getObservances().iterator(); i.hasNext();) {
+            ((Component) i.next()).validate(recurse);
+        }
+        
         /*
          * ; the following is optional, ; and MAY occur more than once x-prop
          */
