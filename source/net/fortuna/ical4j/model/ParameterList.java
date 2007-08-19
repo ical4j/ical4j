@@ -195,6 +195,15 @@ public class ParameterList implements Serializable {
     }
 
     /**
+     * Remove all parameters with the specified name.
+     * @param paramName
+     */
+    public final void removeAll(final String paramName) {
+        ParameterList params = getParameters(paramName);
+        parameters.removeAll(params.parameters);
+    }
+    
+    /**
      * @return the number of parameters in the list
      * @see List#size()
      */
