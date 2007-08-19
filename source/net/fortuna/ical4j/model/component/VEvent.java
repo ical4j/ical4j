@@ -327,6 +327,8 @@ public class VEvent extends CalendarComponent {
                 throw new ValidationException("Component ["
                         + component.getName() + "] may not occur in VEVENT");
             }
+            
+            ((VAlarm) component).validate(recurse);
         }
 
         if (!CompatibilityHints

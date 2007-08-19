@@ -238,7 +238,10 @@ public class VToDo extends CalendarComponent {
             if (!(component instanceof VAlarm)) {
                 throw new ValidationException("Component ["
                         + component.getName() + "] may not occur in VTODO");
+                
             }
+            
+            ((VAlarm) component).validate(recurse);
         }
 
         if (!CompatibilityHints
