@@ -87,6 +87,7 @@ public class CalendarParserImpl implements CalendarParser {
             tokeniser.ordinaryChar(':');
             tokeniser.ordinaryChar(';');
             tokeniser.ordinaryChar('=');
+            tokeniser.ordinaryChar('\t');
             tokeniser.eolIsSignificant(true);
             tokeniser.whitespaceChars(0, 0);
             tokeniser.quoteChar('"');
