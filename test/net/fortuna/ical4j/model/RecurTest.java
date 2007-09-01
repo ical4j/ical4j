@@ -609,4 +609,35 @@ public class RecurTest extends TestCase {
         WeekDay day = new WeekDay(WeekDay.MO, 3);
         assertEquals(day, recur.getDayList().get(0));
     }
+    
+    /**
+     * 
+     */
+    /*
+    public void testInvalidRule() throws ParseException {
+//        String rrule = "FREQ=DAILY;COUNT=60;BYDAY=TU,TH;BYSETPOS=2";
+//        Recur recur = new Recur(rrule);
+
+        Calendar cal = Calendar.getInstance();
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.HOUR);
+//        java.util.Date start = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+//        java.util.Date end = cal.getTime();
+
+//        DateList recurrences = recur.getDates(new DateTime(start),
+//                new DateTime(end), Value.DATE_TIME);
+    }
+    */
+    
+    public void testCountMonthsWith31Days() throws ParseException {
+        Recur recur = new Recur("FREQ=MONTHLY;BYMONTHDAY=31");
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        end.add(Calendar.YEAR, 1);
+        DateList recurrences = recur.getDates(new DateTime(start.getTime()),
+                new DateTime(end.getTime()), Value.DATE);
+        assertEquals(7, recurrences.size());
+    }
 }

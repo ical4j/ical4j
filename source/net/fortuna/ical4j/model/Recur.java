@@ -798,13 +798,21 @@ public class Recur implements Serializable {
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date date = (Date) i.next();
             Calendar cal = Dates.getCalendarInstance(date);
+            cal.setLenient(false);
             cal.setTime(date);
             for (Iterator j = getMonthDayList().iterator(); j.hasNext();) {
                 Integer monthDay = (Integer) j.next();
-                cal.set(Calendar.DAY_OF_MONTH, Dates.getAbsMonthDay(cal
-                        .getTime(), monthDay.intValue()));
-                monthDayDates.add(Dates.getInstance(cal.getTime(),
-                        monthDayDates.getType()));
+                try {
+                    cal.set(Calendar.DAY_OF_MONTH, Dates.getAbsMonthDay(cal
+                            .getTime(), monthDay.intValue()));
+                    monthDayDates.add(Dates.getInstance(cal.getTime(),
+                            monthDayDates.getType()));
+                }
+                catch (IllegalArgumentException iae) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Invalid day of month: " + cal.get(Calendar.DAY_OF_MONTH));
+                    }
+                }
             }
         }
         return monthDayDates;
