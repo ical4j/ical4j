@@ -152,12 +152,12 @@ public class Recur implements Serializable {
             }
             else if (UNTIL.equals(token)) {
                 String untilString = t.nextToken();
-                try {
+                if (untilString != null && untilString.contains("T")) {
                     until = new DateTime(untilString);
                     // UNTIL must be specified in UTC time..
                     ((DateTime) until).setUtc(true);
                 }
-                catch (ParseException pe) {
+                else {
                     until = new Date(untilString);
                 }
             }
