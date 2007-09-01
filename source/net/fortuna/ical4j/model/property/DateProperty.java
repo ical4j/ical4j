@@ -116,9 +116,11 @@ public abstract class DateProperty extends Property {
             if (date != null) {
                 getParameters().replace(Value.DATE);
             }
+            /*
             else {
                 getParameters().removeAll(Parameter.VALUE);
             }
+            */
             // ensure timezone is null for VALUE=DATE or null properties..
             updateTimeZone(null);
         }
