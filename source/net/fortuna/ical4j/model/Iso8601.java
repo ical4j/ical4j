@@ -40,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import net.fortuna.ical4j.util.Dates;
+import net.fortuna.ical4j.util.TimeZones;
 
 /**
  * Base class for date and time representations as defined
@@ -59,11 +60,11 @@ public abstract class Iso8601 extends Date {
      * @param pattern
      */
     public Iso8601(final long time, final String pattern, final int precision) {
-        super(Dates.round(time, precision));
+        super(Dates.round(time, precision, TimeZone.getTimeZone(TimeZones.GMT_ID)));
         format = new SimpleDateFormat(pattern);
         // use GMT timezone to avoid daylight savings rules affecting floating
         // time values..
-//        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
         this.precision = precision;
     }
     
@@ -100,6 +101,6 @@ public abstract class Iso8601 extends Date {
      * @see java.util.Date#setTime(long)
      */
     public void setTime(final long time) {
-        super.setTime(Dates.round(time, precision));
+        super.setTime(Dates.round(time, precision, format.getTimeZone()));
     }
 }

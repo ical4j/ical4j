@@ -38,6 +38,7 @@ package net.fortuna.ical4j.filter;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -51,6 +52,7 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.TimeZones;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -110,7 +112,7 @@ public class PeriodRuleTest extends TestCase {
      * Test filtering of all-day events.
      */
     public void testFilteringAllDayEvents() {
-        java.util.Calendar cal = java.util.Calendar.getInstance();
+        java.util.Calendar cal = java.util.Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
         cal.set(java.util.Calendar.MONTH, java.util.Calendar.JANUARY);
         cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
         

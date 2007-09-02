@@ -48,6 +48,7 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.TimeZones;
 
 public class DtStartTest extends TestCase {
 
@@ -70,7 +71,7 @@ public class DtStartTest extends TestCase {
         params.add(Value.DATE);
         DtStart dtStart = new DtStart(params, "20060811");
         
-        Calendar calendar = Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
         calendar.clear();
         calendar.set(2006, 7, 11);
         calendar.clear(Calendar.HOUR_OF_DAY);

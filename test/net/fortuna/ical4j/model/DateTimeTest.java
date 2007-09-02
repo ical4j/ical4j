@@ -78,7 +78,7 @@ public class DateTimeTest extends TestCase {
      * Class under test for void DateTime(Date)
      */
     public void testDateTimeDate() {
-        Calendar cal = Calendar.getInstance(); //TimeZone.getTimeZone("GMT"));
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         cal.set(Calendar.YEAR, 1984);
         // months are zero-based..
         cal.set(Calendar.MONTH, 3);
@@ -102,6 +102,9 @@ public class DateTimeTest extends TestCase {
         }
         assertEquals("20050630T093000", new DateTime("20050630T093000").toString());
         assertEquals("20050630T093000Z", new DateTime("20050630T093000Z").toString());
+        
+        assertEquals("20000402T020000", new DateTime("20000402T020000",
+                registry.getTimeZone("America/Los_Angeles")).toString());
     }
     
     /**
@@ -111,7 +114,7 @@ public class DateTimeTest extends TestCase {
     public void testDateTimeEquals() throws ParseException {
         DateTime date1 = new DateTime("20050101T093000");
     
-        Calendar calendar = Calendar.getInstance(); //TimeZone.getTimeZone("Etc/UTC"));
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/UTC"));
         calendar.clear();
         calendar.set(2005, 0, 1, 9, 30, 00);
         calendar.set(Calendar.MILLISECOND, 1);
