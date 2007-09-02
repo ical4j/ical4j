@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.property.CalScaleTest;
 import net.fortuna.ical4j.model.property.DtEndTest;
 import net.fortuna.ical4j.model.property.DtStartTest;
 import net.fortuna.ical4j.model.property.ExDateTest;
+import net.fortuna.ical4j.model.property.FreeBusyTest;
 import net.fortuna.ical4j.model.property.GeoTest;
 import net.fortuna.ical4j.model.property.LocationTest;
 import net.fortuna.ical4j.model.property.OrganizerTest;
@@ -108,6 +109,7 @@ public class AllTests extends TestSuite{
         suite.addTestSuite(DtEndTest.class);
         suite.addTestSuite(DtStartTest.class);
         suite.addTestSuite(ExDateTest.class);
+        suite.addTestSuite(FreeBusyTest.class);
         suite.addTestSuite(LocationTest.class);
         suite.addTestSuite(OrganizerTest.class);
         suite.addTestSuite(SummaryTest.class);
