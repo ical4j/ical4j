@@ -194,12 +194,21 @@ public final class Dates {
     }
     
     /**
+     * @param time
+     * @param precision
+     * @return
+     */
+    public static long round(final long time, final int precision) {
+        return round(time, precision, TimeZone.getDefault());
+    }
+    
+    /**
      * Rounds a time value to remove any precision smaller than specified.
      * @param time the time value to round
      * @return a round time value
      */
-    public static long round(final long time, final int precision) {
-        Calendar cal = Calendar.getInstance();
+    public static long round(final long time, final int precision, final TimeZone tz) {
+        Calendar cal = Calendar.getInstance(tz);
         cal.setTimeInMillis(time);
         if (precision == PRECISION_DAY) {
 //            return (long) Math.floor(time / (double) Dates.MILLIS_PER_DAY) * Dates.MILLIS_PER_DAY;
