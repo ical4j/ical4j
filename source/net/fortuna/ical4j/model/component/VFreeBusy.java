@@ -324,6 +324,8 @@ public class VFreeBusy extends CalendarComponent {
     private FreeBusy createBusyTime(final DateTime start, final DateTime end,
             final ComponentList components) {
         PeriodList periods = getConsumedTime(components, start, end);
+        // periods must be in UTC time for freebusy..
+        periods.setUtc(true);
         for (Iterator i = periods.iterator(); i.hasNext();) {
             Period period = (Period) i.next();
             // check if period outside bounds..

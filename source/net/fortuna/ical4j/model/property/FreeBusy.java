@@ -135,6 +135,9 @@ public class FreeBusy extends Property {
      */
     public FreeBusy(final PeriodList pList) {
         super(FREEBUSY);
+        if (!pList.isUtc()) {
+            throw new IllegalArgumentException("Periods must be in UTC format");
+        }
         periods = pList;
     }
 
@@ -144,6 +147,9 @@ public class FreeBusy extends Property {
      */
     public FreeBusy(final ParameterList aList, final PeriodList pList) {
         super(FREEBUSY, aList);
+        if (!pList.isUtc()) {
+            throw new IllegalArgumentException("Periods must be in UTC format");
+        }
         periods = pList;
     }
 
@@ -161,6 +167,10 @@ public class FreeBusy extends Property {
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+        
+        if (!periods.isUtc()) {
+            throw new ValidationException("Periods must be in UTC format");
+        }
     }
 
     /**
