@@ -228,7 +228,9 @@ public abstract class Property extends Content {
     public final String toString() {
         StringBuffer buffer = new StringBuffer();
         buffer.append(getName());
-        buffer.append(getParameters());
+        if (getParameters() != null) {
+            buffer.append(getParameters());
+        }
         buffer.append(':');
         if (this instanceof Escapable) {
             buffer.append(Strings.escape(Strings.valueOf(getValue())));
