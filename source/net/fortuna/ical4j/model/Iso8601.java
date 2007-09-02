@@ -60,11 +60,11 @@ public abstract class Iso8601 extends Date {
      * @param pattern
      */
     public Iso8601(final long time, final String pattern, final int precision) {
-        super(Dates.round(time, precision, TimeZone.getTimeZone(TimeZones.GMT_ID)));
+        super(Dates.round(time, precision)); //, TimeZone.getTimeZone(TimeZones.GMT_ID)));
         format = new SimpleDateFormat(pattern);
         // use GMT timezone to avoid daylight savings rules affecting floating
         // time values..
-        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+//        format.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
         this.precision = precision;
     }
     

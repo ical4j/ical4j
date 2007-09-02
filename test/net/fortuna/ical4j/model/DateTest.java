@@ -97,7 +97,7 @@ public class DateTest extends TestCase {
     public void testDateTimeZone() throws ParseException {
         Date date = new Date("20050101");
         
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        Calendar calendar = Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
         calendar.clear();
         calendar.set(2005, 0, 1);
         calendar.clear(Calendar.HOUR_OF_DAY);

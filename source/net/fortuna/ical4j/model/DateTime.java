@@ -260,8 +260,8 @@ public class DateTime extends Date {
     private void resetTimeZone() {
         // use GMT timezone to avoid daylight savings rules affecting floating
         // time values..
-//        getFormat().setTimeZone(TimeZone.getDefault());
-         getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        getFormat().setTimeZone(TimeZone.getDefault());
+//         getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 
     /**
