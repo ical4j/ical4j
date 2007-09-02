@@ -35,7 +35,9 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import junit.framework.TestCase;
@@ -100,11 +102,33 @@ public class DateTimeTest extends TestCase {
         catch (ParseException pe) {
             log.info("Exception occurred: " + pe.getMessage());
         }
+        
+        try {
+            new DateTime("20000402T020000",
+                    registry.getTimeZone("America/Los_Angeles"));
+            fail("Should throw ParseException");
+        }
+        catch (ParseException pe) {
+            log.info("Exception occurred: " + pe.getMessage());
+        }
+        
         assertEquals("20050630T093000", new DateTime("20050630T093000").toString());
         assertEquals("20050630T093000Z", new DateTime("20050630T093000Z").toString());
         
         assertEquals("20000402T020000", new DateTime("20000402T020000",
-                registry.getTimeZone("America/Los_Angeles")).toString());
+                registry.getTimeZone("Australia/Melbourne")).toString());
+        
+        assertEquals("20000402T020000", new DateTime("20000402T020000").toString());
+        
+        DateFormat df = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+        Calendar cal = Calendar.getInstance(); //java.util.TimeZone.getTimeZone("America/Los_Angeles"));
+        cal.clear();
+        cal.set(2000, 0, 1, 2, 0, 0);
+        for (int i = 0; i < 365; i++) {
+            String dateString = df.format(cal.getTime());
+            assertEquals(dateString, new DateTime(dateString).toString());
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+        }
     }
     
     /**
