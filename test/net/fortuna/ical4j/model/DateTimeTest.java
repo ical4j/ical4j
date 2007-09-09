@@ -103,6 +103,11 @@ public class DateTimeTest extends TestCase {
             log.info("Exception occurred: " + pe.getMessage());
         }
         
+        assertEquals("20000827T020000", new DateTime("20000827T020000").toString());
+        assertEquals("20070101T080000", new DateTime("20070101T080000").toString());
+        assertEquals("20050630T093000", new DateTime("20050630T093000").toString());
+        assertEquals("20050630T093000Z", new DateTime("20050630T093000Z").toString());
+        
         try {
             new DateTime("20000402T020000",
                     registry.getTimeZone("America/Los_Angeles"));
@@ -111,9 +116,6 @@ public class DateTimeTest extends TestCase {
         catch (ParseException pe) {
             log.info("Exception occurred: " + pe.getMessage());
         }
-        
-        assertEquals("20050630T093000", new DateTime("20050630T093000").toString());
-        assertEquals("20050630T093000Z", new DateTime("20050630T093000Z").toString());
         
         assertEquals("20000402T020000", new DateTime("20000402T020000",
                 registry.getTimeZone("Australia/Melbourne")).toString());
