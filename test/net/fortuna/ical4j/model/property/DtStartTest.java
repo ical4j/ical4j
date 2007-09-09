@@ -48,7 +48,6 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.util.TimeZones;
 
 public class DtStartTest extends TestCase {
 
