@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
-		<version>1.0.2-SNAPSHOT</version>
+		<version>1.0.2</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.fortuna</groupId>
@@ -283,7 +283,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.3.1</version>
+			<version>4.4</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -329,11 +329,11 @@
 							<tags>
 								<tag
 									implementation="java.lang.String">
-									ical4j-1_0-beta2
+									ical4j-1_0-beta3
 								</tag>
 								<tag
 									implementation="java.lang.String">
-									ical4j-1_0-beta3
+									ical4j-1_0-beta4
 								</tag>
 							</tags>
 						</configuration>
