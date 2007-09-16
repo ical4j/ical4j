@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
@@ -10,7 +8,7 @@
 	<groupId>net.fortuna</groupId>
 	<artifactId>ical4j</artifactId>
 	<name>iCal4j</name>
-	<version>1.0-beta4-SNAPSHOT</version>
+	<version>1.0-beta4</version>
 	<description>
 		A Java library for reading and writing iCalendar (*.ics) files
 	</description>
@@ -36,7 +34,8 @@
 			scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
 		</developerConnection>
 		<url>http://ical4j.cvs.sourceforge.net/ical4j/iCal4j</url>
-	</scm>
+	  <tag>ical4j-1_0-beta4</tag>
+  </scm>
 
 	<contributors>
 		<contributor>
@@ -327,12 +326,10 @@
 						<configuration>
 							<type>tag</type>
 							<tags>
-								<tag
-									implementation="java.lang.String">
+								<tag implementation="java.lang.String">
 									ical4j-1_0-beta3
 								</tag>
-								<tag
-									implementation="java.lang.String">
+								<tag implementation="java.lang.String">
 									ical4j-1_0-beta4
 								</tag>
 							</tags>
