@@ -1672,7 +1672,7 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
             return new XProperty(name, parameters, value);
         }
         else if (allowIllegalNames()) {
-            return new XProperty(name);
+            return new XProperty(name, parameters, value);
         }
         else {
             throw new IllegalArgumentException("Illegal property [" + name
