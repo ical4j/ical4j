@@ -70,6 +70,8 @@ public abstract class Property extends Content {
     /**
      * the following are optional, but MUST NOT occur more than once.
      */
+    public static final String BUSYTYPE = "BUSYTYPE";
+
     public static final String CLASS = "CLASS";
 
     public static final String CREATED = "CREATED";
