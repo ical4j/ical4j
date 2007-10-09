@@ -54,6 +54,7 @@ import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.component.VAvailability;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
@@ -192,6 +193,9 @@ public class CalendarBuilder implements ContentHandler {
                 }
                 else if (component instanceof VToDo) {
                     ((VToDo) component).getAlarms().add(subComponent);
+                }
+                else if (component instanceof VAvailability) {
+                    ((VAvailability) component).getAvailable().add(subComponent);
                 }
                 subComponent = null;
             }

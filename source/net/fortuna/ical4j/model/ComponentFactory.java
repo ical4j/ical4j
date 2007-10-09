@@ -33,10 +33,12 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.component.Available;
 import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VAlarm;
+import net.fortuna.ical4j.model.component.VAvailability;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VJournal;
@@ -110,6 +112,12 @@ public final class ComponentFactory {
         }
         else if (Component.VVENUE.equals(name)) {
             return new VVenue(properties);
+        }
+        else if (Component.VAVAILABILITY.equals(name)) {
+            return new VAvailability(properties);
+        }
+        else if (Component.AVAILABLE.equals(name)) {
+            return new Available(properties);
         }
         else if (isExperimentalName(name)) {
             return new XComponent(name, properties);
