@@ -34,6 +34,9 @@
 package net.fortuna.ical4j.model.component;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
@@ -47,8 +50,10 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
@@ -56,6 +61,7 @@ import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.util.TimeZones;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -78,6 +84,19 @@ public abstract class Observance extends Component implements Comparable {
 
     // TODO: clear cache when observance definition changes (??)
     private Map onsets = new TreeMap();
+    private Date initialOnset = null;
+    
+    /**
+     * Used for parsing times in a UTC date-time representation.
+     */
+    private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss";
+    private static final DateFormat UTC_FORMAT = new SimpleDateFormat(
+            UTC_PATTERN);
+    
+    static {
+        UTC_FORMAT.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+        UTC_FORMAT.setLenient(false);
+    }
 
     /* If this is set we have rrules. If we get a date after this rebuild onsets */
     private Date onsetLimit;
@@ -141,8 +160,10 @@ public abstract class Observance extends Component implements Comparable {
      * specified date
      */
     public final Date getLatestOnset(final Date date) {
-        Date initialOnset = ((DtStart) getProperty(Property.DTSTART)).getDate();
-
+        
+        if(initialOnset==null)
+            initialOnset = calculateOnset(((DtStart) getProperty(Property.DTSTART)));
+        
         // observance not applicable if date is before the effective date of this observance..
         if (date.before(initialOnset)) {
             return null;
@@ -175,7 +196,7 @@ public abstract class Observance extends Component implements Comparable {
                 for (Iterator i = rdates.iterator(); i.hasNext();) {
                     RDate rdate = (RDate) i.next();
                     for (Iterator j = rdate.getDates().iterator(); j.hasNext();) {
-                        Date rdateOnset = (Date) j.next();
+                        Date rdateOnset = calculateOnset((Date) j.next());
                         if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
                             onset = rdateOnset;
                         }
@@ -319,5 +340,26 @@ public abstract class Observance extends Component implements Comparable {
         throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
         log = LogFactory.getLog(Observance.class);
+    }
+    
+    private Date calculateOnset(DateProperty dateProperty) {
+        return calculateOnset(dateProperty.getValue());
+    }
+    
+    private Date calculateOnset(Date date) {
+        return calculateOnset(date.toString());
+    }
+    
+    private Date calculateOnset(String dateStr) {
+        
+        // Translate local onset into UTC time by parsing local time 
+        // as GMT and adjusting by TZOFFSETFROM
+        try {  
+            java.util.Date utcOnset = UTC_FORMAT.parse(dateStr);
+            long offset = getOffsetFrom().getOffset().getOffset();
+            return new DateTime(utcOnset.getTime() - offset);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
