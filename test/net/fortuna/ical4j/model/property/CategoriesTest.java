@@ -46,7 +46,9 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
 
 /**
@@ -87,5 +89,35 @@ public class CategoriesTest extends TestCase {
                 Component.VEVENT).getProperty(Property.CATEGORIES);
         
         assertEquals(orig, copy);
+    }
+    
+    /**
+     * Test escaping of commas in categories.
+     */
+    public void testCommaEscaping() throws ValidationException, IOException, ParserException {
+        Categories cat1 = new Categories("test1");
+        Categories cat2 = new Categories("test2");
+        Categories cat3 = new Categories("test 1,2,3");
+
+        VEvent event = new VEvent();
+        event.getProperties().add(cat1);
+        event.getProperties().add(cat2);
+        event.getProperties().add(cat3);
+        
+        Calendar calendar = new Calendar();
+        calendar.getComponents().add(event);
+        
+        StringWriter tempOut = new StringWriter();
+        CalendarOutputter cout = new CalendarOutputter(false);
+        cout.output(calendar, tempOut);
+        
+        CalendarBuilder builder = new CalendarBuilder();
+        calendar = builder.build(new StringReader(tempOut.getBuffer().toString()));
+        
+        PropertyList categories = calendar.getComponent(Component.VEVENT).getProperties(Property.CATEGORIES);
+        
+        assertEquals(cat1, categories.get(0));
+        assertEquals(cat2, categories.get(1));
+        assertEquals(cat3, categories.get(2));
     }
 }
