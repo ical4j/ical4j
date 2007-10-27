@@ -66,12 +66,12 @@ public class CategoryList implements Serializable {
     public CategoryList(final String aValue) {
         categories = new ArrayList();
 
-        Pattern pattern = Pattern.compile("([^\\\\](\\\\){2}?),");
+        Pattern pattern = Pattern.compile("([^\\\\](?:\\\\{2})),|([^\\\\]),");
         Matcher matcher = pattern.matcher(aValue);
         String[] categoryValues = null;
 
         if (matcher.find()) {
-            categoryValues = matcher.replaceAll("$1&quot;").split("&quot;");
+            categoryValues = matcher.replaceAll("$1$2&quot;").split("&quot;");
         }
         else {
             categoryValues = aValue.split(",");
