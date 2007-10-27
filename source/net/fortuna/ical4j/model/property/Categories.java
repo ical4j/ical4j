@@ -44,6 +44,48 @@ import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
  * Defines a CATEGORIES iCalendar component property.
+ * <pre>
+ *     4.8.1.2 Categories
+ *     
+ *        Property Name: CATEGORIES
+ *     
+ *        Purpose: This property defines the categories for a calendar
+ *        component.
+ *     
+ *        Value Type: TEXT
+ *     
+ *        Property Parameters: Non-standard and language property parameters
+ *        can be specified on this property.
+ *     
+ *        Conformance: The property can be specified within "VEVENT", "VTODO"
+ *        or "VJOURNAL" calendar components.
+ *     
+ *        Description: This property is used to specify categories or subtypes
+ *        of the calendar component. The categories are useful in searching for
+ *        a calendar component of a particular type and category. Within the
+ *        "VEVENT", "VTODO" or "VJOURNAL" calendar components, more than one
+ *        category can be specified as a list of categories separated by the
+ *        COMMA character (US-ASCII decimal 44).
+ *     
+ *        Format Definition: The property is defined by the following notation:
+ *     
+ *          categories = "CATEGORIES" catparam ":" text *("," text)
+ *                       CRLF
+ *     
+ *          catparam   = *(
+ *     
+ *                     ; the following is optional,
+ *                     ; but MUST NOT occur more than once
+ *     
+ *                     (";" languageparam ) /
+ *     
+ *                     ; the following is optional,
+ *                     ; and MAY occur more than once
+ *     
+ *                     (";" xparam)
+ *     
+ *                     )
+ * </pre>
  * @author benf
  */
 public class Categories extends Property {
