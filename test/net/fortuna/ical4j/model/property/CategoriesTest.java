@@ -97,7 +97,7 @@ public class CategoriesTest extends TestCase {
     public void testCommaEscaping() throws ValidationException, IOException, ParserException {
         Categories cat1 = new Categories("test1");
         Categories cat2 = new Categories("test2");
-        Categories cat3 = new Categories("test 1,2,3");
+        Categories cat3 = new Categories("test1,test2,test 1\\,2\\,3");
 
         VEvent event = new VEvent();
         event.getProperties().add(cat1);
