@@ -197,6 +197,9 @@
 				<configuration>
 					<source>1.4</source>
 					<target>1.4</target>
+					<testExcludes>
+						<exclude>**/RegexTestHarness.java</exclude>
+					</testExcludes>
 				</configuration>
 			</plugin>
 
