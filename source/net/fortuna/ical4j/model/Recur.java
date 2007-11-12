@@ -809,8 +809,8 @@ public class Recur implements Serializable {
                             monthDayDates.getType()));
                 }
                 catch (IllegalArgumentException iae) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Invalid day of month: " + cal.get(Calendar.DAY_OF_MONTH));
+                    if (log.isTraceEnabled()) {
+                        log.trace("Invalid day of month: " + cal.get(Calendar.DAY_OF_MONTH));
                     }
                 }
             }
