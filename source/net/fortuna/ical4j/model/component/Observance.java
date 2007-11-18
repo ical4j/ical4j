@@ -178,12 +178,8 @@ public abstract class Observance extends Component implements Comparable {
 
         Date onset = getCachedOnset(date);
 
-        if (log.isDebugEnabled()) {
-            log.debug("Cache " + ((onset != null) ? "hit" : "miss")
-                    + " - retrieval time: "
-                    + (System.currentTimeMillis() - start) + "ms");
-        }
-
+        boolean cacheHit = onset != null;
+        
         if (onset == null) {
             onset = initialOnset;
             // collect all onsets for the purposes of caching..
@@ -270,6 +266,13 @@ public abstract class Observance extends Component implements Comparable {
              * onsets.put(onsetPeriod, onset);
              */
         }
+        
+        if (log.isDebugEnabled()) {
+            log.debug("Cache " + (cacheHit ? "hit" : "miss")
+                    + " - retrieval time: "
+                    + (System.currentTimeMillis() - start) + "ms");
+        }
+
         return onset;
     }
 
