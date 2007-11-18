@@ -61,6 +61,14 @@ public class RRule extends Property {
     }
 
     /**
+     * @param value
+     */
+    public RRule(String value) throws ParseException {
+        super(RRULE);
+        setValue(value);
+    }
+    
+    /**
      * @param aList a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException thrown when the specified string is not a valid representaton of a recurrence

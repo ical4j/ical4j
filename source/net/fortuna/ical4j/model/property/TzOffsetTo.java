@@ -58,6 +58,14 @@ public class TzOffsetTo extends Property {
     }
 
     /**
+     * @param value
+     */
+    public TzOffsetTo(String value) {
+        super(TZOFFSETTO);
+        setValue(value);
+    }
+    
+    /**
      * @param aList a list of parameters for this component
      * @param aValue a value string for this component
      */
