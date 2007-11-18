@@ -177,16 +177,16 @@ public abstract class DateProperty extends Property {
 
             TzId tzId = new TzId(timezone.getID());
             
-            if (log.isDebugEnabled()) {
-                log.debug("Replacing current timezone ["
+            if (log.isTraceEnabled()) {
+                log.trace("Replacing current timezone ["
                         + getParameter(Parameter.TZID) + "] with [" + tzId + "]");
             }
             
             getParameters().replace(tzId);
         }
         else {
-            if (log.isDebugEnabled()) {
-                log.debug("Clearing timezone [" + getParameter(Parameter.TZID) + "]");
+            if (log.isTraceEnabled()) {
+                log.trace("Clearing timezone [" + getParameter(Parameter.TZID) + "]");
             }
             
             // use setUtc() to reset timezone..

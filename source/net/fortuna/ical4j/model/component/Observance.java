@@ -267,8 +267,8 @@ public abstract class Observance extends Component implements Comparable {
              */
         }
         
-        if (log.isDebugEnabled()) {
-            log.debug("Cache " + (cacheHit ? "hit" : "miss")
+        if (log.isTraceEnabled()) {
+            log.trace("Cache " + (cacheHit ? "hit" : "miss")
                     + " - retrieval time: "
                     + (System.currentTimeMillis() - start) + "ms");
         }
