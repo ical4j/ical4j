@@ -218,7 +218,7 @@ public abstract class Component implements Serializable {
     }
     
     /**
-     * Calculates the recurrence set for this event using the specified period.
+     * Calculates the recurrence set for this component using the specified period.
      * The recurrence set is derived from a combination of the event start date,
      * recurrence rules and dates, and exception rules and dates. Note that component
      * transparency and anniversary-style dates do not affect the resulting
@@ -318,6 +318,14 @@ public abstract class Component implements Serializable {
                     new DateTime(end.getDate()));
         }
         else {
+            /*
+             * PeS: Anniversary type has no DTEND nor DUR, define DUR 
+             * locally, otherwise we get NPE
+             */
+            if (duration == null) {
+                duration = new Duration(rDuration);
+            }
+
             startPeriod = new Period(new DateTime(start.getDate()),
                     duration.getDuration());
         }
