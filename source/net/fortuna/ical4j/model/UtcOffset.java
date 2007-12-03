@@ -111,7 +111,7 @@ public class UtcOffset implements Serializable {
         }
         catch (Exception e) {
             // seconds not supplied..
-            log.debug("Seconds not specified", e);
+            log.trace("Seconds not specified: " + e.getMessage());
         }
         if (negative) {
             offset = -offset;
