@@ -8,6 +8,7 @@ package net.fortuna.ical4j.model.component;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.SocketException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -55,6 +56,8 @@ public class VEventTest extends ComponentTest {
 
     private TimeZoneRegistry registry;
     
+    private UidGenerator uidGenerator;
+    
     private VTimeZone tz;
     
     private TzId tzParam;
@@ -65,6 +68,9 @@ public class VEventTest extends ComponentTest {
     
     private VEvent monthlyWeekdayEvents = null;
 
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
     public void setUp() throws Exception {
         super.setUp();
         // relax validation to avoid UID requirement..
@@ -77,6 +83,8 @@ public class VEventTest extends ComponentTest {
         // create tzid parameter..
         tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
 
+        uidGenerator = new UidGenerator("1");
+        
         Calendar weekday9AM = getCalendarInstance();
         weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
         weekday9AM.set(Calendar.MILLISECOND, 0);
@@ -135,7 +143,7 @@ public class VEventTest extends ComponentTest {
         DtEnd dtEnd = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
 //        dtEnd.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.getProperties().add(dtEnd);
-        weekdayNineToFiveEvents.getProperties().add(new Uid("000001@modularity.net.au"));
+        weekdayNineToFiveEvents.getProperties().add(uidGenerator.generateUid());
         // ensure event is valid..
         weekdayNineToFiveEvents.validate();
 
@@ -150,7 +158,7 @@ public class VEventTest extends ComponentTest {
         DtEnd dtEnd2 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
 //        dtEnd2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.getProperties().add(dtEnd2);
-        dailyWeekdayEvents.getProperties().add(new Uid("000002@modularity.net.au"));
+        dailyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
         // ensure event is valid..
         dailyWeekdayEvents.validate();
 
@@ -165,7 +173,7 @@ public class VEventTest extends ComponentTest {
         DtEnd dtEnd3 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
 //        dtEnd3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.getProperties().add(dtEnd3);
-        monthlyWeekdayEvents.getProperties().add(new Uid("000003@modularity.net.au"));
+        monthlyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
         // ensure event is valid..
         monthlyWeekdayEvents.validate();
     }
@@ -672,5 +680,15 @@ public class VEventTest extends ComponentTest {
         PeriodList recurrenceSet = weekdayNineToFiveEvents.calculateRecurrenceSet(period);
         
         assertTrue(!recurrenceSet.isEmpty());
+    }
+    
+    /**
+     * Unit tests for {@link VEvent#getOccurrence(Date)}.
+     */
+    public void testGetOccurrence() throws IOException, ParseException, URISyntaxException {
+        VEvent occurrence = weekdayNineToFiveEvents.getOccurrence(
+                weekdayNineToFiveEvents.getStartDate().getDate());
+        assertNotNull(occurrence);
+        assertEquals(weekdayNineToFiveEvents.getUid(), occurrence.getUid());
     }
 }
