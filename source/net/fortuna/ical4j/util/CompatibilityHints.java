@@ -35,10 +35,8 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.util.Properties;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A set of keys used to enable compatibility features.
@@ -77,18 +75,7 @@ public final class CompatibilityHints {
      */
     public static final String KEY_NOTES_COMPATIBILITY = "ical4j.compatibility.notes";
 
-    private static final Log LOG = LogFactory.getLog(CompatibilityHints.class);
-
-    private static final Properties HINTS = new Properties();
-    
-    static {
-        try {
-            HINTS.load(CompatibilityHints.class.getResourceAsStream("/ical4j.properties"));
-        }
-        catch (Exception e) {
-            LOG.info("ical4j.properties not found.");
-        }
-    }
+    private static final Map HINTS = new HashMap();
     
     /**
      * Constructor made private to enforce static nature.
@@ -101,7 +88,7 @@ public final class CompatibilityHints {
      * @param value
      */
     public static void setHintEnabled(final String key, final boolean enabled) {
-        HINTS.put(key, String.valueOf(enabled));
+        HINTS.put(key, Boolean.valueOf(enabled));
     }
 
     /**
@@ -109,9 +96,9 @@ public final class CompatibilityHints {
      * @return
      */
     public static boolean isHintEnabled(final String key) {
-        if (HINTS.getProperty(key) != null) {
-            return Boolean.valueOf(HINTS.getProperty(key)).booleanValue();
+        if (HINTS.get(key) != null) {
+            return ((Boolean) HINTS.get(key)).booleanValue();
         }
-        return "true".equals(System.getProperty(key));
+        return "true".equals(Configurator.getProperty(key));
     }
 }

@@ -35,6 +35,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Configurator;
+
 /**
  * Provides access to the configured <code>TimeZoneRegistry</code> instance.
  * Alternative factory implementations may be specified via the following
@@ -53,7 +55,7 @@ public abstract class TimeZoneRegistryFactory {
     private static TimeZoneRegistryFactory instance;
     static {
         try {
-            Class factoryClass = Class.forName(System.getProperty(KEY_FACTORY_CLASS));
+            Class factoryClass = Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
             instance = (TimeZoneRegistryFactory) factoryClass.newInstance();
         }
         catch (Exception e) {

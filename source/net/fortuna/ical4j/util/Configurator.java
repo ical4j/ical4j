@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 08/02/2007
+ * Created on 06/02/2008
  *
- * Copyright (c) 2007, Ben Fortuna
+ * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,50 +33,45 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.data;
+package net.fortuna.ical4j.util;
 
-import net.fortuna.ical4j.util.Configurator;
+import java.util.Properties;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
- * Provides access to the configured {@link CalendarParser} instance. Alternative factory implementations may be
- * specified via the following system property:
- * 
- * <pre>
- * net.fortuna.ical4j.parser=&lt;factory_class_name&gt;
- * </pre>
- * 
- * @author Ben Fortuna
+ * Provides configuration properties specified either as system properties
+ * or in an ical4j.properties configuration file.
+ * @author Ben
+ *
  */
-public abstract class CalendarParserFactory {
+public final class Configurator {
 
-    /**
-     * The system property used to specify an alternate {@link CalendarParser} implementation.
-     */
-    public static final String KEY_FACTORY_CLASS = "net.fortuna.ical4j.parser";
-
-    private static CalendarParserFactory instance;
+    private static final Log LOG = LogFactory.getLog(Configurator.class);
+    
+    private static final Properties CONFIG = new Properties();
+    
     static {
         try {
-            Class factoryClass = Class.forName(
-                    Configurator.getProperty(KEY_FACTORY_CLASS));
-            instance = (CalendarParserFactory) factoryClass.newInstance();
+            CONFIG.load(CompatibilityHints.class.getResourceAsStream("/ical4j.properties"));
         }
         catch (Exception e) {
-            instance = new DefaultCalendarParserFactory();
+            LOG.info("ical4j.properties not found.");
         }
     }
-
+    
     /**
+     * Constructor made private to enforce static nature.
+     */
+    private Configurator() {
+    }
+    
+    /**
+     * @param key
      * @return
      */
-    public static CalendarParserFactory getInstance() {
-        return instance;
+    public static String getProperty(String key) {
+        return CONFIG.getProperty(key, System.getProperty(key));
     }
-
-    /**
-     * Returns a new instance of the configured {@link CalendarParser}.
-     * @return a calendar parser instance
-     */
-    public abstract CalendarParser createParser();
-
 }
