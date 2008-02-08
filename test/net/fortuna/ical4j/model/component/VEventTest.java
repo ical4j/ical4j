@@ -633,6 +633,7 @@ public class VEventTest extends ComponentTest {
         start.getParameters().replace(Value.DATE);
         try {
             event.validate();
+            fail("Should throw ValidationException");
         }
         catch (ValidationException ve) {
             log.info("Caught exception: [" + ve.getMessage() + "]");
@@ -643,6 +644,7 @@ public class VEventTest extends ComponentTest {
         end.getParameters().replace(Value.DATE);
         try {
             event.validate();
+            fail("Should throw ValidationException");
         }
         catch (ValidationException ve) {
             log.info("Caught exception: [" + ve.getMessage() + "]");
@@ -653,6 +655,7 @@ public class VEventTest extends ComponentTest {
         end.getParameters().replace(Value.DATE_TIME);
         try {
             event.validate();
+            fail("Should throw ValidationException");
         }
         catch (ValidationException ve) {
             log.info("Caught exception: [" + ve.getMessage() + "]");
@@ -663,6 +666,7 @@ public class VEventTest extends ComponentTest {
         end.getParameters().replace(Value.DATE);
         try {
             event.validate();
+            fail("Should throw ValidationException");
         }
         catch (ValidationException ve) {
             log.info("Caught exception: [" + ve.getMessage() + "]");
