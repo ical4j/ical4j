@@ -155,7 +155,10 @@ public class PeriodList extends TreeSet implements Serializable {
     public final PeriodList normalise() {
         Period prevPeriod = null;
         Period period = null;
-        PeriodList newList = new PeriodList();
+        PeriodList newList = new PeriodList(isUtc());
+        if (timezone != null) {
+            newList.setTimeZone(timezone);
+        }
         boolean normalised = false;
         for (Iterator i = iterator(); i.hasNext();) {
             period = (Period) i.next();
