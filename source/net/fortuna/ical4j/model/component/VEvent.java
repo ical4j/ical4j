@@ -423,10 +423,23 @@ public class VEvent extends CalendarComponent {
             if (start != null) {
                 Parameter startValue = start.getParameter(Parameter.VALUE);
                 Parameter endValue = end.getParameter(Parameter.VALUE);
-
-                if ((startValue == null || Value.DATE_TIME.equals(startValue))
-                        && !(endValue == null || Value.DATE_TIME.equals(endValue))) {
-
+                
+                boolean startEndValueMismatch = false;
+                if (endValue != null) {
+                    if (startValue != null && !endValue.equals(startValue)) {
+                        // invalid..
+                        startEndValueMismatch = true;
+                    }
+                    else if (startValue == null && !Value.DATE_TIME.equals(endValue)) {
+                        // invalid..
+                        startEndValueMismatch = true;
+                    }
+                }
+                else if (startValue != null && !Value.DATE_TIME.equals(startValue)) {
+                    //invalid..
+                    startEndValueMismatch = true;
+                }
+                if (startEndValueMismatch) {
                     throw new ValidationException("Property [" + Property.DTEND
                             + "] must have the same [" + Parameter.VALUE
                             + "] as [" + Property.DTSTART + "]");
