@@ -36,15 +36,20 @@
 package net.fortuna.ical4j.model.property;
 
 import java.io.FileInputStream;
+import java.text.ParseException;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.util.CompatibilityHints;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Unit tests for the ExDate property.
@@ -52,6 +57,8 @@ import net.fortuna.ical4j.util.CompatibilityHints;
  */
 public class ExDateTest extends TestCase {
 
+    private static final Log LOG = LogFactory.getLog(ExDateTest.class);
+    
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
@@ -82,5 +89,20 @@ public class ExDateTest extends TestCase {
             ExDate exdate = (ExDate) i.next();
             assertNotNull("This EXDATE should have a timezone", exdate.getDates().getTimeZone());
         }
+    }
+    
+    /**
+     * Allow date values by default if relaxed parsing enabled.
+     */
+    public void testRelaxedParsing() throws ParseException {
+        try {
+            new ExDate(new ParameterList(), "20080315");
+            fail("Should throw ParseException");
+        }
+        catch (ParseException pe) {
+            LOG.trace("Caught exception: " + pe.getMessage());
+        }
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
+        new ExDate(new ParameterList(), "20080315");
     }
 }
