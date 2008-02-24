@@ -73,6 +73,7 @@ public class ExDateTest extends TestCase {
     protected void tearDown() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
     
     /**
