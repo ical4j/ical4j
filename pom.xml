@@ -158,7 +158,7 @@
 			</organizationUrl>
 		</contributor>
 	</contributors>
-
+<!-- 
 	<distributionManagement>
 		<relocation>
 			<groupId>net.fortuna.ical4j</groupId>
@@ -169,7 +169,7 @@
 			</message>
 		</relocation>
 	</distributionManagement>
-
+ -->
 	<build>
 		<sourceDirectory>source</sourceDirectory>
 		<resources>
