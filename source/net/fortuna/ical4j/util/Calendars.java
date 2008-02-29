@@ -37,14 +37,21 @@ package net.fortuna.ical4j.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.IndexedComponentList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.property.Uid;
 
 /**
  * Utility method for working with {@link Calendar}s.
@@ -110,5 +117,52 @@ public final class Calendars {
         components.add(component);
 
         return new Calendar(components);
+    }
+    
+    /**
+     * Splits a calendar object into distinct calendar objects for unique
+     * identifers (UID).
+     * @param calendar
+     * @return
+     */
+    public static Calendar[] split(Calendar calendar) {
+        // if calendar contains one component or less, or is composed entirely of timezone
+        // definitions, return the original calendar unmodified..
+        if (calendar.getComponents().size() <= 1
+                || calendar.getComponents(Component.VTIMEZONE).size() == calendar.getComponents().size()) {
+            return new Calendar[] {calendar};
+        }
+        
+        IndexedComponentList timezones = new IndexedComponentList(calendar.getComponents(Component.VTIMEZONE),
+                Property.TZID);
+        
+        Map calendars = new HashMap();
+        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
+            Component c = (Component) i.next();
+            if (c instanceof VTimeZone) {
+                continue;
+            }
+            
+            Uid uid = (Uid) c.getProperty(Property.UID);
+            
+            Calendar uidCal = (Calendar) calendars.get(uid);
+            if (uidCal == null) {
+                uidCal = new Calendar(); //calendar.getProperties(), new ComponentList());
+                calendars.put(uid, uidCal);
+            }
+            
+            for (Iterator j = c.getProperties().iterator(); j.hasNext();) {
+                Property p = (Property) j.next();
+                TzId tzid = (TzId) p.getParameter(Parameter.TZID);
+                if (tzid != null) {
+                    VTimeZone timezone = (VTimeZone) timezones.getComponent(tzid.getValue());
+                    if (!uidCal.getComponents().contains(timezone)) {
+                        uidCal.getComponents().add(timezone);
+                    }
+                }
+            }
+            uidCal.getComponents().add(c);
+        }
+        return (Calendar[]) calendars.values().toArray(new Calendar[calendars.values().size()]);
     }
 }

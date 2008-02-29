@@ -113,4 +113,13 @@ public class CalendarsTest extends TestCase {
                     result.getComponents().contains(c));
         }
     }
+    
+    /**
+     * Test calendar split.
+     */
+    public void testSplit() throws IOException, ParserException {
+        Calendar calendar = Calendars.load("etc/samples/valid/Australian32Holidays.ics");
+        Calendar[] split = Calendars.split(calendar);
+        assertEquals(10, split.length);
+    }
 }
