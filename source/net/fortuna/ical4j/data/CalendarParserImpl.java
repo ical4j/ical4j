@@ -435,8 +435,8 @@ public class CalendarParserImpl implements CalendarParser {
             }
         }
         catch (ParserException pe) {
-            if (log.isDebugEnabled()) {
-                log.debug("Aborting absorbing extra whitespace ["
+            if (log.isTraceEnabled()) {
+                log.trace("Aborting absorbing extra whitespace ["
                         + pe.getMessage() + "]");
             }
         }
