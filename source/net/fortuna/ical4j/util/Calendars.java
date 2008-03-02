@@ -46,6 +46,7 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.ConstraintViolationException;
 import net.fortuna.ical4j.model.IndexedComponentList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
@@ -147,7 +148,7 @@ public final class Calendars {
             
             Calendar uidCal = (Calendar) calendars.get(uid);
             if (uidCal == null) {
-                uidCal = new Calendar(); //calendar.getProperties(), new ComponentList());
+                uidCal = new Calendar(calendar.getProperties(), new ComponentList());
                 calendars.put(uid, uidCal);
             }
             
@@ -164,5 +165,26 @@ public final class Calendars {
             uidCal.getComponents().add(c);
         }
         return (Calendar[]) calendars.values().toArray(new Calendar[calendars.values().size()]);
+    }
+    
+    /**
+     * Returns a unique identifier as specified by components in the provided calendar.
+     * @param calendar
+     * @return
+     * @throws ConstraintViolationException if more than one unique identifer is found in the specified calendar
+     */
+    public static Uid getUid(Calendar calendar) throws ConstraintViolationException {
+        Uid uid = null;
+        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
+            Component c = (Component) i.next();
+            for (Iterator j = c.getProperties(Property.UID).iterator(); j.hasNext();) {
+                Uid foundUid = (Uid) j.next();
+                if (uid != null && !uid.equals(foundUid)) {
+                    throw new ConstraintViolationException("More than one UID found in calendar");
+                }
+                uid = foundUid;
+            }
+        }
+        return uid;
     }
 }
