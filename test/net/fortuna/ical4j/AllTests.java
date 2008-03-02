@@ -59,7 +59,7 @@ public class AllTests extends TestSuite{
      * @return test suite
      */
     public static Test suite() {
-        TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite(AllTests.class.getSimpleName());
 
         // data tests
         suite.addTest(CalendarBuilderTest.suite());
