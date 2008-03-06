@@ -99,8 +99,8 @@ public class FoldingWriter extends FilterWriter {
         for (int i = offset; i <= maxIndex; i++) {
 
             // debugging..
-            if (log.isDebugEnabled()) {
-                log.debug("char [" + buffer[i] + "], line length ["
+            if (log.isTraceEnabled()) {
+                log.trace("char [" + buffer[i] + "], line length ["
                         + lineLength + "]");
             }
 
