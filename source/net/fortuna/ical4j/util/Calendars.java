@@ -149,6 +149,10 @@ public final class Calendars {
             Calendar uidCal = (Calendar) calendars.get(uid);
             if (uidCal == null) {
                 uidCal = new Calendar(calendar.getProperties(), new ComponentList());
+                // remove METHOD property for split calendars..
+                for (Iterator mp = uidCal.getProperties(Property.METHOD).iterator(); mp.hasNext();) {
+                    uidCal.getProperties().remove(mp.next());
+                }
                 calendars.put(uid, uidCal);
             }
             
