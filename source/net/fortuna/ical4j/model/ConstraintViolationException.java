@@ -36,6 +36,7 @@
 package net.fortuna.ical4j.model;
 
 /**
+ * Indicates the violation of a constraint imposed by a relevant specification.
  * @author Ben
  *
  */
