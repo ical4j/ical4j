@@ -123,6 +123,20 @@ public class UnfoldingReader extends PushbackReader {
      * @see java.io.PushbackReader#read()
      */
     public final int read() throws IOException {
+        int c = super.read();
+        boolean doUnfold = false;
+        for (int i = 0; i < patterns.length; i++) {
+            if (c == patterns[i][0]) {
+                doUnfold = true;
+            }
+        }
+        if (!doUnfold) {
+            return c;
+        }
+        else {
+            unread(c);
+        }
+
         boolean didUnfold;
 
         // need to loop since one line fold might be directly followed by another
