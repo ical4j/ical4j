@@ -42,6 +42,7 @@ import java.util.Calendar;
 
 import junit.framework.TestCase;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.TimeZones;
 
 import org.apache.commons.logging.Log;
@@ -62,6 +63,15 @@ public class DateTimeTest extends TestCase {
      */
     public DateTimeTest() {
         registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+    }
+
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+        // ensure relaxing parsing is disabled for these tests..
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
     
     /*
