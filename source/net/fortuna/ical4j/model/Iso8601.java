@@ -36,7 +36,6 @@
 package net.fortuna.ical4j.model;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import net.fortuna.ical4j.util.Dates;
@@ -63,7 +62,8 @@ public abstract class Iso8601 extends Date {
      */
     public Iso8601(final long time, final String pattern, final int precision) {
         super(Dates.round(time, precision)); //, TimeZone.getTimeZone(TimeZones.GMT_ID)));
-        format = new SimpleDateFormat(pattern);
+//        format = new SimpleDateFormat(pattern);
+        format = CalendarDateFormatFactory.getInstance(pattern);
         // use GMT timezone to avoid daylight savings rules affecting floating
         // time values..
 //        gmtFormat = new SimpleDateFormat(pattern);
