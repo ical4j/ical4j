@@ -51,6 +51,8 @@ import junit.framework.TestCase;
  */
 public class TimeZoneTest extends TestCase {
     
+    private static final long GMT_MINUS_10 = -10 * 60 * 60 * 1000;
+    
     private static final Log LOG = LogFactory.getLog(TimeZoneTest.class);
     
     private TimeZoneRegistry registry;
@@ -191,5 +193,21 @@ public class TimeZoneTest extends TestCase {
         TimeZone tz = registry.getTimeZone("US/Mountain");
         assertNotNull(tz);
         assertEquals(tz, registry.getTimeZone("America/Denver"));
+    }
+
+    /**
+     * 
+     */
+    public void testHonoluluRawOffset() {
+        TimeZone tz = registry.getTimeZone("Pacific/Honolulu");
+        assertEquals(GMT_MINUS_10, tz.getRawOffset());
+    }
+
+    /**
+     * 
+     */
+    public void testHonoluluCurrentOffset() {
+        TimeZone tz = registry.getTimeZone("Pacific/Honolulu");
+        assertEquals(GMT_MINUS_10, tz.getOffset(System.currentTimeMillis()));
     }
 }

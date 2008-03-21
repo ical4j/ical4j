@@ -36,7 +36,9 @@
 package net.fortuna.ical4j.model;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.Observance;
@@ -88,14 +90,18 @@ public class TimeZone extends java.util.TimeZone {
      * @see java.util.TimeZone#getRawOffset()
      */
     public final int getRawOffset() {
-        Component seasonalTime = vTimeZone.getObservances().getComponent(Observance.STANDARD);
+        List seasonalTimes = vTimeZone.getObservances().getComponents(Observance.STANDARD);
         // if no standard time use daylight time..
-        if (seasonalTime == null) {
-            seasonalTime = vTimeZone.getObservances().getComponent(Observance.DAYLIGHT);
+        if (seasonalTimes.size() == 0) {
+            seasonalTimes = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
         }
-        TzOffsetTo offsetTo = (TzOffsetTo) seasonalTime.getProperty(Property.TZOFFSETTO);
-        if (offsetTo != null) {
-            return (int) offsetTo.getOffset().getOffset();
+        if (seasonalTimes.size() > 0) {
+            Collections.sort(seasonalTimes);
+            Component latestSeasonalTime = (Component) seasonalTimes.get(seasonalTimes.size() - 1);
+            TzOffsetTo offsetTo = (TzOffsetTo) latestSeasonalTime.getProperty(Property.TZOFFSETTO);
+            if (offsetTo != null) {
+                return (int) offsetTo.getOffset().getOffset();
+            }
         }
         return 0;
     }
