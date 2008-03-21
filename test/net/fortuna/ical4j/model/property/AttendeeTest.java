@@ -35,13 +35,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
+
+import junit.framework.TestCase;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.util.Calendars;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import net.fortuna.ical4j.util.CompatibilityHints;
-import junit.framework.TestCase;
 
 /**
  * @author Ben
@@ -75,4 +81,19 @@ public class AttendeeTest extends TestCase {
         assertNull(attendee.getCalAddress());
     }
 
+    public void testRelaxedParsing() throws IOException, ParserException {
+        try {
+            Calendars.load("etc/samples/invalid/groupwise.ics");
+            fail("Should throw URISyntaxException");
+        }
+        catch (ParserException pe) {
+            LOG.info("Caught exception: " + pe.getMessage());
+        }
+        
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
+        Calendar calendar = Calendars.load("etc/samples/invalid/groupwise.ics");
+        
+        Attendee attendee = (Attendee) calendar.getComponent(Component.VEVENT).getProperty(Property.ATTENDEE);
+        assertNull(attendee.getCalAddress());
+    }
 }
