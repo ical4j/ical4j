@@ -150,8 +150,8 @@ public class UnfoldingReader extends PushbackReader {
                         unread(buffers[i], 0, read);
                     }
                     else {
-                        if (log.isDebugEnabled()) {
-                            log.debug("Unfolding...");
+                        if (log.isTraceEnabled()) {
+                            log.trace("Unfolding...");
                         }
                         linesUnfolded++;
                         didUnfold = true;
