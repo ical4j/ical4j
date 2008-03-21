@@ -34,6 +34,7 @@ import net.fortuna.ical4j.model.parameter.CnTest;
 import net.fortuna.ical4j.model.parameter.CuTypeTest;
 import net.fortuna.ical4j.model.parameter.TzIdTest;
 import net.fortuna.ical4j.model.property.AttachTest;
+import net.fortuna.ical4j.model.property.AttendeeTest;
 import net.fortuna.ical4j.model.property.CalScaleTest;
 import net.fortuna.ical4j.model.property.DtEndTest;
 import net.fortuna.ical4j.model.property.DtStartTest;
@@ -104,6 +105,7 @@ public class AllTests extends TestSuite{
         suite.addTestSuite(TzIdTest.class);
 
         // property tests
+        suite.addTestSuite(AttendeeTest.class);
         suite.addTestSuite(AttachTest.class);
         suite.addTestSuite(CalScaleTest.class);
         suite.addTestSuite(DtEndTest.class);
