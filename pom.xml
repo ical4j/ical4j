@@ -235,6 +235,7 @@
 						</property>
 						</systemProperties>
 					-->
+					<forkMode>pertest</forkMode>
 					<excludes>
 						<exclude>**/AllTests.java</exclude>
 						<exclude>**/CalendarEqualsTest.java</exclude>
