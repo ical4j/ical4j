@@ -102,6 +102,44 @@ public class RecurTest extends TestCase {
     }
     
     /**
+     * 
+     */
+    public void testGetNextDate() throws Exception {
+       
+        // test Date
+        Recur recur = new Recur(Recur.DAILY, 3);
+        
+        Date seed = new Date("20080401"); 
+        Date firstDate = new Date("20080402");
+        Date secondDate = new Date("20080403");
+        
+        Date nextDate = recur.getNextDate(seed, seed);
+        assertTrue("nextDate doesnt match firstDate", firstDate.equals(nextDate));
+        
+        nextDate = recur.getNextDate(seed, nextDate);
+        assertTrue("nextDate doesnt match secondDate", secondDate.equals(nextDate));
+        
+        nextDate = recur.getNextDate(seed, nextDate);
+        assertNull("nextDate is not null", nextDate);
+        
+        // test DateTime
+        recur = new Recur(Recur.WEEKLY, new DateTime("20080421T063000"));
+       
+        seed = new DateTime("20080407T063000");
+        firstDate = new DateTime("20080414T063000");
+        secondDate = new DateTime("20080421T063000");
+        
+        nextDate = recur.getNextDate(seed, seed);
+        assertTrue("nextDate doesnt match firstDate", firstDate.equals(nextDate));
+        
+        nextDate = recur.getNextDate(seed, nextDate);
+        assertTrue("nextDate doesnt match secondDate", secondDate.equals(nextDate));
+        
+        nextDate = recur.getNextDate(seed, nextDate);
+        assertNull("nextDate is not null", nextDate);
+    }
+    
+    /**
      * Test BYDAY rules.
      */
     public void testGetDatesByDay() {

@@ -596,6 +596,88 @@ public class Recur implements Serializable {
         Collections.sort(dates);
         return dates;
     }
+    
+    /**
+     * Returns the the next date of this recurrence given a seed date
+     * and start date.  The seed date indicates the start of the fist 
+     * occurrence of this recurrence. The start date is the
+     * starting date to search for the next recurrence.  Return null
+     * if there is no occurrence date after start date.
+     * @return the next date in the recurrence series after startDate
+     * @param seed the start date of this Recurrence's first instance
+     * @param startDate the date to start the search
+     */
+    public final Date getNextDate(final Date seed, final Date startDate) {
+
+        Calendar cal = Dates.getCalendarInstance(seed);
+        cal.setTime(seed);
+
+        // optimize the start time for selecting candidates
+        // (only applicable where a COUNT is not specified)
+        if (getCount() < 1) {
+            Calendar seededCal = (Calendar) cal.clone();
+            while (seededCal.getTime().before(startDate)) {
+                cal.setTime(seededCal.getTime());
+                increment(seededCal);
+            }
+        }
+
+        int invalidCandidateCount = 0;
+        Date candidate = null;
+        Value value = seed instanceof DateTime ? Value.DATE_TIME : Value.DATE;
+        Date nextDate = null;
+        
+        while (nextDate==null) {
+            Date candidateSeed = Dates.getInstance(cal.getTime(), value);
+
+            if (getUntil() != null && candidate != null
+                    && candidate.after(getUntil())) {
+
+                break;
+            }
+            
+            if (getCount() >= 1
+                    && (invalidCandidateCount) >= getCount()) {
+
+                break;
+            }
+
+            if (Value.DATE_TIME.equals(value)) {
+                if (((DateTime) seed).isUtc()) {
+                    ((DateTime) candidateSeed).setUtc(true);
+                }
+                else {
+                    ((DateTime) candidateSeed).setTimeZone(((DateTime) seed).getTimeZone());
+                }
+            }
+
+            DateList candidates = getCandidates(candidateSeed, value);
+            // sort candidates for identifying when UNTIL date is exceeded..
+            Collections.sort(candidates);
+            for (Iterator i = candidates.iterator(); i.hasNext();) {
+                candidate = (Date) i.next();
+                // don't count candidates that occur before the seed date..
+                if (!candidate.before(seed)) {
+                    // Candidate must be after startDate because
+                    // we want the NEXT occurrence
+                    if (!candidate.after(startDate)) {
+                        invalidCandidateCount++;
+                    }
+                    else if (getCount() >= 1
+                            && (invalidCandidateCount) >= getCount()) {
+                        break;
+                    }
+                    else if (!(getUntil() != null && candidate
+                            .after(getUntil()))) {
+                        nextDate = candidate;
+                    }
+                }
+            }
+            increment(cal);
+        }
+        
+        return nextDate;
+    }
 
     /**
      * Increments the specified calendar according to the frequency and interval specified in this recurrence rule.
