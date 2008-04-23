@@ -264,7 +264,7 @@ public class HCalendarParser implements CalendarParser {
     private static String getTextContent(Element element)
         throws ParserException {
         try {
-            return element.getTextContent().trim().replaceAll("\\s+", " ");
+            return element.getNodeValue().trim().replaceAll("\\s+", " ");
         } catch (DOMException e) {
             throw new ParserException("Unable to get text content for element " + element.getNodeName(), -1, e);
         }
@@ -529,7 +529,7 @@ public class HCalendarParser implements CalendarParser {
 
         // 2002-10-09T19:00:00Z
         if (original.charAt(original.length()-1) == 'Z') {
-            normalized = original.replace("Z", "GMT-00:00");
+            normalized = original.replaceAll("Z", "GMT-00:00");
         }
         // 2002-10-10T00:00:00+05:00
         else if (original.indexOf("GMT") == -1 && 
