@@ -264,7 +264,11 @@ public class HCalendarParser implements CalendarParser {
     private static String getTextContent(Element element)
         throws ParserException {
         try {
-            return element.getNodeValue().trim().replaceAll("\\s+", " ");
+            String content = element.getFirstChild().getNodeValue();
+            if (content != null) {
+                return content.trim().replaceAll("\\s+", " ");
+            }
+            return content;
         } catch (DOMException e) {
             throw new ParserException("Unable to get text content for element " + element.getNodeName(), -1, e);
         }
