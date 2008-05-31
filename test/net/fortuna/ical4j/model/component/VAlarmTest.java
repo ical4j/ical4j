@@ -35,14 +35,21 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.parameter.FmtType;
 import net.fortuna.ical4j.model.property.Action;
+import net.fortuna.ical4j.model.property.Attach;
+import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.Repeat;
+import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Trigger;
 
 /**
@@ -86,5 +93,24 @@ public class VAlarmTest extends ComponentTest {
         alarm.validate();
         alarm.getProperties().remove(duration);
         assertValidationException(alarm);
+    }
+    
+    /**
+     * @throws ValidationException
+     * @throws URISyntaxException
+     */
+    public void testValidationEmail() throws ValidationException, URISyntaxException {
+        VAlarm alarm = new VAlarm(new Dur(-2, 0, 0, 0));
+        alarm.getProperties().add(Action.EMAIL);
+        alarm.getProperties().add(new Attendee("mailto:john_doe@example.com"));
+        alarm.getProperties().add(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"));
+        alarm.getProperties().add(new Description("A draft agenda needs to be sent out to the attendees " 
+                    + "to the weekly managers meeting (MGR-LIST). Attached is a " 
+                    + "pointer the document template for the agenda file."));
+
+        Attach attachment = new Attach(new URI("http://example.com/templates/agenda.doc"));
+        attachment.getParameters().add(new FmtType("application/msword"));
+        alarm.getProperties().add(attachment);
+        alarm.validate(true);
     }
 }
