@@ -107,7 +107,7 @@ public abstract class DateProperty extends Property {
     public final void setDate(final Date date) {
         this.date = date;
         if (date instanceof DateTime) {
-            if (getParameter(Parameter.VALUE) != null) {
+            if (Value.DATE.equals(getParameter(Parameter.VALUE))) {
                 getParameters().replace(Value.DATE_TIME);
             }
             updateTimeZone(((DateTime) date).getTimeZone());
