@@ -42,6 +42,8 @@ import java.io.Reader;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -89,6 +91,8 @@ public class CalendarBuilder implements ContentHandler {
     protected Component subComponent;
 
     protected Property property;
+    
+    protected ArrayList datesMissingTimezones;
 
     /**
      * Default constructor.
@@ -164,9 +168,13 @@ public class CalendarBuilder implements ContentHandler {
         component = null;
         subComponent = null;
         property = null;
+        datesMissingTimezones = new ArrayList();
 
         parser.parse(uin, this);
 
+        if(datesMissingTimezones.size()>0 && registry!=null)
+            resolveTimezones();
+        
         return calendar;
     }
 
@@ -261,6 +269,11 @@ public class CalendarBuilder implements ContentHandler {
                                     + "]", e);
                         }
                     }
+                } else {
+                    // VTIMEZONE may be defined later, so so keep
+                    // track of dates until all components have been
+                    // parsed, and then try again later
+                    datesMissingTimezones.add(property);
                 }
             }
         }
@@ -320,5 +333,42 @@ public class CalendarBuilder implements ContentHandler {
      */
     public final TimeZoneRegistry getRegistry() {
         return registry;
+    }
+    
+    private void resolveTimezones() 
+        throws IOException {
+        
+        // Go through each property and try to resolve the TZID.
+        for(Iterator it = datesMissingTimezones.iterator();it.hasNext();) {
+            Property property = (Property) it.next();
+            Parameter tzParam = property.getParameter(Parameter.TZID);
+            
+            //lookup timezone
+            TimeZone timezone = registry.getTimeZone(tzParam.getValue());
+            
+            // If timezone found, then update date property
+            if (timezone != null) {
+                // Get the String representation of date(s) as
+                // we will need this after changing the timezone
+                String strDate = property.getValue();
+                
+                // Change the timezone
+                if(property instanceof DateProperty)
+                    ((DateProperty) property).setTimeZone(timezone);
+                else if(property instanceof DateListProperty)
+                    ((DateListProperty) property).setTimeZone(timezone);
+                    
+                // Reset value
+                try {
+                    property.setValue(strDate);
+                } catch (ParseException e) {
+                    // shouldn't happen as its already been parsed
+                    throw new RuntimeException(e);
+                } catch (URISyntaxException e) {
+                    // shouldn't happen as its already been parsed
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 }
