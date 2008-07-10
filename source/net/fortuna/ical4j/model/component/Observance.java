@@ -357,8 +357,13 @@ public abstract class Observance extends Component implements Comparable {
         
         // Translate local onset into UTC time by parsing local time 
         // as GMT and adjusting by TZOFFSETFROM
-        try {  
-            java.util.Date utcOnset = UTC_FORMAT.parse(dateStr);
+        try {
+            java.util.Date utcOnset = null;
+       
+            synchronized(UTC_FORMAT) {
+                utcOnset = UTC_FORMAT.parse(dateStr);
+            }
+            
             long offset = getOffsetFrom().getOffset().getOffset();
             return new DateTime(utcOnset.getTime() - offset);
         } catch (ParseException e) {
