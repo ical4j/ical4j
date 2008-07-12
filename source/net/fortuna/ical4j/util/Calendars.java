@@ -37,6 +37,7 @@ package net.fortuna.ical4j.util;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -73,12 +74,22 @@ public final class Calendars {
      * @throws IOException occurs when there is an error reading the specified file
      * @throws ParserException occurs when the data in the specified file is invalid
      */
-    public static Calendar load(final String filename)
-            throws IOException, ParserException {
-
+    public static Calendar load(final String filename) throws IOException, ParserException {
         FileInputStream fin = new FileInputStream(filename);
         CalendarBuilder builder = new CalendarBuilder();
         return builder.build(fin);
+    }
+
+    /**
+     * Loads a calendar from the specified URL.
+     * @param url the URL from which to load calendar data
+     * @return returns a new calendar instance initialised from the specified URL
+     * @throws IOException occurs when there is an error reading from the specified URL
+     * @throws ParserException occurs when the data in the specified URL is invalid
+     */
+    public static Calendar load(final URL url) throws IOException, ParserException {
+        CalendarBuilder builder = new CalendarBuilder();
+        return builder.build(url.openStream());
     }
 
     /**
