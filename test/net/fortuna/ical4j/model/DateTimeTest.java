@@ -41,10 +41,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.TimeZones;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -56,13 +58,26 @@ public class DateTimeTest extends TestCase {
 
     private static Log log = LogFactory.getLog(DateTimeTest.class);
     
-    private TimeZoneRegistry registry;
+    private static TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
 
+    private DateTime dateTime;
+    
+    private String expectedToString;
+    
+    /**
+     * @param testMethod
+     */
+    public DateTimeTest(String testMethod) {
+        super(testMethod);
+    }
+    
     /**
      * Default constructor.
      */
-    public DateTimeTest() {
-        registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+    public DateTimeTest(DateTime dateTime, String expectedToString) {
+        super("testToString");
+        this.dateTime = dateTime;
+        this.expectedToString = expectedToString;
     }
 
     /* (non-Javadoc)
@@ -74,31 +89,11 @@ public class DateTimeTest extends TestCase {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
     
-    /*
-     * Class under test for void DateTime(long)
+    /**
+     * 
      */
-    public void testDateTimelong() {
-        DateTime dt = new DateTime(0);
-//        dt.setTimeZone(TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(TimeZones.GMT_ID));
-//        assertEquals("19700101T000000", dt.toString());
-        
-        dt.setUtc(true);
-        assertEquals("19700101T000000Z", dt.toString());
-    }
-
-    /*
-     * Class under test for void DateTime(Date)
-     */
-    public void testDateTimeDate() {
-        Calendar cal = Calendar.getInstance(); //TimeZone.getTimeZone("GMT"));
-        cal.set(Calendar.YEAR, 1984);
-        // months are zero-based..
-        cal.set(Calendar.MONTH, 3);
-        cal.set(Calendar.DAY_OF_MONTH, 17);
-        cal.set(Calendar.HOUR_OF_DAY, 3);
-        cal.set(Calendar.MINUTE, 15);
-        cal.set(Calendar.SECOND, 34);
-        assertEquals("19840417T031534", new DateTime(cal.getTime()).toString());
+    public void testToString() {
+        assertEquals("Incorrect string representation", expectedToString, dateTime.toString());
     }
 
     /*
@@ -113,11 +108,6 @@ public class DateTimeTest extends TestCase {
             log.info("Exception occurred: " + pe.getMessage());
         }
         
-        assertEquals("20000827T020000", new DateTime("20000827T020000").toString());
-        assertEquals("20070101T080000", new DateTime("20070101T080000").toString());
-        assertEquals("20050630T093000", new DateTime("20050630T093000").toString());
-        assertEquals("20050630T093000Z", new DateTime("20050630T093000Z").toString());
-        
         try {
             new DateTime("20000402T020000",
                     registry.getTimeZone("America/Los_Angeles"));
@@ -125,21 +115,6 @@ public class DateTimeTest extends TestCase {
         }
         catch (ParseException pe) {
             log.info("Exception occurred: " + pe.getMessage());
-        }
-        
-        assertEquals("20000402T020000", new DateTime("20000402T020000",
-                registry.getTimeZone("Australia/Melbourne")).toString());
-        
-        assertEquals("20000402T020000", new DateTime("20000402T020000").toString());
-        
-        DateFormat df = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
-        Calendar cal = Calendar.getInstance(); //java.util.TimeZone.getTimeZone("America/Los_Angeles"));
-        cal.clear();
-        cal.set(2000, 0, 1, 2, 0, 0);
-        for (int i = 0; i < 365; i++) {
-            String dateString = df.format(cal.getTime());
-            assertEquals(dateString, new DateTime(dateString).toString());
-            cal.add(Calendar.DAY_OF_YEAR, 1);
         }
     }
     
@@ -189,5 +164,64 @@ public class DateTimeTest extends TestCase {
         DateTime date5 = new DateTime(false);
         date5.setTimeZone(utcTz);
         assertFalse(date5.isUtc());
+    }
+    
+    public String getName() {
+        if (StringUtils.isNotEmpty(expectedToString)) {
+            return super.getName() + " [" + expectedToString + "]";
+        }
+        return super.getName();
+    }
+    
+    /**
+     * @return
+     */
+    public static TestSuite suite() throws ParseException {
+        TestSuite suite = new TestSuite();
+
+        // test DateTime(long)..
+        DateTime dt = new DateTime(0);
+        dt.setUtc(true);
+//      dt.setTimeZone(TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(TimeZones.GMT_ID));
+//      assertEquals("19700101T000000", dt.toString());
+        suite.addTest(new DateTimeTest(dt, "19700101T000000Z"));
+
+        // test DateTime(Date)..
+        Calendar cal = Calendar.getInstance(); //TimeZone.getTimeZone("GMT"));
+        cal.set(Calendar.YEAR, 1984);
+        // months are zero-based..
+        cal.set(Calendar.MONTH, 3);
+        cal.set(Calendar.DAY_OF_MONTH, 17);
+        cal.set(Calendar.HOUR_OF_DAY, 3);
+        cal.set(Calendar.MINUTE, 15);
+        cal.set(Calendar.SECOND, 34);
+        suite.addTest(new DateTimeTest(new DateTime(cal.getTime()), "19840417T031534"));
+
+        // test DateTime(String)..
+        suite.addTest(new DateTimeTest(new DateTime("20000827T020000"), "20000827T020000"));
+        suite.addTest(new DateTimeTest(new DateTime("20070101T080000"), "20070101T080000"));
+        suite.addTest(new DateTimeTest(new DateTime("20050630T093000"), "20050630T093000"));
+        suite.addTest(new DateTimeTest(new DateTime("20050630T093000Z"), "20050630T093000Z"));
+        
+        suite.addTest(new DateTimeTest(new DateTime("20000402T020000",
+                registry.getTimeZone("Australia/Melbourne")), "20000402T020000"));
+        suite.addTest(new DateTimeTest(new DateTime("20000402T020000"), "20000402T020000"));
+        
+        DateFormat df = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+//        Calendar cal = Calendar.getInstance(); //java.util.TimeZone.getTimeZone("America/Los_Angeles"));
+        cal.clear();
+        cal.set(2000, 0, 1, 2, 0, 0);
+        for (int i = 0; i < 365; i++) {
+            String dateString = df.format(cal.getTime());
+            suite.addTest(new DateTimeTest(new DateTime(dateString), dateString)); 
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+        }
+        
+        // other tests..
+        suite.addTest(new DateTimeTest("testDateTimeString"));
+        suite.addTest(new DateTimeTest("testDateTimeEquals"));
+        suite.addTest(new DateTimeTest("testUtc"));
+        
+        return suite;
     }
 }
