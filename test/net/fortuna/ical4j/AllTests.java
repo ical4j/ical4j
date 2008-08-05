@@ -1,5 +1,7 @@
 package net.fortuna.ical4j;
 
+import java.text.ParseException;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilderTest;
@@ -60,7 +62,7 @@ public class AllTests extends TestSuite{
      * Test suite.
      * @return test suite
      */
-    public static Test suite() {
+    public static Test suite() throws ParseException {
         TestSuite suite = new TestSuite(AllTests.class.getSimpleName());
 
         // data tests
@@ -78,7 +80,7 @@ public class AllTests extends TestSuite{
         suite.addTestSuite(AddressListTest.class);
         suite.addTestSuite(CalendarTest.class);
         suite.addTestSuite(DateTest.class);
-        suite.addTestSuite(DateTimeTest.class);
+        suite.addTest(DateTimeTest.suite());
         suite.addTestSuite(DurTest.class);
         suite.addTestSuite(IndexedComponentListTest.class);
         suite.addTestSuite(IndexedPropertyListTest.class);

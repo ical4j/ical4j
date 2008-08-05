@@ -93,6 +93,7 @@ public class DateTimeTest extends TestCase {
      * 
      */
     public void testToString() {
+        assertNotNull("Null input date", dateTime);
         assertEquals("Incorrect string representation", expectedToString, dateTime.toString());
     }
 
