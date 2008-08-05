@@ -5,6 +5,7 @@ import java.text.ParseException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilderTest;
+import net.fortuna.ical4j.data.CalendarEqualsTest;
 import net.fortuna.ical4j.data.CalendarParserImplTest;
 import net.fortuna.ical4j.data.HCalendarParserTest;
 import net.fortuna.ical4j.filter.FilterTest;
@@ -67,6 +68,7 @@ public class AllTests extends TestSuite{
 
         // data tests
         suite.addTest(CalendarBuilderTest.suite());
+        suite.addTest(CalendarEqualsTest.suite());
 //        suite.addTest(CalendarOutputterTest.suite());
         suite.addTestSuite(CalendarParserImplTest.class);
         suite.addTestSuite(HCalendarParserTest.class);

@@ -47,8 +47,8 @@ public class CalendarBuilderTest extends TestCase {
      * @param file
      *            an iCalendar filename
      */
-    public CalendarBuilderTest(final String method, final String file, final boolean valid) {
-        super(method);
+    public CalendarBuilderTest(final String file, final boolean valid) {
+        super("testBuildInputStream");
         this.filename = file;
         this.valid = valid;
         builder = new CalendarBuilder();
@@ -149,14 +149,14 @@ public class CalendarBuilderTest extends TestCase {
         testFiles = new File("etc/samples/valid").listFiles(new FileOnlyFilter());
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
-            suite.addTest(new CalendarBuilderTest("testBuildInputStream", testFiles[i].getPath(), true));
+            suite.addTest(new CalendarBuilderTest(testFiles[i].getPath(), true));
         }
         
         // invalid tests..
         testFiles = new File("etc/samples/invalid").listFiles(new FileOnlyFilter());
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
-            suite.addTest(new CalendarBuilderTest("testBuildInputStream", testFiles[i].getPath(), false));
+            suite.addTest(new CalendarBuilderTest(testFiles[i].getPath(), false));
         }
 
         return suite;

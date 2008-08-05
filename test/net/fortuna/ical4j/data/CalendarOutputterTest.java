@@ -41,8 +41,8 @@ public class CalendarOutputterTest extends TestCase {
      * @param method
      * @param file
      */
-    public CalendarOutputterTest(final String method, final String file) {
-        super(method);
+    public CalendarOutputterTest(final String file) {
+        super("testOutput");
         this.filename = file;
     }
 
@@ -136,14 +136,14 @@ public class CalendarOutputterTest extends TestCase {
         testFiles = new File("etc/samples/valid").listFiles(new FileOnlyFilter());
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
-            suite.addTest(new CalendarOutputterTest("testOutput", testFiles[i].getPath()));
+            suite.addTest(new CalendarOutputterTest(testFiles[i].getPath()));
         }
         
         // invalid tests..
         testFiles = new File("etc/samples/invalid").listFiles(new FileOnlyFilter());
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
-            suite.addTest(new CalendarOutputterTest("testOutput", testFiles[i].getPath()));
+            suite.addTest(new CalendarOutputterTest(testFiles[i].getPath()));
         }
 
         return suite;

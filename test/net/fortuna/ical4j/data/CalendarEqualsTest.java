@@ -7,6 +7,7 @@ package net.fortuna.ical4j.data;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.FileOnlyFilter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
@@ -26,11 +27,27 @@ import java.util.List;
  */
 public class CalendarEqualsTest extends TestCase {
 
+    private File file;
+    
+    private boolean valid;
+    
+    /**
+     * @param file
+     * @param valid
+     */
+    public CalendarEqualsTest(File file, boolean valid) {
+        super("testCalendarEquals");
+        this.file = file;
+        this.valid = valid;
+    }
+    
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     protected final void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
     }
     
     /* (non-Javadoc)
@@ -38,15 +55,8 @@ public class CalendarEqualsTest extends TestCase {
      */
     protected final void tearDown() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
-    }
-
-    public final void testValidFiles() throws Exception {
-
-        List testFiles = new ArrayList(Arrays.asList(new File("etc/samples/valid").listFiles(new FileOnlyFilter())));
-
-        for (int i = 0; i < testFiles.size(); i++) {
-            doTestCalendarEquals((File) testFiles.get(i), true);
-        }
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, false);
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, false);
     }
 
     /**
@@ -55,7 +65,7 @@ public class CalendarEqualsTest extends TestCase {
      * @param valid true if file is supposed to be valid
      * @throws Exception
      */ 
-    private void doTestCalendarEquals(File file, boolean valid) throws Exception {
+    public void testCalendarEquals() throws Exception {
         
         FileInputStream fin = new FileInputStream(file);
         CalendarBuilder builder = new CalendarBuilder();
@@ -114,5 +124,28 @@ public class CalendarEqualsTest extends TestCase {
             assertTrue("Parsed calendar isn't equal to itself!  : " + file.toString(),
                     calendar.equals(reparsedCalendar));
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#getName()
+     */
+    /**
+     * Overridden to return the current iCalendar file under test.
+     */
+    public final String getName() {
+        return super.getName() + " [" + file.getName() + "]";
+    }
+
+    /**
+     * 
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        
+        List testFiles = new ArrayList(Arrays.asList(new File("etc/samples/valid").listFiles(new FileOnlyFilter())));
+        for (int i = 0; i < testFiles.size(); i++) {
+            suite.addTest(new CalendarEqualsTest((File) testFiles.get(i), true));
+        }
+        return suite;
     }
 }
