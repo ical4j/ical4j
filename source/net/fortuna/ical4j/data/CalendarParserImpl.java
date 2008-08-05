@@ -426,18 +426,12 @@ public class CalendarParserImpl implements CalendarParser {
      * @param tokeniser
      * @throws IOException
      */
-    private void absorbWhitespace(final StreamTokenizer tokeniser)
-            throws IOException {
+    private void absorbWhitespace(final StreamTokenizer tokeniser) throws IOException {
         // HACK: absorb extraneous whitespace between components (KOrganizer)..
-        try {
-            while (true) {
-                assertToken(tokeniser, StreamTokenizer.TT_EOL);
-            }
-        }
-        catch (ParserException pe) {
-            if (log.isTraceEnabled()) {
-                log.trace("Aborting absorbing extra whitespace: " + pe.getMessage());
-            }
+        while (tokeniser.nextToken() == StreamTokenizer.TT_EOL) {}
+        
+        if (log.isTraceEnabled()) {
+            log.trace("Aborting absorbing extra whitespace complete");
         }
     }
 }
