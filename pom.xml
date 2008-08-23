@@ -304,7 +304,7 @@
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>2.3</version>
+			<version>2.4</version>
 		</dependency>
 	</dependencies>
 
@@ -329,7 +329,7 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
-					<comparisonVersion>1.0-beta3</comparisonVersion>
+					<comparisonVersion>1.0-beta4</comparisonVersion>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -344,11 +344,11 @@
 							<tags>
 								<tag
 									implementation="java.lang.String">
-									ical4j-1_0-beta3
+									ical4j-1_0-beta4
 								</tag>
 								<tag
 									implementation="java.lang.String">
-									ical4j-1_0-beta4
+									ical4j-1_0-beta5
 								</tag>
 							</tags>
 						</configuration>
