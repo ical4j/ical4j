@@ -13,8 +13,6 @@
 				<include>CHANGELOG</include>
 				<include>AUTHORS</include>
 				<include>pom.xml</include>
-				<include>build.xml</include>
-				<include>build.properties.sample</include>
 			</includes>
 		</fileSet>
 		<fileSet>
@@ -23,16 +21,8 @@
 			<includes>
 				<include>FAQ</include>
 				<include>TODO</include>
-				<include>rfc2445.txt</include>
-				<include>standard_deviations.txt</include>
-				<include>samples/**</include>
 				<include>checkstyle.xml</include>
-				<include>zoneinfo*/**</include>
 			</includes>
-			<excludes>
-				<exclude>zoneinfo/zones.h</exclude>
-				<exclude>zoneinfo/zones.tab</exclude>
-			</excludes>
 		</fileSet>
 		<fileSet>
 			<directory>source</directory>
@@ -76,12 +66,6 @@
 			<outputDirectory>lib</outputDirectory>
 			<unpack>false</unpack>
 			<scope>runtime</scope>
-			<excludes>
-				<exclude>avalon-framework:avalon-framework</exclude>
-				<exclude>log4j:log4j</exclude>
-				<exclude>logkit:logkit</exclude>
-				<exclude>javax.servlet:servlet-api</exclude>
-			</excludes>
 		</dependencySet>
 	</dependencySets>
 </assembly>
