@@ -2,6 +2,13 @@
  iCal4j - Changes
 ==================
 
+1.0-beta5
+
+ - Added support for compatibility configuration via properties file
+ 
+ - Numerous bug fixes
+ 
+ 
 1.0-beta4
 
  - Added support for VVENUE
