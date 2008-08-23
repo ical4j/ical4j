@@ -192,32 +192,26 @@ import org.apache.commons.logging.LogFactory;
  * Example 1 - Requesting all busy time slots for a given period:
  *
  * <pre><code>
- * // request all busy time between today and 1 week from now..
- * java.util.Calendar cal = java.util.Calendar.getInstance();
- * Date start = cal.getTime();
- * cal.add(java.util.Calendar.WEEK_OF_YEAR, 1);
- * Date end = cal.getTime();
+ * // request all busy times between today and 1 week from now..
+ * DateTime start = new DateTime();
+ * DateTime end = new DateTime(start.getTime() + 1000 * 60 * 60 * 24 * 7);
  *
  * VFreeBusy request = new VFreeBusy(start, end);
- * </code></pre>
  *
- * Example 2 - Publishing all busy time slots for the period requested:
- *
- * <pre><code>
  * VFreeBusy reply = new VFreeBusy(request, calendar.getComponents());
  * </code></pre>
  *
- * Example 3 - Requesting all free time slots for a given period of at least the specified duration:
+ * Example 2 - Requesting all free time slots for a given period of at least the specified duration:
  *
  * <pre><code>
  * // request all free time between today and 1 week from now of
  * // duration 2 hours or more..
- * java.util.Calendar cal = java.util.Calendar.getInstance();
- * Date start = cal.getTime();
- * cal.add(java.util.Calendar.WEEK_OF_YEAR, 1);
- * Date end = cal.getTime();
+ * DateTime start = new DateTime();
+ * DateTime end = new DateTime(start.getTime() + 1000 * 60 * 60 * 24 * 7);
  *
- * VFreeBusy request = new VFreeBusy(start, end, 2 * 60 * 60 * 1000);
+ * VFreeBusy request = new VFreeBusy(start, end, new Dur(0, 2, 0, 0));
+ *
+ * VFreeBusy response = new VFreeBusy(request, myCalendar.getComponents());
  * </code></pre>
  *
  * @author Ben Fortuna
