@@ -220,3 +220,8 @@ NZ=Pacific/Auckland
 Kwajalein=Pacific/Kwajalein
 
 NZ-CHAT=Pacific/Chatham
+
+# Changes as of tzdata2008e
+Asia/Calcutta=Asia/Kolkata
+Asia/Saigon=Asia/Ho_Chi_Minh
+Atlantic/Jan_Mayen=Arctic/Longyearbyen
