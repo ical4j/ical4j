@@ -270,8 +270,13 @@ public class VFreeBusy extends CalendarComponent {
     }
 
     /**
-     * Constructs a new VFreeBusy instance represeting a reply to the specified VFREEBUSY request according to the
+     * Constructs a new VFreeBusy instance representing a reply to the specified VFREEBUSY request according to the
      * specified list of components.
+     * If the request argument has its duration set, then the result
+     * represents a list of <em>free</em> times (that is, parameter FBTYPE
+     * is set to FbType.FREE).
+     * If the request argument does not have its duration set, then the result
+     * represents a list of <em>busy</em> times.
      * @param request a VFREEBUSY request
      * @param components a component list used to initialise busy time
      */
