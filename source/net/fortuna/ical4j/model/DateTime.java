@@ -44,6 +44,7 @@ import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -290,7 +291,7 @@ public class DateTime extends Date {
         // TODO: what about compareTo, before, after, etc.?
 
         if (arg0 instanceof DateTime) {
-            return ObjectUtils.equals(time, ((DateTime) arg0).time);
+            return new EqualsBuilder().append(time, ((DateTime) arg0).time).isEquals();
         }
         return super.equals(arg0);
     }

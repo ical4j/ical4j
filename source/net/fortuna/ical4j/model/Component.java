@@ -50,6 +50,7 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.util.Strings;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -189,8 +190,8 @@ public abstract class Component implements Serializable {
     public boolean equals(final Object arg0) {
         if (arg0 instanceof Component) {
             Component c = (Component) arg0;
-            return ObjectUtils.equals(getName(), c.getName())
-                    && ObjectUtils.equals(getProperties(), c.getProperties());
+            return new EqualsBuilder().append(getName(), c.getName())
+                .append(getProperties(), c.getProperties()).isEquals();
         }
         return super.equals(arg0);
     }

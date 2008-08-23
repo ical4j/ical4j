@@ -49,6 +49,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -356,10 +357,8 @@ public class Calendar implements Serializable {
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Calendar) {
             Calendar calendar = (Calendar) arg0;
-            return ObjectUtils
-                    .equals(getProperties(), calendar.getProperties())
-                    && ObjectUtils.equals(getComponents(), calendar
-                            .getComponents());
+            return new EqualsBuilder().append(getProperties(), calendar.getProperties())
+                .append(getComponents(), calendar.getComponents()).isEquals();
         }
         return super.equals(arg0);
     }

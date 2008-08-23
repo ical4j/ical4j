@@ -38,6 +38,7 @@ import java.text.ParseException;
 import java.util.Date;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -457,8 +458,8 @@ public class Period implements Serializable, Comparable {
         }
 
         final Period period = (Period) o;
-        return ObjectUtils.equals(getStart(), period.getStart())
-            && ObjectUtils.equals(getEnd(), period.getEnd());
+        return new EqualsBuilder().append(getStart(), period.getStart())
+            .append(getEnd(), period.getEnd()).isEquals();
     }
 
     /**

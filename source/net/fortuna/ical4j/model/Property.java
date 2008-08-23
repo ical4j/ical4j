@@ -40,6 +40,7 @@ import java.text.ParseException;
 import net.fortuna.ical4j.util.Strings;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
@@ -327,9 +328,9 @@ public abstract class Property extends Content {
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
             Property p = (Property) arg0;
-            return ObjectUtils.equals(getName(), p.getName())
-                    && ObjectUtils.equals(getValue(), p.getValue())
-                    && ObjectUtils.equals(getParameters(), p.getParameters());
+            return new EqualsBuilder().append(getName(), p.getName())
+                .append(getValue(), p.getValue())
+                .append(getParameters(), p.getParameters()).isEquals();
         }
         return super.equals(arg0);
     }
