@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta5//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_beta5/America/Argentina/Tucuman
+TZID:America/Argentina/Tucuman
 X-LIC-LOCATION:America/Argentina/Tucuman
 BEGIN:STANDARD
 TZOFFSETFROM:-0200

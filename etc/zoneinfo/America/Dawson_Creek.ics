@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta5//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_beta5/America/Dawson_Creek
+TZID:America/Dawson_Creek
 X-LIC-LOCATION:America/Dawson_Creek
 BEGIN:STANDARD
 TZOFFSETFROM:-080056

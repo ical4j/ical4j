@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta5//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_beta5/America/Puerto_Rico
+TZID:America/Puerto_Rico
 X-LIC-LOCATION:America/Puerto_Rico
 BEGIN:STANDARD
 TZOFFSETFROM:-0400
