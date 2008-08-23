@@ -1,8 +1,8 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta4//EN
+PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta5//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:America/Araguaina
+TZID:/ical4j_1_0_beta5/America/Araguaina
 X-LIC-LOCATION:America/Araguaina
 BEGIN:STANDARD
 TZOFFSETFROM:-0300
