@@ -41,6 +41,7 @@ import java.nio.charset.Charset;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * Writes an iCalendar model to an output stream.
@@ -65,7 +66,7 @@ public class CalendarOutputter {
      * @param validating indicates whether to validate calendar when outputting to stream
      */
     public CalendarOutputter(final boolean validating) {
-        this(validating, FoldingWriter.REDUCED_FOLD_LENGTH);
+        this(validating, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY) ? FoldingWriter.MAX_FOLD_LENGTH : FoldingWriter.REDUCED_FOLD_LENGTH);
     }
 
     /**
