@@ -49,6 +49,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 public abstract class Parameter extends Content {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -2058497904769713528L;
+
+    /**
      * Region abbreviation.
      */
     public static final String ABBREV = "ABBREV";

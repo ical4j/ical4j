@@ -45,4 +45,9 @@ import java.io.Serializable;
  */
 public abstract class Content implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -2892694760294583989L;
+
 }

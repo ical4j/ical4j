@@ -60,6 +60,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public abstract class Component implements Serializable {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 4943193483665822201L;
+
     public static final String BEGIN = "BEGIN";
 
     public static final String END = "END";

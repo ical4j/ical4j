@@ -50,6 +50,11 @@ import net.fortuna.ical4j.util.TimeZones;
  */
 public abstract class Iso8601 extends Date {
     
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4290728005713946811L;
+
     private DateFormat format;
     
     private DateFormat gmtFormat;

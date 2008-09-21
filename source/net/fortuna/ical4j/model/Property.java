@@ -50,6 +50,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public abstract class Property extends Content {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 7048785558435608687L;
+
     // iCalendar properties..
 
     /**
