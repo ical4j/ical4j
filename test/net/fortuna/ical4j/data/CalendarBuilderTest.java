@@ -6,6 +6,7 @@
 package net.fortuna.ical4j.data;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -13,7 +14,6 @@ import java.util.Iterator;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.FileOnlyFilter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
@@ -21,6 +21,8 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -146,14 +148,14 @@ public class CalendarBuilderTest extends TestCase {
 //                new File("etc/samples/valid/Session6.ics").getPath(), true));
 
         // valid tests..
-        testFiles = new File("etc/samples/valid").listFiles(new FileOnlyFilter());
+        testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarBuilderTest(testFiles[i].getPath(), true));
         }
         
         // invalid tests..
-        testFiles = new File("etc/samples/invalid").listFiles(new FileOnlyFilter());
+        testFiles = new File("etc/samples/invalid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarBuilderTest(testFiles[i].getPath(), false));

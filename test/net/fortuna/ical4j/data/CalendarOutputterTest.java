@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,11 +19,12 @@ import java.io.StringWriter;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.FileOnlyFilter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
+import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -133,14 +135,14 @@ public class CalendarOutputterTest extends TestCase {
         File[] testFiles = null;
 
         // valid tests..
-        testFiles = new File("etc/samples/valid").listFiles(new FileOnlyFilter());
+        testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarOutputterTest(testFiles[i].getPath()));
         }
         
         // invalid tests..
-        testFiles = new File("etc/samples/invalid").listFiles(new FileOnlyFilter());
+        testFiles = new File("etc/samples/invalid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarOutputterTest(testFiles[i].getPath()));
