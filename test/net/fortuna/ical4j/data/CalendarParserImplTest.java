@@ -38,6 +38,7 @@ package net.fortuna.ical4j.data;
 import java.io.IOException;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -50,8 +51,21 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CalendarParserImplTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(
-            CalendarParserImplTest.class);
+    private static final Log LOG = LogFactory.getLog(CalendarParserImplTest.class);
+    
+    private String filename;
+    
+    private int expectedErrorLineNo;
+    
+    /**
+     * @param filename
+     * @param expectedErrorLineNo
+     */
+    public CalendarParserImplTest(String filename, int expectedErrorLineNo) {
+        super("testParseException");
+        this.filename = filename;
+        this.expectedErrorLineNo = expectedErrorLineNo;
+    }
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
@@ -73,87 +87,48 @@ public class CalendarParserImplTest extends TestCase {
     
     /**
      * Test the accuracy of parser exception line number.
-     */
-    public void testParseExceptionLineNo() throws IOException {
-        try {
-            loadCalendar("etc/samples/invalid/google_aus_holidays.ics");
-        }
-        catch (ParserException pe) {
-            assertEquals(11, pe.getLineNo());
-        }
-
-        try {
-            loadCalendar("etc/samples/invalid/13-MoonPhase.ics");
-        }
-        catch (ParserException pe) {
-            assertEquals(215, pe.getLineNo());
-        }
-
-        try {
-            loadCalendar("etc/samples/invalid/CalendarDataFile.ics");
-        }
-        catch (ParserException pe) {
-            assertEquals(24, pe.getLineNo());
-        }
-
-        try {
-            loadCalendar("etc/samples/invalid/overlaps.ics");
-        }
-        catch (ParserException pe) {
-            assertEquals(1, pe.getLineNo());
-        }
-
-        try {
-            loadCalendar("etc/samples/invalid/phpicalendar_sample.ics");
-        }
-        catch (ParserException pe) {
-            assertEquals(166, pe.getLineNo());
-        }
-
-        try {
-            loadCalendar("etc/samples/invalid/schedule-unstable.ics");
-        }
-        catch (ParserException pe) {
-            assertEquals(196, pe.getLineNo());
-        }
-
-        try {
-            loadCalendar("etc/samples/invalid/smallcluster.ics");
-        }
-        catch (ParserException pe) {
-            assertEquals(2, pe.getLineNo());
-        }
-
-        try {
-            loadCalendar("etc/samples/invalid/twinkle.ics");
-        }
-        catch (ParserException pe) {
-            assertEquals(67, pe.getLineNo());
-        }
-
-        try {
-            loadCalendar("etc/samples/invalid/zidestoreical4jbomb.ics");
-        }
-        catch (ParserException pe) {
-            assertEquals(10, pe.getLineNo());
-        }
-    }
-    
-    /**
-     * @param filename
      * @throws IOException
-     * @throws ParserException
      */
-    private void loadCalendar(String filename)
-        throws IOException, ParserException {
-        
+    public void testParseException() throws IOException {
         try {
             Calendars.load(filename);
             fail("Should throw ParserException: [" + filename + "]");
         }
         catch (ParserException pe) {
             LOG.info(pe.getMessage());
-            throw pe;
+            assertEquals(expectedErrorLineNo, pe.getLineNo());
         }
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#getName()
+     */
+    /**
+     * Overridden to return the current iCalendar file under test.
+     */
+    public final String getName() {
+        return super.getName() + " [" + filename + "]";
+    }
+    
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/google_aus_holidays.ics", 11));
+        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/13-MoonPhase.ics", 215));
+
+        // CalendarParserImpl thinks this error happened on line 24, but you can
+        // see that invalid property "X" starts on line 23, and ends there.
+//        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/CalendarDataFile.ics", 23));
+        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/CalendarDataFile.ics", 24));
+        
+        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/overlaps.ics", 1));
+        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/phpicalendar_sample.ics", 166));
+        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/schedule-unstable.ics", 196));
+        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/smallcluster.ics", 2));
+        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/twinkle.ics", 67));
+        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/zidestoreical4jbomb.ics", 10));
+        return suite;
     }
 }

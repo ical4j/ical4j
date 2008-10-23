@@ -72,7 +72,7 @@ public class AllTests extends TestSuite{
         suite.addTest(CalendarBuilderTest.suite());
         suite.addTest(CalendarEqualsTest.suite());
 //        suite.addTest(CalendarOutputterTest.suite());
-        suite.addTestSuite(CalendarParserImplTest.class);
+        suite.addTest(CalendarParserImplTest.suite());
         suite.addTestSuite(HCalendarParserTest.class);
 
         // filter tests..
