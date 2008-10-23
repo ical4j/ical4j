@@ -8,17 +8,14 @@ package net.fortuna.ical4j.data;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Iterator;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -37,9 +34,9 @@ public class CalendarBuilderTest extends TestCase {
 
     private String filename;
 
-    private CalendarBuilder builder;
+    private FileInputStream fin;
     
-    private boolean valid;
+    private CalendarBuilder builder;
 
     /**
      * Constructor.
@@ -48,11 +45,12 @@ public class CalendarBuilderTest extends TestCase {
      *            name of method to run in test case
      * @param file
      *            an iCalendar filename
+     * @throws FileNotFoundException 
      */
-    public CalendarBuilderTest(final String file, final boolean valid) {
-        super("testBuildInputStream");
+    public CalendarBuilderTest(String testMethod, final String file) throws FileNotFoundException {
+        super(testMethod);
         this.filename = file;
-        this.valid = valid;
+        this.fin = new FileInputStream(filename);
         builder = new CalendarBuilder();
     }
 
@@ -81,46 +79,30 @@ public class CalendarBuilderTest extends TestCase {
     }
     
     /**
-     * Class to test for Calendar build(InputStream).
+     * @throws IOException
+     * @throws ParserException
+     * @throws ValidationException
      */
-    public final void testBuildInputStream() throws IOException {
-        FileInputStream fin = new FileInputStream(filename);
-
-        Calendar calendar = null;
-
+    public void testBuildValid() throws IOException, ParserException, ValidationException {
+        Calendar calendar = builder.build(fin);
+        calendar.validate();
+    }
+    
+    /**
+     * @throws IOException
+     * @throws ParserException
+     */
+    public void testBuildInvalid() throws IOException {
         try {
-            calendar = builder.build(fin);
-            assertNotNull("File [" + filename + "] invalid", calendar);
-            try {
-                calendar.validate();
-                assertTrue("File [" + filename + "] valid", valid);
-            }
-            catch (ValidationException e) {
-                log.warn("Caught exception: [" + filename + "," + e.getMessage() + "]");
-                assertFalse("File [" + filename + "] invalid", valid);
-            }
+            Calendar calendar = builder.build(fin);
+            calendar.validate();
+            fail("Should throw ParserException or ValidationException");
         }
-        catch (ParserException e) {
-            log.warn("Caught exception: [" + filename + "," + e.getMessage() + "]");
-            assertFalse("File [" + filename + "] invalid", valid);
+        catch (ValidationException ve) {
+            log.trace("Caught exception: [" + filename + "," + ve.getMessage() + "]");
         }
-
-        if (log.isInfoEnabled()) {
-            log.info("File: " + filename);
-
-            if (log.isDebugEnabled()) {
-                log.debug("Calendar:\n=========\n" + calendar.toString());
-
-                for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-                    Component c = (Component) i.next();
-
-                    Description description = (Description) c.getProperty(Property.DESCRIPTION);
-
-                    if (description != null) {
-                        log.debug("Description [" + description.getValue() + "]");
-                    }
-                }
-            }
+        catch (ParserException ve) {
+            log.trace("Caught exception: [" + filename + "," + ve.getMessage() + "]");
         }
     }
     
@@ -137,8 +119,9 @@ public class CalendarBuilderTest extends TestCase {
     /**
      * Test suite.
      * @return test suite
+     * @throws FileNotFoundException 
      */
-    public static Test suite() {
+    public static Test suite() throws FileNotFoundException {
         TestSuite suite = new TestSuite();
 
         File[] testFiles = null;
@@ -151,14 +134,14 @@ public class CalendarBuilderTest extends TestCase {
         testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
-            suite.addTest(new CalendarBuilderTest(testFiles[i].getPath(), true));
+            suite.addTest(new CalendarBuilderTest("testBuildValid", testFiles[i].getPath()));
         }
         
         // invalid tests..
         testFiles = new File("etc/samples/invalid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
-            suite.addTest(new CalendarBuilderTest(testFiles[i].getPath(), false));
+            suite.addTest(new CalendarBuilderTest("testBuildInvalid", testFiles[i].getPath()));
         }
 
         return suite;

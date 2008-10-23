@@ -1,5 +1,6 @@
 package net.fortuna.ical4j;
 
+import java.io.FileNotFoundException;
 import java.text.ParseException;
 
 import junit.framework.Test;
@@ -62,8 +63,9 @@ public class AllTests extends TestSuite{
     /**
      * Test suite.
      * @return test suite
+     * @throws FileNotFoundException 
      */
-    public static Test suite() throws ParseException {
+    public static Test suite() throws ParseException, FileNotFoundException {
         TestSuite suite = new TestSuite(AllTests.class.getSimpleName());
 
         // data tests
