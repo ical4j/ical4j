@@ -35,6 +35,7 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -82,6 +83,13 @@ public class CategoryList implements Serializable {
         }
     }
 
+    /**
+     * @param categoryStrings
+     */
+    public CategoryList(String[] categoryValues) {
+        categories = Arrays.asList(categoryValues);
+    }
+    
     /**
      * @see java.util.AbstractCollection#toString()
      */
