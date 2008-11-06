@@ -22,6 +22,7 @@
 				<include>FAQ</include>
 				<include>TODO</include>
 				<include>checkstyle.xml</include>
+				<include>zoneinfo*/**</include>
 			</includes>
 		</fileSet>
 		<fileSet>

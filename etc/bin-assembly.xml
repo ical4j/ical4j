@@ -23,6 +23,7 @@
 				<include>rfc2445.txt</include>
 				<include>standard_deviations.txt</include>
 				<include>samples/**</include>
+				<include>zoneinfo*/**</include>
 			</includes>
 		</fileSet>
 		<fileSet>
