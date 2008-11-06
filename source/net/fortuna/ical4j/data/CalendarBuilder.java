@@ -342,6 +342,9 @@ public class CalendarBuilder implements ContentHandler {
         for(Iterator it = datesMissingTimezones.iterator();it.hasNext();) {
             Property property = (Property) it.next();
             Parameter tzParam = property.getParameter(Parameter.TZID);
+
+            // tzParam might be null: 
+            if (tzParam == null) continue;
             
             //lookup timezone
             TimeZone timezone = registry.getTimeZone(tzParam.getValue());
