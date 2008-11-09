@@ -33,6 +33,7 @@
  */
 package net.fortuna.ical4j.data;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
@@ -47,6 +48,10 @@ import org.apache.commons.logging.LogFactory;
  * A reader which performs iCalendar unfolding as it reads. Note that unfolding rules may be "relaxed" to allow
  * unfolding of non-conformant *.ics files. By specifying the system property "ical4j.unfolding.relaxed=true" iCalendar
  * files created with Mozilla Calendar/Sunbird may be correctly unfolded.
+ * 
+ * To wrap this reader with a {@link BufferedReader} you must ensure you specify an identical buffer size
+ * to that used in the {@link BufferedReader}.
+ * 
  * @author Ben Fortuna
  */
 public class UnfoldingReader extends PushbackReader {
@@ -78,14 +83,24 @@ public class UnfoldingReader extends PushbackReader {
     private char[][] buffers;
 
     private int linesUnfolded;
+    
+    private int maxPatternLength = 0;
 
     /**
      * Creates a new unfolding reader instance. Relaxed unfolding flag is read from system property.
      * @param in the reader to unfold from
      */
     public UnfoldingReader(final Reader in) {
-        this(in, CompatibilityHints
+        this(in, DEFAULT_FOLD_PATTERN.length, CompatibilityHints
                 .isHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING));
+    }
+    
+    /**
+     * @param in
+     * @param size
+     */
+    public UnfoldingReader(final Reader in, int size) {
+        this(in, size, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING));
     }
 
     /**
@@ -93,8 +108,8 @@ public class UnfoldingReader extends PushbackReader {
      * @param in a reader to read from
      * @param relaxed specifies whether unfolding is relaxed
      */
-    public UnfoldingReader(final Reader in, final boolean relaxed) {
-        super(in, DEFAULT_FOLD_PATTERN.length);
+    public UnfoldingReader(final Reader in, int size, final boolean relaxed) {
+        super(in, size);
         if (relaxed) {
             patterns = new char[4][];
             patterns[0] = DEFAULT_FOLD_PATTERN;
@@ -109,6 +124,7 @@ public class UnfoldingReader extends PushbackReader {
         buffers = new char[patterns.length][];
         for (int i = 0; i < patterns.length; i++) {
             buffers[i] = new char[patterns[i].length];
+            maxPatternLength = Math.max(maxPatternLength, patterns[i].length);
         }
     }
 
@@ -128,6 +144,7 @@ public class UnfoldingReader extends PushbackReader {
         for (int i = 0; i < patterns.length; i++) {
             if (c == patterns[i][0]) {
                 doUnfold = true;
+                break;
             }
         }
         if (!doUnfold) {
@@ -137,14 +154,54 @@ public class UnfoldingReader extends PushbackReader {
             unread(c);
         }
 
-        boolean didUnfold;
+        unfold();
 
+        return super.read();
+    }
+    
+    /**
+     * @see java.io.PushbackReader#read(char[], int, int)
+     */
+    public int read(char[] cbuf, int off, int len) throws IOException {
+        int read = super.read(cbuf, off, len);
+        boolean doUnfold = false;
+        for (int i = 0; i < patterns.length; i++) {
+            if (read > 0 && cbuf[0] == patterns[i][0]) {
+                doUnfold = true;
+                break;
+            }
+            else {
+                for (int j = 0; j < read; j++) {
+                    if (cbuf[j] == patterns[i][0]) {
+                        unread(cbuf, j, read - 1);
+                        return j;
+                    }
+                }
+            }
+        }
+        if (!doUnfold) {
+            return read;
+        }
+        else {
+            unread(cbuf, off, read);
+        }
+
+        unfold();
+
+        return super.read(cbuf, off, maxPatternLength);
+    }
+    
+    /**
+     * @throws IOException
+     */
+    private void unfold() throws IOException {
         // need to loop since one line fold might be directly followed by another
+        boolean didUnfold;
         do {
             didUnfold = false;
 
             for (int i = 0; i < buffers.length; i++) {
-                int read = super.read(buffers[i]);
+                int read = super.read(buffers[i], 0, buffers[i].length);
                 if (read > 0) {
                     if (!Arrays.equals(patterns[i], buffers[i])) {
                         unread(buffers[i], 0, read);
@@ -157,13 +214,11 @@ public class UnfoldingReader extends PushbackReader {
                         didUnfold = true;
                     }
                 }
-                else {
-                    return read;
-                }
+//                else {
+//                    return read;
+//                }
             }
         }
         while (didUnfold);
-
-        return super.read();
     }
 }
