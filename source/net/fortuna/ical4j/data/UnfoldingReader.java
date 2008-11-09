@@ -173,7 +173,7 @@ public class UnfoldingReader extends PushbackReader {
             else {
                 for (int j = 0; j < read; j++) {
                     if (cbuf[j] == patterns[i][0]) {
-                        unread(cbuf, j, read - 1);
+                        unread(cbuf, j, read - j);
                         return j;
                     }
                 }
