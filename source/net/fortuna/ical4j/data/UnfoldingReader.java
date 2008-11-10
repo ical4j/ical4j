@@ -104,6 +104,14 @@ public class UnfoldingReader extends PushbackReader {
     }
 
     /**
+     * @param in
+     * @param relaxed
+     */
+    public UnfoldingReader(final Reader in, boolean relaxed) {
+        this(in, DEFAULT_FOLD_PATTERN.length, relaxed); 
+    }
+
+    /**
      * Creates a new unfolding reader instance.
      * @param in a reader to read from
      * @param relaxed specifies whether unfolding is relaxed
