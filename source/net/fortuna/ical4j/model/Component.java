@@ -49,7 +49,6 @@ import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.util.Strings;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -189,7 +188,7 @@ public abstract class Component implements Serializable {
     }
 
     /**
-     * Uses {@link ObjectUtils} to test equality. Two components are equal if and only if their name and property lists
+     * Uses {@link EqualsBuilder} to test equality. Two components are equal if and only if their name and property lists
      * are equal.
      */
     public boolean equals(final Object arg0) {

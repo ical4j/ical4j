@@ -43,7 +43,6 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -285,7 +284,7 @@ public class DateTime extends Date {
     }
 
     /**
-     * Uses {@link ObjectUtils} to test equality.
+     * Uses {@link EqualsBuilder} to test equality.
      */
     public boolean equals(final Object arg0) {
         // TODO: what about compareTo, before, after, etc.?

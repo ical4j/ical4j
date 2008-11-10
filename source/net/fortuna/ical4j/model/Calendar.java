@@ -48,7 +48,6 @@ import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -351,7 +350,7 @@ public class Calendar implements Serializable {
     }
 
     /**
-     * Uses {@link ObjectUtils} to test equality. Two calendars are equal if and only if their property lists and
+     * Uses {@link EqualsBuilder} to test equality. Two calendars are equal if and only if their property lists and
      * component lists are equal.
      */
     public final boolean equals(final Object arg0) {

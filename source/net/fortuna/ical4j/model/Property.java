@@ -39,7 +39,6 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.util.Strings;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -326,7 +325,7 @@ public abstract class Property extends Content {
     public abstract void validate() throws ValidationException;
 
     /**
-     * Uses {@link ObjectUtils} to test equality. Two properties are equal if and only if their name, value and
+     * Uses {@link EqualsBuilder} to test equality. Two properties are equal if and only if their name, value and
      * parameter list are equal.
      * @see java.lang.Object#equals(java.lang.Object)
      */

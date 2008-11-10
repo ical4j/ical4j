@@ -37,7 +37,6 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -445,7 +444,7 @@ public class Period implements Serializable, Comparable {
     }
 
     /**
-     * Uses {@link ObjectUtils} to test equality.
+     * Uses {@link EqualsBuilder} to test equality.
      * @param o object being compared for equality
      * @return true if the objects are equal, false otherwise
      */
