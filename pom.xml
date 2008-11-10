@@ -305,6 +305,7 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>1.4</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -341,10 +342,10 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
-					<comparisonVersion>1.0-beta4</comparisonVersion>
+					<comparisonVersion>1.0-beta5</comparisonVersion>
 				</configuration>
 			</plugin>
-			
+			<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
@@ -356,10 +357,10 @@
 							<type>tag</type>
 							<tags>
 								<tag implementation="java.lang.String">
-									ical4j-1_0-beta4
+									ical4j-1_0-beta5
 								</tag>
 								<tag implementation="java.lang.String">
-									ical4j-1_0-beta5
+									ical4j-1_0-rc1
 								</tag>
 							</tags>
 						</configuration>
@@ -369,6 +370,7 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
+			 -->
 		</plugins>
 	</reporting>
 </project>
