@@ -273,16 +273,12 @@ public class CalendarTest extends TestCase {
         calendar.getComponents().add(week3UserC);
         suite.addTest(new CalendarTest("testValid", calendar));
         
+        // test invalid calendar..
+        calendar = new Calendar(baseCalendar);
+        calendar.getComponents().add(new Daylight());
+        suite.addTest(new CalendarTest("testInvalid", calendar));
+        
         return suite;
-    }
-    /*
-     * Class under test for void Calendar()
-     */
-    public void testCalendar() throws ValidationException {
-        
-        calendar.validate();
-        
-        log.info(calendar);
     }
     
     /**
@@ -315,20 +311,5 @@ public class CalendarTest extends TestCase {
                                                     */
 
         log.info(reply);
-    }
-    
-    /**
-     * Unit test for the method <code>Calendar.validate()</code>.
-     */
-    public void testCalendarValidation() {
-        calendar.getComponents().add(new Daylight());
-        try {
-            calendar.validate();
-            fail("Should throw a ValidationException");
-        }
-        catch (ValidationException ve) {
-            // success..
-            log.debug(ve);
-        }
     }
 }
