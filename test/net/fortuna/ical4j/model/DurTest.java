@@ -41,17 +41,59 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+/**
+ * @author Ben
+ *
+ */
 public class DurTest extends TestCase {
-    
-    private static Log log = LogFactory.getLog(DurTest.class);
 
+    private Dur duration;
+    
+    private Dur duration2;
+    
+    private String expectedString;
+    
+    private Date startTime;
+    
+    private Date expectedTime;
+    
     private TimeZone originalDefault;
+    
+    /**
+     * @param duration
+     * @param expectedString
+     */
+    public DurTest(Dur duration, String expectedString) {
+        super("testToString");
+        this.duration = duration;
+        this.expectedString = expectedString;
+    }
+
+    /**
+     * @param duration
+     * @param startTime
+     * @param expectedTime
+     */
+    public DurTest(Dur duration, Date startTime, Date expectedTime) {
+        super("testGetTime");
+        this.duration = duration;
+        this.startTime = startTime;
+        this.expectedTime = expectedTime;
+    }
+    
+    /**
+     * @param duration
+     * @param duration2
+     */
+    public DurTest(Dur duration, Dur duration2) {
+        super("testEquals");
+        this.duration = duration;
+        this.duration2 = duration2;
+    }
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
@@ -67,113 +109,116 @@ public class DurTest extends TestCase {
         TimeZone.setDefault(originalDefault);
     }
     
-    /*
-     * Class under test for void Dur(String)
+    /**
+     * 
      */
-    public void testDurString() {
-        Dur duration = new Dur("PT15M");
-        log.info(duration);
+    public void testToString() {
+        assertEquals(expectedString, duration.toString());
+    }
+    
+    /**
+     * 
+     */
+    public void testGetTime() {
+        assertEquals(expectedTime, duration.getTime(startTime));
+    }
+    
+    /**
+     * 
+     */
+    public void testEquals() {
+        assertEquals(duration2, duration);
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#getName()
+     */
+    public String getName() {
+        return super.getName() + " [" + duration.toString() + "]";
+    }
+    
+    /**
+     * @return
+     * @throws ParseException 
+     */
+    public static TestSuite suite() throws ParseException {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new DurTest(new Dur("PT15M"), "PT15M"));
         
-        Date start = new Date();
-        log.info("[" + start + "] -> [" + duration.getTime(start) + "]");
-    }
-
-    /*
-     * Class under test for void Dur(long)
-     */
-    public void testDurint() {
-        Dur duration = new Dur(33);
-        log.info(duration);
-    }
-
-    /*
-     * Class under test for void Dur(Date, Date)
-     */
-    public void testDurDateDate() {
         Calendar cal = Calendar.getInstance();
+        Date startTime = cal.getTime();
+        cal.add(Calendar.MINUTE, 15);
+        suite.addTest(new DurTest(new Dur("PT15M"), startTime, cal.getTime()));
+
+        suite.addTest(new DurTest(new Dur(33), "P33W"));
+        
+        cal = Calendar.getInstance();
         cal.set(2005, 7, 1);
         Date start = cal.getTime();
         
         cal.add(Calendar.YEAR, 1);
-        assertEquals("P365D", new Dur(start, cal.getTime()).toString());
+        suite.addTest(new DurTest(new Dur(start, cal.getTime()), "P365D"));
         
         cal.setTime(start);
         cal.add(Calendar.WEEK_OF_YEAR, -5);
-        assertEquals("-P5W", new Dur(start, cal.getTime()).toString());
+        suite.addTest(new DurTest(new Dur(start, cal.getTime()), "-P5W"));
         
         cal.setTime(start);
         cal.add(Calendar.DAY_OF_WEEK, 11);
-        assertEquals("P11D", new Dur(start, cal.getTime()).toString());
+        suite.addTest(new DurTest(new Dur(start, cal.getTime()), "P11D"));
         
         cal.setTime(start);
         cal.add(Calendar.HOUR_OF_DAY, 25);
-        assertEquals("P1DT1H", new Dur(start, cal.getTime()).toString());
+        suite.addTest(new DurTest(new Dur(start, cal.getTime()), "P1DT1H"));
         
         cal.setTime(start);
         cal.add(Calendar.MINUTE, -23);
-        assertEquals("-PT23M", new Dur(start, cal.getTime()).toString());
+        suite.addTest(new DurTest(new Dur(start, cal.getTime()), "-PT23M"));
         
         cal.setTime(start);
         cal.add(Calendar.SECOND, -5);
-        assertEquals("-PT5S", new Dur(start, cal.getTime()).toString());
+        suite.addTest(new DurTest(new Dur(start, cal.getTime()), "-PT5S"));
         
         cal.setTime(start);
         cal.add(Calendar.HOUR_OF_DAY, 25);
         cal.add(Calendar.MINUTE, -23);
         cal.add(Calendar.SECOND, -5);
-        assertEquals("P1DT36M55S", new Dur(start, cal.getTime()).toString());
+        suite.addTest(new DurTest(new Dur(start, cal.getTime()), "P1DT36M55S"));
 
         cal.setTime(start);
         cal.add(Calendar.YEAR, -2);
         cal.add(Calendar.WEEK_OF_YEAR, 11);
-        assertEquals("-P654D", new Dur(start, cal.getTime()).toString());
-    }
+        suite.addTest(new DurTest(new Dur(start, cal.getTime()), "-P654D"));
 
-    /**
-     * 
-     */
-    public void testAdjacentWeeks() {
+        // test adjacent weeks..
         TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
         TimeZoneRegistry tzreg = TimeZoneRegistryFactory.getInstance().createRegistry();
-        Calendar cal = Calendar.getInstance();
+        cal = Calendar.getInstance();
         cal.clear(Calendar.SECOND);
         cal.set(2005, 0, 1, 12, 00);
-        Date start = cal.getTime();
+        start = cal.getTime();
         DtStart dtStart = new DtStart(new DateTime(start));
         dtStart.setTimeZone(tzreg.getTimeZone("America/Los_Angeles"));
         cal.set(2005, 0, 2, 11, 59);
         Date end = cal.getTime();
         DtEnd dtEnd = new DtEnd(new DateTime(end));
-        assertEquals("PT23H59M", new Dur(dtStart.getDate(), dtEnd.getDate()).toString());
-    }
-    
-    /**
-     * @throws ParseException
-     */
-    public void testCrossYearDur() throws ParseException {
+        suite.addTest(new DurTest(new Dur(dtStart.getDate(), dtEnd.getDate()), "PT23H59M"));
+
+        // test cross-year..
         Dur duration = new Dur(new net.fortuna.ical4j.model.Date("20061231"),
                 new net.fortuna.ical4j.model.Date("20070101"));
-        
-        assertEquals("P1D", duration.toString());
-    }
-    
-    /**
-     * Test negative time.
-     */
-    public void testNegativeDuration() {
-        assertEquals("-P1W", new Dur(-1).toString());
-        assertEquals("-P1D", new Dur(-1, 0, 0, 0).toString());
-        assertEquals("-PT1H", new Dur(0, -1, 0, 0).toString());
-        assertEquals("-PT1M", new Dur(0, 0, -1, 0).toString());
-        assertEquals("-PT1S", new Dur(0, 0, 0, -1).toString());
-        assertEquals("-P1DT1S", new Dur(-1, 0, 0, -1).toString());
-//        assertEquals("PT23H59M59S", new Dur(-1, 0, 0, -1).toString());
-    }
-    
-    /**
-     * Test adding durations.
-     */
-    public void testAdd() {
+        suite.addTest(new DurTest(duration, "P1D"));
+
+        // test negative duration..
+        suite.addTest(new DurTest(new Dur(-1), "-P1W"));
+        suite.addTest(new DurTest(new Dur(-1, 0, 0, 0), "-P1D"));
+        suite.addTest(new DurTest(new Dur(0, -1, 0, 0), "-PT1H"));
+        suite.addTest(new DurTest(new Dur(0, 0, -1, 0), "-PT1M"));
+        suite.addTest(new DurTest(new Dur(0, 0, 0, -1), "-PT1S"));
+        suite.addTest(new DurTest(new Dur(-1, 0, 0, -1), "-P1DT1S"));
+//        suite.addTest(new DurTest(new Dur(-1, 0, 0, -1), "PT23H59M59S"));
+
+        // Test adding durations..
         Dur oneWeek = new Dur("P1W");
         Dur twoWeeks = new Dur("P2W");
         Dur oneDay = new Dur("P1D");
@@ -185,22 +230,24 @@ public class DurTest extends TestCase {
         Dur oneSecond = new Dur("P1S");
         Dur twoSeconds = new Dur("P2S");
         
-        assertEquals(twoWeeks, oneWeek.add(oneWeek));
-        assertEquals(twoDays, oneDay.add(oneDay));
-        assertEquals(twoHours, oneHour.add(oneHour));
-        assertEquals(new Dur("P8D"), oneWeek.add(oneDay));
-        assertEquals(new Dur("P1D1H"), oneDay.add(oneHour));
-        assertEquals(new Dur("-P8D"), oneWeek.negate().add(oneDay.negate()));
-        assertEquals(new Dur("-P1D1H"), oneDay.negate().add(oneHour.negate()));
-        assertEquals(new Dur("-P1H1M"), oneHour.negate().add(oneMinute.negate()));
-        assertEquals(new Dur("-P1M1S"), oneMinute.negate().add(oneSecond.negate()));
+        suite.addTest(new DurTest(oneWeek.add(oneWeek), twoWeeks));
+        suite.addTest(new DurTest(oneDay.add(oneDay), twoDays));
+        suite.addTest(new DurTest(oneHour.add(oneHour), twoHours));
+        suite.addTest(new DurTest(oneWeek.add(oneDay), new Dur("P8D")));
+        suite.addTest(new DurTest(oneDay.add(oneHour), new Dur("P1D1H")));
+        suite.addTest(new DurTest(oneWeek.negate().add(oneDay.negate()), new Dur("-P8D")));
+        suite.addTest(new DurTest(oneDay.negate().add(oneHour.negate()), new Dur("-P1D1H")));
+        suite.addTest(new DurTest(oneHour.negate().add(oneMinute.negate()), new Dur("-P1H1M")));
+        suite.addTest(new DurTest(oneMinute.negate().add(oneSecond.negate()), new Dur("-P1M1S")));
         
-        assertEquals(new Dur("P1D1H"), new Dur(0, 23, 0, 0).add(twoHours));
-        assertEquals(new Dur("P1H1M"), new Dur(0, 0, 59, 0).add(twoMinutes));
-        assertEquals(new Dur("P1M1S"), new Dur(0, 0, 0, 59).add(twoSeconds));
+        suite.addTest(new DurTest(new Dur(0, 23, 0, 0).add(twoHours), new Dur("P1D1H")));
+        suite.addTest(new DurTest(new Dur(0, 0, 59, 0).add(twoMinutes), new Dur("P1H1M")));
+        suite.addTest(new DurTest(new Dur(0, 0, 0, 59).add(twoSeconds), new Dur("P1M1S")));
         
-        assertEquals(new Dur("-P1D1H"), new Dur(0, -23, 0, 0).add(twoHours.negate()));
-        assertEquals(new Dur("-P1H1M"), new Dur(0, 0, -59, 0).add(twoMinutes.negate()));
-        assertEquals(new Dur("-P1M1S"), new Dur(0, 0, 0, -59).add(twoSeconds.negate()));
+        suite.addTest(new DurTest(new Dur(0, -23, 0, 0).add(twoHours.negate()), new Dur("-P1D1H")));
+        suite.addTest(new DurTest(new Dur(0, 0, -59, 0).add(twoMinutes.negate()), new Dur("-P1H1M")));
+        suite.addTest(new DurTest(new Dur(0, 0, 0, -59).add(twoSeconds.negate()), new Dur("-P1M1S")));
+        
+        return suite;
     }
 }
