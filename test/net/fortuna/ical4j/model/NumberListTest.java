@@ -35,21 +35,75 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
+/**
+ * @author Ben
+ *
+ */
 public class NumberListTest extends TestCase {
-
-    private static Log log = LogFactory.getLog(NumberListTest.class);
+    
+    private NumberList numberList;
+    
+    private int expectedSize;
+    
+    private String expectedString;
     
     /**
-     * Tests the parsing of a number list.
+     * @param numberList
+     * @param expectedSize
      */
-    public void testParsing() {
-        log.info(new NumberList("1,1,2,4,5"));
-        log.info(new NumberList("-9,-2,-3,3,5,6"));
-        log.info(new NumberList("0,2,5,-2,-4,-5,+3"));
+    public NumberListTest(NumberList numberList, int expectedSize) {
+        super("testSize");
+        this.numberList = numberList;
+        this.expectedSize = expectedSize;
+    }
+    
+    /**
+     * @param numberList
+     * @param expectedString
+     */
+    public NumberListTest(NumberList numberList, String expectedString) {
+        super("testToString");
+        this.numberList = numberList;
+        this.expectedString = expectedString;
+    }
+    
+    /**
+     * 
+     */
+    public void testSize() {
+        assertEquals(expectedSize, numberList.size());
+    }
+    
+    /**
+     * 
+     */
+    public void testToString() {
+        assertEquals(expectedString, numberList.toString());
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#getName()
+     */
+    public String getName() {
+        return super.getName() + " [" + numberList + "]";
+    }
+    
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new NumberListTest(new NumberList("1,1,2,4,5"), 5));
+        suite.addTest(new NumberListTest(new NumberList("1,1,2,4,5"), "1,1,2,4,5"));
+
+        suite.addTest(new NumberListTest(new NumberList("-9,-2,-3,3,5,6"), 6));
+        suite.addTest(new NumberListTest(new NumberList("-9,-2,-3,3,5,6"), "-9,-2,-3,3,5,6"));
+        
+        suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3"), 7));
+        suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3"), "0,2,5,-2,-4,-5,3"));
+        return suite;
     }
 }
