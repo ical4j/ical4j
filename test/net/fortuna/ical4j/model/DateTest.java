@@ -39,6 +39,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.TimeZones;
 
 /**
@@ -47,64 +48,87 @@ import net.fortuna.ical4j.util.TimeZones;
  */
 public class DateTest extends TestCase {
 
-    /*
-     * Class under test for void Date(long)
-     */
-    public void testDatelong() {
-        assertEquals("19700101", new Date(0l).toString());
-    }
+    private Date date;
 
-    /*
-     * Class under test for void Date(Date)
+    private java.util.Date date2;
+    
+    private String expectedString;
+    
+    /**
+     * @param date
+     * @param expectedString
      */
-    public void testDateDate() {
+    public DateTest(Date date, String expectedString) {
+        super("testToString");
+        this.date = date;
+        this.expectedString = expectedString;
+    }
+    
+    /**
+     * @param date
+     * @param date2
+     */
+    public DateTest(Date date, java.util.Date date2) {
+        super("testEquals");
+        this.date = date;
+        this.date2 = date2;
+    }
+    
+    /**
+     * 
+     */
+    public void testToString() {
+        assertEquals(expectedString, date.toString());
+    }
+    
+    /**
+     * 
+     */
+    public void testEquals() {
+        assertEquals(date2, date);
+    }
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#getName()
+     */
+    public String getName() {
+        return super.getName() + " [" + date.toString() + "]";
+    }
+    
+    /**
+     * @return
+     * @throws ParseException 
+     */
+    public static TestSuite suite() throws ParseException {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new DateTest(new Date(0l), "19700101"));
+
         Calendar cal = Calendar.getInstance(java.util.TimeZone.getTimeZone(TimeZones.GMT_ID));
         cal.clear();
         cal.set(Calendar.YEAR, 1984);
         // months are zero-based..
         cal.set(Calendar.MONTH, 3);
         cal.set(Calendar.DAY_OF_MONTH, 17);
-        assertEquals("19840417", new Date(cal.getTime()).toString());
-    }
+        suite.addTest(new DateTest(new Date(cal.getTime()), "19840417"));
 
-    /*
-     * Class under test for void Date(String)
-     */
-    public void testDateString() throws Exception {
-        assertEquals("20050630", new Date("20050630").toString());
-    }
-    
-    /**
-     * Test equality of Date instances created using different constructors.
-     * @throws ParseException
-     */
-    public void testDateEquals() throws ParseException {
-        Date date1 = new Date("20050101");
-    
+        suite.addTest(new DateTest(new Date("20050630"), "20050630"));
+
+        // Test equality of Date instances created using different constructors..
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
         calendar.clear();
         calendar.set(2005, 0, 1);
         calendar.set(Calendar.MILLISECOND, 1);
-        Date date2 = new Date(calendar.getTime());
-    
-        assertEquals(date1.toString(), date2.toString());
-        assertEquals(date1, date2);
-    }
-    
-    /**
-     * Assert the timezone of date instances is GMT.
-     */
-    public void testDateTimeZone() throws ParseException {
-        Date date = new Date("20050101");
+        suite.addTest(new DateTest(new Date(calendar.getTime()), new Date("20050101").toString()));
+        suite.addTest(new DateTest(new Date(calendar.getTime()), new Date("20050101")));
         
-        Calendar calendar = Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
+        calendar = Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
         calendar.clear();
         calendar.set(2005, 0, 1);
         calendar.clear(Calendar.HOUR_OF_DAY);
         calendar.clear(Calendar.MINUTE);
         calendar.clear(Calendar.SECOND);
         calendar.clear(Calendar.MILLISECOND);
-        
-        assertEquals(date, calendar.getTime());
+        suite.addTest(new DateTest(new Date("20050101"), calendar.getTime()));
+        return suite;
     }
 }
