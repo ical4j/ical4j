@@ -40,6 +40,7 @@ import java.util.GregorianCalendar;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,136 +52,332 @@ public class PeriodListTest extends TestCase {
 
     private static Log log = LogFactory.getLog(PeriodListTest.class);
 
-    private DateTime begin1994;
+    private PeriodList periodList;
 
-    private DateTime end1994;
-
-    private DateTime jan1994;
-
-    private DateTime feb1994;
-
-    private DateTime mar1994;
-
-    private DateTime apr1994;
-
-    private DateTime may1994;
-
-    private DateTime jun1994;
-
-    private DateTime jul1994;
-
-    private DateTime aug1994;
-
-    private DateTime sep1994;
-
-    private DateTime oct1994;
-
-    private DateTime nov1994;
-
-    private DateTime dec1994;
-
-    private Period monthJanuary;
-
-    private Period monthFebruary;
-
-    private Period monthMarch;
-
-    private Period monthApril;
-
-    private Period monthMay;
-
-    private Period monthJune;
-
-    private Period monthJuly;
-
-    private Period monthAugust;
-
-    private Period monthSeptember;
-
-    private Period monthOctober;
-
-    private Period monthNovember;
-
-    private Period monthDecember;
-
-    private Period head1994;
-
-    private Period tail1994;
-
-    private PeriodList oddMonths;
-
-    private PeriodList evenMonths;
-
-    private PeriodList headSet;
-
-    private PeriodList tailSet;
-
-    public void setUp() throws Exception {
-        super.setUp();
+    private PeriodList expectedPeriodList;
+    
+    private int expectedSize;
+    
+    private Period expectedFirstPeriod;
+    
+    /**
+     * @param periodList
+     * @param periodList2
+     */
+    public PeriodListTest(PeriodList periodList, PeriodList expectedPeriodList) {
+        super("testEquals");
+        this.periodList = periodList;
+        this.expectedPeriodList = expectedPeriodList;
+    }
+    
+    /**
+     * @param periodList
+     * @param expectedSize
+     */
+    public PeriodListTest(PeriodList periodList, int expectedSize) {
+        super("testSize");
+        this.periodList = periodList;
+        this.expectedSize = expectedSize;
+    }
+    
+    /**
+     * @param periodList
+     * @param expectedFirstPeriod
+     */
+    public PeriodListTest(PeriodList periodList, Period expectedFirstPeriod) {
+        super("testFirstPeriodEquals");
+        this.periodList = periodList;
+        this.expectedFirstPeriod = expectedFirstPeriod;
+    }
+    
+    /**
+     * @param testMethod
+     */
+    public PeriodListTest(String testMethod) {
+        super(testMethod);
+    }
+    
+    /**
+     * 
+     */
+    public void testEquals() {
+        assertEquals(expectedPeriodList, periodList);
+    }
+    
+    /**
+     * 
+     */
+    public void testSize() {
+        assertEquals(expectedSize, periodList.size());
+    }
+    
+    /**
+     * 
+     */
+    public void testFirstPeriodEquals() {
+        assertEquals(expectedFirstPeriod, periodList.toArray()[0]);
+    }
+    
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
         // create ranges that are intervals
         java.util.Calendar cal = new GregorianCalendar(1994,
                 java.util.Calendar.JANUARY, 1);
-        begin1994 = new DateTime(cal.getTime().getTime());
+        DateTime begin1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.DECEMBER, 31);
-        end1994 = new DateTime(cal.getTime().getTime());
+        DateTime end1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.JANUARY, 22);
-        jan1994 = new DateTime(cal.getTime().getTime());
+        DateTime jan1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.FEBRUARY, 15);
-        feb1994 = new DateTime(cal.getTime().getTime());
+        DateTime feb1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.MARCH, 4);
-        mar1994 = new DateTime(cal.getTime().getTime());
+        DateTime mar1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.APRIL, 12);
-        apr1994 = new DateTime(cal.getTime().getTime());
+        DateTime apr1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.MAY, 19);
-        may1994 = new DateTime(cal.getTime().getTime());
+        DateTime may1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.JUNE, 21);
-        jun1994 = new DateTime(cal.getTime().getTime());
+        DateTime jun1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.JULY, 28);
-        jul1994 = new DateTime(cal.getTime().getTime());
+        DateTime jul1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.AUGUST, 20);
-        aug1994 = new DateTime(cal.getTime().getTime());
+        DateTime aug1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.SEPTEMBER, 17);
-        sep1994 = new DateTime(cal.getTime().getTime());
+        DateTime sep1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.OCTOBER, 29);
-        oct1994 = new DateTime(cal.getTime().getTime());
+        DateTime oct1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.NOVEMBER, 11);
-        nov1994 = new DateTime(cal.getTime().getTime());
+        DateTime nov1994 = new DateTime(cal.getTime().getTime());
         cal.set(1994, java.util.Calendar.DECEMBER, 2);
-        dec1994 = new DateTime(cal.getTime().getTime());
-        monthJanuary = new Period(jan1994, feb1994);
-        monthFebruary = new Period(feb1994, mar1994);
-        monthMarch = new Period(mar1994, apr1994);
-        monthApril = new Period(apr1994, may1994);
-        monthMay = new Period(may1994, jun1994);
-        monthJune = new Period(jun1994, jul1994);
-        monthJuly = new Period(jul1994, aug1994);
-        monthAugust = new Period(aug1994, sep1994);
-        monthSeptember = new Period(sep1994, oct1994);
-        monthOctober = new Period(oct1994, nov1994);
-        monthNovember = new Period(nov1994, dec1994);
-        monthDecember = new Period(dec1994, end1994);
-        head1994 = new Period(begin1994, jan1994);
-        tail1994 = new Period(dec1994, end1994);
+        DateTime dec1994 = new DateTime(cal.getTime().getTime());
+        Period monthJanuary = new Period(jan1994, feb1994);
+        Period monthFebruary = new Period(feb1994, mar1994);
+        Period monthMarch = new Period(mar1994, apr1994);
+        Period monthApril = new Period(apr1994, may1994);
+        Period monthMay = new Period(may1994, jun1994);
+        Period monthJune = new Period(jun1994, jul1994);
+        Period monthJuly = new Period(jul1994, aug1994);
+        Period monthAugust = new Period(aug1994, sep1994);
+        Period monthSeptember = new Period(sep1994, oct1994);
+        Period monthOctober = new Period(oct1994, nov1994);
+        Period monthNovember = new Period(nov1994, dec1994);
+        Period monthDecember = new Period(dec1994, end1994);
+        Period head1994 = new Period(begin1994, jan1994);
+        Period tail1994 = new Period(dec1994, end1994);
 
         // create sets that contain the ranges
-        oddMonths = new PeriodList();
+        PeriodList oddMonths = new PeriodList();
         oddMonths.add(monthJanuary);
         oddMonths.add(monthMarch);
         oddMonths.add(monthMay);
         oddMonths.add(monthJuly);
         oddMonths.add(monthSeptember);
         oddMonths.add(monthNovember);
-        evenMonths = new PeriodList();
+        PeriodList tailSet = new PeriodList();
+        tailSet.add(tail1994);
+
+        /*
+         * assertNull("Removing null from a null set should return null", empty1.subtract(null)); assertNull("Removing
+         * from a null set should return null", normalizer.subtractDateRanges(null, headSet));
+         */
+        PeriodList evenMonths = new PeriodList();
         evenMonths.add(monthFebruary);
         evenMonths.add(monthApril);
         evenMonths.add(monthJune);
         evenMonths.add(monthAugust);
         evenMonths.add(monthOctober);
         evenMonths.add(monthDecember);
-        headSet = new PeriodList();
+        
+        PeriodList headSet = new PeriodList();
         headSet.add(head1994);
-        tailSet = new PeriodList();
-        tailSet.add(tail1994);
+        
+        PeriodList empty1 = new PeriodList();
+        PeriodList empty2 = new PeriodList();
+        
+        suite.addTest(new PeriodListTest(evenMonths.subtract(null), evenMonths));
+        suite.addTest(new PeriodListTest(empty1.subtract(empty2), empty1));
+        suite.addTest(new PeriodListTest(headSet.subtract(empty1), headSet));
+        suite.addTest(new PeriodListTest(evenMonths.subtract(empty1), evenMonths));
+        
+        // add disjoint ranges..
+        PeriodList periodList1 = new PeriodList();
+        periodList1.add(monthNovember);
+        periodList1.add(monthDecember);
+        PeriodList periodList2 = new PeriodList();
+        periodList2.add(monthJuly);
+        periodList2.add(monthNovember);
+
+        /*
+         * SortedSet normalizedSet = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
+         */
+        PeriodList sum = periodList1.add(periodList2);
+        suite.addTest(new PeriodListTest(sum, 2));
+//        Period lonePeriod = (Period) sum.toArray()[0];
+//        assertEquals(lonePeriod.getStart(), jul1994);
+//        assertEquals(lonePeriod.getEnd(), aug1994);
+        suite.addTest(new PeriodListTest(sum, new Period(jul1994, aug1994)));
+
+        // add one range containing another..
+        periodList1 = new PeriodList();
+        periodList1.add(monthOctober);
+        periodList1.add(monthNovember);
+        periodList1.add(monthDecember);
+
+        periodList2 = new PeriodList();
+        periodList2.add(monthNovember);
+
+        /*
+         * SortedSet normalizedSet = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
+         */
+        sum = periodList1.add(periodList2);
+        suite.addTest(new PeriodListTest(sum, 1));
+//        Period lonePeriod = (Period) sum.toArray()[0];
+//        assertEquals(lonePeriod.getStart(), oct1994);
+//        assertEquals(lonePeriod.getEnd(), end1994);
+        suite.addTest(new PeriodListTest(sum, new Period(oct1994, end1994)));
+
+        // Test Intersecting Periods
+        periodList1 = new PeriodList();
+        periodList1.add(monthNovember);
+        periodList1.add(monthDecember);
+
+        periodList2 = new PeriodList();
+        periodList2.add(monthOctober);
+        periodList2.add(monthNovember);
+
+        /*
+         * SortedSet normalizedSet = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
+         */
+        sum = periodList1.add(periodList2);
+        suite.addTest(new PeriodListTest(sum, 1));
+//        Period lonePeriod = (Period) sum.toArray()[0];
+//        assertEquals(lonePeriod.getStart(), oct1994);
+//        assertEquals(lonePeriod.getEnd(), end1994);
+        suite.addTest(new PeriodListTest(sum, new Period(oct1994, end1994)));
+
+        // Test adding adjacent periods.
+        periodList1 = new PeriodList();
+        periodList1.add(monthNovember);
+        periodList1.add(monthDecember);
+
+        periodList2 = new PeriodList();
+        periodList2.add(monthOctober);
+
+        /*
+         * SortedSet normalizedSet = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
+         */
+        sum = periodList1.add(periodList2);
+        suite.addTest(new PeriodListTest(sum, 1));
+//        Period lonePeriod = (Period) sum.toArray()[0];
+//        assertEquals(lonePeriod.getStart(), oct1994);
+//        assertEquals(lonePeriod.getEnd(), end1994);
+        suite.addTest(new PeriodListTest(sum, new Period(oct1994, end1994)));
+
+        // Test adding the same range twice
+        periodList1 = new PeriodList();
+        periodList1.add(monthNovember);
+        periodList1.add(monthDecember);
+
+        periodList2 = new PeriodList();
+        periodList2.add(monthOctober);
+        periodList2.add(monthNovember);
+
+        /*
+         * SortedSet normalizedSet1 = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2); SortedSet normalizedSet2 =
+         * normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
+         */
+        PeriodList sum1 = periodList1.add(periodList2);
+        suite.addTest(new PeriodListTest(sum1, 1));
+//        Period lonePeriod1 = (Period) sum1.toArray()[0];
+//        assertEquals(lonePeriod1.getStart(), oct1994);
+//        assertEquals(lonePeriod1.getEnd(), end1994);
+        suite.addTest(new PeriodListTest(sum1, new Period(oct1994, end1994)));
+
+        PeriodList sum2 = periodList1.add(periodList2);
+        suite.addTest(new PeriodListTest(sum2, 1));
+//        Period lonePeriod2 = (Period) sum2.toArray()[0];
+//        assertEquals(lonePeriod2.getStart(), oct1994);
+//        assertEquals(lonePeriod2.getEnd(), end1994);
+        suite.addTest(new PeriodListTest(sum2, new Period(oct1994, end1994)));
+
+        // Test subtract a containing date range set..
+        periodList1 = new PeriodList();
+        periodList1.add(monthSeptember);
+        periodList1.add(monthOctober);
+        periodList1.add(monthNovember);
+        periodList1.add(monthDecember);
+
+        periodList2 = new PeriodList();
+        periodList2.add(monthOctober);
+        periodList2.add(monthNovember);
+
+        /*
+         * SortedSet normalizedSet = normalizer.subtractDateRanges(dateRangeSet1, dateRangeSet2);
+         */
+        sum = periodList1.subtract(periodList2);
+        suite.addTest(new PeriodListTest(sum, 2));
+//        Period lonePeriod1 = (Period) sum.toArray()[0];
+//        assertEquals(lonePeriod1.getStart(), sep1994);
+//        assertEquals(lonePeriod1.getEnd(), oct1994);
+        suite.addTest(new PeriodListTest(sum, new Period(sep1994, oct1994)));
+
+        // FIXME: don't use asserts here..
+        Period lonePeriod2 = (Period) sum.toArray()[1];
+        assertEquals(lonePeriod2.getStart(), dec1994);
+        assertEquals(lonePeriod2.getEnd(), end1994);
+
+        // Test removing a Disjoint Set of Date Ranges..
+        periodList1 = new PeriodList();
+        periodList1.add(monthSeptember);
+        periodList1.add(monthOctober);
+        periodList1.add(monthNovember);
+        periodList1.add(monthDecember);
+
+        periodList2 = new PeriodList();
+        periodList2.add(monthApril);
+        periodList2.add(monthMay);
+
+        /*
+         * SortedSet normalizedSet = normalizer.subtractDateRanges(dateRangeSet1, dateRangeSet2);
+         */
+        sum = periodList1.subtract(periodList2);
+        suite.addTest(new PeriodListTest(sum, periodList1));
+
+        // SubtractSameRangesTwice...
+        periodList1 = new PeriodList();
+        periodList1.add(monthSeptember);
+        periodList1.add(monthOctober);
+        periodList1.add(monthNovember);
+        periodList1.add(monthDecember);
+
+        periodList2 = new PeriodList();
+        periodList2.add(monthOctober);
+        periodList2.add(monthNovember);
+
+        PeriodList expectedResult = new PeriodList();
+        expectedResult.add(monthSeptember);
+        expectedResult.add(monthDecember);
+
+        /*
+         * SortedSet normalizedSet = normalizer.subtractDateRanges(dateRangeSet1, dateRangeSet2);
+         */
+        sum = periodList1.subtract(periodList2);
+        suite.addTest(new PeriodListTest(sum, expectedResult));
+
+        /*
+         * normalizedSet = normalizer.subtractDateRanges(dateRangeSet1, dateRangeSet2);
+         */
+        sum = periodList1.subtract(periodList2);
+        suite.addTest(new PeriodListTest(sum, expectedResult));
+        
+        // other tests..
+        suite.addTest(new PeriodListTest("testTimezone"));
+        suite.addTest(new PeriodListTest("testNormalise"));
+        
+        return suite;
     }
 
     public final void testPeriodListSort() {
@@ -215,25 +412,6 @@ public class PeriodListTest extends TestCase {
      */
 
     /**
-     * test null curr and remove test null curr test null remove test empty curr and remove test empty curr test empty
-     * remove
-     * @throws Exception
-     */
-    public void testEmptySubtractPeriodList() throws Exception {
-        PeriodList empty1 = new PeriodList();
-        PeriodList empty2 = new PeriodList();
-
-        /*
-         * assertNull("Removing null from a null set should return null", empty1.subtract(null)); assertNull("Removing
-         * from a null set should return null", normalizer.subtractDateRanges(null, headSet));
-         */
-        assertEquals(evenMonths, evenMonths.subtract(null));
-        assertEquals(empty1, empty1.subtract(empty2));
-        assertEquals(headSet, headSet.subtract(empty1));
-        assertEquals(evenMonths, evenMonths.subtract(empty1));
-    }
-
-    /**
      * Test null dateList Test empty dateList Test Jan/Feb/Mar dateList
      * @throws Exception
      */
@@ -262,144 +440,6 @@ public class PeriodListTest extends TestCase {
      */
 
     /**
-     * add disjoint ranges
-     * @throws Exception
-     */
-    public void testAddDisjointRange() throws Exception {
-
-        PeriodList periodList1 = new PeriodList();
-        PeriodList periodList2 = new PeriodList();
-
-        periodList1.add(monthNovember);
-        periodList1.add(monthDecember);
-
-        periodList2.add(monthJuly);
-        periodList2.add(monthNovember);
-
-        /*
-         * SortedSet normalizedSet = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
-         */
-        PeriodList sum = periodList1.add(periodList2);
-
-        assertEquals(sum.size(), 2);
-        Period lonePeriod = (Period) sum.toArray()[0];
-        assertEquals(lonePeriod.getStart(), jul1994);
-        assertEquals(lonePeriod.getEnd(), aug1994);
-    }
-
-    /**
-     * add one range containing another
-     * @throws Exception
-     */
-    public void testAddContainingRange() throws Exception {
-
-        PeriodList periodList1 = new PeriodList();
-        PeriodList periodList2 = new PeriodList();
-
-        periodList1.add(monthOctober);
-        periodList1.add(monthNovember);
-        periodList1.add(monthDecember);
-
-        periodList2.add(monthNovember);
-
-        /*
-         * SortedSet normalizedSet = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
-         */
-        PeriodList sum = periodList1.add(periodList2);
-
-        assertEquals(sum.size(), 1);
-        Period lonePeriod = (Period) sum.toArray()[0];
-        assertEquals(lonePeriod.getStart(), oct1994);
-        assertEquals(lonePeriod.getEnd(), end1994);
-    }
-
-    /**
-     * add overlapping ranges
-     * @throws Exception
-     */
-    public void testAddOverlappingDateRanges() throws Exception {
-
-        // Test Intersecting Periods
-        PeriodList periodList1 = new PeriodList();
-        PeriodList periodList2 = new PeriodList();
-
-        periodList1.add(monthNovember);
-        periodList1.add(monthDecember);
-
-        periodList2.add(monthOctober);
-        periodList2.add(monthNovember);
-        /*
-         * SortedSet normalizedSet = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
-         */
-        PeriodList sum = periodList1.add(periodList2);
-
-        assertEquals(sum.size(), 1);
-        Period lonePeriod = (Period) sum.toArray()[0];
-        assertEquals(lonePeriod.getStart(), oct1994);
-        assertEquals(lonePeriod.getEnd(), end1994);
-    }
-
-    /**
-     * add adjacent ranges
-     * @throws Exception
-     */
-    public void testAddAdjacentRanges() throws Exception {
-
-        // Test adding adjacent periods.
-        PeriodList periodList1 = new PeriodList();
-        PeriodList periodList2 = new PeriodList();
-
-        periodList1.add(monthNovember);
-        periodList1.add(monthDecember);
-
-        periodList2.add(monthOctober);
-
-        /*
-         * SortedSet normalizedSet = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
-         */
-        PeriodList sum = periodList1.add(periodList2);
-
-        assertEquals(sum.size(), 1);
-        Period lonePeriod = (Period) sum.toArray()[0];
-        assertEquals(lonePeriod.getStart(), oct1994);
-        assertEquals(lonePeriod.getEnd(), end1994);
-    }
-
-    /**
-     * add the same range twice
-     * @throws Exception
-     */
-    public void testAddSameRangeTwice() throws Exception {
-
-        // Test adding the same range twice
-        PeriodList periodList1 = new PeriodList();
-        PeriodList periodList2 = new PeriodList();
-
-        periodList1.add(monthNovember);
-        periodList1.add(monthDecember);
-
-        periodList2.add(monthOctober);
-        periodList2.add(monthNovember);
-
-        /*
-         * SortedSet normalizedSet1 = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2); SortedSet normalizedSet2 =
-         * normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
-         */
-        PeriodList sum1 = periodList1.add(periodList2);
-        PeriodList sum2 = periodList1.add(periodList2);
-
-        assertEquals(sum1.size(), 1);
-        Period lonePeriod1 = (Period) sum1.toArray()[0];
-        assertEquals(lonePeriod1.getStart(), oct1994);
-        assertEquals(lonePeriod1.getEnd(), end1994);
-
-        assertEquals(sum2.size(), 1);
-        Period lonePeriod2 = (Period) sum2.toArray()[0];
-        assertEquals(lonePeriod2.getStart(), oct1994);
-        assertEquals(lonePeriod2.getEnd(), end1994);
-    }
-
-    /**
      * Test subtract null range sets.
      * @throws Exception
      */
@@ -407,98 +447,6 @@ public class PeriodListTest extends TestCase {
      * public void testSubtractNullDateRanges() throws Exception { assertNull(normalizer.subtractDateRanges(null,
      * null)); }
      */
-
-    /**
-     * Test subtract a containing date range set.
-     * @throws Exception
-     */
-    public void testSubtractContainingRange() throws Exception {
-
-        PeriodList periodList1 = new PeriodList();
-        PeriodList periodList2 = new PeriodList();
-
-        periodList1.add(monthSeptember);
-        periodList1.add(monthOctober);
-        periodList1.add(monthNovember);
-        periodList1.add(monthDecember);
-
-        periodList2.add(monthOctober);
-        periodList2.add(monthNovember);
-
-        /*
-         * SortedSet normalizedSet = normalizer.subtractDateRanges(dateRangeSet1, dateRangeSet2);
-         */
-        PeriodList sum = periodList1.subtract(periodList2);
-
-        assertEquals(2, sum.size());
-        Period lonePeriod1 = (Period) sum.toArray()[0];
-        assertEquals(lonePeriod1.getStart(), sep1994);
-        assertEquals(lonePeriod1.getEnd(), oct1994);
-
-        Period lonePeriod2 = (Period) sum.toArray()[1];
-        assertEquals(lonePeriod2.getStart(), dec1994);
-        assertEquals(lonePeriod2.getEnd(), end1994);
-    }
-
-    /**
-     * Test removing a Disjoint Set of Date Ranges.
-     * @throws Exception
-     */
-    public void testSubtractDisjointDateRanges() throws Exception {
-
-        PeriodList periodList1 = new PeriodList();
-        PeriodList periodList2 = new PeriodList();
-
-        periodList1.add(monthSeptember);
-        periodList1.add(monthOctober);
-        periodList1.add(monthNovember);
-        periodList1.add(monthDecember);
-
-        periodList2.add(monthApril);
-        periodList2.add(monthMay);
-
-        /*
-         * SortedSet normalizedSet = normalizer.subtractDateRanges(dateRangeSet1, dateRangeSet2);
-         */
-        PeriodList sum = periodList1.subtract(periodList2);
-
-        assertEquals(sum, periodList1);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public void testSubtractSameRangesTwice() throws Exception {
-
-        PeriodList periodList1 = new PeriodList();
-        PeriodList periodList2 = new PeriodList();
-        PeriodList expectedResult = new PeriodList();
-
-        expectedResult.add(monthSeptember);
-        expectedResult.add(monthDecember);
-
-        periodList1.add(monthSeptember);
-        periodList1.add(monthOctober);
-        periodList1.add(monthNovember);
-        periodList1.add(monthDecember);
-
-        periodList2.add(monthOctober);
-        periodList2.add(monthNovember);
-
-        /*
-         * SortedSet normalizedSet = normalizer.subtractDateRanges(dateRangeSet1, dateRangeSet2);
-         */
-        PeriodList sum = periodList1.subtract(periodList2);
-
-        assertEquals(sum, expectedResult);
-
-        /*
-         * normalizedSet = normalizer.subtractDateRanges(dateRangeSet1, dateRangeSet2);
-         */
-        sum = periodList1.subtract(periodList2);
-
-        assertEquals(sum, expectedResult);
-    }
 
     /**
      * Test timezone functionality.
