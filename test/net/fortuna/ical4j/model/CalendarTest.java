@@ -35,7 +35,12 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VFreeBusy;
@@ -60,31 +65,59 @@ public class CalendarTest extends TestCase {
 
     private static Log log = LogFactory.getLog(Calendar.class);
     
-    private TimeZoneRegistry registry;
-    
     private Calendar calendar;
 
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * @param testMethod
+     * @param calendar
      */
-    protected void setUp() throws Exception {
-        super.setUp();
-        registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-        calendar = new Calendar();
-        calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
-        calendar.getProperties().add(Version.VERSION_2_0);
-        calendar.getProperties().add(CalScale.GREGORIAN);
+    public CalendarTest(String testMethod, Calendar calendar) {
+    	super(testMethod);
+    	this.calendar = calendar;
     }
     
-    /*
-     * Class under test for void Calendar()
+    /**
+     * @throws ValidationException
      */
-    public void testCalendar() throws ValidationException {
+    public void testValid() throws ValidationException {
+    	calendar.validate();
+    }
+    
+    /**
+     * 
+     */
+    public void testInvalid() {
+    	try {
+    		calendar.validate();
+            fail("Should throw a ValidationException");
+    	}
+    	catch (ValidationException ve) {
+            log.trace(ve);
+    	}
+    }
+    
+    /**
+     * @return
+     * @throws URISyntaxException 
+     * @throws IOException 
+     * @throws ParseException 
+     */
+    public static TestSuite suite() throws ParseException, IOException, URISyntaxException {
+    	TestSuite suite = new TestSuite();
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+
+    	Calendar baseCalendar = new Calendar();
+    	baseCalendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
+    	baseCalendar.getProperties().add(Version.VERSION_2_0);
+    	baseCalendar.getProperties().add(CalScale.GREGORIAN);
+        suite.addTest(new CalendarTest("testValid", baseCalendar));
+        
         VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
-        calendar.getComponents().add(tz);
         TzId tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
+        baseCalendar.getComponents().add(tz);
         
         // Add events, etc..
+        Calendar calendar = new Calendar(baseCalendar);
         java.util.Calendar calStart = java.util.Calendar.getInstance();
         calStart.set(java.util.Calendar.DAY_OF_WEEK, java.util.Calendar.MONDAY);
         calStart.set(java.util.Calendar.HOUR_OF_DAY, 9);
@@ -158,21 +191,12 @@ public class CalendarTest extends TestCase {
         calendar.getComponents().add(week1UserA);
         calendar.getComponents().add(week2UserB);
         calendar.getComponents().add(week3UserC);
-        
-        calendar.validate();
-        
-        log.info(calendar);
-    }
-    
-    /**
-     * @throws ValidationException
-     */
-    public void testGetEventDateRanges() throws ValidationException {
-        // Add events, etc..
-        VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
-        TzId tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
+        suite.addTest(new CalendarTest("testValid", calendar));
 
-        java.util.Calendar calStart = java.util.Calendar.getInstance();
+        // test event date ranges..
+        calendar = new Calendar(baseCalendar);
+        
+        calStart = java.util.Calendar.getInstance();
         calStart.set(java.util.Calendar.YEAR, 2006);
         calStart.set(java.util.Calendar.MONTH, java.util.Calendar.JANUARY);
         calStart.set(java.util.Calendar.DAY_OF_MONTH, 1);
@@ -180,17 +204,17 @@ public class CalendarTest extends TestCase {
         calStart.clear(java.util.Calendar.MINUTE);
         calStart.clear(java.util.Calendar.SECOND);
 
-        java.util.Calendar calEnd = java.util.Calendar.getInstance();
+        calEnd = java.util.Calendar.getInstance();
         calEnd.setTime(calStart.getTime());
         calEnd.add(java.util.Calendar.YEAR, 1);
 
-        VEvent week1UserA = new VEvent(
+        week1UserA = new VEvent(
                 new Date(calStart.getTime().getTime()),
                 new Dur(0, 8, 0, 0), "Week 1 - User A");
         week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
-        Recur week1UserARecur = new Recur(
+        week1UserARecur = new Recur(
                 Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week1UserARecur.setInterval(3);
         week1UserARecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
@@ -205,13 +229,13 @@ public class CalendarTest extends TestCase {
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
 
-        VEvent week2UserB = new VEvent(
+        week2UserB = new VEvent(
                 new Date(calStart.getTime().getTime()),
                 new Dur(0, 8, 0, 0), "Week 2 - User B");
         week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
-        Recur week2UserBRecur = new Recur(
+        week2UserBRecur = new Recur(
                 Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week2UserBRecur.setInterval(3);
         week2UserBRecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
@@ -226,13 +250,13 @@ public class CalendarTest extends TestCase {
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
 
-        VEvent week3UserC = new VEvent(
+        week3UserC = new VEvent(
                 new Date(calStart.getTime().getTime()),
                 new Dur(0, 8, 0, 0), "Week 3 - User C");
         week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
-        Recur week3UserCRecur = new Recur(
+        week3UserCRecur = new Recur(
                 Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
         week3UserCRecur.setInterval(3);
         week3UserCRecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
@@ -247,6 +271,27 @@ public class CalendarTest extends TestCase {
         calendar.getComponents().add(week1UserA);
         calendar.getComponents().add(week2UserB);
         calendar.getComponents().add(week3UserC);
+        suite.addTest(new CalendarTest("testValid", calendar));
+        
+        return suite;
+    }
+    /*
+     * Class under test for void Calendar()
+     */
+    public void testCalendar() throws ValidationException {
+        
+        calendar.validate();
+        
+        log.info(calendar);
+    }
+    
+    /**
+     * @throws ValidationException
+     */
+    public void testGetEventDateRanges() throws ValidationException {
+        // Add events, etc..
+//        VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
+//        TzId tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
 
         calendar.validate();
 

@@ -43,43 +43,78 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class AddressListTest extends TestCase {
 
     private static final Log LOG = LogFactory.getLog(AddressListTest.class);
     
-    private static final String VALUE_ADDRESS_LIST = "\"address1@example.com\",\"address2@example.com\",\"address3@example.com\"";
+    private String value;
     
-    private AddressList addresses;
+    private int expectedSize;
     
+    private String[] compatibilityHints;
+    
+    /**
+     * @param testMethod
+     * @param value
+     */
+    public AddressListTest(String testMethod, String value, String[] compatibilityHints) {
+    	this(testMethod, value, -1, compatibilityHints);
+    }
+    
+    /**
+     * @param testMethod
+     * @param value
+     * @param expectedSize
+     */
+    public AddressListTest(String testMethod, String value, int expectedSize, String[] compatibilityHints) {
+    	super(testMethod);
+    	this.expectedSize = expectedSize;
+    	this.value = value;
+    	this.compatibilityHints = compatibilityHints;
+    }
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
-        super.setUp();
-        addresses = new AddressList(VALUE_ADDRESS_LIST);
+    	for (int i = 0; i < compatibilityHints.length; i++) {
+    		CompatibilityHints.setHintEnabled(compatibilityHints[i], true);
+    	}
     }
-
+    
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+    	for (int i = 0; i < compatibilityHints.length; i++) {
+    		CompatibilityHints.setHintEnabled(compatibilityHints[i], false);
+    	}
+    }
+    
     /**
      * Assert three addresses parsed from value.
+     * @throws URISyntaxException 
      */
-    public void testSize() {
-        assertEquals(3, addresses.size());
+    public void testSize() throws URISyntaxException {
+    	AddressList addresses = new AddressList(value);
+        assertEquals(expectedSize, addresses.size());
     }
     
     /**
      * Assert toString() produces identical address list string value.
+     * @throws URISyntaxException 
      */
-    public void testToString() {
-        assertEquals(VALUE_ADDRESS_LIST, addresses.toString());
+    public void testToString() throws URISyntaxException {
+    	AddressList addresses = new AddressList(value);
+        assertEquals(value, addresses.toString());
     }
     
     /**
      * Test invalid addresses are correctly handled.
      */
     public void testInvalidAddressList() throws URISyntaxException {
-        String value = "address1@example.com,<address2@example.com>,address3@example.com";
-        
         try {
             new AddressList(value);
             fail("Should throw URISyntaxException");
@@ -87,19 +122,23 @@ public class AddressListTest extends TestCase {
         catch (URISyntaxException use) {
             LOG.info("Caught exception: " + use.getMessage());
         }
+    }
+    
+    /**
+     * @return
+     * @throws URISyntaxException
+     */
+    public static TestSuite suite() throws URISyntaxException {
+    	TestSuite suite = new TestSuite();
         
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_PARSING, true);
-        
-        AddressList list = new AddressList(value);
-        assertEquals(2, list.size());
-        
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_PARSING, false);
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
-        
-        list = new AddressList(value);
-        assertEquals(3, list.size());
+        String value = "\"address1@example.com\",\"address2@example.com\",\"address3@example.com\"";
+    	suite.addTest(new AddressListTest("testSize", value, 3, new String[] {}));
+    	suite.addTest(new AddressListTest("testToString", value, new String[] {}));
+    	
+        value = "address1@example.com,<address2@example.com>,address3@example.com";
+    	suite.addTest(new AddressListTest("testInvalidAddressList", value, new String[] {}));
+    	suite.addTest(new AddressListTest("testSize", value, 2, new String[] {CompatibilityHints.KEY_RELAXED_PARSING}));
+    	suite.addTest(new AddressListTest("testSize", value, 3, new String[] {CompatibilityHints.KEY_NOTES_COMPATIBILITY}));
+    	return suite;
     }
 }
