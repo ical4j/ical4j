@@ -191,9 +191,9 @@ public class DurTest extends TestCase {
         suite.addTest(new DurTest(new Dur(start, cal.getTime()), "-P654D"));
 
         // test adjacent weeks..
-        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
+//        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
         TimeZoneRegistry tzreg = TimeZoneRegistryFactory.getInstance().createRegistry();
-        cal = Calendar.getInstance();
+        cal = Calendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
         cal.clear(Calendar.SECOND);
         cal.set(2005, 0, 1, 12, 00);
         start = cal.getTime();
