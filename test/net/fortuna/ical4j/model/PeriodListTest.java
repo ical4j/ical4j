@@ -58,7 +58,7 @@ public class PeriodListTest extends TestCase {
     
     private int expectedSize;
     
-    private Period expectedFirstPeriod;
+    private Period expectedPeriod;
     
     /**
      * @param periodList
@@ -84,10 +84,19 @@ public class PeriodListTest extends TestCase {
      * @param periodList
      * @param expectedFirstPeriod
      */
-    public PeriodListTest(PeriodList periodList, Period expectedFirstPeriod) {
-        super("testFirstPeriodEquals");
+    public PeriodListTest(String testMethod, PeriodList periodList, Period expectedPeriod) {
+        super(testMethod);
         this.periodList = periodList;
-        this.expectedFirstPeriod = expectedFirstPeriod;
+        this.expectedPeriod = expectedPeriod;
+    }
+    
+    /**
+     * @param testMethod
+     * @param periodList
+     */
+    public PeriodListTest(String testMethod, PeriodList periodList) {
+    	super(testMethod);
+    	this.periodList = periodList;
     }
     
     /**
@@ -114,8 +123,19 @@ public class PeriodListTest extends TestCase {
     /**
      * 
      */
+    public void testIsEmpty() {
+    	assertTrue(periodList.isEmpty());
+    }
+    
+    /**
+     * 
+     */
     public void testFirstPeriodEquals() {
-        assertEquals(expectedFirstPeriod, periodList.toArray()[0]);
+        assertEquals(expectedPeriod, periodList.toArray()[0]);
+    }
+    
+    public void testContains() {
+    	assertTrue(periodList.contains(expectedPeriod));
     }
     
     /**
@@ -218,7 +238,7 @@ public class PeriodListTest extends TestCase {
 //        Period lonePeriod = (Period) sum.toArray()[0];
 //        assertEquals(lonePeriod.getStart(), jul1994);
 //        assertEquals(lonePeriod.getEnd(), aug1994);
-        suite.addTest(new PeriodListTest(sum, new Period(jul1994, aug1994)));
+        suite.addTest(new PeriodListTest("testFirstPeriodEquals", sum, new Period(jul1994, aug1994)));
 
         // add one range containing another..
         periodList1 = new PeriodList();
@@ -237,7 +257,7 @@ public class PeriodListTest extends TestCase {
 //        Period lonePeriod = (Period) sum.toArray()[0];
 //        assertEquals(lonePeriod.getStart(), oct1994);
 //        assertEquals(lonePeriod.getEnd(), end1994);
-        suite.addTest(new PeriodListTest(sum, new Period(oct1994, end1994)));
+        suite.addTest(new PeriodListTest("testFirstPeriodEquals", sum, new Period(oct1994, end1994)));
 
         // Test Intersecting Periods
         periodList1 = new PeriodList();
@@ -256,7 +276,7 @@ public class PeriodListTest extends TestCase {
 //        Period lonePeriod = (Period) sum.toArray()[0];
 //        assertEquals(lonePeriod.getStart(), oct1994);
 //        assertEquals(lonePeriod.getEnd(), end1994);
-        suite.addTest(new PeriodListTest(sum, new Period(oct1994, end1994)));
+        suite.addTest(new PeriodListTest("testFirstPeriodEquals", sum, new Period(oct1994, end1994)));
 
         // Test adding adjacent periods.
         periodList1 = new PeriodList();
@@ -274,7 +294,7 @@ public class PeriodListTest extends TestCase {
 //        Period lonePeriod = (Period) sum.toArray()[0];
 //        assertEquals(lonePeriod.getStart(), oct1994);
 //        assertEquals(lonePeriod.getEnd(), end1994);
-        suite.addTest(new PeriodListTest(sum, new Period(oct1994, end1994)));
+        suite.addTest(new PeriodListTest("testFirstPeriodEquals", sum, new Period(oct1994, end1994)));
 
         // Test adding the same range twice
         periodList1 = new PeriodList();
@@ -294,14 +314,14 @@ public class PeriodListTest extends TestCase {
 //        Period lonePeriod1 = (Period) sum1.toArray()[0];
 //        assertEquals(lonePeriod1.getStart(), oct1994);
 //        assertEquals(lonePeriod1.getEnd(), end1994);
-        suite.addTest(new PeriodListTest(sum1, new Period(oct1994, end1994)));
+        suite.addTest(new PeriodListTest("testFirstPeriodEquals", sum1, new Period(oct1994, end1994)));
 
         PeriodList sum2 = periodList1.add(periodList2);
         suite.addTest(new PeriodListTest(sum2, 1));
 //        Period lonePeriod2 = (Period) sum2.toArray()[0];
 //        assertEquals(lonePeriod2.getStart(), oct1994);
 //        assertEquals(lonePeriod2.getEnd(), end1994);
-        suite.addTest(new PeriodListTest(sum2, new Period(oct1994, end1994)));
+        suite.addTest(new PeriodListTest("testFirstPeriodEquals", sum2, new Period(oct1994, end1994)));
 
         // Test subtract a containing date range set..
         periodList1 = new PeriodList();
@@ -322,7 +342,7 @@ public class PeriodListTest extends TestCase {
 //        Period lonePeriod1 = (Period) sum.toArray()[0];
 //        assertEquals(lonePeriod1.getStart(), sep1994);
 //        assertEquals(lonePeriod1.getEnd(), oct1994);
-        suite.addTest(new PeriodListTest(sum, new Period(sep1994, oct1994)));
+        suite.addTest(new PeriodListTest("testFirstPeriodEquals", sum, new Period(sep1994, oct1994)));
 
         // FIXME: don't use asserts here..
         Period lonePeriod2 = (Period) sum.toArray()[1];
