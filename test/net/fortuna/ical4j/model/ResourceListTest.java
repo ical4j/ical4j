@@ -36,6 +36,7 @@
 package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 public class ResourceListTest extends TestCase {
 
@@ -43,25 +44,51 @@ public class ResourceListTest extends TestCase {
     
     private ResourceList resourcees;
     
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
+    private int expectedSize;
+    
+    private String expectedToString;
+    
+    /**
+     * @param resources
      */
-    protected void setUp() throws Exception {
-        super.setUp();
-        resourcees = new ResourceList(VALUE_RESOURCE_LIST);
+    public ResourceListTest(ResourceList resources, int expectedSize) {
+        super("testSize");
+        this.resourcees = resources;
+        this.expectedSize = expectedSize;
+    }
+    
+    /**
+     * @param resources
+     * @param expectedToString
+     */
+    public ResourceListTest(ResourceList resources, String expectedToString) {
+        super("testToString");
+        this.resourcees = resources;
+        this.expectedToString = expectedToString;
     }
 
     /**
      * Assert three resourcees parsed from value.
      */
     public void testSize() {
-        assertEquals(3, resourcees.size());
+        assertEquals(expectedSize, resourcees.size());
     }
     
     /**
      * Assert toString() produces identical resource list string value.
      */
     public void testToString() {
-        assertEquals(VALUE_RESOURCE_LIST, resourcees.toString());
+        assertEquals(expectedToString, resourcees.toString());
+    }
+    
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        ResourceList resources = new ResourceList(VALUE_RESOURCE_LIST);
+        suite.addTest(new ResourceListTest(resources, 3));
+        suite.addTest(new ResourceListTest(resources, VALUE_RESOURCE_LIST));
+        return suite;
     }
 }
