@@ -96,17 +96,6 @@ public class PeriodTest extends TestCase {
         super(name);
     }
 
-    public void setUp() throws Exception {
-        super.setUp();
-    }
-
-    public void tearDown() throws Exception
-    {
-        super.tearDown();
-//        past = null;
-//        future = null;
-    }
-
     /**
      * 
      */
@@ -119,25 +108,6 @@ public class PeriodTest extends TestCase {
      */
     public void testGetEnd() {
     	assertEquals(expectedDate, period.getEnd());
-    }
-
-    /**
-     * <ul>
-     * <li>Get the start date when none set</li>
-     * <li>Get the end date when none set</li>
-     * <li>Get the start date when start date set but not end date</li>
-     * <li>Get the end date when start date set but not end date</li>
-     * <li>Get the start date when end date set but not start</li>
-     * <li>Get the end date when end date set but not start</li>
-     * <li>Get the start date when start date before end date</li>
-     * <li>Get the end date when start date before end date</li>
-     * <li>Get the start date when start date after end date</li>
-     * <li>Get the end date when start date after end date</li>
-     * </ul>
-     * @throws Exception
-     */
-    public void testGetStartEndDate() throws Exception
-    {
     }
 
     /**
@@ -196,21 +166,6 @@ public class PeriodTest extends TestCase {
     public void testNotBefore() {
     	assertFalse(period.before(expectedPeriod));
     }
-    
-    /**
-     * test range before range
-     * test range after range
-     * test range contained in range
-     * test range containing range
-     * test overlapping before range
-     * test overlapping after range
-     * test butted together at start ranges
-     *
-     * @throws Exception
-     */
-    public void testBeforeWithPeriod() throws Exception
-    {
-    }
 
     /**
      * 
@@ -249,21 +204,6 @@ public class PeriodTest extends TestCase {
                 monthMarch.after(apr1994));
     }
     */
-
-    /**
-     * test range before range
-     * test range after range
-     * test range contained in range
-     * test range containing range
-     * test overlapping before range
-     * test overlapping after range
-     * test butted together at start ranges
-     * @throws Exception
-     */
-    public void testAfterWithPeriod() throws Exception
-    {
-
-    }
 
     /**
      * test range before
@@ -358,12 +298,6 @@ public class PeriodTest extends TestCase {
      */
     public void testEquals()  {
     	assertEquals(expectedPeriod, period);
-    }
-    
-    /**
-     * Unit tests for {@link Period#subtract(Period)}.
-     */
-    public void testSubtract() {
     }
 
     /**
@@ -517,7 +451,7 @@ public class PeriodTest extends TestCase {
         Period spring = new Period(apr1994, jul1994);
         Period marchToMay = new Period(mar1994, jun1994);
         Period marchToApril = new Period(mar1994, may1994);
-        Period duplicateRange = new Period(begin1994, end1994);
+//        Period duplicateRange = new Period(begin1994, end1994);
     	
         Period testPeriod;
 
@@ -634,6 +568,10 @@ public class PeriodTest extends TestCase {
         
         // test subtraction contained by period..
         suite.addTest(new PeriodListTest(year1994.subtract(monthApril), 2));
+        
+        // other tests..
+        suite.addTest(new PeriodTest("testTimezone"));
+        suite.addTest(new PeriodTest("testEquals"));
         
         return suite;
     }
