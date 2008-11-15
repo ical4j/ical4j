@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 8/02/2006
+ * Created on 16/11/2008
  *
- * Copyright (c) 2006, Ben Fortuna
+ * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -33,46 +33,33 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.ResourceList;
 
 /**
- * Abstract base class for property unit tests.
- * @author Ben Fortuna
+ * @author Ben
+ *
  */
-public abstract class AbstractPropertyTest extends TestCase {
-
-    private static final Log LOG = LogFactory.getLog(AbstractPropertyTest.class);
+public class ResourcesTest extends PropertyTest {
 
     /**
-     * 
+     * @param resources
+     * @param expectedValue
      */
-    public AbstractPropertyTest() {
-        super();
-    }
-
-    /**
-     * @param name
-     */
-    public AbstractPropertyTest(String name) {
-        super(name);
+    public ResourcesTest(Resources resources, String expectedValue) {
+        super(resources, expectedValue);
     }
     
     /**
-     * @param property
+     * @return
      */
-    protected void assertValidationException(final Property property) {
-        try {
-            property.validate();
-        }
-        catch (ValidationException ve) {
-            LOG.debug("Exception caught", ve);
-            return;
-        }
-        fail("ValidationException should be thrown!");
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new ResourcesTest(new Resources(new ResourceList("value")), "value"));
+        return suite;
     }
+
 }

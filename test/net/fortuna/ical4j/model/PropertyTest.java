@@ -39,8 +39,9 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
+import junit.framework.TestSuite;
+
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.XProperty;
 
 /**
@@ -49,25 +50,75 @@ import net.fortuna.ical4j.model.property.XProperty;
  */
 public class PropertyTest extends AbstractPropertyTest {
     
+    private Property property;
+    
+    private String expectedValue;
+    
+    /**
+     * @param property
+     */
+    public PropertyTest(Property property) {
+        super("testEquals");
+        this.property = property;
+    }
+    
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public PropertyTest(Property property, String expectedValue) {
+        super("testGetValue");
+        this.property = property;
+        this.expectedValue = expectedValue;
+    }
+    
+    /**
+     * 
+     */
+    public void testGetValue() {
+        assertEquals(expectedValue, property.getValue());
+    }
+    
     /**
      * Test equality of properties.
      */
     public void testEquals() {
-        Property p = new Transp();
+        assertTrue(property.equals(property));
         
-        assertFalse("Properties are not equal", Transp.TRANSPARENT.equals(p));
-        assertFalse("Properties are not equal", p.equals(Transp.TRANSPARENT));
+        Property notEqual = new Property("notEqual") {
+            public String getValue() {
+                return "";
+            }
+            public void setValue(String value) throws IOException,
+                    URISyntaxException, ParseException {
+            }
+            public void validate() throws ValidationException {
+            }
+        };
+        
+        assertFalse("Properties are equal", property.equals(notEqual));
+        assertFalse("Properties are equal", notEqual.equals(property));
     }
     
     /**
      * Test deep copy of properties.
      */
     public void testCopy() throws IOException, URISyntaxException, ParseException {
-        ParameterList params = new ParameterList();
-        params.add(Value.BOOLEAN);
-        Property p = new XProperty("X-test", params, "value1");
+        Property copy = property.copy();
+        assertEquals(property, copy);
         
-        Property copy = p.copy();
-        assertEquals(p, copy);
+        copy.getParameters().add(Value.BOOLEAN);
+        assertFalse(property.equals(copy));
+        assertFalse(copy.equals(property));
+    }
+    
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new PropertyTest(new XProperty("X-extended")));
+        suite.addTest(new PropertyTest(new XProperty("X-extended", "value"), "value"));
+        return suite;
     }
 }
