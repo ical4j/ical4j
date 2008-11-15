@@ -140,7 +140,12 @@ public class Period implements Serializable, Comparable {
     public final DateTime getEnd() {
         if (end == null) {
             DateTime derived = new DateTime(duration.getTime(start).getTime());
-            derived.setUtc(start.isUtc());
+            if (start.isUtc()) {
+                derived.setUtc(true);
+            }
+            else {
+                derived.setTimeZone(start.getTimeZone());
+            }
             return derived;
         }
         return end;

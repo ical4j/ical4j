@@ -34,6 +34,7 @@
 
 package net.fortuna.ical4j.model;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -61,6 +62,10 @@ public class PeriodTest extends TestCase {
     
     private Period expectedPeriod;
     
+    private TimeZone expectedTimezone;
+    
+    private boolean expectedIsUtc;
+    
     /**
      * @param period
      * @param expectedDate
@@ -80,6 +85,28 @@ public class PeriodTest extends TestCase {
     	super(testMethod);
     	this.period = period;
     	this.expectedPeriod = expectedPeriod;
+    }
+    
+    /**
+     * @param testMethod
+     * @param period
+     * @param expectedTimezone
+     */
+    public PeriodTest(String testMethod, Period period, TimeZone expectedTimezone) {
+        super(testMethod);
+        this.period = period;
+        this.expectedTimezone = expectedTimezone;
+    }
+
+    /**
+     * @param testMethod
+     * @param period
+     * @param expectedIsUtc
+     */
+    public PeriodTest(String testMethod, Period period, boolean expectedIsUtc) {
+        super(testMethod);
+        this.period = period;
+        this.expectedIsUtc = expectedIsUtc;
     }
     
     /**
@@ -108,6 +135,20 @@ public class PeriodTest extends TestCase {
      */
     public void testGetEnd() {
     	assertEquals(expectedDate, period.getEnd());
+    }
+
+    /**
+     * 
+     */
+    public void testGetEndTimeZone() {
+        assertEquals(expectedTimezone, period.getEnd().getTimeZone());
+    }
+
+    /**
+     * 
+     */
+    public void testGetEndIsUtc() {
+        assertEquals(expectedIsUtc, period.getEnd().isUtc());
     }
 
     /**
@@ -418,8 +459,9 @@ public class PeriodTest extends TestCase {
     
     /**
      * @return
+     * @throws ParseException 
      */
-    public static Test suite() {
+    public static Test suite() throws ParseException {
     	TestSuite suite = new TestSuite();
 
         java.util.Calendar cal = new GregorianCalendar(1980,
@@ -568,6 +610,14 @@ public class PeriodTest extends TestCase {
         
         // test subtraction contained by period..
         suite.addTest(new PeriodListTest(year1994.subtract(monthApril), 2));
+        
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+        DateTime start = new DateTime("20081115T163800", registry.getTimeZone("Australia/Melbourne"));
+        suite.addTest(new PeriodTest("testGetEndTimeZone", new Period(start, new Dur(1)), registry.getTimeZone("Australia/Melbourne")));
+        
+        start = new DateTime(start);
+        start.setUtc(true);
+        suite.addTest(new PeriodTest("testGetEndIsUtc", new Period(start, new Dur(1)), true));
         
         // other tests..
         suite.addTest(new PeriodTest("testTimezone"));
