@@ -164,7 +164,7 @@ public class WeekDay implements Serializable {
      * @return a string, or null if an invalid DAY_OF_WEEK property is
      * specified
      */
-    private static WeekDay getDay(final int calDay) {
+    public static WeekDay getDay(final int calDay) {
         switch (calDay) {
             case Calendar.SUNDAY: return SU;
             case Calendar.MONDAY: return MO;
