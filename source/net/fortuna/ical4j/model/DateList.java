@@ -150,8 +150,8 @@ public class DateList extends ArrayList implements Serializable {
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
-        for (Iterator i = iterator(); i.hasNext();) {
+        final StringBuffer b = new StringBuffer();
+        for (final Iterator i = iterator(); i.hasNext();) {
             /*
              * if (type != null && Value.DATE.equals(type)) {
              * b.append(DateFormat.getInstance().format((Date) i.next())); }
@@ -183,7 +183,7 @@ public class DateList extends ArrayList implements Serializable {
             }
         }
         else if (!Value.DATE.equals(getType())) {
-            DateTime dateTime = new DateTime(date);
+            final DateTime dateTime = new DateTime(date);
             dateTime.setTimeZone(getTimeZone());
             return add((Object) dateTime);
         }
@@ -242,7 +242,7 @@ public class DateList extends ArrayList implements Serializable {
      */
     public final void setUtc(final boolean utc) {
         if (!Value.DATE.equals(type)) {
-            for (Iterator i = iterator(); i.hasNext();) {
+            for (final Iterator i = iterator(); i.hasNext();) {
                 ((DateTime) i.next()).setUtc(utc);
             }
         }
@@ -258,7 +258,7 @@ public class DateList extends ArrayList implements Serializable {
      */
     public final void setTimeZone(final TimeZone timeZone) {
         if (!Value.DATE.equals(type)) {
-            for (Iterator i = iterator(); i.hasNext();) {
+            for (final Iterator i = iterator(); i.hasNext();) {
                 ((DateTime) i.next()).setTimeZone(timeZone);
             }
         }

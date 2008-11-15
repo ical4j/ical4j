@@ -158,7 +158,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                CuType parameter = new CuType(value);
+                final CuType parameter = new CuType(value);
                 if (CuType.INDIVIDUAL.equals(parameter)) {
                     return CuType.INDIVIDUAL;
                 }
@@ -238,7 +238,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                Encoding parameter = new Encoding(value);
+                final Encoding parameter = new Encoding(value);
                 if (Encoding.EIGHT_BIT.equals(parameter)) {
                     return Encoding.EIGHT_BIT;
                 }
@@ -277,7 +277,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                FbType parameter = new FbType(value);
+                final FbType parameter = new FbType(value);
                 if (FbType.FREE.equals(parameter)) {
                     return FbType.FREE;
                 }
@@ -338,7 +338,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                PartStat parameter = new PartStat(value);
+                final PartStat parameter = new PartStat(value);
                 if (PartStat.NEEDS_ACTION.equals(parameter)) {
                     return PartStat.NEEDS_ACTION;
                 }
@@ -376,7 +376,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                Range parameter = new Range(value);
+                final Range parameter = new Range(value);
                 if (Range.THISANDFUTURE.equals(parameter)) {
                     return Range.THISANDFUTURE;
                 }
@@ -399,7 +399,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                Related parameter = new Related(value);
+                final Related parameter = new Related(value);
                 if (Related.START.equals(parameter)) {
                     return Related.START;
                 }
@@ -422,7 +422,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                RelType parameter = new RelType(value);
+                final RelType parameter = new RelType(value);
                 if (RelType.PARENT.equals(parameter)) {
                     return RelType.PARENT;
                 }
@@ -448,7 +448,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                Role parameter = new Role(value);
+                final Role parameter = new Role(value);
                 if (Role.CHAIR.equals(parameter)) {
                     return Role.CHAIR;
                 }
@@ -477,7 +477,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                Rsvp parameter = new Rsvp(value);
+                final Rsvp parameter = new Rsvp(value);
                 if (Rsvp.TRUE.equals(parameter)) {
                     return Rsvp.TRUE;
                 }
@@ -563,7 +563,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
              */
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                Value parameter = new Value(value);
+                final Value parameter = new Value(value);
                 if (Value.BINARY.equals(parameter)) {
                     return Value.BINARY;
                 }
@@ -628,7 +628,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
      */
     public Parameter createParameter(final String name, final String value)
             throws URISyntaxException {
-        ParameterFactory factory = (ParameterFactory) factories.get(name);
+        final ParameterFactory factory = (ParameterFactory) factories.get(name);
         if (factory != null) {
             return factory.createParameter(name, value);
         }

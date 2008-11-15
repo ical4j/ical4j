@@ -110,8 +110,8 @@ public final class ParameterValidator {
      * @param parameters
      * @throws ValidationException
      */
-    public void assertNullOrEqual(Parameter param, ParameterList parameters) throws ValidationException {
-        Parameter p = parameters.getParameter(param.getName());
+    public void assertNullOrEqual(final Parameter param, final ParameterList parameters) throws ValidationException {
+        final Parameter p = parameters.getParameter(param.getName());
         if (p != null && !param.equals(p)) {
             throw new ValidationException("Parameter [" + p + "] is invalid");
         }

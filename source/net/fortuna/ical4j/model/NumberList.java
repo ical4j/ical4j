@@ -106,8 +106,8 @@ public class NumberList extends ArrayList implements Serializable {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
-        for (Iterator i = iterator(); i.hasNext();) {
+        final StringBuffer b = new StringBuffer();
+        for (final Iterator i = iterator(); i.hasNext();) {
             b.append(i.next());
             if (i.hasNext()) {
                 b.append(',');

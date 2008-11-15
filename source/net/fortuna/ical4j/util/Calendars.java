@@ -75,8 +75,8 @@ public final class Calendars {
      * @throws ParserException occurs when the data in the specified file is invalid
      */
     public static Calendar load(final String filename) throws IOException, ParserException {
-        FileInputStream fin = new FileInputStream(filename);
-        CalendarBuilder builder = new CalendarBuilder();
+        final FileInputStream fin = new FileInputStream(filename);
+        final CalendarBuilder builder = new CalendarBuilder();
         return builder.build(fin);
     }
 
@@ -88,7 +88,7 @@ public final class Calendars {
      * @throws ParserException occurs when the data in the specified URL is invalid
      */
     public static Calendar load(final URL url) throws IOException, ParserException {
-        CalendarBuilder builder = new CalendarBuilder();
+        final CalendarBuilder builder = new CalendarBuilder();
         return builder.build(url.openStream());
     }
 
@@ -101,17 +101,17 @@ public final class Calendars {
      * @return a Calendar instance containing all properties and components from both of the specified calendars
      */
     public static Calendar merge(final Calendar c1, final Calendar c2) {
-        Calendar result = new Calendar();
+        final Calendar result = new Calendar();
         result.getProperties().addAll(c1.getProperties());
-        for (Iterator i = c2.getProperties().iterator(); i.hasNext();) {
-            Property p = (Property) i.next();
+        for (final Iterator i = c2.getProperties().iterator(); i.hasNext();) {
+            final Property p = (Property) i.next();
             if (!result.getProperties().contains(p)) {
                 result.getProperties().add(p);
             }
         }
         result.getComponents().addAll(c1.getComponents());
-        for (Iterator i = c2.getComponents().iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        for (final Iterator i = c2.getComponents().iterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
             if (!result.getComponents().contains(c)) {
                 result.getComponents().add(c);
             }
@@ -125,9 +125,8 @@ public final class Calendars {
      * @return a calendar containing the specified component
      */
     public static Calendar wrap(final Component component) {
-        ComponentList components = new ComponentList();
+        final ComponentList components = new ComponentList();
         components.add(component);
-
         return new Calendar(components);
     }
     
@@ -137,7 +136,7 @@ public final class Calendars {
      * @param calendar
      * @return
      */
-    public static Calendar[] split(Calendar calendar) {
+    public static Calendar[] split(final Calendar calendar) {
         // if calendar contains one component or less, or is composed entirely of timezone
         // definitions, return the original calendar unmodified..
         if (calendar.getComponents().size() <= 1
@@ -145,33 +144,33 @@ public final class Calendars {
             return new Calendar[] {calendar};
         }
         
-        IndexedComponentList timezones = new IndexedComponentList(calendar.getComponents(Component.VTIMEZONE),
+        final IndexedComponentList timezones = new IndexedComponentList(calendar.getComponents(Component.VTIMEZONE),
                 Property.TZID);
         
-        Map calendars = new HashMap();
-        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        final Map calendars = new HashMap();
+        for (final Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
             if (c instanceof VTimeZone) {
                 continue;
             }
             
-            Uid uid = (Uid) c.getProperty(Property.UID);
+            final Uid uid = (Uid) c.getProperty(Property.UID);
             
             Calendar uidCal = (Calendar) calendars.get(uid);
             if (uidCal == null) {
                 uidCal = new Calendar(calendar.getProperties(), new ComponentList());
                 // remove METHOD property for split calendars..
-                for (Iterator mp = uidCal.getProperties(Property.METHOD).iterator(); mp.hasNext();) {
+                for (final Iterator mp = uidCal.getProperties(Property.METHOD).iterator(); mp.hasNext();) {
                     uidCal.getProperties().remove(mp.next());
                 }
                 calendars.put(uid, uidCal);
             }
             
-            for (Iterator j = c.getProperties().iterator(); j.hasNext();) {
-                Property p = (Property) j.next();
-                TzId tzid = (TzId) p.getParameter(Parameter.TZID);
+            for (final Iterator j = c.getProperties().iterator(); j.hasNext();) {
+                final Property p = (Property) j.next();
+                final TzId tzid = (TzId) p.getParameter(Parameter.TZID);
                 if (tzid != null) {
-                    VTimeZone timezone = (VTimeZone) timezones.getComponent(tzid.getValue());
+                    final VTimeZone timezone = (VTimeZone) timezones.getComponent(tzid.getValue());
                     if (!uidCal.getComponents().contains(timezone)) {
                         uidCal.getComponents().add(timezone);
                     }
@@ -188,12 +187,12 @@ public final class Calendars {
      * @return
      * @throws ConstraintViolationException if more than one unique identifer is found in the specified calendar
      */
-    public static Uid getUid(Calendar calendar) throws ConstraintViolationException {
+    public static Uid getUid(final Calendar calendar) throws ConstraintViolationException {
         Uid uid = null;
-        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
-            for (Iterator j = c.getProperties(Property.UID).iterator(); j.hasNext();) {
-                Uid foundUid = (Uid) j.next();
+        for (final Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
+            for (final Iterator j = c.getProperties(Property.UID).iterator(); j.hasNext();) {
+                final Uid foundUid = (Uid) j.next();
                 if (uid != null && !uid.equals(foundUid)) {
                     throw new ConstraintViolationException("More than one UID found in calendar");
                 }

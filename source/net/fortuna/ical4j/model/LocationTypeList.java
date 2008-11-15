@@ -76,18 +76,13 @@ public class LocationTypeList implements Serializable {
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-
-        StringBuffer b = new StringBuffer();
-
-        for (Iterator i = locationTypes.iterator(); i.hasNext();) {
-
+        final StringBuffer b = new StringBuffer();
+        for (final Iterator i = locationTypes.iterator(); i.hasNext();) {
             b.append(i.next());
-
             if (i.hasNext()) {
                 b.append(',');
             }
         }
-
         return b.toString();
     }
 

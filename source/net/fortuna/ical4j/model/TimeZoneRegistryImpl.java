@@ -119,14 +119,14 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             timezone = (TimeZone) DEFAULT_TIMEZONES.get(id);
             if (timezone == null) {
                 // if timezone not found with identifier, try loading an alias..
-                String alias = ALIASES.getProperty(id);
+                final String alias = ALIASES.getProperty(id);
                 if (alias != null) {
                     return getTimeZone(alias);
                 }
                 else {
                     synchronized (DEFAULT_TIMEZONES) {
                         try {
-                            VTimeZone vTimeZone = loadVTimeZone(id);
+                            final VTimeZone vTimeZone = loadVTimeZone(id);
                             if (vTimeZone != null) {
                                 // XXX: temporary kludge..
                                 // ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
@@ -147,14 +147,11 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     /**
      * Loads an existing VTimeZone from the classpath corresponding to the specified Java timezone.
      */
-    private VTimeZone loadVTimeZone(final String id) throws IOException,
-            ParserException {
-        
-        URL resource = TimeZoneRegistryImpl.class.getResource(resourcePrefix
-                + id + ".ics");
+    private VTimeZone loadVTimeZone(final String id) throws IOException, ParserException {
+        final URL resource = TimeZoneRegistryImpl.class.getResource(resourcePrefix + id + ".ics");
         if (resource != null) {
-            CalendarBuilder builder = new CalendarBuilder();
-            Calendar calendar = builder.build(resource.openStream());
+            final CalendarBuilder builder = new CalendarBuilder();
+            final Calendar calendar = builder.build(resource.openStream());
             return (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
         }
         return null;

@@ -95,15 +95,11 @@ public class ParameterList implements Serializable {
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-
-        StringBuffer buffer = new StringBuffer();
-
-        for (Iterator i = parameters.iterator(); i.hasNext();) {
-
+        final StringBuffer buffer = new StringBuffer();
+        for (final Iterator i = parameters.iterator(); i.hasNext();) {
             buffer.append(';');
             buffer.append(i.next().toString());
         }
-
         return buffer.toString();
     }
 
@@ -113,15 +109,12 @@ public class ParameterList implements Serializable {
      * @return the first matching parameter or null if no matching parameters
      */
     public final Parameter getParameter(final String aName) {
-
-        for (Iterator i = parameters.iterator(); i.hasNext();) {
-            Parameter p = (Parameter) i.next();
-
+        for (final Iterator i = parameters.iterator(); i.hasNext();) {
+            final Parameter p = (Parameter) i.next();
             if (aName.equalsIgnoreCase(p.getName())) {
                 return p;
             }
         }
-
         return null;
     }
 
@@ -131,11 +124,9 @@ public class ParameterList implements Serializable {
      * @return a parameter list
      */
     public final ParameterList getParameters(final String name) {
-        ParameterList list = new ParameterList();
-
-        for (Iterator i = parameters.iterator(); i.hasNext();) {
-            Parameter p = (Parameter) i.next();
-
+        final ParameterList list = new ParameterList();
+        for (final Iterator i = parameters.iterator(); i.hasNext();) {
+            final Parameter p = (Parameter) i.next();
             if (p.getName().equalsIgnoreCase(name)) {
                 list.add(p);
             }
@@ -161,8 +152,7 @@ public class ParameterList implements Serializable {
      * @return true if successfully added to this list
      */
     public final boolean replace(final Parameter parameter) {
-        for (Iterator i = getParameters(parameter.getName()).iterator(); i
-                .hasNext();) {
+        for (final Iterator i = getParameters(parameter.getName()).iterator(); i.hasNext();) {
             remove((Parameter) i.next());
         }
         return add(parameter);
@@ -199,7 +189,7 @@ public class ParameterList implements Serializable {
      * @param paramName
      */
     public final void removeAll(final String paramName) {
-        ParameterList params = getParameters(paramName);
+        final ParameterList params = getParameters(paramName);
         parameters.removeAll(params.parameters);
     }
     
@@ -218,7 +208,7 @@ public class ParameterList implements Serializable {
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof ParameterList) {
-            ParameterList p = (ParameterList) arg0;
+            final ParameterList p = (ParameterList) arg0;
             return ObjectUtils.equals(parameters, p.parameters);
         }
         return super.equals(arg0);

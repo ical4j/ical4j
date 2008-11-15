@@ -139,7 +139,7 @@ public class Period implements Serializable, Comparable {
      */
     public final DateTime getEnd() {
         if (end == null) {
-            DateTime derived = new DateTime(duration.getTime(start).getTime());
+            final DateTime derived = new DateTime(duration.getTime(start).getTime());
             if (start.isUtc()) {
                 derived.setUtc(true);
             }
@@ -175,7 +175,7 @@ public class Period implements Serializable, Comparable {
      * @return
      * @deprecated use {@link Period#includes(Date, int)} instead.
      */
-    public final boolean includes(final Date date, boolean inclusive) {
+    public final boolean includes(final Date date, final boolean inclusive) {
         if (inclusive) {
             return includes(date, INCLUSIVE_START | INCLUSIVE_END);
         }
@@ -328,8 +328,8 @@ public class Period implements Serializable, Comparable {
      * @param period
      * @return a list containing zero, one or two periods.
      */
-    public final PeriodList subtract(Period period) {
-        PeriodList result = new PeriodList();
+    public final PeriodList subtract(final Period period) {
+        final PeriodList result = new PeriodList();
         
         if (period.contains(this)) {
             return result;
@@ -376,7 +376,7 @@ public class Period implements Serializable, Comparable {
      * the specified UTC timezone status.
      * @param utc
      */
-    public void setUtc(boolean utc) {
+    public void setUtc(final boolean utc) {
         start.setUtc(utc);
         if (end != null) {
             getEnd().setUtc(utc);
@@ -401,7 +401,7 @@ public class Period implements Serializable, Comparable {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
         b.append(start);
         b.append('/');
         if (end != null) {
@@ -433,13 +433,13 @@ public class Period implements Serializable, Comparable {
         if (arg0 == null) {
             throw new ClassCastException("Cannot compare this object to null");
         }
-        int startCompare = getStart().compareTo(arg0.getStart());
+        final int startCompare = getStart().compareTo(arg0.getStart());
         if (startCompare != 0) {
             return startCompare;
         }
         // start dates are equal, compare end dates..
         else if (end != null) {
-            int endCompare = end.compareTo(arg0.getEnd());
+            final int endCompare = end.compareTo(arg0.getEnd());
             if (endCompare != 0) {
                 return endCompare;
             }

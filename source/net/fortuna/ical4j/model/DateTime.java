@@ -194,7 +194,7 @@ public class DateTime extends Date {
      * @param tz
      * @throws ParseException
      */
-    private void setTime(String value, DateFormat format, java.util.TimeZone tz)
+    private void setTime(final String value, final DateFormat format, final java.util.TimeZone tz)
             throws ParseException {
 
         synchronized (format) {
@@ -277,7 +277,7 @@ public class DateTime extends Date {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer(super.toString());
+        final StringBuffer b = new StringBuffer(super.toString());
         b.append('T');
         b.append(time.toString());
         return b.toString();

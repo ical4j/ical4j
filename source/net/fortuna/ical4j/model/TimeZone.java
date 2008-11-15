@@ -71,16 +71,16 @@ public class TimeZone extends java.util.TimeZone {
      * @see java.util.TimeZone#getOffset(int, int, int, int, int, int)
      */
     public final int getOffset(final int era, final int year, final int month, final int day, final int dayOfWeek, final int milliseconds) {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.set(Calendar.ERA, era);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
         cal.set(Calendar.DAY_OF_YEAR, day);
         cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
         cal.set(Calendar.MILLISECOND, milliseconds);
-        Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));
+        final Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));
         if (observance != null) {
-            TzOffsetTo offset = (TzOffsetTo) observance.getProperty(Property.TZOFFSETTO);
+            final TzOffsetTo offset = (TzOffsetTo) observance.getProperty(Property.TZOFFSETTO);
             return (int) offset.getOffset().getOffset();
         }
         return 0;
@@ -97,8 +97,8 @@ public class TimeZone extends java.util.TimeZone {
         }
         if (seasonalTimes.size() > 0) {
             Collections.sort(seasonalTimes);
-            Component latestSeasonalTime = (Component) seasonalTimes.get(seasonalTimes.size() - 1);
-            TzOffsetTo offsetTo = (TzOffsetTo) latestSeasonalTime.getProperty(Property.TZOFFSETTO);
+            final Component latestSeasonalTime = (Component) seasonalTimes.get(seasonalTimes.size() - 1);
+            final TzOffsetTo offsetTo = (TzOffsetTo) latestSeasonalTime.getProperty(Property.TZOFFSETTO);
             if (offsetTo != null) {
                 return (int) offsetTo.getOffset().getOffset();
             }
@@ -113,7 +113,7 @@ public class TimeZone extends java.util.TimeZone {
      * daylight time.
      */
     public final boolean inDaylightTime(final Date date) {
-        Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
+        final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
         return (observance != null && observance instanceof Daylight);
     }
 
@@ -128,7 +128,7 @@ public class TimeZone extends java.util.TimeZone {
      * @see java.util.TimeZone#useDaylightTime()
      */
     public final boolean useDaylightTime() {
-        ComponentList daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
+        final ComponentList daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
         return (!daylights.isEmpty());
     }
 

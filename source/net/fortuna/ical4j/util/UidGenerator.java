@@ -74,7 +74,7 @@ public class UidGenerator {
      * @return
      */
     public Uid generateUid() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
         b.append(uniqueTimestamp());
         b.append('-');
         b.append(pid);
@@ -101,7 +101,7 @@ public class UidGenerator {
             }
             lastMillis = currentMillis;
         }
-        DateTime timestamp = new DateTime(currentMillis);
+        final DateTime timestamp = new DateTime(currentMillis);
         timestamp.setUtc(true);
         return timestamp;
     }
@@ -112,17 +112,14 @@ public class UidGenerator {
      * @throws SocketException if a socket error occurs
      */
     private static InetAddress findNonLoopbackAddress() throws SocketException {
-        Enumeration enumInterfaceAddress = NetworkInterface
-                .getNetworkInterfaces();
+        final Enumeration enumInterfaceAddress = NetworkInterface.getNetworkInterfaces();
         while (enumInterfaceAddress.hasMoreElements()) {
-            NetworkInterface netIf = (NetworkInterface) enumInterfaceAddress
-                    .nextElement();
+            final NetworkInterface netIf = (NetworkInterface) enumInterfaceAddress.nextElement();
 
             // Iterate over inet address
-            Enumeration enumInetAdress = netIf.getInetAddresses();
+            final Enumeration enumInetAdress = netIf.getInetAddresses();
             while (enumInetAdress.hasMoreElements()) {
-                InetAddress address = (InetAddress) enumInetAdress
-                        .nextElement();
+                final InetAddress address = (InetAddress) enumInetAdress.nextElement();
                 if (!address.isLoopbackAddress()) {
                     return address;
                 }

@@ -79,8 +79,8 @@ public class ComponentList extends ArrayList implements Serializable {
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-        StringBuffer buffer = new StringBuffer();
-        for (Iterator i = iterator(); i.hasNext();) {
+        final StringBuffer buffer = new StringBuffer();
+        for (final Iterator i = iterator(); i.hasNext();) {
             buffer.append(i.next().toString());
         }
         return buffer.toString();
@@ -92,8 +92,8 @@ public class ComponentList extends ArrayList implements Serializable {
      * @return a component or null if no matching component found
      */
     public final Component getComponent(final String aName) {
-        for (Iterator i = iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        for (final Iterator i = iterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
             if (c.getName().equals(aName)) {
                 return c;
             }
@@ -107,9 +107,9 @@ public class ComponentList extends ArrayList implements Serializable {
      * @return a list of components with the matching name
      */
     public final ComponentList getComponents(final String name) {
-        ComponentList components = new ComponentList();
-        for (Iterator i = iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        final ComponentList components = new ComponentList();
+        for (final Iterator i = iterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
             if (c.getName().equals(name)) {
                 components.add(c);
             }

@@ -186,17 +186,15 @@ public abstract class Parameter extends Content {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
         b.append(getName());
         b.append('=');
-
         if (isQuotable()) {
             b.append(Strings.quote(Strings.valueOf(getValue())));
         }
         else {
             b.append(Strings.valueOf(getValue()));
         }
-
         return b.toString();
     }
 
@@ -226,7 +224,7 @@ public abstract class Parameter extends Content {
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Parameter) {
-            Parameter p = (Parameter) arg0;
+            final Parameter p = (Parameter) arg0;
             return new EqualsBuilder().append(getName(), p.getName())
                 .append(getValue(), p.getValue()).isEquals();
         }

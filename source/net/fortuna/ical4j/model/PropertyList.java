@@ -79,8 +79,8 @@ public class PropertyList extends ArrayList implements Serializable {
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-        StringBuffer buffer = new StringBuffer();
-        for (Iterator i = iterator(); i.hasNext();) {
+        final StringBuffer buffer = new StringBuffer();
+        for (final Iterator i = iterator(); i.hasNext();) {
             buffer.append(i.next().toString());
         }
         return buffer.toString();
@@ -92,8 +92,8 @@ public class PropertyList extends ArrayList implements Serializable {
      * @return a property or null if no matching property found
      */
     public final Property getProperty(final String aName) {
-        for (Iterator i = iterator(); i.hasNext();) {
-            Property p = (Property) i.next();
+        for (final Iterator i = iterator(); i.hasNext();) {
+            final Property p = (Property) i.next();
             if (p.getName().equalsIgnoreCase(aName)) {
                 return p;
             }
@@ -107,9 +107,9 @@ public class PropertyList extends ArrayList implements Serializable {
      * @return a property list
      */
     public final PropertyList getProperties(final String name) {
-        PropertyList list = new PropertyList();
-        for (Iterator i = iterator(); i.hasNext();) {
-            Property p = (Property) i.next();
+        final PropertyList list = new PropertyList();
+        for (final Iterator i = iterator(); i.hasNext();) {
+            final Property p = (Property) i.next();
             if (p.getName().equalsIgnoreCase(name)) {
                 list.add(p);
             }

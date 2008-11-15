@@ -1637,7 +1637,7 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
      * @return a property
      */
     public Property createProperty(final String name) {
-        PropertyFactory factory = (PropertyFactory) factories.get(name);
+        final PropertyFactory factory = (PropertyFactory) factories.get(name);
         if (factory != null) {
             return factory.createProperty(name);
         }
@@ -1664,7 +1664,7 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
             final ParameterList parameters, final String value)
             throws IOException, URISyntaxException, ParseException {
 
-        PropertyFactory factory = (PropertyFactory) factories.get(name);
+        final PropertyFactory factory = (PropertyFactory) factories.get(name);
         if (factory != null) {
             return factory.createProperty(name, parameters, value);
         }

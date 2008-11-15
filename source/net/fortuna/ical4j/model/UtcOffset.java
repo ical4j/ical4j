@@ -91,9 +91,9 @@ public class UtcOffset implements Serializable {
                     + "] - must be of the form: (+/-)HHMM[SS]");
         }
         
-        boolean negative = value.startsWith("-");
+        boolean negative = value.charAt(0) == '-';
 
-        if (!negative && !value.startsWith("+")) {
+        if (!negative && !(value.charAt(0) == '+')) {
             throw new IllegalArgumentException("UTC offset value must be signed");
         }
         
@@ -129,7 +129,7 @@ public class UtcOffset implements Serializable {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
         long remainder = Math.abs(offset);
 
         if (offset < 0) {
@@ -179,9 +179,7 @@ public class UtcOffset implements Serializable {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private void readObject(java.io.ObjectInputStream stream)
-        throws IOException, ClassNotFoundException {
-        
+    private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
         log = LogFactory.getLog(UtcOffset.class);
     }

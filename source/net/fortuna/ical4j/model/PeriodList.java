@@ -89,8 +89,8 @@ public class PeriodList extends TreeSet implements Serializable {
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
-        for (Iterator i = iterator(); i.hasNext();) {
+        final StringBuffer b = new StringBuffer();
+        for (final Iterator i = iterator(); i.hasNext();) {
             b.append(i.next().toString());
             if (i.hasNext()) {
                 b.append(',');
@@ -155,12 +155,12 @@ public class PeriodList extends TreeSet implements Serializable {
     public final PeriodList normalise() {
         Period prevPeriod = null;
         Period period = null;
-        PeriodList newList = new PeriodList(isUtc());
+        final PeriodList newList = new PeriodList(isUtc());
         if (timezone != null) {
             newList.setTimeZone(timezone);
         }
         boolean normalised = false;
-        for (Iterator i = iterator(); i.hasNext();) {
+        for (final Iterator i = iterator(); i.hasNext();) {
             period = (Period) i.next();
             if (period.isEmpty()) {
                 period = prevPeriod;
@@ -212,9 +212,9 @@ public class PeriodList extends TreeSet implements Serializable {
      */
     public final PeriodList add(final PeriodList periods) {
         if (periods != null) {
-            PeriodList newList = new PeriodList();
+            final PeriodList newList = new PeriodList();
             newList.addAll(this);
-            for (Iterator i = periods.iterator(); i.hasNext();) {
+            for (final Iterator i = periods.iterator(); i.hasNext();) {
                 newList.add((Period) i.next());
             }
             return newList.normalise();
@@ -239,10 +239,10 @@ public class PeriodList extends TreeSet implements Serializable {
         PeriodList result = this;
         PeriodList tmpResult = new PeriodList();
 
-        for (Iterator i = subtractions.iterator(); i.hasNext();) {
-            Period subtraction = (Period) i.next();
-            for (Iterator j = result.iterator(); j.hasNext();) {
-                Period period = (Period) j.next();
+        for (final Iterator i = subtractions.iterator(); i.hasNext();) {
+            final Period subtraction = (Period) i.next();
+            for (final Iterator j = result.iterator(); j.hasNext();) {
+                final Period period = (Period) j.next();
                 tmpResult.addAll(period.subtract(subtraction));
             }
             result = tmpResult;
@@ -265,8 +265,8 @@ public class PeriodList extends TreeSet implements Serializable {
      * @param utc The utc to set.
      */
     public final void setUtc(final boolean utc) {
-        for (Iterator i = iterator(); i.hasNext();) {
-            Period period = (Period) i.next();
+        for (final Iterator i = iterator(); i.hasNext();) {
+            final Period period = (Period) i.next();
             period.setUtc(utc);
         }
         this.timezone = null;
@@ -280,8 +280,8 @@ public class PeriodList extends TreeSet implements Serializable {
      * @param timezone
      */
     public final void setTimeZone(final TimeZone timeZone) {
-        for (Iterator i = iterator(); i.hasNext();) {
-            Period period = (Period) i.next();
+        for (final Iterator i = iterator(); i.hasNext();) {
+            final Period period = (Period) i.next();
             period.setTimeZone(timeZone);
         }
         this.timezone = timeZone;

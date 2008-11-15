@@ -52,7 +52,7 @@ public class DefaultEncoderFactory extends EncoderFactory {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.util.EncoderFactory#createBinaryEncoder(net.fortuna.ical4j.model.parameter.Encoding)
      */
-    public BinaryEncoder createBinaryEncoder(Encoding encoding)
+    public BinaryEncoder createBinaryEncoder(final Encoding encoding)
             throws UnsupportedEncodingException {
 
         if (Encoding.QUOTED_PRINTABLE.equals(encoding)) {
@@ -68,7 +68,7 @@ public class DefaultEncoderFactory extends EncoderFactory {
     /* (non-Javadoc)
      * @see net.fortuna.ical4j.util.EncoderFactory#createStringEncoder(net.fortuna.ical4j.model.parameter.Encoding)
      */
-    public StringEncoder createStringEncoder(Encoding encoding)
+    public StringEncoder createStringEncoder(final Encoding encoding)
             throws UnsupportedEncodingException {
 
         if (Encoding.QUOTED_PRINTABLE.equals(encoding)) {

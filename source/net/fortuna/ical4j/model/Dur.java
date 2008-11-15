@@ -271,7 +271,7 @@ public class Dur implements Comparable, Serializable {
      * @return the end of the duration as a date
      */
     public final Date getTime(final Date start) {
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         if (isNegative()) {
             cal.add(Calendar.WEEK_OF_YEAR, -weeks);
@@ -295,7 +295,7 @@ public class Dur implements Comparable, Serializable {
      * @return a Dur instance that represents a negation of this instance
      */
     public final Dur negate() {
-        Dur negated = new Dur(days, hours, minutes, seconds);
+        final Dur negated = new Dur(days, hours, minutes, seconds);
         negated.weeks = weeks;
         negated.negative = !negative;
         return negated;
@@ -307,7 +307,7 @@ public class Dur implements Comparable, Serializable {
      * @param duration the duration to add to this duration
      * @return a new instance representing the sum of the two durations.
      */
-    public final Dur add(Dur duration) {
+    public final Dur add(final Dur duration) {
         if ((!isNegative() && duration.isNegative())
                 || (isNegative() && !duration.isNegative())) {
             
@@ -363,7 +363,7 @@ public class Dur implements Comparable, Serializable {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
         if (negative) {
             b.append('-');
         }
@@ -441,7 +441,7 @@ public class Dur implements Comparable, Serializable {
     /* (non-Javadoc)
      * @see java.lang.Object#equals(java.lang.Object)
      */
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj instanceof Dur) {
             return ((Dur) obj).compareTo(this) == 0;
         }
@@ -503,9 +503,7 @@ public class Dur implements Comparable, Serializable {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private void readObject(java.io.ObjectInputStream stream)
-            throws IOException, ClassNotFoundException {
-
+    private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
         log = LogFactory.getLog(Dur.class);
     }

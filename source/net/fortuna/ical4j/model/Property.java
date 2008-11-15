@@ -233,7 +233,7 @@ public abstract class Property extends Content {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer buffer = new StringBuffer();
+        final StringBuffer buffer = new StringBuffer();
         buffer.append(getName());
         if (getParameters() != null) {
             buffer.append(getParameters());
@@ -331,7 +331,7 @@ public abstract class Property extends Content {
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
-            Property p = (Property) arg0;
+            final Property p = (Property) arg0;
             return new EqualsBuilder().append(getName(), p.getName())
                 .append(getValue(), p.getValue())
                 .append(getParameters(), p.getParameters()).isEquals();
@@ -352,11 +352,9 @@ public abstract class Property extends Content {
      * Create a (deep) copy of this property.
      * @return the copy of the property
      */
-    public Property copy() throws IOException, URISyntaxException,
-            ParseException {
-        
+    public Property copy() throws IOException, URISyntaxException, ParseException {
         // Deep copy parameter list..
-        ParameterList params = new ParameterList(getParameters(), false);
+        final ParameterList params = new ParameterList(getParameters(), false);
         return PropertyFactoryImpl.getInstance().createProperty(getName(),
                 params, getValue());
     }

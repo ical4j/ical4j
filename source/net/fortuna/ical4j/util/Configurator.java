@@ -71,7 +71,7 @@ public final class Configurator {
      * @param key
      * @return
      */
-    public static String getProperty(String key) {
+    public static String getProperty(final String key) {
         return CONFIG.getProperty(key, System.getProperty(key));
     }
 }

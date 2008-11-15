@@ -122,7 +122,7 @@ public class WeekDay implements Serializable {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
         if (getOffset() != 0) {
             b.append(getOffset());
         }
@@ -218,7 +218,7 @@ public class WeekDay implements Serializable {
         if (!(arg0 instanceof WeekDay)) {
             return false;
         }
-        WeekDay wd = (WeekDay) arg0;
+        final WeekDay wd = (WeekDay) arg0;
         return ObjectUtils.equals(wd.getDay(), getDay())
             && wd.getOffset() == getOffset();
     }

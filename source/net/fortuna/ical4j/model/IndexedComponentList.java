@@ -88,7 +88,7 @@ public class IndexedComponentList {
      * with the specified value
      */
     public Component getComponent(final String propertyValue) {
-        ComponentList components = getComponents(propertyValue);
+        final ComponentList components = getComponents(propertyValue);
         if (!components.isEmpty()) {
             return (Component) components.iterator().next();
         }
