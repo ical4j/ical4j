@@ -79,7 +79,7 @@ public class PeriodRule extends ComponentRule {
         */
         
 //        try {
-        PeriodList recurrenceSet = component.calculateRecurrenceSet(period);
+        final PeriodList recurrenceSet = component.calculateRecurrenceSet(period);
         return (!recurrenceSet.isEmpty());
 //        }
 //        catch (ValidationException ve) {

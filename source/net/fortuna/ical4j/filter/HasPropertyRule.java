@@ -77,9 +77,9 @@ public class HasPropertyRule extends ComponentRule {
      * @see net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)
      */
     public final boolean match(final Component component) {
-        PropertyList properties = component.getProperties(property.getName());
-        for (Iterator i = properties.iterator(); i.hasNext();) {
-            Property p = (Property) i.next();
+        final PropertyList properties = component.getProperties(property.getName());
+        for (final Iterator i = properties.iterator(); i.hasNext();) {
+            final Property p = (Property) i.next();
             if (matchEquals && property.equals(p)) {
                 return true;
             }

@@ -147,7 +147,7 @@ public class UnfoldingReader extends PushbackReader {
      * @see java.io.PushbackReader#read()
      */
     public final int read() throws IOException {
-        int c = super.read();
+        final int c = super.read();
         boolean doUnfold = false;
         for (int i = 0; i < patterns.length; i++) {
             if (c == patterns[i][0]) {
@@ -170,8 +170,8 @@ public class UnfoldingReader extends PushbackReader {
     /**
      * @see java.io.PushbackReader#read(char[], int, int)
      */
-    public int read(char[] cbuf, int off, int len) throws IOException {
-        int read = super.read(cbuf, off, len);
+    public int read(final char[] cbuf, final int off, final int len) throws IOException {
+        final int read = super.read(cbuf, off, len);
         boolean doUnfold = false;
         for (int i = 0; i < patterns.length; i++) {
             if (read > 0 && cbuf[0] == patterns[i][0]) {
@@ -209,7 +209,7 @@ public class UnfoldingReader extends PushbackReader {
             didUnfold = false;
 
             for (int i = 0; i < buffers.length; i++) {
-                int read = super.read(buffers[i], 0, buffers[i].length);
+                final int read = super.read(buffers[i], 0, buffers[i].length);
                 if (read > 0) {
                     if (!Arrays.equals(patterns[i], buffers[i])) {
                         unread(buffers[i], 0, read);

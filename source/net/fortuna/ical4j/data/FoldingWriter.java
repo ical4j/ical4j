@@ -54,11 +54,11 @@ public class FoldingWriter extends FilterWriter {
 
     private static final char[] FOLD_PATTERN = { '\r', '\n', ' ' };
 
-    private Log log = LogFactory.getLog(FoldingWriter.class);
+    private final Log log = LogFactory.getLog(FoldingWriter.class);
 
     private int lineLength;
 
-    private int foldLength;
+    private final int foldLength;
 
     /**
      * @param writer a writer to write output to
@@ -95,7 +95,7 @@ public class FoldingWriter extends FilterWriter {
      */
     public final void write(final char[] buffer, final int offset,
             final int length) throws IOException {
-        int maxIndex = offset + length - 1;
+        final int maxIndex = offset + length - 1;
         for (int i = offset; i <= maxIndex; i++) {
 
             // debugging..

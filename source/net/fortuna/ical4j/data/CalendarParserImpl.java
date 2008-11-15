@@ -78,7 +78,7 @@ public class CalendarParserImpl implements CalendarParser {
     public final void parse(final Reader in, final ContentHandler handler)
             throws IOException, ParserException {
 
-        StreamTokenizer tokeniser = new StreamTokenizer(in);
+        final StreamTokenizer tokeniser = new StreamTokenizer(in);
         try {
             tokeniser.resetSyntax();
             tokeniser.wordChars(WORD_CHAR_START, WORD_CHAR_END);
@@ -133,7 +133,7 @@ public class CalendarParserImpl implements CalendarParser {
                 }
                 if (in instanceof UnfoldingReader) {
                     // need to take unfolded lines into account
-                    int unfolded = ((UnfoldingReader) in).getLinesUnfolded();
+                    final int unfolded = ((UnfoldingReader) in).getLinesUnfolded();
                     line += unfolded;
                 }
                 throw new ParserException(e.getMessage(), line, e);
@@ -183,7 +183,7 @@ public class CalendarParserImpl implements CalendarParser {
             final ContentHandler handler) throws IOException, ParserException,
             URISyntaxException, ParseException {
 
-        String name = tokeniser.sval;
+        final String name = tokeniser.sval;
 
         // debugging..
         if (log.isDebugEnabled()) {
@@ -201,7 +201,7 @@ public class CalendarParserImpl implements CalendarParser {
         // assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
         // String value = tokeniser.sval;
-        StringBuffer value = new StringBuffer();
+        final StringBuffer value = new StringBuffer();
 
         // assertToken(tokeniser,StreamTokenizer.TT_EOL);
 
@@ -266,7 +266,7 @@ public class CalendarParserImpl implements CalendarParser {
 
         assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
-        String paramName = tokeniser.sval;
+        final String paramName = tokeniser.sval;
 
         // debugging..
         if (log.isDebugEnabled()) {
@@ -275,7 +275,7 @@ public class CalendarParserImpl implements CalendarParser {
 
         assertToken(tokeniser, '=');
 
-        StringBuffer paramValue = new StringBuffer();
+        final StringBuffer paramValue = new StringBuffer();
 
         // preserve quote chars..
         if (tokeniser.nextToken() == '"') {
@@ -325,7 +325,7 @@ public class CalendarParserImpl implements CalendarParser {
 
         assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
-        String name = tokeniser.sval;
+        final String name = tokeniser.sval;
 
         handler.startComponent(name);
 

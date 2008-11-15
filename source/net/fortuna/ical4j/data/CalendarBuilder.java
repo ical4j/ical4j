@@ -250,11 +250,10 @@ public class CalendarBuilder implements ContentHandler {
             throws URISyntaxException {
         if (property != null) {
             // parameter names are case-insensitive, but convert to upper case to simplify further processing
-            Parameter param = ParameterFactoryImpl.getInstance()
-                    .createParameter(name.toUpperCase(), value);
+            final Parameter param = ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value);
             property.getParameters().add(param);
             if (param instanceof TzId && registry != null) {
-                TimeZone timezone = registry.getTimeZone(param.getValue());
+                final TimeZone timezone = registry.getTimeZone(param.getValue());
                 if (timezone != null) {
                     try {
                         ((DateProperty) property).setTimeZone(timezone);
@@ -339,21 +338,21 @@ public class CalendarBuilder implements ContentHandler {
         throws IOException {
         
         // Go through each property and try to resolve the TZID.
-        for(Iterator it = datesMissingTimezones.iterator();it.hasNext();) {
-            Property property = (Property) it.next();
-            Parameter tzParam = property.getParameter(Parameter.TZID);
+        for (final Iterator it = datesMissingTimezones.iterator();it.hasNext();) {
+            final Property property = (Property) it.next();
+            final Parameter tzParam = property.getParameter(Parameter.TZID);
 
             // tzParam might be null: 
             if (tzParam == null) continue;
             
             //lookup timezone
-            TimeZone timezone = registry.getTimeZone(tzParam.getValue());
+            final TimeZone timezone = registry.getTimeZone(tzParam.getValue());
             
             // If timezone found, then update date property
             if (timezone != null) {
                 // Get the String representation of date(s) as
                 // we will need this after changing the timezone
-                String strDate = property.getValue();
+                final String strDate = property.getValue();
                 
                 // Change the timezone
                 if(property instanceof DateProperty)

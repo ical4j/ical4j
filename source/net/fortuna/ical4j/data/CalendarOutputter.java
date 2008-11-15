@@ -98,19 +98,15 @@ public class CalendarOutputter {
      */
     public final void output(final Calendar calendar, final Writer out)
             throws IOException, ValidationException {
-
         if (isValidating()) {
             calendar.validate();
         }
 
-        FoldingWriter writer = new FoldingWriter(out, foldLength);
-
+        final FoldingWriter writer = new FoldingWriter(out, foldLength);
         try {
-
             writer.write(calendar.toString());
         }
         finally {
-
             writer.close();
         }
     }

@@ -106,8 +106,8 @@ public class Filter {
                 List list = new ArrayList(c);
                 List temp = new ArrayList();
                 for (int n = 0; n < getRules().length; n++) {
-                    for (Iterator i = list.iterator(); i.hasNext();) {
-                        Object o = i.next();
+                    for (final Iterator i = list.iterator(); i.hasNext();) {
+                        final Object o = i.next();
                         if (getRules()[n].match(o)) {
                             temp.add(o);
                         }
@@ -118,9 +118,9 @@ public class Filter {
                 filtered.addAll(list);
             }
             else {
-                Iterator i = c.iterator();
+                final Iterator i = c.iterator();
                 while (i.hasNext()) {
-                    Object o = i.next();
+                    final Object o = i.next();
                     for (int n = 0; n < getRules().length; n++) {
                         if (getRules()[n].match(o)) {
                             filtered.add(o);
@@ -140,7 +140,7 @@ public class Filter {
      * @return a filtered array
      */
     public final Object[] filter(final Object[] objects) {
-        Collection filtered = filter(Arrays.asList(objects));
+        final Collection filtered = filter(Arrays.asList(objects));
         try {
             return filtered.toArray((Object[]) Array.newInstance(objects
                     .getClass(), filtered.size()));
