@@ -322,11 +322,11 @@ public class VFreeBusy extends CalendarComponent {
      */
     private FreeBusy createBusyTime(final DateTime start, final DateTime end,
             final ComponentList components) {
-        PeriodList periods = getConsumedTime(components, start, end);
+        final PeriodList periods = getConsumedTime(components, start, end);
         // periods must be in UTC time for freebusy..
         periods.setUtc(true);
-        for (Iterator i = periods.iterator(); i.hasNext();) {
-            Period period = (Period) i.next();
+        for (final Iterator i = periods.iterator(); i.hasNext();) {
+            final Period period = (Period) i.next();
             // check if period outside bounds..
             if (period.getStart().after(end) || period.getEnd().before(start)) {
                 periods.remove(period);
@@ -348,9 +348,9 @@ public class VFreeBusy extends CalendarComponent {
      */
     private FreeBusy createFreeTime(final DateTime start, final DateTime end,
             final Dur duration, final ComponentList components) {
-        FreeBusy fb = new FreeBusy();
+        final FreeBusy fb = new FreeBusy();
         fb.getParameters().add(FbType.FREE);
-        PeriodList periods = getConsumedTime(components, start, end);
+        final PeriodList periods = getConsumedTime(components, start, end);
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Busy periods: " + periods);
@@ -360,8 +360,8 @@ public class VFreeBusy extends CalendarComponent {
         if (periods.isEmpty()) {
             lastPeriodEnd = new DateTime(start);
         }
-        for (Iterator i = periods.iterator(); i.hasNext();) {
-            Period period = (Period) i.next();
+        for (final Iterator i = periods.iterator(); i.hasNext();) {
+            final Period period = (Period) i.next();
             // check if period outside bounds..
             if (period.getStart().after(end) || period.getEnd().before(start)) {
                 continue;
@@ -373,12 +373,9 @@ public class VFreeBusy extends CalendarComponent {
             }
             // calculate duration between this period start and last period end..
             if (lastPeriodEnd != null) {
-                Duration freeDuration = new Duration(lastPeriodEnd, period
-                        .getStart());
+                final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
                 if (freeDuration.getDuration().compareTo(duration) >= 0) {
-                    fb.getPeriods().add(
-                            new Period(lastPeriodEnd, freeDuration
-                                    .getDuration()));
+                    fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
                 }
             }
             lastPeriodEnd = period.getEnd();
@@ -387,8 +384,7 @@ public class VFreeBusy extends CalendarComponent {
         if (lastPeriodEnd != null) {
             Duration freeDuration = new Duration(lastPeriodEnd, end);
             if (freeDuration.getDuration().compareTo(duration) >= 0) {
-                fb.getPeriods().add(
-                        new Period(lastPeriodEnd, freeDuration.getDuration()));
+                fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
             }
         }
         return fb;
@@ -541,9 +537,7 @@ public class VFreeBusy extends CalendarComponent {
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private void readObject(java.io.ObjectInputStream stream)
-        throws IOException, ClassNotFoundException {
-        
+    private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
         log = LogFactory.getLog(VFreeBusy.class);
     }

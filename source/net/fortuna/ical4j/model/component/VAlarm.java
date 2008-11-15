@@ -271,7 +271,7 @@ public class VAlarm extends CalendarComponent {
         /*
          * ; the following is optional, ; and MAY occur more than once x-prop
          */
-        Action action = getAction();
+        final Action action = getAction();
         if (Action.AUDIO.equals(action)) {
             validateAudio();
         }

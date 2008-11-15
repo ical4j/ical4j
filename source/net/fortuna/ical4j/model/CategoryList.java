@@ -94,9 +94,8 @@ public class CategoryList implements Serializable {
      * @see java.util.AbstractCollection#toString()
      */
     public final String toString() {
-
-        StringBuffer b = new StringBuffer();
-        for (Iterator i = categories.iterator(); i.hasNext();) {
+        final StringBuffer b = new StringBuffer();
+        for (final Iterator i = categories.iterator(); i.hasNext();) {
             b.append(Strings.escape((String) i.next()));
             if (i.hasNext()) {
                 b.append(',');

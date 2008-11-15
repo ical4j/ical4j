@@ -143,7 +143,7 @@ public class VAvailability extends CalendarComponent {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
         b.append(BEGIN);
         b.append(':');
         b.append(getName());
@@ -164,9 +164,9 @@ public class VAvailability extends CalendarComponent {
             throws ValidationException {
 
         // validate that getAvailable() only contains Available components
-        Iterator iterator = getAvailable().iterator();
+        final Iterator iterator = getAvailable().iterator();
         while (iterator.hasNext()) {
-            Component component = (Component) iterator.next();
+            final Component component = (Component) iterator.next();
 
             if (!(component instanceof Available)) {
                 throw new ValidationException("Component ["
@@ -189,7 +189,7 @@ public class VAvailability extends CalendarComponent {
          *      "DATE-TIME" values specified as either date with UTC time or date
          *      with local time and a time zone reference.
          */
-        DtStart start = (DtStart) getProperty(Property.DTSTART);
+        final DtStart start = (DtStart) getProperty(Property.DTSTART);
         if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
             throw new ValidationException("Property [" + Property.DTSTART
                     + "] must be a " + Value.DATE_TIME);
@@ -203,7 +203,7 @@ public class VAvailability extends CalendarComponent {
             PropertyValidator.getInstance().assertOne(Property.DTEND,
                     getProperties());
             /* Must be DATE_TIME */
-            DtEnd end = (DtEnd) getProperty(Property.DTEND);
+            final DtEnd end = (DtEnd) getProperty(Property.DTEND);
             if (Value.DATE.equals(end.getParameter(Parameter.VALUE))) {
                 throw new ValidationException("Property [" + Property.DTEND
                         + "] must be a " + Value.DATE_TIME);

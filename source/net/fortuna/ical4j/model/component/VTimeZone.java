@@ -171,7 +171,7 @@ public class VTimeZone extends CalendarComponent {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
         b.append(BEGIN);
         b.append(':');
         b.append(getName());
@@ -216,7 +216,7 @@ public class VTimeZone extends CalendarComponent {
                     + "] must be specified at least once");
         }
 
-        for (Iterator i = getObservances().iterator(); i.hasNext();) {
+        for (final Iterator i = getObservances().iterator(); i.hasNext();) {
             ((Component) i.next()).validate(recurse);
         }
         
@@ -245,9 +245,9 @@ public class VTimeZone extends CalendarComponent {
     public final Observance getApplicableObservance(final Date date) {
         Observance latestObservance = null;
         Date latestOnset = null;
-        for (Iterator i = getObservances().iterator(); i.hasNext();) {
-            Observance observance = (Observance) i.next();
-            Date onset = observance.getLatestOnset(date);
+        for (final Iterator i = getObservances().iterator(); i.hasNext();) {
+            final Observance observance = (Observance) i.next();
+            final Date onset = observance.getLatestOnset(date);
             if (latestOnset == null
                     || (onset != null && onset.after(latestOnset))) {
                 latestOnset = onset;
@@ -282,7 +282,7 @@ public class VTimeZone extends CalendarComponent {
      * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Component#equals(java.lang.Object)
      */
-    public boolean equals(Object arg0) {
+    public boolean equals(final Object arg0) {
         if (arg0 instanceof VTimeZone) {
             return super.equals(arg0)
                     && ObjectUtils.equals(observances, ((VTimeZone) arg0)
@@ -304,9 +304,8 @@ public class VTimeZone extends CalendarComponent {
      * Overrides default copy method to add support for copying observance sub-components.
      * @see net.fortuna.ical4j.model.Component#copy()
      */
-    public Component copy() throws ParseException, IOException,
-            URISyntaxException {
-        VTimeZone copy = (VTimeZone) super.copy();
+    public Component copy() throws ParseException, IOException, URISyntaxException {
+        final VTimeZone copy = (VTimeZone) super.copy();
         copy.observances = new ComponentList(observances);
         return copy;
     }

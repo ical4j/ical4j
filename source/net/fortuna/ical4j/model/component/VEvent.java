@@ -298,7 +298,7 @@ public class VEvent extends CalendarComponent {
      * @see java.lang.Object#toString()
      */
     public final String toString() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
         b.append(BEGIN);
         b.append(':');
         b.append(getName());
@@ -319,9 +319,9 @@ public class VEvent extends CalendarComponent {
             throws ValidationException {
 
         // validate that getAlarms() only contains VAlarm components
-        Iterator iterator = getAlarms().iterator();
+        final Iterator iterator = getAlarms().iterator();
         while (iterator.hasNext()) {
-            Component component = (Component) iterator.next();
+            final Component component = (Component) iterator.next();
 
             if (!(component instanceof VAlarm)) {
                 throw new ValidationException("Component ["
@@ -387,7 +387,7 @@ public class VEvent extends CalendarComponent {
         PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID,
                 getProperties());
 
-        Status status = (Status) getProperty(Property.STATUS);
+        final Status status = (Status) getProperty(Property.STATUS);
         if (status != null && !Status.VEVENT_TENTATIVE.equals(status)
                 && !Status.VEVENT_CONFIRMED.equals(status)
                 && !Status.VEVENT_CANCELLED.equals(status)) {
@@ -417,12 +417,12 @@ public class VEvent extends CalendarComponent {
              * anniversary type of "VEVENT" can span more than one date (i.e, "DTEND" property value is set to a
              * calendar date after the "DTSTART" property value).
              */
-            DtStart start = (DtStart) getProperty(Property.DTSTART);
-            DtEnd end = (DtEnd) getProperty(Property.DTEND);
+            final DtStart start = (DtStart) getProperty(Property.DTSTART);
+            final DtEnd end = (DtEnd) getProperty(Property.DTEND);
 
             if (start != null) {
-                Parameter startValue = start.getParameter(Parameter.VALUE);
-                Parameter endValue = end.getParameter(Parameter.VALUE);
+                final Parameter startValue = start.getParameter(Parameter.VALUE);
+                final Parameter endValue = end.getParameter(Parameter.VALUE);
                 
                 boolean startEndValueMismatch = false;
                 if (endValue != null) {
@@ -512,11 +512,11 @@ public class VEvent extends CalendarComponent {
     public final VEvent getOccurrence(final Date date) throws IOException,
         URISyntaxException, ParseException {
         
-        PeriodList consumedTime = getConsumedTime(date, date);
-        for (Iterator i = consumedTime.iterator(); i.hasNext();) {
-            Period p = (Period) i.next();
+        final PeriodList consumedTime = getConsumedTime(date, date);
+        for (final Iterator i = consumedTime.iterator(); i.hasNext();) {
+            final Period p = (Period) i.next();
             if (p.getStart().equals(date)) {
-                VEvent occurrence = (VEvent) this.copy();
+                final VEvent occurrence = (VEvent) this.copy();
                 occurrence.getProperties().add(new RecurrenceId(date));
                 return occurrence;
             }
@@ -657,8 +657,8 @@ public class VEvent extends CalendarComponent {
         DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
         // No DTEND? No problem, we'll use the DURATION.
         if (dtEnd == null && deriveFromDuration && getDuration() != null) {
-            DtStart dtStart = getStartDate();
-            Duration vEventDuration = getDuration();
+            final DtStart dtStart = getStartDate();
+            final Duration vEventDuration = getDuration();
             dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration()
                     .getTime(dtStart.getDate()), (Value) dtStart
                     .getParameter(Parameter.VALUE)));
@@ -688,7 +688,7 @@ public class VEvent extends CalendarComponent {
      * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Component#equals(java.lang.Object)
      */
-    public boolean equals(Object arg0) {
+    public boolean equals(final Object arg0) {
         if (arg0 instanceof VEvent) {
             return super.equals(arg0)
                     && ObjectUtils.equals(alarms, ((VEvent) arg0).getAlarms());
@@ -710,7 +710,7 @@ public class VEvent extends CalendarComponent {
      */
     public Component copy() throws ParseException, IOException,
             URISyntaxException {
-        VEvent copy = (VEvent) super.copy();
+        final VEvent copy = (VEvent) super.copy();
         copy.alarms = new ComponentList(alarms);
         return copy;
     }
