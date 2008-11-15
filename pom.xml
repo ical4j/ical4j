@@ -311,13 +311,18 @@
 
 	<reporting>
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<configuration>
 					<linkXref>true</linkXref>
 					<targetJdk>1.4</targetJdk>
+					<rulesets>
+						<ruleset>/rulesets/basic.xml</ruleset>
+						<ruleset>/rulesets/imports.xml</ruleset>
+						<ruleset>/rulesets/unusedcode.xml</ruleset>
+						<ruleset>/rulesets/optimizations.xml</ruleset>
+					</rulesets>
 				</configuration>
 			</plugin>
 		
