@@ -47,7 +47,7 @@ public class RelatedTest extends ParameterTest {
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new RelatedTest("testGetValue", new Related(""), ""));
+		suite.addTest(new RelatedTest("testGetValue", Related.START, "START"));
 		return suite;
 	}
 }

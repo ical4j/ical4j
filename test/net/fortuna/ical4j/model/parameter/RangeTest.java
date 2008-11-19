@@ -47,7 +47,7 @@ public class RangeTest extends ParameterTest {
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new RangeTest("testGetValue", new Range(""), ""));
+		suite.addTest(new RangeTest("testGetValue", Range.THISANDPRIOR, "THISANDPRIOR"));
 		return suite;
 	}
 }
