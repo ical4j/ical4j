@@ -1,7 +1,7 @@
 /*
  * This file is part of Touchbase.
  *
- * Created: [18/11/2008]
+ * Created: [19/11/2008]
  *
  * Copyright (c) 2008, Ben Fortuna
  *
@@ -22,14 +22,13 @@
 package net.fortuna.ical4j.model.parameter;
 
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
  *
  */
-public class TypeTest extends ParameterTest {
+public class XParameterTest extends ParameterTest {
 
 	/**
 	 * @param testMethod
@@ -37,9 +36,9 @@ public class TypeTest extends ParameterTest {
 	 * @param expectedName
 	 * @param expectedValue
 	 */
-	public TypeTest(String testMethod, Type type,
-			String expectedValue) {
-		super(testMethod, type, Parameter.TYPE, expectedValue);
+	public XParameterTest(String testMethod, XParameter parameter,
+			String expectedName, String expectedValue) {
+		super(testMethod, parameter, expectedName, expectedValue);
 	}
 
 	/**
@@ -47,7 +46,7 @@ public class TypeTest extends ParameterTest {
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new TypeTest("testGetValue", new Type(""), ""));
+		suite.addTest(new XParameterTest("testGetValue", new XParameter("name", "value"), "name", "value"));
 		return suite;
 	}
 }

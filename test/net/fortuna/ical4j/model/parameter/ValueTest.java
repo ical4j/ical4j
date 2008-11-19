@@ -1,7 +1,7 @@
 /*
  * This file is part of Touchbase.
  *
- * Created: [18/11/2008]
+ * Created: [19/11/2008]
  *
  * Copyright (c) 2008, Ben Fortuna
  *
@@ -29,7 +29,7 @@ import net.fortuna.ical4j.model.ParameterTest;
  * @author fortuna
  *
  */
-public class TypeTest extends ParameterTest {
+public class ValueTest extends ParameterTest {
 
 	/**
 	 * @param testMethod
@@ -37,9 +37,9 @@ public class TypeTest extends ParameterTest {
 	 * @param expectedName
 	 * @param expectedValue
 	 */
-	public TypeTest(String testMethod, Type type,
+	public ValueTest(String testMethod, Value value,
 			String expectedValue) {
-		super(testMethod, type, Parameter.TYPE, expectedValue);
+		super(testMethod, value, Parameter.VALUE, expectedValue);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class TypeTest extends ParameterTest {
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new TypeTest("testGetValue", new Type(""), ""));
+		suite.addTest(new ValueTest("testGetValue", Value.BINARY, "BINARY"));
 		return suite;
 	}
 }

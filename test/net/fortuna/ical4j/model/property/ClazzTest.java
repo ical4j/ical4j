@@ -1,7 +1,7 @@
 /*
  * This file is part of Touchbase.
  *
- * Created: [18/11/2008]
+ * Created: [19/11/2008]
  *
  * Copyright (c) 2008, Ben Fortuna
  *
@@ -19,27 +19,23 @@
  * along with Touchbase.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package net.fortuna.ical4j.model.parameter;
+package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterTest;
+import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
  *
  */
-public class TypeTest extends ParameterTest {
+public class ClazzTest extends PropertyTest {
 
 	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
+	 * @param property
 	 * @param expectedValue
 	 */
-	public TypeTest(String testMethod, Type type,
-			String expectedValue) {
-		super(testMethod, type, Parameter.TYPE, expectedValue);
+	public ClazzTest(Clazz clazz, String expectedValue) {
+		super(clazz, expectedValue);
 	}
 
 	/**
@@ -47,7 +43,7 @@ public class TypeTest extends ParameterTest {
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new TypeTest("testGetValue", new Type(""), ""));
+		suite.addTest(new ClazzTest(Clazz.PRIVATE, "PRIVATE"));
 		return suite;
 	}
 }
