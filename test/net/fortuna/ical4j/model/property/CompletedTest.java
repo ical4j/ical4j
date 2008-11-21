@@ -60,7 +60,7 @@ public class CompletedTest extends PropertyTest {
 	 */
 	public static TestSuite suite() throws ParseException {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new CompletedTest(new Completed(""), ""));
+		suite.addTest(new CompletedTest(new Completed("20061121"), ""));
 		return suite;
 	}
 }
