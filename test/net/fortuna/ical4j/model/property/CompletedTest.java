@@ -42,25 +42,24 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class CompletedTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public CompletedTest(Completed completed, String expectedValue) {
-		super(completed, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public CompletedTest(Completed completed, String expectedValue) {
+        super(completed, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() throws ParseException {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new CompletedTest(new Completed("20061121"), ""));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() throws ParseException {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new CompletedTest(new Completed("20061121T000000Z"), "20061121T000000Z"));
+        return suite;
+    }
 }
