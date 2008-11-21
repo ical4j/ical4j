@@ -115,7 +115,7 @@ public class PropertyTest extends AbstractPropertyTest {
     /**
      * @return
      */
-    public static TestSuite suite() {
+    public static TestSuite suite() throws Exception {
         TestSuite suite = new TestSuite();
         suite.addTest(new PropertyTest(new XProperty("X-extended")));
         suite.addTest(new PropertyTest(new XProperty("X-extended", "value"), "value"));

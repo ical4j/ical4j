@@ -1,6 +1,6 @@
 /*
  *
- * Created: [19/11/2008]
+ * Created: [21/11/2008]
  *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
@@ -35,6 +35,8 @@
 
 package net.fortuna.ical4j.model.property;
 
+import java.text.ParseException;
+
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 
@@ -42,22 +44,23 @@ import net.fortuna.ical4j.model.PropertyTest;
  * @author fortuna
  *
  */
-public class ClazzTest extends PropertyTest {
+public class CompletedTest extends PropertyTest {
 
 	/**
 	 * @param property
 	 * @param expectedValue
 	 */
-	public ClazzTest(Clazz clazz, String expectedValue) {
-		super(clazz, expectedValue);
+	public CompletedTest(Completed completed, String expectedValue) {
+		super(completed, expectedValue);
 	}
 
 	/**
 	 * @return
+	 * @throws ParseException 
 	 */
-	public static TestSuite suite() {
+	public static TestSuite suite() throws ParseException {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new ClazzTest(Clazz.PRIVATE, "PRIVATE"));
+		suite.addTest(new CompletedTest(new Completed(""), ""));
 		return suite;
 	}
 }
