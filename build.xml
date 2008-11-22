@@ -67,7 +67,7 @@
 	<!-- Targets -->
 
 	<target name="emma" description="turns on EMMA's on-the-fly instrumentation mode">
-		<property name="emma.enabled" value="true" />
+		<property name="emma.enabled" value="false" />
 
 		<!-- this property, if overriden via -Demma.filter=<list of filter specs>
 	         on ANT's command line, will set the coverage filter; by default,
@@ -76,14 +76,14 @@
 		<property name="emma.filter" value="" />
 	</target>
 
-	<target name="clean-compile">
+	<target name="clean-compile" description="Remove the result of compilation">
 		<mkdir dir="${output.dir}" />
 		<delete>
 			<fileset dir="${output.dir}" />
 		</delete>
 	</target>
 
-	<target name="clean-coverage">
+	<target name="clean-coverage" description="Remove the result of the coverage target">
 		<mkdir dir="${coverage.dir}" />
 		<delete>
 			<fileset dir="${coverage.dir}" />
@@ -94,7 +94,7 @@
 		</delete>
 	</target>
 
-	<target name="compile">
+	<target name="compile" description="Compile the program">
 		<echo message="Compiling source from classpath: ${project.classpath}" />
 		<mkdir dir="${output.dir}" />
 
@@ -103,19 +103,20 @@
 		<javac source="1.4" target="1.4" srcdir="${source.dir}" destdir="${output.dir}" debug="true" debuglevel="lines,source,vars" deprecation="true" classpathref="project.classpath" />
 	</target>
 
-	<target name="compile-tests">
+	<target name="compile-tests" description="Compile the tests">
 		<echo message="Compiling tests from classpath: ${project.classpath}" />
 		<javac srcdir="${test.source.dir}" destdir="${output.dir}" debug="false" deprecation="true" classpathref="project.classpath" />
 	</target>
 
-	<target name="clean-package">
+	<target name="clean-package" description="Remove the results of the package target">
 		<mkdir dir="${package.dir}" />
 		<delete>
 			<fileset dir="${package.dir}" />
 		</delete>
 	</target>
 
-	<target name="package" depends="compile, clean-package">
+	<target name="package" depends="compile, clean-package"
+		description="Create the .jar file">
 		<manifest file="etc/manifest.mf">
 			<!-- Add manifest attributes here.. -->
 			<attribute name="Class-Path" value="commons-logging.jar,commons-codec.jar,commons-lang.jar" />
@@ -125,14 +126,14 @@
 		</jar>
 	</target>
 
-	<target name="clean-javadoc">
+	<target name="clean-javadoc" description="Remove the Javadoc files">
 		<mkdir dir="${javadoc.dir}" />
 		<delete>
 			<fileset dir="${javadoc.dir}" />
 		</delete>
 	</target>
 
-	<target name="javadoc" depends="clean-javadoc">
+	<target name="javadoc" depends="clean-javadoc" description="Create the Javadoc API documentation">
 		<echo message="Generating Javadocs from classpath: ${project.classpath}" />
 		<javadoc sourcepath="${source.dir}" destdir="${javadoc.dir}" packagenames="${javadoc.packages}" Windowtitle="${ant.project.name}" Doctitle="${ant.project.name}" Overview="etc/overview.html" classpathref="project.classpath">
 			<link href="${j2se.apiurl}" />
@@ -142,14 +143,16 @@
 	</target>
 
 	<!-- Source distribution -->
-	<target name="dist-src" depends="clean-compile, clean-package, javadoc">
+	<target name="dist-src" depends="clean-compile, clean-package, javadoc"
+		description="Create the source distribution">
 		<zip zipfile="${dist.dir}/${dist.name}-${project.version}-src.zip">
 			<zipfileset dir="." prefix="${dist.name}-${project.version}" excludes="coverage/**/*" />
 		</zip>
 	</target>
 
 	<!-- Binary distribution -->
-	<target name="dist" depends="clean-compile, package, javadoc">
+	<target name="dist" depends="clean-compile, package, javadoc"
+		description="Create the binary distribution">
 		<zip zipfile="${dist.dir}/${dist.name}-${project.version}.zip">
 			<zipfileset dir="." prefix="${dist.name}-${project.version}" includes="LICENSE,CHANGELOG,README" />
 			<zipfileset dir="docs" prefix="${dist.name}-${project.version}/docs" />
@@ -160,7 +163,8 @@
 	</target>
 
 	<!-- Maven distribution -->
-	<target name="dist-maven" depends="clean-compile, package">
+	<target name="dist-maven" depends="clean-compile, package"
+		description="Create the Maven distribution">
 		<jar jarfile="${dist.dir}/${dist.maven.file}">
 			<zipfileset dir="." includes="LICENSE" fullpath="LICENSE.txt" />
 			<zipfileset dir="etc" includes="project.xml" />
@@ -169,12 +173,13 @@
 	</target>
 
 	<!-- Detailed changelog -->
-	<target name="changelog">
+	<target name="changelog" description="Generate XML report of CVS change logs">
 		<cvschangelog destfile="CHANGES" />
 	</target>
 
 	<!-- JUnit tests -->
-	<target name="run-tests" depends="compile, compile-tests">
+	<target name="run-tests" depends="compile, compile-tests"
+		description="Run JUint tests">
 		<echo message="Running unit tests with classpath: ${project.classpath}" />
 
 		<emma enabled="${emma.enabled}">
@@ -222,7 +227,7 @@
 	</target>
 
 	<!-- Generate timezone data -->
-	<target name="generateTzData">
+	<target name="generateTzData" description="Generate timezone data">
 		<!-- Default -->
 		<echo message="Executing: ${vzic.home}/vzic.exe" />
 		<exec executable="${vzic.home}/vzic.exe" dir="${vzic.home}" output="${basedir}/etc/vzic.log">
