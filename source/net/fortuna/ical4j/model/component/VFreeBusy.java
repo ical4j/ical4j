@@ -403,7 +403,7 @@ public class VFreeBusy extends CalendarComponent {
             // only events consume time..
             if (component instanceof VEvent) {
                 periods.addAll(((VEvent) component).getConsumedTime(rangeStart,
-                        rangeEnd));
+                        rangeEnd, false));
             }
         }
         return periods.normalise();
