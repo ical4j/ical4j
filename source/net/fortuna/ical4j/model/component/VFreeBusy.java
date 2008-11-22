@@ -351,41 +351,28 @@ public class VFreeBusy extends CalendarComponent {
         final FreeBusy fb = new FreeBusy();
         fb.getParameters().add(FbType.FREE);
         final PeriodList periods = getConsumedTime(components, start, end);
+        // Add final consumed time to avoid special-case end-of-list processing
+        periods.add(new Period(end, end));
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Busy periods: " + periods);
         }
-        DateTime lastPeriodEnd = null;
+        DateTime lastPeriodEnd = new DateTime(start);
         // where no time is consumed set the last period end as the range start..
-        if (periods.isEmpty()) {
-            lastPeriodEnd = new DateTime(start);
-        }
         for (final Iterator i = periods.iterator(); i.hasNext();) {
             final Period period = (Period) i.next();
             // check if period outside bounds..
             if (period.getStart().after(end) || period.getEnd().before(start)) {
                 continue;
             }
-            // create a dummy last period end if first period starts after the start date
-            // (i.e. there is a free time gap between the start and the first period).
-            if (lastPeriodEnd == null && period.getStart().after(start)) {
-                lastPeriodEnd = new DateTime(start);
-            }
             // calculate duration between this period start and last period end..
-            if (lastPeriodEnd != null) {
                 final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
                 if (freeDuration.getDuration().compareTo(duration) >= 0) {
                     fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
                 }
-            }
+            if (period.getEnd().after(lastPeriodEnd)) {
             lastPeriodEnd = period.getEnd();
         }
-        // calculate duration between last period end and end ..
-        if (lastPeriodEnd != null) {
-            Duration freeDuration = new Duration(lastPeriodEnd, end);
-            if (freeDuration.getDuration().compareTo(duration) >= 0) {
-                fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
-            }
         }
         return fb;
     }
