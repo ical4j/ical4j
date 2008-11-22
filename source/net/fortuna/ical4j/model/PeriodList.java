@@ -200,7 +200,9 @@ public class PeriodList extends TreeSet implements Serializable {
         if (normalised) {
             return newList;
         }
-        return this;
+        else {
+            return this;
+	}
     }
 
     /**
