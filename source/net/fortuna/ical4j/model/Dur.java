@@ -400,6 +400,7 @@ public class Dur implements Comparable, Serializable {
     }
 
     /**
+     * Compares the durations' lengths.
      * @param arg0
      * @return
      */
@@ -408,7 +409,7 @@ public class Dur implements Comparable, Serializable {
     }
 
     /**
-     * Compares this duration with another.
+     * Compares this duration with another, acording to their length.
      * @param arg0
      * @return
      */
@@ -423,19 +424,29 @@ public class Dur implements Comparable, Serializable {
                 return Integer.MAX_VALUE;
             }
         }
-        else if (getWeeks() != arg0.getWeeks()) {
-            return getWeeks() - arg0.getWeeks();
+        int result;
+        if (getWeeks() != arg0.getWeeks()) {
+            result = getWeeks() - arg0.getWeeks();
         }
         else if (getDays() != arg0.getDays()) {
-            return getDays() - arg0.getDays();
+            result = getDays() - arg0.getDays();
         }
         else if (getHours() != arg0.getHours()) {
-            return getHours() - arg0.getHours();
+            result = getHours() - arg0.getHours();
         }
         else if (getMinutes() != arg0.getMinutes()) {
-            return getMinutes() - arg0.getMinutes();
+            result = getMinutes() - arg0.getMinutes();
         }
-        return getSeconds() - arg0.getSeconds();
+        else {
+            result = getSeconds() - arg0.getSeconds();
+        }
+        // invert sense of all tests if both durations are negative
+        if (isNegative()) {
+            return -result;
+        }
+        else {
+            return result;
+        }
     }
 
     /* (non-Javadoc)
