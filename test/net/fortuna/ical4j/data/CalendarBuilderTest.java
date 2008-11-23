@@ -64,6 +64,10 @@ public class CalendarBuilderTest extends TestCase {
                 CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_VALIDATION, true);
+        
+        // uncomment for testing invalid calendars in relaxed parsing mode..
+//        CompatibilityHints.setHintEnabled(
+//                CompatibilityHints.KEY_RELAXED_PARSING, true);
     }
     
     /* (non-Javadoc)

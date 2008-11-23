@@ -63,6 +63,7 @@ import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Constants;
 import net.fortuna.ical4j.util.Strings;
 
@@ -246,8 +247,7 @@ public class CalendarBuilder implements ContentHandler {
      * (non-Javadoc)
      * @see net.fortuna.ical4j.data.ContentHandler#parameter(java.lang.String, java.lang.String)
      */
-    public void parameter(final String name, final String value)
-            throws URISyntaxException {
+    public void parameter(final String name, final String value) throws URISyntaxException {
         if (property != null) {
             // parameter names are case-insensitive, but convert to upper case to simplify further processing
             final Parameter param = ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value);
@@ -258,14 +258,19 @@ public class CalendarBuilder implements ContentHandler {
                     try {
                         ((DateProperty) property).setTimeZone(timezone);
                     }
-                    catch (Exception e) {
+                    catch (ClassCastException e) {
                         try {
                             ((DateListProperty) property).setTimeZone(timezone);
                         }
-                        catch (Exception e2) {
-                            log.warn("Error setting timezone [" + param
-                                    + "] on property [" + property.getName()
-                                    + "]", e);
+                        catch (ClassCastException e2) {
+                            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                                log.warn("Error setting timezone [" + param
+                                        + "] on property [" + property.getName()
+                                        + "]", e);
+                            }
+                            else {
+                                throw e2;
+                            }
                         }
                     }
                 } else {

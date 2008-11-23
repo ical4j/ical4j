@@ -287,7 +287,12 @@ public class CalendarParserImpl implements CalendarParser {
             paramValue.append(tokeniser.sval);
         }
 
-        handler.parameter(paramName, paramValue.toString());
+        try {
+            handler.parameter(paramName, paramValue.toString());
+        }
+        catch (ClassCastException cce) {
+            throw new ParserException("Error parsing parameter", tokeniser.lineno(), cce);
+        }
     }
 
     /**
