@@ -89,8 +89,8 @@ public class DurTest extends TestCase {
      * @param duration
      * @param duration2
      */
-    public DurTest(Dur duration, Dur duration2) {
-        super("testEquals");
+    public DurTest(String testMethod, Dur duration, Dur duration2) {
+        super(testMethod);
         this.duration = duration;
         this.duration2 = duration2;
     }
@@ -128,6 +128,13 @@ public class DurTest extends TestCase {
      */
     public void testEquals() {
         assertEquals(duration2, duration);
+    }
+    
+    /**
+     * 
+     */
+    public void testCompareToGreater() {
+        assertTrue(duration.compareTo(duration2) > 0);
     }
     
     /* (non-Javadoc)
@@ -230,23 +237,28 @@ public class DurTest extends TestCase {
         Dur oneSecond = new Dur("P1S");
         Dur twoSeconds = new Dur("P2S");
         
-        suite.addTest(new DurTest(oneWeek.add(oneWeek), twoWeeks));
-        suite.addTest(new DurTest(oneDay.add(oneDay), twoDays));
-        suite.addTest(new DurTest(oneHour.add(oneHour), twoHours));
-        suite.addTest(new DurTest(oneWeek.add(oneDay), new Dur("P8D")));
-        suite.addTest(new DurTest(oneDay.add(oneHour), new Dur("P1D1H")));
-        suite.addTest(new DurTest(oneWeek.negate().add(oneDay.negate()), new Dur("-P8D")));
-        suite.addTest(new DurTest(oneDay.negate().add(oneHour.negate()), new Dur("-P1D1H")));
-        suite.addTest(new DurTest(oneHour.negate().add(oneMinute.negate()), new Dur("-P1H1M")));
-        suite.addTest(new DurTest(oneMinute.negate().add(oneSecond.negate()), new Dur("-P1M1S")));
+        suite.addTest(new DurTest("testEquals", oneWeek.add(oneWeek), twoWeeks));
+        suite.addTest(new DurTest("testEquals", oneDay.add(oneDay), twoDays));
+        suite.addTest(new DurTest("testEquals", oneHour.add(oneHour), twoHours));
+        suite.addTest(new DurTest("testEquals", oneWeek.add(oneDay), new Dur("P8D")));
+        suite.addTest(new DurTest("testEquals", oneDay.add(oneHour), new Dur("P1D1H")));
+        suite.addTest(new DurTest("testEquals", oneWeek.negate().add(oneDay.negate()), new Dur("-P8D")));
+        suite.addTest(new DurTest("testEquals", oneDay.negate().add(oneHour.negate()), new Dur("-P1D1H")));
+        suite.addTest(new DurTest("testEquals", oneHour.negate().add(oneMinute.negate()), new Dur("-P1H1M")));
+        suite.addTest(new DurTest("testEquals", oneMinute.negate().add(oneSecond.negate()), new Dur("-P1M1S")));
         
-        suite.addTest(new DurTest(new Dur(0, 23, 0, 0).add(twoHours), new Dur("P1D1H")));
-        suite.addTest(new DurTest(new Dur(0, 0, 59, 0).add(twoMinutes), new Dur("P1H1M")));
-        suite.addTest(new DurTest(new Dur(0, 0, 0, 59).add(twoSeconds), new Dur("P1M1S")));
+        suite.addTest(new DurTest("testEquals", new Dur(0, 23, 0, 0).add(twoHours), new Dur("P1D1H")));
+        suite.addTest(new DurTest("testEquals", new Dur(0, 0, 59, 0).add(twoMinutes), new Dur("P1H1M")));
+        suite.addTest(new DurTest("testEquals", new Dur(0, 0, 0, 59).add(twoSeconds), new Dur("P1M1S")));
         
-        suite.addTest(new DurTest(new Dur(0, -23, 0, 0).add(twoHours.negate()), new Dur("-P1D1H")));
-        suite.addTest(new DurTest(new Dur(0, 0, -59, 0).add(twoMinutes.negate()), new Dur("-P1H1M")));
-        suite.addTest(new DurTest(new Dur(0, 0, 0, -59).add(twoSeconds.negate()), new Dur("-P1M1S")));
+        suite.addTest(new DurTest("testEquals", new Dur(0, -23, 0, 0).add(twoHours.negate()), new Dur("-P1D1H")));
+        suite.addTest(new DurTest("testEquals", new Dur(0, 0, -59, 0).add(twoMinutes.negate()), new Dur("-P1H1M")));
+        suite.addTest(new DurTest("testEquals", new Dur(0, 0, 0, -59).add(twoSeconds.negate()), new Dur("-P1M1S")));
+        
+        suite.addTest(new DurTest("testCompareToGreater", new Dur(1), new Dur(-1)));
+        suite.addTest(new DurTest("testCompareToGreater", new Dur(0, 0, 0, 3), new Dur(0, 0, 0, -5)));
+        suite.addTest(new DurTest("testCompareToGreater", new Dur(0, 0, 0, 5), new Dur(0, 0, 0, 3)));
+        suite.addTest(new DurTest("testCompareToGreater", new Dur(0, 0, 0, -3), new Dur(0, 0, 0, -5)));
         
         return suite;
     }
