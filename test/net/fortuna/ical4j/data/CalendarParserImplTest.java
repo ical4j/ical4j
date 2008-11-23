@@ -72,8 +72,7 @@ public class CalendarParserImplTest extends TestCase {
      */
     protected void setUp() throws Exception {
         super.setUp();
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
     }
     
     /* (non-Javadoc)
@@ -124,7 +123,7 @@ public class CalendarParserImplTest extends TestCase {
         suite.addTest(new CalendarParserImplTest("etc/samples/invalid/CalendarDataFile.ics", 24));
         
         suite.addTest(new CalendarParserImplTest("etc/samples/invalid/overlaps.ics", 1));
-        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/phpicalendar_sample.ics", 166));
+        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/phpicalendar_sample.ics", 93));
         suite.addTest(new CalendarParserImplTest("etc/samples/invalid/schedule-unstable.ics", 196));
         suite.addTest(new CalendarParserImplTest("etc/samples/invalid/smallcluster.ics", 2));
         suite.addTest(new CalendarParserImplTest("etc/samples/invalid/twinkle.ics", 67));
