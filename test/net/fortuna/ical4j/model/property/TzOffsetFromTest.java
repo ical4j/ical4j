@@ -59,7 +59,7 @@ public class TzOffsetFromTest extends PropertyTest {
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new TzOffsetFromTest(new TzOffsetFrom(new UtcOffset("+10")), "+1000"));
+		suite.addTest(new TzOffsetFromTest(new TzOffsetFrom(new UtcOffset("+1000")), "+1000"));
 		return suite;
 	}
 
