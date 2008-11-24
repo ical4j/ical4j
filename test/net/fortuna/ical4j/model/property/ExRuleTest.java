@@ -47,7 +47,7 @@ public class ExRuleTest extends PropertyTest {
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new ExRuleTest(new ExRule(new Recur(Recur.DAILY, 1)), ""));
+		suite.addTest(new ExRuleTest(new ExRule(new Recur(Recur.DAILY, 1)), "FREQ=DAILY;COUNT=1"));
 		return suite;
 	}
 

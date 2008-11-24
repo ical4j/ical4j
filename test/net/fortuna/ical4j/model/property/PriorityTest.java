@@ -61,7 +61,7 @@ public class PriorityTest extends PropertyTest {
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new PriorityTest(Priority.HIGH, "HIGH"));
+		suite.addTest(new PriorityTest(Priority.HIGH, "1"));
 		return suite;
 	}
 

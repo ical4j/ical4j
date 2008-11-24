@@ -62,7 +62,7 @@ public class RRuleTest extends PropertyTest {
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new RRuleTest(new RRule(new Recur(Recur.WEEKLY, 3)), ""));
+		suite.addTest(new RRuleTest(new RRule(new Recur(Recur.WEEKLY, 3)), "FREQ=WEEKLY;COUNT=3"));
 		return suite;
 	}
 

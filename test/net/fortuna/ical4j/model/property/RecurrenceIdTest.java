@@ -61,7 +61,7 @@ public class RecurrenceIdTest extends PropertyTest {
 	 */
 	public static TestSuite suite() throws ParseException {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new RecurrenceIdTest(new RecurrenceId("20081124"), "20081124"));
+		suite.addTest(new RecurrenceIdTest(new RecurrenceId("20081124T180000"), "20081124T180000"));
 		return suite;
 	}
 
