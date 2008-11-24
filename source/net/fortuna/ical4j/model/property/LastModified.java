@@ -87,6 +87,14 @@ public class LastModified extends UtcProperty {
     }
 
     /**
+     * @param aValue
+     * @throws ParseException
+     */
+    public LastModified(final String aValue) throws ParseException {
+    	this(new ParameterList(), aValue);
+    }
+    
+    /**
      * @param aList a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
