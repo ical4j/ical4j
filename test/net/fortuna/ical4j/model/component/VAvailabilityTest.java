@@ -41,33 +41,33 @@ import net.fortuna.ical4j.model.ComponentTest;
 
 /**
  * @author fortuna
- *
  */
 public class VAvailabilityTest extends ComponentTest {
 
-	/**
-	 * @param component
-	 */
-	public VAvailabilityTest(VAvailability component) {
-		super(component);
-	}
+    /**
+     * @param component
+     */
+    public VAvailabilityTest(String testMethod, VAvailability component) {
+        super(testMethod, component);
+    }
 
-	/* (non-Javadoc)
-	 * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
-	 */
-	public void testIsCalendarComponent() {
-		assertIsCalendarComponent(component);
-	}
+    /*
+     * (non-Javadoc)
+     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
+     */
+    public void testIsCalendarComponent() {
+        assertIsCalendarComponent(component);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		
-		VAvailability a = new VAvailability();
-		suite.addTest(new VAvailabilityTest(a));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+
+        VAvailability a = new VAvailability();
+        suite.addTest(new VAvailabilityTest("testIsCalendarComponent", a));
+        return suite;
+    }
 
 }

@@ -13,6 +13,8 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Iterator;
 
+import junit.framework.TestSuite;
+
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
@@ -53,129 +55,64 @@ import org.apache.commons.logging.LogFactory;
 public class VEventTest extends ComponentTest {
 
     private static Log log = LogFactory.getLog(VEventTest.class);
+    
+    private VEvent event;
+    
+    private Period period;
+    
+    private Date date;
 
-    private TimeZoneRegistry registry;
-    
-    private UidGenerator uidGenerator;
-    
-    private VTimeZone tz;
-    
     private TzId tzParam;
-
-    private VEvent weekdayNineToFiveEvents = null;
     
-    private VEvent dailyWeekdayEvents = null;
+    /**
+     * @param testMethod
+     */
+    public VEventTest(String testMethod) {
+        super(testMethod, null);
+    }
     
-    private VEvent monthlyWeekdayEvents = null;
+    /**
+     * @param testMethod
+     * @param component
+     */
+    public VEventTest(String testMethod, VEvent component) {
+        super(testMethod, component);
+        this.event = component;
+    }
 
+    /**
+     * @param testMethod
+     * @param component
+     * @param period
+     */
+    public VEventTest(String testMethod, VEvent component, Period period) {
+        this(testMethod, component);
+        this.period = period;
+    }
+
+    /**
+     * @param testMethod
+     * @param component
+     * @param date
+     */
+    public VEventTest(String testMethod, VEvent component, Date date) {
+        this(testMethod, component);
+        this.date = date;
+    }
+    
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     public void setUp() throws Exception {
         super.setUp();
         // relax validation to avoid UID requirement..
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_VALIDATION, true);
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
         
-        registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         // create timezone property..
-        tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
+        VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         // create tzid parameter..
         tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
-
-        uidGenerator = new UidGenerator("1");
-        
-        Calendar weekday9AM = getCalendarInstance();
-        weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
-        weekday9AM.set(Calendar.MILLISECOND, 0);
-
-        Calendar weekday5PM = getCalendarInstance();
-        weekday5PM.set(2005, Calendar.MARCH, 7, 17, 0, 0);
-        weekday5PM.set(Calendar.MILLISECOND, 0);
-
-        // Do the recurrence until December 31st.
-        Calendar untilCal = getCalendarInstance();
-        untilCal.set(2005, Calendar.DECEMBER, 31);
-        untilCal.set(Calendar.MILLISECOND, 0);
-        Date until = new Date(untilCal.getTime().getTime());
-
-        // 9:00AM to 5:00PM Rule using weekly
-        Recur recurWeekly = new Recur(Recur.WEEKLY, until);
-        recurWeekly.getDayList().add(WeekDay.MO);
-        recurWeekly.getDayList().add(WeekDay.TU);
-        recurWeekly.getDayList().add(WeekDay.WE);
-        recurWeekly.getDayList().add(WeekDay.TH);
-        recurWeekly.getDayList().add(WeekDay.FR);
-        recurWeekly.setInterval(1);
-        recurWeekly.setWeekStartDay(WeekDay.MO.getDay());
-        RRule rruleWeekly = new RRule(recurWeekly);
-
-        // 9:00AM to 5:00PM Rule using daily frequency
-        Recur recurDaily = new Recur(Recur.DAILY, until);
-        recurDaily.getDayList().add(WeekDay.MO);
-        recurDaily.getDayList().add(WeekDay.TU);
-        recurDaily.getDayList().add(WeekDay.WE);
-        recurDaily.getDayList().add(WeekDay.TH);
-        recurDaily.getDayList().add(WeekDay.FR);
-        recurDaily.setInterval(1);
-        recurDaily.setWeekStartDay(WeekDay.MO.getDay());
-        RRule rruleDaily = new RRule(recurDaily);
-
-        // 9:00AM to 5:00PM Rule using monthly frequency
-        Recur recurMonthly = new Recur(Recur.MONTHLY, until);
-        recurMonthly.getDayList().add(WeekDay.MO);
-        recurMonthly.getDayList().add(WeekDay.TU);
-        recurMonthly.getDayList().add(WeekDay.WE);
-        recurMonthly.getDayList().add(WeekDay.TH);
-        recurMonthly.getDayList().add(WeekDay.FR);
-        recurMonthly.setInterval(1);
-        recurMonthly.setWeekStartDay(WeekDay.MO.getDay());
-        RRule rruleMonthly = new RRule(recurMonthly);
-
-        Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
-
-        weekdayNineToFiveEvents = new VEvent();
-        weekdayNineToFiveEvents.getProperties().add(rruleWeekly);
-        weekdayNineToFiveEvents.getProperties().add(summary);
-        DtStart dtStart = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
-//        dtStart.getParameters().add(Value.DATE);
-        weekdayNineToFiveEvents.getProperties().add(dtStart);
-        DtEnd dtEnd = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
-//        dtEnd.getParameters().add(Value.DATE);
-        weekdayNineToFiveEvents.getProperties().add(dtEnd);
-        weekdayNineToFiveEvents.getProperties().add(uidGenerator.generateUid());
-        // ensure event is valid..
-        weekdayNineToFiveEvents.validate();
-
-        summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY");
-
-        dailyWeekdayEvents = new VEvent();
-        dailyWeekdayEvents.getProperties().add(rruleDaily);
-        dailyWeekdayEvents.getProperties().add(summary);
-        DtStart dtStart2 = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
-//        dtStart2.getParameters().add(Value.DATE);
-        dailyWeekdayEvents.getProperties().add(dtStart2);
-        DtEnd dtEnd2 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
-//        dtEnd2.getParameters().add(Value.DATE);
-        dailyWeekdayEvents.getProperties().add(dtEnd2);
-        dailyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
-        // ensure event is valid..
-        dailyWeekdayEvents.validate();
-
-        summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY");
-
-        monthlyWeekdayEvents = new VEvent();
-        monthlyWeekdayEvents.getProperties().add(rruleMonthly);
-        monthlyWeekdayEvents.getProperties().add(summary);
-        DtStart dtStart3 = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
-//        dtStart3.getParameters().add(Value.DATE);
-        monthlyWeekdayEvents.getProperties().add(dtStart3);
-        DtEnd dtEnd3 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
-//        dtEnd3.getParameters().add(Value.DATE);
-        monthlyWeekdayEvents.getProperties().add(dtEnd3);
-        monthlyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
-        // ensure event is valid..
-        monthlyWeekdayEvents.validate();
     }
     
     /* (non-Javadoc)
@@ -191,7 +128,7 @@ public class VEventTest extends ComponentTest {
     /**
      * @return
      */
-    private Calendar getCalendarInstance() {
+    private static Calendar getCalendarInstance() {
         return Calendar.getInstance(); //java.util.TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 
@@ -300,7 +237,7 @@ public class VEventTest extends ComponentTest {
 
         // Test Null Dates
         try {
-            weekdayNineToFiveEvents.getConsumedTime(null, null);
+            event.getConsumedTime(null, null);
             fail("Should've thrown an exception.");
         } catch (RuntimeException re) {
             log.info("Expecting an exception here.");
@@ -325,15 +262,15 @@ public class VEventTest extends ComponentTest {
         Calendar week4StartDate = getCalendarInstance();
         week4StartDate.set(2005, Calendar.APRIL, 24, 14, 47, 0);
         week4StartDate.set(Calendar.MILLISECOND, 0);
-        DateTime week4Start = new DateTime(week4StartDate.getTime().getTime());
+//        DateTime week4Start = new DateTime(week4StartDate.getTime().getTime());
 
         // This range is monday to friday every three weeks, starting from
         // March 7th 2005, which means for our query dates we need
         // April 18th through to the 22nd.
-        PeriodList weeklyPeriods = weekdayNineToFiveEvents.getConsumedTime(queryStart, queryEnd);
-        PeriodList dailyPeriods = dailyWeekdayEvents.getConsumedTime(queryStart, queryEnd);
+        PeriodList weeklyPeriods = event.getConsumedTime(queryStart, queryEnd);
+//        PeriodList dailyPeriods = dailyWeekdayEvents.getConsumedTime(queryStart, queryEnd);
 //                                                      week1EndDate.getTime());
-        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
+//        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
 
         Calendar expectedCal = Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
         expectedCal.set(2005, Calendar.APRIL, 1, 9, 0, 0);
@@ -347,7 +284,7 @@ public class VEventTest extends ComponentTest {
         Period firstPeriod = (Period) weeklyPeriods.toArray()[0];
         assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
         assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
-        assertEquals(dailyPeriods, weeklyPeriods);
+//        assertEquals(dailyPeriods, weeklyPeriods);
 
     }
 
@@ -378,11 +315,11 @@ public class VEventTest extends ComponentTest {
         // This range is Monday to Friday every day (which has a filtering
         // effect), starting from March 7th 2005. Our query dates are
         // April 3rd through to the 10th.
-        PeriodList weeklyPeriods =
-                weekdayNineToFiveEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
-                        new DateTime(queryEndDate.getTime()));
+//        PeriodList weeklyPeriods =
+//                event.getConsumedTime(new DateTime(queryStartDate.getTime()),
+//                        new DateTime(queryEndDate.getTime()));
         PeriodList dailyPeriods =
-                dailyWeekdayEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
+                event.getConsumedTime(new DateTime(queryStartDate.getTime()),
                         new DateTime(queryEndDate.getTime()));
         Calendar expectedCal = getCalendarInstance();
         expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
@@ -396,7 +333,7 @@ public class VEventTest extends ComponentTest {
         Period firstPeriod = (Period) dailyPeriods.toArray()[0];
         assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
         assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
-        assertEquals(weeklyPeriods, dailyPeriods);
+//        assertEquals(weeklyPeriods, dailyPeriods);
     }
 
 
@@ -430,11 +367,11 @@ public class VEventTest extends ComponentTest {
         // effect), starting from March 7th 2005. Our query dates are
         // April 3rd through to the 17th.
         PeriodList monthlyPeriods =
-                monthlyWeekdayEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
+                event.getConsumedTime(new DateTime(queryStartDate.getTime()),
                         new DateTime(queryEndDate.getTime()));
-        PeriodList dailyPeriods =
-                dailyWeekdayEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
-                        new DateTime(queryEndDate.getTime()));
+//        PeriodList dailyPeriods =
+//                dailyWeekdayEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
+//                        new DateTime(queryEndDate.getTime()));
         Calendar expectedCal = getCalendarInstance();
         expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
@@ -447,7 +384,7 @@ public class VEventTest extends ComponentTest {
         Period firstPeriod = (Period) monthlyPeriods.toArray()[0];
         assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
         assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
-        assertEquals(dailyPeriods, monthlyPeriods);
+//        assertEquals(dailyPeriods, monthlyPeriods);
         }
 
 
@@ -492,7 +429,7 @@ public class VEventTest extends ComponentTest {
     /**
      * Test COUNT rules.
      */
-    public void testGetConsumeTimeByCount() {
+    public void testGetConsumedTimeByCount() {
         Recur recur = new Recur(Recur.WEEKLY, 3);
         recur.setInterval(1);
         recur.getDayList().add(WeekDay.SU);
@@ -675,14 +612,10 @@ public class VEventTest extends ComponentTest {
     }
     
     /**
-     * Unit tests for {@link Component#calculateRecurrenceSet(Period)}.
+     * 
      */
-    public void testCalculateRecurrenceSet() throws ParseException, ValidationException {
-        DateTime periodStart = new DateTime("20050101T000000");
-        DateTime periodEnd = new DateTime("20051231T235959");
-        Period period = new Period(periodStart, periodEnd);
-        PeriodList recurrenceSet = weekdayNineToFiveEvents.calculateRecurrenceSet(period);
-        
+    public void testCalculateRecurrenceSetNotEmpty() {
+        PeriodList recurrenceSet = event.calculateRecurrenceSet(period);
         assertTrue(!recurrenceSet.isEmpty());
     }
     
@@ -690,9 +623,139 @@ public class VEventTest extends ComponentTest {
      * Unit tests for {@link VEvent#getOccurrence(Date)}.
      */
     public void testGetOccurrence() throws IOException, ParseException, URISyntaxException {
-        VEvent occurrence = weekdayNineToFiveEvents.getOccurrence(
-                weekdayNineToFiveEvents.getStartDate().getDate());
+        VEvent occurrence = event.getOccurrence(date);
         assertNotNull(occurrence);
-        assertEquals(weekdayNineToFiveEvents.getUid(), occurrence.getUid());
+        assertEquals(event.getUid(), occurrence.getUid());
+    }
+    
+    /**
+     * @return
+     * @throws ValidationException 
+     * @throws SocketException 
+     * @throws ParseException 
+     */
+    public static TestSuite suite() throws ValidationException, SocketException, ParseException {
+        UidGenerator uidGenerator = new UidGenerator("1");
+        
+        Calendar weekday9AM = getCalendarInstance();
+        weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
+        weekday9AM.set(Calendar.MILLISECOND, 0);
+
+        Calendar weekday5PM = getCalendarInstance();
+        weekday5PM.set(2005, Calendar.MARCH, 7, 17, 0, 0);
+        weekday5PM.set(Calendar.MILLISECOND, 0);
+
+        // Do the recurrence until December 31st.
+        Calendar untilCal = getCalendarInstance();
+        untilCal.set(2005, Calendar.DECEMBER, 31);
+        untilCal.set(Calendar.MILLISECOND, 0);
+        Date until = new Date(untilCal.getTime().getTime());
+
+        // 9:00AM to 5:00PM Rule using weekly
+        Recur recurWeekly = new Recur(Recur.WEEKLY, until);
+        recurWeekly.getDayList().add(WeekDay.MO);
+        recurWeekly.getDayList().add(WeekDay.TU);
+        recurWeekly.getDayList().add(WeekDay.WE);
+        recurWeekly.getDayList().add(WeekDay.TH);
+        recurWeekly.getDayList().add(WeekDay.FR);
+        recurWeekly.setInterval(1);
+        recurWeekly.setWeekStartDay(WeekDay.MO.getDay());
+        RRule rruleWeekly = new RRule(recurWeekly);
+
+        // 9:00AM to 5:00PM Rule using daily frequency
+        Recur recurDaily = new Recur(Recur.DAILY, until);
+        recurDaily.getDayList().add(WeekDay.MO);
+        recurDaily.getDayList().add(WeekDay.TU);
+        recurDaily.getDayList().add(WeekDay.WE);
+        recurDaily.getDayList().add(WeekDay.TH);
+        recurDaily.getDayList().add(WeekDay.FR);
+        recurDaily.setInterval(1);
+        recurDaily.setWeekStartDay(WeekDay.MO.getDay());
+        RRule rruleDaily = new RRule(recurDaily);
+
+        // 9:00AM to 5:00PM Rule using monthly frequency
+        Recur recurMonthly = new Recur(Recur.MONTHLY, until);
+        recurMonthly.getDayList().add(WeekDay.MO);
+        recurMonthly.getDayList().add(WeekDay.TU);
+        recurMonthly.getDayList().add(WeekDay.WE);
+        recurMonthly.getDayList().add(WeekDay.TH);
+        recurMonthly.getDayList().add(WeekDay.FR);
+        recurMonthly.setInterval(1);
+        recurMonthly.setWeekStartDay(WeekDay.MO.getDay());
+        RRule rruleMonthly = new RRule(recurMonthly);
+
+        Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
+
+        VEvent weekdayNineToFiveEvents = new VEvent();
+        weekdayNineToFiveEvents.getProperties().add(rruleWeekly);
+        weekdayNineToFiveEvents.getProperties().add(summary);
+        DtStart dtStart = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
+//        dtStart.getParameters().add(Value.DATE);
+        weekdayNineToFiveEvents.getProperties().add(dtStart);
+        DtEnd dtEnd = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
+//        dtEnd.getParameters().add(Value.DATE);
+        weekdayNineToFiveEvents.getProperties().add(dtEnd);
+        weekdayNineToFiveEvents.getProperties().add(uidGenerator.generateUid());
+        // ensure event is valid..
+        weekdayNineToFiveEvents.validate();
+
+        summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY");
+
+        VEvent dailyWeekdayEvents = new VEvent();
+        dailyWeekdayEvents.getProperties().add(rruleDaily);
+        dailyWeekdayEvents.getProperties().add(summary);
+        DtStart dtStart2 = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
+//        dtStart2.getParameters().add(Value.DATE);
+        dailyWeekdayEvents.getProperties().add(dtStart2);
+        DtEnd dtEnd2 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
+//        dtEnd2.getParameters().add(Value.DATE);
+        dailyWeekdayEvents.getProperties().add(dtEnd2);
+        dailyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
+        // ensure event is valid..
+        dailyWeekdayEvents.validate();
+
+        summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY");
+
+        VEvent monthlyWeekdayEvents = new VEvent();
+        monthlyWeekdayEvents.getProperties().add(rruleMonthly);
+        monthlyWeekdayEvents.getProperties().add(summary);
+        DtStart dtStart3 = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
+//        dtStart3.getParameters().add(Value.DATE);
+        monthlyWeekdayEvents.getProperties().add(dtStart3);
+        DtEnd dtEnd3 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
+//        dtEnd3.getParameters().add(Value.DATE);
+        monthlyWeekdayEvents.getProperties().add(dtEnd3);
+        monthlyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
+        // ensure event is valid..
+        monthlyWeekdayEvents.validate();
+
+        TestSuite suite = new TestSuite();
+        
+        //testCalculateRecurrenceSet..
+        DateTime periodStart = new DateTime("20050101T000000");
+        DateTime periodEnd = new DateTime("20051231T235959");
+        Period period = new Period(periodStart, periodEnd);
+        suite.addTest(new VEventTest("testCalculateRecurrenceSetNotEmpty", weekdayNineToFiveEvents, period));
+        
+        //testGetOccurrence..
+        suite.addTest(new VEventTest("testGetOccurrence", weekdayNineToFiveEvents, weekdayNineToFiveEvents.getStartDate().getDate()));
+        
+        //testGetConsumedTime..
+        suite.addTest(new VEventTest("testGetConsumedTime", weekdayNineToFiveEvents));
+        suite.addTest(new VEventTest("testGetConsumedTimeDaily", dailyWeekdayEvents));
+        suite.addTest(new VEventTest("testGetConsumedTimeMonthly", monthlyWeekdayEvents));
+        
+        suite.addTest(new VEventTest("testChristmas"));
+        suite.addTest(new VEventTest("testMelbourneCup"));
+        suite.addTest(new VEventTest("testGetConsumedTime2"));
+        suite.addTest(new VEventTest("testGetConsumedTime3"));
+        suite.addTest(new VEventTest("testGetConsumedTimeByCount"));
+        suite.addTest(new VEventTest("testEventEndDate"));
+        suite.addTest(new VEventTest("testGetConsumedTimeWithExDate"));
+        suite.addTest(new VEventTest("testGetConsumedTimeWithExDate2"));
+        suite.addTest(new VEventTest("testIsCalendarComponent"));
+        suite.addTest(new VEventTest("testEquals"));
+        suite.addTest(new VEventTest("testValidation"));
+        return suite;
     }
 }

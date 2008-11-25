@@ -33,6 +33,8 @@ package net.fortuna.ical4j.model.component;
 import java.io.FileInputStream;
 import java.text.ParseException;
 
+import junit.framework.TestSuite;
+
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
@@ -71,6 +73,21 @@ public class VFreeBusyTest extends ComponentTest {
     private VTimeZone tz;
 
     private TzId tzParam;
+
+    /**
+     * @param testMethod
+     */
+    public VFreeBusyTest(String testMethod) {
+        this(testMethod, null);
+    }
+    
+    /**
+     * @param testMethod
+     * @param component
+     */
+    public VFreeBusyTest(String testMethod, VFreeBusy component) {
+        super(testMethod, component);
+    }
 
     /*
      * (non-Javadoc)
@@ -343,5 +360,23 @@ public class VFreeBusyTest extends ComponentTest {
      */
     public void testIsCalendarComponent() {
         assertIsCalendarComponent(new VFreeBusy());
+    }
+    
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        
+        suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList"));
+        suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList2"));
+        suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList3"));
+        suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList4"));
+        suite.addTest(new VFreeBusyTest("testAngelites"));
+        suite.addTest(new VFreeBusyTest("testRequestFreeTime"));
+        suite.addTest(new VFreeBusyTest("testBusyTime"));
+        suite.addTest(new VFreeBusyTest("testIsCalendarComponent"));
+        
+        return suite;
     }
 }

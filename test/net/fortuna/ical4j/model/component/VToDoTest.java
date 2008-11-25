@@ -36,19 +36,39 @@
 
 package net.fortuna.ical4j.model.component;
 
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
 
 /**
  * @author fortuna
- *
  */
 public class VToDoTest extends ComponentTest {
 
-	/* (non-Javadoc)
-	 * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
-	 */
-	public void testIsCalendarComponent() {
-		assertIsCalendarComponent(component);
-	}
+    /**
+     * @param testMethod
+     * @param component
+     */
+    public VToDoTest(String testMethod, VToDo component) {
+        super(testMethod, component);
+    }
+
+    /*
+     * (non-Javadoc)
+     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
+     */
+    public void testIsCalendarComponent() {
+        assertIsCalendarComponent(component);
+    }
+
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+
+        VToDo td = new VToDo();
+        suite.addTest(new VToDoTest("testIsCalendarComponent", td));
+        return suite;
+    }
 
 }

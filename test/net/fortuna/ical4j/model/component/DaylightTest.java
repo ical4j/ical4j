@@ -41,33 +41,33 @@ import net.fortuna.ical4j.model.ComponentTest;
 
 /**
  * @author fortuna
- *
  */
 public class DaylightTest extends ComponentTest {
 
-	/**
-	 * @param component
-	 */
-	public DaylightTest(Daylight component) {
-		super(component);
-	}
+    /**
+     * @param component
+     */
+    public DaylightTest(String testMethod, Daylight component) {
+        super(testMethod, component);
+    }
 
-	/* (non-Javadoc)
-	 * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
-	 */
-	public void testIsCalendarComponent() {
-		assertIsNotCalendarComponent(component);
-	}
+    /*
+     * (non-Javadoc)
+     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
+     */
+    public void testIsCalendarComponent() {
+        assertIsNotCalendarComponent(component);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		
-		Daylight d = new Daylight();
-		suite.addTest(new DaylightTest(d));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+
+        Daylight d = new Daylight();
+        suite.addTest(new DaylightTest("testIsCalendarComponent", d));
+        return suite;
+    }
 
 }

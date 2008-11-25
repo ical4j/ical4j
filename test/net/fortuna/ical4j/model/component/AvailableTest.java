@@ -41,32 +41,32 @@ import net.fortuna.ical4j.model.ComponentTest;
 
 /**
  * @author fortuna
- *
  */
 public class AvailableTest extends ComponentTest {
 
-	/**
-	 * @param component
-	 */
-	public AvailableTest(Available component) {
-		super(component);
-	}
+    /**
+     * @param component
+     */
+    public AvailableTest(String testMethod, Available component) {
+        super(testMethod, component);
+    }
 
-	/* (non-Javadoc)
-	 * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
-	 */
-	public void testIsCalendarComponent() {
-		assertIsNotCalendarComponent(component);
-	}
+    /*
+     * (non-Javadoc)
+     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
+     */
+    public void testIsCalendarComponent() {
+        assertIsNotCalendarComponent(component);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		
-		Available a = new Available();
-		suite.addTest(new AvailableTest(a));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+
+        Available a = new Available();
+        suite.addTest(new AvailableTest("testIsCalendarComponent", a));
+        return suite;
+    }
 }

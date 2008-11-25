@@ -35,12 +35,13 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Unit tests for <code>XComponent</code>
@@ -50,12 +51,12 @@ public class XComponentTest extends ComponentTest {
 
     private static Log log = LogFactory.getLog(XComponentTest.class);
     
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
+    /**
+     * @param testMethod
+     * @param component
      */
-    protected void setUp() throws Exception {
-        super.setUp();
-        component = new XComponent("X-TEST");
+    public XComponentTest(String testMethod, XComponent component) {
+        super(testMethod, component);
     }
     
     /* (non-Javadoc)
@@ -77,19 +78,30 @@ public class XComponentTest extends ComponentTest {
      * Test experimental component validation.
      */
     public void testValidation() throws ValidationException {
-        XComponent c = new XComponent("TEST");
-        try {
-            c.validate();
-            fail("Should throw net.fortuna.ical4j.model.ValidationException");
-        }
-        catch (ValidationException ve) {
-            // success..
-            log.debug(ve);
-        }
-        new XComponent("X-TEST").validate();
+        component.validate();
         
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION,
                 true);
         new XComponent("TEST").validate();
+    }
+    
+    /**
+     * 
+     */
+    public void testValidationException() {
+        assertValidationException(component);
+    }
+    
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        
+        suite.addTest(new XComponentTest("testIsCalendarComponent", new XComponent("X-TEST")));
+        suite.addTest(new XComponentTest("testValidation", new XComponent("X-TEST")));
+        suite.addTest(new XComponentTest("testValidationException", new XComponent("TEST")));
+        
+        return suite;
     }
 }

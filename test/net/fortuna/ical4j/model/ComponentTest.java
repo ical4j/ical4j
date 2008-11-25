@@ -55,7 +55,8 @@ public abstract class ComponentTest extends TestCase {
     /**
      * @param component
      */
-    public ComponentTest(Component component) {
+    public ComponentTest(String testMethod, Component component) {
+        super(testMethod);
     	this.component = component;
     }
     
@@ -84,11 +85,10 @@ public abstract class ComponentTest extends TestCase {
     protected void assertValidationException(final Component component) {
         try {
             component.validate();
+            fail("ValidationException should be thrown!");
         }
         catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
-            return;
         }
-        fail("ValidationException should be thrown!");
     }
 }
