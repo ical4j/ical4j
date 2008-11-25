@@ -53,6 +53,13 @@ public abstract class ComponentTest extends TestCase {
     protected Component component;
     
     /**
+     * @param component
+     */
+    public ComponentTest(Component component) {
+    	this.component = component;
+    }
+    
+    /**
      * Test whether the component is a calendar component.
      */
     public abstract void testIsCalendarComponent();
