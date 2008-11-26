@@ -58,7 +58,7 @@ public class StandardTest extends ComponentTest {
         TestSuite suite = new TestSuite();
 
         Standard s = new Standard();
-        suite.addTest(new StandardTest("testIsCalendarComponent", s));
+        suite.addTest(new StandardTest("testIsNotCalendarComponent", s));
         return suite;
     }
 

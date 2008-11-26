@@ -67,8 +67,8 @@ public class BusyTypeTest extends PropertyTest {
         TestSuite suite = new TestSuite();
         suite.addTest(new BusyTypeTest(new BusyType("value"), "value"));
         suite.addTest(new BusyTypeTest(BusyType.BUSY, "BUSY"));
-        suite.addTest(new BusyTypeTest(BusyType.BUSY_TENTATIVE, "BUSY_TENTATIVE"));
-        suite.addTest(new BusyTypeTest(BusyType.BUSY_UNAVAILABLE, "BUSY_UNAVAILABLE"));
+        suite.addTest(new BusyTypeTest(BusyType.BUSY_TENTATIVE, "BUSY-TENTATIVE"));
+        suite.addTest(new BusyTypeTest(BusyType.BUSY_UNAVAILABLE, "BUSY-UNAVAILABLE"));
         
         suite.addTest(new BusyTypeTest("testEquals", BusyType.BUSY));
         suite.addTest(new BusyTypeTest("testEquals", BusyType.BUSY_TENTATIVE));
