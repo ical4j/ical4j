@@ -41,12 +41,23 @@ public class CreatedTest extends PropertyTest {
 	}
 
 	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public CreatedTest(String testMethod, Created property) {
+		super(testMethod, property);
+	}
+
+	/**
 	 * @return
 	 * @throws ParseException 
 	 */
 	public static TestSuite suite() throws ParseException {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new CreatedTest(new Created("20081124T090000Z"), "20081124T090000Z"));
+		Created created = new Created("20081124T090000Z");
+		suite.addTest(new CreatedTest(created, "20081124T090000Z"));
+		suite.addTest(new CreatedTest("testEquals", created));
+		suite.addTest(new CreatedTest("testValidation", created));
 		return suite;
 	}
 }

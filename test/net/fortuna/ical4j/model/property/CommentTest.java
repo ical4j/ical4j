@@ -53,11 +53,23 @@ public class CommentTest extends PropertyTest {
 	}
 
 	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public CommentTest(String testMethod, Comment property) {
+		super(testMethod, property);
+	}
+
+	/**
 	 * @return
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new CommentTest(new Comment(""), ""));
+		
+		Comment comment = new Comment("");
+		suite.addTest(new CommentTest(comment, ""));
+		suite.addTest(new CommentTest("testEquals", comment));
+		suite.addTest(new CommentTest("testValidation", comment));
 		return suite;
 	}
 }

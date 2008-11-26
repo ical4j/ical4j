@@ -53,11 +53,32 @@ public class ActionTest extends PropertyTest {
 	}
 
 	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public ActionTest(String testMethod, Action property) {
+		super(testMethod, property);
+	}
+
+	/**
 	 * @return
 	 */
 	public static TestSuite suite() {
 		TestSuite suite = new TestSuite();
 		suite.addTest(new ActionTest(Action.AUDIO, "AUDIO"));
+		suite.addTest(new ActionTest(Action.DISPLAY, "DISPLAY"));
+		suite.addTest(new ActionTest(Action.EMAIL, "EMAIL"));
+		suite.addTest(new ActionTest(Action.PROCEDURE, "PROCEDURE"));
+		
+		suite.addTest(new ActionTest("testEquals", Action.AUDIO));
+		suite.addTest(new ActionTest("testEquals", Action.DISPLAY));
+		suite.addTest(new ActionTest("testEquals", Action.EMAIL));
+		suite.addTest(new ActionTest("testEquals", Action.PROCEDURE));
+		
+		suite.addTest(new ActionTest("testValidation", Action.AUDIO));
+		suite.addTest(new ActionTest("testValidation", Action.DISPLAY));
+		suite.addTest(new ActionTest("testValidation", Action.EMAIL));
+		suite.addTest(new ActionTest("testValidation", Action.PROCEDURE));
 		return suite;
 	}
 }

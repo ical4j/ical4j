@@ -38,6 +38,7 @@ package net.fortuna.ical4j.model;
 import junit.framework.TestCase;
 
 import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -60,10 +61,19 @@ public abstract class ComponentTest extends TestCase {
     	this.component = component;
     }
     
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected void tearDown() throws Exception {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, false);
+    }
+    
     /**
      * Test whether the component is a calendar component.
      */
-    public abstract void testIsCalendarComponent();
+    public final void testIsCalendarComponent() {
+        assertIsCalendarComponent(component);
+    }
     
     /**
      * @param c
@@ -73,10 +83,39 @@ public abstract class ComponentTest extends TestCase {
     }
     
     /**
+     * Test whether the component is a calendar component.
+     */
+    public final void testIsNotCalendarComponent() {
+        assertIsNotCalendarComponent(component);
+    }
+    
+    /**
      * @param c
      */
     protected void assertIsNotCalendarComponent(final Component c) {
         assertFalse("Component is a calendar component", (c instanceof CalendarComponent));
+    }
+    
+    /**
+     * Test component validation.
+     */
+    public final void testValidation() throws ValidationException {
+        component.validate();
+    }
+    
+    /**
+     * Test component validation.
+     */
+    public final void testRelaxedValidation() throws ValidationException {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
+        component.validate();
+    }
+    
+    /**
+     * 
+     */
+    public final void testValidationException() {
+        assertValidationException(component);
     }
     
     /**

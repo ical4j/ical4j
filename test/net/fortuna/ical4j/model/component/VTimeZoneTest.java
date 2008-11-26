@@ -42,13 +42,6 @@ public class VTimeZoneTest extends ComponentTest {
         calendar.getComponents().add(tz);
         log.info(calendar);
     }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
-     */
-    public void testIsCalendarComponent() {
-        assertIsCalendarComponent(tz);
-    }
     
     /**
      * @return

@@ -51,14 +51,6 @@ public class StandardTest extends ComponentTest {
         super(testMethod, component);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
-     */
-    public void testIsCalendarComponent() {
-        assertIsNotCalendarComponent(component);
-    }
-
     /**
      * @return
      */

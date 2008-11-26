@@ -354,13 +354,6 @@ public class VFreeBusyTest extends ComponentTest {
         assertEquals(new DateTime("20050104T0800000Z"), busy1.getStart());
         assertEquals("PT5H", busy1.getDuration().toString());
     }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
-     */
-    public void testIsCalendarComponent() {
-        assertIsCalendarComponent(new VFreeBusy());
-    }
     
     /**
      * @return
@@ -375,7 +368,7 @@ public class VFreeBusyTest extends ComponentTest {
         suite.addTest(new VFreeBusyTest("testAngelites"));
         suite.addTest(new VFreeBusyTest("testRequestFreeTime"));
         suite.addTest(new VFreeBusyTest("testBusyTime"));
-        suite.addTest(new VFreeBusyTest("testIsCalendarComponent"));
+        suite.addTest(new VFreeBusyTest("testIsCalendarComponent", new VFreeBusy()));
         
         return suite;
     }

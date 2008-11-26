@@ -7,14 +7,12 @@ package net.fortuna.ical4j.model.component;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.SocketException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Iterator;
 
 import junit.framework.TestSuite;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
@@ -515,13 +513,6 @@ public class VEventTest extends ComponentTest {
         PeriodList periods = event.getConsumedTime(start, end);
         assertTrue(periods.isEmpty());
     }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
-     */
-    public void testIsCalendarComponent() {
-        assertIsCalendarComponent(new VEvent());
-    }
     
     /**
      * Test equality of events with different alarm sub-components.
@@ -544,74 +535,6 @@ public class VEventTest extends ComponentTest {
     }
     
     /**
-     * Test VEvent validation.
-     */
-    public void testValidation() throws SocketException, ValidationException {
-        UidGenerator ug = new UidGenerator("1");
-        Uid uid = ug.generateUid();
-        
-        DtStart start = new DtStart();
-        
-        DtEnd end = new DtEnd();
-        VEvent event = new VEvent();
-        
-        event.getProperties().add(uid);
-        event.getProperties().add(start);
-        event.getProperties().add(end);
-        
-        event.validate();
-        start.getParameters().replace(Value.DATE_TIME);
-        event.validate();
-        start.getParameters().remove(Value.DATE_TIME);
-        end.getParameters().replace(Value.DATE_TIME);
-        event.validate();
-        
-        // test 1..
-        start.getParameters().replace(Value.DATE);
-        try {
-            event.validate();
-            fail("Should throw ValidationException");
-        }
-        catch (ValidationException ve) {
-            log.info("Caught exception: [" + ve.getMessage() + "]");
-        }
-        
-        // test 2..
-        start.getParameters().replace(Value.DATE_TIME);
-        end.getParameters().replace(Value.DATE);
-        try {
-            event.validate();
-            fail("Should throw ValidationException");
-        }
-        catch (ValidationException ve) {
-            log.info("Caught exception: [" + ve.getMessage() + "]");
-        }
-        
-        // test 3..
-        start.getParameters().replace(Value.DATE);
-        end.getParameters().replace(Value.DATE_TIME);
-        try {
-            event.validate();
-            fail("Should throw ValidationException");
-        }
-        catch (ValidationException ve) {
-            log.info("Caught exception: [" + ve.getMessage() + "]");
-        }
-        
-        // test 3..
-        start.getParameters().remove(Value.DATE);
-        end.getParameters().replace(Value.DATE);
-        try {
-            event.validate();
-            fail("Should throw ValidationException");
-        }
-        catch (ValidationException ve) {
-            log.info("Caught exception: [" + ve.getMessage() + "]");
-        }
-        
-    }
-    
-    /**
      * 
      */
     public void testCalculateRecurrenceSetNotEmpty() {
@@ -631,10 +554,11 @@ public class VEventTest extends ComponentTest {
     /**
      * @return
      * @throws ValidationException 
-     * @throws SocketException 
      * @throws ParseException 
+     * @throws URISyntaxException 
+     * @throws IOException 
      */
-    public static TestSuite suite() throws ValidationException, SocketException, ParseException {
+    public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException {
         UidGenerator uidGenerator = new UidGenerator("1");
         
         Calendar weekday9AM = getCalendarInstance();
@@ -744,6 +668,52 @@ public class VEventTest extends ComponentTest {
         suite.addTest(new VEventTest("testGetConsumedTime", weekdayNineToFiveEvents));
         suite.addTest(new VEventTest("testGetConsumedTimeDaily", dailyWeekdayEvents));
         suite.addTest(new VEventTest("testGetConsumedTimeMonthly", monthlyWeekdayEvents));
+        
+        //test event validation..
+        UidGenerator ug = new UidGenerator("1");
+        Uid uid = ug.generateUid();
+        
+        DtStart start = new DtStart();
+        
+        DtEnd end = new DtEnd();
+        VEvent event = new VEvent();
+        
+        event.getProperties().add(uid);
+        event.getProperties().add(start);
+        event.getProperties().add(end);
+        suite.addTest(new VEventTest("testValidation", event));
+        
+        event = (VEvent) event.copy();
+        start.getParameters().replace(Value.DATE_TIME);
+        suite.addTest(new VEventTest("testValidation", event));
+        
+        event = (VEvent) event.copy();
+        start.getParameters().remove(Value.DATE_TIME);
+        end.getParameters().replace(Value.DATE_TIME);
+        suite.addTest(new VEventTest("testValidation", event));
+        
+        // test 1..
+        event = (VEvent) event.copy();
+        start.getParameters().replace(Value.DATE);
+        suite.addTest(new VEventTest("testValidationException", event));
+        
+        // test 2..
+        event = (VEvent) event.copy();
+        start.getParameters().replace(Value.DATE_TIME);
+        end.getParameters().replace(Value.DATE);
+        suite.addTest(new VEventTest("testValidationException", event));
+        
+        // test 3..
+        event = (VEvent) event.copy();
+        start.getParameters().replace(Value.DATE);
+        end.getParameters().replace(Value.DATE_TIME);
+        suite.addTest(new VEventTest("testValidationException", event));
+        
+        // test 3..
+        event = (VEvent) event.copy();
+        start.getParameters().remove(Value.DATE);
+        end.getParameters().replace(Value.DATE);
+        suite.addTest(new VEventTest("testValidationException", event));
         
         suite.addTest(new VEventTest("testChristmas"));
         suite.addTest(new VEventTest("testMelbourneCup"));

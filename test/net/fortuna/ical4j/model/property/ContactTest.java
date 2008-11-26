@@ -53,11 +53,22 @@ public class ContactTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public ContactTest(String testMethod, Contact property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new ContactTest(new Contact("value"), "value"));
+        Contact contact = new Contact("value");
+        suite.addTest(new ContactTest(contact, "value"));
+        suite.addTest(new ContactTest("testEquals", contact));
+        suite.addTest(new ContactTest("testValidation", contact));
         return suite;
     }
 }

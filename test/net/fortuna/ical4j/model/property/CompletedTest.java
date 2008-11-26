@@ -54,12 +54,23 @@ public class CompletedTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public CompletedTest(String testMethod, Completed property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
-        suite.addTest(new CompletedTest(new Completed("20061121T000000Z"), "20061121T000000Z"));
+        Completed completed = new Completed("20061121T000000Z");
+        suite.addTest(new CompletedTest(completed, "20061121T000000Z"));
+        suite.addTest(new CompletedTest("testEquals", completed));
+        suite.addTest(new CompletedTest("testValidation", completed));
         return suite;
     }
 }

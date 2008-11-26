@@ -40,9 +40,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 
 import junit.framework.TestSuite;
-
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.XProperty;
 
 /**
  * Unit tests for Property-specific functionality.
@@ -57,8 +55,8 @@ public class PropertyTest extends AbstractPropertyTest {
     /**
      * @param property
      */
-    public PropertyTest(Property property) {
-        super("testEquals");
+    public PropertyTest(String testMethod, Property property) {
+        super(testMethod);
         this.property = property;
     }
     
@@ -113,12 +111,75 @@ public class PropertyTest extends AbstractPropertyTest {
     }
     
     /**
+     * @throws ValidationException
+     */
+    public final void testValidation() throws ValidationException {
+    	property.validate();
+    }
+    
+    /**
+     * 
+     */
+    public final void testValidationException() {
+    	try {
+			property.validate();
+			fail("Should throw ValidationException");
+		} catch (ValidationException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    /**
      * @return
      */
     public static TestSuite suite() throws Exception {
         TestSuite suite = new TestSuite();
-        suite.addTest(new PropertyTest(new XProperty("X-extended")));
-        suite.addTest(new PropertyTest(new XProperty("X-extended", "value"), "value"));
+        
+        Property property = new Property("name") {
+        	/* (non-Javadoc)
+        	 * @see net.fortuna.ical4j.model.Property#getValue()
+        	 */
+        	public String getValue() {
+        		return "value";
+        	}
+        	/* (non-Javadoc)
+        	 * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+        	 */
+        	public void setValue(String value) throws IOException,
+        			URISyntaxException, ParseException {
+        	}
+        	/* (non-Javadoc)
+        	 * @see net.fortuna.ical4j.model.Property#validate()
+        	 */
+        	public void validate() throws ValidationException {
+        	}
+        };
+        
+        Property invalidProperty = new Property("name") {
+        	/* (non-Javadoc)
+        	 * @see net.fortuna.ical4j.model.Property#getValue()
+        	 */
+        	public String getValue() {
+        		return "value";
+        	}
+        	/* (non-Javadoc)
+        	 * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+        	 */
+        	public void setValue(String value) throws IOException,
+        			URISyntaxException, ParseException {
+        	}
+        	/* (non-Javadoc)
+        	 * @see net.fortuna.ical4j.model.Property#validate()
+        	 */
+        	public void validate() throws ValidationException {
+        		throw new ValidationException();
+        	}
+        };
+        suite.addTest(new PropertyTest("testEquals", property));
+        suite.addTest(new PropertyTest(property, "value"));
+        suite.addTest(new PropertyTest("testValidation", property));
+        suite.addTest(new PropertyTest("testValidationException", invalidProperty));
+        
         return suite;
     }
 }

@@ -44,7 +44,6 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.FmtType;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.Attach;
@@ -69,28 +68,6 @@ public class VAlarmTest extends ComponentTest {
     public VAlarmTest(String testMethod, VAlarm component) {
         super(testMethod, component);
         this.alarm = component;
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
-     */
-    public void testIsCalendarComponent() {
-        assertIsCalendarComponent(alarm);
-    }
-    
-    /**
-     * Test component validation.
-     * @throws ValidationException
-     */
-    public void testValidation() throws ValidationException {
-        alarm.validate();
-    }
-    
-    /**
-     * 
-     */
-    public void testValidationException() {
-        assertValidationException(alarm);
     }
     
     /**

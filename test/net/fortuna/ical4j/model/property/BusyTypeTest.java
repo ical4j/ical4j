@@ -53,14 +53,30 @@ public class BusyTypeTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public BusyTypeTest(String testMethod, BusyType property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
         suite.addTest(new BusyTypeTest(new BusyType("value"), "value"));
-        suite.addTest(new BusyTypeTest(BusyType.BUSY, BusyType.BUSY.getValue()));
-        suite.addTest(new BusyTypeTest(BusyType.BUSY_TENTATIVE, BusyType.BUSY_TENTATIVE.getValue()));
-        suite.addTest(new BusyTypeTest(BusyType.BUSY_UNAVAILABLE, BusyType.BUSY_UNAVAILABLE.getValue()));
+        suite.addTest(new BusyTypeTest(BusyType.BUSY, "BUSY"));
+        suite.addTest(new BusyTypeTest(BusyType.BUSY_TENTATIVE, "BUSY_TENTATIVE"));
+        suite.addTest(new BusyTypeTest(BusyType.BUSY_UNAVAILABLE, "BUSY_UNAVAILABLE"));
+        
+        suite.addTest(new BusyTypeTest("testEquals", BusyType.BUSY));
+        suite.addTest(new BusyTypeTest("testEquals", BusyType.BUSY_TENTATIVE));
+        suite.addTest(new BusyTypeTest("testEquals", BusyType.BUSY_UNAVAILABLE));
+        
+        suite.addTest(new BusyTypeTest("testValidation", BusyType.BUSY));
+        suite.addTest(new BusyTypeTest("testValidation", BusyType.BUSY_TENTATIVE));
+        suite.addTest(new BusyTypeTest("testValidation", BusyType.BUSY_UNAVAILABLE));
         return suite;
     }
 }

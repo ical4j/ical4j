@@ -37,19 +37,13 @@ package net.fortuna.ical4j.model.component;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Unit tests for <code>XComponent</code>
  * @author Ben Fortuna
  */
 public class XComponentTest extends ComponentTest {
-
-    private static Log log = LogFactory.getLog(XComponentTest.class);
     
     /**
      * @param testMethod
@@ -67,31 +61,6 @@ public class XComponentTest extends ComponentTest {
                 false);
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.ComponentTest#testIsCalendarComponent()
-     */
-    public void testIsCalendarComponent() {
-        assertIsCalendarComponent(component);
-    }
-    
-    /**
-     * Test experimental component validation.
-     */
-    public void testValidation() throws ValidationException {
-        component.validate();
-        
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION,
-                true);
-        new XComponent("TEST").validate();
-    }
-    
-    /**
-     * 
-     */
-    public void testValidationException() {
-        assertValidationException(component);
-    }
-    
     /**
      * @return
      */
@@ -101,6 +70,7 @@ public class XComponentTest extends ComponentTest {
         suite.addTest(new XComponentTest("testIsCalendarComponent", new XComponent("X-TEST")));
         suite.addTest(new XComponentTest("testValidation", new XComponent("X-TEST")));
         suite.addTest(new XComponentTest("testValidationException", new XComponent("TEST")));
+        suite.addTest(new XComponentTest("testRelaxedValidation", new XComponent("TEST")));
         
         return suite;
     }

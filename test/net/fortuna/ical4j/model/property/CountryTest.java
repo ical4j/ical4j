@@ -53,11 +53,22 @@ public class CountryTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public CountryTest(String testMethod, Country property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new CountryTest(new Country("value"), "value"));
+        Country country = new Country("value");
+        suite.addTest(new CountryTest(country, "value"));
+        suite.addTest(new CountryTest("testEquals", country));
+        suite.addTest(new CountryTest("testValidation", country));
         return suite;
     }
 
