@@ -73,9 +73,9 @@ public class VEventTest extends ComponentTest {
      * @param testMethod
      * @param component
      */
-    public VEventTest(String testMethod, VEvent component) {
-        super(testMethod, component);
-        this.event = component;
+    public VEventTest(String testMethod, VEvent event) {
+        super(testMethod, event);
+        this.event = event;
     }
 
     /**
@@ -673,9 +673,9 @@ public class VEventTest extends ComponentTest {
         UidGenerator ug = new UidGenerator("1");
         Uid uid = ug.generateUid();
         
-        DtStart start = new DtStart();
+        DtStart start = new DtStart(new Date());
         
-        DtEnd end = new DtEnd();
+        DtEnd end = new DtEnd(new Date());
         VEvent event = new VEvent();
         
         event.getProperties().add(uid);
@@ -684,34 +684,47 @@ public class VEventTest extends ComponentTest {
         suite.addTest(new VEventTest("testValidation", event));
         
         event = (VEvent) event.copy();
+//        start = (DtStart) event.getProperty(Property.DTSTART);
+        start = new DtStart(new DateTime());
         start.getParameters().replace(Value.DATE_TIME);
+        event.getProperties().remove(event.getProperty(Property.DTSTART));
+        event.getProperties().add(start);
         suite.addTest(new VEventTest("testValidation", event));
         
         event = (VEvent) event.copy();
+        start = (DtStart) event.getProperty(Property.DTSTART);
         start.getParameters().remove(Value.DATE_TIME);
+        end = (DtEnd) event.getProperty(Property.DTEND);
         end.getParameters().replace(Value.DATE_TIME);
         suite.addTest(new VEventTest("testValidation", event));
         
         // test 1..
         event = (VEvent) event.copy();
+        start = (DtStart) event.getProperty(Property.DTSTART);
         start.getParameters().replace(Value.DATE);
         suite.addTest(new VEventTest("testValidationException", event));
         
         // test 2..
         event = (VEvent) event.copy();
+        start = (DtStart) event.getProperty(Property.DTSTART);
         start.getParameters().replace(Value.DATE_TIME);
+        end = (DtEnd) event.getProperty(Property.DTEND);
         end.getParameters().replace(Value.DATE);
         suite.addTest(new VEventTest("testValidationException", event));
         
         // test 3..
         event = (VEvent) event.copy();
+        start = (DtStart) event.getProperty(Property.DTSTART);
         start.getParameters().replace(Value.DATE);
+        end = (DtEnd) event.getProperty(Property.DTEND);
         end.getParameters().replace(Value.DATE_TIME);
         suite.addTest(new VEventTest("testValidationException", event));
         
         // test 3..
         event = (VEvent) event.copy();
+        start = (DtStart) event.getProperty(Property.DTSTART);
         start.getParameters().remove(Value.DATE);
+        end = (DtEnd) event.getProperty(Property.DTEND);
         end.getParameters().replace(Value.DATE);
         suite.addTest(new VEventTest("testValidationException", event));
         
