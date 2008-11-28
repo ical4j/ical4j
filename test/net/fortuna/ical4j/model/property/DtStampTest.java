@@ -41,12 +41,23 @@ public class DtStampTest extends PropertyTest {
 	}
 
 	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public DtStampTest(String testMethod, DtStamp property) {
+		super(testMethod, property);
+	}
+
+	/**
 	 * @return
 	 * @throws ParseException 
 	 */
 	public static TestSuite suite() throws ParseException {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new DtStampTest(new DtStamp("20081124T090000"), "20081124T090000"));
+		DtStamp dtStamp = new DtStamp("20081124T090000");
+		suite.addTest(new DtStampTest(dtStamp, "20081124T090000"));
+		suite.addTest(new DtStampTest("testEquals", dtStamp));
+		suite.addTest(new DtStampTest("testValidation", dtStamp));
 		return suite;
 	}
 }

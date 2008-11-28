@@ -35,9 +35,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.AbstractPropertyTest;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
 
 import org.apache.commons.logging.Log;
@@ -47,41 +52,58 @@ import org.apache.commons.logging.LogFactory;
  * @author Ben Fortuna
  *
  */
-public class DtEndTest extends AbstractPropertyTest {
+public class DtEndTest extends PropertyTest {
     
     private static Log log = LogFactory.getLog(DtEndTest.class);
 
-    /*
-     * Class under test for validation()
+    /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public DtEndTest(String testMethod, DtEnd property) {
+		super(testMethod, property);
+	}
+
+    /**
+     * @return
+     * @throws ParseException 
+     * @throws URISyntaxException 
+     * @throws IOException 
      */
-    public void testValidation() throws Exception {
+    public static TestSuite suite() throws IOException, URISyntaxException, ParseException {
+    	TestSuite suite = new TestSuite();
         DtEnd dtEnd = new DtEnd(new DateTime());
         dtEnd.getParameters().replace(Value.DATE);
         
         // test validation..
         log.info(dtEnd);
-        assertValidationException(dtEnd);
+        suite.addTest(new DtEndTest("testValidation", dtEnd));
         
         //
+        dtEnd = (DtEnd) dtEnd.copy();
         dtEnd.getParameters().replace(Value.DATE_TIME);
         log.info(dtEnd);
-        dtEnd.validate();
+        suite.addTest(new DtEndTest("testValidation", dtEnd));
         
         //
+        dtEnd = (DtEnd) dtEnd.copy();
         dtEnd.setUtc(true);
         log.info(dtEnd);
-        dtEnd.validate();
+        suite.addTest(new DtEndTest("testValidation", dtEnd));
         
         //
+        dtEnd = (DtEnd) dtEnd.copy();
         dtEnd.setDate(new Date());
         dtEnd.getParameters().remove(Value.DATE);
         log.info(dtEnd);
-        assertValidationException(dtEnd);
+        suite.addTest(new DtEndTest("testValidationException", dtEnd));
         
         //
+        dtEnd = (DtEnd) dtEnd.copy();
         dtEnd.getParameters().replace(Value.DATE);
         log.info(dtEnd);
-        dtEnd.validate();
+        suite.addTest(new DtEndTest("testValidation", dtEnd));
+        
+    	return suite;
     }
-
 }

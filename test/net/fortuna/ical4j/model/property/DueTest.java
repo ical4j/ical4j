@@ -41,12 +41,23 @@ public class DueTest extends PropertyTest {
 	}
 
 	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public DueTest(String testMethod, Due property) {
+		super(testMethod, property);
+	}
+
+	/**
 	 * @return
 	 * @throws ParseException 
 	 */
 	public static TestSuite suite() throws ParseException {
 		TestSuite suite = new TestSuite();
-		suite.addTest(new DueTest(new Due("20081124T090000"), "20081124T090000"));
+		Due due = new Due("20081124T090000");
+		suite.addTest(new DueTest(due, "20081124T090000"));
+		suite.addTest(new DueTest("testEquals", due));
+		suite.addTest(new DueTest("testValidation", due));
 		return suite;
 	}
 
