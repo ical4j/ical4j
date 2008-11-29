@@ -309,6 +309,31 @@
 		</dependency>
 	</dependencies>
 
+	<repositories>
+		<repository>
+			<id>modularity-releases</id>
+			<name>Modularity Maven Repository</name>
+			<url>http://m2.modularity.net.au/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>modularity-snapshots</id>
+			<name>Modularity Snapshot Repository</name>
+			<url>http://m2.modularity.net.au/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
 	<reporting>
 		<plugins>
 			<plugin>
