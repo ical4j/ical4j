@@ -163,7 +163,9 @@ public class VFreeBusyTest extends ComponentTest {
 
         VFreeBusy fb = new VFreeBusy(requestBusy, calendar.getComponents());
 
-        log.info("\n==\n" + fb.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("\n==\n" + fb.toString());
+        }
 
         // request all free time between 1970 and now of duration 2 hours or
         // more..
@@ -172,7 +174,9 @@ public class VFreeBusyTest extends ComponentTest {
 
         VFreeBusy fb2 = new VFreeBusy(requestFree, calendar.getComponents());
 
-        log.debug("\n==\n" + fb2.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("\n==\n" + fb2.toString());
+        }
     }
 
     public final void testVFreeBusyComponentList3() throws Exception {
@@ -201,7 +205,9 @@ public class VFreeBusyTest extends ComponentTest {
         recur.getMinuteList().add(new Integer(30));
         event.getProperties().add(new RRule(recur));
 
-        log.debug("\n==\n" + event.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("\n==\n" + event.toString());
+        }
         
         DateTime requestStart = new DateTime(eventStart);
         DateTime requestEnd = new DateTime();
@@ -210,7 +216,9 @@ public class VFreeBusyTest extends ComponentTest {
 
         VFreeBusy fb = new VFreeBusy(request, components);
 
-        log.info("\n==\n" + fb.toString());
+        if (log.isDebugEnabled()) {
+            log.debug("\n==\n" + fb.toString());
+        }
     }
 
     public final void testVFreeBusyComponentList4() throws Exception {
