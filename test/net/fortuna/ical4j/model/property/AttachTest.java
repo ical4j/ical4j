@@ -41,14 +41,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
 
 import junit.framework.TestCase;
+import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
+import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Encoding;
@@ -91,9 +96,9 @@ public class AttachTest extends TestCase {
     /*
      * Class under test for void Attach(ParameterList, String)
      */
-    public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException {
+    public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException, ParserException {
 
-        log.info(attach);
+        //log.info(attach);
         
         // create event start date..
         java.util.Calendar cal = java.util.Calendar.getInstance();
@@ -120,6 +125,15 @@ public class AttachTest extends TestCase {
         StringWriter sw = new StringWriter();
         CalendarOutputter out = new CalendarOutputter();
         out.output(calendar, sw);
+        
+        CalendarBuilder builder = new CalendarBuilder();
+        Calendar cout = builder.build(new StringReader(sw.toString()));
+        
+        VEvent eout = (VEvent) cout.getComponent(Component.VEVENT);
+        
+        Attach aout = (Attach) eout.getProperty(Property.ATTACH);
+        assertNotNull(aout);
+        assertEquals(attach, aout);
         
         log.info(sw.toString());
     }
