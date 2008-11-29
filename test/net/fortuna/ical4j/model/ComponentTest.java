@@ -35,8 +35,12 @@
  */
 package net.fortuna.ical4j.model;
 
-import junit.framework.TestCase;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -47,11 +51,15 @@ import org.apache.commons.logging.LogFactory;
  * Unit tests for <code>Component</code> base class.
  * @author Ben Fortuna
  */
-public abstract class ComponentTest extends TestCase {
+public class ComponentTest extends TestCase {
 
     private static final Log LOG = LogFactory.getLog(ComponentTest.class);
 
     protected Component component;
+    
+    private Period period;
+    
+    private PeriodList expectedPeriods;
     
     /**
      * @param component
@@ -59,6 +67,18 @@ public abstract class ComponentTest extends TestCase {
     public ComponentTest(String testMethod, Component component) {
         super(testMethod);
     	this.component = component;
+    }
+    
+    /**
+     * @param testMethod
+     * @param component
+     * @param period
+     * @param expectedPeriods
+     */
+    public ComponentTest(String testMethod, Component component, Period period, PeriodList expectedPeriods) {
+        this(testMethod, component);
+        this.period = period;
+        this.expectedPeriods = expectedPeriods;
     }
     
     /* (non-Javadoc)
@@ -129,5 +149,25 @@ public abstract class ComponentTest extends TestCase {
         catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
         }
+    }
+    
+    public void testCalculateRecurrenceSet() {
+        PeriodList periods = component.calculateRecurrenceSet(period);
+        assertEquals(expectedPeriods, periods);
+    }
+    
+    /**
+     * @return
+     */
+    public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException {
+        TestSuite suite = new TestSuite();
+        
+        Component component = new Component("test") {
+            public void validate(boolean recurse) throws ValidationException {
+            }
+        };
+        
+        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime(), new Dur(0, 0, 0, 1)), new PeriodList()));
+        return suite;
     }
 }
