@@ -50,60 +50,59 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Ben Fortuna
- *
  */
 public class DtEndTest extends PropertyTest {
-    
+
     private static Log log = LogFactory.getLog(DtEndTest.class);
 
     /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public DtEndTest(String testMethod, DtEnd property) {
-		super(testMethod, property);
-	}
+     * @param testMethod
+     * @param property
+     */
+    public DtEndTest(String testMethod, DtEnd property) {
+        super(testMethod, property);
+    }
 
     /**
      * @return
-     * @throws ParseException 
-     * @throws URISyntaxException 
-     * @throws IOException 
+     * @throws ParseException
+     * @throws URISyntaxException
+     * @throws IOException
      */
     public static TestSuite suite() throws IOException, URISyntaxException, ParseException {
-    	TestSuite suite = new TestSuite();
+        TestSuite suite = new TestSuite();
         DtEnd dtEnd = new DtEnd(new DateTime());
-        dtEnd.getParameters().replace(Value.DATE);
-        
+        dtEnd.getParameters().replace(Value.DATE_TIME);
+
         // test validation..
         log.info(dtEnd);
         suite.addTest(new DtEndTest("testValidation", dtEnd));
-        
+
         //
         dtEnd = (DtEnd) dtEnd.copy();
-        dtEnd.getParameters().replace(Value.DATE_TIME);
+        dtEnd.getParameters().replace(Value.DATE);
         log.info(dtEnd);
-        suite.addTest(new DtEndTest("testValidation", dtEnd));
-        
+        suite.addTest(new DtEndTest("testValidationException", dtEnd));
+
         //
         dtEnd = (DtEnd) dtEnd.copy();
         dtEnd.setUtc(true);
         log.info(dtEnd);
         suite.addTest(new DtEndTest("testValidation", dtEnd));
-        
+
+        //
+        dtEnd = (DtEnd) dtEnd.copy();
+        dtEnd.getParameters().replace(Value.DATE);
+        log.info(dtEnd);
+        suite.addTest(new DtEndTest("testValidation", dtEnd));
+
         //
         dtEnd = (DtEnd) dtEnd.copy();
         dtEnd.setDate(new Date());
         dtEnd.getParameters().remove(Value.DATE);
         log.info(dtEnd);
         suite.addTest(new DtEndTest("testValidationException", dtEnd));
-        
-        //
-        dtEnd = (DtEnd) dtEnd.copy();
-        dtEnd.getParameters().replace(Value.DATE);
-        log.info(dtEnd);
-        suite.addTest(new DtEndTest("testValidation", dtEnd));
-        
-    	return suite;
+
+        return suite;
     }
 }
