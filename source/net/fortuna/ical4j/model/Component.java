@@ -250,7 +250,10 @@ public abstract class Component implements Serializable {
         
         // initialise timezone..
 //        if (startValue == null || Value.DATE_TIME.equals(startValue)) {
-        if (start.getDate() instanceof DateTime) {
+        if (start.isUtc()) {
+            recurrenceSet.setUtc(true);
+        }
+        else if (start.getDate() instanceof DateTime) {
             recurrenceSet.setTimeZone(((DateTime) start.getDate()).getTimeZone());
         }
         
