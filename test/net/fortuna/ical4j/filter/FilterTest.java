@@ -60,6 +60,8 @@ public class FilterTest extends TestCase {
     
     private Collection collection;
     
+    private int expectedFilteredSize;
+    
     /**
      * @param testMethod
      * @param filter
@@ -69,6 +71,17 @@ public class FilterTest extends TestCase {
         super(testMethod);
         this.filter = filter;
         this.collection = collection;
+    }
+
+    /**
+     * @param testMethod
+     * @param filter
+     * @param collection
+     * @param expectedFilteredSize
+     */
+    public FilterTest(String testMethod, Filter filter, Collection collection, int expectedFilteredSize) {
+        this(testMethod, filter, collection);
+        this.expectedFilteredSize = expectedFilteredSize;
     }
     
     /**
@@ -85,6 +98,13 @@ public class FilterTest extends TestCase {
         assertFalse(filter.filter(collection).isEmpty());
     }
 
+    /**
+     * 
+     */
+    public void testFilteredSize() {
+        assertEquals(expectedFilteredSize, filter.filter(collection).size());
+    }
+    
     /**
      * @return
      * @throws ParserException 
