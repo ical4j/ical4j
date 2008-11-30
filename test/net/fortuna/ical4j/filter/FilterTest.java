@@ -35,22 +35,20 @@
  */
 package net.fortuna.ical4j.filter;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
 
 /**
  * Unit tests for the filter implementation.
@@ -58,74 +56,70 @@ import junit.framework.TestCase;
  */
 public class FilterTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(FilterTest.class);
-
-    private Calendar calendar;
+    private Filter filter;
     
-    private HasPropertyRule organiserRuleMatch;
-    
-    private HasPropertyRule organiserRuleNoMatch;
-    
-    private HasPropertyRule attendeeRuleMatch;
-    
-    private HasPropertyRule attendeeRuleNoMatch;
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-        CalendarBuilder builder = new CalendarBuilder();
-        calendar = builder.build(new FileReader("etc/samples/valid/incoming.ics"));
-        organiserRuleMatch = new HasPropertyRule(new Organizer(new URI("Mailto:B@example.com")));
-        organiserRuleNoMatch = new HasPropertyRule(new Organizer(new URI("Mailto:X@example.com")));
-        attendeeRuleMatch = new HasPropertyRule(new Attendee(new URI("Mailto:A@example.com")));
-        attendeeRuleNoMatch = new HasPropertyRule(new Attendee(new URI("Mailto:X@example.com")));
-    }
+    private Collection collection;
     
     /**
+     * @param testMethod
      * @param filter
-     * @return
+     * @param collection
      */
-    private ComponentList filterComponents(Filter filter) {
-        ComponentList filtered = (ComponentList) filter.filter(calendar.getComponents());
-        
-        LOG.info(filtered.size() + " matching component(s).");
-        
-        return filtered;
+    public FilterTest(String testMethod, Filter filter, Collection collection) {
+        super(testMethod);
+        this.filter = filter;
+        this.collection = collection;
+    }
+    
+    /**
+     * 
+     */
+    public void testFilteredIsEmpty() {
+        assertTrue(filter.filter(collection).isEmpty());
+    }
+    
+    /**
+     * 
+     */
+    public void testFilteredIsNotEmpty() {
+        assertFalse(filter.filter(collection).isEmpty());
     }
 
     /**
-     * Test filtering of a calendar.
+     * @return
+     * @throws ParserException 
+     * @throws IOException 
+     * @throws FileNotFoundException 
+     * @throws URISyntaxException 
      */
-    public void testFilterMatchAll() throws URISyntaxException, IOException, ParserException {
+    public static TestSuite suite() throws FileNotFoundException, IOException, ParserException, URISyntaxException {
+        CalendarBuilder builder = new CalendarBuilder();
+        Calendar calendar = builder.build(new FileReader("etc/samples/valid/incoming.ics"));
+        Rule organiserRuleMatch = new HasPropertyRule(new Organizer(new URI("Mailto:B@example.com")));
+        Rule organiserRuleNoMatch = new HasPropertyRule(new Organizer(new URI("Mailto:X@example.com")));
+        Rule attendeeRuleMatch = new HasPropertyRule(new Attendee(new URI("Mailto:A@example.com")));
+        Rule attendeeRuleNoMatch = new HasPropertyRule(new Attendee(new URI("Mailto:X@example.com")));
+        
+        TestSuite suite = new TestSuite();
+        //testFilterMatchAll..
         Filter filter = new Filter(new Rule[] {organiserRuleMatch, attendeeRuleMatch}, Filter.MATCH_ALL);
-        ComponentList filtered = filterComponents(filter);
-        assertTrue(!filtered.isEmpty());
+        suite.addTest(new FilterTest("testFilteredIsNotEmpty", filter, calendar.getComponents()));
 
         filter = new Filter(new Rule[] {organiserRuleNoMatch, attendeeRuleMatch}, Filter.MATCH_ALL);
-        filtered = filterComponents(filter);
-        assertTrue(filtered.isEmpty());
+        suite.addTest(new FilterTest("testFilteredIsEmpty", filter, calendar.getComponents()));
 
         filter = new Filter(new Rule[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ALL);
-        filtered = filterComponents(filter);
-        assertTrue(filtered.isEmpty());
-    }
-
-    /**
-     * Test filtering of a calendar.
-     */
-    public void testFilterMatchAny() throws URISyntaxException, IOException, ParserException {
-        Filter filter = new Filter(new Rule[] {organiserRuleMatch, attendeeRuleMatch}, Filter.MATCH_ANY);
-        ComponentList filtered = filterComponents(filter);
-        assertTrue(!filtered.isEmpty());
+        suite.addTest(new FilterTest("testFilteredIsEmpty", filter, calendar.getComponents()));
+        
+        //testFilterMatchAny..
+        filter = new Filter(new Rule[] {organiserRuleMatch, attendeeRuleMatch}, Filter.MATCH_ANY);
+        suite.addTest(new FilterTest("testFilteredIsNotEmpty", filter, calendar.getComponents()));
 
         filter = new Filter(new Rule[] {organiserRuleNoMatch, attendeeRuleMatch}, Filter.MATCH_ANY);
-        filtered = filterComponents(filter);
-        assertTrue(!filtered.isEmpty());
+        suite.addTest(new FilterTest("testFilteredIsNotEmpty", filter, calendar.getComponents()));
 
         filter = new Filter(new Rule[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ANY);
-        filtered = filterComponents(filter);
-        assertTrue(!filtered.isEmpty());
+        suite.addTest(new FilterTest("testFilteredIsNotEmpty", filter, calendar.getComponents()));
+        return suite;
     }
-
 }
