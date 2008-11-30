@@ -95,28 +95,14 @@ public class ComponentTest extends TestCase {
      * Test whether the component is a calendar component.
      */
     public final void testIsCalendarComponent() {
-        assertIsCalendarComponent(component);
-    }
-    
-    /**
-     * @param c
-     */
-    protected void assertIsCalendarComponent(final Component c) {
-        assertTrue("Component is not a calendar component", (c instanceof CalendarComponent));
+        assertTrue("Component is not a calendar component", (component instanceof CalendarComponent));
     }
     
     /**
      * Test whether the component is a calendar component.
      */
     public final void testIsNotCalendarComponent() {
-        assertIsNotCalendarComponent(component);
-    }
-    
-    /**
-     * @param c
-     */
-    protected void assertIsNotCalendarComponent(final Component c) {
-        assertFalse("Component is a calendar component", (c instanceof CalendarComponent));
+        assertFalse("Component is a calendar component", (component instanceof CalendarComponent));
     }
     
     /**
@@ -138,13 +124,6 @@ public class ComponentTest extends TestCase {
      * 
      */
     public final void testValidationException() {
-        assertValidationException(component);
-    }
-    
-    /**
-     * @param component
-     */
-    protected void assertValidationException(final Component component) {
         try {
             component.validate();
             fail("ValidationException should be thrown!");
