@@ -74,6 +74,11 @@ import org.apache.commons.logging.LogFactory;
 public abstract class Observance extends Component implements Comparable {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 2523330383042085994L;
+
+    /**
      * one of 'standardc' or 'daylightc' MUST occur and each MAY occur more than once.
      */
     public static final String STANDARD = "STANDARD";

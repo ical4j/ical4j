@@ -61,6 +61,11 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class DateProperty extends Property {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3160883132732961321L;
+
     private Log log = LogFactory.getLog(DateProperty.class);
     
     private Date date;

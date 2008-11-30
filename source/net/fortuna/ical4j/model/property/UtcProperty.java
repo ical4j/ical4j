@@ -47,6 +47,11 @@ import net.fortuna.ical4j.model.ValidationException;
 public abstract class UtcProperty extends DateProperty {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = 4850079486497487938L;
+
+    /**
      * @param name
      * @param parameters
      */

@@ -46,6 +46,11 @@ import net.fortuna.ical4j.model.PropertyList;
 public abstract class CalendarComponent extends Component {
 
     /**
+     * 
+     */
+    private static final long serialVersionUID = -5832972592377720592L;
+
+    /**
      * @param name component name
      */
     public CalendarComponent(final String name) {
