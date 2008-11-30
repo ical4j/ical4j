@@ -44,26 +44,25 @@ import net.fortuna.ical4j.model.Recur;
 
 /**
  * @author fortuna
- *
  */
 public class RRuleTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public RRuleTest(RRule rule, String expectedValue) {
-		super(rule, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public RRuleTest(RRule rule, String expectedValue) {
+        super(rule, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new RRuleTest(new RRule(new Recur(Recur.WEEKLY, 3)), "FREQ=WEEKLY;COUNT=3"));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new RRuleTest(new RRule(new Recur(Recur.WEEKLY, 3)), "FREQ=WEEKLY;COUNT=3"));
+        return suite;
+    }
 
 }

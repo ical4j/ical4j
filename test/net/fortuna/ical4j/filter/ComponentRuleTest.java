@@ -1,9 +1,9 @@
 /*
  * $Id$
  *
- * Created on 2/02/2006
+ * Created on 30/11/2008
  *
- * Copyright (c) 2005, Ben Fortuna
+ * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,7 +24,7 @@
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
  * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
  * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
  * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
@@ -35,46 +35,68 @@
  */
 package net.fortuna.ical4j.filter;
 
-import java.net.URI;
-
-import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.property.Attendee;
-import net.fortuna.ical4j.model.property.Organizer;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
- * Unit tests for the has property filter rule.
- * @author Ben Fortuna
+ * @author Ben
+ *
  */
-public class HasPropertyRuleTest extends ComponentRuleTest {
+public class ComponentRuleTest extends TestCase {
+
+    private ComponentRule rule;
+    
+    private Component component;
     
     /**
      * @param testMethod
      * @param rule
      * @param component
      */
-    public HasPropertyRuleTest(String testMethod, ComponentRule rule, Component component) {
-        super(testMethod, rule, component);
+    public ComponentRuleTest(String testMethod, ComponentRule rule, Component component) {
+        super(testMethod);
+        this.rule = rule;
+        this.component = component;
     }
     
+    /**
+     * Test method for {@link net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)}.
+     */
+    public void testMatchComponent() {
+        assertTrue(rule.match(component));
+    }
+    
+    /**
+     * Test method for {@link net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)}.
+     */
+    public void testNotMatchComponent() {
+        assertFalse(rule.match(component));
+    }
+
     /**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        Organizer organiser = new Organizer(URI.create("Mailto:B@example.com"));
-        Attendee attendee = new Attendee(URI.create("Mailto:A@example.com"));
         Component component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
             }
         };
-        component.getProperties().add(organiser);
-        component.getProperties().add(attendee);
-        HasPropertyRule organiserRule = new HasPropertyRule(organiser);
-        suite.addTest(new HasPropertyRuleTest("testMatchComponent", organiserRule, component));
-        HasPropertyRule attendeeRule = new HasPropertyRule(attendee);
-        suite.addTest(new HasPropertyRuleTest("testMatchComponent", attendeeRule, component));
+        ComponentRule matchRule = new ComponentRule() {
+            public boolean match(Component component) {
+                return true;
+            }
+        };
+        suite.addTest(new ComponentRuleTest("testMatchComponent", matchRule, component));
+        ComponentRule notMatchRule = new ComponentRule() {
+            public boolean match(Component component) {
+                return false;
+            }
+        };
+        suite.addTest(new ComponentRuleTest("testNotMatchComponent", notMatchRule, component));
+        
         return suite;
     }
 }
