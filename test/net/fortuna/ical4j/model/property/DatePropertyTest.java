@@ -49,59 +49,60 @@ import net.fortuna.ical4j.model.TimeZoneRegistry;
 /**
  * Unit tests specific to {@link DateProperty} and its subclasses.
  * @author Ben
- *
  */
 public class DatePropertyTest extends PropertyTest {
 
     private DateProperty property;
-    
+
     /**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public DatePropertyTest(DateProperty property, String expectedValue) {
-		super(property, expectedValue);
-	}
+     * @param property
+     * @param expectedValue
+     */
+    public DatePropertyTest(DateProperty property, String expectedValue) {
+        super(property, expectedValue);
+    }
 
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public DatePropertyTest(String testMethod, DateProperty property) {
-		super(testMethod, property);
-		this.property = property;
-	}
+    /**
+     * @param testMethod
+     * @param property
+     */
+    public DatePropertyTest(String testMethod, DateProperty property) {
+        super(testMethod, property);
+        this.property = property;
+    }
 
-	/**
+    /**
      * 
      */
-    public void testCopy() throws IOException, URISyntaxException, ParseException {
+    public void testCopy() throws IOException, URISyntaxException,
+            ParseException {
         Property copy = property.copy();
         assertEquals(property, copy);
         if (property.timezone != null) {
-        	assertEquals(property.timezone, ((DateProperty) copy).timezone);
+            assertEquals(property.timezone, ((DateProperty) copy).timezone);
         }
         else {
-        	assertNull(((DateProperty) copy).timezone);
+            assertNull(((DateProperty) copy).timezone);
         }
     }
-    
+
     /**
      * @return
      */
     public static TestSuite suite() {
-        TimeZoneRegistry tzReg = DefaultTimeZoneRegistryFactory.getInstance().createRegistry();
-        
-    	TestSuite suite = new TestSuite();
+        TimeZoneRegistry tzReg = DefaultTimeZoneRegistryFactory.getInstance()
+                .createRegistry();
+
+        TestSuite suite = new TestSuite();
         DtStamp dtStamp = new DtStamp();
-//      dtStamp.getParameters().add(new TzId("Australia/Melbourne"));
-//      dtStamp.setTimeZone(tzReg.getTimeZone("Australia/Melbourne"));
+        // dtStamp.getParameters().add(new TzId("Australia/Melbourne"));
+        // dtStamp.setTimeZone(tzReg.getTimeZone("Australia/Melbourne"));
         suite.addTest(new DatePropertyTest("testCopy", dtStamp));
-        
+
         DtStart dtStart = new DtStart(new DateTime());
-//        dtStart.getParameters().add(new TzId("Australia/Melbourne"));
+        // dtStart.getParameters().add(new TzId("Australia/Melbourne"));
         dtStart.setTimeZone(tzReg.getTimeZone("Australia/Melbourne"));
         suite.addTest(new DatePropertyTest("testCopy", dtStart));
-    	return suite;
+        return suite;
     }
 }

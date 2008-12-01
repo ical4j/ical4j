@@ -43,26 +43,25 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class TranspTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public TranspTest(Transp transp, String expectedValue) {
-		super(transp, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public TranspTest(Transp transp, String expectedValue) {
+        super(transp, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new TranspTest(Transp.OPAQUE, "OPAQUE"));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new TranspTest(Transp.OPAQUE, "OPAQUE"));
+        return suite;
+    }
 
 }

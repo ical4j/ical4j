@@ -28,37 +28,36 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class DueTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public DueTest(Due due, String expectedValue) {
-		super(due, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public DueTest(Due due, String expectedValue) {
+        super(due, expectedValue);
+    }
 
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public DueTest(String testMethod, Due property) {
-		super(testMethod, property);
-	}
+    /**
+     * @param testMethod
+     * @param property
+     */
+    public DueTest(String testMethod, Due property) {
+        super(testMethod, property);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() throws ParseException {
-		TestSuite suite = new TestSuite();
-		Due due = new Due("20081124T090000");
-		suite.addTest(new DueTest(due, "20081124T090000"));
-		suite.addTest(new DueTest("testEquals", due));
-		suite.addTest(new DueTest("testValidation", due));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() throws ParseException {
+        TestSuite suite = new TestSuite();
+        Due due = new Due("20081124T090000");
+        suite.addTest(new DueTest(due, "20081124T090000"));
+        suite.addTest(new DueTest("testEquals", due));
+        suite.addTest(new DueTest("testValidation", due));
+        return suite;
+    }
 
 }

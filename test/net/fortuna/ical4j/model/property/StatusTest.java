@@ -43,26 +43,25 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class StatusTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public StatusTest(Status status, String expectedValue) {
-		super(status, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public StatusTest(Status status, String expectedValue) {
+        super(status, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new StatusTest(Status.VEVENT_CANCELLED, "CANCELLED"));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new StatusTest(Status.VEVENT_CANCELLED, "CANCELLED"));
+        return suite;
+    }
 
 }

@@ -43,26 +43,26 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class RecurrenceIdTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public RecurrenceIdTest(RecurrenceId id, String expectedValue) {
-		super(id, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public RecurrenceIdTest(RecurrenceId id, String expectedValue) {
+        super(id, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() throws ParseException {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new RecurrenceIdTest(new RecurrenceId("20081124T180000"), "20081124T180000"));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() throws ParseException {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new RecurrenceIdTest(new RecurrenceId("20081124T180000"),
+                "20081124T180000"));
+        return suite;
+    }
 
 }

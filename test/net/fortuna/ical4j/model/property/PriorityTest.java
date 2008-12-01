@@ -43,26 +43,25 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class PriorityTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public PriorityTest(Priority priority, String expectedValue) {
-		super(priority, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public PriorityTest(Priority priority, String expectedValue) {
+        super(priority, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new PriorityTest(Priority.HIGH, "1"));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new PriorityTest(Priority.HIGH, "1"));
+        return suite;
+    }
 
 }

@@ -41,27 +41,26 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class LanguageTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public LanguageTest(String testMethod, Language language,
-			String expectedValue) {
-		super(testMethod, language, Parameter.LANGUAGE, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public LanguageTest(String testMethod, Language language,
+            String expectedValue) {
+        super(testMethod, language, Parameter.LANGUAGE, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new LanguageTest("testGetValue", new Language(""), ""));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new LanguageTest("testGetValue", new Language(""), ""));
+        return suite;
+    }
 }

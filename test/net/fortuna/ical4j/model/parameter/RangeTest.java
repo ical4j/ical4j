@@ -41,27 +41,26 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class RangeTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public RangeTest(String testMethod, Range range,
-			String expectedValue) {
-		super(testMethod, range, Parameter.RANGE, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public RangeTest(String testMethod, Range range, String expectedValue) {
+        super(testMethod, range, Parameter.RANGE, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new RangeTest("testGetValue", Range.THISANDPRIOR, "THISANDPRIOR"));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new RangeTest("testGetValue", Range.THISANDPRIOR,
+                "THISANDPRIOR"));
+        return suite;
+    }
 }

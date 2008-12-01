@@ -55,30 +55,30 @@ import net.fortuna.ical4j.util.Calendars;
 /**
  * Unit testing for {@link Categories}.
  * @author Ben Fortuna
- *
  */
 public class CategoriesTest extends PropertyTest {
 
     /**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public CategoriesTest(Categories property, String expectedValue) {
-		super(property, expectedValue);
-	}
+     * @param property
+     * @param expectedValue
+     */
+    public CategoriesTest(Categories property, String expectedValue) {
+        super(property, expectedValue);
+    }
 
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public CategoriesTest(String testMethod, Categories property) {
-		super(testMethod, property);
-	}
-    
+    /**
+     * @param testMethod
+     * @param property
+     */
+    public CategoriesTest(String testMethod, Categories property) {
+        super(testMethod, property);
+    }
+
     /**
      * Test escaping of commas in categories.
      */
-    public void testCommaEscaping() throws ValidationException, IOException, ParserException {
+    public void testCommaEscaping() throws ValidationException, IOException,
+            ParserException {
         Categories cat1 = new Categories("test1");
         Categories cat2 = new Categories("test2");
         Categories cat3 = new Categories("test1,test2,test 1\\,2\\,3");
@@ -87,54 +87,60 @@ public class CategoriesTest extends PropertyTest {
         event.getProperties().add(cat1);
         event.getProperties().add(cat2);
         event.getProperties().add(cat3);
-        
+
         Calendar calendar = new Calendar();
         calendar.getComponents().add(event);
-        
+
         StringWriter tempOut = new StringWriter();
         CalendarOutputter cout = new CalendarOutputter(false);
         cout.output(calendar, tempOut);
-        
+
         CalendarBuilder builder = new CalendarBuilder();
-        calendar = builder.build(new StringReader(tempOut.getBuffer().toString()));
-        
-        PropertyList categories = calendar.getComponent(Component.VEVENT).getProperties(Property.CATEGORIES);
-        
+        calendar = builder.build(new StringReader(tempOut.getBuffer()
+                .toString()));
+
+        PropertyList categories = calendar.getComponent(Component.VEVENT)
+                .getProperties(Property.CATEGORIES);
+
         assertEquals(cat1, categories.get(0));
         assertEquals(cat2, categories.get(1));
         assertEquals(cat3, categories.get(2));
     }
-    
+
     /**
      * @return
-     * @throws ValidationException 
-     * @throws IOException 
-     * @throws ParserException 
+     * @throws ValidationException
+     * @throws IOException
+     * @throws ParserException
      */
-    public static TestSuite suite() throws IOException, ValidationException, ParserException {
-    	TestSuite suite = new TestSuite();
+    public static TestSuite suite() throws IOException, ValidationException,
+            ParserException {
+        TestSuite suite = new TestSuite();
         String list = "one,two,three";
         Categories categories = new Categories(list);
         suite.addTest(new CategoriesTest(categories, list));
 
         // Test escaping of categories string representation..
         Calendar calendar = Calendars.load("etc/samples/valid/categories.ics");
-        Categories orig = (Categories) calendar.getComponent(Component.VEVENT).getProperty(Property.CATEGORIES);
-        
+        Categories orig = (Categories) calendar.getComponent(Component.VEVENT)
+                .getProperty(Property.CATEGORIES);
+
         StringWriter tempOut = new StringWriter();
         CalendarOutputter cout = new CalendarOutputter();
         cout.output(calendar, tempOut);
-        
+
         CalendarBuilder builder = new CalendarBuilder();
-        calendar = builder.build(new StringReader(tempOut.getBuffer().toString()));
-        
-        Categories copy = (Categories) calendar.getComponent(Component.VEVENT).getProperty(Property.CATEGORIES);
+        calendar = builder.build(new StringReader(tempOut.getBuffer()
+                .toString()));
+
+        Categories copy = (Categories) calendar.getComponent(Component.VEVENT)
+                .getProperty(Property.CATEGORIES);
         assertEquals(orig, copy);
         suite.addTest(new CategoriesTest(copy, orig.getValue()));
-        
+
         // other tests..
         suite.addTest(new CategoriesTest("testCommaEscaping", null));
-        
-    	return suite;
+
+        return suite;
     }
 }

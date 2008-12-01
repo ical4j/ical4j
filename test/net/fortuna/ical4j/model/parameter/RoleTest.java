@@ -41,27 +41,25 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class RoleTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public RoleTest(String testMethod, Role role,
-			String expectedValue) {
-		super(testMethod, role, Parameter.ROLE, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public RoleTest(String testMethod, Role role, String expectedValue) {
+        super(testMethod, role, Parameter.ROLE, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new RoleTest("testGetValue", Role.CHAIR, "CHAIR"));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new RoleTest("testGetValue", Role.CHAIR, "CHAIR"));
+        return suite;
+    }
 }

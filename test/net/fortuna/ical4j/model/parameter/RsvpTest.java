@@ -27,27 +27,25 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class RsvpTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public RsvpTest(String testMethod, Rsvp rsvp,
-			String expectedValue) {
-		super(testMethod, rsvp, Parameter.RSVP, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public RsvpTest(String testMethod, Rsvp rsvp, String expectedValue) {
+        super(testMethod, rsvp, Parameter.RSVP, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new RsvpTest("testGetValue", Rsvp.TRUE, "TRUE"));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new RsvpTest("testGetValue", Rsvp.TRUE, "TRUE"));
+        return suite;
+    }
 }

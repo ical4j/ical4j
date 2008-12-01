@@ -41,25 +41,24 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class TzNameTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public TzNameTest(TzName name, String expectedValue) {
-		super(name, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public TzNameTest(TzName name, String expectedValue) {
+        super(name, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new TzNameTest(new TzName(""), ""));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new TzNameTest(new TzName(""), ""));
+        return suite;
+    }
 
 }

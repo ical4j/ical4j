@@ -43,26 +43,26 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class LastModifiedTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public LastModifiedTest(LastModified lastModified, String expectedValue) {
-		super(lastModified, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public LastModifiedTest(LastModified lastModified, String expectedValue) {
+        super(lastModified, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() throws ParseException {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new LastModifiedTest(new LastModified("20081124T090000"), "20081124T090000"));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() throws ParseException {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new LastModifiedTest(new LastModified("20081124T090000"),
+                "20081124T090000"));
+        return suite;
+    }
 
 }

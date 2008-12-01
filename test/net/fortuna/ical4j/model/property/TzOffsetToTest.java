@@ -44,26 +44,26 @@ import net.fortuna.ical4j.model.UtcOffset;
 
 /**
  * @author fortuna
- *
  */
 public class TzOffsetToTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public TzOffsetToTest(TzOffsetTo offset, String expectedValue) {
-		super(offset, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public TzOffsetToTest(TzOffsetTo offset, String expectedValue) {
+        super(offset, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new TzOffsetToTest(new TzOffsetTo(new UtcOffset("+1000")), "+1000"));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new TzOffsetToTest(
+                new TzOffsetTo(new UtcOffset("+1000")), "+1000"));
+        return suite;
+    }
 
 }

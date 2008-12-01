@@ -41,28 +41,28 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class AbbrevTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public AbbrevTest(String testMethod, Abbrev abbrev,
-			String expectedValue) {
-		super(testMethod, abbrev, Parameter.ABBREV, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public AbbrevTest(String testMethod, Abbrev abbrev, String expectedValue) {
+        super(testMethod, abbrev, Parameter.ABBREV, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new AbbrevTest("testGetValue", new Abbrev("value"), "value"));
-		suite.addTest(new AbbrevTest("testToString", new Abbrev("value"), "value"));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new AbbrevTest("testGetValue", new Abbrev("value"),
+                "value"));
+        suite.addTest(new AbbrevTest("testToString", new Abbrev("value"),
+                "value"));
+        return suite;
+    }
 }

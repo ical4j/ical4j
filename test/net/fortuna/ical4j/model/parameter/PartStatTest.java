@@ -41,27 +41,27 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class PartStatTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public PartStatTest(String testMethod, PartStat partStat,
-			String expectedValue) {
-		super(testMethod, partStat, Parameter.PARTSTAT, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public PartStatTest(String testMethod, PartStat partStat,
+            String expectedValue) {
+        super(testMethod, partStat, Parameter.PARTSTAT, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new PartStatTest("testGetValue", PartStat.ACCEPTED, "ACCEPTED"));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new PartStatTest("testGetValue", PartStat.ACCEPTED,
+                "ACCEPTED"));
+        return suite;
+    }
 }

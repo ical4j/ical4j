@@ -41,27 +41,25 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class RelTypeTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public RelTypeTest(String testMethod, RelType relType,
-			String expectedValue) {
-		super(testMethod, relType, Parameter.RELTYPE, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public RelTypeTest(String testMethod, RelType relType, String expectedValue) {
+        super(testMethod, relType, Parameter.RELTYPE, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new RelTypeTest("testGetValue", RelType.CHILD, "CHILD"));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new RelTypeTest("testGetValue", RelType.CHILD, "CHILD"));
+        return suite;
+    }
 }

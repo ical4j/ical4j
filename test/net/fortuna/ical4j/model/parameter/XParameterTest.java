@@ -26,27 +26,27 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class XParameterTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public XParameterTest(String testMethod, XParameter parameter,
-			String expectedName, String expectedValue) {
-		super(testMethod, parameter, expectedName, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public XParameterTest(String testMethod, XParameter parameter,
+            String expectedName, String expectedValue) {
+        super(testMethod, parameter, expectedName, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new XParameterTest("testGetValue", new XParameter("name", "value"), "name", "value"));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new XParameterTest("testGetValue", new XParameter("name",
+                "value"), "name", "value"));
+        return suite;
+    }
 }

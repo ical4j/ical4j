@@ -39,32 +39,29 @@ package net.fortuna.ical4j.model.property;
 import java.text.ParseException;
 
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class UrlTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public UrlTest(Url url, String expectedValue) {
-		super(url, expectedValue);
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public UrlTest(Url url, String expectedValue) {
+        super(url, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new UrlTest(new Url(), ""));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new UrlTest(new Url(), ""));
+        return suite;
+    }
 
 }

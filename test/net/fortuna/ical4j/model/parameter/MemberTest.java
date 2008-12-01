@@ -43,28 +43,26 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class MemberTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public MemberTest(String testMethod, Member member,
-			String expectedValue) {
-		super(testMethod, member, Parameter.MEMBER, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public MemberTest(String testMethod, Member member, String expectedValue) {
+        super(testMethod, member, Parameter.MEMBER, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws URISyntaxException 
-	 */
-	public static TestSuite suite() throws URISyntaxException {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new MemberTest("testGetValue", new Member(""), ""));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws URISyntaxException
+     */
+    public static TestSuite suite() throws URISyntaxException {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new MemberTest("testGetValue", new Member(""), ""));
+        return suite;
+    }
 }

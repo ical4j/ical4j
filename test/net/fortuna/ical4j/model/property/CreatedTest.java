@@ -28,36 +28,35 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class CreatedTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public CreatedTest(Created created, String expectedValue) {
-		super(created, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public CreatedTest(Created created, String expectedValue) {
+        super(created, expectedValue);
+    }
 
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public CreatedTest(String testMethod, Created property) {
-		super(testMethod, property);
-	}
+    /**
+     * @param testMethod
+     * @param property
+     */
+    public CreatedTest(String testMethod, Created property) {
+        super(testMethod, property);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() throws ParseException {
-		TestSuite suite = new TestSuite();
-		Created created = new Created("20081124T090000Z");
-		suite.addTest(new CreatedTest(created, "20081124T090000Z"));
-		suite.addTest(new CreatedTest("testEquals", created));
-		suite.addTest(new CreatedTest("testValidation", created));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() throws ParseException {
+        TestSuite suite = new TestSuite();
+        Created created = new Created("20081124T090000Z");
+        suite.addTest(new CreatedTest(created, "20081124T090000Z"));
+        suite.addTest(new CreatedTest("testEquals", created));
+        suite.addTest(new CreatedTest("testValidation", created));
+        return suite;
+    }
 }

@@ -40,42 +40,41 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class ClazzTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public ClazzTest(Clazz clazz, String expectedValue) {
-		super(clazz, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public ClazzTest(Clazz clazz, String expectedValue) {
+        super(clazz, expectedValue);
+    }
 
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public ClazzTest(String testMethod, Clazz property) {
-		super(testMethod, property);
-	}
+    /**
+     * @param testMethod
+     * @param property
+     */
+    public ClazzTest(String testMethod, Clazz property) {
+        super(testMethod, property);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new ClazzTest(Clazz.CONFIDENTIAL, "CONFIDENTIAL"));
-		suite.addTest(new ClazzTest(Clazz.PRIVATE, "PRIVATE"));
-		suite.addTest(new ClazzTest(Clazz.PUBLIC, "PUBLIC"));
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new ClazzTest(Clazz.CONFIDENTIAL, "CONFIDENTIAL"));
+        suite.addTest(new ClazzTest(Clazz.PRIVATE, "PRIVATE"));
+        suite.addTest(new ClazzTest(Clazz.PUBLIC, "PUBLIC"));
 
-		suite.addTest(new ClazzTest("testEquals", Clazz.CONFIDENTIAL));
-		suite.addTest(new ClazzTest("testEquals", Clazz.PRIVATE));
-		suite.addTest(new ClazzTest("testEquals", Clazz.PUBLIC));
+        suite.addTest(new ClazzTest("testEquals", Clazz.CONFIDENTIAL));
+        suite.addTest(new ClazzTest("testEquals", Clazz.PRIVATE));
+        suite.addTest(new ClazzTest("testEquals", Clazz.PUBLIC));
 
-		suite.addTest(new ClazzTest("testValidation", Clazz.CONFIDENTIAL));
-		suite.addTest(new ClazzTest("testValidation", Clazz.PRIVATE));
-		suite.addTest(new ClazzTest("testValidation", Clazz.PUBLIC));
-		return suite;
-	}
+        suite.addTest(new ClazzTest("testValidation", Clazz.CONFIDENTIAL));
+        suite.addTest(new ClazzTest("testValidation", Clazz.PRIVATE));
+        suite.addTest(new ClazzTest("testValidation", Clazz.PUBLIC));
+        return suite;
+    }
 }

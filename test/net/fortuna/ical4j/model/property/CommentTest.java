@@ -40,36 +40,35 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class CommentTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public CommentTest(Comment comment, String expectedValue) {
-		super(comment, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public CommentTest(Comment comment, String expectedValue) {
+        super(comment, expectedValue);
+    }
 
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public CommentTest(String testMethod, Comment property) {
-		super(testMethod, property);
-	}
+    /**
+     * @param testMethod
+     * @param property
+     */
+    public CommentTest(String testMethod, Comment property) {
+        super(testMethod, property);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		
-		Comment comment = new Comment("");
-		suite.addTest(new CommentTest(comment, ""));
-		suite.addTest(new CommentTest("testEquals", comment));
-		suite.addTest(new CommentTest("testValidation", comment));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+
+        Comment comment = new Comment("");
+        suite.addTest(new CommentTest(comment, ""));
+        suite.addTest(new CommentTest("testEquals", comment));
+        suite.addTest(new CommentTest("testValidation", comment));
+        return suite;
+    }
 }

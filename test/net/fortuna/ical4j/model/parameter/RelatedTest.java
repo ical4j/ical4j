@@ -41,27 +41,25 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class RelatedTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public RelatedTest(String testMethod, Related related,
-			String expectedValue) {
-		super(testMethod, related, Parameter.RELATED, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public RelatedTest(String testMethod, Related related, String expectedValue) {
+        super(testMethod, related, Parameter.RELATED, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new RelatedTest("testGetValue", Related.START, "START"));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new RelatedTest("testGetValue", Related.START, "START"));
+        return suite;
+    }
 }

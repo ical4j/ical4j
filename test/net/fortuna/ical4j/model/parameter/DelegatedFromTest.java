@@ -43,28 +43,28 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class DelegatedFromTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public DelegatedFromTest(String testMethod, Parameter parameter,
-			String expectedValue) {
-		super(testMethod, parameter, Parameter.DELEGATED_FROM, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public DelegatedFromTest(String testMethod, Parameter parameter,
+            String expectedValue) {
+        super(testMethod, parameter, Parameter.DELEGATED_FROM, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws URISyntaxException 
-	 */
-	public static TestSuite suite() throws URISyntaxException {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new DelegatedFromTest("testGetValue", new DelegatedFrom(""), ""));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws URISyntaxException
+     */
+    public static TestSuite suite() throws URISyntaxException {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new DelegatedFromTest("testGetValue", new DelegatedFrom(
+                ""), ""));
+        return suite;
+    }
 }

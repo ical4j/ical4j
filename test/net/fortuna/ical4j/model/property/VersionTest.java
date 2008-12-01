@@ -22,47 +22,69 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestCase;
-import net.fortuna.ical4j.model.parameter.Value;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
+import junit.framework.TestSuite;
+
+import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author Ben
  *
  * Tests related to the property VERSION
  */
-public class VersionTest extends TestCase {
+public class VersionTest extends PropertyTest {
+
+    private Version version;
+    
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public VersionTest(Version property, String expectedValue) {
+        super(property, expectedValue);
+        this.version = property;
+    }
+
+    /**
+     * @param testMethod
+     * @param property
+     */
+    public VersionTest(String testMethod, Version property) {
+        super(testMethod, property);
+        this.version = property;
+    }
 
     /*
      * Test that the constant VERSION_2_0 is immutable.
      */
-    public void testVersion_2_0Immutable() {
+    public void testImmutable() throws IOException, URISyntaxException, ParseException {
+        super.testImmutable();
+        
         try {
-            Version.VERSION_2_0.getParameters().add(Value.DATE);
+            version.setMinVersion("3.0");
             fail("UnsupportedOperationException should be thrown");
         }
         catch (UnsupportedOperationException uoe) {
         }
         
         try {
-            Version.VERSION_2_0.setMinVersion("3.0");
-            fail("UnsupportedOperationException should be thrown");
-        }
-        catch (UnsupportedOperationException uoe) {
-        }
-        
-        try {
-            Version.VERSION_2_0.setMaxVersion("5.0");
-            fail("UnsupportedOperationException should be thrown");
-        }
-        catch (UnsupportedOperationException uoe) {
-        }
-        
-        try {
-            Version.VERSION_2_0.setValue("5.0");
+            version.setMaxVersion("5.0");
             fail("UnsupportedOperationException should be thrown");
         }
         catch (UnsupportedOperationException uoe) {
         }
     }
 
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new VersionTest(Version.VERSION_2_0, "2.0"));
+        suite.addTest(new VersionTest("testImmutable", Version.VERSION_2_0));
+        return suite;
+    }
 }

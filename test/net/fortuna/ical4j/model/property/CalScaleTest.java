@@ -26,35 +26,33 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 
 /**
- * @author Ben
- *
- * Tests related to the property CALSCALE
+ * @author Ben Tests related to the property CALSCALE
  */
 public class CalScaleTest extends PropertyTest {
-	
-    /**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public CalScaleTest(CalScale property, String expectedValue) {
-		super(property, expectedValue);
-	}
 
-	/**
-	 * @param testMethod
-	 * @param property
-	 */
-	public CalScaleTest(String testMethod, CalScale property) {
-		super(testMethod, property);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public CalScaleTest(CalScale property, String expectedValue) {
+        super(property, expectedValue);
+    }
+
+    /**
+     * @param testMethod
+     * @param property
+     */
+    public CalScaleTest(String testMethod, CalScale property) {
+        super(testMethod, property);
+    }
 
     /**
      * @return
      */
     public static TestSuite suite() {
-    	TestSuite suite = new TestSuite();
-    	suite.addTest(new CalScaleTest(CalScale.GREGORIAN, "GREGORIAN"));
-    	suite.addTest(new CalScaleTest("testImmutable", CalScale.GREGORIAN));
-    	return suite;
+        TestSuite suite = new TestSuite();
+        suite.addTest(new CalScaleTest(CalScale.GREGORIAN, "GREGORIAN"));
+        suite.addTest(new CalScaleTest("testImmutable", CalScale.GREGORIAN));
+        return suite;
     }
 }

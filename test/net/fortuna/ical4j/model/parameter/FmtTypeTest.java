@@ -41,27 +41,25 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class FmtTypeTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public FmtTypeTest(String testMethod, FmtType fmtType,
-			String expectedValue) {
-		super(testMethod, fmtType, Parameter.FMTTYPE, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public FmtTypeTest(String testMethod, FmtType fmtType, String expectedValue) {
+        super(testMethod, fmtType, Parameter.FMTTYPE, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new FmtTypeTest("testGetValue", new FmtType(""), ""));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new FmtTypeTest("testGetValue", new FmtType(""), ""));
+        return suite;
+    }
 }

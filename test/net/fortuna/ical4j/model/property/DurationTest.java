@@ -29,26 +29,25 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class DurationTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public DurationTest(Duration duration, String expectedValue) {
-		super(duration, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public DurationTest(Duration duration, String expectedValue) {
+        super(duration, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new DurationTest(new Duration(new Dur(1)), "P1W"));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new DurationTest(new Duration(new Dur(1)), "P1W"));
+        return suite;
+    }
 
 }

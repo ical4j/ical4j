@@ -41,27 +41,25 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class FbTypeTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public FbTypeTest(String testMethod, FbType fbType,
-			String expectedValue) {
-		super(testMethod, fbType, Parameter.FBTYPE, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public FbTypeTest(String testMethod, FbType fbType, String expectedValue) {
+        super(testMethod, fbType, Parameter.FBTYPE, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new FbTypeTest("testGetValue", FbType.BUSY, "BUSY"));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new FbTypeTest("testGetValue", FbType.BUSY, "BUSY"));
+        return suite;
+    }
 }

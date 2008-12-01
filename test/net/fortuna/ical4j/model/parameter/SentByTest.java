@@ -29,28 +29,26 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class SentByTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public SentByTest(String testMethod, SentBy sentBy,
-			String expectedValue) {
-		super(testMethod, sentBy, Parameter.SENT_BY, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public SentByTest(String testMethod, SentBy sentBy, String expectedValue) {
+        super(testMethod, sentBy, Parameter.SENT_BY, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws URISyntaxException 
-	 */
-	public static TestSuite suite() throws URISyntaxException {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new SentByTest("testGetValue", new SentBy(""), ""));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws URISyntaxException
+     */
+    public static TestSuite suite() throws URISyntaxException {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new SentByTest("testGetValue", new SentBy(""), ""));
+        return suite;
+    }
 }

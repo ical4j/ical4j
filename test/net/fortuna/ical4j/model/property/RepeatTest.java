@@ -43,26 +43,25 @@ import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author fortuna
- *
  */
 public class RepeatTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public RepeatTest(Repeat repeat, String expectedValue) {
-		super(repeat, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public RepeatTest(Repeat repeat, String expectedValue) {
+        super(repeat, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new RepeatTest(new Repeat(5), "5"));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new RepeatTest(new Repeat(5), "5"));
+        return suite;
+    }
 
 }

@@ -66,6 +66,8 @@ public class XPropertyTest extends PropertyTest {
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
         XProperty p = new XProperty("TEST");
+        p.setValue("value");
+        suite.addTest(new XPropertyTest(p, "value"));
         suite.addTest(new XPropertyTest("testValidationException", p));
         suite.addTest(new XPropertyTest("testRelaxedValidation", p));
         

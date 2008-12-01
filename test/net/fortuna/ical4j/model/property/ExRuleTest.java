@@ -29,26 +29,26 @@ import net.fortuna.ical4j.model.Recur;
 
 /**
  * @author fortuna
- *
  */
 public class ExRuleTest extends PropertyTest {
 
-	/**
-	 * @param property
-	 * @param expectedValue
-	 */
-	public ExRuleTest(ExRule exRule, String expectedValue) {
-		super(exRule, expectedValue);
-	}
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public ExRuleTest(ExRule exRule, String expectedValue) {
+        super(exRule, expectedValue);
+    }
 
-	/**
-	 * @return
-	 * @throws ParseException 
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new ExRuleTest(new ExRule(new Recur(Recur.DAILY, 1)), "FREQ=DAILY;COUNT=1"));
-		return suite;
-	}
+    /**
+     * @return
+     * @throws ParseException
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new ExRuleTest(new ExRule(new Recur(Recur.DAILY, 1)),
+                "FREQ=DAILY;COUNT=1"));
+        return suite;
+    }
 
 }

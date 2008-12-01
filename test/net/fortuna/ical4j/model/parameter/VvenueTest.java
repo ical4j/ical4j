@@ -27,27 +27,25 @@ import net.fortuna.ical4j.model.ParameterTest;
 
 /**
  * @author fortuna
- *
  */
 public class VvenueTest extends ParameterTest {
 
-	/**
-	 * @param testMethod
-	 * @param parameter
-	 * @param expectedName
-	 * @param expectedValue
-	 */
-	public VvenueTest(String testMethod, Vvenue venue,
-			String expectedValue) {
-		super(testMethod, venue, Parameter.VVENUE, expectedValue);
-	}
+    /**
+     * @param testMethod
+     * @param parameter
+     * @param expectedName
+     * @param expectedValue
+     */
+    public VvenueTest(String testMethod, Vvenue venue, String expectedValue) {
+        super(testMethod, venue, Parameter.VVENUE, expectedValue);
+    }
 
-	/**
-	 * @return
-	 */
-	public static TestSuite suite() {
-		TestSuite suite = new TestSuite();
-		suite.addTest(new VvenueTest("testGetValue", new Vvenue(""), ""));
-		return suite;
-	}
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new VvenueTest("testGetValue", new Vvenue(""), ""));
+        return suite;
+    }
 }
