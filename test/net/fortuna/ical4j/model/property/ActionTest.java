@@ -79,6 +79,11 @@ public class ActionTest extends PropertyTest {
 		suite.addTest(new ActionTest("testValidation", Action.DISPLAY));
 		suite.addTest(new ActionTest("testValidation", Action.EMAIL));
 		suite.addTest(new ActionTest("testValidation", Action.PROCEDURE));
+		
+		suite.addTest(new ActionTest("testImmutable", Action.AUDIO));
+		suite.addTest(new ActionTest("testImmutable", Action.DISPLAY));
+		suite.addTest(new ActionTest("testImmutable", Action.EMAIL));
+		suite.addTest(new ActionTest("testImmutable", Action.PROCEDURE));
 		return suite;
 	}
 }

@@ -129,6 +129,29 @@ public class PropertyTest extends AbstractPropertyTest {
 		}
     }
     
+    public void testImmutable() throws IOException, URISyntaxException, ParseException {
+    	try {
+    		property.setValue("");
+            fail("UnsupportedOperationException should be thrown");
+    	}
+    	catch (UnsupportedOperationException uoe) {
+    	}
+    	
+    	try {
+    		property.getParameters().add(new Parameter("name") {
+    			/* (non-Javadoc)
+    			 * @see net.fortuna.ical4j.model.Parameter#getValue()
+    			 */
+    			public String getValue() {
+    				return null;
+    			}
+    		});
+            fail("UnsupportedOperationException should be thrown");
+    	}
+    	catch (UnsupportedOperationException uoe) {
+    	}
+    }
+    
     /**
      * @return
      */

@@ -22,33 +22,39 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestCase;
-import net.fortuna.ical4j.model.parameter.Value;
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author Ben
  *
  * Tests related to the property CALSCALE
  */
-public class CalScaleTest extends TestCase {
+public class CalScaleTest extends PropertyTest {
+	
+    /**
+	 * @param property
+	 * @param expectedValue
+	 */
+	public CalScaleTest(CalScale property, String expectedValue) {
+		super(property, expectedValue);
+	}
 
-    /*
-     * Test that the constant GREGORIAN is immutable.
+	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public CalScaleTest(String testMethod, CalScale property) {
+		super(testMethod, property);
+	}
+
+    /**
+     * @return
      */
-    public void testGregorianImmutable() {
-        try {
-            CalScale.GREGORIAN.getParameters().add(Value.DATE);
-            fail("UnsupportedOperationException should be thrown");
-        }
-        catch (UnsupportedOperationException uoe) {
-        }
-        
-        try {
-            CalScale.GREGORIAN.setValue("LUNAR");
-            fail("UnsupportedOperationException should be thrown");
-        }
-        catch (UnsupportedOperationException uoe) {
-        }
+    public static TestSuite suite() {
+    	TestSuite suite = new TestSuite();
+    	suite.addTest(new CalScaleTest(CalScale.GREGORIAN, "GREGORIAN"));
+    	suite.addTest(new CalScaleTest("testImmutable", CalScale.GREGORIAN));
+    	return suite;
     }
-
 }

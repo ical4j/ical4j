@@ -77,6 +77,10 @@ public class BusyTypeTest extends PropertyTest {
         suite.addTest(new BusyTypeTest("testValidation", BusyType.BUSY));
         suite.addTest(new BusyTypeTest("testValidation", BusyType.BUSY_TENTATIVE));
         suite.addTest(new BusyTypeTest("testValidation", BusyType.BUSY_UNAVAILABLE));
+        
+        suite.addTest(new BusyTypeTest("testImmutable", BusyType.BUSY));
+        suite.addTest(new BusyTypeTest("testImmutable", BusyType.BUSY_TENTATIVE));
+        suite.addTest(new BusyTypeTest("testImmutable", BusyType.BUSY_UNAVAILABLE));
         return suite;
     }
 }

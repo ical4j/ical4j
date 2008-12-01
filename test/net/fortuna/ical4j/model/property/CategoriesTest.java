@@ -39,7 +39,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
@@ -47,6 +47,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
@@ -56,40 +57,23 @@ import net.fortuna.ical4j.util.Calendars;
  * @author Ben Fortuna
  *
  */
-public class CategoriesTest extends TestCase {
+public class CategoriesTest extends PropertyTest {
 
     /**
-     * Test construction of category list.
-     */
-    public void testCategoryList() {
-        String list = "one,two,three";
-        Categories categories = new Categories(list);
-        assertEquals(list, categories.getCategories().toString());
-    }
-    
-    /**
-     * Test escaping of categories string representation.
-     */
-    public void testStringEscaping() throws ParserException, IOException,
-        ValidationException {
-        
-        Calendar calendar = Calendars.load("etc/samples/valid/categories.ics");
-        
-        Categories orig = (Categories) calendar.getComponent(
-                Component.VEVENT).getProperty(Property.CATEGORIES);
-        
-        StringWriter tempOut = new StringWriter();
-        CalendarOutputter cout = new CalendarOutputter();
-        cout.output(calendar, tempOut);
-        
-        CalendarBuilder builder = new CalendarBuilder();
-        calendar = builder.build(new StringReader(tempOut.getBuffer().toString()));
-        
-        Categories copy = (Categories) calendar.getComponent(
-                Component.VEVENT).getProperty(Property.CATEGORIES);
-        
-        assertEquals(orig, copy);
-    }
+	 * @param property
+	 * @param expectedValue
+	 */
+	public CategoriesTest(Categories property, String expectedValue) {
+		super(property, expectedValue);
+	}
+
+	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public CategoriesTest(String testMethod, Categories property) {
+		super(testMethod, property);
+	}
     
     /**
      * Test escaping of commas in categories.
@@ -119,5 +103,38 @@ public class CategoriesTest extends TestCase {
         assertEquals(cat1, categories.get(0));
         assertEquals(cat2, categories.get(1));
         assertEquals(cat3, categories.get(2));
+    }
+    
+    /**
+     * @return
+     * @throws ValidationException 
+     * @throws IOException 
+     * @throws ParserException 
+     */
+    public static TestSuite suite() throws IOException, ValidationException, ParserException {
+    	TestSuite suite = new TestSuite();
+        String list = "one,two,three";
+        Categories categories = new Categories(list);
+        suite.addTest(new CategoriesTest(categories, list));
+
+        // Test escaping of categories string representation..
+        Calendar calendar = Calendars.load("etc/samples/valid/categories.ics");
+        Categories orig = (Categories) calendar.getComponent(Component.VEVENT).getProperty(Property.CATEGORIES);
+        
+        StringWriter tempOut = new StringWriter();
+        CalendarOutputter cout = new CalendarOutputter();
+        cout.output(calendar, tempOut);
+        
+        CalendarBuilder builder = new CalendarBuilder();
+        calendar = builder.build(new StringReader(tempOut.getBuffer().toString()));
+        
+        Categories copy = (Categories) calendar.getComponent(Component.VEVENT).getProperty(Property.CATEGORIES);
+        assertEquals(orig, copy);
+        suite.addTest(new CategoriesTest(copy, orig.getValue()));
+        
+        // other tests..
+        suite.addTest(new CategoriesTest("testCommaEscaping", null));
+        
+    	return suite;
     }
 }
