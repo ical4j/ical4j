@@ -38,12 +38,17 @@ package net.fortuna.ical4j.filter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
@@ -182,6 +187,55 @@ public class PeriodRuleTest extends FilterTest {
         period = new Period(startDt, new Dur(52));
         filter = new Filter(new PeriodRule(period));
         suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, exCal.getComponents()));
+        
+        // Asia/Singapore test..
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+        calendar = Calendars.load("etc/samples/valid/2207678.ics");
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+        
+        TimeZone timeZone = TimeZone.getTimeZone("Asia/Singapore");
+        java.util.Calendar day = java.util.Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT")); //timeZone);
+        day.set(java.util.Calendar.YEAR, 2008);
+        day.set(java.util.Calendar.MONTH, java.util.Calendar.OCTOBER);
+        day.set(java.util.Calendar.DAY_OF_MONTH, 31);
+        day.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        day.set(java.util.Calendar.MINUTE, 0);
+        day.set(java.util.Calendar.SECOND, 0);
+        day.set(java.util.Calendar.MILLISECOND, 0);
+
+        DateFormat dateFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
+        dateFormat.setCalendar(java.util.Calendar.getInstance(timeZone));
+
+        // friday..
+        startDt = new DateTime(day.getTime());
+        period = new Period(startDt, new Dur(1, 0, 0, 0));
+        System.out.println("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
+        filter = new Filter(new PeriodRule(period));
+        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents(Component.VEVENT)));
+
+        // saturday..
+        day.add(java.util.Calendar.DATE, 1);
+        startDt = new DateTime(day.getTime());
+        period = new Period(startDt, new Dur(1, 0, 0, 0));
+        System.out.println("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
+        filter = new Filter(new PeriodRule(period));
+        suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, calendar.getComponents(Component.VEVENT)));
+
+        // friday..
+        day.add(java.util.Calendar.DATE, 6);
+        startDt = new DateTime(day.getTime());
+        period = new Period(startDt, new Dur(1, 0, 0, 0));
+        System.out.println("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
+        filter = new Filter(new PeriodRule(period));
+        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents(Component.VEVENT)));
+
+        // saturday..
+        day.add(java.util.Calendar.DATE, 1);
+        startDt = new DateTime(day.getTime());
+        period = new Period(startDt, new Dur(1, 0, 0, 0));
+        System.out.println("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
+        filter = new Filter(new PeriodRule(period));
+        suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, calendar.getComponents(Component.VEVENT)));
         
         return suite;
     }

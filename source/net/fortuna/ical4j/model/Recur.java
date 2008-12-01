@@ -559,7 +559,8 @@ public class Recur implements Serializable {
                 break;
             }
 
-            if (Value.DATE_TIME.equals(value)) {
+//            if (Value.DATE_TIME.equals(value)) {
+            if (seed instanceof DateTime) {
                 if (dates.isUtc()) {
                     ((DateTime) candidateSeed).setUtc(true);
                 }
