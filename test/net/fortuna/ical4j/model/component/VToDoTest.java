@@ -60,6 +60,7 @@ public class VToDoTest extends ComponentTest {
 
         VToDo td = new VToDo();
         suite.addTest(new VToDoTest("testIsCalendarComponent", td));
+        suite.addTest(new VToDoTest("testValidationException", td));
         return suite;
     }
 

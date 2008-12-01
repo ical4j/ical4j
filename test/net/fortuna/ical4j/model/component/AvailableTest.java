@@ -59,6 +59,7 @@ public class AvailableTest extends ComponentTest {
 
         Available a = new Available();
         suite.addTest(new AvailableTest("testIsNotCalendarComponent", a));
+        suite.addTest(new AvailableTest("testValidationException", a));
         return suite;
     }
 }

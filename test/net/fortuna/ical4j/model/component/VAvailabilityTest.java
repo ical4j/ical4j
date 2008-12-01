@@ -59,6 +59,7 @@ public class VAvailabilityTest extends ComponentTest {
 
         VAvailability a = new VAvailability();
         suite.addTest(new VAvailabilityTest("testIsCalendarComponent", a));
+        suite.addTest(new VAvailabilityTest("testValidationException", a));
         return suite;
     }
 

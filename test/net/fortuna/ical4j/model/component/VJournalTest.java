@@ -60,6 +60,7 @@ public class VJournalTest extends ComponentTest {
 
         VJournal j = new VJournal();
         suite.addTest(new VJournalTest("testIsCalendarComponent", j));
+        suite.addTest(new VJournalTest("testValidationException", j));
         return suite;
     }
 

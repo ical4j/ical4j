@@ -59,6 +59,7 @@ public class DaylightTest extends ComponentTest {
 
         Daylight d = new Daylight();
         suite.addTest(new DaylightTest("testIsNotCalendarComponent", d));
+        suite.addTest(new DaylightTest("testValidationException", d));
         return suite;
     }
 

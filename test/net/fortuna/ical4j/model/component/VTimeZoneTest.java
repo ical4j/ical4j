@@ -51,7 +51,10 @@ public class VTimeZoneTest extends ComponentTest {
         TestSuite suite = new TestSuite();
         
         suite.addTest(new VTimeZoneTest("testCreateDefinition", registry.getTimeZone("Australia/Melbourne").getVTimeZone()));
-        suite.addTest(new VTimeZoneTest("testIsCalendarComponent", new VTimeZone()));
+        
+        VTimeZone tz = new VTimeZone();
+        suite.addTest(new VTimeZoneTest("testIsCalendarComponent", tz));
+        suite.addTest(new VTimeZoneTest("testValidationException", tz));
         
         return suite;
     }

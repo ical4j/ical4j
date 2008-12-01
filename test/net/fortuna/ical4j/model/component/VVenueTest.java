@@ -60,6 +60,7 @@ public class VVenueTest extends ComponentTest {
 
         VVenue vv = new VVenue();
         suite.addTest(new VVenueTest("testIsCalendarComponent", vv));
+        suite.addTest(new VVenueTest("testValidationException", vv));
         return suite;
     }
 

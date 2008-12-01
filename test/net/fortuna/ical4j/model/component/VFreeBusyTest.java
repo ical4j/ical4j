@@ -376,7 +376,10 @@ public class VFreeBusyTest extends ComponentTest {
         suite.addTest(new VFreeBusyTest("testAngelites"));
         suite.addTest(new VFreeBusyTest("testRequestFreeTime"));
         suite.addTest(new VFreeBusyTest("testBusyTime"));
-        suite.addTest(new VFreeBusyTest("testIsCalendarComponent", new VFreeBusy()));
+        
+        VFreeBusy fb = new VFreeBusy();
+        suite.addTest(new VFreeBusyTest("testIsCalendarComponent", fb));
+        suite.addTest(new VFreeBusyTest("testValidation", fb));
         
         return suite;
     }
