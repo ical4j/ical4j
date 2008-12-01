@@ -35,48 +35,42 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author Ben
  *
  */
-public class XPropertyTest extends TestCase {
-
-    private static Log LOG = LogFactory.getLog(XPropertyTest.class);
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION,
-                false);
-    }
+public class XPropertyTest extends PropertyTest {
     
     /**
-     * Test method for {@link net.fortuna.ical4j.model.property.XProperty#validate()}.
+     * @param property
+     * @param expectedValue
      */
-    public void testValidate() throws ValidationException {
-        XProperty p = new XProperty("TEST");
-        try {
-            p.validate();
-            fail("Should throw net.fortuna.ical4j.model.ValidationException");
-        }
-        catch (ValidationException ve) {
-            // success..
-            LOG.debug(ve.getMessage());
-        }
-        
-        new XProperty("X-TEST").validate();
-        
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION,
-                true);
-        new XProperty("TEST").validate();
+    public XPropertyTest(XProperty property, String expectedValue) {
+        super(property, expectedValue);
     }
 
+    /**
+     * @param testMethod
+     * @param property
+     */
+    public XPropertyTest(String testMethod, XProperty property) {
+        super(testMethod, property);
+    }
+
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        XProperty p = new XProperty("TEST");
+        suite.addTest(new XPropertyTest("testValidationException", p));
+        suite.addTest(new XPropertyTest("testRelaxedValidation", p));
+        
+        p = new XProperty("X-TEST");
+        suite.addTest(new XPropertyTest("testValidation", p));
+        return suite;
+    }
 }
