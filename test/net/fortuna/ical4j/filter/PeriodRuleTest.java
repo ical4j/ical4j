@@ -114,7 +114,6 @@ public class PeriodRuleTest extends FilterTest {
      * @throws FileNotFoundException 
      */
     public static TestSuite suite() throws FileNotFoundException, IOException, ParserException {
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(new FileReader("etc/samples/valid/Australian_TV_Melbourne.ics"));
         
