@@ -56,13 +56,23 @@ public class TzOffsetToTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public TzOffsetToTest(String testMethod, TzOffsetTo property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new TzOffsetToTest(
-                new TzOffsetTo(new UtcOffset("+1000")), "+1000"));
+        TzOffsetTo offset = new TzOffsetTo(new UtcOffset("+1000"));
+        suite.addTest(new TzOffsetToTest(offset, "+1000"));
+        suite.addTest(new TzOffsetToTest("testValidation", offset));
+        suite.addTest(new TzOffsetToTest("testEquals", offset));
         return suite;
     }
 

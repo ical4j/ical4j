@@ -53,11 +53,22 @@ public class TzIdTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public TzIdTest(String testMethod, TzId property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new TzIdTest(new TzId(""), ""));
+        TzId id = new TzId("");
+        suite.addTest(new TzIdTest(id, ""));
+        suite.addTest(new TzIdTest("testValidation", id));
+        suite.addTest(new TzIdTest("testEquals", id));
         return suite;
     }
 

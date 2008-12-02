@@ -53,11 +53,22 @@ public class TzNameTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public TzNameTest(String testMethod, TzName property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new TzNameTest(new TzName(""), ""));
+        TzName name = new TzName("");
+        suite.addTest(new TzNameTest(name, ""));
+        suite.addTest(new TzNameTest("testValidation", name));
+        suite.addTest(new TzNameTest("testEquals", name));
         return suite;
     }
 

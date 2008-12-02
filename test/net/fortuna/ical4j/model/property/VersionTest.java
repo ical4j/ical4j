@@ -85,6 +85,8 @@ public class VersionTest extends PropertyTest {
         TestSuite suite = new TestSuite();
         suite.addTest(new VersionTest(Version.VERSION_2_0, "2.0"));
         suite.addTest(new VersionTest("testImmutable", Version.VERSION_2_0));
+        suite.addTest(new VersionTest("testValidation", Version.VERSION_2_0));
+        suite.addTest(new VersionTest("testEquals", Version.VERSION_2_0));
         return suite;
     }
 }

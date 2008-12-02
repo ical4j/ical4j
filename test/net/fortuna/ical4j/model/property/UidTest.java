@@ -53,11 +53,21 @@ public class UidTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public UidTest(String testMethod, Uid property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new UidTest(new Uid(""), ""));
+        Uid uid = new Uid("");
+        suite.addTest(new UidTest(uid, ""));
+        suite.addTest(new UidTest("testValidation", uid));
         return suite;
     }
 

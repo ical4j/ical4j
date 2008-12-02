@@ -55,11 +55,22 @@ public class TzUrlTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public TzUrlTest(String testMethod, TzUrl property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new TzUrlTest(new TzUrl(URI.create("")), ""));
+        TzUrl url = new TzUrl(URI.create(""));
+        suite.addTest(new TzUrlTest(url, ""));
+        suite.addTest(new TzUrlTest("testValidation", url));
+        suite.addTest(new TzUrlTest("testEquals", url));
         return suite;
     }
 

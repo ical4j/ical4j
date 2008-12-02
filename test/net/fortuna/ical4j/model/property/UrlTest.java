@@ -55,12 +55,23 @@ public class UrlTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public UrlTest(String testMethod, Url property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new UrlTest(new Url(), ""));
+        Url url = new Url();
+        suite.addTest(new UrlTest(url, ""));
+        suite.addTest(new UrlTest("testValidation", url));
+        suite.addTest(new UrlTest("testEquals", url));
         return suite;
     }
 

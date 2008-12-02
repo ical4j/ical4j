@@ -25,9 +25,10 @@ package net.fortuna.ical4j.model.property;
 import java.text.ParseException;
 import java.util.Date;
 
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.AbstractPropertyTest;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 
@@ -38,15 +39,34 @@ import org.apache.commons.logging.LogFactory;
  * @author Ben Fortuna
  *
  */
-public class TriggerTest extends AbstractPropertyTest {
+public class TriggerTest extends PropertyTest {
     
     private static Log log = LogFactory.getLog(TriggerTest.class);
 
+    private Trigger trigger;
+    
     /**
+	 * @param property
+	 * @param expectedValue
+	 */
+	public TriggerTest(Trigger property, String expectedValue) {
+		super(property, expectedValue);
+		this.trigger = property;
+	}
+
+	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public TriggerTest(String testMethod, Trigger property) {
+		super(testMethod, property);
+		this.trigger = property;
+	}
+
+	/**
      * @throws ParseException
      */
     public void testSetValue() throws ParseException {
-        Trigger trigger = new Trigger();
         trigger.setValue(new DateTime(new Date(0).getTime()).toString());
         
         log.info(new DateTime(new Date(0).getTime()));
@@ -64,8 +84,6 @@ public class TriggerTest extends AbstractPropertyTest {
      * Unit test on a duration trigger.
      */
     public void testTriggerDuration() {
-        Trigger trigger = new Trigger(new Dur(1, 0, 0, 0));
-        
         assertNotNull(trigger.getDuration());
         assertNull(trigger.getDate());
         assertNull(trigger.getDateTime());
@@ -75,8 +93,6 @@ public class TriggerTest extends AbstractPropertyTest {
      * Unit test on a date-time trigger.
      */
     public void testTriggerDateTime() throws ValidationException {
-        Trigger trigger = new Trigger(new DateTime(new Date()));
-        
         assertNull(trigger.getDuration());
         assertNotNull(trigger.getDate());
         assertNotNull(trigger.getDateTime());
@@ -84,5 +100,22 @@ public class TriggerTest extends AbstractPropertyTest {
 
         trigger.getParameters().add(Value.DURATION);
         assertValidationException(trigger);
+    }
+    
+    /**
+     * @return
+     */
+    public static TestSuite suite() {
+    	TestSuite suite = new TestSuite();
+        Trigger trigger = new Trigger();
+    	suite.addTest(new TriggerTest("testSetValue", trigger));
+
+    	trigger = new Trigger(new Dur(1, 0, 0, 0));
+    	suite.addTest(new TriggerTest("testTriggerDuration", trigger));
+        
+    	trigger = new Trigger(new DateTime(new Date()));
+    	suite.addTest(new TriggerTest("testTriggerDateTime", trigger));
+        
+    	return suite;
     }
 }
