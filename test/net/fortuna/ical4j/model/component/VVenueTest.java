@@ -36,8 +36,11 @@
 
 package net.fortuna.ical4j.model.component;
 
+import java.net.SocketException;
+
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
+import net.fortuna.ical4j.util.UidGenerator;
 
 /**
  * @author fortuna
@@ -54,13 +57,20 @@ public class VVenueTest extends ComponentTest {
 
     /**
      * @return
+     * @throws SocketException 
      */
-    public static TestSuite suite() {
+    public static TestSuite suite() throws SocketException {
         TestSuite suite = new TestSuite();
 
         VVenue vv = new VVenue();
         suite.addTest(new VVenueTest("testIsCalendarComponent", vv));
         suite.addTest(new VVenueTest("testValidationException", vv));
+        
+        UidGenerator g = new UidGenerator("test");
+        vv = new VVenue();
+        vv.getProperties().add(g.generateUid());
+        suite.addTest(new VVenueTest("testValidation", vv));
+        
         return suite;
     }
 
