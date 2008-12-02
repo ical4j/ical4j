@@ -52,6 +52,11 @@ import net.fortuna.ical4j.util.Strings;
  */
 public abstract class DateListProperty extends Property {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5233773091972759919L;
+
     private DateList dates;
 
     private TimeZone timezone;
@@ -60,8 +65,7 @@ public abstract class DateListProperty extends Property {
      * @param name
      */
     public DateListProperty(final String name) {
-        super(name);
-        dates = new DateList(Value.DATE_TIME);
+        this(name, new DateList(Value.DATE_TIME));
     }
 
     /**
@@ -77,18 +81,19 @@ public abstract class DateListProperty extends Property {
      * @param dates
      */
     public DateListProperty(final String name, final DateList dates) {
-        super(name);
-        this.dates = dates;
+        this(name, new ParameterList(), dates);
     }
 
     /**
      * @param name
      * @param dates
      */
-    public DateListProperty(final String name, final ParameterList parameters,
-            final DateList dates) {
+    public DateListProperty(final String name, final ParameterList parameters, final DateList dates) {
         super(name, parameters);
         this.dates = dates;
+        if (dates != null && !Value.DATE_TIME.equals(dates.getType())) {
+            getParameters().add(dates.getType());
+        }
     }
 
     /**
