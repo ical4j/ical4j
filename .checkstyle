@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fileset-config file-format-version="1.2.0" simple-config="false">
-    <local-check-config name="Java Source" location="etc/checkstyle.xml" type="project" description="">
+    <local-check-config name="iCal4j Checks" location="etc/checkstyle.xml" type="project" description="">
         <additional-data name="protect-config-file" value="false"/>
     </local-check-config>
-    <fileset name="Java Source" enabled="false" check-config-name="Default Checks" local="false">
+    <fileset name="Java Source" enabled="true" check-config-name="iCal4j Checks" local="true">
         <file-match-pattern match-pattern=".java$" include-pattern="true"/>
     </fileset>
     <filter name="WriteProtectedFiles" enabled="true"/>
