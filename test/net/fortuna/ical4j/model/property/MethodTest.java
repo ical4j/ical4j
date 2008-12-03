@@ -55,12 +55,55 @@ public class MethodTest extends PropertyTest {
     }
 
     /**
+     * @param testMethod
+     * @param property
+     */
+    public MethodTest(String testMethod, Method property) {
+        super(testMethod, property);
+    }
+
+    /**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
         suite.addTest(new MethodTest(Method.ADD, "ADD"));
+        suite.addTest(new MethodTest(Method.CANCEL, "CANCEL"));
+        suite.addTest(new MethodTest(Method.COUNTER, "COUNTER"));
+        suite.addTest(new MethodTest(Method.DECLINE_COUNTER, "DECLINE-COUNTER"));
+        suite.addTest(new MethodTest(Method.PUBLISH, "PUBLISH"));
+        suite.addTest(new MethodTest(Method.REFRESH, "REFRESH"));
+        suite.addTest(new MethodTest(Method.REPLY, "REPLY"));
+        suite.addTest(new MethodTest(Method.REQUEST, "REQUEST"));
+        
+        suite.addTest(new MethodTest("testValidation", Method.ADD));
+        suite.addTest(new MethodTest("testValidation", Method.CANCEL));
+        suite.addTest(new MethodTest("testValidation", Method.COUNTER));
+        suite.addTest(new MethodTest("testValidation", Method.DECLINE_COUNTER));
+        suite.addTest(new MethodTest("testValidation", Method.PUBLISH));
+        suite.addTest(new MethodTest("testValidation", Method.REFRESH));
+        suite.addTest(new MethodTest("testValidation", Method.REPLY));
+        suite.addTest(new MethodTest("testValidation", Method.REQUEST));
+        
+        suite.addTest(new MethodTest("testEquals", Method.ADD));
+        suite.addTest(new MethodTest("testEquals", Method.CANCEL));
+        suite.addTest(new MethodTest("testEquals", Method.COUNTER));
+        suite.addTest(new MethodTest("testEquals", Method.DECLINE_COUNTER));
+        suite.addTest(new MethodTest("testEquals", Method.PUBLISH));
+        suite.addTest(new MethodTest("testEquals", Method.REFRESH));
+        suite.addTest(new MethodTest("testEquals", Method.REPLY));
+        suite.addTest(new MethodTest("testEquals", Method.REQUEST));
+        
+        suite.addTest(new MethodTest("testImmutable", Method.ADD));
+        suite.addTest(new MethodTest("testImmutable", Method.CANCEL));
+        suite.addTest(new MethodTest("testImmutable", Method.COUNTER));
+        suite.addTest(new MethodTest("testImmutable", Method.DECLINE_COUNTER));
+        suite.addTest(new MethodTest("testImmutable", Method.PUBLISH));
+        suite.addTest(new MethodTest("testImmutable", Method.REFRESH));
+        suite.addTest(new MethodTest("testImmutable", Method.REPLY));
+        suite.addTest(new MethodTest("testImmutable", Method.REQUEST));
+        
         return suite;
     }
 

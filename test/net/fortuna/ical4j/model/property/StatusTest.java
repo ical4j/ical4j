@@ -100,6 +100,17 @@ public class StatusTest extends PropertyTest {
         suite.addTest(new StatusTest("testEquals", Status.VTODO_COMPLETED));
         suite.addTest(new StatusTest("testEquals", Status.VTODO_IN_PROCESS));
         suite.addTest(new StatusTest("testEquals", Status.VTODO_NEEDS_ACTION));
+        
+        suite.addTest(new StatusTest("testImmutable", Status.VEVENT_CANCELLED));
+        suite.addTest(new StatusTest("testImmutable", Status.VEVENT_CONFIRMED));
+        suite.addTest(new StatusTest("testImmutable", Status.VEVENT_TENTATIVE));
+        suite.addTest(new StatusTest("testImmutable", Status.VJOURNAL_CANCELLED));
+        suite.addTest(new StatusTest("testImmutable", Status.VJOURNAL_DRAFT));
+        suite.addTest(new StatusTest("testImmutable", Status.VJOURNAL_FINAL));
+        suite.addTest(new StatusTest("testImmutable", Status.VTODO_CANCELLED));
+        suite.addTest(new StatusTest("testImmutable", Status.VTODO_COMPLETED));
+        suite.addTest(new StatusTest("testImmutable", Status.VTODO_IN_PROCESS));
+        suite.addTest(new StatusTest("testImmutable", Status.VTODO_NEEDS_ACTION));
         return suite;
     }
 

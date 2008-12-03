@@ -75,6 +75,10 @@ public class ClazzTest extends PropertyTest {
         suite.addTest(new ClazzTest("testValidation", Clazz.CONFIDENTIAL));
         suite.addTest(new ClazzTest("testValidation", Clazz.PRIVATE));
         suite.addTest(new ClazzTest("testValidation", Clazz.PUBLIC));
+
+        suite.addTest(new ClazzTest("testImmutable", Clazz.CONFIDENTIAL));
+        suite.addTest(new ClazzTest("testImmutable", Clazz.PRIVATE));
+        suite.addTest(new ClazzTest("testImmutable", Clazz.PUBLIC));
         return suite;
     }
 }

@@ -55,12 +55,39 @@ public class PriorityTest extends PropertyTest {
     }
 
     /**
+     * @param testMethod
+     * @param property
+     */
+    public PriorityTest(String testMethod, Priority property) {
+        super(testMethod, property);
+    }
+
+    /**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
+        suite.addTest(new PriorityTest(Priority.UNDEFINED, "0"));
         suite.addTest(new PriorityTest(Priority.HIGH, "1"));
+        suite.addTest(new PriorityTest(Priority.MEDIUM, "5"));
+        suite.addTest(new PriorityTest(Priority.LOW, "9"));
+        
+        suite.addTest(new PriorityTest("testValidation", Priority.UNDEFINED));
+        suite.addTest(new PriorityTest("testValidation", Priority.HIGH));
+        suite.addTest(new PriorityTest("testValidation", Priority.MEDIUM));
+        suite.addTest(new PriorityTest("testValidation", Priority.LOW));
+        
+        suite.addTest(new PriorityTest("testEquals", Priority.UNDEFINED));
+        suite.addTest(new PriorityTest("testEquals", Priority.HIGH));
+        suite.addTest(new PriorityTest("testEquals", Priority.MEDIUM));
+        suite.addTest(new PriorityTest("testEquals", Priority.LOW));
+        
+        suite.addTest(new PriorityTest("testImmutable", Priority.UNDEFINED));
+        suite.addTest(new PriorityTest("testImmutable", Priority.HIGH));
+        suite.addTest(new PriorityTest("testImmutable", Priority.MEDIUM));
+        suite.addTest(new PriorityTest("testImmutable", Priority.LOW));
+        
         return suite;
     }
 

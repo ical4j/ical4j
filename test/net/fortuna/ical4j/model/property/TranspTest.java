@@ -76,6 +76,9 @@ public class TranspTest extends PropertyTest {
         
         suite.addTest(new TranspTest("testEquals",Transp.OPAQUE));
         suite.addTest(new TranspTest("testEquals",Transp.TRANSPARENT));
+        
+        suite.addTest(new TranspTest("testImmutable",Transp.OPAQUE));
+        suite.addTest(new TranspTest("testImmutable",Transp.TRANSPARENT));
         return suite;
     }
 
