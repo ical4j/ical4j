@@ -117,6 +117,8 @@ public class PercentComplete extends Property {
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+        if (percentage < 0 || percentage > 100) {
+            throw new ValidationException(getName() + " with invalid value: " + percentage);
+        }
     }
 }

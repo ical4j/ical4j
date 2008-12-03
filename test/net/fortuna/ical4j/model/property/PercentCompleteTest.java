@@ -53,11 +53,28 @@ public class PercentCompleteTest extends PropertyTest {
     }
     
     /**
+     * @param testMethod
+     * @param property
+     */
+    public PercentCompleteTest(String testMethod, PercentComplete property) {
+        super(testMethod, property);
+    }
+
+    /**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new PercentCompleteTest(new PercentComplete(100), "100"));
+        PercentComplete pc = new PercentComplete(100);
+        suite.addTest(new PercentCompleteTest(pc, "100"));
+        suite.addTest(new PercentCompleteTest("testValidation", pc));
+        suite.addTest(new PercentCompleteTest("testEquals", pc));
+        
+        pc = new PercentComplete(101);
+        suite.addTest(new PercentCompleteTest("testValidationException", pc));
+        
+        pc = new PercentComplete(-1);
+        suite.addTest(new PercentCompleteTest("testValidationException", pc));
         return suite;
     }
 
