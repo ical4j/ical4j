@@ -53,11 +53,22 @@ public class TelTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public TelTest(String testMethod, Tel property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new TelTest(new Tel("value"), "value"));
+        Tel tel = new Tel("value");
+        suite.addTest(new TelTest(tel, "value"));
+        suite.addTest(new TelTest("testValidation", tel));
+        suite.addTest(new TelTest("testEquals", tel));
         return suite;
     }
 

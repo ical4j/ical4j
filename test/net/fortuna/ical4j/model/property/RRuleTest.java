@@ -56,12 +56,23 @@ public class RRuleTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public RRuleTest(String testMethod, RRule property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new RRuleTest(new RRule(new Recur(Recur.WEEKLY, 3)), "FREQ=WEEKLY;COUNT=3"));
+        RRule rule = new RRule(new Recur(Recur.WEEKLY, 3));
+        suite.addTest(new RRuleTest(rule, "FREQ=WEEKLY;COUNT=3"));
+        suite.addTest(new RRuleTest("testValidation", rule));
+        suite.addTest(new RRuleTest("testEquals", rule));
         return suite;
     }
 

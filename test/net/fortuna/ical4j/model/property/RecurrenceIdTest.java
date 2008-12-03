@@ -55,13 +55,23 @@ public class RecurrenceIdTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public RecurrenceIdTest(String testMethod, RecurrenceId property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
-        suite.addTest(new RecurrenceIdTest(new RecurrenceId("20081124T180000"),
-                "20081124T180000"));
+        RecurrenceId id = new RecurrenceId("20081124T180000");
+        suite.addTest(new RecurrenceIdTest(id, "20081124T180000"));
+        suite.addTest(new RecurrenceIdTest("testValidation", id));
+        suite.addTest(new RecurrenceIdTest("testEquals", id));
         return suite;
     }
 

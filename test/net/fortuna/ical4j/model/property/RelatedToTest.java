@@ -53,11 +53,22 @@ public class RelatedToTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public RelatedToTest(String testMethod, RelatedTo property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new RelatedToTest(new RelatedTo("value"), "value"));
+        RelatedTo related = new RelatedTo("value");
+        suite.addTest(new RelatedToTest(related, "value"));
+        suite.addTest(new RelatedToTest("testValidation", related));
+        suite.addTest(new RelatedToTest("testEquals", related));
         return suite;
     }
 

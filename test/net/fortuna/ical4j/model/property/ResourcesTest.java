@@ -54,11 +54,22 @@ public class ResourcesTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public ResourcesTest(String testMethod, Resources property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new ResourcesTest(new Resources(new ResourceList("value")), "value"));
+        Resources resources = new Resources(new ResourceList("value"));
+        suite.addTest(new ResourcesTest(resources, "value"));
+        suite.addTest(new ResourcesTest("testValidation", resources));
+        suite.addTest(new ResourcesTest("testEquals", resources));
         return suite;
     }
 

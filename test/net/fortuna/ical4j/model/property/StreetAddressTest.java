@@ -53,11 +53,22 @@ public class StreetAddressTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public StreetAddressTest(String testMethod, StreetAddress property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new StreetAddressTest(new StreetAddress("value"), "value"));
+        StreetAddress address = new StreetAddress("value");
+        suite.addTest(new StreetAddressTest(address, "value"));
+        suite.addTest(new StreetAddressTest("testValidation", address));
+        suite.addTest(new StreetAddressTest("testEquals", address));
         return suite;
     }
 

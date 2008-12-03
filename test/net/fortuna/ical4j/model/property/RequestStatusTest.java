@@ -53,11 +53,22 @@ public class RequestStatusTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public RequestStatusTest(String testMethod, RequestStatus property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new RequestStatusTest(new RequestStatus(RequestStatus.SUCCESS, null, null), RequestStatus.SUCCESS));
+        RequestStatus status = new RequestStatus(RequestStatus.SUCCESS, null, null);
+        suite.addTest(new RequestStatusTest(status, RequestStatus.SUCCESS));
+        suite.addTest(new RequestStatusTest("testValidation", status));
+        suite.addTest(new RequestStatusTest("testEquals", status));
         return suite;
     }
 

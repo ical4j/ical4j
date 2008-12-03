@@ -55,12 +55,23 @@ public class SequenceTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public SequenceTest(String testMethod, Sequence property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new SequenceTest(new Sequence(5), "5"));
+        Sequence sequence = new Sequence(5);
+        suite.addTest(new SequenceTest(sequence, "5"));
+        suite.addTest(new SequenceTest("testValidation", sequence));
+        suite.addTest(new SequenceTest("testEquals", sequence));
         return suite;
     }
 

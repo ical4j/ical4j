@@ -55,12 +55,51 @@ public class StatusTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public StatusTest(String testMethod, Status property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
         suite.addTest(new StatusTest(Status.VEVENT_CANCELLED, "CANCELLED"));
+        suite.addTest(new StatusTest(Status.VEVENT_CONFIRMED, "CONFIRMED"));
+        suite.addTest(new StatusTest(Status.VEVENT_TENTATIVE, "TENTATIVE"));
+        suite.addTest(new StatusTest(Status.VJOURNAL_CANCELLED, "CANCELLED"));
+        suite.addTest(new StatusTest(Status.VJOURNAL_DRAFT, "DRAFT"));
+        suite.addTest(new StatusTest(Status.VJOURNAL_FINAL, "FINAL"));
+        suite.addTest(new StatusTest(Status.VTODO_CANCELLED, "CANCELLED"));
+        suite.addTest(new StatusTest(Status.VTODO_COMPLETED, "COMPLETED"));
+        suite.addTest(new StatusTest(Status.VTODO_IN_PROCESS, "IN-PROCESS"));
+        suite.addTest(new StatusTest(Status.VTODO_NEEDS_ACTION, "NEEDS-ACTION"));
+        
+        suite.addTest(new StatusTest("testValidation", Status.VEVENT_CANCELLED));
+        suite.addTest(new StatusTest("testValidation", Status.VEVENT_CONFIRMED));
+        suite.addTest(new StatusTest("testValidation", Status.VEVENT_TENTATIVE));
+        suite.addTest(new StatusTest("testValidation", Status.VJOURNAL_CANCELLED));
+        suite.addTest(new StatusTest("testValidation", Status.VJOURNAL_DRAFT));
+        suite.addTest(new StatusTest("testValidation", Status.VJOURNAL_FINAL));
+        suite.addTest(new StatusTest("testValidation", Status.VTODO_CANCELLED));
+        suite.addTest(new StatusTest("testValidation", Status.VTODO_COMPLETED));
+        suite.addTest(new StatusTest("testValidation", Status.VTODO_IN_PROCESS));
+        suite.addTest(new StatusTest("testValidation", Status.VTODO_NEEDS_ACTION));
+        
+        suite.addTest(new StatusTest("testEquals", Status.VEVENT_CANCELLED));
+        suite.addTest(new StatusTest("testEquals", Status.VEVENT_CONFIRMED));
+        suite.addTest(new StatusTest("testEquals", Status.VEVENT_TENTATIVE));
+        suite.addTest(new StatusTest("testEquals", Status.VJOURNAL_CANCELLED));
+        suite.addTest(new StatusTest("testEquals", Status.VJOURNAL_DRAFT));
+        suite.addTest(new StatusTest("testEquals", Status.VJOURNAL_FINAL));
+        suite.addTest(new StatusTest("testEquals", Status.VTODO_CANCELLED));
+        suite.addTest(new StatusTest("testEquals", Status.VTODO_COMPLETED));
+        suite.addTest(new StatusTest("testEquals", Status.VTODO_IN_PROCESS));
+        suite.addTest(new StatusTest("testEquals", Status.VTODO_NEEDS_ACTION));
         return suite;
     }
 

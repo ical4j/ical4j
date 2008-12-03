@@ -37,27 +37,51 @@ package net.fortuna.ical4j.model.property;
 
 import java.io.IOException;
 
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.AbstractPropertyTest;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.util.Calendars;
 
 /**
  * Unit tests for Summary property.
  * @author Ben Fortuna
  */
-public class SummaryTest extends AbstractPropertyTest {
+public class SummaryTest extends PropertyTest {
 
     /**
-     * Test correct parsing of quoted text.
-     * @throws IOException
-     * @throws ParserException
+	 * @param property
+	 * @param expectedValue
+	 */
+	public SummaryTest(Summary property, String expectedValue) {
+		super(property, expectedValue);
+	}
+
+	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public SummaryTest(String testMethod, Summary property) {
+		super(testMethod, property);
+	}
+    
+    /**
+     * @return
+     * @throws ParserException 
+     * @throws IOException 
      */
-    public void testQuotedText() throws IOException, ParserException {
+    public static TestSuite suite() throws IOException, ParserException {
+    	TestSuite suite = new TestSuite();
+    	// Test correct parsing of quoted text..
         Calendar calendar = Calendars.load("etc/samples/valid/mansour.ics");
         Component event = calendar.getComponent(Component.VEVENT);
-        assertEquals("A colon with spaces on either side : like that", event.getProperty(Property.SUMMARY).getValue());
+        Summary summary = (Summary) event.getProperty(Property.SUMMARY);
+        suite.addTest(new SummaryTest(summary, "A colon with spaces on either side : like that"));
+        
+        suite.addTest(new SummaryTest("testValidation", summary));
+        suite.addTest(new SummaryTest("testEquals", summary));
+    	return suite;
     }
 }

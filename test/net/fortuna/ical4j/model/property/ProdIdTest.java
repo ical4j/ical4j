@@ -55,12 +55,23 @@ public class ProdIdTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public ProdIdTest(String testMethod, ProdId property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new ProdIdTest(new ProdId(""), ""));
+        ProdId id = new ProdId("");
+        suite.addTest(new ProdIdTest(id, ""));
+        suite.addTest(new ProdIdTest("testValidation", id));
+        suite.addTest(new ProdIdTest("testEquals", id));
         return suite;
     }
 

@@ -55,12 +55,23 @@ public class RepeatTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public RepeatTest(String testMethod, Repeat property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new RepeatTest(new Repeat(5), "5"));
+        Repeat repeat = new Repeat(5);
+        suite.addTest(new RepeatTest(repeat, "5"));
+        suite.addTest(new RepeatTest("testValidation", repeat));
+        suite.addTest(new RepeatTest("testEquals", repeat));
         return suite;
     }
 

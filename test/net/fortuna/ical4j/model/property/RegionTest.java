@@ -53,11 +53,22 @@ public class RegionTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public RegionTest(String testMethod, Region property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new RegionTest(new Region("value"), "value"));
+        Region region = new Region("value");
+        suite.addTest(new RegionTest(region, "value"));
+        suite.addTest(new RegionTest("testValidation", region));
+        suite.addTest(new RegionTest("testEquals", region));
         return suite;
     }
 

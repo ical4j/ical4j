@@ -55,12 +55,27 @@ public class TranspTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public TranspTest(String testMethod, Transp property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
         suite.addTest(new TranspTest(Transp.OPAQUE, "OPAQUE"));
+        suite.addTest(new TranspTest(Transp.TRANSPARENT, "TRANSPARENT"));
+        
+        suite.addTest(new TranspTest("testValidation",Transp.OPAQUE));
+        suite.addTest(new TranspTest("testValidation",Transp.TRANSPARENT));
+        
+        suite.addTest(new TranspTest("testEquals",Transp.OPAQUE));
+        suite.addTest(new TranspTest("testEquals",Transp.TRANSPARENT));
         return suite;
     }
 
