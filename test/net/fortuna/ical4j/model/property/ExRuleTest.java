@@ -54,14 +54,14 @@ public class ExRuleTest extends PropertyTest {
     }
 
     /**
-	 * @param testMethod
-	 * @param property
-	 */
-	public ExRuleTest(String testMethod, ExRule property) {
-		super(testMethod, property);
-	}
+     * @param testMethod
+     * @param property
+     */
+    public ExRuleTest(String testMethod, ExRule property) {
+        super(testMethod, property);
+    }
 
-	/**
+    /**
      * @return
      * @throws ParseException
      */
@@ -70,7 +70,7 @@ public class ExRuleTest extends PropertyTest {
         ExRule rule = new ExRule(new Recur(Recur.DAILY, 1));
         suite.addTest(new ExRuleTest(rule, "FREQ=DAILY;COUNT=1"));
         suite.addTest(new ExRuleTest("testValidation", rule));
-        suite.addTest(new ExRuleTest("testRule", rule));
+        suite.addTest(new ExRuleTest("testEquals", rule));
         return suite;
     }
 

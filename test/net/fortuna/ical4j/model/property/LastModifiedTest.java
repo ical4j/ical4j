@@ -70,6 +70,9 @@ public class LastModifiedTest extends PropertyTest {
         TestSuite suite = new TestSuite();
         LastModified modified = new LastModified("20081124T090000");
         suite.addTest(new LastModifiedTest(modified, "20081124T090000"));
+        suite.addTest(new LastModifiedTest("testValidationException", modified));
+        
+        modified = new LastModified("20081124T090000Z");
         suite.addTest(new LastModifiedTest("testValidation", modified));
         suite.addTest(new LastModifiedTest("testEquals", modified));
         return suite;
