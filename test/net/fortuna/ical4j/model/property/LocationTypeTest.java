@@ -53,11 +53,22 @@ public class LocationTypeTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public LocationTypeTest(String testMethod, LocationType property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new LocationTypeTest(new LocationType("value"), "value"));
+        LocationType type = new LocationType("value");
+        suite.addTest(new LocationTypeTest(type, "value"));
+        suite.addTest(new LocationTypeTest("testValidation", type));
+        suite.addTest(new LocationTypeTest("testEquals", type));
         return suite;
     }
 

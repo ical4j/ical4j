@@ -53,11 +53,22 @@ public class LocalityTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public LocalityTest(String testMethod, Locality property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new LocalityTest(new Locality("value"), "value"));
+        Locality locality = new Locality("value");
+        suite.addTest(new LocalityTest(locality, "value"));
+        suite.addTest(new LocalityTest("testValidation", locality));
+        suite.addTest(new LocalityTest("testEquals", locality));
         return suite;
     }
 

@@ -37,19 +37,41 @@ package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
 
-import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * @author Ben
  *
  */
-public class FreeBusyTest extends TestCase {
+public class FreeBusyTest extends PropertyTest {
 
     /**
-     * Test method for {@link net.fortuna.ical4j.model.property.FreeBusy#FreeBusy(net.fortuna.ical4j.model.ParameterList, java.lang.String)}.
+	 * @param property
+	 * @param expectedValue
+	 */
+	public FreeBusyTest(FreeBusy property, String expectedValue) {
+		super(property, expectedValue);
+	}
+
+	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public FreeBusyTest(String testMethod, FreeBusy property) {
+		super(testMethod, property);
+	}
+    
+    /**
+     * @return
+     * @throws ParseException 
      */
-    public void testFreeBusyParameterListString() throws ParseException {
+    public static TestSuite suite() throws ParseException {
+    	TestSuite suite = new TestSuite();
         FreeBusy fb = new FreeBusy(null, "20070904T140000Z/PT3H");
-        assertEquals("20070904T140000Z/PT3H", fb.getValue());
+        suite.addTest(new FreeBusyTest(fb, "20070904T140000Z/PT3H"));
+        suite.addTest(new FreeBusyTest("testValidation", fb));
+        suite.addTest(new FreeBusyTest("testEquals", fb));
+    	return suite;
     }
 }

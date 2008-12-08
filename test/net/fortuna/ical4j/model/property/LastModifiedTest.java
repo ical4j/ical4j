@@ -55,13 +55,23 @@ public class LastModifiedTest extends PropertyTest {
     }
 
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public LastModifiedTest(String testMethod, LastModified property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      * @throws ParseException
      */
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
-        suite.addTest(new LastModifiedTest(new LastModified("20081124T090000"),
-                "20081124T090000"));
+        LastModified modified = new LastModified("20081124T090000");
+        suite.addTest(new LastModifiedTest(modified, "20081124T090000"));
+        suite.addTest(new LastModifiedTest("testValidation", modified));
+        suite.addTest(new LastModifiedTest("testEquals", modified));
         return suite;
     }
 

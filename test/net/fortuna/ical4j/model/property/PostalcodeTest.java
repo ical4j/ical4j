@@ -53,11 +53,22 @@ public class PostalcodeTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public PostalcodeTest(String testMethod, Postalcode property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new PostalcodeTest(new Postalcode("value"), "value"));
+        Postalcode code = new Postalcode("value");
+        suite.addTest(new PostalcodeTest(code, "value"));
+        suite.addTest(new PostalcodeTest("testValidation", code));
+        suite.addTest(new PostalcodeTest("testEquals", code));
         return suite;
     }
 

@@ -53,11 +53,22 @@ public class NameTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public NameTest(String testMethod, Name property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new NameTest(new Name("value"), "value"));
+        Name name = new Name("value");
+        suite.addTest(new NameTest(name, "value"));
+        suite.addTest(new NameTest("testValidation", name));
+        suite.addTest(new NameTest("testEquals", name));
         return suite;
     }
 

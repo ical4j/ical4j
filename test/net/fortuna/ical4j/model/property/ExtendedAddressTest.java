@@ -53,11 +53,22 @@ public class ExtendedAddressTest extends PropertyTest {
     }
     
     /**
+	 * @param testMethod
+	 * @param property
+	 */
+	public ExtendedAddressTest(String testMethod, ExtendedAddress property) {
+		super(testMethod, property);
+	}
+
+	/**
      * @return
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new ExtendedAddressTest(new ExtendedAddress("value"), "value"));
+        ExtendedAddress address = new ExtendedAddress("value");
+        suite.addTest(new ExtendedAddressTest(address, "value"));
+        suite.addTest(new ExtendedAddressTest("testValidation", address));
+        suite.addTest(new ExtendedAddressTest("testEquals", address));
         return suite;
     }
 

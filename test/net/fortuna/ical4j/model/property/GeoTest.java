@@ -38,31 +38,49 @@ package net.fortuna.ical4j.model.property;
 
 import java.math.BigDecimal;
 
-import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * Unit tests for GEO property implementation.
  * @author Ben Fortuna
  */
-public class GeoTest extends TestCase {
+public class GeoTest extends PropertyTest {
 
     /**
-     * Ensure no loss of precision in lattitude/longitude.
-     */
-    public void testPrecision() {
-        Geo geo = new Geo("37.386013;-122.082932");
-        
-        assertEquals("37.386013;-122.082932", geo.getValue());
-    }
+	 * @param property
+	 * @param expectedValue
+	 */
+	public GeoTest(Geo property, String expectedValue) {
+		super(property, expectedValue);
+	}
+
+	/**
+	 * @param testMethod
+	 * @param property
+	 */
+	public GeoTest(String testMethod, Geo property) {
+		super(testMethod, property);
+	}
     
     /**
-     * Unit testing for {@link Geo#Geo(BigDecimal, BigDecimal)}.
+     * @return
      */
-    public void testGeoBigDecimal() {
+    public static TestSuite suite() {
+    	TestSuite suite = new TestSuite();
+    	// Ensure no loss of precision in lattitude/longitude..
+        Geo geo = new Geo("37.386013;-122.082932");
+        suite.addTest(new GeoTest(geo, "37.386013;-122.082932"));
+        
+        //testGeoBigDecimal..
         BigDecimal latitude = BigDecimal.valueOf(65.35);
         BigDecimal longitude = BigDecimal.valueOf(22.01);
+        geo = new Geo(latitude, longitude);
+        suite.addTest(new GeoTest(geo, "65.35;22.01"));
+
+        suite.addTest(new GeoTest("testValidation", geo));
+        suite.addTest(new GeoTest("testEquals", geo));
         
-        Geo geo = new Geo(latitude, longitude);
-        assertEquals("65.35;22.01", geo.getValue());
+    	return suite;
     }
 }
