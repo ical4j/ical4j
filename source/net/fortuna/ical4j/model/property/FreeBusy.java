@@ -120,6 +120,15 @@ public class FreeBusy extends Property {
     }
 
     /**
+     * @param aValue
+     * @throws ParseException
+     */
+    public FreeBusy(final String aValue) throws ParseException {
+        super(FREEBUSY);
+        setValue(aValue);
+    }
+    
+    /**
      * @param aList a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException when the specified string is not a valid list of periods

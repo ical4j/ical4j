@@ -68,7 +68,7 @@ public class FreeBusyTest extends PropertyTest {
      */
     public static TestSuite suite() throws ParseException {
     	TestSuite suite = new TestSuite();
-        FreeBusy fb = new FreeBusy(null, "20070904T140000Z/PT3H");
+        FreeBusy fb = new FreeBusy("20070904T140000Z/PT3H");
         suite.addTest(new FreeBusyTest(fb, "20070904T140000Z/PT3H"));
         suite.addTest(new FreeBusyTest("testValidation", fb));
         suite.addTest(new FreeBusyTest("testEquals", fb));
