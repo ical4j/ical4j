@@ -79,24 +79,24 @@ public class RecurTest extends TestCase {
     public void testGetDates() {
         Recur recur = new Recur(Recur.DAILY, 10);
         recur.setInterval(2);
-        log.info(recur);
+        log.debug(recur);
         
         Calendar cal = Calendar.getInstance();
         Date start = new Date(cal.getTime().getTime());
         cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
         Date end = new Date(cal.getTime().getTime());
-        log.info(recur.getDates(start, end, Value.DATE_TIME));        
+        log.debug(recur.getDates(start, end, Value.DATE_TIME));        
         
         recur.setUntil(new Date(cal.getTime().getTime()));
         log.info(recur);
-        log.info(recur.getDates(start, end, Value.DATE_TIME));
+        log.debug(recur.getDates(start, end, Value.DATE_TIME));
         
         recur.setFrequency(Recur.WEEKLY);
         recur.getDayList().add(WeekDay.MO);
-        log.info(recur);
+        log.debug(recur);
 
         DateList dates = recur.getDates(start, end, Value.DATE);
-        log.info(dates);
+        log.debug(dates);
         
         assertTrue("Date list exceeds COUNT limit", dates.size() <= 10);
     }
@@ -150,7 +150,7 @@ public class RecurTest extends TestCase {
         recur.getDayList().add(WeekDay.WE);
         recur.getDayList().add(WeekDay.TH);
         recur.getDayList().add(WeekDay.FR);
-        log.info(recur);
+        log.debug(recur);
         
         Calendar cal = Calendar.getInstance();
         Date start = new Date(cal.getTime().getTime());
@@ -158,7 +158,7 @@ public class RecurTest extends TestCase {
         Date end = new Date(cal.getTime().getTime());
         
         DateList dates = recur.getDates(start, end, Value.DATE_TIME);
-        log.info(dates);
+        log.debug(dates);
         
         assertTrue("Date list exceeds COUNT limit", dates.size() <= 10);
     }
@@ -215,10 +215,10 @@ public class RecurTest extends TestCase {
         Date start = new DateTime(cal.getTime().getTime());
         cal.add(Calendar.YEAR, 2);
         Date end = new DateTime(cal.getTime().getTime());
-        log.info(recur);
+        log.debug(recur);
         
         DateList dates = recur.getDates(new DateTime(testCal.getTime()), start, end, Value.DATE_TIME);
-        log.info(dates);
+        log.debug(dates);
     }
 
     /*
@@ -309,7 +309,7 @@ public class RecurTest extends TestCase {
         Recur recur = new Recur(Recur.WEEKLY, 10);
         recur.getDayList().add(WeekDay.TU);
         recur.getDayList().add(WeekDay.TH);
-        log.info(recur);
+        log.debug(recur);
         
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 1997);
@@ -327,7 +327,7 @@ public class RecurTest extends TestCase {
         Date end = new DateTime(cal.getTime());
         
         DateList dates = recur.getDates(seed, start, end, Value.DATE_TIME);
-        log.info(dates);
+        log.debug(dates);
         
         assertTrue(dates.isEmpty());
     }
@@ -353,7 +353,7 @@ public class RecurTest extends TestCase {
         recur.getDayList().add(WeekDay.TH);
         recur.getDayList().add(WeekDay.FR);
         recur.getSetPosList().add(new Integer(-1));
-        log.info(recur);
+        log.debug(recur);
 
         Calendar cal = Calendar.getInstance();
         Date start = new DateTime(cal.getTime());
@@ -361,7 +361,7 @@ public class RecurTest extends TestCase {
         Date end = new DateTime(cal.getTime());
         
         DateList dates = recur.getDates(start, end, Value.DATE_TIME);
-        log.info(dates);
+        log.debug(dates);
     }
     
     public void testMgmill2001() {
@@ -452,7 +452,7 @@ public class RecurTest extends TestCase {
         DateTime(queryStartDate.getTime()), new
         DateTime(queryEndDate.getTime()), Value.DATE_TIME);
         
-        log.info(dateList);
+        log.debug(dateList);
     }
     
     /**
@@ -476,7 +476,7 @@ public class RecurTest extends TestCase {
         for(int i=0; i<dl1.size(); i++) {
             prev = event;
             event = (Date) dl1.get(i); 
-            log.info("Occurence "+i+" at "+event);
+            log.debug("Occurence "+i+" at "+event);
             assertTrue(prev == null || !prev.after(event));
         }
     }
