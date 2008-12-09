@@ -35,113 +35,11 @@
 
 	<contributors>
 		<contributor>
-			<name>Heladito</name>
-		</contributor>
-		<contributor>
-			<name>Darkwave</name>
-		</contributor>
-		<contributor>
-			<name>twinkle</name>
-		</contributor>
-		<contributor>
-			<name>Outmyth</name>
-		</contributor>
-		<contributor>
-			<name>Ralph Schaer</name>
-		</contributor>
-		<contributor>
-			<name>Chris Borrill</name>
-		</contributor>
-		<contributor>
-			<name>Meher Tendjoukian</name>
-		</contributor>
-		<contributor>
-			<name>John Casey</name>
-		</contributor>
-		<contributor>
-			<name>Harrie Hazewinkel</name>
-		</contributor>
-		<contributor>
-			<name>Markus Rahlff</name>
-		</contributor>
-		<contributor>
-			<name>Marcus Hauer</name>
-		</contributor>
-		<contributor>
 			<name>Mike Douglass</name>
 			<organization>
 				Rensselaer Polytechnic Institute
 			</organization>
 			<organizationUrl>http://www.rpi.edu</organizationUrl>
-		</contributor>
-		<contributor>
-			<name>Dustin (calibre)</name>
-		</contributor>
-		<contributor>
-			<name>Tobias Lidskog</name>
-		</contributor>
-		<contributor>
-			<name>Anders Wisch</name>
-		</contributor>
-		<contributor>
-			<name>Nate (nlipke)</name>
-		</contributor>
-		<contributor>
-			<name>Max Kubierschky</name>
-		</contributor>
-		<contributor>
-			<name>Craig W Gulliver</name>
-		</contributor>
-		<contributor>
-			<name>Tom White</name>
-		</contributor>
-		<contributor>
-			<name>Antoni Mylka</name>
-		</contributor>
-		<contributor>
-			<name>Bruce Atherton</name>
-		</contributor>
-		<contributor>
-			<name>Fredrik Bertilsson</name>
-		</contributor>
-		<contributor>
-			<name>Bjoern (bjoernatsf)</name>
-		</contributor>
-		<contributor>
-			<name>Aimar (atellitu)</name>
-		</contributor>
-		<contributor>
-			<name>Ivo van Dongen</name>
-		</contributor>
-		<contributor>
-			<name>Ralph Schaer</name>
-		</contributor>
-		<contributor>
-			<name>(hilt2)</name>
-		</contributor>
-		<contributor>
-			<name>Bill Schneider</name>
-		</contributor>
-		<contributor>
-			<name>froggy (frog007)</name>
-		</contributor>
-		<contributor>
-			<name>David Peterson</name>
-		</contributor>
-		<contributor>
-			<name>Scott J Brickner</name>
-		</contributor>
-		<contributor>
-			<name>Flavia Paganelli</name>
-		</contributor>
-		<contributor>
-			<name>Norman Kraemer</name>
-		</contributor>
-		<contributor>
-			<name>Mathew McBride</name>
-		</contributor>
-		<contributor>
-			<name>Román Sosa</name>
 		</contributor>
 		<contributor>
 			<name>Randy Letness</name>
@@ -153,6 +51,7 @@
 			</organizationUrl>
 		</contributor>
 	</contributors>
+
 <!-- 
 	<distributionManagement>
 		<relocation>
@@ -165,6 +64,7 @@
 		</relocation>
 	</distributionManagement>
  -->
+
 	<build>
 		<sourceDirectory>source</sourceDirectory>
 		<resources>
