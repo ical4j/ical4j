@@ -1,6 +1,4 @@
 /*
- * $Id: CalendarBuilderTimezoneTest.java [Jul 1, 2008]
- *
  * Copyright (c) 2004 Ben Fortuna
  */
 package net.fortuna.ical4j.data;
@@ -17,6 +15,8 @@ import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
+ * $Id: CalendarBuilderTimezoneTest.java [Jul 1, 2008]
+ *
  * Test case for CalendarBuilder and handling of icalendar streams
  * where VTIMZONES are included after other components.
  *

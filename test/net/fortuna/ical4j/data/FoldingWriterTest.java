@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 21/01/2006
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -46,6 +42,10 @@ import org.apache.commons.logging.LogFactory;
 import junit.framework.TestCase;
 
 /**
+ * $Id$
+ *
+ * Created on 21/01/2006
+ *
  * Unit tests for FoldingWriter.
  * @author Ben Fortuna
  */

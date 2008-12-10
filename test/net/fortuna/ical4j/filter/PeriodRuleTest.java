@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 2/02/2006
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -59,6 +55,10 @@ import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
+ * $Id$
+ *
+ * Created on 2/02/2006
+ *
  * Unit tests for the period filter rule.
  * @author Ben Fortuna
  */

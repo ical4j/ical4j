@@ -1,6 +1,4 @@
 /*
- * $Id: CalendarBuilderTest.java [Apr 5, 2004]
- *
  * Copyright (c) 2004 Ben Fortuna
  */
 package net.fortuna.ical4j.data;
@@ -24,6 +22,8 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 
 /**
+ * $Id: CalendarBuilderTest.java [Apr 5, 2004]
+ *
  * Test case for CalendarBuilder.
  *
  * @author benf

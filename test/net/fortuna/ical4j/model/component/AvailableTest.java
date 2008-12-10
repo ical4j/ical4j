@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on: 25/11/2008
- *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
@@ -48,6 +44,10 @@ import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.util.UidGenerator;
 
 /**
+ * $Id$
+ *
+ * Created on: 25/11/2008
+ *
  * @author fortuna
  */
 public class AvailableTest extends ComponentTest {

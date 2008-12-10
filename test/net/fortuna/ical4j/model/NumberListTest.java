@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 6/08/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -39,6 +35,10 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
+ * $Id$
+ *
+ * Created on 6/08/2005
+ *
  * @author Ben
  *
  */

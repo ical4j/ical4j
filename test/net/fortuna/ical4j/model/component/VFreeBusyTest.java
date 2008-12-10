@@ -1,6 +1,4 @@
 /*
- * Created on 10/02/2005
- *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -62,6 +60,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Created on 10/02/2005
+ *
  * @author Ben Fortuna
  */
 public class VFreeBusyTest extends ComponentTest {

@@ -1,6 +1,4 @@
 /*
- * $Id$ [06-Apr-2004]
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -44,6 +42,10 @@ import net.fortuna.ical4j.model.CalendarDateFormatFactory;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+/**
+ * $Id$ [06-Apr-2004]
+ *
+ */
 public class CalendarDateFormatFactoryTest extends TestCase {
 
     private static final boolean STRICT = false;

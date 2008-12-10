@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 10/11/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -48,6 +44,10 @@ import net.fortuna.ical4j.model.Calendar;
 import junit.framework.TestCase;
 
 /**
+ * $Id$
+ *
+ * Created on 10/11/2006
+ *
  * Unit tests for {@link Calendars}.
  * @author Ben Fortuna
  */

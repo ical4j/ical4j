@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 11/11/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -46,6 +42,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 11/11/2006
+ *
  * Unit tests for {@link CalendarParserImpl}.
  * @author Ben Fortuna
  */

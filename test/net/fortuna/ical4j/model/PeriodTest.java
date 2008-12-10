@@ -1,6 +1,4 @@
 /*
- * $Id$
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -46,6 +44,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
  * <p>Period Tester.</p>
  *
  * </p>Tests the behaviour of the Period class to make sure it acts in

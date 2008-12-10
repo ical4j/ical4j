@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 14/09/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -46,6 +42,10 @@ import net.fortuna.ical4j.model.property.DtStart;
 import junit.framework.TestCase;
 
 /**
+ * $Id$
+ *
+ * Created on 14/09/2005
+ *
  * Unit tests for <code>TimeZone</code>.
  * @author Ben Fortuna
  */

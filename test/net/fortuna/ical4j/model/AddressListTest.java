@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 16/11/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -45,6 +41,12 @@ import org.apache.commons.logging.LogFactory;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+/**
+ * $Id$
+ *
+ * Created on 16/11/2005
+ *
+ */
 public class AddressListTest extends TestCase {
 
     private static final Log LOG = LogFactory.getLog(AddressListTest.class);

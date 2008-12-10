@@ -1,6 +1,4 @@
 /*
- * Created on 15/06/2005
- *
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
@@ -14,6 +12,8 @@ import org.apache.commons.logging.LogFactory;
 import junit.framework.TestCase;
 
 /**
+ * Created on 15/06/2005
+ *
  * @author Ben_Fortuna
  */
 public class ParameterFactoryImplTest extends TestCase {

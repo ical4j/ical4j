@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 20/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -46,6 +42,10 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 
 /**
+ * $Id$
+ *
+ * Created on 20/06/2005
+ *
  * @author Ben
  *
  */

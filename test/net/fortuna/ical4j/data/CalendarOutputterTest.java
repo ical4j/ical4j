@@ -1,6 +1,4 @@
 /*
- * $Id: CalendarOutputterTest.java [Apr 6, 2004]
- *
  * Copyright (c) 2004 Ben Fortuna
  */
 package net.fortuna.ical4j.data;
@@ -29,6 +27,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id: CalendarOutputterTest.java [Apr 6, 2004]
+ *
  * Test case for iCalendarOutputter.
  *
  * @author benf

@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on: 25/11/2008
- *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +36,10 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
 
 /**
+ * $Id$
+ *
+ * Created on: 25/11/2008
+ *
  * @author fortuna
  */
 public class StandardTest extends ComponentTest {

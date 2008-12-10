@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 11/03/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -42,6 +38,10 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.model.property.Uid;
 
 /**
+ * $Id$
+ *
+ * Created on 11/03/2007
+ *
  * Unit tests for {@link UidGenerator}.
  * @author Ben Fortuna
  *

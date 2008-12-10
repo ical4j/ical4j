@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 8/02/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 8/02/2006
+ *
  * Abstract base class for property unit tests.
  * @author Ben Fortuna
  */

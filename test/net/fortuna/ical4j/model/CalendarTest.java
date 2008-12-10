@@ -1,8 +1,4 @@
 /*
- * Created on 16/03/2005
- *
- * $Id$
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -57,6 +53,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Created on 16/03/2005
+ *
+ * $Id$
+ *
  * @author Ben
  *
  * A test case for creating calendars.

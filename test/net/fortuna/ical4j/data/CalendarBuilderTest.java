@@ -1,6 +1,4 @@
 /*
- * $Id: CalendarBuilderTest.java [Apr 5, 2004]
- *
  * Copyright (c) 2004 Ben Fortuna
  */
 package net.fortuna.ical4j.data;
@@ -24,6 +22,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id: CalendarBuilderTest.java [Apr 5, 2004]
+ *
  * Test case for iCalendarBuilder.
  *
  * @author benf

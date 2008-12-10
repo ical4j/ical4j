@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 17/05/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import org.apache.commons.logging.LogFactory;
 import junit.framework.TestCase;
 
 /**
+ * $Id$
+ *
+ * Created on 17/05/2007
+ *
  * @author Ben
  *
  */

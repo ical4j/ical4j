@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 03/10/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -48,6 +44,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 03/10/2006
+ *
  * Unit tests for {@link DefaultDecoderFactory}.
  * @author Ben Fortuna
  */

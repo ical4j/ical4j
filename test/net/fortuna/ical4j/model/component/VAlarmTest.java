@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 8/02/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -55,6 +51,10 @@ import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Trigger;
 
 /**
+ * $Id$
+ *
+ * Created on 8/02/2006
+ *
  * Unit tests for VAlarm component.
  * @author Ben Fortuna
  */

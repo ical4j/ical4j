@@ -1,6 +1,4 @@
 /*
- * $Id$ [17-Jan-2005]
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +34,8 @@ package net.fortuna.ical4j.util;
 import junit.framework.TestCase;
 
 /**
+ * $Id$ [17-Jan-2005]
+ *
  * Unit test for StringUtils.
  * @author Chris Borrill
  */

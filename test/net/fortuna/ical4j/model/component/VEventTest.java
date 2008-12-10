@@ -1,6 +1,4 @@
 /*
- * $Id: VEventTest.java [28/09/2004]
- *
  * Copyright (c) 2004, Ben Fortuna All rights reserved.
  */
 package net.fortuna.ical4j.model.component;
@@ -47,6 +45,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id: VEventTest.java [28/09/2004]
+ *
  * A test case for VEvents.
  * @author Ben Fortuna
  */

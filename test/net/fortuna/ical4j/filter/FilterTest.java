@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 2/02/2006
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -51,6 +47,10 @@ import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
 
 /**
+ * $Id$
+ *
+ * Created on 2/02/2006
+ *
  * Unit tests for the filter implementation.
  * @author Ben Fortuna
  */

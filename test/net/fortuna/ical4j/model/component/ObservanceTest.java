@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 18/11/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -45,6 +41,10 @@ import net.fortuna.ical4j.model.property.TzOffsetTo;
 import junit.framework.TestCase;
 
 /**
+ * $Id$
+ *
+ * Created on 18/11/2007
+ *
  * @author fortuna
  *
  */

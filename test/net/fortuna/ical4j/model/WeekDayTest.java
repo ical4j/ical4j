@@ -1,8 +1,4 @@
 /*
- * Created on 13/02/2005
- *
- * $Id$
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -43,6 +39,10 @@ import org.apache.commons.logging.LogFactory;
 import junit.framework.TestCase;
 
 /**
+ * Created on 13/02/2005
+ *
+ * $Id$
+ *
  * @author Ben Fortuna
  */
 public class WeekDayTest extends TestCase {

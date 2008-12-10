@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 30/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -43,6 +39,10 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.TimeZones;
 
 /**
+ * $Id$
+ *
+ * Created on 30/06/2005
+ *
  * @author Ben Fortuna
  *
  */

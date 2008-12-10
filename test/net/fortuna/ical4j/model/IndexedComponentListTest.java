@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 5/02/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -47,6 +43,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 5/02/2006
+ *
  * Unit tests for indexed component list.
  * @author Ben Fortuna
  */

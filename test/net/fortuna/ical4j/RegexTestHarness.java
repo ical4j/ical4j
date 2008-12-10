@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 27/10/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -39,6 +35,12 @@ import java.io.Console;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+/**
+ * $Id$
+ *
+ * Created on 27/10/2007
+ *
+ */
 public class RegexTestHarness {
 
     public static void main(String[] args){

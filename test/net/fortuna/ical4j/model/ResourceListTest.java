@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 16/11/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -38,6 +34,12 @@ package net.fortuna.ical4j.model;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+/**
+ * $Id$
+ *
+ * Created on 16/11/2005
+ *
+ */
 public class ResourceListTest extends TestCase {
 
     private static final String VALUE_RESOURCE_LIST = "projector,laptop,pulpit";
