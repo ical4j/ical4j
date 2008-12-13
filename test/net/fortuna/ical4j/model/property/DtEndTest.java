@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 30/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -49,6 +45,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 30/06/2005
+ *
  * @author Ben Fortuna
  */
 public class DtEndTest extends PropertyTest {

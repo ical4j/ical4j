@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 10/02/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -38,6 +34,10 @@ package net.fortuna.ical4j.model.parameter;
 import junit.framework.TestCase;
 
 /**
+ * $Id$
+ *
+ * Created on 10/02/2007
+ *
  * Unit tests for {@link Cn} parameter.
  * @author Ben Fortuna
  *

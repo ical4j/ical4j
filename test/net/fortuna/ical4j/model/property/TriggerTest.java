@@ -1,8 +1,4 @@
 /*
- * Created on 7/03/2005
- *
- * $Id$
- *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
@@ -49,6 +45,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Created on 7/03/2005
+ *
+ * $Id$
+ *
  * @author Ben Fortuna
  *
  */

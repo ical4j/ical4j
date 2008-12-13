@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 10/12/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -52,6 +48,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 10/12/2005
+ *
  * Unit tests for the ExDate property.
  * @author Ben Fortuna
  */

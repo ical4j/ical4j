@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 18/10/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -42,6 +38,10 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 
 /**
+ * $Id$
+ *
+ * Created on 18/10/2006
+ *
  * Unit tests for GEO property implementation.
  * @author Ben Fortuna
  */

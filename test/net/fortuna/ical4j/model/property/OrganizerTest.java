@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 10/02/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -46,6 +42,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 10/02/2007
+ *
  * Unit tests for {@link Organizer} property.
  * @author Ben Fortuna
  *

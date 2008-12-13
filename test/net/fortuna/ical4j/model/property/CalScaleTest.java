@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 16/03/2005
- *
  * Copyright (c) 2008, Ben Fortuna
  * 
  * All rights reserved.
@@ -40,7 +36,13 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 
 /**
- * @author Ben Tests related to the property CALSCALE
+ * $Id$
+ *
+ * Created on 16/03/2005
+ *
+ * @author Ben
+ * 
+ *  Tests related to the property CALSCALE
  */
 public class CalScaleTest extends PropertyTest {
 

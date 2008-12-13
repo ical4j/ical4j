@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 02/09/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 
 /**
+ * $Id$
+ *
+ * Created on 02/09/2007
+ *
  * @author Ben
  *
  */

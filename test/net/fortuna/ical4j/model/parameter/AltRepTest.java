@@ -1,6 +1,4 @@
 /*
- * $Id: AltRepTest.java [23-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna All rights reserved.
  */
 package net.fortuna.ical4j.model.parameter;
@@ -16,6 +14,8 @@ import junit.framework.TestCase;
 
 
 /**
+ * $Id: AltRepTest.java [23-Apr-2004]
+ *
  * Test case for AltRep.
  * @author benfortuna
  */

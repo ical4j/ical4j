@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 20/02/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -46,6 +42,10 @@ import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.util.Calendars;
 
 /**
+ * $Id$
+ *
+ * Created on 20/02/2006
+ *
  * Unit tests for Location property.
  * @author Ben Fortuna
  */

@@ -1,7 +1,5 @@
 /*
  *
- * Created: [17/11/2008]
- *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
@@ -42,6 +40,8 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterTest;
 
 /**
+ * Created: [17/11/2008]
+ *
  * @author fortuna
  */
 public class DelegatedFromTest extends ParameterTest {

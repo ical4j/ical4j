@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 10/12/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -42,6 +38,10 @@ import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 10/12/2006
+ *
  * Unit tests for {@link RDate}.
  * @author Ben Fortuna
  */

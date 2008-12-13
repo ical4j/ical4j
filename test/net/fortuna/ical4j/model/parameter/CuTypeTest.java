@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 16/11/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -38,6 +34,10 @@ package net.fortuna.ical4j.model.parameter;
 import junit.framework.TestCase;
 
 /**
+ * $Id$
+ *
+ * Created on 16/11/2005
+ *
  * Unit tests for parameter: CUTYPE
  * @author Ben Fortuna
  */

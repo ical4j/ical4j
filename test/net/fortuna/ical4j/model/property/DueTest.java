@@ -1,6 +1,4 @@
 /*
- * Created: [24/11/2008]
- *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +38,8 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 
 /**
+ * Created: [24/11/2008]
+ *
  * @author fortuna
  */
 public class DueTest extends PropertyTest {

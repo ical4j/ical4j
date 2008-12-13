@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 17/03/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -53,6 +49,10 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
 
 /**
+ * $Id$
+ *
+ * Created on 17/03/2007
+ *
  * Unit testing for {@link Categories}.
  * @author Ben Fortuna
  */

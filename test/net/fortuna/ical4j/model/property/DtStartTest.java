@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 10/12/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -49,6 +45,14 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 
+/**
+ * $Id$
+ *
+ * Created on 10/12/2005
+ *
+ * @author fortuna
+ *
+ */
 public class DtStartTest extends TestCase {
 
     private TimeZone timezone;

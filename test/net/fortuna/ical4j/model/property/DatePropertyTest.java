@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 31/03/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -47,6 +43,10 @@ import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 
 /**
+ * $Id$
+ *
+ * Created on 31/03/2007
+ *
  * Unit tests specific to {@link DateProperty} and its subclasses.
  * @author Ben
  */

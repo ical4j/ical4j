@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 16/10/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -49,6 +45,10 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 
 /**
+ * $Id$
+ *
+ * Created on 16/10/2005
+ *
  * Unit tests for the TzId parameter.
  * @author Ben Fortuna
  */

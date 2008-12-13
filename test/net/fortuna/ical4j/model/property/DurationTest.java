@@ -1,6 +1,4 @@
 /*
- * Created: [24/11/2008]
- *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +39,8 @@ import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.PropertyTest;
 
 /**
+ * Created: [24/11/2008]
+ *
  * @author fortuna
  */
 public class DurationTest extends PropertyTest {

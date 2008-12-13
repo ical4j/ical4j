@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 16/11/2008
- *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +36,10 @@ import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.ResourceList;
 
 /**
+ * $Id$
+ *
+ * Created on 16/11/2008
+ *
  * @author Ben
  *
  */

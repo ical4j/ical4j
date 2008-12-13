@@ -1,6 +1,4 @@
 /*
- * Created on 21/08/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -44,6 +42,8 @@ import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.util.Calendars;
 
 /**
+ * Created on 21/08/2007
+ *
  * Unit tests for Description property.
  */
 public class DescriptionTest extends PropertyTest {
