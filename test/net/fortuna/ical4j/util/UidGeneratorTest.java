@@ -68,7 +68,9 @@ public class UidGeneratorTest extends TestCase {
             threads[i] = new Thread(new Runnable() {
                 public void run() {
                     for (int i = 0; i < 10; i++) {
-                        uids.add(generator.generateUid());
+                        synchronized(uids) {
+                            uids.add(generator.generateUid());
+                        }
                     }
                 }
             });
