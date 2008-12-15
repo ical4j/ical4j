@@ -63,27 +63,41 @@ public class DateTime extends Date {
     /**
      * Used for parsing times in a UTC date-time representation.
      */
-    private static final DateFormat UTC_FORMAT = new SimpleDateFormat(
-            UTC_PATTERN);
-    static {
-        UTC_FORMAT.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
-        UTC_FORMAT.setLenient(false);
-    }
+     private static final ThreadLocal utc_format =
+             new ThreadLocal () {
+                protected Object initialValue() {
+                    DateFormat format = new SimpleDateFormat(UTC_PATTERN);
+                    format.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+                    format.setLenient(false);
+                    return (Object)format;
+                }
+            };
 
     /**
      * Used for parsing times in a local date-time representation.
      */
-    private static final DateFormat DEFAULT_FORMAT = new SimpleDateFormat(
-            DEFAULT_PATTERN);
-    static {
-        DEFAULT_FORMAT.setLenient(false);
-    }
+     private static final ThreadLocal default_format =
+             new ThreadLocal () {
+                protected Object initialValue() {
+                    DateFormat format = new SimpleDateFormat(DEFAULT_PATTERN);
+                    format.setLenient(false);
+                    return (Object)format;
+                }
+            };
 
-    private static final DateFormat LENIENT_DEFAULT_FORMAT = new SimpleDateFormat(
-            DEFAULT_PATTERN);
+     private static final ThreadLocal lenient_default_format =
+             new ThreadLocal () {
+                protected Object initialValue() {
+                    return (Object)new SimpleDateFormat(DEFAULT_PATTERN);
+                }
+            };
 
-    private static final DateFormat RELAXED_FORMAT = new SimpleDateFormat(
-            RELAXED_PATTERN);
+     private static final ThreadLocal relaxed_format =
+             new ThreadLocal () {
+                protected Object initialValue() {
+                    return (Object)new SimpleDateFormat(RELAXED_PATTERN);
+                }
+            };
 
     private Time time;
 
@@ -157,19 +171,19 @@ public class DateTime extends Date {
             throws ParseException {
         this();
         try {
-            setTime(value, UTC_FORMAT, null);
+            setTime(value, (DateFormat)utc_format.get(), null);
             setUtc(true);
         }
         catch (ParseException pe) {
             try {
                 if (timezone != null) {
-                    setTime(value, DEFAULT_FORMAT, timezone);
+                    setTime(value, (DateFormat)default_format.get(), timezone);
                 }
                 else {
                     // Use lenient parsing for floating times. This is to overcome
                     // the problem of parsing VTimeZone dates that specify dates
                     // that the strict parser does not accept.
-                    setTime(value, LENIENT_DEFAULT_FORMAT, getFormat()
+                    setTime(value, (DateFormat)lenient_default_format.get(), getFormat()
                             .getTimeZone());
                 }
             }
@@ -177,7 +191,7 @@ public class DateTime extends Date {
                 if (CompatibilityHints
                         .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
 
-                    setTime(value, RELAXED_FORMAT, timezone);
+                    setTime(value, (DateFormat)relaxed_format.get(), timezone);
                 }
                 else {
                     throw pe2;
@@ -190,19 +204,17 @@ public class DateTime extends Date {
     /**
      * Internal set of time by parsing value string.
      * @param value
-     * @param format
+     * @param format a {@code DateFormat}, protected by the use of a ThreadLocal.
      * @param tz
      * @throws ParseException
      */
     private void setTime(final String value, final DateFormat format, final java.util.TimeZone tz)
             throws ParseException {
 
-        synchronized (format) {
-            if (tz != null) {
-                format.setTimeZone(tz);
-            }
-            setTime(format.parse(value).getTime());
+        if (tz != null) {
+            format.setTimeZone(tz);
         }
+        setTime(format.parse(value).getTime());
     }
 
     /*
