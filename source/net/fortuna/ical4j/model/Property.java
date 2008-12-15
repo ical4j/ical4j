@@ -332,9 +332,12 @@ public abstract class Property extends Content {
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
             final Property p = (Property) arg0;
-            return new EqualsBuilder().append(getName(), p.getName())
-                .append(getValue(), p.getValue())
-                .append(getParameters(), p.getParameters()).isEquals();
+            if (getName().equals(p.getName())) {
+                return new EqualsBuilder().append(getValue(), p.getValue())
+                    .append(getParameters(), p.getParameters()).isEquals();
+            } else {
+                return false;
+            }
         }
         return super.equals(arg0);
     }
