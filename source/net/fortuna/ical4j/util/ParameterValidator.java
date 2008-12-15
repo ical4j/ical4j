@@ -1,6 +1,4 @@
 /*
- * $Id$ [15-May-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -38,6 +36,8 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
+ * $Id$ [15-May-2004]
+ *
  * Defines methods for validating parameters and parameter
  * lists.
  * 

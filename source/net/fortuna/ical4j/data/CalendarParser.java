@@ -1,7 +1,4 @@
 /*
- * $Id$ [Nov 5,
- * 2004]
- *
  * Copyright (c) 2004, Ben Fortuna All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,6 +34,10 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
+ * $Id$
+ * 
+ * Created [Nov 5, 2004]
+ *
  * Implementors provide iCalendar parsing functionality.
  * @author Ben Fortuna
  */

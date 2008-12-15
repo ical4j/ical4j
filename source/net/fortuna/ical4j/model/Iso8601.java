@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 30/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -42,6 +38,10 @@ import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
 /**
+ * $Id$
+ *
+ * Created on 30/06/2005
+ *
  * Base class for date and time representations as defined
  * by the ISO 8601 standard. Sub-classes must ensure that either the correct
  * precision is used in constructor arguments, or that <code>Object.equals()</code>

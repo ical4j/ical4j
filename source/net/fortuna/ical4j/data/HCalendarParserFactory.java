@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 18/11/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +32,10 @@
 package net.fortuna.ical4j.data;
 
 /**
+ * $Id$
+ *
+ * Created on 18/11/2007
+ *
  * @author fortuna
  *
  */

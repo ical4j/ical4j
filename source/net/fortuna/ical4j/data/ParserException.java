@@ -1,6 +1,4 @@
 /*
- * $Id$ [Apr 5, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -34,6 +32,8 @@
 package net.fortuna.ical4j.data;
 
 /**
+ * $Id$ [Apr 5, 2004]
+ *
  * An exception thrown when an error ocurrs in parsing iCalendar data.
  * @author Ben Fortuna
  */

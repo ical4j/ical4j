@@ -1,6 +1,4 @@
 /*
- * $Id$ [Apr 5, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -44,6 +42,8 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
+ * $Id$ [Apr 5, 2004]
+ *
  * Writes an iCalendar model to an output stream.
  * @author Ben Fortuna
  */

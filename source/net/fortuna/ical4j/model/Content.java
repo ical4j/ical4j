@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created: 12/10/2004
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -38,6 +34,10 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 
 /**
+ * $Id$
+ *
+ * Created: 12/10/2004
+ *
  * Base class for calendar content in the form of
  * properties and parameters.
  * 

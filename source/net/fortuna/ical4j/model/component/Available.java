@@ -1,6 +1,4 @@
 /*
- * $Id$ [05-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -44,6 +42,8 @@ import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
+ * $Id$ [05-Apr-2004]
+ *
  * Defines an iCalendar Available component.
  *
  * <pre>

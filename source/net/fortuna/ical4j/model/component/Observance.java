@@ -1,6 +1,4 @@
 /*
- * $Id$ [05-Apr-2004]
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -67,6 +65,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$ [05-Apr-2004]
+ *
  * Defines an iCalendar sub-component representing a timezone observance. Class made abstract such that only Standard
  * and Daylight instances are valid.
  * @author Ben Fortuna

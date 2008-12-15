@@ -1,6 +1,4 @@
 /*
- * $Id$ [05-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +34,8 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.PropertyList;
 
 /**
+ * $Id$ [05-Apr-2004]
+ *
  * Defines an iCalendar daylight savings timezone observance component.
  *
  * <pre>

@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 30/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
 /**
+ * $Id$
+ *
+ * Created on 30/06/2005
+ *
  * A type used to represent iCalendar time values.
  * @author Ben Fortuna
  */

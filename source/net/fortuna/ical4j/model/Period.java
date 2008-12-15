@@ -1,6 +1,4 @@
 /*
- * $Id$ [Apr 14, 2004]
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +39,8 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
+ * $Id$ [Apr 14, 2004]
+ *
  * Defines a period of time. A period may be specified as either a start date
  * and end date, or a start date and duration. NOTE: End dates and durations are
  * implicitly derived when not explicitly specified. This means that you cannot

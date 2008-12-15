@@ -1,6 +1,4 @@
 /*
- * $Id$ [Apr 5, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -44,6 +42,8 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
+ * $Id$ [Apr 5, 2004]
+ *
  * Defines a list of iCalendar parameters. A parameter list may be specified as unmodifiable at instantiation - useful
  * for constant properties that you don't want modified.
  * @author Ben Fortuna

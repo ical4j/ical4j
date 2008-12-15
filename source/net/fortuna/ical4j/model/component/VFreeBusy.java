@@ -1,6 +1,4 @@
 /*
- * $Id$ [Apr 5, 2004]
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -63,6 +61,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$ [Apr 5, 2004]
+ *
  * Defines an iCalendar VFREEBUSY component.
  *
  * <pre>

@@ -1,6 +1,4 @@
 /*
- * $Id$ [23-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +38,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 /**
+ * $Id LocationTypeList.java $ [23-Apr-2004]
+ *
  * Defines a list of iCalendar location types.
  *
  * @author Ben Fortuna

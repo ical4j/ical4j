@@ -1,6 +1,4 @@
 /*
- * $Id$ [23-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -34,6 +32,8 @@
 package net.fortuna.ical4j.model;
 
 /**
+ * $Id$ [23-Apr-2004]
+ *
  * An exception thrown during validation.
  * 
  * @author Ben Fortuna

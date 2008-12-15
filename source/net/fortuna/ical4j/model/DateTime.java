@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 26/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -47,6 +43,10 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
+ * $Id$
+ *
+ * Created on 26/06/2005
+ *
  * Represents a time of day on a specific date.
  * @author Ben Fortuna
  */

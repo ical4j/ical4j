@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created: Feb 1, 2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -46,6 +42,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created: Feb 1, 2006
+ *
  * Performs collection filtering based on a set of rules. A filter may dictate whether at least one rule or all rules
  * are matched.
  * @author Ben Fortuna

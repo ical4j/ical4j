@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 08/02/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -38,6 +34,10 @@ package net.fortuna.ical4j.data;
 import net.fortuna.ical4j.util.Configurator;
 
 /**
+ * $Id$
+ *
+ * Created on 08/02/2007
+ *
  * Provides access to the configured {@link CalendarParser} instance. Alternative factory implementations may be
  * specified via the following system property:
  * 

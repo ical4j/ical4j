@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 08/02/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +32,10 @@
 package net.fortuna.ical4j.data;
 
 /**
+ * $Id$
+ *
+ * Created on 08/02/2007
+ *
  * Default factory implementation for calendar parsers.
  * @author Ben Fortuna
  */

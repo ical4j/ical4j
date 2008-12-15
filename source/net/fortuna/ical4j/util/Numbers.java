@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 6/08/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +32,10 @@
 package net.fortuna.ical4j.util;
 
 /**
+ * $Id$
+ *
+ * Created on 6/08/2005
+ *
  * A utility class for number processing.
  * @author Ben Fortuna
  */

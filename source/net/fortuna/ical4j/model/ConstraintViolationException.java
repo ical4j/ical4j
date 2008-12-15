@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 02/03/2008
- *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +32,10 @@
 package net.fortuna.ical4j.model;
 
 /**
+ * $Id$
+ *
+ * Created on 02/03/2008
+ *
  * Indicates the violation of a constraint imposed by a relevant specification.
  * @author Ben
  *

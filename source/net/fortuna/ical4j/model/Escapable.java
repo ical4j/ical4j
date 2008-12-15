@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 26/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +32,10 @@
 package net.fortuna.ical4j.model;
 
 /**
+ * $Id$
+ *
+ * Created on 26/06/2005
+ *
  * Implementors by definition require their string value to be converted to/from an escaped form when converting to/from
  * and iCalendar representation.
  * @author Ben Fortuna

@@ -1,6 +1,4 @@
 /*
- * $Id$ [Apr 5, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +38,8 @@ import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
 
 /**
+ * $Id $ [Apr 5, 2004]
+ *
  * Defines an iCalendar VVENUE component.
  *
  * <pre>

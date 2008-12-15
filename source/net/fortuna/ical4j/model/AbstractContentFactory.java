@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 28/01/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import java.util.Map;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
+ * $Id$
+ *
+ * Created on 28/01/2007
+ *
  * Abstract implementation of a content factory.
  * @author Ben Fortuna
  */

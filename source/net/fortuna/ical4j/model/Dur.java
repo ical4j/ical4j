@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 20/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -46,6 +42,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 20/06/2005
+ *
  * Represents a duration of time in iCalendar. Note that according to RFC2445 durations represented in weeks are
  * mutually exclusive of other duration fields.
  * 

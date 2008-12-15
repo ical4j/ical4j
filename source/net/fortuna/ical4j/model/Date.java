@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 26/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import net.fortuna.ical4j.util.Dates;
 
 
 /**
+ * $Id$
+ *
+ * Created on 26/06/2005
+ *
  * Base class for all representations of time values in RFC2445.
  *
  * @author Ben Fortuna

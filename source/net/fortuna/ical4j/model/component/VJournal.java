@@ -1,6 +1,4 @@
 /*
- * $Id$ [Apr 5, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -54,6 +52,8 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
+ * $Id$ [Apr 5, 2004]
+ *
  * Defines an iCalendar VJOURNAL component.
  *
  * <pre>

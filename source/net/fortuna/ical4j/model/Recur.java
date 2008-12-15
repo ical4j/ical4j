@@ -1,6 +1,4 @@
 /*
- * $Id$ [18-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -51,6 +49,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$ [18-Apr-2004]
+ *
  * Defines a recurrence.
  * @version 2.0
  * @author Ben Fortuna

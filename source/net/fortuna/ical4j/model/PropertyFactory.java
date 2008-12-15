@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 16/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +36,10 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 
 /**
+ * $Id$
+ *
+ * Created on 16/06/2005
+ *
  * A factory for creating iCalendar properties.
  * 
  * @author Ben Fortuna

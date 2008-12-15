@@ -1,6 +1,4 @@
 /*
- * $Id$ [05-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -96,6 +94,8 @@ import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
 
 /**
+ * $Id$ [05-Apr-2004]
+ *
  * A factory for creating iCalendar properties. Note that if relaxed parsing is enabled (via specifying the system
  * property: icalj.parsing.relaxed=true) illegal property names are allowed.
  * @author Ben Fortuna

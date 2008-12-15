@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 26/02/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +36,10 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.PropertyList;
 
 /**
+ * $Id$
+ *
+ * Created on 26/02/2006
+ *
  * Base class for components that may be added to a calendar.
  * @author Ben Fortuna
  */

@@ -1,6 +1,4 @@
 /*
- * $Id$ [29-May-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +39,8 @@ import java.util.StringTokenizer;
 import net.fortuna.ical4j.util.Numbers;
 
 /**
+ * $Id$ [29-May-2004]
+ *
  * Defines a list of numbers.
  * 
  * @author Ben Fortuna

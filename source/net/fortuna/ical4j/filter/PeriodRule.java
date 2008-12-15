@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 2/02/2006
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +36,10 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 
 /**
+ * $Id$
+ *
+ * Created on 2/02/2006
+ *
  * A rule that matches any component that occurs in the specified time period.
  * @author Ben Fortuna
  */

@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 10/11/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -56,6 +52,10 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.Uid;
 
 /**
+ * $Id$
+ *
+ * Created on 10/11/2006
+ *
  * Utility method for working with {@link Calendar}s.
  * @author Ben Fortuna
  */

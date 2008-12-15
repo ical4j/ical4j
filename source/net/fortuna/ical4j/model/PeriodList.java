@@ -1,6 +1,4 @@
 /*
- * $Id$ [23-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +38,8 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 /**
+ * $Id$ [23-Apr-2004]
+ *
  * Defines a list of iCalendar periods. NOTE: By implementing the
  * <code>java.util.SortedSet</code> interface period lists will always be
  * sorted according to natural ordering.

@@ -1,6 +1,4 @@
 /*
- * $Id$ [05-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -49,6 +47,8 @@ import net.fortuna.ical4j.model.component.XComponent;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
+ * $Id$ [05-Apr-2004]
+ *
  * A factory for creating iCalendar components. Note that if relaxed parsing is enabled (via specifying the system
  * property: icalj.parsing.relaxed=true) illegal component names are allowed.
  * @author Ben Fortuna

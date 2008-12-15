@@ -1,6 +1,4 @@
 /*
- * $Id$ [5/07/2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +34,8 @@ package net.fortuna.ical4j.util;
 import java.util.TimeZone;
 
 /**
+ * $Id$ [5/07/2004]
+ *
  * Utility methods relevant to Java timezones.
  *
  * @author Ben Fortuna

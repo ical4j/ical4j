@@ -1,7 +1,4 @@
 /*
- * $Id$ [Nov
- * 5, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -47,6 +44,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ * 
+ *  Created [Nov 5, 2004]
+ *
  * The default implementation of a calendar parser.
  * @author Ben Fortuna
  */

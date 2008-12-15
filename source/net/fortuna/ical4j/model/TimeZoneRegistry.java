@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 18/09/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +32,10 @@
 package net.fortuna.ical4j.model;
 
 /**
+ * $Id$
+ *
+ * Created on 18/09/2005
+ *
  * Implementors provide a list of timezone definitions applicable for use
  * with iCalendar objects.
  * @author Ben Fortuna

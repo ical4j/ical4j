@@ -1,6 +1,4 @@
 /*
- * $Id$ [23-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -44,6 +42,8 @@ import java.util.regex.Pattern;
 import net.fortuna.ical4j.util.Strings;
 
 /**
+ * $Id$ [23-Apr-2004]
+ *
  * Defines a list of iCalendar categories.
  * @author Ben Fortuna
  */

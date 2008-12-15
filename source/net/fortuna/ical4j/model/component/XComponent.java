@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 3/11/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
+ * $Id$
+ *
+ * Created on 3/11/2005
+ *
  * Implementation of an experimental component as defined in RFC2445.
  * @author Ben Fortuna
  */

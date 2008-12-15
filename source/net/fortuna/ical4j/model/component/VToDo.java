@@ -1,6 +1,4 @@
 /*
- * $Id$ [Apr 5, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -73,6 +71,8 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
+ * $Id$ [Apr 5, 2004]
+ *
  * Defines an iCalendar VTODO component.
  * 
  * <pre>

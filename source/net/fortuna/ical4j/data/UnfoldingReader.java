@@ -1,6 +1,4 @@
 /*
- * $Id$ [06-Apr-2004]
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -45,6 +43,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$ [06-Apr-2004]
+ *
  * A reader which performs iCalendar unfolding as it reads. Note that unfolding rules may be "relaxed" to allow
  * unfolding of non-conformant *.ics files. By specifying the system property "ical4j.unfolding.relaxed=true" iCalendar
  * files created with Mozilla Calendar/Sunbird may be correctly unfolded.

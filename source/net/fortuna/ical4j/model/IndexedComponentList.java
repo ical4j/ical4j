@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 4/02/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +36,10 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * $Id$
+ *
+ * Created on 4/02/2006
+ *
  * Provides indexing of components on a specific property.
  * @author Ben Fortuna
  */

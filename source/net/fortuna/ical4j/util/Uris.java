@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 11/09/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -39,6 +35,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 /**
+ * $Id$
+ *
+ * Created on 11/09/2005
+ *
  * Utility methods for working with URIs.
  * @author Ben Fortuna
  */

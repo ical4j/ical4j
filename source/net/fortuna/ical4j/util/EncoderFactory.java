@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 13/05/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -43,6 +39,10 @@ import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.StringEncoder;
 
 /**
+ * $Id$
+ *
+ * Created on 13/05/2006
+ *
  * @author Ben Fortuna
  */
 public abstract class EncoderFactory {

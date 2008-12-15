@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created: 23/09/2004
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.util.Calendars;
 
 /**
+ * $Id$
+ *
+ * Created: 23/09/2004
+ *
  * Base class of calendar transformations.
  * @author benfortuna
  */

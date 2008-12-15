@@ -1,7 +1,4 @@
 /*
- * $Id$ [Nov 5,
- * 2004]
- *
  * Copyright (c) 2004, Ben Fortuna All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,6 +34,9 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 
 /**
+ * $Id$ [Nov 5,
+ * 2004]
+ *
  * Implementors provide functionality applicable during the parsing of an iCalendar data stream (e.g. building an object
  * model).
  * @author Ben Fortuna

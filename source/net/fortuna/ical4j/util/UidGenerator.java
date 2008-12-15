@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 11/03/2007
- *
  * Copyright (c) 2007, Ben Fortuna
  * All rights reserved.
  *
@@ -44,6 +40,10 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.property.Uid;
 
 /**
+ * $Id$
+ *
+ * Created on 11/03/2007
+ *
  * Generates {@link Uid} properties in a similar fashion to that recommended in section 4.8.4.7 of the specification.
  * @author Ben Fortuna
  */

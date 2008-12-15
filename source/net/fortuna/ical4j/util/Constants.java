@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 5/07/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -46,6 +42,10 @@ import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.Version;
 
 /**
+ * $Id$
+ *
+ * Created on 5/07/2005
+ *
  * Provides some convenience methods for working with constant
  * parameters and properties.
  * @author Ben Fortuna

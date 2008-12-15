@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 13/09/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -47,6 +43,10 @@ import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 
 /**
+ * $Id$
+ *
+ * Created on 13/09/2005
+ *
  * A Java timezone implementation based on an underlying VTimeZone
  * definition.
  * @author Ben Fortuna

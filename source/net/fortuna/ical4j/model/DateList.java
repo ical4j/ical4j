@@ -1,6 +1,4 @@
 /*
- * $Id$ [23-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -42,6 +40,8 @@ import java.util.StringTokenizer;
 import net.fortuna.ical4j.model.parameter.Value;
 
 /**
+ * $Id$ [23-Apr-2004]
+ *
  * Defines a list of iCalendar dates. If no value type is specified a list
  * defaults to DATE-TIME instances.
  * @author Ben Fortuna

@@ -1,7 +1,4 @@
 /*
- * $Id$ [05-Apr-2004]
- * Created on 14/06/2005
- *
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
@@ -11,6 +8,10 @@ import java.net.URISyntaxException;
 
 
 /**
+ * $Id$ [05-Apr-2004]
+ * 
+ * Created on 14/06/2005
+ *
  * Implementors provide parameter creation services.
  * 
  * @author Ben Fortuna

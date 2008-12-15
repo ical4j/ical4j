@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 26/06/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -45,6 +41,10 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.parameter.Value;
 
 /**
+ * $Id$
+ *
+ * Created on 26/06/2005
+ *
  * Implements a collection of utility methods relevant to date processing.
  * 
  * @author Ben Fortuna

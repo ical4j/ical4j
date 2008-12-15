@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 18/09/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -49,6 +45,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 18/09/2005
+ *
  * The default implementation of a <code>TimeZoneRegistry</code>. This implementation will search the classpath for
  * applicable VTimeZone definitions used to back the provided TimeZone instances.
  * @author Ben Fortuna

@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created: Feb 1, 2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +32,10 @@
 package net.fortuna.ical4j.filter;
 
 /**
+ * $Id$
+ *
+ * Created: Feb 1, 2006
+ *
  * Implementors dictate whether a given object is classified as a "match" for the enclosing filter.
  * @author Ben Fortuna
  */

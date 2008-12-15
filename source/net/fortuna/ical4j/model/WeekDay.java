@@ -1,8 +1,4 @@
 /*
- * $Id$
- * 
- * Created: 19/12/2004
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -44,6 +40,10 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
+ * $Id$
+ * 
+ * Created: 19/12/2004
+ *
  * Defines a day of the week with a possible offset related to
  * a MONTHLY or YEARLY occurrence.
  * 

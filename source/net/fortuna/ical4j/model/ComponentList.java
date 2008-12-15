@@ -1,6 +1,4 @@
 /*
- * $Id$ [Apr 5, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
+ * $Id$ [Apr 5, 2004]
+ *
  * Defines a list of iCalendar components.
  * @author Ben Fortuna
  */

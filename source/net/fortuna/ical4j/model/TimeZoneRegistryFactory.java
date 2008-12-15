@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 18/09/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -38,6 +34,10 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.util.Configurator;
 
 /**
+ * $Id$
+ *
+ * Created on 18/09/2005
+ *
  * Provides access to the configured <code>TimeZoneRegistry</code> instance.
  * Alternative factory implementations may be specified via the following
  * system property:

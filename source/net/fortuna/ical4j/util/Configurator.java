@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 06/02/2008
- *
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 06/02/2008
+ *
  * Provides configuration properties specified either as system properties
  * or in an ical4j.properties configuration file.
  * @author Ben

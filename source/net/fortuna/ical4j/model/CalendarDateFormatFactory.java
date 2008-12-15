@@ -1,6 +1,4 @@
 /*
- * $Id$ [06-Apr-2004]
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -45,6 +43,8 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
 /**
+ * $Id$ [06-Apr-2004]
+ *
  * Creates DateFormat objects optimized for common iCalendar date patterns.
  *
  * @author Dave Nault dnault@laszlosystems.com

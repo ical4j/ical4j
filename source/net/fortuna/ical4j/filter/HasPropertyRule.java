@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 5/02/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -42,6 +38,10 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 
 /**
+ * $Id$
+ *
+ * Created on 5/02/2006
+ *
  * A rule that matches any component containing the specified property. Note that this rule ignores any parameters
  * matching only on the value of the property.
  * @author Ben Fortuna

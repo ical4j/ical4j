@@ -1,6 +1,4 @@
 /*
- * $Id$ [Apr 6, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +39,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$ [Apr 6, 2004]
+ *
  * A writer that performs iCalendar folding as it writes.
  * @author Ben Fortuna
  */

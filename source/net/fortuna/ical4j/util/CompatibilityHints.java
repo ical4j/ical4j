@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 9/03/2006
- *
  * Copyright (c) 2006, Ben Fortuna
  * All rights reserved.
  *
@@ -39,6 +35,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * $Id$
+ *
+ * Created on 9/03/2006
+ *
  * A set of keys used to enable compatibility features.
  * @author Ben Fortuna
  */

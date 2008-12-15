@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created: 26/09/2004
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -45,6 +41,10 @@ import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Sequence;
 
 /**
+ * $Id$
+ *
+ * Created: 26/09/2004
+ *
  * Transforms a calendar for publishing.
  * @author benfortuna
  */

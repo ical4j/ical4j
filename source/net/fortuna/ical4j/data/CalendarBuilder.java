@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created: Apr 5, 2004
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -71,6 +67,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created: Apr 5, 2004
+ *
  * Parses and builds an iCalendar model from an input stream. Note that this class is not thread-safe.
  * @version 2.0
  * @author Ben Fortuna
