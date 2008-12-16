@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created: [Apr 6, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +36,10 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
+ * $Id$
+ *
+ * Created: [Apr 6, 2004]
+ *
  * Defines a VERSION iCalendar property. When creating a new calendar you should always add a version property with
  * value "2.0". There is actually a constant defined in the Version class for this. e.g:
  * <code>    Calendar calendar = new Calendar();</code>

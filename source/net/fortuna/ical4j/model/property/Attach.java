@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created: [Apr 6, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -60,6 +56,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created: [Apr 6, 2004]
+ *
  * Defines an ATTACH iCalendar component property.
  * 
  * <pre>

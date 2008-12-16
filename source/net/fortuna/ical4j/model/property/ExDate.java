@@ -1,8 +1,4 @@
 /*
- * $Id$
- * 
- * Created: [Apr 6, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -45,6 +41,10 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
+ * $Id$
+ * 
+ * Created: [Apr 6, 2004]
+ *
  * Defines a EXDATE iCalendar component property.
  * @author benf
  */

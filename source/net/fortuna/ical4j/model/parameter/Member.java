@@ -1,6 +1,4 @@
 /*
- * $Id$ [18-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -40,6 +38,8 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.util.Strings;
 
 /**
+ * $Id$ [18-Apr-2004]
+ *
  * Defines a Group or List Membership parameter.
  * @author benfortuna
  */

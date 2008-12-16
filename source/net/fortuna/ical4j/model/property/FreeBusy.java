@@ -1,8 +1,4 @@
 /*
- * $Id$
- * 
- * Created: [Apr 14, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -45,6 +41,10 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
+ * $Id$
+ * 
+ * Created: [Apr 14, 2004]
+ *
  * Defines a FREEBUSY iCalendar component property.
  * 
  * <pre>

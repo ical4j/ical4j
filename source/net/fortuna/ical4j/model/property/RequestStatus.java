@@ -1,8 +1,4 @@
 /*
- * $Id$
- * 
- * Created: [Apr 6, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -44,6 +40,10 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
 /**
+ * $Id$
+ * 
+ * Created: [Apr 6, 2004]
+ *
  * Defines a REQUEST-STATUS iCalendar component property.
  * @author benf
  */

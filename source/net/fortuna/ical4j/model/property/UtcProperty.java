@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 8/08/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
+ * $Id$
+ *
+ * Created on 8/08/2005
+ *
  * Superclass for all properties with date-time values that must be specified in UTC time.
  * @author Ben Fortuna
  */

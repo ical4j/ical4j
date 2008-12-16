@@ -1,6 +1,4 @@
 /*
- * $Id$ [18-Apr-2004]
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -37,6 +35,8 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.util.Strings;
 
 /**
+ * $Id$ [18-Apr-2004]
+ *
  * Defines a Value Data Type parameter.
  * @author Ben Fortuna
  */

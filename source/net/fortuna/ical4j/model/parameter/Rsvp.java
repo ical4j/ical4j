@@ -1,6 +1,4 @@
 /*
- * $Id$ [18-Apr-2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -36,6 +34,8 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Parameter;
 
 /**
+ * $Id$ [18-Apr-2004]
+ *
  * Defines an RSVP parameter.
  * @author benfortuna
  */

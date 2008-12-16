@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 9/07/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -55,6 +51,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * $Id$
+ *
+ * Created on 9/07/2005
+ *
  * Base class for properties with a DATE or DATE-TIME value. Note that some sub-classes may only allow either a DATE or
  * a DATE-TIME value, for which additional rules/validation should be specified.
  * @author Ben Fortuna

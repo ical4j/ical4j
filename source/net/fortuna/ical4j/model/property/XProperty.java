@@ -1,8 +1,4 @@
 /*
- * $Id$
- * 
- * Created: [15/06/2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -42,6 +38,10 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
+ * $Id$
+ * 
+ * Created: [15/06/2004]
+ *
  * Defines an extension property.
  * @author benfortuna
  */

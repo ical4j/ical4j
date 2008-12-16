@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created on 11/08/2005
- *
  * Copyright (c) 2005, Ben Fortuna
  * All rights reserved.
  *
@@ -47,6 +43,10 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 
 /**
+ * $Id$
+ *
+ * Created on 11/08/2005
+ *
  * Base class for properties with a list of dates as a value.
  * @author Ben Fortuna
  */

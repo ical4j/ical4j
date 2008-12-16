@@ -1,8 +1,4 @@
 /*
- * $Id$
- * 
- * Created: [Apr 6, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -48,6 +44,10 @@ import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
 
 /**
+ * $Id$
+ * 
+ * Created: [Apr 6, 2004]
+ *
  * Defines an RDATE iCalendar component property.
  * 
  * <pre>

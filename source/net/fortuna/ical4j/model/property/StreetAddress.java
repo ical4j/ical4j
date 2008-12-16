@@ -1,8 +1,4 @@
 /*
- * $Id$
- *
- * Created: [Apr 6, 2004]
- *
  * Copyright (c) 2004, Ben Fortuna
  * All rights reserved.
  *
@@ -41,6 +37,10 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
+ * $Id$
+ *
+ * Created: [Apr 6, 2004]
+ *
  * Defines a STREET_ADDRESS iCalendar component property.
  * @author benf
  * @author Mike Douglass
