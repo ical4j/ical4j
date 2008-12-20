@@ -96,28 +96,28 @@ public class CalendarParserImpl implements CalendarParser {
             tokeniser.quoteChar('"');
 
             // BEGIN:VCALENDAR
-            assertToken(tokeniser, Calendar.BEGIN);
+            assertToken(tokeniser, in, Calendar.BEGIN);
 
-            assertToken(tokeniser, ':');
+            assertToken(tokeniser, in, ':');
 
-            assertToken(tokeniser, Calendar.VCALENDAR, true);
+            assertToken(tokeniser, in, Calendar.VCALENDAR, true);
 
-            assertToken(tokeniser, StreamTokenizer.TT_EOL);
+            assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
 
             handler.startCalendar();
 
             // parse calendar properties..
-            parsePropertyList(tokeniser, handler);
+            parsePropertyList(tokeniser, in, handler);
 
             // parse components..
-            parseComponentList(tokeniser, handler);
+            parseComponentList(tokeniser, in, handler);
 
             // END:VCALENDAR
             // assertToken(tokeniser,Calendar.END);
 
-            assertToken(tokeniser, ':');
+            assertToken(tokeniser, in, ':');
 
-            assertToken(tokeniser, Calendar.VCALENDAR, true);
+            assertToken(tokeniser, in, Calendar.VCALENDAR, true);
 
             handler.endCalendar();
         }
@@ -130,16 +130,7 @@ public class CalendarParserImpl implements CalendarParser {
                 throw (ParserException) e;
             }
             else {
-                int line = tokeniser.lineno();
-                if (tokeniser.ttype == StreamTokenizer.TT_EOL) {
-                    line -= 1;
-                }
-                if (in instanceof UnfoldingReader) {
-                    // need to take unfolded lines into account
-                    final int unfolded = ((UnfoldingReader) in).getLinesUnfolded();
-                    line += unfolded;
-                }
-                throw new ParserException(e.getMessage(), line, e);
+                throw new ParserException(e.getMessage(), getLineNumber(tokeniser, in), e);
             }
         }
     }
@@ -153,21 +144,21 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParserException
      */
-    private void parsePropertyList(final StreamTokenizer tokeniser,
+    private void parsePropertyList(final StreamTokenizer tokeniser, Reader in,
             final ContentHandler handler) throws IOException, ParseException,
             URISyntaxException, ParserException {
 
-        assertToken(tokeniser, StreamTokenizer.TT_WORD);
+        assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
         while (/*
                  * !Component.BEGIN.equals(tokeniser.sval) &&
                  */!Component.END.equals(tokeniser.sval)) {
             // check for timezones observances or vevent/vtodo alarms..
             if (Component.BEGIN.equals(tokeniser.sval)) {
-                parseComponent(tokeniser, handler);
+                parseComponent(tokeniser, in, handler);
             }
             else {
-                parseProperty(tokeniser, handler);
+                parseProperty(tokeniser, in, handler);
             }
             absorbWhitespace(tokeniser);
             // assertToken(tokeniser, StreamTokenizer.TT_WORD);
@@ -182,7 +173,7 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParseException
      */
-    private void parseProperty(final StreamTokenizer tokeniser,
+    private void parseProperty(final StreamTokenizer tokeniser, Reader in,
             final ContentHandler handler) throws IOException, ParserException,
             URISyntaxException, ParseException {
 
@@ -195,7 +186,7 @@ public class CalendarParserImpl implements CalendarParser {
 
         handler.startProperty(name);
 
-        parseParameterList(tokeniser, handler);
+        parseParameterList(tokeniser, in, handler);
 
         // it appears that control tokens (ie. ':') are allowed
         // after the first instance on a line is used.. as such
@@ -233,11 +224,20 @@ public class CalendarParserImpl implements CalendarParser {
         
         if (nextToken == StreamTokenizer.TT_EOF) {
             throw new ParserException("Unexpected end of file",
-                    tokeniser.lineno());
+                    getLineNumber(tokeniser, in));
         }
 
-        handler.propertyValue(value.toString());
+        try {
+            handler.propertyValue(value.toString());
+        }
+        catch (ParseException e) {
+            ParseException eNew = new ParseException("[" + name + "] " + e.getMessage(), e.getErrorOffset());
+            eNew.initCause(e);
+            throw eNew;
+        }
+
         handler.endProperty(name);
+
     }
 
     /**
@@ -247,12 +247,12 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws ParserException
      * @throws URISyntaxException
      */
-    private void parseParameterList(final StreamTokenizer tokeniser,
+    private void parseParameterList(final StreamTokenizer tokeniser, Reader in,
             final ContentHandler handler) throws IOException, ParserException,
             URISyntaxException {
 
         while (tokeniser.nextToken() == ';') {
-            parseParameter(tokeniser, handler);
+            parseParameter(tokeniser, in, handler);
         }
     }
 
@@ -263,11 +263,11 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws ParserException
      * @throws URISyntaxException
      */
-    private void parseParameter(final StreamTokenizer tokeniser,
+    private void parseParameter(final StreamTokenizer tokeniser, Reader in,
             final ContentHandler handler) throws IOException, ParserException,
             URISyntaxException {
 
-        assertToken(tokeniser, StreamTokenizer.TT_WORD);
+        assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
         final String paramName = tokeniser.sval;
 
@@ -276,7 +276,7 @@ public class CalendarParserImpl implements CalendarParser {
             log.debug("Parameter [" + paramName + "]");
         }
 
-        assertToken(tokeniser, '=');
+        assertToken(tokeniser, in, '=');
 
         final StringBuffer paramValue = new StringBuffer();
 
@@ -294,7 +294,7 @@ public class CalendarParserImpl implements CalendarParser {
             handler.parameter(paramName, paramValue.toString());
         }
         catch (ClassCastException cce) {
-            throw new ParserException("Error parsing parameter", tokeniser.lineno(), cce);
+            throw new ParserException("Error parsing parameter", getLineNumber(tokeniser, in), cce);
         }
     }
 
@@ -306,12 +306,12 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParserException
      */
-    private void parseComponentList(final StreamTokenizer tokeniser,
+    private void parseComponentList(final StreamTokenizer tokeniser, Reader in,
             final ContentHandler handler) throws IOException, ParseException,
             URISyntaxException, ParserException {
 
         while (Component.BEGIN.equals(tokeniser.sval)) {
-            parseComponent(tokeniser, handler);
+            parseComponent(tokeniser, in, handler);
             absorbWhitespace(tokeniser);
             // assertToken(tokeniser, StreamTokenizer.TT_WORD);
         }
@@ -325,21 +325,21 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParserException
      */
-    private void parseComponent(final StreamTokenizer tokeniser,
+    private void parseComponent(final StreamTokenizer tokeniser, Reader in,
             final ContentHandler handler) throws IOException, ParseException,
             URISyntaxException, ParserException {
 
-        assertToken(tokeniser, ':');
+        assertToken(tokeniser, in, ':');
 
-        assertToken(tokeniser, StreamTokenizer.TT_WORD);
+        assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
         final String name = tokeniser.sval;
 
         handler.startComponent(name);
 
-        assertToken(tokeniser, StreamTokenizer.TT_EOL);
+        assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
 
-        parsePropertyList(tokeniser, handler);
+        parsePropertyList(tokeniser, in, handler);
 
         /*
          * // a special case for VTIMEZONE component which contains
@@ -355,11 +355,11 @@ public class CalendarParserImpl implements CalendarParser {
          * }
          */
 
-        assertToken(tokeniser, ':');
+        assertToken(tokeniser, in, ':');
 
-        assertToken(tokeniser, name);
+        assertToken(tokeniser, in, name);
 
-        assertToken(tokeniser, StreamTokenizer.TT_EOL);
+        assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
 
         handler.endComponent(name);
     }
@@ -371,13 +371,13 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws IOException when unable to read from stream
      * @throws ParserException when next token in the stream does not match the expected token
      */
-    private void assertToken(final StreamTokenizer tokeniser, final int token)
+    private void assertToken(final StreamTokenizer tokeniser, Reader in, final int token)
             throws IOException, ParserException {
 
         if (tokeniser.nextToken() != token) {
             throw new ParserException(
                     "Expected [" + token + "], read [" + tokeniser.ttype + "]",
-                    tokeniser.lineno());
+                    getLineNumber(tokeniser, in));
         }
 
         if (log.isDebugEnabled()) {
@@ -392,9 +392,9 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws IOException
      * @throws ParserException
      */
-    private void assertToken(final StreamTokenizer tokeniser, final String token)
+    private void assertToken(final StreamTokenizer tokeniser, Reader in, final String token)
             throws IOException, ParserException {
-        assertToken(tokeniser, token, false);
+        assertToken(tokeniser, in, token, false);
     }
 
     /**
@@ -404,24 +404,24 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws IOException when unable to read from stream
      * @throws ParserException when next token in the stream does not match the expected token
      */
-    private void assertToken(final StreamTokenizer tokeniser,
+    private void assertToken(final StreamTokenizer tokeniser, Reader in,
             final String token, final boolean ignoreCase) throws IOException,
             ParserException {
 
         // ensure next token is a word token..
-        assertToken(tokeniser, StreamTokenizer.TT_WORD);
+        assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
         if (ignoreCase) {
             if (!token.equalsIgnoreCase(tokeniser.sval)) {
                 throw new ParserException(
                         "Expected [" + token + "], read [" + tokeniser.sval + "]",
-                        tokeniser.lineno());
+                        getLineNumber(tokeniser, in));
             }
         }
         else if (!token.equals(tokeniser.sval)) {
             throw new ParserException(
                     "Expected [" + token + "], read [" + tokeniser.sval + "]",
-                    tokeniser.lineno());
+                    getLineNumber(tokeniser, in));
         }
 
         if (log.isDebugEnabled()) {
@@ -441,9 +441,26 @@ public class CalendarParserImpl implements CalendarParser {
                 log.trace("Absorbing extra whitespace..");
             }
         }
-        
         if (log.isTraceEnabled()) {
             log.trace("Aborting: absorbing extra whitespace complete");
         }
+    }
+    
+    /**
+     * @param tokeniser
+     * @param in
+     * @return
+     */
+    private int getLineNumber(StreamTokenizer tokeniser, Reader in) {
+        int line = tokeniser.lineno();
+        if (tokeniser.ttype == StreamTokenizer.TT_EOL) {
+            line -= 1;
+        }
+        if (in instanceof UnfoldingReader) {
+            // need to take unfolded lines into account
+            final int unfolded = ((UnfoldingReader) in).getLinesUnfolded();
+            line += unfolded;
+        }
+        return line;
     }
 }
