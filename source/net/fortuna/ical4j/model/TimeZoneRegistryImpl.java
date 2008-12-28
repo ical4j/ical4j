@@ -36,10 +36,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,6 +60,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private static final String DEFAULT_RESOURCE_PREFIX = "/zoneinfo/";
 
+    private static final Pattern TZ_ID_SUFFIX = Pattern.compile("(?<=/)[^/]*/[^/]*$");
+    
     private Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
 
     private static final Map DEFAULT_TIMEZONES = new HashMap();
@@ -132,6 +137,13 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                                 // ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
                                 timezone = new TimeZone(vTimeZone);
                                 DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
+                            }
+                            else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                                // strip global part of id and match on default tz..
+                                Matcher matcher = TZ_ID_SUFFIX.matcher(id);
+                                if (matcher.find()) {
+                                    return getTimeZone(matcher.group());
+                                }
                             }
                         }
                         catch (Exception e) {
