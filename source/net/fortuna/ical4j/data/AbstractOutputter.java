@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2008, Ben Fortuna
  * All rights reserved.
  *
@@ -31,73 +31,60 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+import java.nio.charset.Charset;
 
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
- * $Id$ [Apr 5, 2004]
+ * $Id$
  *
- * Writes an iCalendar model to an output stream.
- * @author Ben Fortuna
+ * Created on 29/12/2008
+ * 
+ * @author Ben
+ *
  */
-public class CalendarOutputter extends AbstractOutputter {
+public abstract class AbstractOutputter {
+
+    protected static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
+
+    private boolean validating;
+
+    protected int foldLength;
 
     /**
      * Default constructor.
      */
-    public CalendarOutputter() {
-        super();
+    public AbstractOutputter() {
+        this(true);
     }
 
     /**
      * @param validating indicates whether to validate calendar when outputting to stream
      */
-    public CalendarOutputter(final boolean validating) {
-        super(validating);
+    public AbstractOutputter(final boolean validating) {
+        this(validating, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY) ? FoldingWriter.MAX_FOLD_LENGTH : FoldingWriter.REDUCED_FOLD_LENGTH);
     }
 
     /**
      * @param validating indicates whether to validate calendar when outputting to stream
      * @param foldLength maximum number of characters before a line is folded
      */
-    public CalendarOutputter(final boolean validating, final int foldLength) {
-        super(validating, foldLength);
+    public AbstractOutputter(final boolean validating, final int foldLength) {
+        this.validating = validating;
+        this.foldLength = foldLength;
     }
 
     /**
-     * Outputs an iCalender string to the specified output stream.
-     * @param calendar calendar to write to ouput stream
-     * @param out an output stream
-     * @throws IOException thrown when unable to write to output stream
+     * @return Returns the validating.
      */
-    public final void output(final Calendar calendar, final OutputStream out)
-            throws IOException, ValidationException {
-        output(calendar, new OutputStreamWriter(out, DEFAULT_CHARSET));
+    public final boolean isValidating() {
+        return validating;
     }
 
     /**
-     * Outputs an iCalender string to the specified writer.
-     * @param calendar calendar to write to writer
-     * @param out a writer
-     * @throws IOException thrown when unable to write to writer
+     * @param validating The validating to set.
      */
-    public final void output(final Calendar calendar, final Writer out)
-            throws IOException, ValidationException {
-        if (isValidating()) {
-            calendar.validate();
-        }
-
-        final FoldingWriter writer = new FoldingWriter(out, foldLength);
-        try {
-            writer.write(calendar.toString());
-        }
-        finally {
-            writer.close();
-        }
+    public final void setValidating(final boolean validating) {
+        this.validating = validating;
     }
 }
