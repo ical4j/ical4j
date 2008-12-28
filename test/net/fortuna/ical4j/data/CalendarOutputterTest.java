@@ -118,7 +118,7 @@ public class CalendarOutputterTest extends TestCase {
                 log.debug(out.toString());
             }
 
-            BufferedReader bin = new BufferedReader(new UnfoldingReader(new FileReader(filename)));
+            BufferedReader bin = new BufferedReader(new UnfoldingReader(new FileReader(filename), 1024), 1024);
             StringWriter rout = new StringWriter();
             BufferedWriter bout = new BufferedWriter(rout);
 
