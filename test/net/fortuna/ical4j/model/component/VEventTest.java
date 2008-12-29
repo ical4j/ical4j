@@ -42,6 +42,7 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
@@ -681,6 +682,9 @@ public class VEventTest extends ComponentTest {
         // ensure event is valid..
         monthlyWeekdayEvents.validate();
 
+        // enable relaxed parsing to allow copying of invalid events..
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
+        
         TestSuite suite = new TestSuite();
         
         //testCalculateRecurrenceSet..
@@ -747,6 +751,9 @@ public class VEventTest extends ComponentTest {
 //        end = (DtEnd) event.getProperty(Property.DTEND);
 //        end.getParameters().replace(Value.DATE);
 //        suite.addTest(new VEventTest("testValidationException", event));
+        
+        // disable relaxed parsing after copying invalid events..
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
         
         suite.addTest(new VEventTest("testChristmas"));
         suite.addTest(new VEventTest("testMelbourneCup"));

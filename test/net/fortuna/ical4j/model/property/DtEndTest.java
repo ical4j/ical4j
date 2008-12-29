@@ -40,6 +40,7 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -70,6 +71,10 @@ public class DtEndTest extends PropertyTest {
      * @throws IOException
      */
     public static TestSuite suite() throws IOException, URISyntaxException, ParseException {
+
+        // enable relaxed parsing to allow copying of invalid properties..
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
+        
         TestSuite suite = new TestSuite();
         DtEnd dtEnd = new DtEnd(new DateTime());
         dtEnd.getParameters().replace(Value.DATE_TIME);
@@ -102,6 +107,9 @@ public class DtEndTest extends PropertyTest {
         dtEnd.getParameters().remove(Value.DATE);
         log.info(dtEnd);
         suite.addTest(new DtEndTest("testValidationException", dtEnd));
+        
+        // disable relaxed parsing after copying invalid properties..
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
 
         return suite;
     }

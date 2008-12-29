@@ -420,8 +420,8 @@ public class RecurTest extends TestCase {
     public final void testRecurGetDates() throws ParseException {
         Recur recur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=SA");
     
-        Date start = new Date("20050101Z");
-        Date end = new Date("20060101Z");
+        Date start = new Date("20050101");
+        Date end = new Date("20060101");
     
         DateList list = recur.getDates(start, end, null);
         for (int i = 0; i < list.size(); i++) {
