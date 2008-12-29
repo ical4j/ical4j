@@ -31,9 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
@@ -41,6 +38,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$ [06-Apr-2004]
@@ -207,6 +207,18 @@ public class CalendarDateFormatFactory {
         }
 
         public Date parse(String source, ParsePosition pos) {
+            // if lenient ignore superfluous input.. 
+            if (patternEndsWithZ) {
+                if (source.length() > DATETIME_UTC_PATTERN.length() && !isLenient()) {
+                    pos.setErrorIndex(DATETIME_UTC_PATTERN.length());
+                    return null;
+                }
+            }
+            else if (source.length() > DATETIME_PATTERN.length() && !isLenient()) {
+                pos.setErrorIndex(DATETIME_PATTERN.length());
+                return null;
+            }
+            
             try {
                 if (source.charAt(8) != 'T') {
                     pos.setErrorIndex(8);
@@ -258,6 +270,12 @@ public class CalendarDateFormatFactory {
         }
 
         public Date parse(String source, ParsePosition pos) {
+            // if lenient ignore superfluous input.. 
+            if (source.length() > DATE_PATTERN.length() && !isLenient()) {
+                pos.setErrorIndex(DATE_PATTERN.length());
+                return null;
+            }
+            
             try {
                 int year = Integer.parseInt(source.substring(0, 4));
                 int month = Integer.parseInt(source.substring(4, 6)) - 1;
@@ -305,6 +323,18 @@ public class CalendarDateFormatFactory {
         }
 
         public Date parse(String source, ParsePosition pos) {
+            // if lenient ignore superfluous input..
+            if (patternEndsWithZ) {
+                if (source.length() > TIME_UTC_PATTERN.length() && !isLenient()) {
+                    pos.setErrorIndex(TIME_UTC_PATTERN.length());
+                    return null;
+                }
+            }
+            else if (source.length() > TIME_PATTERN.length() && !isLenient()) {
+                pos.setErrorIndex(TIME_PATTERN.length());
+                return null;
+            }
+            
             try {
                 if (patternEndsWithZ && source.charAt(6) != 'Z') {
                     pos.setErrorIndex(6);

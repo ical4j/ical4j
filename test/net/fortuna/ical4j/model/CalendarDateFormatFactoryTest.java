@@ -148,7 +148,8 @@ public class CalendarDateFormatFactoryTest extends TestCase {
             try {
                 // sanity check, make sure simple date formatter fails too
                 sdf.parse(values[i]);
-                fail("bad test -- expected simple date formatter to fail for value: " + values[i]);
+                // CalendarDateFormats are a bit more strict than SimpleDateFormat..
+//                fail("bad test -- expected simple date formatter to fail for value: " + values[i]);
             } catch (Exception e) {
                 sdfException = e;
             }
@@ -158,7 +159,9 @@ public class CalendarDateFormatFactoryTest extends TestCase {
                 fail("expected a parse exception for value: " + values[i]);
 
             } catch (Exception e) {
-                assertEquals(sdfException.getClass().getName(), e.getClass().getName());
+                if (sdfException != null) {
+                    assertEquals(sdfException.getClass().getName(), e.getClass().getName());
+                }
             }
 
             try {
@@ -166,7 +169,9 @@ public class CalendarDateFormatFactoryTest extends TestCase {
                 fail("expected a parse exception for value: " + values[i]);
 
             } catch (Exception e) {
-                assertEquals(sdfException.getClass().getName(), e.getClass().getName());
+                if (sdfException != null) {
+                    assertEquals(sdfException.getClass().getName(), e.getClass().getName());
+                }
             }
 
         }
@@ -182,16 +187,15 @@ public class CalendarDateFormatFactoryTest extends TestCase {
         java.util.TimeZone[] tz = {TimeZone.getDefault(), TimeZone.getTimeZone("GMT"), TimeZone.getTimeZone("US/Eastern"), TimeZone.getTimeZone("US/Pacific")};
 
         suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "yyyyMMdd'T'HHmmss", STRICT, new String[] {"1", "20081201T231370", "20081601T000000"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss", LENIENT, tz, new String[] {"20081201T231370", "20081601T000000"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss", STRICT, tz, new String[] {"00010215T023456", "20081201T000000", "20081201T000000xyz"}));
+        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss", LENIENT, tz, new String[] {"20081201T231370", "20081601T000000", "20081201T000000xyz"}));
+        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss", STRICT, tz, new String[] {"00010215T023456", "20081201T000000"}));
 
         suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "yyyyMMdd'T'HHmmss'Z'", STRICT, new String[] {"1", "20081201T000000", "20083101T000000Z"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss'Z'", LENIENT, tz, new String[] {"20083101T000000Z"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss'Z'", STRICT, tz, new String[] {"20081201T000000Z", "20081201T000000Zxyz"}));
+        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss'Z'", LENIENT, tz, new String[] {"20083101T000000Z", "20081201T000000Zxyz"}));
+        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd'T'HHmmss'Z'", STRICT, tz, new String[] {"20081201T000000Z"}));
 
         suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "yyyyMMdd", STRICT, new String[] {"1", "20081301"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd", LENIENT, tz, new String[] {"20081301"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd", STRICT, tz, new String[] {"20081201xyz"}));
+        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "yyyyMMdd", LENIENT, tz, new String[] {"20081301", "20081201xyz"}));
 
         suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "HHmmss", STRICT, new String[] {"1", "260000"}));
         suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "HHmmss", LENIENT, tz, new String[] {"260000"}));
@@ -199,7 +203,9 @@ public class CalendarDateFormatFactoryTest extends TestCase {
 
         suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "HHmmss'Z'", STRICT, new String[] {"1", "123456", "261234Z"}));
         suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "HHmmss'Z'", LENIENT, tz, new String[] {"261234Z"}));
-        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "HHmmss'Z'", STRICT, tz, new String[] {"021234Z", "233456Zzxy"}));
+        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "HHmmss'Z'", STRICT, tz, new String[] {"021234Z"}));
+        suite.addTest(new CalendarDateFormatFactoryTest("testParseFailure", "HHmmss'Z'", STRICT, tz, new String[] {"233456Zzxy"}));
+        suite.addTest(new CalendarDateFormatFactoryTest("testParseSuccess", "HHmmss'Z'", LENIENT, tz, new String[] {"233456Zzxy"}));
     	return suite;
     }
 }
