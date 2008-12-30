@@ -92,11 +92,11 @@ public class DtStartTest extends TestCase {
         DtStart dtStart = new DtStart(timezone);
 
         dtStart.setValue(new DateTime().toString());
-        assertEquals(timezone, dtStart.timezone);
+        assertEquals(timezone, dtStart.getTimeZone());
 
         // initialising with DATE value should reset timezone..
         dtStart.setDate(new Date());
-        assertNull(dtStart.timezone);
+        assertNull(dtStart.getTimeZone());
     }
 
     /**
@@ -106,7 +106,7 @@ public class DtStartTest extends TestCase {
         String value = new DateTime().toString();
         DtStart dtStart = new DtStart(value, timezone);
 
-        assertEquals(timezone, dtStart.timezone);
+        assertEquals(timezone, dtStart.getTimeZone());
         assertEquals(value, dtStart.getValue());
     }
     

@@ -70,7 +70,7 @@ public abstract class DateProperty extends Property {
     
     private Date date;
 
-    protected TimeZone timezone;
+    private TimeZone timeZone;
 
     /**
      * @param aName
@@ -90,7 +90,7 @@ public abstract class DateProperty extends Property {
     /**
      * Creates a new instance of the named property with an initial timezone.
      * @param name property name
-     * @param timezone initial timezone
+     * @param timeZone initial timezone
      */
     public DateProperty(final String name, TimeZone timezone) {
         super(name);
@@ -142,7 +142,7 @@ public abstract class DateProperty extends Property {
             this.date = new Date(value);
         }
         else {
-            this.date = new DateTime(value, timezone);
+            this.date = new DateTime(value, timeZone);
         }
     }
 
@@ -156,12 +156,19 @@ public abstract class DateProperty extends Property {
 
     /**
      * Publically available method to update the current timezone.
-     * @param timezone
+     * @param timeZone
      */
     public void setTimeZone(final TimeZone timezone) {
         updateTimeZone(timezone);
     }
     
+    /**
+     * @return the timezone
+     */
+    public final TimeZone getTimeZone() {
+        return timeZone;
+    }
+
     /**
      * Updates the timezone associated with the property's value. If the specified timezone is equivalent to UTC any
      * existing TZID parameters will be removed. Note that this method is only applicable where the current date is an
@@ -170,7 +177,7 @@ public abstract class DateProperty extends Property {
      * @param vTimeZone
      */
     private void updateTimeZone(final TimeZone timezone) {
-        this.timezone = timezone;
+        this.timeZone = timezone;
         if (timezone != null) {
             if (getDate() != null && !(getDate() instanceof DateTime)) {
                 throw new UnsupportedOperationException(
@@ -282,7 +289,7 @@ public abstract class DateProperty extends Property {
     public Property copy() throws IOException, URISyntaxException, ParseException {
         Property copy = super.copy();
         
-       ((DateProperty) copy).timezone = timezone;
+       ((DateProperty) copy).timeZone = timeZone;
        ((DateProperty) copy).setValue(getValue());
        
         return copy;

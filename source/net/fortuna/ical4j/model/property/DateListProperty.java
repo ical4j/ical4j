@@ -59,7 +59,7 @@ public abstract class DateListProperty extends Property {
 
     private DateList dates;
 
-    private TimeZone timezone;
+    private TimeZone timeZone;
 
     /**
      * @param name
@@ -109,7 +109,7 @@ public abstract class DateListProperty extends Property {
      */
     public void setValue(final String aValue) throws ParseException {
         dates = new DateList(aValue, (Value) getParameter(Parameter.VALUE),
-                timezone);
+                timeZone);
     }
 
     /*
@@ -122,14 +122,14 @@ public abstract class DateListProperty extends Property {
 
     /**
      * Sets the timezone associated with this property.
-     * @param timezone a timezone to associate with this property
+     * @param timeZone a timezone to associate with this property
      */
     public void setTimeZone(final TimeZone timezone) {
         if (dates == null) {
             throw new UnsupportedOperationException(
                     "TimeZone is not applicable to current value");
         }
-        this.timezone = timezone;
+        this.timeZone = timezone;
         if (timezone != null) {
             if (!Value.DATE_TIME.equals(getDates().getType())) {
                 throw new UnsupportedOperationException(
@@ -144,6 +144,13 @@ public abstract class DateListProperty extends Property {
             // use setUtc() to reset timezone..
             setUtc(false);
         }
+    }
+
+    /**
+     * @return the timezone
+     */
+    public final TimeZone getTimeZone() {
+        return timeZone;
     }
 
     /**

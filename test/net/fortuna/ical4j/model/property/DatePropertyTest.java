@@ -78,11 +78,11 @@ public class DatePropertyTest extends PropertyTest {
             ParseException {
         Property copy = property.copy();
         assertEquals(property, copy);
-        if (property.timezone != null) {
-            assertEquals(property.timezone, ((DateProperty) copy).timezone);
+        if (property.getTimeZone() != null) {
+            assertEquals(property.getTimeZone(), ((DateProperty) copy).getTimeZone());
         }
         else {
-            assertNull(((DateProperty) copy).timezone);
+            assertNull(((DateProperty) copy).getTimeZone());
         }
     }
 
