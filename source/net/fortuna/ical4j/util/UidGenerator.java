@@ -78,8 +78,10 @@ public class UidGenerator {
         b.append(uniqueTimestamp());
         b.append('-');
         b.append(pid);
-        b.append('@');
-        b.append(hostAddress.getHostName());
+        if (hostAddress != null) {
+            b.append('@');
+            b.append(hostAddress.getHostName());
+        }
         return new Uid(b.toString());
     }
 
