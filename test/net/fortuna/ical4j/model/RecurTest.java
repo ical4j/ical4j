@@ -38,6 +38,7 @@ import java.util.Iterator;
 import java.util.TimeZone;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -59,6 +60,135 @@ public class RecurTest extends TestCase {
 
     private TimeZone originalDefault;
     
+    private Recur recur;
+    
+    private Date periodStart;
+    
+    private Date periodEnd;
+    
+    private Value value;
+    
+    private int expectedCount;
+    
+    private Date seed;
+    
+    private Date expectedDate;
+    
+    private int calendarField;
+    
+    private int expectedCalendarValue;
+    
+    private net.fortuna.ical4j.model.TimeZone expectedTimeZone;
+    
+    private String recurrenceString;
+    
+    private String expectedFrequency;
+    
+    private int expectedInterval;
+    
+    private WeekDayList expectedDayList;
+    
+    /**
+     * @param testMethod
+     * @param recur
+     * @param periodStart
+     * @param periodEnd
+     * @param value
+     */
+    public RecurTest(String testMethod, Recur recur, Date seed, Date periodStart, Date periodEnd, Value value) {
+        super(testMethod);
+        this.recur = recur;
+        this.seed = seed;
+        this.periodStart = periodStart;
+        this.periodEnd = periodEnd;
+        this.value = value;
+    }
+    
+    /**
+     * @param recur
+     * @param periodStart
+     * @param periodEnd
+     * @param value
+     * @param expectedCount
+     */
+    public RecurTest(Recur recur, Date periodStart, Date periodEnd, Value value, int expectedCount) {
+        this(recur, null, periodStart, periodEnd, value, expectedCount);
+    }
+    
+    /**
+     * @param recur
+     * @param seed
+     * @param periodStart
+     * @param periodEnd
+     * @param value
+     * @param expectedCount
+     */
+    public RecurTest(Recur recur, Date seed, Date periodStart, Date periodEnd, Value value, int expectedCount) {
+        this("testGetDatesCount", recur, seed, periodStart, periodEnd, value);
+        this.expectedCount = expectedCount;
+    }
+    
+    /**
+     * @param recur
+     * @param seed
+     * @param periodStart
+     * @param expectedDate
+     */
+    public RecurTest(Recur recur, Date seed, Date periodStart, Date expectedDate) {
+        this("testGetNextDate", recur, seed, periodStart, null, null);
+        this.expectedDate = expectedDate;
+    }
+    
+    /**
+     * @param recur
+     * @param periodStart
+     * @param periodEnd
+     * @param value
+     * @param calendarField
+     * @param expectedCalendarValue
+     */
+    public RecurTest(Recur recur, Date periodStart, Date periodEnd, Value value,
+            int calendarField, int expectedCalendarValue) {
+        this("testGetDatesCalendarField", recur, null, periodStart, periodEnd, value);
+        this.calendarField = calendarField;
+        this.expectedCalendarValue = expectedCalendarValue;
+    }
+
+    /**
+     * @param recur
+     * @param periodStart
+     * @param periodEnd
+     * @param value
+     * @param expectedTimeZone
+     */
+    public RecurTest(Recur recur, Date periodStart, Date periodEnd, Value value,
+            net.fortuna.ical4j.model.TimeZone expectedTimeZone) {
+        this("testGetDatesTimeZone", recur, null, periodStart, periodEnd, value);
+        this.expectedTimeZone = expectedTimeZone;
+    }
+    
+    /**
+     * @param recurrenceString
+     */
+    public RecurTest(String recurrenceString) {
+        super("testInvalidRecurrenceString");
+        this.recurrenceString = recurrenceString;
+    }
+
+    /**
+     * @param recurrenceString
+     * @param expectedFrequency
+     * @param expectedInterval
+     * @param expectedDayList
+     */
+    public RecurTest(String recurrenceString, String expectedFrequency, int expectedInterval, WeekDayList expectedDayList) {
+        super("testRecurrenceString");
+        this.recurrenceString = recurrenceString;
+        this.expectedFrequency = expectedFrequency;
+        this.expectedInterval = expectedInterval;
+        this.expectedDayList = expectedDayList;
+    }
+    
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
@@ -76,114 +206,94 @@ public class RecurTest extends TestCase {
     /**
      * 
      */
-    public void testGetDates() {
-        Recur recur = new Recur(Recur.DAILY, 10);
-        recur.setInterval(2);
-        log.debug(recur);
-        
-        Calendar cal = Calendar.getInstance();
-        Date start = new Date(cal.getTime().getTime());
-        cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
-        Date end = new Date(cal.getTime().getTime());
-        log.debug(recur.getDates(start, end, Value.DATE_TIME));        
-        
-        recur.setUntil(new Date(cal.getTime().getTime()));
-        log.info(recur);
-        log.debug(recur.getDates(start, end, Value.DATE_TIME));
-        
-        recur.setFrequency(Recur.WEEKLY);
-        recur.getDayList().add(WeekDay.MO);
-        log.debug(recur);
-
-        DateList dates = recur.getDates(start, end, Value.DATE);
-        log.debug(dates);
-        
-        assertTrue("Date list exceeds COUNT limit", dates.size() <= 10);
+    public void testGetDatesCount() {
+        DateList dates = null;
+        if (seed != null) {
+            dates = recur.getDates(seed, periodStart, periodEnd, value);
+        }
+        else {
+            dates = recur.getDates(periodStart, periodEnd, value);
+        }
+//        assertEquals(expectedCount, dates.size());
+        assertTrue("Date list exceeds expected count", dates.size() <= expectedCount);
     }
     
     /**
      * 
      */
-    public void testGetNextDate() throws Exception {
-       
-        // test Date
-        Recur recur = new Recur(Recur.DAILY, 3);
-        
-        Date seed = new Date("20080401"); 
-        Date firstDate = new Date("20080402");
-        Date secondDate = new Date("20080403");
-        
-        Date nextDate = recur.getNextDate(seed, seed);
-        assertTrue("nextDate doesnt match firstDate", firstDate.equals(nextDate));
-        
-        nextDate = recur.getNextDate(seed, nextDate);
-        assertTrue("nextDate doesnt match secondDate", secondDate.equals(nextDate));
-        
-        nextDate = recur.getNextDate(seed, nextDate);
-        assertNull("nextDate is not null", nextDate);
-        
-        // test DateTime
-        recur = new Recur(Recur.WEEKLY, new DateTime("20080421T063000"));
-       
-        seed = new DateTime("20080407T063000");
-        firstDate = new DateTime("20080414T063000");
-        secondDate = new DateTime("20080421T063000");
-        
-        nextDate = recur.getNextDate(seed, seed);
-        assertTrue("nextDate doesnt match firstDate", firstDate.equals(nextDate));
-        
-        nextDate = recur.getNextDate(seed, nextDate);
-        assertTrue("nextDate doesnt match secondDate", secondDate.equals(nextDate));
-        
-        nextDate = recur.getNextDate(seed, nextDate);
-        assertNull("nextDate is not null", nextDate);
+    public void testGetNextDate() {
+        assertEquals(expectedDate, recur.getNextDate(seed, periodStart));
     }
     
     /**
-     * Test BYDAY rules.
+     * 
      */
-    public void testGetDatesByDay() {
-        Recur recur = new Recur(Recur.DAILY, 10);
-        recur.setInterval(1);
-        recur.getDayList().add(WeekDay.MO);
-        recur.getDayList().add(WeekDay.TU);
-        recur.getDayList().add(WeekDay.WE);
-        recur.getDayList().add(WeekDay.TH);
-        recur.getDayList().add(WeekDay.FR);
-        log.debug(recur);
-        
+    public void testGetDatesCalendarField() {
+        DateList dates = recur.getDates(periodStart, periodEnd, value);
         Calendar cal = Calendar.getInstance();
-        Date start = new Date(cal.getTime().getTime());
-        cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
-        Date end = new Date(cal.getTime().getTime());
-        
-        DateList dates = recur.getDates(start, end, Value.DATE_TIME);
-        log.debug(dates);
-        
-        assertTrue("Date list exceeds COUNT limit", dates.size() <= 10);
-    }
-    
-    /**
-     * Test BYDAY recurrence rules..
-     */
-    public void testGetDatesByDay2() throws ParseException {
-        String rrule = "FREQ=MONTHLY;WKST=SU;INTERVAL=2;BYDAY=5TU";
-        Recur recur = new Recur(rrule);
-
-        Calendar cal = Calendar.getInstance();
-        cal.clear(Calendar.SECOND);
-        java.util.Date start = cal.getTime();
-        cal.add(Calendar.YEAR, 2);
-        java.util.Date end = cal.getTime();
-        
-        DateList recurrences = recur.getDates(new Date(start), new Date(end), Value.DATE);
-        for (Iterator i = recurrences.iterator(); i.hasNext();) {
+        for (Iterator i = dates.iterator(); i.hasNext();) {
             Date recurrence = (Date) i.next();
             cal.setTime(recurrence);
-            assertEquals(5, cal.get(Calendar.WEEK_OF_MONTH));
+            assertEquals(expectedCalendarValue, cal.get(calendarField));
         }
     }
 
+    /**
+     * 
+     */
+    public void testGetDatesOrdering() {
+        DateList dl1 = recur.getDates(periodStart, periodEnd, value); 
+        Date prev = null;
+        Date event = null;
+        for(int i=0; i<dl1.size(); i++) {
+            prev = event;
+            event = (Date) dl1.get(i); 
+            log.debug("Occurence "+i+" at "+event);
+            assertTrue(prev == null || !prev.after(event));
+        }
+    }
+    
+    /**
+     * 
+     */
+    public void testGetDatesNotEmpty() {
+        assertFalse(recur.getDates(periodStart, periodEnd, value).isEmpty());
+    }
+    
+    /**
+     * 
+     */
+    public void testGetDatesTimeZone() {
+        DateList dates = recur.getDates(periodStart, periodEnd, value);
+        for (Iterator i = dates.iterator(); i.hasNext();) {
+            DateTime recurrence = (DateTime) i.next();
+            assertEquals(expectedTimeZone, recurrence.getTimeZone());
+        }
+    }
+    
+    /**
+     * @throws ParseException
+     */
+    public void testInvalidRecurrenceString() throws ParseException {
+        try {
+            new Recur(recurrenceString);
+            fail("IllegalArgumentException not thrown!");
+        }
+        catch (IllegalArgumentException e) {
+            // expected
+        }
+    }
+    
+    /**
+     * @throws ParseException
+     */
+    public void testRecurrenceString() throws ParseException {
+        Recur recur = new Recur(recurrenceString);
+        assertEquals(expectedFrequency, recur.getFrequency());
+        assertEquals(expectedInterval, recur.getInterval());
+        assertEquals(expectedDayList, recur.getDayList());
+    }
+    
     /**
      * 
      */
@@ -291,48 +401,6 @@ public class RecurTest extends TestCase {
     */
     
     /**
-     * This test creates a rule outside of the specified boundaries to
-     * confirm that the returned date list is empty.
-     * <pre>
-     *  Weekly on Tuesday and Thursday for 5 weeks: 
-     *
-     *  DTSTART;TZID=US-Eastern:19970902T090000 
-     *  RRULE:FREQ=WEEKLY;UNTIL=19971007T000000Z;WKST=SU;BYDAY=TU,TH 
-     *  or 
-     *
-     *  RRULE:FREQ=WEEKLY;COUNT=10;WKST=SU;BYDAY=TU,TH 
-     *
-     *  ==> (1997 9:00 AM EDT)September 2,4,9,11,16,18,23,25,30;October 2 
-     * </pre>
-     */
-    public final void testBoundaryProcessing() {
-        Recur recur = new Recur(Recur.WEEKLY, 10);
-        recur.getDayList().add(WeekDay.TU);
-        recur.getDayList().add(WeekDay.TH);
-        log.debug(recur);
-        
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 1997);
-        cal.set(Calendar.MONTH, Calendar.SEPTEMBER);
-        cal.set(Calendar.DAY_OF_MONTH, 2);
-        cal.set(Calendar.HOUR_OF_DAY, 9);
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.SECOND);
-        
-        Date seed = new DateTime(cal.getTime());
-
-        cal = Calendar.getInstance();
-        Date start = new DateTime(cal.getTime());
-        cal.add(Calendar.YEAR, 2);
-        Date end = new DateTime(cal.getTime());
-        
-        DateList dates = recur.getDates(seed, start, end, Value.DATE_TIME);
-        log.debug(dates);
-        
-        assertTrue(dates.isEmpty());
-    }
-    
-    /**
      * This test confirms SETPOS rules are working correctly.
      * <pre>
      *      The BYSETPOS rule part specifies a COMMA character (US-ASCII decimal
@@ -414,25 +482,6 @@ public class RecurTest extends TestCase {
         } 
     }
     
-    /**
-     * @throws ParseException
-     */
-    public final void testRecurGetDates() throws ParseException {
-        Recur recur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=SA");
-    
-        Date start = new Date("20050101");
-        Date end = new Date("20060101");
-    
-        DateList list = recur.getDates(start, end, null);
-        for (int i = 0; i < list.size(); i++) {
-            Date date = (Date) list.get(i);
-//            Calendar calendar = Dates.getCalendarInstance(date);
-            Calendar calendar = Calendar.getInstance(); //TimeZone.getTimeZone("Etc/UTC"));
-            calendar.setTime(date);
-            assertEquals(Calendar.SATURDAY, calendar.get(Calendar.DAY_OF_WEEK));
-        }
-    }
-    
     public void testGetDatesRalph() throws ParseException {
         Recur recur = new
         Recur("FREQ=WEEKLY;WKST=MO;INTERVAL=1;UNTIL=20051003T000000Z;BYDAY=MO,WE");
@@ -456,199 +505,6 @@ public class RecurTest extends TestCase {
     }
     
     /**
-     * Test ordering of returned dates.
-     * @throws ParseException
-     */
-    public void testDateOrdering() throws ParseException {
-        String s1 = "FREQ=WEEKLY;COUNT=75;INTERVAL=2;BYDAY=SU,MO,TU;WKST=SU"; 
-        
-        Recur rec = new Recur(s1); 
-         
-        Date d1 = new Date(); 
-        Calendar cal = Calendar.getInstance(); 
-        cal.add(Calendar.YEAR,1); 
-        Date d2 = new Date(cal.getTimeInMillis()); 
-         
-        DateList dl1 = rec.getDates(d1,d2, Value.DATE_TIME); 
-        
-        Date prev = null;
-        Date event = null;
-        for(int i=0; i<dl1.size(); i++) {
-            prev = event;
-            event = (Date) dl1.get(i); 
-            log.debug("Occurence "+i+" at "+event);
-            assertTrue(prev == null || !prev.after(event));
-        }
-    }
-    
-    /**
-     * @throws ParseException
-     */
-    public void testMonthByDay() throws ParseException {
-        String rrule = "FREQ=MONTHLY;UNTIL=20061220T000000;INTERVAL=1;BYDAY=3WE";
-        Recur recur = new Recur(rrule);
-
-        Calendar cal = Calendar.getInstance();
-        cal.set(2006, 11, 1);
-        Date start = new Date(cal.getTime());
-        cal.add(Calendar.YEAR, 1);
-        
-        DateList recurrences = recur.getDates(start, new Date(cal.getTime()), Value.DATE);
-        assertTrue(!recurrences.isEmpty());
-    }
-    
-    /**
-     * @throws ParseException
-     */
-    public void testAlternateTimeZone() throws ParseException {
-        String rrule = "FREQ=WEEKLY;BYDAY=WE;BYHOUR=12;BYMINUTE=0";
-        Recur recur = new Recur(rrule);
-
-        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
-        TimeZoneRegistry tzreg = TimeZoneRegistryFactory.getInstance().createRegistry();
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
-        cal.clear(Calendar.SECOND);
-        java.util.Date start = cal.getTime();
-        DtStart dtStart = new DtStart(new DateTime(start));
-        dtStart.setTimeZone(tzreg.getTimeZone("America/Los_Angeles"));
-        cal.add(Calendar.MONTH, 2);
-        java.util.Date end = cal.getTime();
-        DtEnd dtEnd = new DtEnd(new DateTime(end));
-        
-        DateList recurrences = recur.getDates(dtStart.getDate(), dtEnd.getDate(), Value.DATE_TIME);
-        for (Iterator i = recurrences.iterator(); i.hasNext();) {
-            DateTime recurrence = (DateTime) i.next();
-            assertEquals(tzreg.getTimeZone("America/Los_Angeles"), recurrence.getTimeZone());
-        }
-    }
-    
-    /**
-     * @throws ParseException
-     */
-    public void testFriday13Recur() throws ParseException {
-        String rrule = "FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13";
-        Recur recur = new Recur(rrule);
-        
-        Calendar cal = Calendar.getInstance();
-        cal.clear(Calendar.SECOND);
-        cal.set(1997, 0, 1);
-        java.util.Date start = cal.getTime();
-        cal.set(2000, 0, 1);
-        java.util.Date end = cal.getTime();
-        
-        DateList recurrences = recur.getDates(new Date(start), new Date(end), Value.DATE);
-        for (Iterator i = recurrences.iterator(); i.hasNext();) {
-            Date recurrence = (Date) i.next();
-            cal.setTime(recurrence);
-            assertEquals(13, cal.get(Calendar.DAY_OF_MONTH));
-            assertEquals(Calendar.FRIDAY, cal.get(Calendar.DAY_OF_WEEK));
-        }
-    }
-    
-    public void testNoFrequency() throws ParseException {
-        String rrule = "BYDAY=MO,TU,WE,TH,FR";
-        try {
-            new Recur(rrule);
-            fail("IllegalArgumentException not thrown!");
-        } catch (IllegalArgumentException e) {
-            // expected
-        }
-    }
-    
-    public void testUnknownFrequency() throws ParseException {
-        String rrule = "FREQ=FORTNIGHTLY;BYDAY=MO,TU,WE,TH,FR";
-        try {
-            new Recur(rrule);
-            fail("IllegalArgumentException not thrown!");
-        } catch (IllegalArgumentException e) {
-            // expected
-        }       
-    }
-    
-    /**
-     * Unit test for recurrence every 4th february.
-     */
-    public void testRecur4Feb() throws ParseException {
-        String rrule = "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=4;BYDAY=MO,TU,WE,TH,FR,SA,SU";
-        Recur recur = new Recur(rrule);
-        
-        Calendar cal = Calendar.getInstance();
-        cal.clear(Calendar.SECOND);
-        cal.set(2006, 3, 10);
-        java.util.Date start = cal.getTime();
-        cal.set(2008, 1, 6);
-        java.util.Date end = cal.getTime();
-        
-        DateList recurrences = recur.getDates(new Date(start), new Date(end), Value.DATE);
-        assertEquals(2, recurrences.size());
-        for (Iterator i = recurrences.iterator(); i.hasNext();) {
-            Date recurrence = (Date) i.next();
-            cal.setTime(recurrence);
-            assertEquals(4, cal.get(Calendar.DAY_OF_MONTH));
-            assertEquals(1, cal.get(Calendar.MONTH));
-        }
-    }
-    
-    /**
-     * Unit test for recurrence generation where seed month-date specified is
-     * not valid for recurrence instances (e.g. feb 31).
-     */
-    public void testRecur4Feb2() throws ParseException {
-        String rrule = "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=4;BYDAY=MO,TU,WE,TH,FR,SA,SU";
-        Recur recur = new Recur(rrule);
-        
-        Calendar cal = Calendar.getInstance();
-        cal.clear(Calendar.SECOND);
-        cal.set(2006, 11, 31);
-        java.util.Date start = cal.getTime();
-        cal.set(2008, 11, 31);
-        java.util.Date end = cal.getTime();
-        
-        DateList recurrences = recur.getDates(new Date(start), new Date(end), Value.DATE);
-        assertEquals(2, recurrences.size());
-        for (Iterator i = recurrences.iterator(); i.hasNext();) {
-            Date recurrence = (Date) i.next();
-            cal.setTime(recurrence);
-            assertEquals(4, cal.get(Calendar.DAY_OF_MONTH));
-            assertEquals(1, cal.get(Calendar.MONTH));
-        }
-    }
-    
-    /**
-     * Unit test for recurrence representing each half-hour.
-     * @throws ParseException
-     */
-    public void testRecurHalfHour() throws ParseException {
-        String rrule = "FREQ=DAILY;BYHOUR=9,10,11,12,13,14,15,16;BYMINUTE=0,30";
-        Recur recur = new Recur(rrule);
-
-        Calendar cal = Calendar.getInstance();
-        cal.clear(Calendar.SECOND);
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.HOUR);
-        java.util.Date start = cal.getTime();
-        cal.add(Calendar.DAY_OF_YEAR, 1);
-        java.util.Date end = cal.getTime();
-
-        DateList recurrences = recur.getDates(new DateTime(start),
-                new DateTime(end), Value.DATE_TIME);
-        assertEquals(16, recurrences.size());
-    }
-    
-    /**
-     * Test creation of recur instances.
-     */
-    public void testCreate() throws ParseException {
-        Recur recur = new Recur("FREQ=MONTHLY;INTERVAL=2;BYDAY=3MO");
-        
-        assertEquals(Recur.MONTHLY, recur.getFrequency());
-        assertEquals(2, recur.getInterval());
-        
-        WeekDay day = new WeekDay(WeekDay.MO, 3);
-        assertEquals(day, recur.getDayList().get(0));
-    }
-    
-    /**
      * 
      */
     /*
@@ -669,13 +525,250 @@ public class RecurTest extends TestCase {
     }
     */
     
-    public void testCountMonthsWith31Days() throws ParseException {
-        Recur recur = new Recur("FREQ=MONTHLY;BYMONTHDAY=31");
-        Calendar start = Calendar.getInstance();
-        Calendar end = Calendar.getInstance();
-        end.add(Calendar.YEAR, 1);
-        DateList recurrences = recur.getDates(new DateTime(start.getTime()),
-                new DateTime(end.getTime()), Value.DATE);
-        assertEquals(7, recurrences.size());
+    /**
+     * @return
+     * @throws ParseException 
+     */
+    public static TestSuite suite() throws ParseException {
+        TestSuite suite = new TestSuite();
+        
+        // testGetDates..
+        Recur recur = new Recur(Recur.DAILY, 10);
+        recur.setInterval(2);
+        log.debug(recur);
+        
+        Calendar cal = Calendar.getInstance();
+        Date start = new Date(cal.getTime().getTime());
+        cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
+        Date end = new Date(cal.getTime().getTime());
+        log.debug(recur.getDates(start, end, Value.DATE_TIME));        
+        
+        recur.setUntil(new Date(cal.getTime().getTime()));
+        log.info(recur);
+        log.debug(recur.getDates(start, end, Value.DATE_TIME));
+        
+        recur.setFrequency(Recur.WEEKLY);
+        recur.getDayList().add(WeekDay.MO);
+        log.debug(recur);
+
+        DateList dates = recur.getDates(start, end, Value.DATE);
+        log.debug(dates);
+        
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, 10));
+        
+        // testGetNextDate..
+        recur = new Recur(Recur.DAILY, 3);
+        Date seed = new Date("20080401"); 
+        Date firstDate = new Date("20080402");
+        Date secondDate = new Date("20080403");
+        
+        suite.addTest(new RecurTest(recur, seed, seed, firstDate));
+        suite.addTest(new RecurTest(recur, seed, firstDate, secondDate));
+        suite.addTest(new RecurTest(recur, seed, secondDate, null));
+        
+        // test DateTime
+        recur = new Recur(Recur.WEEKLY, new DateTime("20080421T063000"));
+        seed = new DateTime("20080407T063000");
+        firstDate = new DateTime("20080414T063000");
+        secondDate = new DateTime("20080421T063000");
+        
+        suite.addTest(new RecurTest(recur, seed, seed, firstDate));
+        suite.addTest(new RecurTest(recur, seed, firstDate, secondDate));
+        suite.addTest(new RecurTest(recur, seed, secondDate, null));
+        
+        // Test BYDAY rules..
+        recur = new Recur(Recur.DAILY, 10);
+        recur.setInterval(1);
+        recur.getDayList().add(WeekDay.MO);
+        recur.getDayList().add(WeekDay.TU);
+        recur.getDayList().add(WeekDay.WE);
+        recur.getDayList().add(WeekDay.TH);
+        recur.getDayList().add(WeekDay.FR);
+        log.debug(recur);
+        
+        cal = Calendar.getInstance();
+        start = new Date(cal.getTime().getTime());
+        cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
+        end = new Date(cal.getTime().getTime());
+        
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, 10));
+
+        // Test BYDAY recurrence rules..
+        String rrule = "FREQ=MONTHLY;WKST=SU;INTERVAL=2;BYDAY=5TU";
+        recur = new Recur(rrule);
+
+        cal = Calendar.getInstance();
+        cal.clear(Calendar.SECOND);
+        start = new Date(cal.getTime());
+        cal.add(Calendar.YEAR, 2);
+        end = new Date(cal.getTime());
+
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, Calendar.WEEK_OF_MONTH, 5));
+
+        /*
+         * This test creates a rule outside of the specified boundaries to
+         * confirm that the returned date list is empty.
+         * <pre>
+         *  Weekly on Tuesday and Thursday for 5 weeks: 
+         *
+         *  DTSTART;TZID=US-Eastern:19970902T090000 
+         *  RRULE:FREQ=WEEKLY;UNTIL=19971007T000000Z;WKST=SU;BYDAY=TU,TH 
+         *  or 
+         *
+         *  RRULE:FREQ=WEEKLY;COUNT=10;WKST=SU;BYDAY=TU,TH 
+         *
+         *  ==> (1997 9:00 AM EDT)September 2,4,9,11,16,18,23,25,30;October 2 
+         * </pre>
+         */
+        recur = new Recur(Recur.WEEKLY, 10);
+        recur.getDayList().add(WeekDay.TU);
+        recur.getDayList().add(WeekDay.TH);
+        log.debug(recur);
+        
+        cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 1997);
+        cal.set(Calendar.MONTH, Calendar.SEPTEMBER);
+        cal.set(Calendar.DAY_OF_MONTH, 2);
+        cal.set(Calendar.HOUR_OF_DAY, 9);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.SECOND);
+        
+        seed = new DateTime(cal.getTime());
+
+        cal = Calendar.getInstance();
+        start = new DateTime(cal.getTime());
+        cal.add(Calendar.YEAR, 2);
+        end = new DateTime(cal.getTime());
+        
+        suite.addTest(new RecurTest(recur, seed, start, end, Value.DATE, 0));
+
+        // testRecurGetDates..
+        recur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=SA");
+        start = new Date("20050101");
+        end = new Date("20060101");
+    
+        suite.addTest(new RecurTest(recur, start, end, null, Calendar.DAY_OF_WEEK, Calendar.SATURDAY));
+
+        // Test ordering of returned dates..
+        String s1 = "FREQ=WEEKLY;COUNT=75;INTERVAL=2;BYDAY=SU,MO,TU;WKST=SU"; 
+        Recur rec = new Recur(s1); 
+        Date d1 = new Date(); 
+        cal = Calendar.getInstance(); 
+        cal.add(Calendar.YEAR,1); 
+        Date d2 = new Date(cal.getTimeInMillis()); 
+         
+        suite.addTest(new RecurTest("testGetDatesOrdering", rec, null, d1, d2, Value.DATE_TIME));
+
+        // testMonthByDay..
+        rrule = "FREQ=MONTHLY;UNTIL=20061220T000000;INTERVAL=1;BYDAY=3WE";
+        recur = new Recur(rrule);
+
+        cal = Calendar.getInstance();
+        cal.set(2006, 11, 1);
+        start = new Date(cal.getTime());
+        cal.add(Calendar.YEAR, 1);
+        
+        suite.addTest(new RecurTest("testGetDatesNotEmpty", recur, null, start, new Date(cal.getTime()), Value.DATE));
+
+        // testAlternateTimeZone..
+        rrule = "FREQ=WEEKLY;BYDAY=WE;BYHOUR=12;BYMINUTE=0";
+        recur = new Recur(rrule);
+
+//        TimeZone originalDefault = TimeZone.getDefault();
+//        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
+        
+        TimeZoneRegistry tzreg = TimeZoneRegistryFactory.getInstance().createRegistry();
+        cal = Calendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
+        cal.clear(Calendar.SECOND);
+        start = new DateTime(cal.getTime());
+        DtStart dtStart = new DtStart(start);
+        dtStart.setTimeZone(tzreg.getTimeZone("America/Los_Angeles"));
+        cal.add(Calendar.MONTH, 2);
+        end = new DateTime(cal.getTime());
+        DtEnd dtEnd = new DtEnd(end);
+        
+        suite.addTest(new RecurTest(recur, dtStart.getDate(), dtEnd.getDate(), Value.DATE_TIME, tzreg.getTimeZone("America/Los_Angeles")));
+
+        // testFriday13Recur..
+        rrule = "FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13";
+        recur = new Recur(rrule);
+        
+        cal = Calendar.getInstance();
+        cal.clear(Calendar.SECOND);
+        cal.set(1997, 0, 1);
+        start = new Date(cal.getTime());
+        cal.set(2000, 0, 1);
+        end = new Date(cal.getTime());
+
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, Calendar.DAY_OF_MONTH, 13));
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, Calendar.DAY_OF_WEEK, Calendar.FRIDAY));
+
+        // testNoFrequency..
+        suite.addTest(new RecurTest("BYDAY=MO,TU,WE,TH,FR"));
+        
+        // testUnknownFrequency..
+        suite.addTest(new RecurTest("FREQ=FORTNIGHTLY;BYDAY=MO,TU,WE,TH,FR"));
+
+        // Unit test for recurrence every 4th february..
+        rrule = "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=4;BYDAY=MO,TU,WE,TH,FR,SA,SU";
+        recur = new Recur(rrule);
+        
+        cal = Calendar.getInstance();
+        cal.clear(Calendar.SECOND);
+        cal.set(2006, 3, 10);
+        start = new Date(cal.getTime());
+        cal.set(2008, 1, 6);
+        end = new Date(cal.getTime());
+        
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, Calendar.DAY_OF_MONTH, 4));
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, Calendar.MONTH, 1));
+        
+        // Unit test for recurrence generation where seed month-date specified is
+        // not valid for recurrence instances (e.g. feb 31).
+        rrule = "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=4;BYDAY=MO,TU,WE,TH,FR,SA,SU";
+        recur = new Recur(rrule);
+        
+        cal = Calendar.getInstance();
+        cal.clear(Calendar.SECOND);
+        cal.set(2006, 11, 31);
+        start = new Date(cal.getTime());
+        cal.set(2008, 11, 31);
+        end = new Date(cal.getTime());
+        
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, 2));
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, Calendar.DAY_OF_MONTH, 4));
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, Calendar.MONTH, 1));
+
+        // Unit test for recurrence representing each half-hour..
+        rrule = "FREQ=DAILY;BYHOUR=9,10,11,12,13,14,15,16;BYMINUTE=0,30";
+        recur = new Recur(rrule);
+
+        cal = Calendar.getInstance();
+        cal.clear(Calendar.SECOND);
+        cal.clear(Calendar.MINUTE);
+        cal.clear(Calendar.HOUR);
+        start = new DateTime(cal.getTime());
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        end = new DateTime(cal.getTime());
+
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE_TIME, 16));
+
+        // Test creation of recur instances..
+        String recurString = "FREQ=MONTHLY;INTERVAL=2;BYDAY=3MO";
+        WeekDayList expectedDayList = new WeekDayList();
+        expectedDayList.add(new WeekDay(WeekDay.MO, 3));
+        
+        suite.addTest(new RecurTest(recurString, Recur.MONTHLY, 2, expectedDayList));
+
+        // testCountMonthsWith31Days..
+        recur = new Recur("FREQ=MONTHLY;BYMONTHDAY=31");
+        cal = Calendar.getInstance();
+        start = new DateTime(cal.getTime());
+        cal.add(Calendar.YEAR, 1);
+        end = new DateTime(cal.getTime());
+        
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, 7));
+        
+        return suite;
     }
 }
