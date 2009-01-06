@@ -626,20 +626,15 @@ public class Recur implements Serializable {
         int invalidCandidateCount = 0;
         Date candidate = null;
         final Value value = seed instanceof DateTime ? Value.DATE_TIME : Value.DATE;
-        Date nextDate = null;
         
-        while (nextDate==null) {
+        while (true) {
             final Date candidateSeed = Dates.getInstance(cal.getTime(), value);
 
-            if (getUntil() != null && candidate != null
-                    && candidate.after(getUntil())) {
-
+            if (getUntil() != null && candidate != null && candidate.after(getUntil())) {
                 break;
             }
             
-            if (getCount() >= 1
-                    && (invalidCandidateCount) >= getCount()) {
-
+            if (getCount() > 0 && invalidCandidateCount >= getCount()) {
                 break;
             }
 
@@ -655,6 +650,7 @@ public class Recur implements Serializable {
             final DateList candidates = getCandidates(candidateSeed, value);
             // sort candidates for identifying when UNTIL date is exceeded..
             Collections.sort(candidates);
+            
             for (final Iterator i = candidates.iterator(); i.hasNext();) {
                 candidate = (Date) i.next();
                 // don't count candidates that occur before the seed date..
@@ -664,20 +660,17 @@ public class Recur implements Serializable {
                     if (!candidate.after(startDate)) {
                         invalidCandidateCount++;
                     }
-                    else if (getCount() >= 1
-                            && (invalidCandidateCount) >= getCount()) {
+                    else if (getCount() > 0 && invalidCandidateCount >= getCount()) {
                         break;
                     }
-                    else if (!(getUntil() != null && candidate
-                            .after(getUntil()))) {
-                        nextDate = candidate;
+                    else if (!(getUntil() != null && candidate.after(getUntil()))) {
+                        return candidate;
                     }
                 }
             }
             increment(cal);
         }
-        
-        return nextDate;
+        return null;
     }
 
     /**

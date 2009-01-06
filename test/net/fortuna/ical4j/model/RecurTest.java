@@ -769,6 +769,15 @@ public class RecurTest extends TestCase {
         
         suite.addTest(new RecurTest(recur, start, end, Value.DATE, 7));
         
+        // Ensure the first result from getDates is the same as getNextDate..
+        recur = new Recur("FREQ=WEEKLY;WKST=MO;INTERVAL=3;BYDAY=MO,WE,TH");
+        seed = new DateTime("20081103T070000");
+        Date periodStart = new DateTime("20081109T210000Z");
+        Date periodEnd = new DateTime("20100104T210000Z");
+        
+        Date getDatesFirstResult = (Date) recur.getDates(seed, periodStart, periodEnd, Value.DATE_TIME).get(0);
+        suite.addTest(new RecurTest(recur, seed, periodStart, getDatesFirstResult));
+                       
         return suite;
     }
 }
