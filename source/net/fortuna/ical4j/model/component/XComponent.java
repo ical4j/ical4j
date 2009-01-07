@@ -83,4 +83,69 @@ public class XComponent extends CalendarComponent {
             validateProperties();
         }
     }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validatePublish()
+     */
+    public void validatePublish() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateAdd()
+     */
+    public void validateAdd() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCancel()
+     */
+    public void validateCancel() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+     */
+    public void validateCounter() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+     */
+    public void validateDeclineCounter() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+     */
+    public void validateRefresh() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateReply()
+     */
+    public void validateReply() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRequest()
+     */
+    public void validateRequest() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+    
 }

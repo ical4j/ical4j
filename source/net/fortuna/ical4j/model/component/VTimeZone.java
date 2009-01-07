@@ -230,6 +230,103 @@ public class VTimeZone extends CalendarComponent {
     }
 
     /**
+     * <pre>
+     *    Component/Property  Presence
+     *    ------------------- ----------------------------------------------
+     *    VTIMEZONE           0+      MUST be present if any date/time refers
+     *                                to timezone
+     *        DAYLIGHT        0+      MUST be one or more of either STANDARD or
+     *                                DAYLIGHT
+     *           COMMENT      0 or 1
+     *           DTSTART      1       MUST be local time format
+     *           RDATE        0+      if present RRULE MUST NOT be present
+     *           RRULE        0+      if present RDATE MUST NOT be present
+     *           TZNAME       0 or 1
+     *           TZOFFSET     1
+     *           TZOFFSETFROM 1
+     *           TZOFFSETTO   1
+     *           X-PROPERTY   0+
+     *        LAST-MODIFIED   0 or 1
+     *        STANDARD        0+      MUST be one or more of either STANDARD or
+     *                                DAYLIGHT
+     *           COMMENT      0 or 1
+     *           DTSTART      1       MUST be local time format
+     *           RDATE        0+      if present RRULE MUST NOT be present
+     *           RRULE        0+      if present RDATE MUST NOT be present
+     *           TZNAME       0 or 1
+     *           TZOFFSETFROM 1
+     *           TZOFFSETTO   1
+     *           X-PROPERTY   0+
+     *        TZID            1
+     *        TZURL           0 or 1
+     *        X-PROPERTY      0+
+     * </pre>
+     */
+    public void validatePublish() throws ValidationException {
+        for (Iterator i = getObservances().iterator(); i.hasNext();) {
+            Observance observance = (Observance) i.next();
+            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, observance.getProperties());
+            PropertyValidator.getInstance().assertOneOrLess(Property.TZNAME, observance.getProperties());
+        }
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateAdd()
+     */
+    public void validateAdd() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCancel()
+     */
+    public void validateCancel() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+     */
+    public void validateCounter() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+     */
+    public void validateDeclineCounter() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+     */
+    public void validateRefresh() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateReply()
+     */
+    public void validateReply() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRequest()
+     */
+    public void validateRequest() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /**
      * @return Returns the types.
      */
     public final ComponentList getObservances() {

@@ -241,36 +241,29 @@ public class VAlarm extends CalendarComponent {
         /*
          * ; 'action' and 'trigger' are both REQUIRED, ; but MUST NOT occur more than once action / trigger /
          */
-        PropertyValidator.getInstance().assertOne(Property.ACTION,
-                getProperties());
-        PropertyValidator.getInstance().assertOne(Property.TRIGGER,
-                getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ACTION, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.TRIGGER, getProperties());
 
         /*
          * ; 'duration' and 'repeat' are both optional, ; and MUST NOT occur more than once each, ; but if one occurs,
          * so MUST the other duration / repeat /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT,
-                getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT, getProperties());
 
         try {
-            PropertyValidator.getInstance().assertNone(Property.DURATION,
-                    getProperties());
-            PropertyValidator.getInstance().assertNone(Property.REPEAT,
-                    getProperties());
+            PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+            PropertyValidator.getInstance().assertNone(Property.REPEAT, getProperties());
         }
         catch (ValidationException ve) {
-            PropertyValidator.getInstance().assertOne(Property.DURATION,
-                    getProperties());
-            PropertyValidator.getInstance().assertOne(Property.REPEAT,
-                    getProperties());
+            PropertyValidator.getInstance().assertOne(Property.DURATION, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.REPEAT, getProperties());
         }
-
+        
         /*
          * ; the following is optional, ; and MAY occur more than once x-prop
          */
+        
         final Action action = getAction();
         if (Action.AUDIO.equals(action)) {
             validateAudio();
@@ -297,8 +290,7 @@ public class VAlarm extends CalendarComponent {
         /*
          * ; the following is optional, ; but MUST NOT occur more than once attach /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.ATTACH,
-                getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.ATTACH, getProperties());
     }
 
     /**
@@ -308,8 +300,7 @@ public class VAlarm extends CalendarComponent {
         /*
          * ; the following are all REQUIRED, ; but MUST NOT occur more than once action / description / trigger /
          */
-        PropertyValidator.getInstance().assertOne(Property.DESCRIPTION,
-                getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
     }
 
     /**
@@ -317,18 +308,20 @@ public class VAlarm extends CalendarComponent {
      */
     private void validateEmail() throws ValidationException {
         /*
-         * ; the following are all REQUIRED, ; but MUST NOT occur more than once action / description / trigger /
-         * summary ; the following is REQUIRED, ; and MAY occur more than once attendee / ; 'duration' and 'repeat' are
-         * both optional, ; and MUST NOT occur more than once each, ; but if one occurs, so MUST the other duration /
-         * repeat / ; the following are optional, ; and MAY occur more than once attach / x-prop
+         * ; the following are all REQUIRED, 
+         * ; but MUST NOT occur more than once action / description / trigger / summary 
+         * ; the following is REQUIRED, 
+         * ; and MAY occur more than once attendee / 
+         * ; 'duration' and 'repeat' are both optional, 
+         * ; and MUST NOT occur more than once each, 
+         * ; but if one occurs, so MUST the other duration / repeat / 
+         * ; the following are optional, 
+         * ; and MAY occur more than once attach / x-prop
          */
-        PropertyValidator.getInstance().assertOne(Property.DESCRIPTION,
-                getProperties());
-        PropertyValidator.getInstance().assertOne(Property.SUMMARY,
-                getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
 
-        PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE,
-                getProperties());
+        PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
     }
 
     /**
@@ -336,16 +329,94 @@ public class VAlarm extends CalendarComponent {
      */
     private void validateProcedure() throws ValidationException {
         /*
-         * ; the following are all REQUIRED, ; but MUST NOT occur more than once action / attach / trigger / ;
-         * 'duration' and 'repeat' are both optional, ; and MUST NOT occur more than once each, ; but if one occurs, so
-         * MUST the other duration / repeat / ; 'description' is optional, ; and MUST NOT occur more than once
-         * description / ; the following is optional, ; and MAY occur more than once x-prop
+         * ; the following are all REQUIRED, 
+         * ; but MUST NOT occur more than once action / attach / trigger / 
+         * ; 'duration' and 'repeat' are both optional, 
+         * ; and MUST NOT occur more than once each, 
+         * ; but if one occurs, so MUST the other duration / repeat / 
+         * ; 'description' is optional, 
+         * ; and MUST NOT occur more than once description / 
+         * ; the following is optional, ; and MAY occur more than once x-prop
          */
-        PropertyValidator.getInstance().assertOne(Property.ATTACH,
-                getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ATTACH, getProperties());
 
-        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION,
-                getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+    }
+
+    /**
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * VALARM              0+
+     *     ACTION          1
+     *     ATTACH          0+
+     *     DESCRIPTION     0 or 1
+     *     DURATION        0 or 1  if present REPEAT MUST be present
+     *     REPEAT          0 or 1  if present DURATION MUST be present
+     *     SUMMARY         0 or 1
+     *     TRIGGER         1
+     *     X-PROPERTY      0+
+     * </pre>
+     */
+    public void validatePublish() throws ValidationException {
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateAdd()
+     */
+    public void validateAdd() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCancel()
+     */
+    public void validateCancel() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+     */
+    public void validateCounter() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+     */
+    public void validateDeclineCounter() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+     */
+    public void validateRefresh() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateReply()
+     */
+    public void validateReply() throws ValidationException {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRequest()
+     */
+    public void validateRequest() throws ValidationException {
+        // TODO Auto-generated method stub
+        
     }
 
     /**

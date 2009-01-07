@@ -315,8 +315,7 @@ public class VEvent extends CalendarComponent {
     /**
      * @see net.fortuna.ical4j.model.Component#validate(boolean)
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
+    public final void validate(final boolean recurse) throws ValidationException {
 
         // validate that getAlarms() only contains VAlarm components
         final Iterator iterator = getAlarms().iterator();
@@ -451,12 +450,696 @@ public class VEvent extends CalendarComponent {
          * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
          * contact / exdate / exrule / rstatus / related / resources / rdate / rrule / x-prop
          */
-
+        
         if (recurse) {
             validateProperties();
         }
     }
 
+    /**
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1       MUST equal "PUBLISH"
+     * VEVENT              1+
+     *      DTSTAMP        1
+     *      DTSTART        1
+     *      ORGANIZER      1
+     *      SUMMARY        1       Can be null.
+     *      UID            1
+     *      RECURRENCE-ID  0 or 1  only if referring to an instance of a
+     *                             recurring calendar component.  Otherwise
+     *                             it MUST NOT be present.
+     *      SEQUENCE       0 or 1  MUST be present if value is greater than
+     *                             0, MAY be present if 0
+     *      ATTACH         0+
+     *      CATEGORIES     0 or 1  This property may contain a list of
+     *                             values
+     *      CLASS          0 or 1
+     *      COMMENT        0 or 1
+     *      CONTACT        0+
+     *      CREATED        0 or 1
+     *      DESCRIPTION    0 or 1  Can be null
+     *      DTEND          0 or 1  if present DURATION MUST NOT be present
+     *      DURATION       0 or 1  if present DTEND MUST NOT be present
+     *      EXDATE         0+
+     *      EXRULE         0+
+     *      GEO            0 or 1
+     *      LAST-MODIFIED  0 or 1
+     *      LOCATION       0 or 1
+     *      PRIORITY       0 or 1
+     *      RDATE          0+
+     *      RELATED-TO     0+
+     *      RESOURCES      0 or 1 This property MAY contain a list of values
+     *      RRULE          0+
+     *      STATUS         0 or 1 MAY be one of TENTATIVE/CONFIRMED/CANCELLED
+     *      TRANSP         0 or 1
+     *      URL            0 or 1
+     *      X-PROPERTY     0+
+     * 
+     *      ATTENDEE       0
+     *      REQUEST-STATUS 0
+     * 
+     * VALARM              0+
+     * VFREEBUSY           0
+     * VJOURNAL            0
+     * VTODO               0
+     * VTIMEZONE           0+    MUST be present if any date/time refers to
+     *                           a timezone
+     * X-COMPONENT         0+
+     * </pre>
+     */
+    public void validatePublish() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.GEO, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LOCATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.PRIORITY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RESOURCES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+    }
+    
+    /**
+     * @throws ValidationException
+     * 
+     * <pre>
+     * Component/Property  Presence
+     * -----------------------------------------------------------------
+     * METHOD              1       MUST be "REQUEST"
+     * VEVENT              1+      All components MUST have the same UID
+     *     ATTENDEE        1+
+     *     DTSTAMP         1
+     *     DTSTART         1
+     *     ORGANIZER       1
+     *     SEQUENCE        0 or 1  MUST be present if value is greater than 0,
+     *                             MAY be present if 0
+     *     SUMMARY         1       Can be null
+     *     UID             1
+     *     
+     *     ATTACH          0+
+     *     CATEGORIES      0 or 1  This property may contain a list of values
+     *     CLASS           0 or 1
+     *     COMMENT         0 or 1
+     *     CONTACT         0+
+     *     CREATED         0 or 1
+     *     DESCRIPTION     0 or 1  Can be null
+     *     DTEND           0 or 1  if present DURATION MUST NOT be present
+     *     DURATION        0 or 1  if present DTEND MUST NOT be present
+     *     EXDATE          0+
+     *     EXRULE          0+
+     *     GEO             0 or 1
+     *     LAST-MODIFIED   0 or 1
+     *     LOCATION        0 or 1
+     *     PRIORITY        0 or 1
+     *     RDATE           0+
+     *     RECURRENCE-ID   0 or 1  only if referring to an instance of a
+     *                             recurring calendar component.  Otherwise it
+     *                             MUST NOT be present.
+     *     RELATED-TO      0+
+     *     REQUEST-STATUS  0+
+     *     RESOURCES       0 or 1  This property MAY contain a list of values
+     *     RRULE           0+
+     *     STATUS          0 or 1  MAY be one of TENTATIVE/CONFIRMED
+     *     TRANSP          0 or 1
+     *     URL             0 or 1
+     *     X-PROPERTY      0+
+     *     
+     * VALARM              0+
+     * VTIMEZONE           0+      MUST be present if any date/time refers to
+     *                             a timezone
+     * X-COMPONENT         0+
+     * VFREEBUSY           0
+     * VJOURNAL            0
+     * VTODO               0
+     * </pre>
+     */
+    public void validateRequest() throws ValidationException {
+        PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
+        
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.GEO, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LOCATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.PRIORITY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RESOURCES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+    }
+    
+    /**
+     * @throws ValidationException
+     * 
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1       MUST be "REPLY"
+     * VEVENT              1+      All components MUST have the same UID
+     *     ATTENDEE        1       MUST be the address of the Attendee
+     *                             replying.
+     *     DTSTAMP         1
+     *     ORGANIZER       1
+     *     RECURRENCE-ID   0 or 1  only if referring to an instance of a
+     *                             recurring calendar component.  Otherwise
+     *                             it must NOT be present.
+     *     UID             1       MUST be the UID of the original REQUEST
+     *     
+     *     SEQUENCE        0 or 1  MUST if non-zero, MUST be the sequence
+     *                             number of the original REQUEST. MAY be
+     *                             present if 0.
+     *     
+     *     ATTACH          0+
+     *     CATEGORIES      0 or 1  This property may contain a list of values
+     *     CLASS           0 or 1
+     *     COMMENT         0 or 1
+     *     CONTACT         0+
+     *     CREATED         0 or 1
+     *     DESCRIPTION     0 or 1
+     *     DTEND           0 or 1  if present DURATION MUST NOT be present
+     *     DTSTART         0 or 1
+     *     DURATION        0 or 1  if present DTEND MUST NOT be present
+     *     EXDATE          0+
+     *     EXRULE          0+
+     *     GEO             0 or 1
+     *     LAST-MODIFIED   0 or 1
+     *     LOCATION        0 or 1
+     *     PRIORITY        0 or 1
+     *     RDATE           0+
+     *     RELATED-TO      0+
+     *     RESOURCES       0 or 1  This property MAY contain a list of values
+     *     REQUEST-STATUS  0+
+     *     RRULE           0+
+     *     STATUS          0 or 1
+     *     SUMMARY         0 or 1
+     *     TRANSP          0 or 1
+     *     URL             0 or 1
+     *     X-PROPERTY      0+
+     *     
+     * VTIMEZONE           0 or 1 MUST be present if any date/time refers
+     *                            to a timezone
+     * X-COMPONENT         0+
+     * 
+     * VALARM              0
+     * VFREEBUSY           0
+     * VJOURNAL            0
+     * VTODO               0
+     * </pre>
+     */
+    public void validateReply() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.ATTENDEE, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.GEO, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LOCATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.PRIORITY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RESOURCES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+    }
+    
+    /**
+     * @throws ValidationException
+     * 
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1      MUST be "ADD"
+     * VEVENT              1
+     *     DTSTAMP         1
+     *     DTSTART         1
+     *     ORGANIZER       1
+     *     SEQUENCE        1      MUST be greater than 0
+     *     SUMMARY         1      Can be null
+     *     UID             1      MUST match that of the original event
+     * 
+     *     ATTACH          0+
+     *     ATTENDEE        0+
+     *     CATEGORIES      0 or 1 This property MAY contain a list of values
+     *     CLASS           0 or 1
+     *     COMMENT         0 or 1
+     *     CONTACT         0+
+     *     CREATED         0 or 1
+     *     DESCRIPTION     0 or 1  Can be null
+     *     DTEND           0 or 1  if present DURATION MUST NOT be present
+     *     DURATION        0 or 1  if present DTEND MUST NOT be present
+     *     EXDATE          0+
+     *     EXRULE          0+
+     *     GEO             0 or 1
+     *     LAST-MODIFIED   0 or 1
+     *     LOCATION        0 or 1
+     *     PRIORITY        0 or 1
+     *     RDATE           0+
+     *     RELATED-TO      0+
+     *     RESOURCES       0 or 1  This property MAY contain a list of values
+     *     RRULE           0+
+     *     STATUS          0 or 1  MAY be one of TENTATIVE/CONFIRMED
+     *     TRANSP          0 or 1
+     *     URL             0 or 1
+     *     X-PROPERTY      0+
+     * 
+     *     RECURRENCE-ID   0
+     *     REQUEST-STATUS  0
+     * 
+     * VALARM              0+
+     * VTIMEZONE           0+     MUST be present if any date/time refers to
+     *                            a timezone
+     * X-COMPONENT         0+
+     * 
+     * VFREEBUSY           0
+     * VTODO               0
+     * VJOURNAL            0
+     * </pre>
+     */
+    public void validateAdd() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.GEO, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LOCATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.PRIORITY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RESOURCES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+    }
+    
+    /**
+     * @throws ValidationException
+     * 
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1      MUST be "CANCEL"
+     * 
+     * VEVENT              1+     All must have the same UID
+     *     ATTENDEE        0+     MUST include all "Attendees" being removed
+     *                            the event. MUST include all "Attendees" if
+     *                            the entire event is cancelled.
+     *     DTSTAMP         1
+     *     ORGANIZER       1
+     *     SEQUENCE        1
+     *     UID             1       MUST be the UID of the original REQUEST
+     * 
+     *     COMMENT         0 or 1
+     *     ATTACH          0+
+     *     CATEGORIES      0 or 1  This property may contain a list of values
+     *     CLASS           0 or 1
+     *     CONTACT         0+
+     *     CREATED         0 or 1
+     *     DESCRIPTION     0 or 1
+     *     DTEND           0 or 1 if present DURATION MUST NOT be present
+     *     DTSTART         0 or 1
+     *     DURATION        0 or 1 if present DTEND MUST NOT be present
+     *     EXDATE          0+
+     *     EXRULE          0+
+     *     GEO             0 or 1
+     *     LAST-MODIFIED   0 or 1
+     *     LOCATION        0 or 1
+     *     PRIORITY        0 or 1
+     *     RDATE           0+
+     *     RECURRENCE-ID   0 or 1  MUST be present if referring to one or
+     *                             more or more recurring instances.
+     *                             Otherwise it MUST NOT be present
+     *     RELATED-TO      0+
+     *     RESOURCES       0 or 1
+     *     RRULE           0+
+     *     STATUS          0 or 1  MUST be set to CANCELLED. If uninviting
+     *                             specific "Attendees" then MUST NOT be
+     *                             included.
+     *     SUMMARY         0 or 1
+     *     TRANSP          0 or 1
+     *     URL             0 or 1
+     *     X-PROPERTY      0+
+     *     REQUEST-STATUS  0
+     * 
+     * VTIMEZONE           0+     MUST be present if any date/time refers to
+     *                            a timezone
+     * X-COMPONENT         0+
+     * 
+     * VTODO               0
+     * VJOURNAL            0
+     * VFREEBUSY           0
+     * VALARM              0
+     * </pre>
+     */
+    public void validateCancel() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.GEO, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LOCATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.PRIORITY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RESOURCES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+    }
+    
+    /**
+     * @throws ValidationException
+     * 
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1      MUST be "REFRESH"
+     * 
+     * VEVENT              1
+     *     ATTENDEE        1      MUST be the address of requestor
+     *     DTSTAMP         1
+     *     ORGANIZER       1
+     *     UID             1      MUST be the UID associated with original
+     *                            REQUEST
+     *     COMMENT         0 or 1
+     *     RECURRENCE-ID   0 or 1 MUST only if referring to an instance of a
+     *                            recurring calendar component.  Otherwise
+     *                            it must NOT be present.
+     *     X-PROPERTY      0+
+     * 
+     *     ATTACH          0
+     *     CATEGORIES      0
+     *     CLASS           0
+     *     CONTACT         0
+     *     CREATED         0
+     *     DESCRIPTION     0
+     *     DTEND           0
+     *     DTSTART         0
+     *     DURATION        0
+     *     EXDATE          0
+     *     EXRULE          0
+     *     GEO             0
+     *     LAST-MODIFIED   0
+     *     LOCATION        0
+     *     PRIORITY        0
+     *     RDATE           0
+     *     RELATED-TO      0
+     *     REQUEST-STATUS  0
+     *     RESOURCES       0
+     *     RRULE           0
+     *     SEQUENCE        0
+     *     STATUS          0
+     *     SUMMARY         0
+     *     TRANSP          0
+     *     URL             0
+     * 
+     * X-COMPONENT         0+
+     * 
+     * VTODO               0
+     * VJOURNAL            0
+     * VFREEBUSY           0
+     * VTIMEZONE           0
+     * VALARM              0
+     * </pre>
+     */
+    public void validateRefresh() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.ATTENDEE, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.ATTACH, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.CONTACT, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.EXDATE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.EXRULE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.GEO, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.LOCATION, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.PRIORITY, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.RDATE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.RELATED_TO, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.RESOURCES, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.RRULE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.SEQUENCE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.TRANSP, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.URL, getProperties());
+    }
+    
+    /**
+     * @throws ValidationException
+     * 
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1      MUST be "COUNTER"
+     * 
+     * VEVENT              1
+     *     DTSTAMP         1
+     *     DTSTART         1
+     *     ORGANIZER       1       MUST be the "Organizer" of the original
+     *                             event
+     *     SEQUENCE        1       MUST be present if value is greater than 0,
+     *                             MAY be present if 0
+     *     SUMMARY         1       Can be null
+     *     UID             1       MUST be the UID associated with the REQUEST
+     *                             being countered
+     * 
+     *     ATTACH          0+
+     *     ATTENDEE        0+      Can also  be used to propose other
+     *                             "Attendees"
+     *     CATEGORIES      0 or 1  This property may contain a list of values
+     *     CLASS           0 or 1
+     *     COMMENT         0 or 1
+     *     CONTACT         0+
+     *     CREATED         0 or 1
+     *     DESCRIPTION     0 or 1
+     *     DTEND           0 or 1  if present DURATION MUST NOT be present
+     *     DURATION        0 or 1  if present DTEND MUST NOT be present
+     *     EXDATE          0+
+     *     EXRULE          0+
+     *     GEO             0 or 1
+     *     LAST-MODIFIED   0 or 1
+     *     LOCATION        0 or 1
+     *     PRIORITY        0 or 1
+     *     RDATE           0+
+     *     RECURRENCE-ID   0 or 1  MUST only if referring to an instance of a
+     *                             recurring calendar component.  Otherwise it
+     *                             MUST NOT be present.
+     *     RELATED-TO      0+
+     *     REQUEST-STATUS  0+
+     *     RESOURCES       0 or 1  This property may contain a list of values
+     *     RRULE           0+
+     *     STATUS          0 or 1  Value must be one of CONFIRMED/TENATIVE/
+     *                             CANCELLED
+     *     TRANSP          0 or 1
+     *     URL             0 or 1
+     *     X-PROPERTY      0+
+     * 
+     * VALARM              0+
+     * VTIMEZONE           0+      MUST be present if any date/time refers to
+     *                             a timezone
+     * X-COMPONENT         0+
+     * 
+     * VTODO               0
+     * VJOURNAL            0
+     * VFREEBUSY           0
+     * </pre>
+     */
+    public void validateCounter() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.GEO, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LOCATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.PRIORITY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RESOURCES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+    }
+    
+    /**
+     * @throws ValidationException
+     * 
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1      MUST be "DECLINECOUNTER"
+     * 
+     * VEVENT              1
+     *     DTSTAMP         1
+     *     ORGANIZER       1
+     *     UID             1       MUST, same UID specified in original
+     *                             REQUEST and subsequent COUNTER
+     *     COMMENT         0 or 1
+     *     RECURRENCE-ID   0 or 1  MUST only if referring to an instance of a
+     *                             recurring calendar component.  Otherwise it
+     *                             MUST NOT be present.
+     *     REQUEST-STATUS  0+
+     *     SEQUENCE        0 OR 1  MUST be present if value is greater than 0,
+     *                             MAY be present if 0
+     *     X-PROPERTY      0+
+     *     ATTACH          0
+     *     ATTENDEE        0
+     *     CATEGORIES      0
+     *     CLASS           0
+     *     CONTACT         0
+     *     CREATED         0
+     *     DESCRIPTION     0
+     *     DTEND           0
+     *     DTSTART         0
+     *     DURATION        0
+     *     EXDATE          0
+     *     EXRULE          0
+     *     GEO             0
+     *     LAST-MODIFIED   0
+     *     LOCATION        0
+     *     PRIORITY        0
+     *     RDATE           0
+     *     RELATED-TO      0
+     *     RESOURCES       0
+     *     RRULE           0
+     *     STATUS          0
+     *     SUMMARY         0
+     *     TRANSP          0
+     *     URL             0
+     * 
+     * X-COMPONENT         0+
+     * VTODO               0
+     * VJOURNAL            0
+     * VFREEBUSY           0
+     * VTIMEZONE           0
+     * VALARM              0
+     * </pre>
+     */
+    public void validateDeclineCounter() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.ATTACH, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.CONTACT, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.EXDATE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.EXRULE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.GEO, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.LOCATION, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.PRIORITY, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.RDATE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.RELATED_TO, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.RESOURCES, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.RRULE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.TRANSP, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.URL, getProperties());
+    }
+    
     /**
      * Returns a normalised list of periods representing the consumed time for this event.
      * @param rangeStart

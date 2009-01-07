@@ -462,6 +462,191 @@ public class VFreeBusy extends CalendarComponent {
     }
 
     /**
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1       MUST be "PUBLISH"
+     * 
+     * VFREEBUSY           1+
+     *     DTSTAMP         1
+     *     DTSTART         1       DateTime values must be in UTC
+     *     DTEND           1       DateTime values must be in UTC
+     *     FREEBUSY        1+      MUST be BUSYTIME. Multiple instances are
+     *                             allowed. Multiple instances must be sorted
+     *                             in ascending order
+     *     ORGANIZER       1       MUST contain the address of originator of
+     *                             busy time data.
+     * 
+     *     COMMENT         0 or 1
+     *     CONTACT         0+
+     *     X-PROPERTY      0+
+     *     URL             0 or 1  Specifies busy time URL
+     * 
+     *     ATTENDEE        0
+     *     DURATION        0
+     *     REQUEST-STATUS  0
+     *     UID             0
+     * 
+     * X-COMPONENT         0+
+     * 
+     * VEVENT              0
+     * VTODO               0
+     * VJOURNAL            0
+     * VTIMEZONE           0
+     * VALARM              0
+     * </pre>
+     */
+    public void validatePublish() throws ValidationException {
+        PropertyValidator.getInstance().assertOneOrMore(Property.FREEBUSY, getProperties());
+        
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.UID, getProperties());
+    }
+
+    /**
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1      MUST be "REQUEST"
+     * 
+     * VFREEBUSY           1
+     *     ATTENDEE        1+     contain the address of the calendar store
+     *     DTEND           1      DateTime values must be in UTC
+     *     DTSTAMP         1
+     *     DTSTART         1      DateTime values must be in UTC
+     *     ORGANIZER       1      MUST be the request originator's address
+     *     UID             1
+     *     COMMENT         0 or 1
+     *     CONTACT         0+
+     *     X-PROPERTY      0+
+     * 
+     *     FREEBUSY        0
+     *     DURATION        0
+     *     REQUEST-STATUS  0
+     *     URL             0
+     * 
+     * X-COMPONENT         0+
+     * VALARM              0
+     * VEVENT              0
+     * VTODO               0
+     * VJOURNAL            0
+     * VTIMEZONE           0
+     * </pre>
+     */
+    public void validateRequest() throws ValidationException {
+        PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
+        
+        PropertyValidator.getInstance().assertOne(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.FREEBUSY, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.URL, getProperties());
+    }
+
+    /**
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1      MUST be "REPLY"
+     * 
+     * VFREEBUSY           1
+     *     ATTENDEE        1      (address of recipient replying)
+     *     DTSTAMP         1
+     *     DTEND           1      DateTime values must be in UTC
+     *     DTSTART         1      DateTime values must be in UTC
+     *     FREEBUSY        1+      (values MUST all be of the same data
+     *                             type. Multiple instances are allowed.
+     *                             Multiple instances MUST be sorted in
+     *                             ascending order. Values MAY NOT overlap)
+     *     ORGANIZER       1       MUST be the request originator's address
+     *     UID             1
+     * 
+     *     COMMENT         0 or 1
+     *     CONTACT         0+
+     *     REQUEST-STATUS  0+
+     *     URL             0 or 1  (specifies busy time URL)
+     *     X-PROPERTY      0+
+     *     DURATION        0
+     *     SEQUENCE        0
+     * 
+     * X-COMPONENT         0+
+     * VALARM              0
+     * VEVENT              0
+     * VTODO               0
+     * VJOURNAL            0
+     * VTIMEZONE           0
+     * </pre>
+     */
+    public void validateReply() throws ValidationException {
+        PropertyValidator.getInstance().assertOneOrMore(Property.FREEBUSY, getProperties());
+        
+        PropertyValidator.getInstance().assertOne(Property.ATTENDEE, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTEND, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.SEQUENCE, getProperties());
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+     */
+    public void validateRefresh() throws ValidationException {
+        throw new ValidationException("METHOD:REFRESH not supported for VFREEBUSY components");
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateAdd()
+     */
+    public void validateAdd() throws ValidationException {
+        throw new ValidationException("METHOD:ADD not supported for VFREEBUSY components");
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCancel()
+     */
+    public void validateCancel() throws ValidationException {
+        throw new ValidationException("METHOD:CANCEL not supported for VFREEBUSY components");
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+     */
+    public void validateCounter() throws ValidationException {
+        throw new ValidationException("METHOD:COUNTER not supported for VFREEBUSY components");
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+     */
+    public void validateDeclineCounter() throws ValidationException {
+        throw new ValidationException("METHOD:DECLINE-COUNTER not supported for VFREEBUSY components");
+    }
+
+    /**
      * @return
      */
     public final Contact getContact() {

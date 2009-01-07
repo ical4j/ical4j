@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * $Id$
@@ -64,4 +65,51 @@ public abstract class CalendarComponent extends Component {
         super(name, properties);
     }
 
+    /**
+     * Apply validation for METHOD=PUBLISH.
+     * @throws ValidationException
+     */
+    public abstract void validatePublish() throws ValidationException;
+
+    /**
+     * Apply validation for METHOD=REQUEST.
+     * @throws ValidationException
+     */
+    public abstract void validateRequest() throws ValidationException;
+
+    /**
+     * Apply validation for METHOD=REPLY.
+     * @throws ValidationException
+     */
+    public abstract void validateReply() throws ValidationException;
+
+    /**
+     * Apply validation for METHOD=ADD.
+     * @throws ValidationException
+     */
+    public abstract void validateAdd() throws ValidationException;
+
+    /**
+     * Apply validation for METHOD=CANCEL.
+     * @throws ValidationException
+     */
+    public abstract void validateCancel() throws ValidationException;
+
+    /**
+     * Apply validation for METHOD=REFRESH.
+     * @throws ValidationException
+     */
+    public abstract void validateRefresh() throws ValidationException;
+
+    /**
+     * Apply validation for METHOD=COUNTER.
+     * @throws ValidationException
+     */
+    public abstract void validateCounter() throws ValidationException;
+
+    /**
+     * Apply validation for METHOD=DECLINE-COUNTER.
+     * @throws ValidationException
+     */
+    public abstract void validateDeclineCounter() throws ValidationException;
 }

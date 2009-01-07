@@ -43,6 +43,7 @@ import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
 
@@ -281,14 +282,63 @@ public class Calendar implements Serializable {
         // validate components..
         for (final Iterator i = getComponents().iterator(); i.hasNext();) {
             final Component component = (Component) i.next();
-
             if (!(component instanceof CalendarComponent)) {
-                throw new ValidationException(
-                        "Not a valid calendar component: "
-                                + component.getName());
+                throw new ValidationException("Not a valid calendar component: " + component.getName());
             }
         }
 
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            // validate method..
+            if (Method.PUBLISH.equals(getProperty(Property.METHOD))) {
+                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
+                    final CalendarComponent component = (CalendarComponent) i.next();
+                    component.validatePublish();
+                }
+            }
+            else if (Method.REQUEST.equals(getProperty(Property.METHOD))) {
+                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
+                    final CalendarComponent component = (CalendarComponent) i.next();
+                    component.validateRequest();
+                }
+            }
+            else if (Method.REPLY.equals(getProperty(Property.METHOD))) {
+                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
+                    final CalendarComponent component = (CalendarComponent) i.next();
+                    component.validateReply();
+                }
+            }
+            else if (Method.ADD.equals(getProperty(Property.METHOD))) {
+                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
+                    final CalendarComponent component = (CalendarComponent) i.next();
+                    component.validateAdd();
+                }
+            }
+            else if (Method.CANCEL.equals(getProperty(Property.METHOD))) {
+                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
+                    final CalendarComponent component = (CalendarComponent) i.next();
+                    component.validateCancel();
+                }
+            }
+            else if (Method.REFRESH.equals(getProperty(Property.METHOD))) {
+                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
+                    final CalendarComponent component = (CalendarComponent) i.next();
+                    component.validateRefresh();
+                }
+            }
+            else if (Method.COUNTER.equals(getProperty(Property.METHOD))) {
+                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
+                    final CalendarComponent component = (CalendarComponent) i.next();
+                    component.validateCounter();
+                }
+            }
+            else if (Method.DECLINE_COUNTER.equals(getProperty(Property.METHOD))) {
+                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
+                    final CalendarComponent component = (CalendarComponent) i.next();
+                    component.validateDeclineCounter();
+                }
+            }
+        }
+        
         if (recurse) {
             validateProperties();
             validateComponents();

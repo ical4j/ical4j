@@ -214,6 +214,240 @@ public class VJournal extends CalendarComponent {
     }
 
     /**
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD               1       MUST be "PUBLISH"
+     * VJOURNAL             1+
+     *     DESCRIPTION      1       Can be null.
+     *     DTSTAMP          1
+     *     DTSTART          1
+     *     ORGANIZER        1
+     *     UID              1
+     * 
+     *     ATTACH           0+
+     *     CATEGORIES       0 or 1  This property MAY contain a list of values
+     *     CLASS            0 or 1
+     *     COMMENT          0 or 1
+     *     CONTACT          0+
+     *     CREATED          0 or 1
+     *     EXDATE           0+
+     *     EXRULE           0+
+     *     LAST-MODIFIED    0 or 1
+     *     RDATE            0+
+     *     RECURRENCE-ID    0 or 1  MUST only if referring to an instance of a
+     *                              recurring calendar component.  Otherwise
+     *                              it MUST NOT be present.
+     *     RELATED-TO       0+
+     *     RRULE            0+
+     *     SEQUENCE         0 or 1  MUST echo the original SEQUENCE number.
+     *                              MUST be present if non-zero. MAY be
+     *                              present if zero.
+     *     STATUS           0 or 1  MAY be one of DRAFT/FINAL/CANCELLED
+     *     SUMMARY          0 or 1  Can be null
+     *     URL              0 or 1
+     *     X-PROPERTY       0+
+     * 
+     *     ATTENDEE         0
+     * 
+     * VALARM               0+
+     * VTIMEZONE            0+      MUST be present if any date/time refers to
+     *                              a timezone
+     * X-COMPONENT          0+
+     * 
+     * VEVENT               0
+     * VFREEBUSY            0
+     * VTODO                0
+     * </pre>
+     */
+    public void validatePublish() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
+    }
+
+    /**
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD               1      MUST be "ADD"
+     * VJOURNAL             1
+     *     DESCRIPTION      1      Can be null.
+     *     DTSTAMP          1
+     *     DTSTART          1
+     *     ORGANIZER        1
+     *     SEQUENCE         1      MUST be greater than 0
+     *     UID              1      MUST match that of the original journal
+     * 
+     *     ATTACH           0+
+     *     CATEGORIES       0 or 1 This property MAY contain a list of values
+     *     CLASS            0 or 1
+     *     COMMENT          0 or 1
+     *     CONTACT          0+
+     *     CREATED          0 or 1
+     *     EXDATE           0+
+     *     EXRULE           0+
+     *     LAST-MODIFIED    0 or 1
+     *     RDATE            0+
+     *     RELATED-TO       0+
+     *     RRULE            0+
+     *     STATUS           0 or 1  MAY be one of DRAFT/FINAL/CANCELLED
+     *     SUMMARY          0 or 1  Can be null
+     *     URL              0 or 1
+     *     X-PROPERTY       0+
+     * 
+     *     ATTENDEE         0
+     *     RECURRENCE-ID    0
+     * 
+     * VALARM               0+
+     * VTIMEZONE            0 or 1 MUST be present if any date/time refers to
+     *                             a timezone
+     * X-COMPONENT          0+
+     * 
+     * VEVENT               0
+     * VFREEBUSY            0
+     * VTODO                0
+     * </pre>
+     */
+    public void validateAdd() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
+        PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, getProperties());
+    }
+
+    /**
+     * <pre>
+     * Component/Property   Presence
+     * -------------------  ---------------------------------------------
+     * METHOD               1       MUST be "CANCEL"
+     * VJOURNAL             1+      All MUST have the same UID
+     *     DTSTAMP          1
+     *     ORGANIZER        1
+     *     SEQUENCE         1
+     *     UID              1       MUST be the UID of the original REQUEST
+     * 
+     *     ATTACH           0+
+     *     ATTENDEE         0+
+     *     CATEGORIES       0 or 1  This property MAY contain a list of values
+     *     CLASS            0 or 1
+     *     COMMENT          0 or 1
+     *     CONTACT          0+
+     *     CREATED          0 or 1
+     *     DESCRIPTION      0 or 1
+     *     DTSTART          0 or 1
+     *     EXDATE           0+
+     *     EXRULE           0+
+     *     LAST-MODIFIED    0 or 1
+     *     RDATE            0+
+     *     RECURRENCE-ID    0 or 1  only if referring to an instance of a
+     *                              recurring calendar component.  Otherwise
+     *                              it MUST NOT be present.
+     *     RELATED-TO       0+
+     *     RRULE            0+
+     *     STATUS           0 or 1  MAY be present, must be "CANCELLED" if
+     *                              present
+     *     SUMMARY          0 or 1
+     *     URL              0 or 1
+     *     X-PROPERTY       0+
+     * 
+     *     REQUEST-STATUS   0
+     * 
+     * VTIMEZONE            0+      MUST be present if any date/time refers to
+     *                              a timezone
+     * X-COMPONENT          0+
+     * VALARM               0
+     * VEVENT               0
+     * VFREEBUSY            0
+     * VTODO                0
+     * </pre>
+     */
+    public void validateCancel() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+        
+        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+     */
+    public void validateCounter() throws ValidationException {
+        throw new ValidationException("METHOD:COUNTER not supported for VJOURNAL components");
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+     */
+    public void validateDeclineCounter() throws ValidationException {
+        throw new ValidationException("METHOD:DECLINE-COUNTER not supported for VJOURNAL components");
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+     */
+    public void validateRefresh() throws ValidationException {
+        throw new ValidationException("METHOD:REFRESH not supported for VJOURNAL components");
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateReply()
+     */
+    public void validateReply() throws ValidationException {
+        throw new ValidationException("METHOD:REPLY not supported for VJOURNAL components");
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRequest()
+     */
+    public void validateRequest() throws ValidationException {
+        throw new ValidationException("METHOD:REQUEST not supported for VJOURNAL components");
+    }
+
+    /**
      * @return the optional access classification property for a journal entry
      */
     public final Clazz getClassification() {
