@@ -1,8 +1,8 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta5//EN
+PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_beta5/America/Goose_Bay
+TZID:/ical4j_1_0_rc1/America/Goose_Bay
 X-LIC-LOCATION:America/Goose_Bay
 BEGIN:DAYLIGHT
 TZOFFSETFROM:-0400

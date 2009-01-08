@@ -1,8 +1,8 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-beta5//EN
+PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_beta5/Pacific/Honolulu
+TZID:/ical4j_1_0_rc1/Pacific/Honolulu
 X-LIC-LOCATION:Pacific/Honolulu
 BEGIN:STANDARD
 TZOFFSETFROM:-1000
