@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -42,8 +43,6 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
@@ -63,6 +62,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.ExDate;
+import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
@@ -79,7 +79,7 @@ import org.apache.commons.logging.LogFactory;
  * A test case for VEvents.
  * @author Ben Fortuna
  */
-public class VEventTest extends ComponentTest {
+public class VEventTest extends CalendarComponentTest {
 
     private static Log log = LogFactory.getLog(VEventTest.class);
     
@@ -586,8 +586,9 @@ public class VEventTest extends ComponentTest {
      * @throws ParseException 
      * @throws URISyntaxException 
      * @throws IOException 
+     * @throws ParserException 
      */
-    public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException {
+    public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException, ParserException {
         UidGenerator uidGenerator = new UidGenerator("1");
         
         Calendar weekday9AM = getCalendarInstance();
@@ -766,6 +767,34 @@ public class VEventTest extends ComponentTest {
         suite.addTest(new VEventTest("testIsCalendarComponent", event));
         suite.addTest(new VEventTest("testEquals"));
 //        suite.addTest(new VEventTest("testValidation"));
+        
+        // use relaxed unfolding for samples..
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
+        
+        // test iTIP validation..
+//        File[] testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        File[] testFiles = new File[] {new File("etc/samples/valid/calconnect.ics"), new File("etc/samples/valid/calconnect10.ics")};
+        for (int i = 0; i < testFiles.length; i++) {
+            log.info("Sample [" + testFiles[i] + "]");
+            net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFiles[i].getPath());
+            if (Method.PUBLISH.equals(calendar.getProperty(Property.METHOD))) {
+                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext();) {
+                    VEvent event1 = (VEvent) it.next();
+                    suite.addTest(new VEventTest("testPublishValidationException", event1));
+                }
+            }
+            else if (Method.REQUEST.equals(calendar.getProperty(Property.METHOD))) {
+                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext();) {
+                    VEvent event1 = (VEvent) it.next();
+                    suite.addTest(new VEventTest("testRequestValidationException", event1));
+                }
+            }
+        }
+        
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, false);
+        
         return suite;
     }
 }

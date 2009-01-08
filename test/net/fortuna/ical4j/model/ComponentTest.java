@@ -37,6 +37,7 @@ import java.text.ParseException;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -142,7 +143,7 @@ public class ComponentTest extends TestCase {
     /**
      * @return
      */
-    public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException {
+    public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException, ParserException  {
         TestSuite suite = new TestSuite();
         
         Component component = new Component("test") {
