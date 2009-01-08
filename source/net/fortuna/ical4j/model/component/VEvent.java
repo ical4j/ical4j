@@ -68,6 +68,7 @@ import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.ComponentValidator;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
@@ -536,6 +537,11 @@ public class VEvent extends CalendarComponent {
         
         PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
         PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+        
+        for (Iterator i = getAlarms().iterator(); i.hasNext();) {
+            VAlarm alarm = (VAlarm) i.next();
+            alarm.validatePublish();
+        }
     }
     
     /**
@@ -618,6 +624,11 @@ public class VEvent extends CalendarComponent {
         PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        for (Iterator i = getAlarms().iterator(); i.hasNext();) {
+            VAlarm alarm = (VAlarm) i.next();
+            alarm.validateRequest();
+        }
     }
     
     /**
@@ -703,6 +714,8 @@ public class VEvent extends CalendarComponent {
         PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        ComponentValidator.assertNone(Component.VALARM, getAlarms());
     }
     
     /**
@@ -784,6 +797,11 @@ public class VEvent extends CalendarComponent {
         
         PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, getProperties());
         PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+        
+        for (Iterator i = getAlarms().iterator(); i.hasNext();) {
+            VAlarm alarm = (VAlarm) i.next();
+            alarm.validateAdd();
+        }
     }
     
     /**
@@ -872,6 +890,8 @@ public class VEvent extends CalendarComponent {
         PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
         
         PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+        
+        ComponentValidator.assertNone(Component.VALARM, getAlarms());
     }
     
     /**
@@ -963,6 +983,8 @@ public class VEvent extends CalendarComponent {
         PropertyValidator.getInstance().assertNone(Property.SUMMARY, getProperties());
         PropertyValidator.getInstance().assertNone(Property.TRANSP, getProperties());
         PropertyValidator.getInstance().assertNone(Property.URL, getProperties());
+        
+        ComponentValidator.assertNone(Component.VALARM, getAlarms());
     }
     
     /**
@@ -1049,6 +1071,11 @@ public class VEvent extends CalendarComponent {
         PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+        
+        for (Iterator i = getAlarms().iterator(); i.hasNext();) {
+            VAlarm alarm = (VAlarm) i.next();
+            alarm.validateCounter();
+        }
     }
     
     /**
@@ -1138,6 +1165,8 @@ public class VEvent extends CalendarComponent {
         PropertyValidator.getInstance().assertNone(Property.SUMMARY, getProperties());
         PropertyValidator.getInstance().assertNone(Property.TRANSP, getProperties());
         PropertyValidator.getInstance().assertNone(Property.URL, getProperties());
+        
+        ComponentValidator.assertNone(Component.VALARM, getAlarms());
     }
     
     /**

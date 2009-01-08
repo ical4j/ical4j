@@ -343,7 +343,66 @@ public class VAlarm extends CalendarComponent {
         PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
     }
 
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validatePublish()
+     */
+    public void validatePublish() throws ValidationException {
+        validateITIP();
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateAdd()
+     */
+    public void validateAdd() throws ValidationException {
+        validateITIP();
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCancel()
+     */
+    public void validateCancel() throws ValidationException {
+        validateITIP();
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+     */
+    public void validateCounter() throws ValidationException {
+        validateITIP();
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+     */
+    public void validateDeclineCounter() throws ValidationException {
+        validateITIP();
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+     */
+    public void validateRefresh() throws ValidationException {
+        validateITIP();
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateReply()
+     */
+    public void validateReply() throws ValidationException {
+        validateITIP();
+    }
+
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRequest()
+     */
+    public void validateRequest() throws ValidationException {
+        validateITIP();
+    }
+
     /**
+     * Common validation for all iTIP methods.
+     * @throws ValidationException
+     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -358,67 +417,16 @@ public class VAlarm extends CalendarComponent {
      *     X-PROPERTY      0+
      * </pre>
      */
-    public void validatePublish() throws ValidationException {
+    private void validateITIP() throws ValidationException {
+        PropertyValidator.getInstance().assertOne(Property.ACTION, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.TRIGGER, getProperties());
+        
         PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateAdd()
-     */
-    public void validateAdd() throws ValidationException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCancel()
-     */
-    public void validateCancel() throws ValidationException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
-     */
-    public void validateCounter() throws ValidationException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
-     */
-    public void validateDeclineCounter() throws ValidationException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
-     */
-    public void validateRefresh() throws ValidationException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateReply()
-     */
-    public void validateReply() throws ValidationException {
-        // TODO Auto-generated method stub
-        
-    }
-
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRequest()
-     */
-    public void validateRequest() throws ValidationException {
-        // TODO Auto-generated method stub
-        
-    }
-
     /**
      * Returns the mandatory action property.
      * @return
