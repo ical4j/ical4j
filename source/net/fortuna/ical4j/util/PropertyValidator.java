@@ -117,7 +117,7 @@ public final class PropertyValidator {
      * is found in the list of properties
      */
     public void assertNone(final String propertyName, final PropertyList properties) throws ValidationException {
-        if (properties.getProperties(propertyName).size() > 0) {
+        if (properties.getProperty(propertyName) != null) {
             throw new ValidationException(
                 "Property [" + propertyName + "] is not applicable");
         }

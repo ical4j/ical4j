@@ -99,7 +99,7 @@ public final class ParameterValidator {
      * is found in the list of properties
      */
     public void assertNone(final String paramName, final ParameterList parameters) throws ValidationException {
-        if (parameters.getParameters(paramName).size() > 0) {
+        if (parameters.getParameter(paramName) != null) {
             throw new ValidationException(
                 "Parameter [" + paramName + "] is not applicable");
         }
