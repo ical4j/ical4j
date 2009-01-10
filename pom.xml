@@ -275,11 +275,10 @@
 					<comparisonVersion>1.0-beta5</comparisonVersion>
 				</configuration>
 			</plugin>
-			<!-- 
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
-				<version>2.1</version>
 				<reportSets>
 					<reportSet>
 						<id>changelog</id>
@@ -300,7 +299,6 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
-			 -->
 		</plugins>
 	</reporting>
 </project>
