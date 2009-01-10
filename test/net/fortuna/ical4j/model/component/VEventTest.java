@@ -781,13 +781,13 @@ public class VEventTest extends CalendarComponentTest {
             if (Method.PUBLISH.equals(calendar.getProperty(Property.METHOD))) {
                 for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext();) {
                     VEvent event1 = (VEvent) it.next();
-                    suite.addTest(new VEventTest("testPublishValidationException", event1));
+                    suite.addTest(new VEventTest("testPublishValidation", event1));
                 }
             }
             else if (Method.REQUEST.equals(calendar.getProperty(Property.METHOD))) {
                 for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext();) {
                     VEvent event1 = (VEvent) it.next();
-                    suite.addTest(new VEventTest("testRequestValidationException", event1));
+                    suite.addTest(new VEventTest("testRequestValidation", event1));
                 }
             }
         }
