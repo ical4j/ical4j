@@ -288,13 +288,16 @@ public class Calendar implements Serializable {
             }
         }
 
-        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+//        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // validate method..
             if (Method.PUBLISH.equals(getProperty(Property.METHOD))) {
                 if (getComponent(Component.VEVENT) != null) {
                     ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
                     ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
+                    
+                    if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+                        ComponentValidator.assertNone(Component.VTODO, getComponents());
+                    }
                 }
                 else if (getComponent(Component.VFREEBUSY) != null) {
                     ComponentValidator.assertNone(Component.VTODO, getComponents());
@@ -480,7 +483,7 @@ public class Calendar implements Serializable {
                     component.validateDeclineCounter();
                 }
             }
-        }
+//        }
         
         if (recurse) {
             validateProperties();

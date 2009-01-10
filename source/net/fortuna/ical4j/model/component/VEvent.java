@@ -513,8 +513,12 @@ public class VEvent extends CalendarComponent {
     public void validatePublish() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
         PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
+        
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
+        }
+        
         PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
         
         PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
@@ -535,7 +539,10 @@ public class VEvent extends CalendarComponent {
         PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
         
-        PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
+        }
+        
         PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
         
         for (Iterator i = getAlarms().iterator(); i.hasNext();) {
@@ -599,7 +606,9 @@ public class VEvent extends CalendarComponent {
      * </pre>
      */
     public void validateRequest() throws ValidationException {
-        PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
+        }
         
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
         PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());

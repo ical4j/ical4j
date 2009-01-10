@@ -391,8 +391,12 @@ public class VToDo extends CalendarComponent {
     public void validatePublish() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
         PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.PRIORITY, getProperties());
+        
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.PRIORITY, getProperties());
+        }
+        
         PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
         PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
         
