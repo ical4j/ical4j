@@ -2,6 +2,12 @@
  iCal4j - Changes
 ==================
 
+See the changelog report for further details:
+
+http://m2.modularity.net.au/projects/ical4j/changelog.html
+
+==
+
 1.0-beta5
 
  - Added support for compatibility configuration via properties file
