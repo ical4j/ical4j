@@ -21,6 +21,7 @@
 				<include>FAQ</include>
 				<include>TODO</include>
 				<include>rfc2445.txt</include>
+				<include>rfc2446.txt</include>
 				<include>standard_deviations.txt</include>
 				<include>samples/**</include>
 				<include>zoneinfo*/**</include>
@@ -59,12 +60,6 @@
 			<outputDirectory>lib</outputDirectory>
 			<unpack>false</unpack>
 			<scope>runtime</scope>
-			<excludes>
-				<exclude>avalon-framework:avalon-framework</exclude>
-				<exclude>log4j:log4j</exclude>
-				<exclude>logkit:logkit</exclude>
-				<exclude>javax.servlet:servlet-api</exclude>
-			</excludes>
 		</dependencySet>
 	</dependencySets>
 </assembly>

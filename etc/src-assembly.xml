@@ -21,8 +21,12 @@
 			<includes>
 				<include>FAQ</include>
 				<include>TODO</include>
-				<include>checkstyle.xml</include>
+				<include>rfc2445.txt</include>
+				<include>rfc2446.txt</include>
+				<include>standard_deviations.txt</include>
+				<include>samples/**</include>
 				<include>zoneinfo*/**</include>
+				<include>checkstyle.xml</include>
 			</includes>
 		</fileSet>
 		<fileSet>
@@ -66,7 +70,7 @@
 		<dependencySet>
 			<outputDirectory>lib</outputDirectory>
 			<unpack>false</unpack>
-			<scope>runtime</scope>
+			<scope>test</scope>
 		</dependencySet>
 	</dependencySets>
 </assembly>
