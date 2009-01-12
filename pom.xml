@@ -272,10 +272,10 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
-					<comparisonVersion>1.0-beta5</comparisonVersion>
+					<comparisonVersion>1.0-rc1</comparisonVersion>
 				</configuration>
 			</plugin>
-
+<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
@@ -286,10 +286,10 @@
 							<type>tag</type>
 							<tags>
 								<tag implementation="java.lang.String">
-									ical4j-1_0-beta5
+									ical4j-1_0-rc1
 								</tag>
 								<tag implementation="java.lang.String">
-									ical4j-1_0-rc1
+									ical4j-1_0-rc2
 								</tag>
 							</tags>
 						</configuration>
@@ -299,6 +299,7 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
+ -->
 		</plugins>
 	</reporting>
 </project>
