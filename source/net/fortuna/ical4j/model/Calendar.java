@@ -256,6 +256,11 @@ public class Calendar implements Serializable {
         PropertyValidator.getInstance().assertOne(Property.PRODID, properties);
         PropertyValidator.getInstance().assertOne(Property.VERSION, properties);
 
+        // require VERSION:2.0 for RFC2445..
+        if (!Version.VERSION_2_0.equals(getProperty(Property.VERSION))) {
+            throw new ValidationException("Unsupported Version: " + getProperty(Property.VERSION).getValue());
+        }
+        
         // 'calscale' and 'method' are optional,
         // but MUST NOT occur more than once
         PropertyValidator.getInstance().assertOneOrLess(Property.CALSCALE,
