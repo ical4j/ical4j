@@ -185,7 +185,7 @@ public final class Calendars {
      * Returns a unique identifier as specified by components in the provided calendar.
      * @param calendar
      * @return
-     * @throws ConstraintViolationException if more than one unique identifer is found in the specified calendar
+     * @throws ConstraintViolationException if zero or more than one unique identifer is found in the specified calendar
      */
     public static Uid getUid(final Calendar calendar) throws ConstraintViolationException {
         Uid uid = null;
@@ -198,6 +198,9 @@ public final class Calendars {
                 }
                 uid = foundUid;
             }
+        }
+        if (uid == null) {
+            throw new ConstraintViolationException("Calendar must specify a single unique identifier (UID)");
         }
         return uid;
     }
