@@ -476,7 +476,7 @@ public class VFreeBusy extends CalendarComponent {
      *                             in ascending order
      *     ORGANIZER       1       MUST contain the address of originator of
      *                             busy time data.
-     * 
+     *     UID             1
      *     COMMENT         0 or 1
      *     CONTACT         0+
      *     X-PROPERTY      0+
@@ -485,7 +485,6 @@ public class VFreeBusy extends CalendarComponent {
      *     ATTENDEE        0
      *     DURATION        0
      *     REQUEST-STATUS  0
-     *     UID             0
      * 
      * X-COMPONENT         0+
      * 
@@ -503,6 +502,7 @@ public class VFreeBusy extends CalendarComponent {
         PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
         PropertyValidator.getInstance().assertOne(Property.DTEND, getProperties());
         PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
         
         PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
@@ -510,7 +510,6 @@ public class VFreeBusy extends CalendarComponent {
         PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
         PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
         PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
-        PropertyValidator.getInstance().assertNone(Property.UID, getProperties());
     }
 
     /**

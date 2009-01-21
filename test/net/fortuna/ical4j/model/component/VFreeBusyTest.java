@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.component;
 
 import java.io.FileInputStream;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
 import junit.framework.TestSuite;
@@ -39,7 +40,6 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
@@ -56,7 +56,9 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.FreeBusy;
+import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.logging.Log;
@@ -67,7 +69,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author Ben Fortuna
  */
-public class VFreeBusyTest extends ComponentTest {
+public class VFreeBusyTest extends CalendarComponentTest {
 
     private static Log log = LogFactory.getLog(VFreeBusyTest.class);
 
@@ -369,7 +371,7 @@ public class VFreeBusyTest extends ComponentTest {
     /**
      * @return
      */
-    public static TestSuite suite() {
+    public static TestSuite suite() throws ParseException, URISyntaxException {
         TestSuite suite = new TestSuite();
         
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList"));
@@ -379,10 +381,22 @@ public class VFreeBusyTest extends ComponentTest {
         suite.addTest(new VFreeBusyTest("testAngelites"));
         suite.addTest(new VFreeBusyTest("testRequestFreeTime"));
         suite.addTest(new VFreeBusyTest("testBusyTime"));
-        
+
+        // icalendar validation
         VFreeBusy fb = new VFreeBusy();
         suite.addTest(new VFreeBusyTest("testIsCalendarComponent", fb));
         suite.addTest(new VFreeBusyTest("testValidation", fb));
+
+        // iTIP PUBLISH validation
+        suite.addTest(new VFreeBusyTest("testPublishValidationException", new VFreeBusy()));
+        VFreeBusy publishFb = new VFreeBusy();
+        publishFb.getProperties().add(new DtStart("20091212T000000Z"));
+        publishFb.getProperties().add(new DtEnd("20091212T235959Z"));
+        publishFb.getProperties().add(new FreeBusy("20091212T140000Z/PT3H"));
+        publishFb.getProperties().add(new Organizer("mailto:joe@example.com"));
+        publishFb.getProperties().add(new Uid("12"));
+        suite.addTest(new VFreeBusyTest("testPublishValidation", publishFb));
+
         
         return suite;
     }
