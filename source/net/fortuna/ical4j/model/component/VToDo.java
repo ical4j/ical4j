@@ -528,10 +528,9 @@ public class VToDo extends CalendarComponent {
      *     ATTENDEE         1+
      *     DTSTAMP          1
      *     ORGANIZER        1
-     *     REQUEST-STATUS   1+
      *     UID              1      MUST must be the address of the replying
      *                             attendee
-     * 
+     *     REQUEST-STATUS   0+
      *     ATTACH           0+
      *     CATEGORIES       0 or 1 This property may contain a list of values
      *     CLASS            0 or 1
@@ -575,12 +574,12 @@ public class VToDo extends CalendarComponent {
      */
     public void validateReply() throws ValidationException {
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
-        PropertyValidator.getInstance().assertOneOrMore(Property.REQUEST_STATUS, getProperties());
         
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
         PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
         PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
-        
+
+        PropertyValidator.getInstance().assertOneOrLess(Property.REQUEST_STATUS, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());

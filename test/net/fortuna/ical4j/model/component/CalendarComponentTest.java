@@ -131,4 +131,32 @@ public class CalendarComponentTest extends ComponentTest {
         }
     }
 
+    /**
+     * Test component iTIP METHOD validation.
+     */
+    public final void testReplyValidation() throws ValidationException {
+        component.validateReply();
+    }
+
+    /**
+     * Test component iTIP METHOD validation.
+     */
+    public final void testReplyRelaxedValidation() throws ValidationException {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
+        component.validateReply();
+    }
+
+    /**
+     *
+     */
+    public final void testReplyValidationException() {
+        try {
+            component.validateReply();
+            fail("ValidationException should be thrown!");
+        }
+        catch (ValidationException ve) {
+            LOG.debug("Exception caught", ve);
+        }
+    }
+
 }

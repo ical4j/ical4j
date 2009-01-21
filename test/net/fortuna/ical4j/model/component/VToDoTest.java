@@ -31,8 +31,11 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import java.net.URISyntaxException;
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.ComponentTest;
+import net.fortuna.ical4j.model.property.Attendee;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.Uid;
 
 /**
  * $Id$
@@ -41,7 +44,7 @@ import net.fortuna.ical4j.model.ComponentTest;
  *
  * @author fortuna
  */
-public class VToDoTest extends ComponentTest {
+public class VToDoTest extends CalendarComponentTest {
 
     /**
      * @param testMethod
@@ -54,12 +57,26 @@ public class VToDoTest extends ComponentTest {
     /**
      * @return
      */
-    public static TestSuite suite() {
+    public static TestSuite suite() throws URISyntaxException {
         TestSuite suite = new TestSuite();
 
         VToDo td = new VToDo();
         suite.addTest(new VToDoTest("testIsCalendarComponent", td));
+
+        // iCalendar validation
         suite.addTest(new VToDoTest("testValidationException", td));
+        VToDo validTd = new VToDo();
+        validTd.getProperties().add(new Uid("12"));
+        suite.addTest(new VToDoTest("testValidation", validTd));
+
+        // iTIP REPLY validation
+        suite.addTest(new VToDoTest("testReplyValidationException", new VToDo()));
+        VToDo replyTd = new VToDo();
+        replyTd.getProperties().add(new Attendee("mailto:jane@example.com"));
+        replyTd.getProperties().add(new Organizer("mailto:joe@example.com"));
+        replyTd.getProperties().add(new Uid("12"));
+        suite.addTest(new VToDoTest("testReplyValidation", replyTd));
+
         return suite;
     }
 
