@@ -579,7 +579,6 @@ public class VToDo extends CalendarComponent {
         PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
         PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
 
-        PropertyValidator.getInstance().assertOneOrLess(Property.REQUEST_STATUS, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
