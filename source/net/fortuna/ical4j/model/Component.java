@@ -279,7 +279,7 @@ public abstract class Component implements Serializable {
                 for (final Iterator j = rdate.getPeriods().iterator(); j.hasNext();) {
                     final Period rdatePeriod = (Period) j.next();
                     if (period.intersects(rdatePeriod)) {
-                        recurrenceSet.add(period);
+                        recurrenceSet.add(rdatePeriod);
                     }
                 }
             }
