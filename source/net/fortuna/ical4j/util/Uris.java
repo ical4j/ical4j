@@ -67,7 +67,7 @@ public final class Uris {
          */
 
         /*
-         * Lotus Notes does not correctly strip angle brackets from cid uris. From RFC2932: A "cid" URL is converted to
+         * Lotus Notes does not correctly strip angle brackets from cid uris. From RFC2392: A "cid" URL is converted to
          * the corresponding Content-ID message header [MIME] by removing the "cid:" prefix, converting the % encoded
          * character to their equivalent US-ASCII characters, and enclosing the remaining parts with an angle bracket
          * pair, "<" and ">". For example, "cid:foo4%25foo1@bar.net" corresponds to Content-ID: <foo4%25foo1@bar.net>
