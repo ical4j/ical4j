@@ -199,7 +199,8 @@ public final class Dates {
      * @return
      */
     public static long round(final long time, final int precision) {
-        return round(time, precision, TimeZone.getDefault());
+//        return round(time, precision, TimeZone.getDefault());
+        return round(time, precision, TimeZone.getTimeZone("Etc/UTC"));
     }
     
     /**
