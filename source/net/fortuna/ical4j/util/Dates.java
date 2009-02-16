@@ -199,8 +199,20 @@ public final class Dates {
      * @return
      */
     public static long round(final long time, final int precision) {
-//        return round(time, precision, TimeZone.getDefault());
-        return round(time, precision, TimeZone.getTimeZone("Etc/UTC"));
+        return round(time, precision, TimeZone.getDefault());
+//        return round(time, precision, TimeZone.getTimeZone("Etc/UTC"));
+        /*
+        long newTime = time;
+        if (precision == PRECISION_DAY) {
+            long remainder = newTime%(1000*60*60); // get the mod remainder using milliseconds*seconds*min
+            newTime = newTime-remainder;  // remove the remainder from the time to clear the milliseconds, seconds and minutes
+        }
+        else if (precision == PRECISION_SECOND) {
+            long remainder = newTime%(1000); // get the mod remainder using milliseconds
+            newTime = newTime-remainder;  // remove the remainder from the time to clear the milliseconds
+        }
+        return newTime;
+	*/
     }
     
     /**
