@@ -206,8 +206,8 @@ public class CalendarsTest extends TestCase {
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar"));
         
         calendar = Calendars.load("etc/samples/valid/OZMovies.ics");
-        suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=publish"));
-        suite.addTest(new CalendarsTest("testGetContentType", calendar, Charset.forName("US-ASCII"), "text/calendar; method=publish; charset=US-ASCII"));
+        suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
+        suite.addTest(new CalendarsTest("testGetContentType", calendar, Charset.forName("US-ASCII"), "text/calendar; method=PUBLISH; charset=US-ASCII"));
         
         return suite;
     }
