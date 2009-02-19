@@ -33,7 +33,9 @@ package net.fortuna.ical4j.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,6 +44,7 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * $Id$
@@ -55,25 +58,82 @@ public class CalendarsTest extends TestCase {
 
     private static final Log LOG = LogFactory.getLog(CalendarsTest.class);
     
+    private String path;
+    
+    private Calendar[] calendars;
+    
+    private Calendar calendar;
+    
+    private int expectedCount;
+    
+    private String expectedContentType;
+    
+    /**
+     * @param testMethod
+     * @param path
+     */
+    public CalendarsTest(String testMethod, String path) {
+        super(testMethod);
+        this.path = path;
+    }
+    
+    /**
+     * @param testMethod
+     */
+    public CalendarsTest(String testMethod, Calendar[] calendars) {
+        super(testMethod);
+        this.calendars = calendars;
+    }
+    
+    /**
+     * @param testMethod
+     */
+    public CalendarsTest(String testMethod, Calendar calendar, int expectedCount) {
+        super(testMethod);
+        this.calendar = calendar;
+        this.expectedCount = expectedCount;
+    }
+    
+    /**
+     * @param testMethod
+     */
+    public CalendarsTest(String testMethod, Calendar calendar, String expectedContentType) {
+        super(testMethod);
+        this.calendar = calendar;
+        this.expectedContentType = expectedContentType;
+    }
+    
     /**
      * Test loading of calendars.
      * @throws IOException
      * @throws ParserException
      */
     public void testLoad() throws IOException, ParserException {
-        assertNotNull(Calendars.load(
-                "etc/samples/valid/Australian32Holidays.ics"));
-        
+        assertNotNull(Calendars.load(path));
+    }
+    
+    /**
+     * Test loading of calendars.
+     * @throws IOException
+     * @throws ParserException
+     */
+    public void testLoadFileNotFoundException() throws IOException, ParserException {
         try {
-            Calendars.load("etc/samples/valid/doesnt-exist.ics");
+            Calendars.load(path);
             fail("Should throw FileNotFoundException");
         }
         catch (FileNotFoundException fnfe) {
             LOG.info("Caught exception: " + fnfe.getMessage());
         }
-        
+    }
+    
+    /**
+     * Test loading of calendars.
+     * @throws IOException
+     */
+    public void testLoadParserException() throws IOException {
         try {
-            Calendars.load("etc/samples/invalid/google_aus_holidays.ics");
+            Calendars.load(path);
             fail("Should throw ParserException");
         }
         catch (ParserException pe) {
@@ -85,32 +145,22 @@ public class CalendarsTest extends TestCase {
      * Test merging of calendars.
      */
     public void testMerge() throws IOException, ParserException {
-        Calendar calendar1 = Calendars.load(
-                "etc/samples/valid/Australian32Holidays.ics");
-        Calendar calendar2 = Calendars.load(
-                "etc/samples/valid/OZMovies.ics");
-        
-        Calendar result = Calendars.merge(calendar1, calendar2);
-        
-        for (Iterator i = calendar1.getProperties().iterator(); i.hasNext();) {
-            Object p = i.next();
-            assertTrue("Property [" + p + "] not found in merged calendar",
-                    result.getProperties().contains(p));
+        Calendar result = calendars[0];
+        for (int i = 1; i < calendars.length; i++) {
+            result = Calendars.merge(result, calendars[i]);
         }
-        for (Iterator i = calendar1.getComponents().iterator(); i.hasNext();) {
-            Object c = i.next();
-            assertTrue("Component [" + c + "] not found in merged calendar",
-                    result.getComponents().contains(c));
-        }
-        for (Iterator i = calendar2.getProperties().iterator(); i.hasNext();) {
-            Object p = i.next();
-            assertTrue("Property [" + p + "] not found in merged calendar",
-                    result.getProperties().contains(p));
-        }
-        for (Iterator i = calendar2.getComponents().iterator(); i.hasNext();) {
-            Object c = i.next();
-            assertTrue("Component [" + c + "] not found in merged calendar",
-                    result.getComponents().contains(c));
+
+        for (int i = 0; i < calendars.length; i++) {
+            for (Iterator it = calendars[i].getProperties().iterator(); it.hasNext();) {
+                Object p = it.next();
+                assertTrue("Property [" + p + "] not found in merged calendar",
+                        result.getProperties().contains(p));
+            }
+            for (Iterator it = calendars[i].getComponents().iterator(); it.hasNext();) {
+                Object c = it.next();
+                assertTrue("Component [" + c + "] not found in merged calendar",
+                        result.getComponents().contains(c));
+            }
         }
     }
     
@@ -118,8 +168,42 @@ public class CalendarsTest extends TestCase {
      * Test calendar split.
      */
     public void testSplit() throws IOException, ParserException {
-        Calendar calendar = Calendars.load("etc/samples/valid/Australian32Holidays.ics");
         Calendar[] split = Calendars.split(calendar);
-        assertEquals(10, split.length);
+        assertEquals(expectedCount, split.length);
+    }
+    
+    /**
+     * 
+     */
+    public void testGetContentType() {
+        assertEquals(expectedContentType, Calendars.getContentType(calendar));
+    }
+    
+    /**
+     * @return
+     * @throws ParserException 
+     * @throws IOException 
+     */
+    public static TestSuite suite() throws IOException, ParserException {
+        TestSuite suite = new TestSuite();
+        
+        suite.addTest(new CalendarsTest("testLoad", "etc/samples/valid/Australian32Holidays.ics"));
+        suite.addTest(new CalendarsTest("testLoadFileNotFoundException", "etc/samples/valid/doesnt-exist.ics"));
+        suite.addTest(new CalendarsTest("testLoadParserException", "etc/samples/invalid/google_aus_holidays.ics"));
+
+        List calendars = new ArrayList();
+        calendars.add(Calendars.load("etc/samples/valid/Australian32Holidays.ics"));
+        calendars.add(Calendars.load("etc/samples/valid/OZMovies.ics"));
+        suite.addTest(new CalendarsTest("testMerge", (Calendar[]) calendars.toArray(new Calendar[calendars.size()])));
+        
+        Calendar calendar = Calendars.load("etc/samples/valid/Australian32Holidays.ics");
+        suite.addTest(new CalendarsTest("testSplit", calendar, 10));
+        
+        suite.addTest(new CalendarsTest("testGetContentType", calendar, "text/calendar"));
+        
+        calendar = Calendars.load("etc/samples/valid/OZMovies.ics");
+        suite.addTest(new CalendarsTest("testGetContentType", calendar, "text/calendar; method=publish"));
+        
+        return suite;
     }
 }

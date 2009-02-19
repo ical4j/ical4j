@@ -49,6 +49,7 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Uid;
 
 /**
@@ -203,5 +204,21 @@ public final class Calendars {
             throw new ConstraintViolationException("Calendar must specify a single unique identifier (UID)");
         }
         return uid;
+    }
+    
+    /**
+     * Returns an appropriate MIME Content-Type for the specified calendar object.
+     * @param calendar
+     * @return
+     */
+    public static String getContentType(Calendar calendar) {
+        StringBuffer b = new StringBuffer("text/calendar");
+        
+        Method method = (Method) calendar.getProperty(Property.METHOD);
+        if (method != null) {
+            b.append("; method=");
+            b.append(method.getValue().toLowerCase());
+        }
+        return b.toString();
     }
 }
