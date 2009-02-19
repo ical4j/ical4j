@@ -34,6 +34,7 @@ package net.fortuna.ical4j.util;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -211,13 +212,18 @@ public final class Calendars {
      * @param calendar
      * @return
      */
-    public static String getContentType(Calendar calendar) {
+    public static String getContentType(Calendar calendar, Charset charset) {
         StringBuffer b = new StringBuffer("text/calendar");
         
         Method method = (Method) calendar.getProperty(Property.METHOD);
         if (method != null) {
             b.append("; method=");
-            b.append(method.getValue().toLowerCase());
+            b.append(method.getValue());
+        }
+        
+        if (charset != null) {
+            b.append("; charset=");
+            b.append(charset);
         }
         return b.toString();
     }

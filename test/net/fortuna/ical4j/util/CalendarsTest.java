@@ -33,6 +33,7 @@ package net.fortuna.ical4j.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -66,6 +67,8 @@ public class CalendarsTest extends TestCase {
     
     private int expectedCount;
     
+    private Charset charset;
+    
     private String expectedContentType;
     
     /**
@@ -97,9 +100,10 @@ public class CalendarsTest extends TestCase {
     /**
      * @param testMethod
      */
-    public CalendarsTest(String testMethod, Calendar calendar, String expectedContentType) {
+    public CalendarsTest(String testMethod, Calendar calendar, Charset charset, String expectedContentType) {
         super(testMethod);
         this.calendar = calendar;
+        this.charset = charset;
         this.expectedContentType = expectedContentType;
     }
     
@@ -176,7 +180,7 @@ public class CalendarsTest extends TestCase {
      * 
      */
     public void testGetContentType() {
-        assertEquals(expectedContentType, Calendars.getContentType(calendar));
+        assertEquals(expectedContentType, Calendars.getContentType(calendar, charset));
     }
     
     /**
@@ -199,10 +203,11 @@ public class CalendarsTest extends TestCase {
         Calendar calendar = Calendars.load("etc/samples/valid/Australian32Holidays.ics");
         suite.addTest(new CalendarsTest("testSplit", calendar, 10));
         
-        suite.addTest(new CalendarsTest("testGetContentType", calendar, "text/calendar"));
+        suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar"));
         
         calendar = Calendars.load("etc/samples/valid/OZMovies.ics");
-        suite.addTest(new CalendarsTest("testGetContentType", calendar, "text/calendar; method=publish"));
+        suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=publish"));
+        suite.addTest(new CalendarsTest("testGetContentType", calendar, Charset.forName("US-ASCII"), "text/calendar; method=publish; charset=US-ASCII"));
         
         return suite;
     }
