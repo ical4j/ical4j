@@ -181,11 +181,11 @@ import net.fortuna.ical4j.util.PropertyValidator;
  * is due:
  *
  * <pre><code>
- * VAlarm reminder = new VAlarm(-1000 * 60 * 60);
+ * VAlarm reminder = new VAlarm(new Dur(0, -1, 0, 0));
  *
  * // repeat reminder four (4) more times every fifteen (15) minutes..
  * reminder.getProperties().add(new Repeat(4));
- * reminder.getProperties().add(new Duration(1000 * 60 * 15));
+ * reminder.getProperties().add(new Duration(new Dur(0, 0, 15, 0));
  *
  * // display a message..
  * reminder.getProperties().add(Action.DISPLAY);
