@@ -42,6 +42,7 @@ import java.util.regex.Pattern;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.logging.Log;
@@ -162,9 +163,22 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private VTimeZone loadVTimeZone(final String id) throws IOException, ParserException {
         final URL resource = TimeZoneRegistryImpl.class.getResource(resourcePrefix + id + ".ics");
         if (resource != null) {
-            final CalendarBuilder builder = new CalendarBuilder();
-            final Calendar calendar = builder.build(resource.openStream());
-            return (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
+            CalendarBuilder builder = new CalendarBuilder();
+            Calendar calendar = builder.build(resource.openStream());
+            VTimeZone vTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
+            // load any available updates for the timezone..
+            TzUrl tzUrl = vTimeZone.getTimeZoneUrl();
+            if (tzUrl != null) {
+                try {
+                    builder = new CalendarBuilder();
+                    calendar = builder.build(tzUrl.getUri().toURL().openStream());
+                    return (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
+                }
+                catch (Exception e) {
+                    log.warn("Unable to retrieve updates for timezone: " + id, e);
+                }
+            }
+            return vTimeZone;
         }
         return null;
     }
