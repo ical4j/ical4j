@@ -103,14 +103,16 @@ public class CalendarDateFormatFactoryTest extends TestCase {
     public void testParseSuccess() throws ParseException {
 
         SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+        // Date instances are always in UTC..
+        sdf.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
         DateFormat cdf = getCalendarFormatForPattern(pattern);
         sdf.setLenient(lenient);
         cdf.setLenient(lenient);
 
         for (int i = 0; i < timeZones.length; i++) {
             assertNotNull(timeZones[i]);
-            sdf.setTimeZone(timeZones[i]);
             cdf.setTimeZone(timeZones[i]);
+            sdf.setTimeZone(cdf.getTimeZone());
 
             DateFormat clone = (DateFormat) cdf.clone();
 
