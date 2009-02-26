@@ -104,7 +104,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * @see net.fortuna.ical4j.model.TimeZoneRegistry#register(net.fortuna.ical4j.model.TimeZone)
      */
     public final void register(final TimeZone timezone) {
-        timezones.put(timezone.getID(), timezone);
+        // load any available updates for the timezone..
+        timezones.put(timezone.getID(), new TimeZone(updateDefinition(timezone.getVTimeZone())));
     }
 
     /*
@@ -167,19 +168,27 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             Calendar calendar = builder.build(resource.openStream());
             VTimeZone vTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
             // load any available updates for the timezone..
-            TzUrl tzUrl = vTimeZone.getTimeZoneUrl();
-            if (tzUrl != null) {
-                try {
-                    builder = new CalendarBuilder();
-                    calendar = builder.build(tzUrl.getUri().toURL().openStream());
-                    return (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
-                }
-                catch (Exception e) {
-                    log.warn("Unable to retrieve updates for timezone: " + id, e);
-                }
-            }
-            return vTimeZone;
+            return updateDefinition(vTimeZone);
         }
         return null;
+    }
+    
+    /**
+     * @param vTimeZone
+     * @return
+     */
+    private VTimeZone updateDefinition(VTimeZone vTimeZone) {
+        TzUrl tzUrl = vTimeZone.getTimeZoneUrl();
+        if (tzUrl != null) {
+            try {
+                CalendarBuilder builder = new CalendarBuilder();
+                Calendar calendar = builder.build(tzUrl.getUri().toURL().openStream());
+                return (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
+            }
+            catch (Exception e) {
+                log.warn("Unable to retrieve updates for timezone: " + vTimeZone.getTimeZoneId().getValue(), e);
+            }
+        }
+        return vTimeZone;
     }
 }
