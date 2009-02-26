@@ -202,6 +202,36 @@ public class DateTime extends Date {
     }
 
     /**
+     * @param value
+     * @param pattern
+     * @param timezone
+     * @throws ParseException
+     */
+    public DateTime(String value, String pattern, TimeZone timezone) throws ParseException {
+        this();
+        DateFormat format = CalendarDateFormatFactory.getInstance(pattern);
+        setTime(value, format, timezone);
+    }
+    
+    /**
+     * @param value
+     * @param pattern
+     * @param utc
+     * @throws ParseException
+     */
+    public DateTime(String value, String pattern, boolean utc) throws ParseException {
+        this();
+        DateFormat format = CalendarDateFormatFactory.getInstance(pattern);
+        if (utc) {
+            setTime(value, format, ((DateFormat) utc_format.get()).getTimeZone());
+        }
+        else {
+            setTime(value, format, null);
+        }
+        setUtc(utc);
+    }
+    
+    /**
      * Internal set of time by parsing value string.
      * @param value
      * @param format a {@code DateFormat}, protected by the use of a ThreadLocal.
