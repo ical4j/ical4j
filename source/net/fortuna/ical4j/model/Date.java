@@ -101,4 +101,14 @@ public class Date extends Iso8601 {
         this();
         setTime(getFormat().parse(value).getTime());
     }
+    
+    /**
+     * @param value
+     * @param pattern
+     * @throws ParseException
+     */
+    public Date(String value, String pattern) throws ParseException {
+        super(pattern, Dates.PRECISION_DAY);
+        setTime(getFormat().parse(value).getTime());
+    }
 }
