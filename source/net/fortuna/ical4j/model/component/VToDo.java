@@ -399,6 +399,7 @@ public class VToDo extends CalendarComponent {
         PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
         PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
         
+        // DTSTART: RFC2446 conflicts with RCF2445..
         PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
         PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
