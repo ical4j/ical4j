@@ -183,7 +183,10 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             try {
                 CalendarBuilder builder = new CalendarBuilder();
                 Calendar calendar = builder.build(tzUrl.getUri().toURL().openStream());
-                return (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
+                VTimeZone updatedVTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
+                if (updatedVTimeZone != null) {
+                    return updatedVTimeZone;
+                }
             }
             catch (Exception e) {
                 log.warn("Unable to retrieve updates for timezone: " + vTimeZone.getTimeZoneId().getValue(), e);
