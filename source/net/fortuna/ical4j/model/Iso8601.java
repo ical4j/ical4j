@@ -66,8 +66,8 @@ public abstract class Iso8601 extends Date {
      * @param time
      * @param pattern
      */
-    public Iso8601(final long time, final String pattern, final int precision) {
-        super(Dates.round(time, precision)); //, TimeZone.getTimeZone(TimeZones.GMT_ID)));
+    public Iso8601(final long time, final String pattern, final int precision, java.util.TimeZone tz) {
+        super(Dates.round(time, precision, tz)); //, TimeZone.getTimeZone(TimeZones.GMT_ID)));
 //        format = new SimpleDateFormat(pattern);
         format = CalendarDateFormatFactory.getInstance(pattern);
         format.setLenient(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
@@ -81,16 +81,16 @@ public abstract class Iso8601 extends Date {
     /**
      * @param pattern
      */
-    public Iso8601(final String pattern, final int precision) {
-        this(System.currentTimeMillis(), pattern, precision);
+    public Iso8601(final String pattern, final int precision, java.util.TimeZone tz) {
+        this(System.currentTimeMillis(), pattern, precision, tz);
     }
 
     /**
      * @param time
      * @param pattern
      */
-    public Iso8601(final Date time, final String pattern, final int precision) {
-        this(time.getTime(), pattern, precision);
+    public Iso8601(final Date time, final String pattern, final int precision, java.util.TimeZone tz) {
+        this(time.getTime(), pattern, precision, tz);
     }
     
     /* (non-Javadoc)

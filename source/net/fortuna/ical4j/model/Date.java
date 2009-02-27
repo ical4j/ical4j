@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import java.text.ParseException;
+import java.util.TimeZone;
 
 import net.fortuna.ical4j.util.Dates;
 
@@ -55,7 +56,7 @@ public class Date extends Iso8601 {
      * Default constructor.
      */
     public Date() {
-        super(PATTERN, Dates.PRECISION_DAY);
+        super(PATTERN, Dates.PRECISION_DAY, TimeZone.getTimeZone("Etc/UTC"));
     }
     
     /**
@@ -64,14 +65,14 @@ public class Date extends Iso8601 {
      * @param precision
      */
     protected Date(final int precision) {
-        super(PATTERN, precision);
+        super(PATTERN, precision, TimeZone.getTimeZone("Etc/UTC"));
     }
 
     /**
      * @param time
      */
     public Date(final long time) {
-        super(time, PATTERN, Dates.PRECISION_DAY);
+        super(time, PATTERN, Dates.PRECISION_DAY, TimeZone.getTimeZone("Etc/UTC"));
     }
     
     /**
@@ -81,7 +82,7 @@ public class Date extends Iso8601 {
      * @param precision
      */
     protected Date(final long time, final int precision) {
-        super(time, PATTERN, precision);
+        super(time, PATTERN, precision, TimeZone.getTimeZone("Etc/UTC"));
     }
 
     /**
@@ -108,7 +109,7 @@ public class Date extends Iso8601 {
      * @throws ParseException
      */
     public Date(String value, String pattern) throws ParseException {
-        super(pattern, Dates.PRECISION_DAY);
+        super(pattern, Dates.PRECISION_DAY, TimeZone.getTimeZone("Etc/UTC"));
         setTime(getFormat().parse(value).getTime());
     }
 }
