@@ -70,6 +70,7 @@ public abstract class Iso8601 extends Date {
         super(Dates.round(time, precision, tz)); //, TimeZone.getTimeZone(TimeZones.GMT_ID)));
 //        format = new SimpleDateFormat(pattern);
         format = CalendarDateFormatFactory.getInstance(pattern);
+        format.setTimeZone(tz);
         format.setLenient(CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING));
         // use GMT timezone to avoid daylight savings rules affecting floating
         // time values..
