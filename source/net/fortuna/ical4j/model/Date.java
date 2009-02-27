@@ -35,6 +35,7 @@ import java.text.ParseException;
 import java.util.TimeZone;
 
 import net.fortuna.ical4j.util.Dates;
+import net.fortuna.ical4j.util.TimeZones;
 
 
 /**
@@ -56,7 +57,7 @@ public class Date extends Iso8601 {
      * Default constructor.
      */
     public Date() {
-        super(PATTERN, Dates.PRECISION_DAY, TimeZone.getTimeZone("Etc/UTC"));
+        super(PATTERN, Dates.PRECISION_DAY, TimeZone.getTimeZone(TimeZones.UTC_ID));
     }
     
     /**
@@ -65,14 +66,14 @@ public class Date extends Iso8601 {
      * @param precision
      */
     protected Date(final int precision) {
-        super(PATTERN, precision, TimeZone.getTimeZone("Etc/UTC"));
+        super(PATTERN, precision, TimeZone.getTimeZone(TimeZones.UTC_ID));
     }
 
     /**
      * @param time
      */
     public Date(final long time) {
-        super(time, PATTERN, Dates.PRECISION_DAY, TimeZone.getTimeZone("Etc/UTC"));
+        super(time, PATTERN, Dates.PRECISION_DAY, TimeZone.getTimeZone(TimeZones.UTC_ID));
     }
     
     /**
@@ -82,7 +83,7 @@ public class Date extends Iso8601 {
      * @param precision
      */
     protected Date(final long time, final int precision) {
-        super(time, PATTERN, precision, TimeZone.getTimeZone("Etc/UTC"));
+        super(time, PATTERN, precision, TimeZone.getTimeZone(TimeZones.UTC_ID));
     }
 
     /**
@@ -109,7 +110,7 @@ public class Date extends Iso8601 {
      * @throws ParseException
      */
     public Date(String value, String pattern) throws ParseException {
-        super(pattern, Dates.PRECISION_DAY, TimeZone.getTimeZone("Etc/UTC"));
+        super(pattern, Dates.PRECISION_DAY, TimeZone.getTimeZone(TimeZones.UTC_ID));
         setTime(getFormat().parse(value).getTime());
     }
 }

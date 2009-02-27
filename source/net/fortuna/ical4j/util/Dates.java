@@ -200,7 +200,7 @@ public final class Dates {
      */
     public static long round(final long time, final int precision) {
         return round(time, precision, TimeZone.getDefault());
-//        return round(time, precision, TimeZone.getTimeZone("Etc/UTC"));
+//        return round(time, precision, TimeZone.getTimeZone(TimeZones.UTC_ID));
         /*
         long newTime = time;
         if (precision == PRECISION_DAY) {
