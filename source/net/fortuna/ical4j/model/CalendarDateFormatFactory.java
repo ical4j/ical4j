@@ -291,13 +291,6 @@ public class CalendarDateFormatFactory {
                 return null;
             }
         }
-        
-        /* (non-Javadoc)
-         * @see net.fortuna.ical4j.model.CalendarDateFormatFactory.CalendarDateFormat#getTimeZone()
-         */
-        public TimeZone getTimeZone() {
-            return TimeZone.getTimeZone("Etc/UTC");
-        }
     }
 
     /**
