@@ -121,7 +121,7 @@ public class DateTest extends TestCase {
         suite.addTest(new DateTest(new Date(calendar.getTime()), new Date("20050101").toString()));
         suite.addTest(new DateTest(new Date(calendar.getTime()), new Date("20050101")));
         
-        calendar = Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
+        calendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
         calendar.clear();
         calendar.set(2005, 0, 1);
         calendar.clear(Calendar.HOUR_OF_DAY);
