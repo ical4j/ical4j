@@ -107,9 +107,8 @@ public class DateTime extends Date {
      * Default constructor.
      */
     public DateTime() {
-        super(Dates.PRECISION_SECOND);
-        this.time = new Time(System.currentTimeMillis(), getFormat()
-                .getTimeZone());
+        super(Dates.PRECISION_SECOND, java.util.TimeZone.getDefault());
+        this.time = new Time(System.currentTimeMillis(), getFormat().getTimeZone());
     }
 
     /**
@@ -124,7 +123,7 @@ public class DateTime extends Date {
      * @param time
      */
     public DateTime(final long time) {
-        super(time, Dates.PRECISION_SECOND);
+        super(time, Dates.PRECISION_SECOND, java.util.TimeZone.getDefault());
         this.time = new Time(time, getFormat().getTimeZone());
     }
 
@@ -132,7 +131,7 @@ public class DateTime extends Date {
      * @param date
      */
     public DateTime(final java.util.Date date) {
-        super(date.getTime(), Dates.PRECISION_SECOND);
+        super(date.getTime(), Dates.PRECISION_SECOND, java.util.TimeZone.getDefault());
         this.time = new Time(date.getTime(), getFormat().getTimeZone());
         // copy timezone information if applicable..
         if (date instanceof DateTime) {

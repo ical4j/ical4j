@@ -65,8 +65,8 @@ public class Date extends Iso8601 {
      * constructor is only intended for use by sub-classes.
      * @param precision
      */
-    protected Date(final int precision) {
-        super(PATTERN, precision, TimeZone.getTimeZone(TimeZones.UTC_ID));
+    protected Date(final int precision, TimeZone tz) {
+        super(PATTERN, precision, tz);
     }
 
     /**
@@ -82,8 +82,8 @@ public class Date extends Iso8601 {
      * @param time
      * @param precision
      */
-    protected Date(final long time, final int precision) {
-        super(time, PATTERN, precision, TimeZone.getTimeZone(TimeZones.UTC_ID));
+    protected Date(final long time, final int precision, TimeZone tz) {
+        super(time, PATTERN, precision, tz);
     }
 
     /**
@@ -91,7 +91,7 @@ public class Date extends Iso8601 {
      */
     public Date(final java.util.Date date) {
 //        this();
-        this(date.getTime(), Dates.PRECISION_DAY);
+        this(date.getTime(), Dates.PRECISION_DAY, TimeZone.getTimeZone(TimeZones.UTC_ID));
 //        setTime(date.getTime());
     }
 
