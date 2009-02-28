@@ -286,12 +286,6 @@ public class TimeZoneTest extends TestCase {
         assertEquals(tz.getDSTSavings(), timezone.getDSTSavings());
     }
     
-    public void testAmericaLosAngeles() throws Exception {
-        DateTime dt = new DateTime("20071104T000000",
-        registry.getTimeZone("America/Los_Angeles"));
-        assertEquals("20071104T000000", dt.toString());
-        }
-    
     /* (non-Javadoc)
      * @see junit.framework.TestCase#getName()
      */
