@@ -660,10 +660,10 @@ public class RecurTest extends TestCase {
         suite.addTest(new RecurTest("testGetDatesOrdering", rec, null, d1, d2, Value.DATE_TIME));
 
         // testMonthByDay..
-        rrule = "FREQ=MONTHLY;UNTIL=20061220T000000;INTERVAL=1;BYDAY=3WE";
+        rrule = "FREQ=MONTHLY;UNTIL=20061220;INTERVAL=1;BYDAY=3WE";
         recur = new Recur(rrule);
 
-        cal = Calendar.getInstance();
+        cal = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
         cal.set(2006, 11, 1);
         start = new Date(cal.getTime());
         cal.add(Calendar.YEAR, 1);

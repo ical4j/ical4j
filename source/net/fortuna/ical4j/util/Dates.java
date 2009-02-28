@@ -190,7 +190,7 @@ public final class Dates {
                 return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.UTC_ID));
             }
         }
-        return Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
+        return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
     
     /**
