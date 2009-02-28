@@ -68,6 +68,7 @@ import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.TimeZones;
 import net.fortuna.ical4j.util.UidGenerator;
 
 import org.apache.commons.logging.Log;
@@ -156,7 +157,7 @@ public class VEventTest extends CalendarComponentTest {
      * @return
      */
     private static Calendar getCalendarInstance() {
-        return Calendar.getInstance(); //java.util.TimeZone.getTimeZone(TimeZones.GMT_ID));
+        return Calendar.getInstance(java.util.TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 
     /**
@@ -299,7 +300,7 @@ public class VEventTest extends CalendarComponentTest {
 //                                                      week1EndDate.getTime());
 //        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
 
-        Calendar expectedCal = Calendar.getInstance(); //TimeZone.getTimeZone(TimeZones.GMT_ID));
+        Calendar expectedCal = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
         expectedCal.set(2005, Calendar.APRIL, 1, 9, 0, 0);
         expectedCal.set(Calendar.MILLISECOND, 0);
         Date expectedStartOfFirstRange = new DateTime(expectedCal.getTime().getTime());
