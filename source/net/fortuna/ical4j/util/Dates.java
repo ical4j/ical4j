@@ -197,6 +197,8 @@ public final class Dates {
      * @param time
      * @param precision
      * @return
+     * @deprecated It is not all that useful to perform rounding without specifying an
+     * explicit timezone.
      */
     public static long round(final long time, final int precision) {
         return round(time, precision, TimeZone.getDefault());
