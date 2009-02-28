@@ -270,7 +270,10 @@ public class DateTime extends Date {
      */
     public DateTime(final String value, final TimeZone timezone)
             throws ParseException {
-        this();
+//        this();
+        super(Dates.PRECISION_SECOND, timezone != null ? timezone : java.util.TimeZone.getDefault());
+        this.time = new Time(System.currentTimeMillis(), getFormat().getTimeZone());
+
         try {
             setTime(value, (DateFormat)utc_format.get(), null);
             setUtc(true);
@@ -309,7 +312,10 @@ public class DateTime extends Date {
      * @throws ParseException
      */
     public DateTime(String value, String pattern, TimeZone timezone) throws ParseException {
-        this();
+//        this();
+        super(Dates.PRECISION_SECOND, timezone != null ? timezone : java.util.TimeZone.getDefault());
+        this.time = new Time(System.currentTimeMillis(), getFormat().getTimeZone());
+
         DateFormat format = CalendarDateFormatFactory.getInstance(pattern);
         setTime(value, format, timezone);
     }
