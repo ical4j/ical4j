@@ -217,6 +217,9 @@ public class DateTimeTest extends TestCase {
             suite.addTest(new DateTimeTest(new DateTime(dateString), dateString)); 
             cal.add(Calendar.DAY_OF_YEAR, 1);
         }
+
+        suite.addTest(new DateTimeTest(new DateTime("20071104T000000",
+                registry.getTimeZone("America/Los_Angeles")), "20071104T000000"));
         
         // other tests..
         suite.addTest(new DateTimeTest("testDateTimeString"));
