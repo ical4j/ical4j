@@ -297,7 +297,7 @@ public class TimeZoneTest extends TestCase {
      * @return
      */
     public static TestSuite suite() {
-        TestSuite suite = new TestSuite(TimeZoneTest.class);
+        TestSuite suite = new TestSuite();
         suite.addTest(new TimeZoneTest("testGetId", "Australia/Melbourne"));
         suite.addTest(new TimeZoneTest("testGetId", "US/Mountain", "America/Denver"));
         
