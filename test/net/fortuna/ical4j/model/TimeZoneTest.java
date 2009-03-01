@@ -35,13 +35,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import net.fortuna.ical4j.model.property.DtStart;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.property.DtStart;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$
@@ -80,6 +79,8 @@ public class TimeZoneTest extends TestCase {
     private Date date;
     
     private long expectedOffset;
+    
+    private boolean expectedInDaylight;
 
     /**
      * @param testMethod
@@ -143,7 +144,19 @@ public class TimeZoneTest extends TestCase {
         this.date = date;
         this.expectedOffset = expectedOffset;
     }
-    
+
+    /**
+     * @param testMethod
+     * @param timezoneId
+     * @param date
+     * @param expectedInDaylight
+     */
+    public TimeZoneTest(String testMethod, String timezoneId, Date date, boolean expectedInDaylight) {
+        this(testMethod, timezoneId);
+        this.date = date;
+        this.expectedInDaylight = expectedInDaylight;
+    }
+
     /*
      * (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
@@ -201,24 +214,29 @@ public class TimeZoneTest extends TestCase {
      * A test to ensure the method TimeZone.inDaylightTime() is working correctly (for the last 10 years).
      */
     public void testInDaylightTime() {
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.YEAR, -10);
-        /*
-         * cal.set(Calendar.MONTH, 12); assertEquals(tz.inDaylightTime(cal.getTime()),
-         * timezone.inDaylightTime(cal.getTime())); cal.set(Calendar.MONTH, 6);
-         * assertEquals(tz.inDaylightTime(cal.getTime()), timezone.inDaylightTime(cal.getTime()));
-         */
-        long start, stop;
-        for (int y = 0; y < 10; y++) {
-            cal.clear(Calendar.DAY_OF_YEAR);
-            for (int i = 0; i < 365; i++) {
-                cal.add(Calendar.DAY_OF_YEAR, 1);
-                start = System.currentTimeMillis();
-                assertEquals("inDaylightTime() invalid: [" + cal.getTime()
-                        + "]", tz.inDaylightTime(cal.getTime()), timezone
-                        .inDaylightTime(cal.getTime()));
-                stop = System.currentTimeMillis();
-                LOG.debug("Time: " + (stop - start) + "ms");
+        if (date != null) {
+            assertEquals(expectedInDaylight, timezone.inDaylightTime(date));
+        }
+        else {
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.YEAR, -10);
+            /*
+             * cal.set(Calendar.MONTH, 12); assertEquals(tz.inDaylightTime(cal.getTime()),
+             * timezone.inDaylightTime(cal.getTime())); cal.set(Calendar.MONTH, 6);
+             * assertEquals(tz.inDaylightTime(cal.getTime()), timezone.inDaylightTime(cal.getTime()));
+             */
+            long start, stop;
+            for (int y = 0; y < 10; y++) {
+                cal.clear(Calendar.DAY_OF_YEAR);
+                for (int i = 0; i < 365; i++) {
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                    start = System.currentTimeMillis();
+                    assertEquals("inDaylightTime() invalid: [" + cal.getTime()
+                            + "]", tz.inDaylightTime(cal.getTime()), timezone
+                            .inDaylightTime(cal.getTime()));
+                    stop = System.currentTimeMillis();
+                    LOG.debug("Time: " + (stop - start) + "ms");
+                }
             }
         }
     }
@@ -308,6 +326,11 @@ public class TimeZoneTest extends TestCase {
         suite.addTest(new TimeZoneTest("testGetRawOffset", "Pacific/Honolulu", GMT_MINUS_10));
         
         suite.addTest(new TimeZoneTest("testHasSameRules", "Australia/Melbourne"));
+        
+        Calendar cal = Calendar.getInstance(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
+        cal.set(1999, 2, 28, 2, 1);
+        // technically, 2:01am, Sunday 28 March 1999 doesn't exist, so it can't be in daylight time..
+        suite.addTest(new TimeZoneTest("testInDaylightTime", "Australia/Melbourne", cal.getTime(), false));
         suite.addTest(new TimeZoneTest("testInDaylightTime", "Australia/Melbourne"));
         
         suite.addTest(new TimeZoneTest("testUseDaylightTime", "Australia/Melbourne", true));
@@ -318,7 +341,7 @@ public class TimeZoneTest extends TestCase {
         //testHonoluluCurrentOffset..
         suite.addTest(new TimeZoneTest("testGetOffset", "Pacific/Honolulu", new Date(), GMT_MINUS_10));
         //testHonoluluHistoricalOffset..
-        GregorianCalendar cal = new GregorianCalendar(1925, 0, 1);
+        cal = new GregorianCalendar(1925, 0, 1);
 //        suite.addTest(new TimeZoneTest("testGetOffset", "Pacific/Honolulu", cal.getTime(), GMT_MINUS_1030));
         //testHonoluluPreHistoricOffset..
         cal = new GregorianCalendar(1800, 0, 1);
