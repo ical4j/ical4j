@@ -239,7 +239,7 @@ public class VFreeBusy extends CalendarComponent {
 
     /**
      * Constructs a new VFreeBusy instance with the specified start and end boundaries. This constructor should be used
-     * for requesting Free/Busy time for a specified period.
+     * for requesting busy time for a specified period.
      * @param startDate the starting boundary for the VFreeBusy
      * @param endDate the ending boundary for the VFreeBusy
      */
@@ -253,7 +253,7 @@ public class VFreeBusy extends CalendarComponent {
 
     /**
      * Constructs a new VFreeBusy instance with the specified start and end boundaries. This constructor should be used
-     * for requesting Free/Busy time for a specified duration in given period defined by the start date and end date.
+     * for requesting free time for a specified duration in given period defined by the start date and end date.
      * @param startDate the starting boundary for the VFreeBusy
      * @param endDate the ending boundary for the VFreeBusy
      * @param duration the length of the period being requested

@@ -78,6 +78,16 @@ public class VFreeBusyTest extends CalendarComponentTest {
     private VTimeZone tz;
 
     private TzId tzParam;
+    
+    private ComponentList components;
+    
+    private VFreeBusy request;
+    
+    private FbType expectedFbType;
+    
+    private int expectedPeriodCount;
+    
+    private PeriodList expectedPeriods;
 
     /**
      * @param testMethod
@@ -92,6 +102,44 @@ public class VFreeBusyTest extends CalendarComponentTest {
      */
     public VFreeBusyTest(String testMethod, VFreeBusy component) {
         super(testMethod, component);
+    }
+    
+    /**
+     * @param testMethod
+     * @param component
+     * @param expectedPeriodCount
+     */
+    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList components, int expectedPeriodCount) {
+        super(testMethod, component);
+        this.request = component;
+        this.components = components;
+        this.expectedPeriodCount = expectedPeriodCount;
+    }
+    
+    /**
+     * @param testMethod
+     * @param component
+     * @param components
+     * @param expectedFbType
+     */
+    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList components, FbType expectedFbType) {
+        super(testMethod, component);
+        this.request = component;
+        this.components = components;
+        this.expectedFbType = expectedFbType;
+    }
+    
+    /**
+     * @param testMethod
+     * @param component
+     * @param components
+     * @param expectedPeriods
+     */
+    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList components, PeriodList expectedPeriods) {
+        super(testMethod, component);
+        this.request = component;
+        this.components = components;
+        this.expectedPeriods = expectedPeriods;
     }
 
     /*
@@ -303,69 +351,32 @@ public class VFreeBusyTest extends CalendarComponentTest {
         log.debug("REPLY BUSY2: \n" + replyBusy2.toString());
         log.debug("REPLY FREE2: \n" + replyFree2.toString());
     }
-
+    
     /**
-     * A test for a request for free time where the VFreeBusy instance doesn't
-     * consume any time in the specified range. Correct behaviour should see the
-     * return of a VFreeBusy specifying the entire range as free.
      * 
-     * @throws ParseException
      */
-    public final void testRequestFreeTime() throws ParseException {
-        ComponentList components = new ComponentList();
-
-        VEvent event1 = new VEvent(new DateTime("20050101T080000"), new Dur(0,
-                0, 15, 0), "Consultation 1");
-        components.add(event1);
-
-        DateTime start = new DateTime("20050103T000000");
-        DateTime end = new DateTime("20050104T000000");
-
-        VFreeBusy requestFree = new VFreeBusy(start, end, new Dur(0, 0, 5, 0));
-
-        VFreeBusy freeBusy = new VFreeBusy(requestFree, components);
-
-        FreeBusy fg = (FreeBusy) freeBusy.getProperty(Property.FREEBUSY);
-        assertNotNull(fg);
-        // free/busy type should be FREE..
-        assertEquals(FbType.FREE, fg.getParameter(Parameter.FBTYPE));
-        // should be only one period..
-        assertEquals(1, fg.getPeriods().size());
-        // period should be from the start to the end date..
-        assertEquals(new Period(start, end), fg.getPeriods().first());
+    public void testFbType() {
+        VFreeBusy result = new VFreeBusy(request, components);
+        FreeBusy fb = (FreeBusy) result.getProperty(Property.FREEBUSY);
+        assertEquals(expectedFbType, fb.getParameter(Parameter.FBTYPE));
     }
-
-    public void testBusyTime() throws ParseException {
-
-        VEvent event1 = new VEvent(new DateTime("20050103T080000Z"), new Dur(0,
-                5, 0, 0), "Event 1");
-
-        Recur rRuleRecur = new Recur(
-                "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
-        RRule rRule = new RRule(rRuleRecur);
-        event1.getProperties().add(rRule);
-
-        ComponentList list = new ComponentList();
-        list.add(event1);
-
-        DateTime start = new DateTime("20050104T1100000Z");
-        Period period = new Period(start, new Dur(0, 0, 30, 0));
-
-        VFreeBusy request = new VFreeBusy(period.getStart(), period.getEnd());
-        VFreeBusy busyTime = new VFreeBusy(request, list);
-        FreeBusy fg = (FreeBusy) busyTime.getProperty(
-                Property.FREEBUSY);
-        assertNotNull(fg);
-        PeriodList periods = fg.getPeriods();
-        assertNotNull(periods);
-        assertTrue(periods.size() == 1);
-        Period busy1 = (Period) periods.iterator().next();
-        // TODO: further work needed to "splice" events based on the amount
-        // of time that intersects a free-busy request..
-//        assertEquals(new DateTime("20050104T1100000Z"), busy1.getStart());
-//        assertEquals("PT30M", busy1.getDuration().toString());
-        assertEquals(new DateTime("20050104T0800000Z"), busy1.getStart());
-        assertEquals("PT5H", busy1.getDuration().toString());
+    
+    /**
+     * 
+     */
+    public void testPeriodCount() {
+        VFreeBusy result = new VFreeBusy(request, components);
+        FreeBusy fb = (FreeBusy) result.getProperty(Property.FREEBUSY);
+        assertEquals(expectedPeriodCount, fb.getPeriods().size());
+    }
+    
+    /**
+     * 
+     */
+    public void testFreeBusyPeriods() {
+        VFreeBusy result = new VFreeBusy(request, components);
+        FreeBusy fb = (FreeBusy) result.getProperty(Property.FREEBUSY);
+        assertEquals(expectedPeriods, fb.getPeriods());
     }
     
     /**
@@ -379,8 +390,6 @@ public class VFreeBusyTest extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList3"));
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList4"));
         suite.addTest(new VFreeBusyTest("testAngelites"));
-        suite.addTest(new VFreeBusyTest("testRequestFreeTime"));
-        suite.addTest(new VFreeBusyTest("testBusyTime"));
 
         // icalendar validation
         VFreeBusy fb = new VFreeBusy();
@@ -397,7 +406,53 @@ public class VFreeBusyTest extends CalendarComponentTest {
         publishFb.getProperties().add(new Uid("12"));
         suite.addTest(new VFreeBusyTest("testPublishValidation", publishFb));
 
+        // A test for a request for free time where the VFreeBusy instance doesn't
+        // consume any time in the specified range. Correct behaviour should see the
+        // return of a VFreeBusy specifying the entire range as free.
+        ComponentList components = new ComponentList();
+        VEvent event1 = new VEvent(new DateTime("20050101T080000"), new Dur(0, 0, 15, 0), "Consultation 1");
+        components.add(event1);
+
+        DateTime start = new DateTime("20050103T000000");
+        DateTime end = new DateTime("20050104T000000");
+
+        VFreeBusy requestFree = new VFreeBusy(start, end, new Dur(0, 0, 5, 0));
+        // free/busy type should be FREE..
+        suite.addTest(new VFreeBusyTest("testFbType", requestFree, components, FbType.FREE));
+
+        // should be only one period..
+        suite.addTest(new VFreeBusyTest("testPeriodCount", requestFree, components, 1));
+
+        // period should be from the start to the end date..
+        PeriodList periods = new PeriodList();
+        periods.add(new Period(start, end));
+        suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", requestFree, components, periods));
+
+        //testBusyTime..
+        components = new ComponentList();
+        event1 = new VEvent(new DateTime("20050103T080000Z"), new Dur(0, 5, 0, 0), "Event 1");
+        Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
+        RRule rRule = new RRule(rRuleRecur);
+        event1.getProperties().add(rRule);
+        components.add(event1);
+
+        start = new DateTime("20050104T1100000Z");
+        Period period = new Period(start, new Dur(0, 0, 30, 0));
+
+        VFreeBusy request = new VFreeBusy(period.getStart(), period.getEnd());
+        // FBTYPE is optional - defaults to BUSY..
+//        suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.BUSY));
+        suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
         
+        periods = new PeriodList();
+        periods.add(new Period(new DateTime("20050104T0800000Z"), new Dur("PT5H")));
+        suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
+        
+        // TODO: further work needed to "splice" events based on the amount
+        // of time that intersects a free-busy request..
+//        assertEquals(new DateTime("20050104T1100000Z"), busy1.getStart());
+//        assertEquals("PT30M", busy1.getDuration().toString());
+
         return suite;
     }
 }
