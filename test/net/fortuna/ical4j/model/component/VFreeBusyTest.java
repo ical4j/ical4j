@@ -103,7 +103,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
     public VFreeBusyTest(String testMethod, VFreeBusy component) {
         super(testMethod, component);
     }
-    
+
     /**
      * @param testMethod
      * @param component
@@ -367,7 +367,12 @@ public class VFreeBusyTest extends CalendarComponentTest {
     public void testPeriodCount() {
         VFreeBusy result = new VFreeBusy(request, components);
         FreeBusy fb = (FreeBusy) result.getProperty(Property.FREEBUSY);
-        assertEquals(expectedPeriodCount, fb.getPeriods().size());
+        if (expectedPeriodCount > 0) {
+            assertEquals(expectedPeriodCount, fb.getPeriods().size());
+        }
+        else {
+            assertNull(fb);
+        }
     }
     
     /**
@@ -452,7 +457,10 @@ public class VFreeBusyTest extends CalendarComponentTest {
         // of time that intersects a free-busy request..
 //        assertEquals(new DateTime("20050104T1100000Z"), busy1.getStart());
 //        assertEquals("PT30M", busy1.getDuration().toString());
-
+        
+        request = new VFreeBusy(period.getStart(), period.getEnd(), new Dur(0));
+        suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
+        
         return suite;
     }
 }
