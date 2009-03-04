@@ -2,4 +2,4 @@
 #
 ## Latest tzdata available here: ftp://elsie.nci.nih.gov/pub/
 #
-awk '/Link/ {print "RewriteRule","^(.*)"$3,"/$1/"$2,"[NC]"}' backward
+awk '/Link/ {print "RewriteRule","^(.*)"$3,"$1"$2,"[NC]"}' backward
