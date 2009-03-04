@@ -1,227 +1,222 @@
-Pacific/Samoa=Pacific/Pago_Pago
-US/Samoa=Pacific/Pago_Pago
+Africa/Timbuktu=Africa/Bamako
 
+America/Argentina/ComodRivadavia=America/Argentina/Catamarca
 America/Atka=America/Adak
-US/Aleutian=America/Adak
 
-US/Hawaii=Pacific/Honolulu
-
-US/Alaska=America/Anchorage
-
-US/Pacific=America/Los_Angeles
-US/Pacific-New=America/Los_Angeles
-
-America/Ensenada=America/Tijuana
-Mexico/BajaNorte=America/Tijuana
-
-Canada/Pacific=America/Vancouver
-
-Canada/Yukon=America/Whitehorse
-
-America/Shiprock=America/Denver
-Navajo=America/Denver
-US/Mountain=America/Denver
-
-Canada/Mountain=America/Edmonton
-
-Mexico/BajaSur=America/Mazatlan
-
-US/Arizona=America/Phoenix
-
-US/Central=America/Chicago
-
-America/Knox_IN=America/Indiana/Knox
-US/Indiana-Starke=America/Indiana/Knox
-
-Mexico/General=America/Mexico_City
-
-Canada/East-Saskatchewan=America/Regina
-Canada/Saskatchewan=America/Regina
-
-Canada/Central=America/Winnipeg
-
-Chile/EasterIsland=Pacific/Easter
+America/Buenos_Aires=America/Argentina/Buenos_Aires
+America/Catamarca=America/Argentina/Catamarca
 
 America/Coral_Harbour=America/Atikokan
 
-US/Michigan=America/Detroit
+America/Cordoba=America/Argentina/Cordoba
 
-Cuba=America/Havana
-
+America/Ensenada=America/Tijuana
 America/Fort_Wayne=America/Indiana/Indianapolis
 America/Indianapolis=America/Indiana/Indianapolis
-US/East-Indiana=America/Indiana/Indianapolis
-
-Jamaica=America/Jamaica
-
-America/Louisville=America/Kentucky/Louisville
-
-US/Eastern=America/New_York
-
-America/Porto_Acre=America/Rio_Branco
-Brazil/Acre=America/Rio_Branco
-
-Canada/Eastern=America/Toronto
-
-Canada/Atlantic=America/Halifax
-
-Brazil/West=America/Manaus
-
-Chile/Continental=America/Santiago
-
-America/Virgin=America/St_Thomas
-
-Canada/Newfoundland=America/St_Johns
-
-America/Buenos_Aires=America/Argentina/Buenos_Aires
-
-America/Argentina/ComodRivadavia=America/Argentina/Catamarca
-America/Catamarca=America/Argentina/Catamarca
-
-America/Cordoba=America/Argentina/Cordoba
-America/Rosario=America/Argentina/Cordoba
 
 America/Jujuy=America/Argentina/Jujuy
 
+America/Knox_IN=America/Indiana/Knox
+
+America/Louisville=America/Kentucky/Louisville
+
 America/Mendoza=America/Argentina/Mendoza
 
-Brazil/East=America/Sao_Paulo
+America/Porto_Acre=America/Rio_Branco
+America/Rosario=America/Argentina/Cordoba
 
-Brazil/DeNoronha=America/Noronha
+America/Shiprock=America/Denver
 
-Africa/Timbuktu=Africa/Bamako
-
-Iceland=Atlantic/Reykjavik
-
-## Unsupported timezone identifiers..
-Etc/GMT+0=Etc/GMT
-Etc/GMT-0=Etc/GMT
-Etc/GMT0=Etc/GMT
-Etc/Greenwich=Etc/GMT
-GMT=Etc/GMT
-GMT+0=Etc/GMT
-GMT-0=Etc/GMT
-GMT0=Etc/GMT
-Greenwich=Etc/GMT
-
-UCT=Etc/UCT
-
-Etc/Universal=Etc/UTC
-Etc/Zulu=Etc/UTC
-Universal=Etc/UTC
-Zulu=Etc/UTC
-##
-
-### Temporary hack to support above timezones..
-Etc/UTC=Europe/London
-Etc/GMT=Europe/London
-Etc/UCT=Europe/London
-###
-
-Eire=Europe/Dublin
-
-Portugal=Europe/Lisbon
-
-Europe/Belfast=Europe/London
-Europe/Guernsey=Europe/London
-Europe/Isle_of_Man=Europe/London
-Europe/Jersey=Europe/London
-GB=Europe/London
-GB-Eire=Europe/London
-
-Europe/Ljubljana=Europe/Belgrade
-Europe/Podgorica=Europe/Belgrade
-Europe/Sarajevo=Europe/Belgrade
-Europe/Skopje=Europe/Belgrade
-Europe/Zagreb=Europe/Belgrade
+America/Virgin=America/St_Thomas
+Antarctica/South_Pole=Antarctica/McMurdo
 
 Arctic/Longyearbyen=Europe/Oslo
-Atlantic/Jan_Mayen=Europe/Oslo
-
-Europe/Bratislava=Europe/Prague
-
-Europe/San_Marino=Europe/Rome
-Europe/Vatican=Europe/Rome
-
-Poland=Europe/Warsaw
-
-Egypt=Africa/Cairo
-
-Libya=Africa/Tripoli
-
-Asia/Tel_Aviv=Asia/Jerusalem
-Israel=Asia/Jerusalem
-
-Europe/Nicosia=Asia/Nicosia
-
-Europe/Tiraspol=Europe/Chisinau
-
-Europe/Mariehamn=Europe/Helsinki
-
-Asia/Istanbul=Europe/Istanbul
-Turkey=Europe/Istanbul
-
-W-SU=Europe/Moscow
-
-Iran=Asia/Tehran
 
 Asia/Ashkhabad=Asia/Ashgabat
 
-Asia/Dacca=Asia/Dhaka
-
-Asia/Thimbu=Asia/Thimphu
+Asia/Calcutta=Asia/Kolkata
 
 Asia/Chungking=Asia/Chongqing
 
-Hongkong=Asia/Hong_Kong
+Asia/Dacca=Asia/Dhaka
 
+Asia/Istanbul=Europe/Istanbul
 Asia/Macao=Asia/Macau
+Asia/Saigon=Asia/Ho_Chi_Minh
+
+Asia/Tel_Aviv=Asia/Jerusalem
+
+Asia/Thimbu=Asia/Thimphu
 
 Asia/Ujung_Pandang=Asia/Makassar
 
-PRC=Asia/Shanghai
-
-Singapore=Asia/Singapore
-
-ROC=Asia/Taipei
-
 Asia/Ulan_Bator=Asia/Ulaanbaatar
+Atlantic/Jan_Mayen=Arctic/Longyearbyen
 
-Australia/West=Australia/Perth
+Atlantic/Jan_Mayen=Europe/Oslo
 
-ROK=Asia/Seoul
+Australia/ACT=Australia/Sydney
 
-Japan=Asia/Tokyo
+Australia/Canberra=Australia/Sydney
 
-Australia/South=Australia/Adelaide
+Australia/LHI=Australia/Lord_Howe
 
-Australia/Yancowinna=Australia/Broken_Hill
+Australia/NSW=Australia/Sydney
 
 Australia/North=Australia/Darwin
 
 Australia/Queensland=Australia/Brisbane
 
+Australia/South=Australia/Adelaide
 Australia/Tasmania=Australia/Hobart
 
 Australia/Victoria=Australia/Melbourne
+Australia/West=Australia/Perth
 
-Australia/ACT=Australia/Sydney
-Australia/Canberra=Australia/Sydney
-Australia/NSW=Australia/Sydney
+Australia/Yancowinna=Australia/Broken_Hill
 
-Pacific/Yap=Pacific/Truk
+Brazil/Acre=America/Rio_Branco
 
-Australia/LHI=Australia/Lord_Howe
+Brazil/DeNoronha=America/Noronha
 
-Antarctica/South_Pole=Antarctica/McMurdo
+Brazil/East=America/Sao_Paulo
 
-NZ=Pacific/Auckland
+Brazil/West=America/Manaus
+
+Canada/Atlantic=America/Halifax
+
+Canada/Central=America/Winnipeg
+Canada/East-Saskatchewan=America/Regina
+Canada/Eastern=America/Toronto
+Canada/Mountain=America/Edmonton
+Canada/Newfoundland=America/St_Johns
+Canada/Pacific=America/Vancouver
+Canada/Saskatchewan=America/Regina
+Canada/Yukon=America/Whitehorse
+Chile/Continental=America/Santiago
+Chile/EasterIsland=Pacific/Easter
+
+Cuba=America/Havana
+
+Egypt=Africa/Cairo
+Eire=Europe/Dublin
+
+## Unsupported timezone identifiers..
+Etc/GMT+0=Etc/GMT
+Etc/GMT-0=Etc/GMT
+Etc/GMT0=Etc/GMT
+
+### Temporary hack to support above timezones..
+Etc/GMT=Europe/London
+Etc/Greenwich=Etc/GMT
+Etc/UCT=Europe/London
+Etc/UTC=Europe/London
+Etc/Universal=Etc/UTC
+
+Etc/Zulu=Etc/UTC
+
+Europe/Belfast=Europe/London
+
+Europe/Bratislava=Europe/Prague
+Europe/Guernsey=Europe/London
+Europe/Isle_of_Man=Europe/London
+Europe/Jersey=Europe/London
+Europe/Ljubljana=Europe/Belgrade
+Europe/Mariehamn=Europe/Helsinki
+
+Europe/Nicosia=Asia/Nicosia
+Europe/Podgorica=Europe/Belgrade
+Europe/San_Marino=Europe/Rome
+Europe/Sarajevo=Europe/Belgrade
+Europe/Skopje=Europe/Belgrade
+
+Europe/Tiraspol=Europe/Chisinau
+Europe/Vatican=Europe/Rome
+
+Europe/Zagreb=Europe/Belgrade
+
+GB-Eire=Europe/London
+GB=Europe/London
+
+GMT+0=Etc/GMT
+
+GMT-0=Etc/GMT
+
+GMT0=Etc/GMT
+
+GMT=Etc/GMT
+Greenwich=Etc/GMT
+
+Hongkong=Asia/Hong_Kong
+
+Iceland=Atlantic/Reykjavik
+
+Iran=Asia/Tehran
+
+Israel=Asia/Jerusalem
+Jamaica=America/Jamaica
+
+Japan=Asia/Tokyo
 
 Kwajalein=Pacific/Kwajalein
 
+Libya=Africa/Tripoli
+
+Mexico/BajaNorte=America/Tijuana
+
+Mexico/BajaSur=America/Mazatlan
+
+Mexico/General=America/Mexico_City
+
 NZ-CHAT=Pacific/Chatham
 
-# Changes as of tzdata2008e
-Asia/Calcutta=Asia/Kolkata
-Asia/Saigon=Asia/Ho_Chi_Minh
-Atlantic/Jan_Mayen=Arctic/Longyearbyen
+NZ=Pacific/Auckland
+
+Navajo=America/Denver
+
+PRC=Asia/Shanghai
+
+Pacific/Samoa=Pacific/Pago_Pago
+
+Pacific/Yap=Pacific/Truk
+
+Poland=Europe/Warsaw
+
+Portugal=Europe/Lisbon
+
+ROC=Asia/Taipei
+
+ROK=Asia/Seoul
+
+Singapore=Asia/Singapore
+
+Turkey=Europe/Istanbul
+
+UCT=Etc/UCT
+
+US/Alaska=America/Anchorage
+
+US/Aleutian=America/Adak
+
+US/Arizona=America/Phoenix
+
+US/Central=America/Chicago
+US/East-Indiana=America/Indiana/Indianapolis
+US/Eastern=America/New_York
+
+US/Hawaii=Pacific/Honolulu
+
+US/Indiana-Starke=America/Indiana/Knox
+
+US/Michigan=America/Detroit
+
+US/Mountain=America/Denver
+
+US/Pacific-New=America/Los_Angeles
+
+US/Pacific=America/Los_Angeles
+
+US/Samoa=Pacific/Pago_Pago
+Universal=Etc/UTC
+W-SU=Europe/Moscow
+Zulu=Etc/UTC
