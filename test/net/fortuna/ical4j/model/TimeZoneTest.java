@@ -308,7 +308,10 @@ public class TimeZoneTest extends TestCase {
      * @see junit.framework.TestCase#getName()
      */
     public String getName() {
-        return super.getName() + " [" + timezone.getID() + "]";
+        if (timezone != null) {
+            return super.getName() + " [" + timezone.getID() + "]";
+        }
+        return super.getName();
     }
     
     /**
@@ -318,6 +321,7 @@ public class TimeZoneTest extends TestCase {
         TestSuite suite = new TestSuite();
         suite.addTest(new TimeZoneTest("testGetId", "Australia/Melbourne"));
         suite.addTest(new TimeZoneTest("testGetId", "US/Mountain", "America/Denver"));
+        suite.addTest(new TimeZoneTest("testGetId", "Asia/Calcutta", "Asia/Kolkata"));
         
         suite.addTest(new TimeZoneTest("testGetDisplayName", "Australia/Melbourne"));
         suite.addTest(new TimeZoneTest("testGetDisplayNameShort", "Australia/Melbourne"));
