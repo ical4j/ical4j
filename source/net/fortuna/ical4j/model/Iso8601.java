@@ -126,6 +126,14 @@ public abstract class Iso8601 extends Date {
      * @see java.util.Date#setTime(long)
      */
     public void setTime(final long time) {
-        super.setTime(Dates.round(time, precision, format.getTimeZone()));
+        // need to check for null format due to Android java.util.Date(long) constructor
+        // calling this method..
+        if (format != null) {
+            super.setTime(Dates.round(time, precision, format.getTimeZone()));
+        }
+        else {
+            // XXX: what do we do here??
+            super.setTime(time);
+        }
     }
 }
