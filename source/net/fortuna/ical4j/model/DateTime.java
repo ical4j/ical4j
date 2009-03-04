@@ -360,7 +360,11 @@ public class DateTime extends Date {
      */
     public final void setTime(final long time) {
         super.setTime(time);
-        this.time.setTime(time);
+        // need to check for null time due to Android java.util.Date(long) constructor
+        // calling this method..
+        if (this.time != null) {
+            this.time.setTime(time);
+        }
     }
 
     /**
