@@ -460,7 +460,25 @@ public class VFreeBusyTest extends CalendarComponentTest {
         
         request = new VFreeBusy(period.getStart(), period.getEnd(), new Dur(0));
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
+
+        // anniversary-style events don't consume time..
+        components = new ComponentList();
+        event1 = new VEvent(new Date("20081225"), "Christmas 2008");
+        components.add(event1);
+
+        start = new DateTime("20081225T110000");
+        end = new DateTime("20081225T113000");
         
+        request = new VFreeBusy(start, end);
+        suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
+        
+        request = new VFreeBusy(start, end, new Dur(0, 0, 15, 0));
+        suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.FREE));
+        suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
+
+        periods = new PeriodList();
+        periods.add(new Period(start, new Dur(0, 0, 30, 0)));
+        suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
         return suite;
     }
 }
