@@ -32,9 +32,11 @@
 package net.fortuna.ical4j.data;
 
 /**
+ * <pre>
  * $Id$
  *
  * Created on 18/11/2007
+ * </pre>
  *
  * @author fortuna
  *

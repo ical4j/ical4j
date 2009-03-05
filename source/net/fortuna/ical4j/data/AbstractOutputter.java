@@ -36,9 +36,11 @@ import java.nio.charset.Charset;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
+ * <pre>
  * $Id$
  *
  * Created on 29/12/2008
+ * </pre>
  * 
  * @author Ben
  *

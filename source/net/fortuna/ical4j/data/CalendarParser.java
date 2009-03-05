@@ -36,9 +36,11 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
+ * <pre>
  * $Id$
  * 
  * Created [Nov 5, 2004]
+ * </pre>
  *
  * Implementors provide iCalendar parsing functionality.
  * @author Ben Fortuna

@@ -34,9 +34,11 @@ package net.fortuna.ical4j.data;
 import net.fortuna.ical4j.util.Configurator;
 
 /**
+ * <pre>
  * $Id$
  *
  * Created on 08/02/2007
+ * </pre>
  *
  * Provides access to the configured {@link CalendarParser} instance. Alternative factory implementations may be
  * specified via the following system property:

@@ -39,7 +39,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * <pre>
  * $Id$ [Apr 6, 2004]
+ * </pre>
  *
  * A writer that performs iCalendar folding as it writes.
  * @author Ben Fortuna

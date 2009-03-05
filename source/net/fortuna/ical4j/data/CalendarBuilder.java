@@ -67,9 +67,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * <pre>
  * $Id$
  *
  * Created: Apr 5, 2004
+ * </pre>
  *
  * Parses and builds an iCalendar model from an input stream. Note that this class is not thread-safe.
  * @version 2.0

@@ -46,9 +46,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * <pre>
  * $Id$
  * 
  *  Created [Nov 5, 2004]
+ * </pre>
  *
  * The default implementation of a calendar parser.
  * @author Ben Fortuna

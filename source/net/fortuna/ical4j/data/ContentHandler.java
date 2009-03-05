@@ -36,8 +36,10 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 
 /**
+ * <pre>
  * $Id$ [Nov 5,
  * 2004]
+ * </pre>
  *
  * Implementors provide functionality applicable during the parsing of an iCalendar data stream (e.g. building an object
  * model).

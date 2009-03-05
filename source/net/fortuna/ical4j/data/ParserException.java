@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.data;
 
 /**
+ * <pre>
  * $Id$ [Apr 5, 2004]
+ * </pre>
  *
  * An exception thrown when an error occurs in parsing iCalendar data.
  * @author Ben Fortuna

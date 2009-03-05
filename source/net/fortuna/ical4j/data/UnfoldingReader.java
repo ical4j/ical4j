@@ -43,7 +43,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * <pre>
  * $Id$ [06-Apr-2004]
+ * </pre>
  *
  * A reader which performs iCalendar unfolding as it reads. Note that unfolding rules may be "relaxed" to allow
  * unfolding of non-conformant *.ics files. By specifying the system property "ical4j.unfolding.relaxed=true" iCalendar

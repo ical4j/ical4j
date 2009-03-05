@@ -40,7 +40,9 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
+ * <pre>
  * $Id$ [Apr 5, 2004]
+ * </pre>
  *
  * Writes an iCalendar model to an output stream.
  * @author Ben Fortuna

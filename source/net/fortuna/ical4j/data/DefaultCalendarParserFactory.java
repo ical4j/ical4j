@@ -32,9 +32,11 @@
 package net.fortuna.ical4j.data;
 
 /**
+ * <pre>
  * $Id$
  *
  * Created on 08/02/2007
+ * </pre>
  *
  * Default factory implementation for calendar parsers.
  * @author Ben Fortuna
