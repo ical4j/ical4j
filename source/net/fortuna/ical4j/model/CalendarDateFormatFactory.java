@@ -97,7 +97,12 @@ public class CalendarDateFormatFactory {
     }
 
     private static abstract class CalendarDateFormat extends java.text.DateFormat {
-        static private final java.util.TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -4191402739860280205L;
+
+		static private final java.util.TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
 
         final private String pattern;
         
@@ -181,7 +186,12 @@ public class CalendarDateFormatFactory {
      */
     private static class DateTimeFormat extends CalendarDateFormat {
 
-        final boolean patternEndsWithZ;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 3005824302269636122L;
+		
+		final boolean patternEndsWithZ;
 
         public DateTimeFormat(String pattern) {
             super(pattern);
@@ -256,7 +266,12 @@ public class CalendarDateFormatFactory {
      */
     private static class DateFormat extends CalendarDateFormat {
 
-        public DateFormat(String pattern) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -7626077667268431779L;
+
+		public DateFormat(String pattern) {
             super(pattern);
         }
 
@@ -302,7 +317,12 @@ public class CalendarDateFormatFactory {
      */
     private static class TimeFormat extends CalendarDateFormat {
 
-        final boolean patternEndsWithZ;
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -1367114409994225425L;
+		
+		final boolean patternEndsWithZ;
 
         public TimeFormat(String pattern) {
             super(pattern);

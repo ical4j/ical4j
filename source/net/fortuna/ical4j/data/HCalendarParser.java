@@ -483,10 +483,11 @@ public class HCalendarParser implements CalendarParser {
 
     // "The basic format of hCalendar is to use iCalendar object/property
     // names in lower-case for class names ..."
-        
+    /*
     private static String _icalName(Element element) {
         return element.getAttribute("class").toUpperCase();
     }
+    */
 
     private static String _className(String propName) {
         return propName.toLowerCase();
