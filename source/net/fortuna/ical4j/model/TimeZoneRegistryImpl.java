@@ -104,8 +104,21 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * @see net.fortuna.ical4j.model.TimeZoneRegistry#register(net.fortuna.ical4j.model.TimeZone)
      */
     public final void register(final TimeZone timezone) {
-        // load any available updates for the timezone..
-        timezones.put(timezone.getID(), new TimeZone(updateDefinition(timezone.getVTimeZone())));
+    	// for now we only apply updates to included definitions by default..
+    	register(timezone, false);
+    }
+    
+    /* (non-Javadoc)
+     * @see net.fortuna.ical4j.model.TimeZoneRegistry#register(net.fortuna.ical4j.model.TimeZone, boolean)
+     */
+    public final void register(final TimeZone timezone, boolean update) {
+    	if (update) {
+            // load any available updates for the timezone..
+            timezones.put(timezone.getID(), new TimeZone(updateDefinition(timezone.getVTimeZone())));
+    	}
+    	else {
+            timezones.put(timezone.getID(), timezone);
+    	}
     }
 
     /*
@@ -132,25 +145,29 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                 }
                 else {
                     synchronized (DEFAULT_TIMEZONES) {
-                        try {
-                            final VTimeZone vTimeZone = loadVTimeZone(id);
-                            if (vTimeZone != null) {
-                                // XXX: temporary kludge..
-                                // ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
-                                timezone = new TimeZone(vTimeZone);
-                                DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
-                            }
-                            else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
-                                // strip global part of id and match on default tz..
-                                Matcher matcher = TZ_ID_SUFFIX.matcher(id);
-                                if (matcher.find()) {
-                                    return getTimeZone(matcher.group());
+                    	// check again as it may be loaded now..
+                    	timezone = (TimeZone) DEFAULT_TIMEZONES.get(id);
+                    	if (timezone == null) {
+                            try {
+                                final VTimeZone vTimeZone = loadVTimeZone(id);
+                                if (vTimeZone != null) {
+                                    // XXX: temporary kludge..
+                                    // ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
+                                    timezone = new TimeZone(vTimeZone);
+                                    DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
+                                }
+                                else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                                    // strip global part of id and match on default tz..
+                                    Matcher matcher = TZ_ID_SUFFIX.matcher(id);
+                                    if (matcher.find()) {
+                                        return getTimeZone(matcher.group());
+                                    }
                                 }
                             }
-                        }
-                        catch (Exception e) {
-                            log.warn("Error occurred loading VTimeZone", e);
-                        }
+                            catch (Exception e) {
+                                log.warn("Error occurred loading VTimeZone", e);
+                            }
+                    	}
                     }
                 }
             }

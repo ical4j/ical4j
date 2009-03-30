@@ -52,6 +52,17 @@ public interface TimeZoneRegistry {
     void register(final TimeZone timezone);
     
     /**
+     * Registers a new timezone for use with iCalendar objects. If a timezone
+     * with the same identifier is already registered this timezone will take
+     * precedence.
+     * @param timezone a timezone to be registered for use with iCalendar
+     * objects
+     * @param update attempt to update the definition from any specified TZURL
+     * property if true
+     */
+    void register(final TimeZone timezone, boolean update);
+    
+    /**
      * Clears all registered timezones.
      */
     void clear();
