@@ -44,6 +44,7 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.Configurator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,6 +63,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private static final String DEFAULT_RESOURCE_PREFIX = "/zoneinfo/";
 
     private static final Pattern TZ_ID_SUFFIX = Pattern.compile("(?<=/)[^/]*/[^/]*$");
+    
+    private static final String UPDATE_ENABLED = "net.fortuna.ical4j.timezone.update.enabled";
     
     private Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
 
@@ -184,8 +187,11 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             CalendarBuilder builder = new CalendarBuilder();
             Calendar calendar = builder.build(resource.openStream());
             VTimeZone vTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
-            // load any available updates for the timezone..
-            return updateDefinition(vTimeZone);
+            // load any available updates for the timezone.. can be explicility disabled via configuration
+            if (!"false".equals(Configurator.getProperty(UPDATE_ENABLED))) {
+                return updateDefinition(vTimeZone);
+            }
+            return vTimeZone;
         }
         return null;
     }
