@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009d//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:America/Manaus
+TZURL:http://tzurl.org/zoneinfo/America/Manaus
 X-LIC-LOCATION:America/Manaus
 BEGIN:STANDARD
 TZOFFSETFROM:-040004

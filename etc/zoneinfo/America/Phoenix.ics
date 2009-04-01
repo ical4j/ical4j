@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009d//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:America/Phoenix
+TZURL:http://tzurl.org/zoneinfo/America/Phoenix
 X-LIC-LOCATION:America/Phoenix
 BEGIN:STANDARD
 TZOFFSETFROM:-072818

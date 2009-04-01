@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009d//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:Pacific/Tahiti
+TZURL:http://tzurl.org/zoneinfo/Pacific/Tahiti
 X-LIC-LOCATION:Pacific/Tahiti
 BEGIN:STANDARD
 TZOFFSETFROM:-095816

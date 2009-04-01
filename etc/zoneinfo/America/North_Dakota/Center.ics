@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009d//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:America/North_Dakota/Center
+TZURL:http://tzurl.org/zoneinfo/America/North_Dakota/Center
 X-LIC-LOCATION:America/North_Dakota/Center
 BEGIN:DAYLIGHT
 TZOFFSETFROM:-0600

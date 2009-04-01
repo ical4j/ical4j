@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009d//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:Africa/Dar_es_Salaam
+TZURL:http://tzurl.org/zoneinfo/Africa/Dar_es_Salaam
 X-LIC-LOCATION:Africa/Dar_es_Salaam
 BEGIN:STANDARD
 TZOFFSETFROM:+023708

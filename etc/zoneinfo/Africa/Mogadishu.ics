@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009d//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:Africa/Mogadishu
+TZURL:http://tzurl.org/zoneinfo/Africa/Mogadishu
 X-LIC-LOCATION:Africa/Mogadishu
 BEGIN:STANDARD
 TZOFFSETFROM:+030128

@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009d//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:Pacific/Rarotonga
+TZURL:http://tzurl.org/zoneinfo/Pacific/Rarotonga
 X-LIC-LOCATION:Pacific/Rarotonga
 BEGIN:STANDARD
 TZOFFSETFROM:-103904
