@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.component;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
@@ -52,12 +53,14 @@ import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Sequence;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -387,7 +390,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
     /**
      * @return
      */
-    public static TestSuite suite() throws ParseException, URISyntaxException {
+    public static TestSuite suite() throws ParseException, URISyntaxException,
+     IOException {
         TestSuite suite = new TestSuite();
         
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList"));
@@ -410,6 +414,23 @@ public class VFreeBusyTest extends CalendarComponentTest {
         publishFb.getProperties().add(new Organizer("mailto:joe@example.com"));
         publishFb.getProperties().add(new Uid("12"));
         suite.addTest(new VFreeBusyTest("testPublishValidation", publishFb));
+
+        // iTIP REPLY validation
+        suite.addTest(new VFreeBusyTest("testReplyValidationException", new VFreeBusy()));
+        VFreeBusy replyFb = new VFreeBusy();
+        replyFb.getProperties().add(new DtStart("20091212T000000Z"));
+        replyFb.getProperties().add(new DtEnd("20091212T235959Z"));
+        replyFb.getProperties().add(new Organizer("mailto:joe@example.com"));
+        replyFb.getProperties().add(new Attendee("mailto:joe@example.com"));
+        replyFb.getProperties().add(new Uid("12"));
+        suite.addTest(new VFreeBusyTest("testReplyValidation", replyFb));
+        VFreeBusy invalDurFb = (VFreeBusy)replyFb.copy();
+        invalDurFb.getProperties().add(new Duration(new Dur("PT1H")));
+        suite.addTest(new VFreeBusyTest("testReplyValidationException", invalDurFb));
+        VFreeBusy invalSeqFb = (VFreeBusy)replyFb.copy();
+        invalSeqFb.getProperties().add(new Sequence("12"));
+        suite.addTest(new VFreeBusyTest("testReplyValidationException", invalSeqFb));
+
 
         // A test for a request for free time where the VFreeBusy instance doesn't
         // consume any time in the specified range. Correct behaviour should see the

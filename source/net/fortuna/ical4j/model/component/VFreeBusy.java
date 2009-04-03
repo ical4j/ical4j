@@ -623,7 +623,7 @@ public class VFreeBusy extends CalendarComponent {
      *     DTSTAMP         1
      *     DTEND           1      DateTime values must be in UTC
      *     DTSTART         1      DateTime values must be in UTC
-     *     FREEBUSY        1+      (values MUST all be of the same data
+     *     FREEBUSY        0+      (values MUST all be of the same data
      *                             type. Multiple instances are allowed.
      *                             Multiple instances MUST be sorted in
      *                             ascending order. Values MAY NOT overlap)
@@ -647,7 +647,8 @@ public class VFreeBusy extends CalendarComponent {
      * </pre>
      */
     public void validateReply() throws ValidationException {
-        PropertyValidator.getInstance().assertOneOrMore(Property.FREEBUSY, getProperties());
+
+        // FREEBUSY is 1+ in RFC2446 but 0+ in Calsify
         
         PropertyValidator.getInstance().assertOne(Property.ATTENDEE, getProperties());
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
