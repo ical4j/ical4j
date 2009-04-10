@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * $Id$
@@ -119,8 +120,15 @@ public class CalScale extends Property {
      * @see net.fortuna.ical4j.model.Property#validate()
      */
     public final void validate() throws ValidationException {
-        if (!GREGORIAN.getValue().equals(value)) {
-            throw new ValidationException("Invalid value [" + value + "]");
-        }
+    	if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            if (!GREGORIAN.getValue().equalsIgnoreCase(value)) {
+                throw new ValidationException("Invalid value [" + value + "]");
+            }
+    	}
+    	else {
+            if (!GREGORIAN.getValue().equals(value)) {
+                throw new ValidationException("Invalid value [" + value + "]");
+            }
+    	}
     }
 }
