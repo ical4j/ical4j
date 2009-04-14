@@ -190,7 +190,7 @@ public final class Dates {
                 return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.UTC_ID));
             }
             else {
-            	// a date-time without a timezone but not is UTC is floating
+            	// a date-time without a timezone but not UTC is floating
             	return Calendar.getInstance();
             }
         }
