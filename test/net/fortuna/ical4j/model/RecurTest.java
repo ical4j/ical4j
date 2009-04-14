@@ -777,7 +777,10 @@ public class RecurTest extends TestCase {
         
         Date getDatesFirstResult = (Date) recur.getDates(seed, periodStart, periodEnd, Value.DATE_TIME).get(0);
         suite.addTest(new RecurTest(recur, seed, periodStart, getDatesFirstResult));
-                       
+                      
+        recur = new Recur("FREQ=YEARLY;BYMONTH=4;BYDAY=1SU");
+        suite.addTest(new RecurTest(recur, seed, periodStart, new DateTime("20090405T070000")));
+        
         return suite;
     }
 }
