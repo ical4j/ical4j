@@ -644,10 +644,10 @@ public class VEventTest extends CalendarComponentTest {
         VEvent weekdayNineToFiveEvents = new VEvent();
         weekdayNineToFiveEvents.getProperties().add(rruleWeekly);
         weekdayNineToFiveEvents.getProperties().add(summary);
-        DtStart dtStart = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
+        DtStart dtStart = new DtStart(new DateTime(weekday9AM.getTime().getTime()), true);
 //        dtStart.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.getProperties().add(dtStart);
-        DtEnd dtEnd = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
+        DtEnd dtEnd = new DtEnd(new DateTime(weekday5PM.getTime().getTime()), true);
 //        dtEnd.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.getProperties().add(dtEnd);
         weekdayNineToFiveEvents.getProperties().add(uidGenerator.generateUid());
@@ -659,10 +659,10 @@ public class VEventTest extends CalendarComponentTest {
         VEvent dailyWeekdayEvents = new VEvent();
         dailyWeekdayEvents.getProperties().add(rruleDaily);
         dailyWeekdayEvents.getProperties().add(summary);
-        DtStart dtStart2 = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
+        DtStart dtStart2 = new DtStart(new DateTime(weekday9AM.getTime().getTime()), true);
 //        dtStart2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.getProperties().add(dtStart2);
-        DtEnd dtEnd2 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
+        DtEnd dtEnd2 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()), true);
 //        dtEnd2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.getProperties().add(dtEnd2);
         dailyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
@@ -674,10 +674,10 @@ public class VEventTest extends CalendarComponentTest {
         VEvent monthlyWeekdayEvents = new VEvent();
         monthlyWeekdayEvents.getProperties().add(rruleMonthly);
         monthlyWeekdayEvents.getProperties().add(summary);
-        DtStart dtStart3 = new DtStart(new DateTime(weekday9AM.getTime().getTime()));
+        DtStart dtStart3 = new DtStart(new DateTime(weekday9AM.getTime().getTime()), true);
 //        dtStart3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.getProperties().add(dtStart3);
-        DtEnd dtEnd3 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()));
+        DtEnd dtEnd3 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()), true);
 //        dtEnd3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.getProperties().add(dtEnd3);
         monthlyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
