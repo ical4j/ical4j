@@ -129,15 +129,11 @@
 						<value>true</value>
 						</property>
 						</systemProperties>
-					-->
 					<forkMode>pertest</forkMode>
+					-->
 					<excludes>
-						<exclude>**/AllTests.java</exclude>
-						<exclude>**/CalendarEqualsTest.java</exclude>
 						<exclude>**/CalendarOutputterTest.java</exclude>
-						<exclude>**/FoldingWriterTest.java</exclude>
-						<exclude>**/ComponentTest.java</exclude>
-						<exclude>**/AbstractPropertyTest.java</exclude>
+						<exclude>**/Abstract*.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
