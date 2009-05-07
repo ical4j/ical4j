@@ -194,7 +194,9 @@ public final class Dates {
             	return Calendar.getInstance();
             }
         }
-        return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        else {
+            return Calendar.getInstance(TimeZones.getDateTimeZone());
+        }
     }
     
     /**

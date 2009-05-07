@@ -663,7 +663,7 @@ public class RecurTest extends TestCase {
         rrule = "FREQ=MONTHLY;UNTIL=20061220;INTERVAL=1;BYDAY=3WE";
         recur = new Recur(rrule);
 
-        cal = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        cal = Calendar.getInstance(TimeZones.getDateTimeZone());
         cal.set(2006, 11, 1);
         start = new Date(cal.getTime());
         cal.add(Calendar.YEAR, 1);

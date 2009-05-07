@@ -137,7 +137,7 @@ public class PeriodRuleTest extends FilterTest {
         suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents()));
         
         //testFilteringAllDayEvents..
-        cal = java.util.Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        cal = java.util.Calendar.getInstance(TimeZones.getDateTimeZone());
         cal.set(java.util.Calendar.MONTH, java.util.Calendar.JANUARY);
         cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
         

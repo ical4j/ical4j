@@ -75,7 +75,7 @@ public class DtStartTest extends TestCase {
         params.add(Value.DATE);
         DtStart dtStart = new DtStart(params, "20060811");
         
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        Calendar calendar = Calendar.getInstance(TimeZones.getDateTimeZone());
         calendar.clear();
         calendar.set(2006, 7, 11);
         calendar.clear(Calendar.HOUR_OF_DAY);

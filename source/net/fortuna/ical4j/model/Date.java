@@ -93,7 +93,7 @@ public class Date extends Iso8601 {
      * Default constructor.
      */
     public Date() {
-        super(PATTERN, Dates.PRECISION_DAY, TimeZone.getTimeZone(TimeZones.UTC_ID));
+        super(PATTERN, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
     }
     
     /**
@@ -109,7 +109,7 @@ public class Date extends Iso8601 {
      * @param time
      */
     public Date(final long time) {
-        super(time, PATTERN, Dates.PRECISION_DAY, TimeZone.getTimeZone(TimeZones.UTC_ID));
+        super(time, PATTERN, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
     }
     
     /**
@@ -127,7 +127,7 @@ public class Date extends Iso8601 {
      */
     public Date(final java.util.Date date) {
 //        this();
-        this(date.getTime(), Dates.PRECISION_DAY, TimeZone.getTimeZone(TimeZones.UTC_ID));
+        this(date.getTime(), Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
 //        setTime(date.getTime());
     }
 
@@ -146,7 +146,7 @@ public class Date extends Iso8601 {
      * @throws ParseException
      */
     public Date(String value, String pattern) throws ParseException {
-        super(pattern, Dates.PRECISION_DAY, TimeZone.getTimeZone(TimeZones.UTC_ID));
+        super(pattern, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
         setTime(getFormat().parse(value).getTime());
     }
 }

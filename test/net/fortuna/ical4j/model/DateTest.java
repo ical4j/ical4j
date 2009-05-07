@@ -103,7 +103,7 @@ public class DateTest extends TestCase {
         TestSuite suite = new TestSuite();
         suite.addTest(new DateTest(new Date(0l), "19700101"));
 
-        Calendar cal = Calendar.getInstance(java.util.TimeZone.getTimeZone(TimeZones.GMT_ID));
+        Calendar cal = Calendar.getInstance(TimeZones.getDateTimeZone());
         cal.clear();
         cal.set(Calendar.YEAR, 1984);
         // months are zero-based..
@@ -114,14 +114,14 @@ public class DateTest extends TestCase {
         suite.addTest(new DateTest(new Date("20050630"), "20050630"));
 
         // Test equality of Date instances created using different constructors..
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        Calendar calendar = Calendar.getInstance(TimeZones.getDateTimeZone());
         calendar.clear();
         calendar.set(2005, 0, 1);
         calendar.set(Calendar.MILLISECOND, 1);
         suite.addTest(new DateTest(new Date(calendar.getTime()), new Date("20050101").toString()));
         suite.addTest(new DateTest(new Date(calendar.getTime()), new Date("20050101")));
         
-        calendar = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        calendar = Calendar.getInstance(TimeZones.getDateTimeZone());
         calendar.clear();
         calendar.set(2005, 0, 1);
         calendar.clear(Calendar.HOUR_OF_DAY);

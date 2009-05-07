@@ -66,4 +66,23 @@ public final class TimeZones {
         return UTC_ID.equals(timezone.getID())
             || IBM_UTC_ID.equals(timezone.getID());
     }
+    
+    /**
+     * Although timezones are not really applicable to DATE instances in iCalendar, the implementation
+     * in iCal4j requires the use of a timezone. Dates in iCal4j may be either "floating", in that they
+     * use the default Java timezone, or alternatively will use UTC (this is the default).
+     * 
+     * The use of floating dates may be configured by specifying the following as a system property or in
+     * a file called "ical4j.properties" in the classpath:
+     * 
+     * <pre>net.fortuna.ical4j.timezone.date.floating=true</pre>
+     * 
+     * @return the timezone used for date instances
+     */
+    public static TimeZone getDateTimeZone() {
+    	if ("true".equals(Configurator.getProperty("net.fortuna.ical4j.timezone.date.floating"))) {
+    		return TimeZone.getDefault();
+    	}
+    	return TimeZone.getTimeZone(UTC_ID);
+    }
 }
