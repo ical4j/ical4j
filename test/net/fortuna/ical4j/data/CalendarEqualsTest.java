@@ -35,9 +35,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
@@ -141,6 +138,7 @@ public class CalendarEqualsTest extends TestCase {
 
             fin = new FileInputStream(file);
             Calendar reparsedCalendar = null;
+            builder = new CalendarBuilder();
 
             try {
                 reparsedCalendar = builder.build(fin);
@@ -152,8 +150,8 @@ public class CalendarEqualsTest extends TestCase {
                 errorOccurred = true;
             }
 
-            assertTrue("Parsed calendar isn't equal to itself!  : " + file.toString(),
-                    calendar.equals(reparsedCalendar));
+            assertEquals("Parsed calendar isn't equal to itself!  : " + file.toString(),
+                    calendar, reparsedCalendar);
         }
     }
     
@@ -173,9 +171,9 @@ public class CalendarEqualsTest extends TestCase {
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
         
-        List testFiles = new ArrayList(Arrays.asList(new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE))));
-        for (int i = 0; i < testFiles.size(); i++) {
-            suite.addTest(new CalendarEqualsTest((File) testFiles.get(i), true));
+        File[] testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        for (int i = 0; i < testFiles.length; i++) {
+            suite.addTest(new CalendarEqualsTest((File) testFiles[i], true));
         }
         return suite;
     }

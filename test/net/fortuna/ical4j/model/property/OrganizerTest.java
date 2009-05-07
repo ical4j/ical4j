@@ -54,13 +54,17 @@ public class OrganizerTest extends TestCase {
 
     private static final Log LOG = LogFactory.getLog(OrganizerTest.class);
     
+    protected void setUp() throws Exception {
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_PARSING, false);
+    }
+    
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_PARSING, false);
-        super.tearDown();
     }
     
     /**
