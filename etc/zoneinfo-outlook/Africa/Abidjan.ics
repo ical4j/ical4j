@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009g//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:Africa/Abidjan
+TZURL:http://tzurl.org/zoneinfo-outlook/Africa/Abidjan
 X-LIC-LOCATION:Africa/Abidjan
 BEGIN:STANDARD
 TZOFFSETFROM:+0000

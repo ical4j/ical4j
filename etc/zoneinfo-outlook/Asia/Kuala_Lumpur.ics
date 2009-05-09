@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009g//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:Asia/Kuala_Lumpur
+TZURL:http://tzurl.org/zoneinfo-outlook/Asia/Kuala_Lumpur
 X-LIC-LOCATION:Asia/Kuala_Lumpur
 BEGIN:STANDARD
 TZOFFSETFROM:+0800

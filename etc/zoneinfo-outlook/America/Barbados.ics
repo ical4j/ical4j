@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009g//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:America/Barbados
+TZURL:http://tzurl.org/zoneinfo-outlook/America/Barbados
 X-LIC-LOCATION:America/Barbados
 BEGIN:STANDARD
 TZOFFSETFROM:-0400

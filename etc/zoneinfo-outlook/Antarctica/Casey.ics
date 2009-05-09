@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2009g//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
 TZID:Antarctica/Casey
+TZURL:http://tzurl.org/zoneinfo-outlook/Antarctica/Casey
 X-LIC-LOCATION:Antarctica/Casey
 BEGIN:STANDARD
 TZOFFSETFROM:+0800
