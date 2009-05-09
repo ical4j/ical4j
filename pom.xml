@@ -271,7 +271,6 @@
 					<comparisonVersion>1.0-rc1</comparisonVersion>
 				</configuration>
 			</plugin>
-<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
@@ -295,7 +294,6 @@
 					</reportSet>
 				</reportSets>
 			</plugin>
- -->
 		</plugins>
 	</reporting>
 </project>
