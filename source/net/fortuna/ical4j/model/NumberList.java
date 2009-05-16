@@ -90,7 +90,7 @@ public class NumberList extends ArrayList implements Serializable {
     	this(minValue, maxValue);
         for (StringTokenizer t = new StringTokenizer(aString, ","); t.hasMoreTokens();) {
         	int value = Numbers.parseInt(t.nextToken());
-            add(new Integer(value));
+            add(Integer.valueOf(value));
         }
     }
 
@@ -100,7 +100,7 @@ public class NumberList extends ArrayList implements Serializable {
      */
     public final boolean add(final Integer aNumber) {
     	if (aNumber.intValue() < minValue || aNumber.intValue() > maxValue) {
-    		throw new IllegalArgumentException("Value outside allowable bounds");
+    		throw new IllegalArgumentException("Value not in range [" + minValue + ".." + maxValue + "]: " + aNumber);
     	}
         return add((Object) aNumber);
     }

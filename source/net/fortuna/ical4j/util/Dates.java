@@ -96,7 +96,7 @@ public final class Dates {
         List weeks = new ArrayList();
         cal.set(Calendar.WEEK_OF_YEAR, 1);
         while (cal.get(Calendar.YEAR) == year) {
-            weeks.add(new Integer(cal.get(Calendar.WEEK_OF_YEAR)));
+            weeks.add(Integer.valueOf(cal.get(Calendar.WEEK_OF_YEAR)));
             cal.add(Calendar.WEEK_OF_YEAR, 1);
         }
         return ((Integer) weeks.get(weeks.size() + weekNo)).intValue();
@@ -125,7 +125,7 @@ public final class Dates {
         List days = new ArrayList();
         cal.set(Calendar.DAY_OF_YEAR, 1);
         while (cal.get(Calendar.YEAR) == year) {
-            days.add(new Integer(cal.get(Calendar.DAY_OF_YEAR)));
+            days.add(Integer.valueOf(cal.get(Calendar.DAY_OF_YEAR)));
             cal.add(Calendar.DAY_OF_YEAR, 1);
         }
         return ((Integer) days.get(days.size() + yearDay)).intValue();
@@ -154,7 +154,7 @@ public final class Dates {
         List days = new ArrayList();
         cal.set(Calendar.DAY_OF_MONTH, 1);
         while (cal.get(Calendar.MONTH) == month) {
-            days.add(new Integer(cal.get(Calendar.DAY_OF_MONTH)));
+            days.add(Integer.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
             cal.add(Calendar.DAY_OF_MONTH, 1);
         }
         return ((Integer) days.get(days.size() + monthDay)).intValue();
