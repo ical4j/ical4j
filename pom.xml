@@ -8,6 +8,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.fortuna.ical4j</groupId>
 	<artifactId>ical4j</artifactId>
+	<packaging>bundle</packaging>
 	<name>iCal4j</name>
 	<version>1.0-rc3-SNAPSHOT</version>
 	<description>
@@ -135,6 +136,18 @@
 						<exclude>**/CalendarOutputterTest.java</exclude>
 						<exclude>**/Abstract*.java</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			
+			<plugin>   
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Export-Package>net.fortuna.ical4j.*</Export-Package>
+						<Import-Package>net.fortuna.ical4j.*,org.apache.commons.lang.*,org.apache.commons.logging,*;resolution:=optional</Import-Package>
+					</instructions>
 				</configuration>
 			</plugin>
 
