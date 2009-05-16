@@ -49,12 +49,22 @@ public class NumberList extends ArrayList implements Serializable {
     
     private static final long serialVersionUID = -1667481795613729889L;
 
+    private int minValue;
+    
+    private int maxValue;
+    
     /**
      * Default constructor.
      */
     public NumberList() {
+    	this(Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
+    public NumberList(int minValue, int maxValue) {
+    	this.minValue = minValue;
+    	this.maxValue = maxValue;
+    }
+    
     /**
      * Creates a new instance with the specified initial capacity.
      * @param initialCapacity the initial capacity of the list
@@ -68,9 +78,19 @@ public class NumberList extends ArrayList implements Serializable {
      * @param aString a string representation of a number list
      */
     public NumberList(final String aString) {
-        for (StringTokenizer t = new StringTokenizer(aString, ","); t
-                .hasMoreTokens();) {
-            add(new Integer(Numbers.parseInt(t.nextToken())));
+    	this(aString, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    
+    /**
+     * @param aString
+     * @param minValue
+     * @param maxValue
+     */
+    public NumberList(final String aString, int minValue, int maxValue) {
+    	this(minValue, maxValue);
+        for (StringTokenizer t = new StringTokenizer(aString, ","); t.hasMoreTokens();) {
+        	int value = Numbers.parseInt(t.nextToken());
+            add(new Integer(value));
         }
     }
 
@@ -79,6 +99,9 @@ public class NumberList extends ArrayList implements Serializable {
      * @return
      */
     public final boolean add(final Integer aNumber) {
+    	if (aNumber.intValue() < minValue || aNumber.intValue() > maxValue) {
+    		throw new IllegalArgumentException("Value outside allowable bounds");
+    	}
         return add((Object) aNumber);
     }
     

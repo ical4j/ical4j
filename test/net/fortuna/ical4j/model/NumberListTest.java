@@ -31,6 +31,9 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
@@ -44,11 +47,17 @@ import junit.framework.TestSuite;
  */
 public class NumberListTest extends TestCase {
     
+	private static final Log LOG = LogFactory.getLog(NumberListTest.class);
+	
     private NumberList numberList;
     
     private int expectedSize;
     
     private String expectedString;
+    
+    private Integer validNumber;
+    
+    private Integer invalidNumber;
     
     /**
      * @param numberList
@@ -71,21 +80,37 @@ public class NumberListTest extends TestCase {
     }
     
     /**
-     * 
+     * @param list
+     * @param validNumber
+     * @param invalidNumber
      */
+    public NumberListTest(NumberList list, Integer validNumber, Integer invalidNumber) {
+    	super("testBounds");
+    	this.numberList = list;
+    	this.validNumber = validNumber;
+    	this.invalidNumber = invalidNumber;
+    }
+    
     public void testSize() {
         assertEquals(expectedSize, numberList.size());
     }
     
-    /**
-     * 
-     */
     public void testToString() {
         assertEquals(expectedString, numberList.toString());
     }
     
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#getName()
+    public void testBounds() {
+		numberList.add(validNumber);
+    	try {
+    		numberList.add(invalidNumber);
+    	}
+    	catch (IllegalArgumentException e) {
+    		LOG.debug("Caught exception: " + e);
+    	}
+    }
+    
+    /**
+     * {@inheritDoc}
      */
     public String getName() {
         return super.getName() + " [" + numberList + "]";
@@ -104,6 +129,10 @@ public class NumberListTest extends TestCase {
         
         suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3"), 7));
         suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3"), "0,2,5,-2,-4,-5,3"));
+        
+        suite.addTest(new NumberListTest(new NumberList(0, 1), Integer.valueOf(0), Integer.valueOf(-1)));
+        suite.addTest(new NumberListTest(new NumberList("1", 0, 1), Integer.valueOf(0), Integer.valueOf(2)));
+        
         return suite;
     }
 }
