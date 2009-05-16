@@ -67,18 +67,16 @@ public class CalendarParserImpl implements CalendarParser {
 
     private Log log = LogFactory.getLog(CalendarParserImpl.class);
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.data.CalendarParser#parse(java.io.InputStream, net.fortuna.ical4j.data.ContentHandler)
+    /**
+     * {@inheritDoc}
      */
     public final void parse(final InputStream in, final ContentHandler handler)
             throws IOException, ParserException {
         parse(new InputStreamReader(in), handler);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.data.CalendarParser#parse(java.io.Reader, net.fortuna.ical4j.data.ContentHandler)
+    /**
+     * {@inheritDoc}
      */
     public final void parse(final Reader in, final ContentHandler handler)
             throws IOException, ParserException {
