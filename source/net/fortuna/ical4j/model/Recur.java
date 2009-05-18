@@ -43,6 +43,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.Dates;
 
 import org.apache.commons.logging.Log;
@@ -101,6 +102,24 @@ public class Recur implements Serializable {
     public static final String MONTHLY = "MONTHLY";
 
     public static final String YEARLY = "YEARLY";
+
+    /**
+     * When calculating dates matching this recur ({@code getDates()} or {@code getNextDate}),
+     *  this property defines the maximum number of attempt to find a matching date by
+     * incrementing the seed.
+     * <p>The default value is 1000. A value of -1 corresponds to no maximum.</p>
+     */
+    public static final String KEY_MAX_INCREMENT_COUNT = "net.fortuna.ical4j.recur.maxincrementcount";
+
+    private static final int maxIncrementCount;
+    static {
+        String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
+        if ((value != null) && (!value.isEmpty())) {
+            maxIncrementCount = Integer.parseInt(value);
+        } else {
+            maxIncrementCount = 1000;
+        }
+    }
 
     private transient Log log = LogFactory.getLog(Recur.class);
 
@@ -539,6 +558,7 @@ public class Recur implements Serializable {
         }
 
         int invalidCandidateCount = 0;
+        int noCandidateIncrementCount = 0;
         Date candidate = null;
         while ((maxCount < 0) || (dates.size() < maxCount)) {
             final Date candidateSeed = Dates.getInstance(cal.getTime(), value);
@@ -570,25 +590,31 @@ public class Recur implements Serializable {
             }
 
             final DateList candidates = getCandidates(candidateSeed, value);
-            // sort candidates for identifying when UNTIL date is exceeded..
-            Collections.sort(candidates);
-            for (final Iterator i = candidates.iterator(); i.hasNext();) {
-                candidate = (Date) i.next();
-                // don't count candidates that occur before the seed date..
-                if (!candidate.before(seed)) {
-                    // candidates exclusive of periodEnd..
-                    if (candidate.before(periodStart)
-                            || !candidate.before(periodEnd)) {
-                        invalidCandidateCount++;
+            if (!candidates.isEmpty()) {
+                noCandidateIncrementCount = 0;
+                // sort candidates for identifying when UNTIL date is exceeded..
+                Collections.sort(candidates);
+                for (final Iterator i = candidates.iterator(); i.hasNext();) {
+                    candidate = (Date) i.next();
+                    // don't count candidates that occur before the seed date..
+                    if (!candidate.before(seed)) {
+                        // candidates exclusive of periodEnd..
+                        if (candidate.before(periodStart)
+                                || !candidate.before(periodEnd)) {
+                            invalidCandidateCount++;
+                        } else if (getCount() >= 1
+                                && (dates.size() + invalidCandidateCount) >= getCount()) {
+                            break;
+                        } else if (!(getUntil() != null
+                                && candidate.after(getUntil()))) {
+                            dates.add(candidate);
+                        }
                     }
-                    else if (getCount() >= 1
-                            && (dates.size() + invalidCandidateCount) >= getCount()) {
-                        break;
-                    }
-                    else if (!(getUntil() != null && candidate
-                            .after(getUntil()))) {
-                        dates.add(candidate);
-                    }
+                }
+            } else {
+                noCandidateIncrementCount++;
+                if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
+                    break;
                 }
             }
             increment(cal);
@@ -624,6 +650,7 @@ public class Recur implements Serializable {
         }
 
         int invalidCandidateCount = 0;
+        int noCandidateIncrementCount = 0;
         Date candidate = null;
         final Value value = seed instanceof DateTime ? Value.DATE_TIME : Value.DATE;
         
@@ -648,24 +675,32 @@ public class Recur implements Serializable {
             }
 
             final DateList candidates = getCandidates(candidateSeed, value);
-            // sort candidates for identifying when UNTIL date is exceeded..
-            Collections.sort(candidates);
-            
-            for (final Iterator i = candidates.iterator(); i.hasNext();) {
-                candidate = (Date) i.next();
-                // don't count candidates that occur before the seed date..
-                if (!candidate.before(seed)) {
-                    // Candidate must be after startDate because
-                    // we want the NEXT occurrence
-                    if (!candidate.after(startDate)) {
-                        invalidCandidateCount++;
+            if (!candidates.isEmpty()) {
+                noCandidateIncrementCount = 0;
+                // sort candidates for identifying when UNTIL date is exceeded..
+                Collections.sort(candidates);
+
+                for (final Iterator i = candidates.iterator(); i.hasNext();) {
+                    candidate = (Date) i.next();
+                    // don't count candidates that occur before the seed date..
+                    if (!candidate.before(seed)) {
+                        // Candidate must be after startDate because
+                        // we want the NEXT occurrence
+                        if (!candidate.after(startDate)) {
+                            invalidCandidateCount++;
+                        } else if (getCount() > 0
+                                && invalidCandidateCount >= getCount()) {
+                            break;
+                        } else if (!(getUntil() != null
+                                && candidate.after(getUntil()))) {
+                            return candidate;
+                        }
                     }
-                    else if (getCount() > 0 && invalidCandidateCount >= getCount()) {
-                        break;
-                    }
-                    else if (!(getUntil() != null && candidate.after(getUntil()))) {
-                        return candidate;
-                    }
+                }
+            } else {
+                noCandidateIncrementCount++;
+                if ((maxIncrementCount > 0) && (noCandidateIncrementCount > maxIncrementCount)) {
+                    break;
                 }
             }
             increment(cal);

@@ -780,6 +780,10 @@ public class RecurTest extends TestCase {
                       
         recur = new Recur("FREQ=YEARLY;BYMONTH=4;BYDAY=1SU");
         suite.addTest(new RecurTest(recur, seed, periodStart, new DateTime("20090405T070000")));
+
+        // rrule never matching any candidate  - should reach limit
+        recur = new Recur("FREQ=DAILY;COUNT=60;BYDAY=TU,TH;BYSETPOS=2");
+        suite.addTest(new RecurTest(recur, seed, start, end, Value.DATE, 0));
         
         return suite;
     }
