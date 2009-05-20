@@ -187,31 +187,31 @@ public class Recur implements Serializable {
                 interval = Integer.parseInt(t.nextToken());
             }
             else if (BYSECOND.equals(token)) {
-                secondList = new NumberList(t.nextToken(), 0, 59);
+                secondList = new NumberList(t.nextToken(), 0, 59, false);
             }
             else if (BYMINUTE.equals(token)) {
-                minuteList = new NumberList(t.nextToken(), 0, 59);
+                minuteList = new NumberList(t.nextToken(), 0, 59, false);
             }
             else if (BYHOUR.equals(token)) {
-                hourList = new NumberList(t.nextToken(), 0, 23);
+                hourList = new NumberList(t.nextToken(), 0, 23, false);
             }
             else if (BYDAY.equals(token)) {
                 dayList = new WeekDayList(t.nextToken());
             }
             else if (BYMONTHDAY.equals(token)) {
-                monthDayList = new NumberList(t.nextToken(), 1, 31);
+                monthDayList = new NumberList(t.nextToken(), 1, 31, true);
             }
             else if (BYYEARDAY.equals(token)) {
-                yearDayList = new NumberList(t.nextToken(), 1, 366);
+                yearDayList = new NumberList(t.nextToken(), 1, 366, true);
             }
             else if (BYWEEKNO.equals(token)) {
-                weekNoList = new NumberList(t.nextToken(), 1, 53);
+                weekNoList = new NumberList(t.nextToken(), 1, 53, true);
             }
             else if (BYMONTH.equals(token)) {
-                monthList = new NumberList(t.nextToken(), 1, 12);
+                monthList = new NumberList(t.nextToken(), 1, 12, false);
             }
             else if (BYSETPOS.equals(token)) {
-                setPosList = new NumberList(t.nextToken(), 1, 366);
+                setPosList = new NumberList(t.nextToken(), 1, 366, true);
             }
             else if (WKST.equals(token)) {
                 weekStartDay = t.nextToken();
@@ -261,7 +261,7 @@ public class Recur implements Serializable {
      */
     public final NumberList getHourList() {
         if (hourList == null) {
-            hourList = new NumberList(0, 23);
+            hourList = new NumberList(0, 23, false);
         }
         return hourList;
     }
@@ -271,7 +271,7 @@ public class Recur implements Serializable {
      */
     public final NumberList getMinuteList() {
         if (minuteList == null) {
-            minuteList = new NumberList(0, 59);
+            minuteList = new NumberList(0, 59, false);
         }
         return minuteList;
     }
@@ -281,7 +281,7 @@ public class Recur implements Serializable {
      */
     public final NumberList getMonthDayList() {
         if (monthDayList == null) {
-            monthDayList = new NumberList(1, 31);
+            monthDayList = new NumberList(1, 31, true);
         }
         return monthDayList;
     }
@@ -291,7 +291,7 @@ public class Recur implements Serializable {
      */
     public final NumberList getMonthList() {
         if (monthList == null) {
-            monthList = new NumberList(1, 12);
+            monthList = new NumberList(1, 12, false);
         }
         return monthList;
     }
@@ -301,7 +301,7 @@ public class Recur implements Serializable {
      */
     public final NumberList getSecondList() {
         if (secondList == null) {
-            secondList = new NumberList(0, 59);
+            secondList = new NumberList(0, 59, false);
         }
         return secondList;
     }
@@ -311,7 +311,7 @@ public class Recur implements Serializable {
      */
     public final NumberList getSetPosList() {
         if (setPosList == null) {
-            setPosList = new NumberList(1, 366);
+            setPosList = new NumberList(1, 366, true);
         }
         return setPosList;
     }
@@ -321,7 +321,7 @@ public class Recur implements Serializable {
      */
     public final NumberList getWeekNoList() {
         if (weekNoList == null) {
-            weekNoList = new NumberList(1, 53);
+            weekNoList = new NumberList(1, 53, true);
         }
         return weekNoList;
     }
@@ -331,7 +331,7 @@ public class Recur implements Serializable {
      */
     public final NumberList getYearDayList() {
         if (yearDayList == null) {
-            yearDayList = new NumberList(1, 366);
+            yearDayList = new NumberList(1, 366, true);
         }
         return yearDayList;
     }

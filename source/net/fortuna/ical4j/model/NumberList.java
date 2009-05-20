@@ -49,28 +49,29 @@ public class NumberList extends ArrayList implements Serializable {
     
     private static final long serialVersionUID = -1667481795613729889L;
 
-    private int minValue;
+    private final int minValue;
     
-    private int maxValue;
+    private final int maxValue;
+
+    private final boolean allowsNegativeValues;
     
     /**
      * Default constructor.
      */
     public NumberList() {
-    	this(Integer.MIN_VALUE, Integer.MAX_VALUE);
+    	this(Integer.MIN_VALUE, Integer.MAX_VALUE, true);
     }
 
-    public NumberList(int minValue, int maxValue) {
+    /**
+     * Constructor with limits.
+     * @param minValue
+     * @param maxValue
+     * @param allowsNegativeValues
+     */
+    public NumberList(int minValue, int maxValue, boolean allowsNegativeValues) {
     	this.minValue = minValue;
     	this.maxValue = maxValue;
-    }
-    
-    /**
-     * Creates a new instance with the specified initial capacity.
-     * @param initialCapacity the initial capacity of the list
-     */
-    public NumberList(final int initialCapacity) {
-        super(initialCapacity);
+        this.allowsNegativeValues = allowsNegativeValues;
     }
 
     /**
@@ -78,16 +79,17 @@ public class NumberList extends ArrayList implements Serializable {
      * @param aString a string representation of a number list
      */
     public NumberList(final String aString) {
-    	this(aString, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    	this(aString, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
     }
     
     /**
      * @param aString
      * @param minValue
      * @param maxValue
+     * @param allowsNegativeValues
      */
-    public NumberList(final String aString, int minValue, int maxValue) {
-    	this(minValue, maxValue);
+    public NumberList(final String aString, int minValue, int maxValue, boolean allowsNegativeValues) {
+    	this(minValue, maxValue, allowsNegativeValues);
         for (StringTokenizer t = new StringTokenizer(aString, ","); t.hasMoreTokens();) {
         	int value = Numbers.parseInt(t.nextToken());
             add(Integer.valueOf(value));
@@ -99,7 +101,14 @@ public class NumberList extends ArrayList implements Serializable {
      * @return
      */
     public final boolean add(final Integer aNumber) {
-    	if (aNumber.intValue() < minValue || aNumber.intValue() > maxValue) {
+        int abs = aNumber.intValue();
+        if (Integer.signum(abs) < 0) {
+            if (!allowsNegativeValues) {
+                throw new IllegalArgumentException("Negative value not allowed: " + aNumber);
+            }
+            abs = Math.abs(abs);
+        }
+    	if (abs < minValue || abs > maxValue) {
     		throw new IllegalArgumentException("Value not in range [" + minValue + ".." + maxValue + "]: " + aNumber);
     	}
         return add((Object) aNumber);

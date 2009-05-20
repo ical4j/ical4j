@@ -709,6 +709,10 @@ public class RecurTest extends TestCase {
         // testUnknownFrequency..
         suite.addTest(new RecurTest("FREQ=FORTNIGHTLY;BYDAY=MO,TU,WE,TH,FR"));
 
+        // various invalid values
+        suite.addTest(new RecurTest("FREQ=YEARLY;BYMONTH=0"));
+        suite.addTest(new RecurTest("FREQ=YEARLY;BYMONTHDAY=-400"));
+
         // Unit test for recurrence every 4th february..
         rrule = "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=4;BYDAY=MO,TU,WE,TH,FR,SA,SU";
         recur = new Recur(rrule);
@@ -784,6 +788,10 @@ public class RecurTest extends TestCase {
         // rrule never matching any candidate  - should reach limit
         recur = new Recur("FREQ=DAILY;COUNT=60;BYDAY=TU,TH;BYSETPOS=2");
         suite.addTest(new RecurTest(recur, seed, start, end, Value.DATE, 0));
+
+        // rrule with negative bymonthday
+        recur = new Recur("FREQ=YEARLY;COUNT=4;INTERVAL=2;BYMONTH=1,2,3;BYMONTHDAY=-1");
+        suite.addTest(new RecurTest(recur, seed, periodStart, new DateTime("20100131T070000")));
         
         return suite;
     }
