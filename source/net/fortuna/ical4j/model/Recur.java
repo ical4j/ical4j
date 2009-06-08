@@ -399,12 +399,6 @@ public class Recur implements Serializable {
             b.append('=');
             b.append(weekStartDay);
         }
-        if (interval >= 1) {
-            b.append(';');
-            b.append(INTERVAL);
-            b.append('=');
-            b.append(interval);
-        }
         if (until != null) {
             b.append(';');
             b.append(UNTIL);
@@ -417,6 +411,12 @@ public class Recur implements Serializable {
             b.append(COUNT);
             b.append('=');
             b.append(count);
+        }
+        if (interval >= 1) {
+            b.append(';');
+            b.append(INTERVAL);
+            b.append('=');
+            b.append(interval);
         }
         if (!getMonthList().isEmpty()) {
             b.append(';');
