@@ -201,15 +201,22 @@ public class Dur implements Comparable, Serializable {
      * @param start the start date of the duration
      * @param end the end date of the duration
      */
-    public Dur(Date start, Date end) {
+    public Dur(final Date date1, final Date date2) {
+        
+        Date start = null;
+        Date end = null;
+        
         // Negative range? (start occurs after end)
         negative = start.compareTo(end) > 0;
         if (negative) {
             // Swap the dates (which eliminates the need to bother with
             // negative after this!)
-            Date t = start;
-            start = end;
-            end = t;
+            start = date2;
+            end = date1;
+        }
+        else {
+            start = date1;
+            end = date2;
         }
 
         Calendar startCal = Calendar.getInstance();
