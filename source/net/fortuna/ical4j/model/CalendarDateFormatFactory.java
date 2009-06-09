@@ -44,14 +44,14 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$ [06-Apr-2004]
- *
+ * 
  * Creates DateFormat objects optimized for common iCalendar date patterns.
- *
+ * 
  * @author Dave Nault dnault@laszlosystems.com
  * @see #getInstance(String)
  */
-public class CalendarDateFormatFactory {
-    private static final Log log = LogFactory.getLog(CalendarDateFormatFactory.class);
+public final class CalendarDateFormatFactory {
+    private static final Log LOG = LogFactory.getLog(CalendarDateFormatFactory.class);
 
     private static final String DATETIME_PATTERN = "yyyyMMdd'T'HHmmss";
     private static final String DATETIME_UTC_PATTERN = "yyyyMMdd'T'HHmmss'Z'";
@@ -60,22 +60,29 @@ public class CalendarDateFormatFactory {
     private static final String TIME_UTC_PATTERN = "HHmmss'Z'";
 
     /**
-     * Returns DateFormat objects optimized for common iCalendar date patterns.
-     * The DateFormats are *not* thread safe. Attempts to get or set the
-     * Calendar or NumberFormat of an optimized DateFormat will result in
-     * an UnsupportedOperation exception being thrown.
-     *
-     * @param pattern a SimpleDateFormat-compatible pattern
-     * @return an optimized DateFormat instance if possible,
-     *         otherwise a normal SimpleDateFormat instance
-     * @throws NullPointerException     if the given pattern is null
-     * @throws IllegalArgumentException if the given pattern is invalid
+     * Constructor made private to enforce static nature.
+     */
+    private CalendarDateFormatFactory() {
+    }
+
+    /**
+     * Returns DateFormat objects optimized for common iCalendar date patterns. The DateFormats are *not* thread safe.
+     * Attempts to get or set the Calendar or NumberFormat of an optimized DateFormat will result in an
+     * UnsupportedOperation exception being thrown.
+     * 
+     * @param pattern
+     *            a SimpleDateFormat-compatible pattern
+     * @return an optimized DateFormat instance if possible, otherwise a normal SimpleDateFormat instance
+     * @throws NullPointerException
+     *             if the given pattern is null
+     * @throws IllegalArgumentException
+     *             if the given pattern is invalid
      */
     public static java.text.DateFormat getInstance(String pattern) {
 
-        //if (true) {
-        //    return new SimpleDateFormat(pattern);
-        //}
+        // if (true) {
+        // return new SimpleDateFormat(pattern);
+        // }
 
         if (pattern.equals(DATETIME_PATTERN) || pattern.equals(DATETIME_UTC_PATTERN)) {
             return new DateTimeFormat(pattern);
@@ -89,8 +96,8 @@ public class CalendarDateFormatFactory {
             return new TimeFormat(pattern);
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug("unexpected date format pattern: " + pattern);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("unexpected date format pattern: " + pattern);
         }
 
         return new SimpleDateFormat(pattern);
@@ -100,14 +107,14 @@ public class CalendarDateFormatFactory {
         /**
 		 * 
 		 */
-		private static final long serialVersionUID = -4191402739860280205L;
+        private static final long serialVersionUID = -4191402739860280205L;
 
-		static private final java.util.TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
+        static private final java.util.TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
 
         final private String pattern;
-        
+
         private boolean lenient = true;
-        
+
         private java.util.TimeZone timeZone = DEFAULT_TIME_ZONE;
 
         public CalendarDateFormat(String pattern) {
@@ -155,15 +162,21 @@ public class CalendarDateFormatFactory {
         }
 
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            if (!super.equals(o)) return false;
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            if (!super.equals(o))
+                return false;
 
             CalendarDateFormat that = (CalendarDateFormat) o;
 
-            if (lenient != that.lenient) return false;
-            if (!pattern.equals(that.pattern)) return false;
-            if (!timeZone.equals(that.timeZone)) return false;
+            if (lenient != that.lenient)
+                return false;
+            if (!pattern.equals(that.pattern))
+                return false;
+            if (!timeZone.equals(that.timeZone))
+                return false;
 
             return true;
         }
@@ -179,6 +192,7 @@ public class CalendarDateFormatFactory {
 
     /**
      * Parses and formats these patterns:
+     * 
      * <pre>
      * yyyyMMdd'T'HHmmss
      * yyyyMMdd'T'HHmmss'Z'
@@ -189,9 +203,9 @@ public class CalendarDateFormatFactory {
         /**
 		 * 
 		 */
-		private static final long serialVersionUID = 3005824302269636122L;
-		
-		final boolean patternEndsWithZ;
+        private static final long serialVersionUID = 3005824302269636122L;
+
+        final boolean patternEndsWithZ;
 
         public DateTimeFormat(String pattern) {
             super(pattern);
@@ -219,18 +233,17 @@ public class CalendarDateFormatFactory {
         }
 
         public Date parse(String source, ParsePosition pos) {
-            // if lenient ignore superfluous input.. 
+            // if lenient ignore superfluous input..
             if (patternEndsWithZ) {
                 if (source.length() > DATETIME_UTC_PATTERN.length() && !isLenient()) {
                     pos.setErrorIndex(DATETIME_UTC_PATTERN.length());
                     return null;
                 }
-            }
-            else if (source.length() > DATETIME_PATTERN.length() && !isLenient()) {
+            } else if (source.length() > DATETIME_PATTERN.length() && !isLenient()) {
                 pos.setErrorIndex(DATETIME_PATTERN.length());
                 return null;
             }
-            
+
             try {
                 if (source.charAt(8) != 'T') {
                     pos.setErrorIndex(8);
@@ -248,11 +261,10 @@ public class CalendarDateFormatFactory {
                 int minute = Integer.parseInt(source.substring(11, 13));
                 int second = Integer.parseInt(source.substring(13, 15));
 
-                Date d =  makeCalendar(isLenient(), getTimeZone(), year, month, day, hour, minute, second).getTime();
+                Date d = makeCalendar(isLenient(), getTimeZone(), year, month, day, hour, minute, second).getTime();
                 pos.setIndex(15);
                 return d;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 return null;
             }
         }
@@ -260,6 +272,7 @@ public class CalendarDateFormatFactory {
 
     /**
      * Parses and formats this pattern:
+     * 
      * <pre>
      * yyyyMMdd
      * </pre>
@@ -269,9 +282,9 @@ public class CalendarDateFormatFactory {
         /**
 		 * 
 		 */
-		private static final long serialVersionUID = -7626077667268431779L;
+        private static final long serialVersionUID = -7626077667268431779L;
 
-		public DateFormat(String pattern) {
+        public DateFormat(String pattern) {
             super(pattern);
         }
 
@@ -287,12 +300,12 @@ public class CalendarDateFormatFactory {
         }
 
         public Date parse(String source, ParsePosition pos) {
-            // if lenient ignore superfluous input.. 
+            // if lenient ignore superfluous input..
             if (source.length() > DATE_PATTERN.length() && !isLenient()) {
                 pos.setErrorIndex(DATE_PATTERN.length());
                 return null;
             }
-            
+
             try {
                 int year = Integer.parseInt(source.substring(0, 4));
                 int month = Integer.parseInt(source.substring(4, 6)) - 1;
@@ -301,8 +314,7 @@ public class CalendarDateFormatFactory {
                 Date d = makeCalendar(isLenient(), getTimeZone(), year, month, day).getTime();
                 pos.setIndex(8);
                 return d;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 return null;
             }
         }
@@ -310,6 +322,7 @@ public class CalendarDateFormatFactory {
 
     /**
      * Parses and formats these patterns:
+     * 
      * <pre>
      * HHmmss
      * HHmmss'Z'
@@ -320,9 +333,9 @@ public class CalendarDateFormatFactory {
         /**
 		 * 
 		 */
-		private static final long serialVersionUID = -1367114409994225425L;
-		
-		final boolean patternEndsWithZ;
+        private static final long serialVersionUID = -1367114409994225425L;
+
+        final boolean patternEndsWithZ;
 
         public TimeFormat(String pattern) {
             super(pattern);
@@ -351,12 +364,11 @@ public class CalendarDateFormatFactory {
                     pos.setErrorIndex(TIME_UTC_PATTERN.length());
                     return null;
                 }
-            }
-            else if (source.length() > TIME_PATTERN.length() && !isLenient()) {
+            } else if (source.length() > TIME_PATTERN.length() && !isLenient()) {
                 pos.setErrorIndex(TIME_PATTERN.length());
                 return null;
             }
-            
+
             try {
                 if (patternEndsWithZ && source.charAt(6) != 'Z') {
                     pos.setErrorIndex(6);
@@ -370,14 +382,14 @@ public class CalendarDateFormatFactory {
                 Date d = makeCalendar(isLenient(), getTimeZone(), 1970, 0, 1, hour, minute, second).getTime();
                 pos.setIndex(6);
                 return d;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 return null;
             }
         }
     }
 
-    private static GregorianCalendar makeCalendar(boolean lenient, java.util.TimeZone timeZone, int year, int zeroBasedMonth, int day, int hour, int minutes, int seconds) {
+    private static GregorianCalendar makeCalendar(boolean lenient, java.util.TimeZone timeZone, int year,
+            int zeroBasedMonth, int day, int hour, int minutes, int seconds) {
         GregorianCalendar cal = new GregorianCalendar(timeZone);
         cal.setLenient(lenient);
         cal.set(year, zeroBasedMonth, day, hour, minutes, seconds);
