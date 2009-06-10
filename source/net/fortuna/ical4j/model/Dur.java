@@ -207,7 +207,7 @@ public class Dur implements Comparable, Serializable {
         Date end = null;
         
         // Negative range? (start occurs after end)
-        negative = start.compareTo(end) > 0;
+        negative = date1.compareTo(date2) > 0;
         if (negative) {
             // Swap the dates (which eliminates the need to bother with
             // negative after this!)
