@@ -225,7 +225,7 @@ public class Attach extends Property {
      * the binary field. Otherwise the value is assumed to be a URI
      * location to binary data and is stored as such.
      */
-    public void setValue(final String aValue) throws IOException,
+    public final void setValue(final String aValue) throws IOException,
             URISyntaxException {
         
         // determine if ATTACH is a URI or an embedded
