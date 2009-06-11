@@ -215,11 +215,6 @@ public abstract class Parameter extends Content {
     }
 
     /**
-     * @return Returns the value.
-     */
-    public abstract String getValue();
-
-    /**
      * Uses {@link EqualsBuilder} to test equality.
      */
     public final boolean equals(final Object arg0) {

@@ -111,7 +111,7 @@ public class Recur implements Serializable {
      */
     public static final String KEY_MAX_INCREMENT_COUNT = "net.fortuna.ical4j.recur.maxincrementcount";
 
-    private static final int maxIncrementCount;
+    private static int maxIncrementCount;
     static {
         String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
         if ((value != null) && (!value.isEmpty())) {

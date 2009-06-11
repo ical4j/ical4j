@@ -263,15 +263,6 @@ public abstract class Property extends Content {
     }
 
     /**
-     * Indicates whether this property is a component property.
-     * @return boolean
-     */
-    public final boolean isComponentProperty() {
-
-        return false;
-    }
-
-    /**
      * @return Returns the name.
      */
     public final String getName() {
@@ -312,11 +303,6 @@ public abstract class Property extends Content {
      */
     public abstract void setValue(String aValue) throws IOException,
             URISyntaxException, ParseException;
-
-    /**
-     * @return Returns the value.
-     */
-    public abstract String getValue();
 
     /**
      * Perform validation on a property.

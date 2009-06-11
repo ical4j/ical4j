@@ -50,4 +50,13 @@ public abstract class Content implements Serializable {
      */
     private static final long serialVersionUID = -2892694760294583989L;
 
+    /**
+     * @return
+     */
+    public abstract String getName();
+
+    /**
+     * @return
+     */
+    public abstract String getValue();
 }
