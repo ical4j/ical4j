@@ -51,7 +51,6 @@ import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
@@ -166,8 +165,15 @@ public abstract class Observance extends Component implements Comparable {
      */
     public final Date getLatestOnset(final Date date) {
         
-        if(initialOnset==null)
-            initialOnset = calculateOnset(((DtStart) getProperty(Property.DTSTART)));
+        if (initialOnset == null) {
+            try {
+                initialOnset = calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate());
+            } catch (ParseException e) {
+                log.error("Unexpected error calculating initial onset", e);
+                // XXX: is this correct?
+                return null;
+            }
+        }
         
         // observance not applicable if date is before the effective date of this observance..
         if (date.before(initialOnset)) {
@@ -197,15 +203,19 @@ public abstract class Observance extends Component implements Comparable {
                 for (Iterator i = rdates.iterator(); i.hasNext();) {
                     RDate rdate = (RDate) i.next();
                     for (Iterator j = rdate.getDates().iterator(); j.hasNext();) {
-                        Date rdateOnset = calculateOnset((Date) j.next());
-                        if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
-                            onset = rdateOnset;
+                        try {
+                            Date rdateOnset = calculateOnset((Date) j.next());
+                            if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
+                                onset = rdateOnset;
+                            }
+                            /*
+                             * else if (rdateOnset.after(date) && rdateOnset.after(onset) && (nextOnset == null ||
+                             * rdateOnset.before(nextOnset))) { nextOnset = rdateOnset; }
+                             */
+                            cacheableOnsets.add(rdateOnset);
+                        } catch (ParseException e) {
+                            log.error("Unexpected error calculating onset", e);
                         }
-                        /*
-                         * else if (rdateOnset.after(date) && rdateOnset.after(onset) && (nextOnset == null ||
-                         * rdateOnset.before(nextOnset))) { nextOnset = rdateOnset; }
-                         */
-                        cacheableOnsets.add(rdateOnset);
                     }
                 }
                 rdatesCached = true;
@@ -350,19 +360,19 @@ public abstract class Observance extends Component implements Comparable {
         log = LogFactory.getLog(Observance.class);
     }
     
-    private Date calculateOnset(DateProperty dateProperty) {
-        return calculateOnset(dateProperty.getValue());
-    }
-    
-    private Date calculateOnset(Date date) {
+//    private Date calculateOnset(DateProperty dateProperty) {
+//        return calculateOnset(dateProperty.getValue());
+//    }
+//    
+    private Date calculateOnset(Date date) throws ParseException {
         return calculateOnset(date.toString());
     }
     
-    private Date calculateOnset(String dateStr) {
+    private Date calculateOnset(String dateStr) throws ParseException {
         
         // Translate local onset into UTC time by parsing local time 
         // as GMT and adjusting by TZOFFSETFROM
-        try {
+//        try {
             java.util.Date utcOnset = null;
        
             synchronized(UTC_FORMAT) {
@@ -371,8 +381,8 @@ public abstract class Observance extends Component implements Comparable {
             
             long offset = getOffsetFrom().getOffset().getOffset();
             return new DateTime(utcOnset.getTime() - offset);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }
