@@ -47,10 +47,16 @@ import net.fortuna.ical4j.util.CompatibilityHints;
  */
 public abstract class AbstractOutputter {
 
+    /**
+     * The default character set used to generate output.
+     */
     protected static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
     private boolean validating;
 
+    /**
+     * The maximum line length allowed.
+     */
     protected int foldLength;
 
     /**
@@ -64,7 +70,9 @@ public abstract class AbstractOutputter {
      * @param validating indicates whether to validate calendar when outputting to stream
      */
     public AbstractOutputter(final boolean validating) {
-        this(validating, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY) ? FoldingWriter.MAX_FOLD_LENGTH : FoldingWriter.REDUCED_FOLD_LENGTH);
+        this(validating, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY)
+                ? FoldingWriter.MAX_FOLD_LENGTH
+                        : FoldingWriter.REDUCED_FOLD_LENGTH);
     }
 
     /**

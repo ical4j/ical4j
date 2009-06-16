@@ -43,8 +43,8 @@ package net.fortuna.ical4j.data;
  */
 public class DefaultCalendarParserFactory extends CalendarParserFactory {
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.data.CalendarParserFactory#createParser()
+    /**
+     * {@inheritDoc}
      */
     public CalendarParser createParser() {
         return new CalendarParserImpl();

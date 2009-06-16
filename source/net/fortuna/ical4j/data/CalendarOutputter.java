@@ -76,6 +76,7 @@ public class CalendarOutputter extends AbstractOutputter {
      * @param calendar calendar to write to ouput stream
      * @param out an output stream
      * @throws IOException thrown when unable to write to output stream
+     * @throws ValidationException where calendar validation fails
      */
     public final void output(final Calendar calendar, final OutputStream out)
             throws IOException, ValidationException {
@@ -87,6 +88,7 @@ public class CalendarOutputter extends AbstractOutputter {
      * @param calendar calendar to write to writer
      * @param out a writer
      * @throws IOException thrown when unable to write to writer
+     * @throws ValidationException where calendar validation fails
      */
     public final void output(final Calendar calendar, final Writer out)
             throws IOException, ValidationException {

@@ -79,6 +79,9 @@ public class Filter {
     /**
      * Constructor.
      * @param rules an array of rules that define this filter
+     * @param type the type of matching to apply
+     * @see Filter#MATCH_ALL
+     * @see Filter#MATCH_ANY
      */
     public Filter(final Rule[] rules, final int type) {
         this.rules = rules;

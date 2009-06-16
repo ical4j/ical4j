@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
@@ -51,8 +50,8 @@ import org.apache.commons.logging.LogFactory;
  * unfolding of non-conformant *.ics files. By specifying the system property "ical4j.unfolding.relaxed=true" iCalendar
  * files created with Mozilla Calendar/Sunbird may be correctly unfolded.
  * 
- * To wrap this reader with a {@link BufferedReader} you must ensure you specify an identical buffer size
- * to that used in the {@link BufferedReader}.
+ * To wrap this reader with a {@link java.io.BufferedReader} you must ensure you specify an identical buffer size
+ * to that used in the {@link java.io.BufferedReader}.
  * 
  * @author Ben Fortuna
  */
@@ -98,16 +97,16 @@ public class UnfoldingReader extends PushbackReader {
     }
     
     /**
-     * @param in
-     * @param size
+     * @param in reader source for data
+     * @param size the buffer size
      */
     public UnfoldingReader(final Reader in, int size) {
         this(in, size, CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING));
     }
 
     /**
-     * @param in
-     * @param relaxed
+     * @param in reader source for data
+     * @param relaxed indicates whether relaxed unfolding is enabled
      */
     public UnfoldingReader(final Reader in, boolean relaxed) {
         this(in, DEFAULT_FOLD_PATTERN.length, relaxed); 
@@ -116,6 +115,7 @@ public class UnfoldingReader extends PushbackReader {
     /**
      * Creates a new unfolding reader instance.
      * @param in a reader to read from
+     * @param size the buffer size
      * @param relaxed specifies whether unfolding is relaxed
      */
     public UnfoldingReader(final Reader in, int size, final boolean relaxed) {
@@ -146,7 +146,7 @@ public class UnfoldingReader extends PushbackReader {
     }
 
     /**
-     * @see java.io.PushbackReader#read()
+     * {@inheritDoc}
      */
     public final int read() throws IOException {
         final int c = super.read();
@@ -170,7 +170,7 @@ public class UnfoldingReader extends PushbackReader {
     }
     
     /**
-     * @see java.io.PushbackReader#read(char[], int, int)
+     * {@inheritDoc}
      */
     public int read(final char[] cbuf, final int off, final int len) throws IOException {
         final int read = super.read(cbuf, off, len);
@@ -201,9 +201,6 @@ public class UnfoldingReader extends PushbackReader {
         return super.read(cbuf, off, maxPatternLength);
     }
     
-    /**
-     * @throws IOException
-     */
     private void unfold() throws IOException {
         // need to loop since one line fold might be directly followed by another
         boolean didUnfold;

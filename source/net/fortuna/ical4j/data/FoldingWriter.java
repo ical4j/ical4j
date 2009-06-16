@@ -48,10 +48,14 @@ import org.apache.commons.logging.LogFactory;
  */
 public class FoldingWriter extends FilterWriter {
 
-    // Lines of text SHOULD NOT be longer than 75 octets, excluding the line break.
-    // reduced to 73 to be consistent with Apple iCal..
+    /**
+     * reduced to 73 to be consistent with Apple iCal..
+     */
     public static final int REDUCED_FOLD_LENGTH = 73;
 
+    /**
+     * Lines of text SHOULD NOT be longer than 75 octets, excluding the line break.
+     */
     public static final int MAX_FOLD_LENGTH = 75;
 
     private static final char[] FOLD_PATTERN = { '\r', '\n', ' ' };
@@ -64,7 +68,7 @@ public class FoldingWriter extends FilterWriter {
 
     /**
      * @param writer a writer to write output to
-     * @param foldLength
+     * @param foldLength the maximum line length
      */
     public FoldingWriter(final Writer writer, final int foldLength) {
         super(writer);
@@ -78,9 +82,8 @@ public class FoldingWriter extends FilterWriter {
         this(writer, REDUCED_FOLD_LENGTH);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.io.FilterWriter#write(int)
+    /**
+     * {@inheritDoc}
      */
     public final void write(final int c) throws IOException {
 
@@ -91,9 +94,8 @@ public class FoldingWriter extends FilterWriter {
         write(new char[] { (char) c }, 0, 1);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.io.FilterWriter#write(char[], int, int)
+    /**
+     * {@inheritDoc}
      */
     public final void write(final char[] buffer, final int offset,
             final int length) throws IOException {
@@ -126,9 +128,8 @@ public class FoldingWriter extends FilterWriter {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.io.FilterWriter#write(java.lang.String, int, int)
+    /**
+     * {@inheritDoc}
      */
     public final void write(final String str, final int off, final int len)
             throws IOException {
@@ -144,7 +145,8 @@ public class FoldingWriter extends FilterWriter {
 
     /*
      * (non-Javadoc)
-     * @see java.io.Writer#write(java.lang.String) public void write(String arg0) throws IOException { /* if (lineLength +
+     * @see java.io.Writer#write(java.lang.String) public void write(String arg0) throws IOException {
+     *  /* if (lineLength +
      * arg0.length() >= FOLD_LENGTH) { super.write(arg0.substring(0,FOLD_LENGTH-lineLength-1));
      * super.write(FOLD_PATTERN); super.write(arg0.substring(FOLD_LENGTH-lineLength)); } else { super.write(arg0); } if
      * (arg0.indexOf('\n') >= 0) { lineLength = 0; } else { lineLength += 1; } fold(); char[] chars =

@@ -46,6 +46,9 @@ import net.fortuna.ical4j.util.CompatibilityHints;
  */
 public abstract class AbstractContentFactory {
 
+    /**
+     * Map of delegate factories.
+     */
     protected Map factories;
 
     /**
@@ -56,7 +59,7 @@ public abstract class AbstractContentFactory {
     }
 
     /**
-     * @return
+     * @return true if non-standard names are allowed, otherwise false
      */
     protected boolean allowIllegalNames() {
         return CompatibilityHints

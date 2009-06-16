@@ -69,7 +69,7 @@ public abstract class CalendarParserFactory {
     }
 
     /**
-     * @return
+     * @return a shared factory instance
      */
     public static CalendarParserFactory getInstance() {
         return instance;

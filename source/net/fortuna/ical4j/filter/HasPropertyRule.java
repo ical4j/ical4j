@@ -55,7 +55,7 @@ public class HasPropertyRule extends ComponentRule {
     /**
      * Constructs a new instance with the specified property. Ignores any parameters matching only on the value of the
      * property.
-     * @param property
+     * @param property a property instance to check for
      */
     public HasPropertyRule(final Property property) {
         this(property, false);
@@ -72,9 +72,8 @@ public class HasPropertyRule extends ComponentRule {
         this.matchEquals = matchEquals;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)
+    /**
+     * {@inheritDoc}
      */
     public final boolean match(final Component component) {
         final PropertyList properties = component.getProperties(property.getName());

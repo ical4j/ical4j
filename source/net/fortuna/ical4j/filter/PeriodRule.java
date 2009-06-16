@@ -49,15 +49,14 @@ public class PeriodRule extends ComponentRule {
 
     /**
      * Constructs a new instance using the specified period.
-     * @param period
+     * @param period a period instance to match on
      */
     public PeriodRule(final Period period) {
         this.period = period;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)
+    /**
+     * {@inheritDoc}
      */
     public final boolean match(final Component component) {
 

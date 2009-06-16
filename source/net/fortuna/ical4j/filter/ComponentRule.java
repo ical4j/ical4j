@@ -43,17 +43,16 @@ import net.fortuna.ical4j.model.Component;
  */
 public abstract class ComponentRule implements Rule {
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.filter.Rule#match(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     public final boolean match(final Object o) {
         return match((Component) o);
     }
 
     /**
-     * @param component
-     * @return
+     * @param component a component to match on
+     * @return true if the component matches the rule, otherwise false
      */
     public abstract boolean match(Component component);
 }
