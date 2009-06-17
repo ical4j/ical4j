@@ -84,14 +84,14 @@ public class CategoryList implements Serializable {
     }
 
     /**
-     * @param categoryStrings
+     * @param categoryValues an array of category values
      */
     public CategoryList(String[] categoryValues) {
         categories = Arrays.asList(categoryValues);
     }
     
     /**
-     * @see java.util.AbstractCollection#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();

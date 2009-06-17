@@ -64,7 +64,10 @@ public class ComponentList extends ArrayList implements Serializable {
 
     /**
      * Creates a deep copy of the specified component list.
-     * @param components
+     * @param components a component list to copy
+     * @throws IOException where an error occurs reading component data
+     * @throws ParseException where component data cannot be parsed
+     * @throws URISyntaxException where component data contains an invalid URI
      */
     public ComponentList(ComponentList components) throws ParseException,
             IOException, URISyntaxException {
@@ -76,7 +79,7 @@ public class ComponentList extends ArrayList implements Serializable {
     }
 
     /**
-     * @see java.util.AbstractCollection#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
@@ -130,14 +133,16 @@ public class ComponentList extends ArrayList implements Serializable {
     /**
      * Overrides superclass to throw an <code>IllegalArgumentException</code> where argument is not a
      * <code>net.fortuna.ical4j.model.Component</code>.
+     * @param component a component to add
+     * @return true if the object was added, otherwise false
      * @see List#add(E)
      */
-    public final boolean add(final Object arg0) {
-        if (!(arg0 instanceof Component)) {
+    public final boolean add(final Object component) {
+        if (!(component instanceof Component)) {
             throw new IllegalArgumentException("Argument not a "
                     + Component.class.getName());
         }
-        return super.add(arg0);
+        return super.add(component);
     }
 
     /**

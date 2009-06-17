@@ -59,33 +59,66 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public abstract class Component implements Serializable {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 4943193483665822201L;
 
+    /**
+     * Component start token.
+     */
     public static final String BEGIN = "BEGIN";
 
+    /**
+     * Component end token.
+     */
     public static final String END = "END";
 
+    /**
+     * Component token.
+     */
     public static final String VEVENT = "VEVENT";
 
+    /**
+     * Component token.
+     */
     public static final String VTODO = "VTODO";
 
+    /**
+     * Component token.
+     */
     public static final String VJOURNAL = "VJOURNAL";
 
+    /**
+     * Component token.
+     */
     public static final String VFREEBUSY = "VFREEBUSY";
 
+    /**
+     * Component token.
+     */
     public static final String VTIMEZONE = "VTIMEZONE";
 
+    /**
+     * Component token.
+     */
     public static final String VALARM = "VALARM";
 
+    /**
+     * Component token.
+     */
     public static final String VAVAILABILITY = "VAVAILABILITY";
 
+    /**
+     * Component token.
+     */
     public static final String VVENUE = "VVENUE";
 
+    /**
+     * Component token.
+     */
     public static final String AVAILABLE = "AVAILABLE";
 
+    /**
+     * Prefix for non-standard components.
+     */
     public static final String EXPERIMENTAL_PREFIX = "X-";
 
     private String name;
@@ -111,7 +144,7 @@ public abstract class Component implements Serializable {
     }
 
     /**
-     * @see java.lang.Object#toString()
+     * {@inheritDoc}
      */
     public String toString() {
         final StringBuffer buffer = new StringBuffer();
@@ -188,8 +221,7 @@ public abstract class Component implements Serializable {
     }
 
     /**
-     * Uses {@link EqualsBuilder} to test equality. Two components are equal if and only if their name and property lists
-     * are equal.
+     * {@inheritDoc}
      */
     public boolean equals(final Object arg0) {
         if (arg0 instanceof Component) {
@@ -201,7 +233,7 @@ public abstract class Component implements Serializable {
     }
 
     /**
-     * Uses {@link HashCodeBuilder} to build hashcode.
+     * {@inheritDoc}
      */
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
@@ -211,6 +243,9 @@ public abstract class Component implements Serializable {
     /**
      * Create a (deep) copy of this component.
      * @return the component copy
+     * @throws IOException where an error occurs reading the component data
+     * @throws ParseException where parsing component data fails
+     * @throws URISyntaxException where component data contains an invalid URI
      */
     public Component copy() throws ParseException, IOException,
             URISyntaxException {
@@ -228,8 +263,8 @@ public abstract class Component implements Serializable {
      * recurrence rules and dates, and exception rules and dates. Note that component
      * transparency and anniversary-style dates do not affect the resulting
      * intersection.
-     * @param period
-     * @return
+     * @param period a range to calculate recurrences for
+     * @return a list of periods
      */
     public final PeriodList calculateRecurrenceSet(final Period period) {
         

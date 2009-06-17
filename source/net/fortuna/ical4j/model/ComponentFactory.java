@@ -71,8 +71,8 @@ public final class ComponentFactory {
     }
 
     /**
-     * @param name
-     * @return
+     * @param name a component name
+     * @return a new component instance of the specified type
      */
     public Component createComponent(final String name) {
         return createComponent(name, new PropertyList());
@@ -165,7 +165,7 @@ public final class ComponentFactory {
     }
 
     /**
-     * @return
+     * @return true if non-standard names are allowed, otherwise false
      */
     protected boolean allowIllegalNames() {
         return CompatibilityHints

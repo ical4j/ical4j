@@ -73,10 +73,6 @@ public final class CalendarDateFormatFactory {
      * @param pattern
      *            a SimpleDateFormat-compatible pattern
      * @return an optimized DateFormat instance if possible, otherwise a normal SimpleDateFormat instance
-     * @throws NullPointerException
-     *             if the given pattern is null
-     * @throws IllegalArgumentException
-     *             if the given pattern is invalid
      */
     public static java.text.DateFormat getInstance(String pattern) {
 

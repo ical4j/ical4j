@@ -122,10 +122,19 @@ public class Calendar implements Serializable {
 
     private static final long serialVersionUID = -1654118204678581940L;
 
+    /**
+     * Begin token.
+     */
     public static final String BEGIN = "BEGIN";
 
+    /**
+     * Calendar token.
+     */
     public static final String VCALENDAR = "VCALENDAR";
 
+    /**
+     * End token.
+     */
     public static final String END = "END";
 
     private PropertyList properties;
@@ -160,6 +169,9 @@ public class Calendar implements Serializable {
     /**
      * Creates a deep copy of the specified calendar.
      * @param c the calendar to copy
+     * @throws IOException where an error occurs reading calendar data
+     * @throws ParseException where calendar parsing fails
+     * @throws URISyntaxException where an invalid URI string is encountered
      */
     public Calendar(Calendar c) throws ParseException, IOException,
             URISyntaxException {
@@ -169,7 +181,7 @@ public class Calendar implements Serializable {
     }
 
     /**
-     * @see java.lang.Object#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
@@ -522,7 +534,7 @@ public class Calendar implements Serializable {
 
     /**
      * Returns the mandatory prodid property.
-     * @return
+     * @return the PRODID property, or null if property doesn't exist
      */
     public final ProdId getProductId() {
         return (ProdId) getProperty(Property.PRODID);
@@ -530,7 +542,7 @@ public class Calendar implements Serializable {
 
     /**
      * Returns the mandatory version property.
-     * @return
+     * @return the VERSION property, or null if property doesn't exist
      */
     public final Version getVersion() {
         return (Version) getProperty(Property.VERSION);
@@ -538,7 +550,7 @@ public class Calendar implements Serializable {
 
     /**
      * Returns the optional calscale property.
-     * @return
+     * @return the CALSCALE property, or null if property doesn't exist
      */
     public final CalScale getCalendarScale() {
         return (CalScale) getProperty(Property.CALSCALE);
@@ -546,15 +558,14 @@ public class Calendar implements Serializable {
 
     /**
      * Returns the optional method property.
-     * @return
+     * @return the METHOD property, or null if property doesn't exist
      */
     public final Method getMethod() {
         return (Method) getProperty(Property.METHOD);
     }
 
     /**
-     * Uses {@link EqualsBuilder} to test equality. Two calendars are equal if and only if their property lists and
-     * component lists are equal.
+     * {@inheritDoc}
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Calendar) {
@@ -566,7 +577,7 @@ public class Calendar implements Serializable {
     }
 
     /**
-     * Uses {@link HashCodeBuilder} to build hashcode.
+     * {@inheritDoc}
      */
     public final int hashCode() {
         return new HashCodeBuilder().append(getProperties()).append(
