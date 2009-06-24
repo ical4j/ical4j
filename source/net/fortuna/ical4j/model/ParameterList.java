@@ -63,6 +63,7 @@ public class ParameterList implements Serializable {
 
     /**
      * Constructor.
+     * @param unmodifiable indicates whether the list should be mutable
      */
     public ParameterList(final boolean unmodifiable) {
         if (unmodifiable) {
@@ -77,7 +78,8 @@ public class ParameterList implements Serializable {
      * Creates a deep copy of the specified parameter list. That is, copies of all parameters in the specified list are
      * added to this list.
      * @param list a parameter list to copy parameters from
-     * @throws URISyntaxException
+     * @param unmodifiable indicates whether the list should be mutable
+     * @throws URISyntaxException where a parameter in the list specifies an invalid URI value
      */
     public ParameterList(final ParameterList list, final boolean unmodifiable)
             throws URISyntaxException {
@@ -92,7 +94,7 @@ public class ParameterList implements Serializable {
     }
 
     /**
-     * @see java.util.AbstractCollection#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
@@ -186,7 +188,7 @@ public class ParameterList implements Serializable {
 
     /**
      * Remove all parameters with the specified name.
-     * @param paramName
+     * @param paramName the name of parameters to remove
      */
     public final void removeAll(final String paramName) {
         final ParameterList params = getParameters(paramName);
@@ -202,9 +204,7 @@ public class ParameterList implements Serializable {
     }
 
     /**
-     * Uses {@link ObjectUtils} to test equality. Two parameter lists are equals if and only if they contain the same
-     * set of parameters.
-     * @see java.lang.Object#equals(java.lang.Object)
+     * {@inheritDoc}
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof ParameterList) {
@@ -215,7 +215,7 @@ public class ParameterList implements Serializable {
     }
 
     /**
-     * Uses {@link HashCodeBuilder} to build hashcode.
+     * {@inheritDoc}
      */
     public final int hashCode() {
         return new HashCodeBuilder().append(parameters).toHashCode();

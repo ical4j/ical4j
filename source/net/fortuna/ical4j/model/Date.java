@@ -99,14 +99,17 @@ public class Date extends Iso8601 {
     /**
      * Creates a new date instance with the specified precision. This
      * constructor is only intended for use by sub-classes.
-     * @param precision
+     * @param precision the date precision
+     * @param tz the timezone
+     * @see Dates#PRECISION_DAY
+     * @see Dates#PRECISION_SECOND
      */
     protected Date(final int precision, TimeZone tz) {
         super(PATTERN, precision, tz);
     }
 
     /**
-     * @param time
+     * @param time a date value in milliseconds
      */
     public Date(final long time) {
         super(time, PATTERN, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
@@ -115,15 +118,18 @@ public class Date extends Iso8601 {
     /**
      * Creates a new date instance with the specified precision. This
      * constructor is only intended for use by sub-classes.
-     * @param time
-     * @param precision
+     * @param time a date value in milliseconds
+     * @param precision the date precision
+     * @param tz the timezone
+     * @see Dates#PRECISION_DAY
+     * @see Dates#PRECISION_SECOND
      */
     protected Date(final long time, final int precision, TimeZone tz) {
         super(time, PATTERN, precision, tz);
     }
 
     /**
-     * @param date
+     * @param date a date value
      */
     public Date(final java.util.Date date) {
 //        this();
@@ -132,8 +138,8 @@ public class Date extends Iso8601 {
     }
 
     /**
-     * @param value
-     * @throws ParseException
+     * @param value a string representation of a date
+     * @throws ParseException where the specified string is not a valid date
      */
     public Date(final String value) throws ParseException {
         this();
@@ -141,9 +147,9 @@ public class Date extends Iso8601 {
     }
     
     /**
-     * @param value
-     * @param pattern
-     * @throws ParseException
+     * @param value a string representation of a date
+     * @param pattern a date pattern to apply when parsing
+     * @throws ParseException where the specified string is not a valid date
      */
     public Date(String value, String pattern) throws ParseException {
         super(pattern, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());

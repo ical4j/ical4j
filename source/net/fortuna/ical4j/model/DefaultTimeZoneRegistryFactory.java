@@ -41,8 +41,8 @@ package net.fortuna.ical4j.model;
  */
 public class DefaultTimeZoneRegistryFactory extends TimeZoneRegistryFactory {
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.TimeZoneRegistryFactory#createRegistry()
+    /**
+     * {@inheritDoc}
      */
     public TimeZoneRegistry createRegistry() {
         return new TimeZoneRegistryImpl();

@@ -60,6 +60,7 @@ public class DateList extends ArrayList implements Serializable {
      * Default constructor.
      */
     public DateList() {
+        super();
     }
 
     /**
@@ -71,7 +72,7 @@ public class DateList extends ArrayList implements Serializable {
     }
 
     /**
-     * @param aType
+     * @param aType the type of dates contained by the instance
      */
     public DateList(final Value aType) {
         this(aType, null);
@@ -82,6 +83,7 @@ public class DateList extends ArrayList implements Serializable {
      * 
      * @param aType
      *            specifies the type of dates (either date or date-time)
+     * @param timezone the timezone to apply to dates contained by the instance
      */
     public DateList(final Value aType, final TimeZone timezone) {
         this.type = aType;
@@ -89,9 +91,9 @@ public class DateList extends ArrayList implements Serializable {
     }
 
     /**
-     * @param aValue
-     * @param aType
-     * @throws ParseException
+     * @param aValue a string representation of a date list
+     * @param aType the date types contained in the instance
+     * @throws ParseException where the specified string is not a valid date list
      */
     public DateList(final String aValue, final Value aType) throws ParseException {
         this(aValue, aType, null);
@@ -104,6 +106,7 @@ public class DateList extends ArrayList implements Serializable {
      *            a string representation of a list of dates
      * @param aType
      *            specifies the type of dates (either date or date-time)
+     * @param timezone the timezone to apply to contained dates
      * @throws ParseException
      *             if an invalid date representation exists in the date list
      *             string
@@ -147,7 +150,7 @@ public class DateList extends ArrayList implements Serializable {
     }
 
     /**
-     * @see java.util.AbstractCollection#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -193,13 +196,15 @@ public class DateList extends ArrayList implements Serializable {
     /**
      * Overrides superclass to throw an <code>IllegalArgumentException</code>
      * Where argument is not a <code>net.fortuna.ical4j.model.Date</code>.
+     * @param date the date to add
+     * @return true if the object was added, otherwise false
      * @see List#add(E)
      */
-    public final boolean add(final Object arg0) {
-        if (!(arg0 instanceof Date)) {
+    public final boolean add(final Object date) {
+        if (!(date instanceof Date)) {
             throw new IllegalArgumentException("Argument not a " + Date.class.getName());
         }
-        return super.add(arg0);
+        return super.add(date);
     }
 
     /**
@@ -254,7 +259,7 @@ public class DateList extends ArrayList implements Serializable {
      * Applies the specified timezone to all dates in the list.
      * All dates added to this list will also have this timezone
      * applied.
-     * @param timezone
+     * @param timeZone a timezone to apply to contained dates
      */
     public final void setTimeZone(final TimeZone timeZone) {
         if (!Value.DATE.equals(type)) {

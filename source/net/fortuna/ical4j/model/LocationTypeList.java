@@ -39,16 +39,16 @@ import java.util.StringTokenizer;
 
 /**
  * $Id LocationTypeList.java $ [23-Apr-2004]
- *
+ * 
  * Defines a list of iCalendar location types.
- *
+ * 
  * @author Ben Fortuna
  */
 public class LocationTypeList implements Serializable {
 
-	private static final long serialVersionUID = -9181735547604179160L;
+    private static final long serialVersionUID = -9181735547604179160L;
 
-	private List locationTypes;
+    private List locationTypes;
 
     /**
      * Default constructor.
@@ -58,22 +58,21 @@ public class LocationTypeList implements Serializable {
     }
 
     /**
-     * Parses the specified string representation to create
-     * a list of categories.
-     * @param aValue a string representation of a list of
-     * categories
+     * Parses the specified string representation to create a list of categories.
+     * 
+     * @param aValue
+     *            a string representation of a list of categories
      */
     public LocationTypeList(final String aValue) {
         locationTypes = new ArrayList();
 
-        for (StringTokenizer t = new StringTokenizer(aValue, ","); t
-                .hasMoreTokens();) {
+        for (StringTokenizer t = new StringTokenizer(aValue, ","); t.hasMoreTokens();) {
             locationTypes.add(t.nextToken());
         }
     }
 
     /**
-     * @see java.util.AbstractCollection#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -88,8 +87,9 @@ public class LocationTypeList implements Serializable {
 
     /**
      * Add a location type to the list.
-     * @param category the category to add
-     * @return true
+     * 
+     * @param locationType the location type to add
+     * @return true if the object is added successfully
      * @see List#add(java.lang.Object)
      */
     public final boolean add(final String locationType) {
@@ -114,7 +114,8 @@ public class LocationTypeList implements Serializable {
 
     /**
      * Remove a locationType from the list.
-     * @param category the category to remove
+     * 
+     * @param locationType the location type to remove
      * @return true if the list contained the specified category
      * @see List#remove(java.lang.Object)
      */

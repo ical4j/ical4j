@@ -51,8 +51,14 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class Period implements Serializable, Comparable {
 
+    /**
+     * A flag indicating whether to include the start of the period in test functions.
+     */
     public static final int INCLUSIVE_START = 1;
 
+    /**
+     * A flag indicating whether to include the end of the period in test functions.
+     */
     public static final int INCLUSIVE_END = 2;
     
     private static final long serialVersionUID = 7321090422911676490L;
@@ -161,7 +167,7 @@ public class Period implements Serializable, Comparable {
     /**
      * Determines if the specified date occurs within this period (inclusive of
      * period start and end).
-     * @param date
+     * @param date a date to test for inclusion
      * @return true if the specified date occurs within the current period
      * 
      */
@@ -170,9 +176,9 @@ public class Period implements Serializable, Comparable {
     }
 
     /**
-     * @param date
-     * @param inclusive
-     * @return
+     * @param date a date to test for inclusion
+     * @param inclusive indicates if the start and end of the period are included in the test
+     * @return true if the specified date occurs within the current period
      * @deprecated use {@link Period#includes(Date, int)} instead.
      */
     public final boolean includes(final Date date, final boolean inclusive) {
@@ -187,9 +193,11 @@ public class Period implements Serializable, Comparable {
     /**
      * Decides whether a date falls within this period.
      * @param date the date to be tested
-     * @param inclusive specifies whether period start and end are included
+     * @param inclusiveMask specifies whether period start and end are included
      * in the calculation
-     * @return true if the date is in the perod, false otherwise
+     * @return true if the date is in the period, false otherwise
+     * @see Period#INCLUSIVE_START
+     * @see Period#INCLUSIVE_END
      */
     public final boolean includes(final Date date, final int inclusiveMask) {
         boolean includes = true;
@@ -257,7 +265,7 @@ public class Period implements Serializable, Comparable {
 
     /**
      * Decides whether these periods are serial without a gap.
-     * 
+     * @param period a period to test for adjacency
      * @return true if one period immediately follows the other, false otherwise
      */
     public final boolean adjacent(final Period period) {
@@ -325,7 +333,7 @@ public class Period implements Serializable, Comparable {
      * it will contain one. If the specified period does not interest this period
      * a list containing this period is returned. If this period is completely
      * contained within the specified period an empty period list is returned.
-     * @param period
+     * @param period a period to subtract from this one
      * @return a list containing zero, one or two periods.
      */
     public final PeriodList subtract(final Period period) {
@@ -374,7 +382,7 @@ public class Period implements Serializable, Comparable {
     /**
      * Updates the start and (possible) end times of this period to reflect
      * the specified UTC timezone status.
-     * @param utc
+     * @param utc indicates whether the period is in UTC time
      */
     public void setUtc(final boolean utc) {
         start.setUtc(utc);
@@ -386,7 +394,7 @@ public class Period implements Serializable, Comparable {
     /**
      * Updates the start and (possible) end times of this period to reflect
      * the specified timezone status.
-     * @param timezone
+     * @param timezone a timezone for the period
      */
     public final void setTimeZone(final TimeZone timezone) {
         start.setUtc(false);
@@ -398,7 +406,7 @@ public class Period implements Serializable, Comparable {
     }
     
     /**
-     * @see java.lang.Object#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -413,10 +421,8 @@ public class Period implements Serializable, Comparable {
         return b.toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     public final int compareTo(final Object arg0) {
         return compareTo((Period) arg0);
@@ -425,8 +431,9 @@ public class Period implements Serializable, Comparable {
     /**
      * Compares the specified period with this period.
      * 
-     * @param arg0
-     * @return
+     * @param arg0 a period to compare with this one
+     * @return a postive value if this period is greater, negative if the other is
+     * greater, or zero if they are equal
      */
     public final int compareTo(final Period arg0) {
         // Throws documented exception if type is wrong or parameter is null
@@ -449,9 +456,7 @@ public class Period implements Serializable, Comparable {
     }
 
     /**
-     * Uses {@link EqualsBuilder} to test equality.
-     * @param o object being compared for equality
-     * @return true if the objects are equal, false otherwise
+     * {@inheritDoc}
      */
     public final boolean equals(final Object o) {
         if (this == o) {
@@ -467,7 +472,7 @@ public class Period implements Serializable, Comparable {
     }
 
     /**
-     * Uses {@link HashCodeBuilder} to build hashcode.
+     * {@inheritDoc}
      */
     public final int hashCode() {
         return new HashCodeBuilder().append(start)

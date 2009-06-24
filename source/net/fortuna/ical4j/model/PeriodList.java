@@ -62,7 +62,7 @@ public class PeriodList extends TreeSet implements Serializable {
     }
 
     /**
-     * @param utc
+     * @param utc indicates whether the period list is in UTC time
      */
     public PeriodList(boolean utc) {
         this.utc = utc;
@@ -86,7 +86,7 @@ public class PeriodList extends TreeSet implements Serializable {
     }
 
     /**
-     * @see java.util.AbstractCollection#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -120,15 +120,16 @@ public class PeriodList extends TreeSet implements Serializable {
     /**
      * Overrides superclass to throw an <code>IllegalArgumentException</code>
      * where argument is not a <code>net.fortuna.ical4j.model.Period</code>.
-     * 
+     * @param period a period to add to the list
+     * @return true if the period was added, otherwise false
      * @see java.util.List#add(E)
      */
-    public final boolean add(final Object arg0) {
-        if (!(arg0 instanceof Period)) {
+    public final boolean add(final Object period) {
+        if (!(period instanceof Period)) {
             throw new IllegalArgumentException("Argument not a "
                     + Period.class.getName());
         }
-        return super.add(arg0);
+        return super.add(period);
     }
 
     /**
@@ -210,7 +211,8 @@ public class PeriodList extends TreeSet implements Serializable {
      * this list. Normalisation is also performed automatically after all
      * periods have been added.
      * 
-     * @param periods
+     * @param periods a list of periods to add
+     * @return a period list instance
      */
     public final PeriodList add(final PeriodList periods) {
         if (periods != null) {
@@ -229,7 +231,7 @@ public class PeriodList extends TreeSet implements Serializable {
      * periods from this list and returns the results as a new period list. If
      * no intersection is identified this list is returned.
      * 
-     * @param periods
+     * @param subtractions
      *            a list of periods to subtract from this list
      * @return a period list
      */
@@ -279,7 +281,7 @@ public class PeriodList extends TreeSet implements Serializable {
      * Applies the specified timezone to all dates in the list.
      * All dates added to this list will also have this timezone
      * applied.
-     * @param timezone
+     * @param timeZone the timezone for the period list
      */
     public final void setTimeZone(final TimeZone timeZone) {
         for (final Iterator i = iterator(); i.hasNext();) {

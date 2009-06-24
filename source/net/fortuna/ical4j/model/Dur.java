@@ -198,8 +198,8 @@ public class Dur implements Comparable, Serializable {
     /**
      * Constructs a new duration representing the time between the two specified dates. The end date may precede the
      * start date in order to represent a negative duration.
-     * @param start the start date of the duration
-     * @param end the end date of the duration
+     * @param date1 the first date of the duration
+     * @param date2 the second date of the duration
      */
     public Dur(final Date date1, final Date date2) {
         
@@ -365,9 +365,8 @@ public class Dur implements Comparable, Serializable {
         return sum;
     }
     
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -407,9 +406,7 @@ public class Dur implements Comparable, Serializable {
     }
 
     /**
-     * Compares the durations' lengths.
-     * @param arg0
-     * @return
+     * {@inheritDoc}
      */
     public final int compareTo(final Object arg0) {
         return compareTo((Dur) arg0);
@@ -417,8 +414,9 @@ public class Dur implements Comparable, Serializable {
 
     /**
      * Compares this duration with another, acording to their length.
-     * @param arg0
-     * @return
+     * @param arg0 another duration instance
+     * @return a postive value if this duration is longer, zero if the duration
+     * lengths are equal, otherwise a negative value
      */
     public final int compareTo(final Dur arg0) {
         if (isNegative() != arg0.isNegative()) {
@@ -456,8 +454,8 @@ public class Dur implements Comparable, Serializable {
         }
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     public boolean equals(final Object obj) {
         if (obj instanceof Dur) {
@@ -466,8 +464,8 @@ public class Dur implements Comparable, Serializable {
         return super.equals(obj);
     }
     
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
+    /**
+     * {@inheritDoc}
      */
     public int hashCode() {
         return new HashCodeBuilder().append(weeks).append(days).append(

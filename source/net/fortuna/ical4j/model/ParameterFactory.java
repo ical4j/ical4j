@@ -55,6 +55,7 @@ public interface ParameterFactory {
      * @param value a value to assign to the returned parameter
      * @return a parameter instance, or null if this factory is unable to create an
      * appropriate parameter
+     * @throws URISyntaxException where an invalid URI is encountered
      */
     Parameter createParameter(String name, String value) throws URISyntaxException;
 }

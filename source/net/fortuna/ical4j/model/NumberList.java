@@ -64,9 +64,9 @@ public class NumberList extends ArrayList implements Serializable {
 
     /**
      * Constructor with limits.
-     * @param minValue
-     * @param maxValue
-     * @param allowsNegativeValues
+     * @param minValue the minimum allowable value
+     * @param maxValue the maximum allowable value
+     * @param allowsNegativeValues indicates whether negative values are allowed
      */
     public NumberList(int minValue, int maxValue, boolean allowsNegativeValues) {
     	this.minValue = minValue;
@@ -83,10 +83,10 @@ public class NumberList extends ArrayList implements Serializable {
     }
     
     /**
-     * @param aString
-     * @param minValue
-     * @param maxValue
-     * @param allowsNegativeValues
+     * @param aString a string representation of a number list
+     * @param minValue the minimum allowable value
+     * @param maxValue the maximum allowable value
+     * @param allowsNegativeValues indicates whether negative values are allowed
      */
     public NumberList(final String aString, int minValue, int maxValue, boolean allowsNegativeValues) {
     	this(minValue, maxValue, allowsNegativeValues);
@@ -98,7 +98,7 @@ public class NumberList extends ArrayList implements Serializable {
 
     /**
      * @param aNumber a number to add to the list
-     * @return
+     * @return true if the number was added, otherwise false
      */
     public final boolean add(final Integer aNumber) {
         int abs = aNumber.intValue();
@@ -109,7 +109,8 @@ public class NumberList extends ArrayList implements Serializable {
             abs = Math.abs(abs);
         }
     	if (abs < minValue || abs > maxValue) {
-    		throw new IllegalArgumentException("Value not in range [" + minValue + ".." + maxValue + "]: " + aNumber);
+    		throw new IllegalArgumentException(
+    		        "Value not in range [" + minValue + ".." + maxValue + "]: " + aNumber);
     	}
         return add((Object) aNumber);
     }
@@ -117,6 +118,8 @@ public class NumberList extends ArrayList implements Serializable {
     /**
      * Overrides superclass to throw an <code>IllegalArgumentException</code>
      * where argument is not a <code>java.lang.Integer</code>.
+     * @param arg0 an object to add
+     * @return true if the object was added, otherwise false
      * @see List#add(E)
      */
     public final boolean add(final Object arg0) {
@@ -128,14 +131,14 @@ public class NumberList extends ArrayList implements Serializable {
 
     /**
      * @param aNumber a number to remove from the list
-     * @return
+     * @return true if the number was removed, otherwise false
      */
     public final boolean remove(final Integer aNumber) {
         return remove((Object) aNumber);
     }
 
     /**
-     * @see java.lang.Object#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();

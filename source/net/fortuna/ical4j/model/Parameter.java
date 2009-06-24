@@ -183,7 +183,7 @@ public abstract class Parameter extends Content {
     }
 
     /**
-     * @see java.lang.Object#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -215,7 +215,7 @@ public abstract class Parameter extends Content {
     }
 
     /**
-     * Uses {@link EqualsBuilder} to test equality.
+     * {@inheritDoc}
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Parameter) {
@@ -227,7 +227,7 @@ public abstract class Parameter extends Content {
     }
 
     /**
-     * Uses {@link HashCodeBuilder} to build hashcode.
+     * {@inheritDoc}
      */
     public final int hashCode() {
         // as parameter name is case-insensitive generate hash for uppercase..
@@ -238,6 +238,7 @@ public abstract class Parameter extends Content {
     /**
      * Deep copy of parameter.
      * @return new parameter
+     * @throws URISyntaxException where an invalid URI is encountered
      */
     public final Parameter copy() throws URISyntaxException {
         return ParameterFactoryImpl.getInstance().createParameter(

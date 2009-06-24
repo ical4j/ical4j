@@ -63,8 +63,12 @@ public abstract class Iso8601 extends Date {
     private int precision;
 
     /**
-     * @param time
-     * @param pattern
+     * @param time a time value in milliseconds
+     * @param pattern the formatting pattern to apply
+     * @param precision the precision to apply
+     * @param tz the timezone for the instance
+     * @see Dates#PRECISION_DAY
+     * @see Dates#PRECISION_SECOND
      */
     public Iso8601(final long time, final String pattern, final int precision, java.util.TimeZone tz) {
         super(Dates.round(time, precision, tz)); //, TimeZone.getTimeZone(TimeZones.GMT_ID)));
@@ -80,22 +84,30 @@ public abstract class Iso8601 extends Date {
     }
     
     /**
-     * @param pattern
+     * @param pattern the formatting pattern to apply
+     * @param precision the precision to apply
+     * @param tz the timezone for the instance
+     * @see Dates#PRECISION_DAY
+     * @see Dates#PRECISION_SECOND
      */
     public Iso8601(final String pattern, final int precision, java.util.TimeZone tz) {
         this(System.currentTimeMillis(), pattern, precision, tz);
     }
 
     /**
-     * @param time
-     * @param pattern
+     * @param time a time value as a date
+     * @param pattern the formatting pattern to apply
+     * @param precision the precision to apply
+     * @param tz the timezone for the instance
+     * @see Dates#PRECISION_DAY
+     * @see Dates#PRECISION_SECOND
      */
     public Iso8601(final Date time, final String pattern, final int precision, java.util.TimeZone tz) {
         this(time.getTime(), pattern, precision, tz);
     }
     
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * {@inheritDoc}
      */
     public String toString() {
         // if time is floating avoid daylight saving rules when generating
@@ -105,8 +117,12 @@ public abstract class Iso8601 extends Date {
                 gmtFormat = (DateFormat) format.clone();
                 gmtFormat.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
             }
-            if (format.getTimeZone().inDaylightTime(this) && format.getTimeZone().inDaylightTime(new Date(getTime() - 1))) {
-                return gmtFormat.format(new Date(getTime() + format.getTimeZone().getRawOffset() + format.getTimeZone().getDSTSavings()));
+            if (format.getTimeZone().inDaylightTime(this)
+                    && format.getTimeZone().inDaylightTime(new Date(getTime() - 1))) {
+                
+                return gmtFormat.format(new Date(getTime()
+                        + format.getTimeZone().getRawOffset()
+                        + format.getTimeZone().getDSTSavings()));
 //                return format.format(new Date(getTime() - format.getTimeZone().getDSTSavings()));
             }
 //            return gmtFormat.format(new Date(getTime() + format.getTimeZone().getOffset(getTime())));
@@ -122,8 +138,8 @@ public abstract class Iso8601 extends Date {
         return format;
     }
     
-    /* (non-Javadoc)
-     * @see java.util.Date#setTime(long)
+    /**
+     * {@inheritDoc}
      */
     public void setTime(final long time) {
         // need to check for null format due to Android java.util.Date(long) constructor
