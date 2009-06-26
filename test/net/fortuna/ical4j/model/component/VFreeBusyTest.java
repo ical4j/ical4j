@@ -255,10 +255,10 @@ public class VFreeBusyTest extends CalendarComponentTest {
 
         // add recurrence..
         Recur recur = new Recur(Recur.YEARLY, 20);
-        recur.getMonthList().add(new Integer(1));
-        recur.getMonthDayList().add(new Integer(26));
-        recur.getHourList().add(new Integer(9));
-        recur.getMinuteList().add(new Integer(30));
+        recur.getMonthList().add(Integer.valueOf(1));
+        recur.getMonthDayList().add(Integer.valueOf(26));
+        recur.getHourList().add(Integer.valueOf(9));
+        recur.getMinuteList().add(Integer.valueOf(30));
         event.getProperties().add(new RRule(recur));
 
         if (log.isDebugEnabled()) {

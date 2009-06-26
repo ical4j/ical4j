@@ -32,8 +32,11 @@
 package net.fortuna.ical4j;
 
 import java.io.Console;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$
@@ -43,10 +46,12 @@ import java.util.regex.Matcher;
  */
 public class RegexTestHarness {
 
+    private static final Log LOG = LogFactory.getLog(RegexTestHarness.class);
+    
     public static void main(String[] args){
         Console console = System.console();
         if (console == null) {
-            System.err.println("No console.");
+            LOG.warn("No console.");
             System.exit(1);
         }
         while (true) {
@@ -61,7 +66,7 @@ public class RegexTestHarness {
             while (matcher.find()) {
                 console.format("I found the text \"%s\" starting at " +
                    "index %d and ending at index %d.%n",
-                   new Object[] {matcher.group(), new Integer(matcher.start()), new Integer(matcher.end())});
+                   new Object[] {matcher.group(), Integer.valueOf(matcher.start()), Integer.valueOf(matcher.end())});
                 found = true;
             }
             if(!found){

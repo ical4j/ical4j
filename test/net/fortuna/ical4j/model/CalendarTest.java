@@ -142,7 +142,7 @@ public class CalendarTest extends TestCase {
         week1UserARecur.getDayList().add(WeekDay.WE);
         week1UserARecur.getDayList().add(WeekDay.TH);
         week1UserARecur.getDayList().add(WeekDay.FR);
-        week1UserARecur.getHourList().add(new Integer(9));
+        week1UserARecur.getHourList().add(Integer.valueOf(9));
         week1UserA.getProperties().add(new RRule(week1UserARecur));
         week1UserA.getProperties().add(new Uid("000001@modularity.net.au"));
 
@@ -163,7 +163,7 @@ public class CalendarTest extends TestCase {
         week2UserBRecur.getDayList().add(WeekDay.WE);
         week2UserBRecur.getDayList().add(WeekDay.TH);
         week2UserBRecur.getDayList().add(WeekDay.FR);
-        week2UserBRecur.getHourList().add(new Integer(9));
+        week2UserBRecur.getHourList().add(Integer.valueOf(9));
         week2UserB.getProperties().add(new RRule(week2UserBRecur));
         week2UserB.getProperties().add(new Uid("000002@modularity.net.au"));
 
@@ -184,7 +184,7 @@ public class CalendarTest extends TestCase {
         week3UserCRecur.getDayList().add(WeekDay.WE);
         week3UserCRecur.getDayList().add(WeekDay.TH);
         week3UserCRecur.getDayList().add(WeekDay.FR);
-        week3UserCRecur.getHourList().add(new Integer(9));
+        week3UserCRecur.getHourList().add(Integer.valueOf(9));
         week3UserC.getProperties().add(new RRule(week3UserCRecur));
         week3UserC.getProperties().add(new Uid("000003@modularity.net.au"));
         
@@ -222,7 +222,7 @@ public class CalendarTest extends TestCase {
         week1UserARecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
         week1UserARecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
         week1UserARecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
-        week1UserARecur.getHourList().add(new Integer(9));
+        week1UserARecur.getHourList().add(Integer.valueOf(9));
         week1UserA.getProperties().add(new RRule(week1UserARecur));
         week1UserA.getProperties().add(new Uid("000001@modularity.net.au"));
 
@@ -243,7 +243,7 @@ public class CalendarTest extends TestCase {
         week2UserBRecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
         week2UserBRecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
         week2UserBRecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
-        week2UserBRecur.getHourList().add(new Integer(9));
+        week2UserBRecur.getHourList().add(Integer.valueOf(9));
         week2UserB.getProperties().add(new RRule(week2UserBRecur));
         week2UserB.getProperties().add(new Uid("000002@modularity.net.au"));
 
@@ -264,7 +264,7 @@ public class CalendarTest extends TestCase {
         week3UserCRecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
         week3UserCRecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
         week3UserCRecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
-        week3UserCRecur.getHourList().add(new Integer(9));
+        week3UserCRecur.getHourList().add(Integer.valueOf(9));
         week3UserC.getProperties().add(new RRule(week3UserCRecur));
         week3UserC.getProperties().add(new Uid("000003@modularity.net.au"));
 
