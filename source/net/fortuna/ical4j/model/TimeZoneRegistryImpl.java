@@ -102,17 +102,16 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         timezones = new HashMap();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.TimeZoneRegistry#register(net.fortuna.ical4j.model.TimeZone)
+    /**
+     * {@inheritDoc}
      */
     public final void register(final TimeZone timezone) {
     	// for now we only apply updates to included definitions by default..
     	register(timezone, false);
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.TimeZoneRegistry#register(net.fortuna.ical4j.model.TimeZone, boolean)
+    /**
+     * {@inheritDoc}
      */
     public final void register(final TimeZone timezone, boolean update) {
     	if (update) {
@@ -124,17 +123,15 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     	}
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.TimeZoneRegistry#clear()
+    /**
+     * {@inheritDoc}
      */
     public final void clear() {
         timezones.clear();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.TimeZoneRegistry#getTimeZone(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final TimeZone getTimeZone(final String id) {
         TimeZone timezone = (TimeZone) timezones.get(id);

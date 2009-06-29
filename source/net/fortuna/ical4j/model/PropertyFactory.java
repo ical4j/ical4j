@@ -47,19 +47,20 @@ import java.text.ParseException;
 public interface PropertyFactory {
 
     /**
-     * @param name
-     * @return
+     * @param name a property name
+     * @return a new instance of the specified property
      */
     Property createProperty(String name);
     
     /**
-     * @param name
-     * @param parameters
-     * @param value
-     * @return
-     * @throws IOException
-     * @throws URISyntaxException
-     * @throws ParseException
+     * @param name a property name
+     * @param parameters a list of property parameters
+     * @param value a property value
+     * @return a new instance of the specified property
+     * @throws IOException where an unexpected error occurs reading data
+     * @throws URISyntaxException where data contains an invalid URI
+     * @throws ParseException where data is unable to be parsed correctly
      */
-    Property createProperty(String name, ParameterList parameters, String value) throws IOException, URISyntaxException, ParseException;
+    Property createProperty(String name, ParameterList parameters, String value) throws IOException,
+        URISyntaxException, ParseException;
 }

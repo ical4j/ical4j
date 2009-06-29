@@ -59,7 +59,7 @@ public class TimeZone extends java.util.TimeZone {
     
     /**
      * Constructs a new instance based on the specified VTimeZone.
-     * @param vTimeZone
+     * @param vTimeZone a VTIMEZONE object instance
      */
     public TimeZone(final VTimeZone vTimeZone) {
         this.vTimeZone = vTimeZone;
@@ -67,10 +67,12 @@ public class TimeZone extends java.util.TimeZone {
         setID(tzId.getValue());
     }
 
-    /* (non-Javadoc)
-     * @see java.util.TimeZone#getOffset(int, int, int, int, int, int)
+    /**
+     * {@inheritDoc}
      */
-    public final int getOffset(final int era, final int year, final int month, final int day, final int dayOfWeek, final int milliseconds) {
+    public final int getOffset(final int era, final int year, final int month, final int day,
+            final int dayOfWeek, final int milliseconds) {
+        
         final Calendar cal = Calendar.getInstance();
         cal.set(Calendar.ERA, era);
         cal.set(Calendar.YEAR, year);
@@ -86,8 +88,8 @@ public class TimeZone extends java.util.TimeZone {
         return 0;
     }
 
-    /* (non-Javadoc)
-     * @see java.util.TimeZone#getRawOffset()
+    /**
+     * {@inheritDoc}
      */
     public final int getRawOffset() {
         List seasonalTimes = vTimeZone.getObservances().getComponents(Observance.STANDARD);
@@ -111,21 +113,23 @@ public class TimeZone extends java.util.TimeZone {
      * this timezone. This is done by finding the latest supporting
      * observance for the specified date and identifying whether it is
      * daylight time.
+     * @param date a date instance
+     * @return true if the specified date is in daylight time, otherwise false
      */
     public final boolean inDaylightTime(final Date date) {
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
         return (observance != null && observance instanceof Daylight);
     }
 
-    /* (non-Javadoc)
-     * @see java.util.TimeZone#setRawOffset(int)
+    /**
+     * {@inheritDoc}
      */
     public final void setRawOffset(final int offsetMillis) {
         throw new UnsupportedOperationException("Updates to the VTIMEZONE object must be performed directly");
     }
 
-    /* (non-Javadoc)
-     * @see java.util.TimeZone#useDaylightTime()
+    /**
+     * {@inheritDoc}
      */
     public final boolean useDaylightTime() {
         final ComponentList daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);

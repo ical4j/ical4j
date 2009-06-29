@@ -64,11 +64,13 @@ public class PropertyList extends ArrayList implements Serializable {
 
     /**
      * Creates a deep copy of the specified property list.
-     * @param properties
+     * @param properties a property list
+     * @throws ParseException where property data cannot be parsed
+     * @throws IOException where property data cannot be read
+     * @throws URISyntaxException where a property contains an invalid URI
      */
-    public PropertyList(PropertyList properties) throws ParseException,
-            IOException, URISyntaxException {
-
+    public PropertyList(PropertyList properties) throws ParseException, IOException, URISyntaxException {
+        super();
         for (Iterator i = properties.iterator(); i.hasNext();) {
             Property p = (Property) i.next();
             add(p.copy());
@@ -76,7 +78,7 @@ public class PropertyList extends ArrayList implements Serializable {
     }
 
     /**
-     * @see java.util.AbstractCollection#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
@@ -130,14 +132,16 @@ public class PropertyList extends ArrayList implements Serializable {
     /**
      * Overrides superclass to throw an <code>IllegalArgumentException</code> where argument is not a
      * <code>net.fortuna.ical4j.model.Property</code>.
+     * @param property a property to add
+     * @return true if the property is added, otherwise false
      * @see java.util.List#add(E)
      */
-    public final boolean add(final Object arg0) {
-        if (!(arg0 instanceof Property)) {
+    public final boolean add(final Object property) {
+        if (!(property instanceof Property)) {
             throw new IllegalArgumentException("Argument not a "
                     + Property.class.getName());
         }
-        return super.add(arg0);
+        return super.add(property);
     }
 
     /**

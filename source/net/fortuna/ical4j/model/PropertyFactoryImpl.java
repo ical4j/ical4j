@@ -168,364 +168,210 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
         factories.put(Property.VERSION, createVersionFactory());
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createActionFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Action(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Action();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createAttachFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Attach(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Attach();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createAttendeeFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Attendee(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Attendee();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createCalScaleFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new CalScale(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new CalScale();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createCategoriesFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Categories(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Categories();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createClazzFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Clazz(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Clazz();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createCommentFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Comment(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Comment();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createCompletedFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Completed(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Completed();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createContactFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Contact(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Contact();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createCountryFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Country(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Country();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createCreatedFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Created(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Created();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createDescriptionFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Description(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Description();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createDtEndFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new DtEnd(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new DtEnd();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createDtStampFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new DtStamp(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new DtStamp();
             }
@@ -537,1087 +383,628 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
      */
     private PropertyFactory createDtStartFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new DtStart(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new DtStart();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createDueFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Due(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Due();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createDurationFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Duration(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Duration();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createExDateFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new ExDate(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new ExDate();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createExRuleFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new ExRule(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new ExRule();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createExtendedAddressFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new ExtendedAddress(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new ExtendedAddress();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createFreeBusyFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new FreeBusy(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new FreeBusy();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createGeoFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Geo(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Geo();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createLastModifiedFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new LastModified(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new LastModified();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createLocalityFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Locality(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Locality();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createLocationFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Location(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Location();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createLocationTypeFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new LocationType(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new LocationType();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createMethodFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Method(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Method();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createNameFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Name(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Name();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createOrganizerFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Organizer(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Organizer();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createPercentCompleteFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new PercentComplete(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new PercentComplete();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createPostalcodeFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Postalcode(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Postalcode();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createPriorityFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Priority(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Priority();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createProdIdFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new ProdId(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new ProdId();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createRDateFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new RDate(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new RDate();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createRecurrenceIdFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new RecurrenceId(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new RecurrenceId();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createRegionFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Region(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Region();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createRelatedToFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new RelatedTo(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new RelatedTo();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createRepeatFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Repeat(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Repeat();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createRequestStatusFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new RequestStatus(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new RequestStatus();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createResourcesFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Resources(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Resources();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createRRuleFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new RRule(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new RRule();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createSequenceFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Sequence(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Sequence();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createStatusFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Status(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Status();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createStreetAddressFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new StreetAddress(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new StreetAddress();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createSummaryFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Summary(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Summary();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createTelFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Tel(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Tel();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createTranspFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Transp(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Transp();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createTriggerFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Trigger(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Trigger();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createTzIdFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new TzId(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new TzId();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createTzNameFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new TzName(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new TzName();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createTzOffsetFromFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new TzOffsetFrom(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new TzOffsetFrom();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createTzOffsetToFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new TzOffsetTo(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new TzOffsetTo();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createTzUrlFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new TzUrl(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new TzUrl();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createUidFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Uid(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Uid();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createUrlFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Url(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Url();
             }
         };
     }
 
-    /**
-     * @return
-     */
     private PropertyFactory createVersionFactory() {
         return new PropertyFactory() {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String,
-             * net.fortuna.ical4j.model.ParameterList, java.lang.String)
-             */
+
             public Property createProperty(final String name,
                     final ParameterList parameters, final String value)
                     throws IOException, URISyntaxException, ParseException {
                 return new Version(parameters, value);
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.PropertyFactory#createProperty(java.lang.String)
-             */
             public Property createProperty(final String name) {
                 return new Version();
             }
@@ -1632,9 +1019,7 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
     }
 
     /**
-     * Creates an uninitialised property.
-     * @param name name of the property
-     * @return a property
+     * {@inheritDoc}
      */
     public Property createProperty(final String name) {
         final PropertyFactory factory = (PropertyFactory) factories.get(name);
@@ -1654,11 +1039,7 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
     }
 
     /**
-     * Creates a property.
-     * @param name name of the property
-     * @param parameters a list of property parameters
-     * @param value a property value
-     * @return a component
+     * {@inheritDoc}
      */
     public Property createProperty(final String name,
             final ParameterList parameters, final String value)

@@ -78,7 +78,7 @@ public class UtcOffset implements Serializable {
     private long offset;
 
     /**
-     * @param value
+     * @param value a string representation of an offset
      */
     public UtcOffset(final String value) {
         // debugging..
@@ -119,14 +119,14 @@ public class UtcOffset implements Serializable {
     }
 
     /**
-     * @param offset
+     * @param offset an offset value in milliseconds
      */
     public UtcOffset(final long offset) {
         this.offset = (long) Math.floor(offset / (double) Dates.MILLIS_PER_SECOND) * Dates.MILLIS_PER_SECOND;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -157,8 +157,8 @@ public class UtcOffset implements Serializable {
         return offset;
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#equals(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof UtcOffset) {
@@ -167,8 +167,8 @@ public class UtcOffset implements Serializable {
         return super.equals(arg0);
     }
 
-    /* (non-Javadoc)
-     * @see java.lang.Object#hashCode()
+    /**
+     * {@inheritDoc}
      */
     public final int hashCode() {
         return new HashCodeBuilder().append(getOffset()).toHashCode();

@@ -64,7 +64,7 @@ public abstract class TimeZoneRegistryFactory {
     }
     
     /**
-     * @return
+     * @return a shared factory instance
      */
     public static TimeZoneRegistryFactory getInstance() {
         return instance;
