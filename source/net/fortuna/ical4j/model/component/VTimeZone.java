@@ -168,7 +168,7 @@ public class VTimeZone extends CalendarComponent {
     }
 
     /**
-     * @see java.lang.Object#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -185,9 +185,8 @@ public class VTimeZone extends CalendarComponent {
         return b.toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#validate(boolean)
+    /**
+     * {@inheritDoc}
      */
     public final void validate(final boolean recurse)
             throws ValidationException {
@@ -229,57 +228,57 @@ public class VTimeZone extends CalendarComponent {
         }
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validatePublish()
+    /**
+     * {@inheritDoc}
      */
     public void validatePublish() throws ValidationException {
         validateITIP();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateAdd()
+    /**
+     * {@inheritDoc}
      */
     public void validateAdd() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCancel()
+    /**
+     * {@inheritDoc}
      */
     public void validateCancel() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+    /**
+     * {@inheritDoc}
      */
     public void validateCounter() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+    /**
+     * {@inheritDoc}
      */
     public void validateDeclineCounter() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+    /**
+     * {@inheritDoc}
      */
     public void validateRefresh() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateReply()
+    /**
+     * {@inheritDoc}
      */
     public void validateReply() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRequest()
+    /**
+     * {@inheritDoc}
      */
     public void validateRequest() throws ValidationException {
         validateITIP();
@@ -382,9 +381,8 @@ public class VTimeZone extends CalendarComponent {
         return (TzUrl) getProperty(Property.TZURL);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#equals(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VTimeZone) {
@@ -395,9 +393,8 @@ public class VTimeZone extends CalendarComponent {
         return super.equals(arg0);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#hashCode()
+    /**
+     * {@inheritDoc}
      */
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
@@ -406,6 +403,10 @@ public class VTimeZone extends CalendarComponent {
 
     /**
      * Overrides default copy method to add support for copying observance sub-components.
+     * @return a copy of the instance
+     * @throws ParseException where an error occurs parsing data
+     * @throws IOException where an error occurs reading data
+     * @throws URISyntaxException where an invalid URI is encountered
      * @see net.fortuna.ical4j.model.Component#copy()
      */
     public Component copy() throws ParseException, IOException, URISyntaxException {

@@ -231,9 +231,8 @@ public class VAlarm extends CalendarComponent {
         getProperties().add(new Trigger(trigger));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#validate(boolean)
+    /**
+     * {@inheritDoc}
      */
     public final void validate(final boolean recurse)
             throws ValidationException {
@@ -343,57 +342,57 @@ public class VAlarm extends CalendarComponent {
         PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validatePublish()
+    /**
+     * {@inheritDoc}
      */
     public void validatePublish() throws ValidationException {
         validateITIP();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateAdd()
+    /**
+     * {@inheritDoc}
      */
     public void validateAdd() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCancel()
+    /**
+     * {@inheritDoc}
      */
     public void validateCancel() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+    /**
+     * {@inheritDoc}
      */
     public void validateCounter() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+    /**
+     * {@inheritDoc}
      */
     public void validateDeclineCounter() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+    /**
+     * {@inheritDoc}
      */
     public void validateRefresh() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateReply()
+    /**
+     * {@inheritDoc}
      */
     public void validateReply() throws ValidationException {
         validateITIP();
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRequest()
+    /**
+     * {@inheritDoc}
      */
     public void validateRequest() throws ValidationException {
         validateITIP();
@@ -429,7 +428,7 @@ public class VAlarm extends CalendarComponent {
     
     /**
      * Returns the mandatory action property.
-     * @return
+     * @return the ACTION property or null if not specified
      */
     public final Action getAction() {
         return (Action) getProperty(Property.ACTION);
@@ -437,7 +436,7 @@ public class VAlarm extends CalendarComponent {
 
     /**
      * Returns the mandatory trigger property.
-     * @return
+     * @return the TRIGGER property or null if not specified
      */
     public final Trigger getTrigger() {
         return (Trigger) getProperty(Property.TRIGGER);
@@ -445,7 +444,7 @@ public class VAlarm extends CalendarComponent {
 
     /**
      * Returns the optional duration property.
-     * @return
+     * @return the DURATION property or null if not specified
      */
     public final Duration getDuration() {
         return (Duration) getProperty(Property.DURATION);
@@ -453,7 +452,7 @@ public class VAlarm extends CalendarComponent {
 
     /**
      * Returns the optional repeat property.
-     * @return
+     * @return the REPEAT property or null if not specified
      */
     public final Repeat getRepeat() {
         return (Repeat) getProperty(Property.REPEAT);
@@ -461,7 +460,7 @@ public class VAlarm extends CalendarComponent {
 
     /**
      * Returns the optional attachment property.
-     * @return
+     * @return the ATTACH property or null if not specified
      */
     public final Attach getAttachment() {
         return (Attach) getProperty(Property.ATTACH);
@@ -469,7 +468,7 @@ public class VAlarm extends CalendarComponent {
 
     /**
      * Returns the optional description property.
-     * @return
+     * @return the DESCRIPTION property or null if not specified
      */
     public final Description getDescription() {
         return (Description) getProperty(Property.DESCRIPTION);
@@ -477,7 +476,7 @@ public class VAlarm extends CalendarComponent {
 
     /**
      * Returns the optional summary property.
-     * @return
+     * @return the SUMMARY property or null if not specified
      */
     public final Summary getSummary() {
         return (Summary) getProperty(Property.SUMMARY);

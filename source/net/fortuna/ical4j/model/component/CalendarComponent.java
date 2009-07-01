@@ -67,49 +67,49 @@ public abstract class CalendarComponent extends Component {
 
     /**
      * Apply validation for METHOD=PUBLISH.
-     * @throws ValidationException
+     * @throws ValidationException where the component does not comply with RFC2446
      */
     public abstract void validatePublish() throws ValidationException;
 
     /**
      * Apply validation for METHOD=REQUEST.
-     * @throws ValidationException
+     * @throws ValidationException where the component does not comply with RFC2446
      */
     public abstract void validateRequest() throws ValidationException;
 
     /**
      * Apply validation for METHOD=REPLY.
-     * @throws ValidationException
+     * @throws ValidationException where the component does not comply with RFC2446
      */
     public abstract void validateReply() throws ValidationException;
 
     /**
      * Apply validation for METHOD=ADD.
-     * @throws ValidationException
+     * @throws ValidationException where the component does not comply with RFC2446
      */
     public abstract void validateAdd() throws ValidationException;
 
     /**
      * Apply validation for METHOD=CANCEL.
-     * @throws ValidationException
+     * @throws ValidationException where the component does not comply with RFC2446
      */
     public abstract void validateCancel() throws ValidationException;
 
     /**
      * Apply validation for METHOD=REFRESH.
-     * @throws ValidationException
+     * @throws ValidationException where the component does not comply with RFC2446
      */
     public abstract void validateRefresh() throws ValidationException;
 
     /**
      * Apply validation for METHOD=COUNTER.
-     * @throws ValidationException
+     * @throws ValidationException where the component does not comply with RFC2446
      */
     public abstract void validateCounter() throws ValidationException;
 
     /**
      * Apply validation for METHOD=DECLINE-COUNTER.
-     * @throws ValidationException
+     * @throws ValidationException where the component does not comply with RFC2446
      */
     public abstract void validateDeclineCounter() throws ValidationException;
 }

@@ -296,7 +296,7 @@ public class VEvent extends CalendarComponent {
     }
 
     /**
-     * @see java.lang.Object#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -314,7 +314,7 @@ public class VEvent extends CalendarComponent {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Component#validate(boolean)
+     * {@inheritDoc}
      */
     public final void validate(final boolean recurse) throws ValidationException {
 
@@ -509,6 +509,8 @@ public class VEvent extends CalendarComponent {
      *                           a timezone
      * X-COMPONENT         0+
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validatePublish() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -552,8 +554,6 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
-     * @throws ValidationException
-     * 
      * <pre>
      * Component/Property  Presence
      * -----------------------------------------------------------------
@@ -604,6 +604,8 @@ public class VEvent extends CalendarComponent {
      * VJOURNAL            0
      * VTODO               0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateRequest() throws ValidationException {
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
@@ -641,8 +643,6 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
-     * @throws ValidationException
-     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -697,6 +697,8 @@ public class VEvent extends CalendarComponent {
      * VJOURNAL            0
      * VTODO               0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateReply() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.ATTENDEE, getProperties());
@@ -728,8 +730,6 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
-     * @throws ValidationException
-     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -779,6 +779,8 @@ public class VEvent extends CalendarComponent {
      * VTODO               0
      * VJOURNAL            0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateAdd() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -814,8 +816,6 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
-     * @throws ValidationException
-     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -871,6 +871,8 @@ public class VEvent extends CalendarComponent {
      * VFREEBUSY           0
      * VALARM              0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateCancel() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -904,8 +906,6 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
-     * @throws ValidationException
-     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -957,6 +957,8 @@ public class VEvent extends CalendarComponent {
      * VTIMEZONE           0
      * VALARM              0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateRefresh() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.ATTENDEE, getProperties());
@@ -997,8 +999,6 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
-     * @throws ValidationException
-     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -1055,6 +1055,8 @@ public class VEvent extends CalendarComponent {
      * VJOURNAL            0
      * VFREEBUSY           0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateCounter() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -1088,8 +1090,6 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
-     * @throws ValidationException
-     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -1140,6 +1140,8 @@ public class VEvent extends CalendarComponent {
      * VTIMEZONE           0
      * VALARM              0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateDeclineCounter() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -1180,8 +1182,8 @@ public class VEvent extends CalendarComponent {
     
     /**
      * Returns a normalised list of periods representing the consumed time for this event.
-     * @param rangeStart
-     * @param rangeEnd
+     * @param rangeStart the start of a range
+     * @param rangeEnd the end of a range
      * @return a normalised list of periods representing consumed time for this event
      * @see VEvent#getConsumedTime(Date, Date, boolean)
      */
@@ -1227,8 +1229,12 @@ public class VEvent extends CalendarComponent {
 
     /**
      * Returns a single occurrence of a recurring event.
-     * @param date
-     * @return
+     * @param date a date on which the occurence should occur
+     * @return a single non-recurring event instance for the specified date, or null if the event doesn't
+     * occur on the specified date
+     * @throws IOException where an error occurs reading data
+     * @throws URISyntaxException where an invalid URI is encountered
+     * @throws ParseException where an error occurs parsing data
      */
     public final VEvent getOccurrence(final Date date) throws IOException,
         URISyntaxException, ParseException {
@@ -1405,9 +1411,8 @@ public class VEvent extends CalendarComponent {
         return (Uid) getProperty(Property.UID);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#equals(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VEvent) {
@@ -1417,8 +1422,8 @@ public class VEvent extends CalendarComponent {
         return super.equals(arg0);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#hashCode()
+    /**
+     * {@inheritDoc}
      */
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
@@ -1427,6 +1432,10 @@ public class VEvent extends CalendarComponent {
 
     /**
      * Overrides default copy method to add support for copying alarm sub-components.
+     * @return a copy of the instance
+     * @throws ParseException where values in the instance cannot be parsed
+     * @throws IOException where values in the instance cannot be read
+     * @throws URISyntaxException where an invalid URI value is encountered in the instance
      * @see net.fortuna.ical4j.model.Component#copy()
      */
     public Component copy() throws ParseException, IOException,

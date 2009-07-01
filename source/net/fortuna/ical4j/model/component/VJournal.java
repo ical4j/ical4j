@@ -141,9 +141,8 @@ public class VJournal extends CalendarComponent {
         getProperties().add(new Summary(summary));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#validate(boolean)
+    /**
+     * {@inheritDoc}
      */
     public final void validate(final boolean recurse)
             throws ValidationException {
@@ -259,6 +258,8 @@ public class VJournal extends CalendarComponent {
      * VFREEBUSY            0
      * VTODO                0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validatePublish() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
@@ -323,6 +324,8 @@ public class VJournal extends CalendarComponent {
      * VFREEBUSY            0
      * VTODO                0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateAdd() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
@@ -390,6 +393,8 @@ public class VJournal extends CalendarComponent {
      * VFREEBUSY            0
      * VTODO                0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateCancel() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -412,36 +417,36 @@ public class VJournal extends CalendarComponent {
         PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+    /**
+     * {@inheritDoc}
      */
     public void validateCounter() throws ValidationException {
         throw new ValidationException("METHOD:COUNTER not supported for VJOURNAL components");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+    /**
+     * {@inheritDoc}
      */
     public void validateDeclineCounter() throws ValidationException {
         throw new ValidationException("METHOD:DECLINE-COUNTER not supported for VJOURNAL components");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+    /**
+     * {@inheritDoc}
      */
     public void validateRefresh() throws ValidationException {
         throw new ValidationException("METHOD:REFRESH not supported for VJOURNAL components");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateReply()
+    /**
+     * {@inheritDoc}
      */
     public void validateReply() throws ValidationException {
         throw new ValidationException("METHOD:REPLY not supported for VJOURNAL components");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRequest()
+    /**
+     * {@inheritDoc}
      */
     public void validateRequest() throws ValidationException {
         throw new ValidationException("METHOD:REQUEST not supported for VJOURNAL components");

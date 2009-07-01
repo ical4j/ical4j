@@ -240,8 +240,8 @@ public class VFreeBusy extends CalendarComponent {
     /**
      * Constructs a new VFreeBusy instance with the specified start and end boundaries. This constructor should be used
      * for requesting busy time for a specified period.
-     * @param startDate the starting boundary for the VFreeBusy
-     * @param endDate the ending boundary for the VFreeBusy
+     * @param start the starting boundary for the VFreeBusy
+     * @param end the ending boundary for the VFreeBusy
      */
     public VFreeBusy(final DateTime start, final DateTime end) {
         this();
@@ -265,8 +265,8 @@ public class VFreeBusy extends CalendarComponent {
     /**
      * Constructs a new VFreeBusy instance with the specified start and end boundaries. This constructor should be used
      * for requesting free time for a specified duration in given period defined by the start date and end date.
-     * @param startDate the starting boundary for the VFreeBusy
-     * @param endDate the ending boundary for the VFreeBusy
+     * @param start the starting boundary for the VFreeBusy
+     * @param end the ending boundary for the VFreeBusy
      * @param duration the length of the period being requested
      */
     public VFreeBusy(final DateTime start, final DateTime end, final Dur duration) {
@@ -429,9 +429,8 @@ public class VFreeBusy extends CalendarComponent {
         return periods.normalise();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#validate(boolean)
+    /**
+     * {@inheritDoc}
      */
     public final void validate(final boolean recurse) throws ValidationException {
 
@@ -547,6 +546,8 @@ public class VFreeBusy extends CalendarComponent {
      * VTIMEZONE           0
      * VALARM              0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validatePublish() throws ValidationException {
         PropertyValidator.getInstance().assertOneOrMore(Property.FREEBUSY, getProperties());
@@ -594,6 +595,8 @@ public class VFreeBusy extends CalendarComponent {
      * VJOURNAL            0
      * VTIMEZONE           0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateRequest() throws ValidationException {
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
@@ -645,6 +648,8 @@ public class VFreeBusy extends CalendarComponent {
      * VJOURNAL            0
      * VTIMEZONE           0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateReply() throws ValidationException {
 
@@ -664,85 +669,85 @@ public class VFreeBusy extends CalendarComponent {
         PropertyValidator.getInstance().assertNone(Property.SEQUENCE, getProperties());
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+    /**
+     * {@inheritDoc}
      */
     public void validateRefresh() throws ValidationException {
         throw new ValidationException("METHOD:REFRESH not supported for VFREEBUSY components");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateAdd()
+    /**
+     * {@inheritDoc}
      */
     public void validateAdd() throws ValidationException {
         throw new ValidationException("METHOD:ADD not supported for VFREEBUSY components");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCancel()
+    /**
+     * {@inheritDoc}
      */
     public void validateCancel() throws ValidationException {
         throw new ValidationException("METHOD:CANCEL not supported for VFREEBUSY components");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+    /**
+     * {@inheritDoc}
      */
     public void validateCounter() throws ValidationException {
         throw new ValidationException("METHOD:COUNTER not supported for VFREEBUSY components");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+    /**
+     * {@inheritDoc}
      */
     public void validateDeclineCounter() throws ValidationException {
         throw new ValidationException("METHOD:DECLINE-COUNTER not supported for VFREEBUSY components");
     }
 
     /**
-     * @return
+     * @return the CONTACT property or null if not specified
      */
     public final Contact getContact() {
         return (Contact) getProperty(Property.CONTACT);
     }
 
     /**
-     * @return
+     * @return the DTSTART propery or null if not specified
      */
     public final DtStart getStartDate() {
         return (DtStart) getProperty(Property.DTSTART);
     }
 
     /**
-     * @return
+     * @return the DTEND property or null if not specified
      */
     public final DtEnd getEndDate() {
         return (DtEnd) getProperty(Property.DTEND);
     }
 
     /**
-     * @return
+     * @return the DURATION property or null if not specified
      */
     public final Duration getDuration() {
         return (Duration) getProperty(Property.DURATION);
     }
 
     /**
-     * @return
+     * @return the DTSTAMP property or null if not specified
      */
     public final DtStamp getDateStamp() {
         return (DtStamp) getProperty(Property.DTSTAMP);
     }
 
     /**
-     * @return
+     * @return the ORGANIZER property or null if not specified
      */
     public final Organizer getOrganizer() {
         return (Organizer) getProperty(Property.ORGANIZER);
     }
 
     /**
-     * @return
+     * @return the URL property or null if not specified
      */
     public final Url getUrl() {
         return (Url) getProperty(Property.URL);

@@ -106,9 +106,8 @@ public class Available extends Component {
         super(AVAILABLE, properties);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#validate(boolean)
+    /**
+     * {@inheritDoc}
      */
     public final void validate(final boolean recurse)
             throws ValidationException {

@@ -207,7 +207,7 @@ public class VToDo extends CalendarComponent {
     }
 
     /**
-     * @see java.lang.Object#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
@@ -224,9 +224,8 @@ public class VToDo extends CalendarComponent {
         return buffer.toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#validate(boolean)
+    /**
+     * {@inheritDoc}
      */
     public final void validate(final boolean recurse)
             throws ValidationException {
@@ -387,6 +386,8 @@ public class VToDo extends CalendarComponent {
      * VEVENT               0
      * VJOURNAL             0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validatePublish() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -484,6 +485,8 @@ public class VToDo extends CalendarComponent {
      * VFREEBUSY             0
      * VJOURNAL              0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateRequest() throws ValidationException {
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
@@ -572,6 +575,8 @@ public class VToDo extends CalendarComponent {
      * VEVENT               0
      * VFREEBUSY            0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateReply() throws ValidationException {
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
@@ -655,7 +660,9 @@ public class VToDo extends CalendarComponent {
      * VEVENT                0
      * VJOURNAL              0
      * VFREEBUSY             0
-    * </pre>
+     * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateAdd() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -746,6 +753,8 @@ public class VToDo extends CalendarComponent {
      * VEVENT               0
      * VFREEBUSY            0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateCancel() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
@@ -825,6 +834,8 @@ public class VToDo extends CalendarComponent {
      * VFREEBUSY            0
      * VTIMEZONE            0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateRefresh() throws ValidationException {
         PropertyValidator.getInstance().assertOne(Property.ATTENDEE, getProperties());
@@ -917,6 +928,8 @@ public class VToDo extends CalendarComponent {
      * VEVENT               0
      * VFREEBUSY            0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateCounter() throws ValidationException {
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
@@ -1002,6 +1015,8 @@ public class VToDo extends CalendarComponent {
      * VEVENT               0
      * VFREEBUSY            0
      * </pre>
+     * 
+     * @throws ValidationException where component does not conform to RFC2446
      */
     public void validateDeclineCounter() throws ValidationException {
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
@@ -1174,9 +1189,8 @@ public class VToDo extends CalendarComponent {
         return (Uid) getProperty(Property.UID);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#equals(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VToDo) {
@@ -1186,8 +1200,8 @@ public class VToDo extends CalendarComponent {
         return super.equals(arg0);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#hashCode()
+    /**
+     * {@inheritDoc}
      */
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
@@ -1196,6 +1210,10 @@ public class VToDo extends CalendarComponent {
 
     /**
      * Overrides default copy method to add support for copying alarm sub-components.
+     * @return a copy of the instance
+     * @throws ParseException where an error occurs parsing data
+     * @throws IOException where an error occurs reading data
+     * @throws URISyntaxException where an invalid URI is encountered
      * @see net.fortuna.ical4j.model.Component#copy()
      */
     public Component copy() throws ParseException, IOException, URISyntaxException {

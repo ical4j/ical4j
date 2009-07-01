@@ -64,9 +64,8 @@ public class XComponent extends CalendarComponent {
         super(name, properties);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Component#validate(boolean)
+    /**
+     * {@inheritDoc}
      */
     public final void validate(final boolean recurse)
             throws ValidationException {
@@ -84,64 +83,64 @@ public class XComponent extends CalendarComponent {
         }
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validatePublish()
+    /**
+     * {@inheritDoc}
      */
     public void validatePublish() throws ValidationException {
         // TODO Auto-generated method stub
         
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateAdd()
+    /**
+     * {@inheritDoc}
      */
     public void validateAdd() throws ValidationException {
         // TODO Auto-generated method stub
         
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCancel()
+    /**
+     * {@inheritDoc}
      */
     public void validateCancel() throws ValidationException {
         // TODO Auto-generated method stub
         
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateCounter()
+    /**
+     * {@inheritDoc}
      */
     public void validateCounter() throws ValidationException {
         // TODO Auto-generated method stub
         
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateDeclineCounter()
+    /**
+     * {@inheritDoc}
      */
     public void validateDeclineCounter() throws ValidationException {
         // TODO Auto-generated method stub
         
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRefresh()
+    /**
+     * {@inheritDoc}
      */
     public void validateRefresh() throws ValidationException {
         // TODO Auto-generated method stub
         
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateReply()
+    /**
+     * {@inheritDoc}
      */
     public void validateReply() throws ValidationException {
         // TODO Auto-generated method stub
         
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.component.CalendarComponent#validateRequest()
+    /**
+     * {@inheritDoc}
      */
     public void validateRequest() throws ValidationException {
         // TODO Auto-generated method stub
