@@ -73,9 +73,8 @@ public class DelegatedTo extends Parameter {
         return delegatees;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Parameter#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return getDelegatees().toString();

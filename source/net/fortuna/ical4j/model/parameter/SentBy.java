@@ -73,9 +73,8 @@ public class SentBy extends Parameter {
         return address;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Parameter#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getAddress()));

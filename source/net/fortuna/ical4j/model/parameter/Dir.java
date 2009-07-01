@@ -73,9 +73,8 @@ public class Dir extends Parameter {
         return uri;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Parameter#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getUri()));

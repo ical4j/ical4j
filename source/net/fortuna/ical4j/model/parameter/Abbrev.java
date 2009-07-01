@@ -56,9 +56,8 @@ public class Abbrev extends Parameter {
         this.value = Strings.unquote(aValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Parameter#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return value;

@@ -73,9 +73,8 @@ public class Member extends Parameter {
         return groups;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Parameter#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return getGroups().toString();
