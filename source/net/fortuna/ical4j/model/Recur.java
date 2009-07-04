@@ -46,6 +46,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.Dates;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -114,7 +115,7 @@ public class Recur implements Serializable {
     private static int maxIncrementCount;
     static {
         String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
-        if ((value != null) && (!value.isEmpty())) {
+        if (StringUtils.isEmpty(value)) {
             maxIncrementCount = Integer.parseInt(value);
         } else {
             maxIncrementCount = 1000;
