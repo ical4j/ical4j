@@ -46,7 +46,6 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.Dates;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -115,7 +114,7 @@ public class Recur implements Serializable {
     private static int maxIncrementCount;
     static {
         String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
-        if (StringUtils.isEmpty(value)) {
+        if (value == null || value.length() == 0) {
             maxIncrementCount = Integer.parseInt(value);
         } else {
             maxIncrementCount = 1000;
@@ -161,7 +160,6 @@ public class Recur implements Serializable {
      * Constructs a new instance from the specified string value.
      * @param aValue a string representation of a recurrence.
      * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
-     * @throws IllegalArgumentException if the <code>frequency</code> is <code>null</code> or unrecognized.
      */
     public Recur(final String aValue) throws ParseException {
         for (StringTokenizer t = new StringTokenizer(aValue, ";="); t
@@ -226,9 +224,8 @@ public class Recur implements Serializable {
     }
 
     /**
-     * @param frequency
-     * @param until
-     * @throws IllegalArgumentException if the <code>frequency</code> is <code>null</code> or unrecognized.
+     * @param frequency a recurrence frequency string
+     * @param until maximum recurrence date
      */
     public Recur(final String frequency, final Date until) {
         this.frequency = frequency;
@@ -237,9 +234,8 @@ public class Recur implements Serializable {
     }
 
     /**
-     * @param frequency
-     * @param count
-     * @throws IllegalArgumentException if the <code>frequency</code> is <code>null</code> or unrecognized.
+     * @param frequency a recurrence frequency string
+     * @param count maximum recurrence count
      */
     public Recur(final String frequency, final int count) {
         this.frequency = frequency;
@@ -387,7 +383,7 @@ public class Recur implements Serializable {
     }
 
     /**
-     * @see java.lang.Object#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -492,6 +488,7 @@ public class Recur implements Serializable {
 
     /**
      * Convenience method for retrieving recurrences in a specified period.
+     * @param seed a seed date for generating recurrence instances
      * @param period the period of returned recurrence dates
      * @param value type of dates to generate
      * @return a list of dates
@@ -1156,7 +1153,6 @@ public class Recur implements Serializable {
 
     /**
      * @param frequency The frequency to set.
-     * @throws IllegalArgumentException if the <code>frequency</code> is <code>null</code> or unrecognized.
      */
     public final void setFrequency(final String frequency) {
         this.frequency = frequency;
