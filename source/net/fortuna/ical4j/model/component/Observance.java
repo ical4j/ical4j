@@ -82,6 +82,9 @@ public abstract class Observance extends Component implements Comparable {
      */
     public static final String STANDARD = "STANDARD";
 
+    /**
+     * Token for daylight observance
+     */
     public static final String DAYLIGHT = "DAYLIGHT";
 
     private transient Log log = LogFactory.getLog(Observance.class);
@@ -125,10 +128,9 @@ public abstract class Observance extends Component implements Comparable {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Component#validate(boolean)
+     * {@inheritDoc}
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
+    public final void validate(final boolean recurse) throws ValidationException {
 
         // From "4.8.3.3 Time Zone Offset From":
         // Conformance: This property MUST be specified in a "VTIMEZONE"
@@ -308,7 +310,7 @@ public abstract class Observance extends Component implements Comparable {
 
     /**
      * Returns the mandatory dtstart property.
-     * @return
+     * @return the DTSTART property or null if not specified
      */
     public final DtStart getStartDate() {
         return (DtStart) getProperty(Property.DTSTART);
@@ -316,7 +318,7 @@ public abstract class Observance extends Component implements Comparable {
 
     /**
      * Returns the mandatory tzoffsetfrom property.
-     * @return
+     * @return the TZOFFSETFROM property or null if not specified
      */
     public final TzOffsetFrom getOffsetFrom() {
         return (TzOffsetFrom) getProperty(Property.TZOFFSETFROM);
@@ -324,23 +326,24 @@ public abstract class Observance extends Component implements Comparable {
 
     /**
      * Returns the mandatory tzoffsetto property.
-     * @return
+     * @return the TZOFFSETTO property or null if not specified
      */
     public final TzOffsetTo getOffsetTo() {
         return (TzOffsetTo) getProperty(Property.TZOFFSETTO);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
+    /**
+     * {@inheritDoc}
      */
     public final int compareTo(final Object arg0) {
         return compareTo((Observance) arg0);
     }
 
     /**
-     * @param arg0
-     * @return
+     * @param arg0 another observance instance
+     * @return a positve value if this observance starts earlier than the other,
+     * a negative value if it occurs later than the other, or zero if they start
+     * at the same time
      */
     public final int compareTo(final Observance arg0) {
         // TODO: sort by RDATE??
