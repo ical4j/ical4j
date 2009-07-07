@@ -114,7 +114,7 @@ public class Recur implements Serializable {
     private static int maxIncrementCount;
     static {
         String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
-        if (value == null || value.length() == 0) {
+        if (value != null && value.length() > 0) {
             maxIncrementCount = Integer.parseInt(value);
         } else {
             maxIncrementCount = 1000;
