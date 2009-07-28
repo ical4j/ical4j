@@ -135,8 +135,8 @@ public final class Calendars {
     /**
      * Splits a calendar object into distinct calendar objects for unique
      * identifers (UID).
-     * @param calendar
-     * @return
+     * @param calendar a calendar instance
+     * @return an array of calendar objects
      */
     public static Calendar[] split(final Calendar calendar) {
         // if calendar contains one component or less, or is composed entirely of timezone
@@ -185,8 +185,8 @@ public final class Calendars {
     
     /**
      * Returns a unique identifier as specified by components in the provided calendar.
-     * @param calendar
-     * @return
+     * @param calendar a calendar instance
+     * @return the UID property
      * @throws ConstraintViolationException if zero or more than one unique identifer is found in the specified calendar
      */
     public static Uid getUid(final Calendar calendar) throws ConstraintViolationException {
@@ -209,8 +209,9 @@ public final class Calendars {
     
     /**
      * Returns an appropriate MIME Content-Type for the specified calendar object.
-     * @param calendar
-     * @return
+     * @param calendar a calendar instance
+     * @param charset an optional encoding
+     * @return a content type string
      */
     public static String getContentType(Calendar calendar, Charset charset) {
         StringBuffer b = new StringBuffer("text/calendar");

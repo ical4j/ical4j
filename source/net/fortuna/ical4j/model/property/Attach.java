@@ -89,7 +89,7 @@ import org.apache.commons.logging.LogFactory;
  *       
  *            attach     = &quot;ATTACH&quot; attparam &quot;:&quot; uri  CRLF
  *       
- *            attach     =/ &quot;ATTACH&quot; attparam &quot;;&quot; &quot;ENCODING&quot; &quot;=&quot; &quot;BASE64&quot;
+ *        attach     =/ &quot;ATTACH&quot; attparam &quot;;&quot; &quot;ENCODING&quot; &quot;=&quot; &quot;BASE64&quot;
  *                          &quot;;&quot; &quot;VALUE&quot; &quot;=&quot; &quot;BINARY&quot; &quot;:&quot; binary
  *       
  *            attparam   = *(
@@ -176,7 +176,7 @@ public class Attach extends Property {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Property#validate()
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
 
@@ -224,6 +224,10 @@ public class Attach extends Property {
      * value is encoded binary data, the value is decoded and stored in
      * the binary field. Otherwise the value is assumed to be a URI
      * location to binary data and is stored as such.
+     * 
+     * @param aValue a string encoded binary or URI value
+     * @throws IOException where binary data cannot be decoded
+     * @throws URISyntaxException where the specified value is not a valid URI
      */
     public final void setValue(final String aValue) throws IOException,
             URISyntaxException {
@@ -251,9 +255,8 @@ public class Attach extends Property {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         if (getUri() != null) {

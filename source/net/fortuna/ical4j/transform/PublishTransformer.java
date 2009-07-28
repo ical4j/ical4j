@@ -49,9 +49,8 @@ import net.fortuna.ical4j.model.property.Sequence;
  */
 public class PublishTransformer extends Transformer {
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.transform.Transformer#transform(net.fortuna.ical4j.model.Calendar)
+    /**
+     * {@inheritDoc}
      */
     public final Calendar transform(final Calendar calendar) {
         PropertyList calProps = calendar.getProperties();

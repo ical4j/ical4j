@@ -62,31 +62,32 @@ public abstract class DateListProperty extends Property {
     private TimeZone timeZone;
 
     /**
-     * @param name
+     * @param name the property name
      */
     public DateListProperty(final String name) {
         this(name, new DateList(Value.DATE_TIME));
     }
 
     /**
-     * @param name
-     * @param parameters
+     * @param name the property name
+     * @param parameters property parameters
      */
     public DateListProperty(final String name, final ParameterList parameters) {
         super(name, parameters);
     }
 
     /**
-     * @param name
-     * @param dates
+     * @param name the property name
+     * @param dates a list of initial dates for the property
      */
     public DateListProperty(final String name, final DateList dates) {
         this(name, new ParameterList(), dates);
     }
 
     /**
-     * @param name
-     * @param dates
+     * @param name the property name
+     * @param parameters property parameters
+     * @param dates a list of initial dates for the property
      */
     public DateListProperty(final String name, final ParameterList parameters, final DateList dates) {
         super(name, parameters);
@@ -103,18 +104,16 @@ public abstract class DateListProperty extends Property {
         return dates;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public void setValue(final String aValue) throws ParseException {
         dates = new DateList(aValue, (Value) getParameter(Parameter.VALUE),
                 timeZone);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public String getValue() {
         return Strings.valueOf(dates);
@@ -122,7 +121,7 @@ public abstract class DateListProperty extends Property {
 
     /**
      * Sets the timezone associated with this property.
-     * @param timeZone a timezone to associate with this property
+     * @param timezone a timezone to associate with this property
      */
     public void setTimeZone(final TimeZone timezone) {
         if (dates == null) {
@@ -157,7 +156,7 @@ public abstract class DateListProperty extends Property {
      * Resets the timezone associated with the property. If utc is true, any TZID parameters are removed and the Java
      * timezone is updated to UTC time. If utc is false, TZID parameters are removed and the Java timezone is set to the
      * default timezone (i.e. represents a "floating" local time)
-     * @param utc
+     * @param utc the UTC value
      */
     public final void setUtc(final boolean utc) {
         if (dates == null || !Value.DATE_TIME.equals(dates.getType())) {
