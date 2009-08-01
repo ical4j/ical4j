@@ -50,7 +50,7 @@ public class DateList extends ArrayList implements Serializable {
 
     private static final long serialVersionUID = 5925108767897130313L;
 
-    private Value type;
+    private final Value type;
 
     private TimeZone timeZone;
     
@@ -61,14 +61,17 @@ public class DateList extends ArrayList implements Serializable {
      */
     public DateList() {
         super();
+        this.type = Value.DATE_TIME;
     }
 
     /**
      * Creates a new instance with the specified initial capacity.
      * @param initialCapacity the initial capacity of the list
+     * @deprecated
      */
     public DateList(final int initialCapacity) {
         super(initialCapacity);
+        this.type = Value.DATE_TIME;
     }
 
     /**
