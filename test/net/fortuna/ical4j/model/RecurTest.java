@@ -716,6 +716,7 @@ public class RecurTest extends TestCase {
         suite.addTest(new RecurTest(""));
         suite.addTest(new RecurTest(Recur.WEEKLY));
         suite.addTest(new RecurTest("FREQ"));
+        suite.addTest(new RecurTest("FREQ=WEEKLY;BYDAY=xx"));
 
         // Unit test for recurrence every 4th february..
         rrule = "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=4;BYDAY=MO,TU,WE,TH,FR,SA,SU";

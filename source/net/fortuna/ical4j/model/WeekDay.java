@@ -82,13 +82,15 @@ public class WeekDay implements Serializable {
             offset = 0;
         }
         day = value.substring(value.length() - 2);
+        validateDay();
     }
     
     /**
+     * Constructor used to construct constant instances.
      * @param day
      * @param offset
      */
-    public WeekDay(final String day, final int offset) {
+    private WeekDay(final String day, final int offset) {
         this.day = day;
         this.offset = offset;
     }
@@ -104,6 +106,17 @@ public class WeekDay implements Serializable {
         this.offset = offset;
     }
     
+    private void validateDay() {
+        if (!SU.day.equals(day)
+            && !MO.day.equals(day)
+            && !TU.day.equals(day)
+            && !WE.day.equals(day)
+            && !TH.day.equals(day)
+            && !FR.day.equals(day)
+            && !SA.day.equals(day)) {
+            throw new IllegalArgumentException("Invalid day: " + day);
+        }
+    }
     /**
      * @return Returns the day.
      */
