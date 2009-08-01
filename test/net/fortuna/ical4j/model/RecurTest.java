@@ -281,6 +281,7 @@ public class RecurTest extends TestCase {
         }
         catch (IllegalArgumentException e) {
             // expected
+            log.info("Caught exception: " + e.getMessage());
         }
     }
     
@@ -712,6 +713,9 @@ public class RecurTest extends TestCase {
         // various invalid values
         suite.addTest(new RecurTest("FREQ=YEARLY;BYMONTH=0"));
         suite.addTest(new RecurTest("FREQ=YEARLY;BYMONTHDAY=-400"));
+        suite.addTest(new RecurTest(""));
+        suite.addTest(new RecurTest(Recur.WEEKLY));
+        suite.addTest(new RecurTest("FREQ"));
 
         // Unit test for recurrence every 4th february..
         rrule = "FREQ=YEARLY;BYMONTH=2;BYMONTHDAY=4;BYDAY=MO,TU,WE,TH,FR,SA,SU";

@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.model.parameter.Value;
@@ -162,14 +163,14 @@ public class Recur implements Serializable {
      * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
      */
     public Recur(final String aValue) throws ParseException {
-        for (StringTokenizer t = new StringTokenizer(aValue, ";="); t
-                .hasMoreTokens();) {
+        StringTokenizer t = new StringTokenizer(aValue, ";=");
+        while (t.hasMoreTokens()) {
             String token = t.nextToken();
             if (FREQ.equals(token)) {
-                frequency = t.nextToken();
+                frequency = nextToken(t, token);
             }
             else if (UNTIL.equals(token)) {
-                String untilString = t.nextToken();
+                String untilString = nextToken(t, token);
                 if (untilString != null && untilString.indexOf("T") >= 0) {
                     until = new DateTime(untilString);
                     // UNTIL must be specified in UTC time..
@@ -180,49 +181,58 @@ public class Recur implements Serializable {
                 }
             }
             else if (COUNT.equals(token)) {
-                count = Integer.parseInt(t.nextToken());
+                count = Integer.parseInt(nextToken(t, token));
             }
             else if (INTERVAL.equals(token)) {
-                interval = Integer.parseInt(t.nextToken());
+                interval = Integer.parseInt(nextToken(t, token));
             }
             else if (BYSECOND.equals(token)) {
-                secondList = new NumberList(t.nextToken(), 0, 59, false);
+                secondList = new NumberList(nextToken(t, token), 0, 59, false);
             }
             else if (BYMINUTE.equals(token)) {
-                minuteList = new NumberList(t.nextToken(), 0, 59, false);
+                minuteList = new NumberList(nextToken(t, token), 0, 59, false);
             }
             else if (BYHOUR.equals(token)) {
-                hourList = new NumberList(t.nextToken(), 0, 23, false);
+                hourList = new NumberList(nextToken(t, token), 0, 23, false);
             }
             else if (BYDAY.equals(token)) {
-                dayList = new WeekDayList(t.nextToken());
+                dayList = new WeekDayList(nextToken(t, token));
             }
             else if (BYMONTHDAY.equals(token)) {
-                monthDayList = new NumberList(t.nextToken(), 1, 31, true);
+                monthDayList = new NumberList(nextToken(t, token), 1, 31, true);
             }
             else if (BYYEARDAY.equals(token)) {
-                yearDayList = new NumberList(t.nextToken(), 1, 366, true);
+                yearDayList = new NumberList(nextToken(t, token), 1, 366, true);
             }
             else if (BYWEEKNO.equals(token)) {
-                weekNoList = new NumberList(t.nextToken(), 1, 53, true);
+                weekNoList = new NumberList(nextToken(t, token), 1, 53, true);
             }
             else if (BYMONTH.equals(token)) {
-                monthList = new NumberList(t.nextToken(), 1, 12, false);
+                monthList = new NumberList(nextToken(t, token), 1, 12, false);
             }
             else if (BYSETPOS.equals(token)) {
-                setPosList = new NumberList(t.nextToken(), 1, 366, true);
+                setPosList = new NumberList(nextToken(t, token), 1, 366, true);
             }
             else if (WKST.equals(token)) {
-                weekStartDay = t.nextToken();
+                weekStartDay = nextToken(t, token);
             }
             // assume experimental value..
             else {
-                experimentalValues.put(token, t.nextToken());
+                experimentalValues.put(token, nextToken(t, token));
             }
         }
         validateFrequency();
     }
 
+    private String nextToken(StringTokenizer t, String lastToken) {
+        try {
+            return t.nextToken();
+        }
+        catch (NoSuchElementException e) {
+            throw new IllegalArgumentException("Missing expected token, last token: " + lastToken);
+        }
+    }
+    
     /**
      * @param frequency a recurrence frequency string
      * @param until maximum recurrence date
