@@ -216,6 +216,12 @@
 			<version>1.4</version>
 			<scope>test</scope>
 		</dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy.maven.runtime</groupId>
+            <artifactId>gmaven-runtime-1.6</artifactId>
+            <version>1.0-rc-5</version>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
 
 	<repositories>
