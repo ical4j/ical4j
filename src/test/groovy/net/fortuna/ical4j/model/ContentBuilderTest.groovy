@@ -85,4 +85,22 @@ public class ContentBuilderTest extends GroovyTestCase {
         version = new ContentBuilder().version('2.0')
         assert version == Version.VERSION_2_0
     }
+    
+    void testBuildAbbrev() {
+        def abbrev = new ContentBuilder().abbrev('abb')
+        assert abbrev.value == 'abb'
+        println(abbrev)
+    }
+    
+    void testBuildAltRep() {
+        def altRep = new ContentBuilder().altrep('http://example.com/alt')
+        assert altRep.value == 'http://example.com/alt'
+        println(altRep)
+    }
+    
+    void testBuildCn() {
+        def cn = new ContentBuilder().cn('Doe, John')
+        assert cn.value == 'Doe, John'
+        println(cn)
+    }
 }

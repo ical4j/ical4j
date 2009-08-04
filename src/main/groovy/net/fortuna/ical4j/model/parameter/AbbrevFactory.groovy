@@ -29,31 +29,23 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model.parameter
 
-import groovy.util.FactoryBuilderSupportimport net.fortuna.ical4j.model.component.*
-import net.fortuna.ical4j.model.property.*import net.fortuna.ical4j.model.parameter.*/**
- * $Id$
- *
- * Created on: 03/08/2009
- *
+/**
  * @author fortuna
  *
  */
-public class ContentBuilder extends FactoryBuilderSupport {
+public class AbbrevFactory extends AbstractParameterFactory {
 
-    public ContentBuilder() {
-        registerFactory('calendar', new CalendarFactory())
-        // components..
-        registerFactory('event', new VEventFactory())
-        // properties..
-        registerFactory('dtstamp', new DtStampFactory())
-        registerFactory('prodid', new ProdIdFactory())
-        registerFactory('uid', new UidFactory())
-        registerFactory('version', new VersionFactory())
-        // parameters..
-        registerFactory('abbrev', new AbbrevFactory())
-        registerFactory('altrep', new AltRepFactory())
-        registerFactory('cn', new CnFactory())
+
+    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        Abbrev abbrev
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Abbrev.class)) {
+            abbrev = (Abbrev) value
+        }
+        else {
+            abbrev = new Abbrev(value)
+        }
+        return abbrev
     }
 }
