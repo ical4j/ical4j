@@ -47,7 +47,7 @@ public class ContentBuilderTest extends GroovyTestCase {
         def calendar = builder.calendar() {
             prodid('-//Ben Fortuna//iCal4j 1.0//EN')
             version('2.0')
-            event() {
+            vevent() {
                 uid('1')
                 dtstamp('20090803T093000Z')
             }
@@ -102,5 +102,13 @@ public class ContentBuilderTest extends GroovyTestCase {
         def cn = new ContentBuilder().cn('Doe, John')
         assert cn.value == 'Doe, John'
         println(cn)
+    }
+    
+    void testBuildXComponent() {
+        def component = new ContentBuilder().xcomponent('test')
+        assert component.name == 'test'
+        
+        component = new ContentBuilder().xcomponent(name: 'test')
+        assert component.name == 'test'
     }
 }

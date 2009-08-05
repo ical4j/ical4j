@@ -29,42 +29,29 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model
+package net.fortuna.ical4j.model.component
 
-import groovy.util.FactoryBuilderSupportimport net.fortuna.ical4j.model.component.*
-import net.fortuna.ical4j.model.property.*import net.fortuna.ical4j.model.parameter.*/**
- * $Id$
- *
- * Created on: 03/08/2009
- *
+import net.fortuna.ical4j.model.PropertyList;
+
+/**
  * @author fortuna
  *
  */
-public class ContentBuilder extends FactoryBuilderSupport {
+public class VAvailabilityFactory extends AbstractComponentFactory{
 
-    public ContentBuilder() {
-        registerFactory('calendar', new CalendarFactory())
-        // components..
-        registerFactory('available', new AvailableFactory())
-        registerFactory('daylight', new DaylightFactory())
-        registerFactory('standard', new StandardFactory())
-        registerFactory('valarm', new VAlarmFactory())
-        registerFactory('vavailability', new VAvailabilityFactory())
-        registerFactory('vevent', new VEventFactory())
-        registerFactory('vfreebusy', new VFreeBusyFactory())
-        registerFactory('vjournal', new VJournalFactory())
-        registerFactory('vtimezone', new VTimeZoneFactory())
-        registerFactory('vtodo', new VToDoFactory())
-        registerFactory('vvenue', new VVenueFactory())
-        registerFactory('xcomponent', new XComponentFactory())
-        // properties..
-        registerFactory('dtstamp', new DtStampFactory())
-        registerFactory('prodid', new ProdIdFactory())
-        registerFactory('uid', new UidFactory())
-        registerFactory('version', new VersionFactory())
-        // parameters..
-        registerFactory('abbrev', new AbbrevFactory())
-        registerFactory('altrep', new AltRepFactory())
-        registerFactory('cn', new CnFactory())
-    }
+
+     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+         VAvailability availability
+         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, VAvailability.class)) {
+             availability = (VAvailability) value
+         }
+         else {
+             availability = super.newInstance(builder, name, value, attributes);
+         }
+         return availability
+     }
+     
+     protected Object newInstance(PropertyList properties) {
+         return new VAvailability(properties)
+     }
 }
