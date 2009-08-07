@@ -44,6 +44,7 @@ public class ContentBuilder extends FactoryBuilderSupport {
 
     public ContentBuilder() {
         registerFactory('calendar', new CalendarFactory())
+        registerFactory('parameters', new ParameterListFactory())
         // components..
         registerFactory('available', new AvailableFactory())
         registerFactory('daylight', new DaylightFactory())

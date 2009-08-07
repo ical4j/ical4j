@@ -49,18 +49,28 @@ public class ContentBuilderTest extends GroovyTestCase {
             version('2.0')
             vevent() {
                 uid('1')
-                dtstamp('20090803T093000Z') {
-                    value('DATE-TIME')
-                }
+                dtstamp('20090803T093000Z', parameters: parameters() {
+                    value('DATE-TIME')})
                 action('DISPLAY')
             }
         }
         calendar.validate()
         
-//        assert calendar.properties.size == 2
-//        assert calendar.components.size == 1
+        assert calendar.properties.size() == 2
+        assert calendar.components.size() == 1
         
         println(calendar)
+    }
+    
+    void testBuildParameterList() {
+        def parameters = new ContentBuilder().parameters() {
+            value('TIME')
+            type('test')
+            role('CHAIR')
+        }
+        
+        assert parameters.size() == 3
+        println(parameters)
     }
     
     void testBuildDtStamp() {
