@@ -58,6 +58,7 @@ public class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('vvenue', new VVenueFactory())
         registerFactory('xcomponent', new XComponentFactory())
         // properties..
+        registerFactory('action', new ActionFactory())
         registerFactory('dtstamp', new DtStampFactory())
         registerFactory('prodid', new ProdIdFactory())
         registerFactory('uid', new UidFactory())

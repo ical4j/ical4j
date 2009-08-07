@@ -52,6 +52,7 @@ public class ContentBuilderTest extends GroovyTestCase {
                 dtstamp('20090803T093000Z') {
                     value('DATE-TIME')
                 }
+                action('DISPLAY')
             }
         }
         calendar.validate()
