@@ -49,7 +49,9 @@ public class ContentBuilderTest extends GroovyTestCase {
             version('2.0')
             vevent() {
                 uid('1')
-                dtstamp('20090803T093000Z')
+                dtstamp('20090803T093000Z') {
+                    value('DATE-TIME')
+                }
             }
         }
         calendar.validate()
