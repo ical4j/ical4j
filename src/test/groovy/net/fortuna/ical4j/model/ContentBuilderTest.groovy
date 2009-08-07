@@ -52,6 +52,8 @@ public class ContentBuilderTest extends GroovyTestCase {
                 dtstamp('20090803T093000Z', parameters: parameters() {
                     value('DATE-TIME')})
                 action('DISPLAY')
+                attach('http://example.com/attachment', parameters: parameters() {
+                    value('URI')})
             }
         }
         calendar.validate()
