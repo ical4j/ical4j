@@ -36,19 +36,21 @@ import net.fortuna.ical4j.util.Strings;
 
 /**
  * $Id$ [18-Apr-2004]
- *
+ * 
  * Defines an Abbreviation parameter.
+ * 
  * @author benfortuna
  * @author Mike Douglass
  */
 public class Abbrev extends Parameter {
 
-	private static final long serialVersionUID = -8650841407406422738L;
-	
-	private String value;
+    private static final long serialVersionUID = -8650841407406422738L;
+
+    private String value;
 
     /**
-     * @param aValue a string abbreviation
+     * @param aValue
+     *            a string abbreviation
      */
     public Abbrev(final String aValue) {
         super(ABBREV);
