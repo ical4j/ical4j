@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.property.Version
-/**
+import net.fortuna.ical4j.model.property.DtStamp/**
  * $Id$
  *
  * Created on: 03/08/2009
@@ -49,8 +49,9 @@ public class ContentBuilderTest extends GroovyTestCase {
             version('2.0')
             vevent() {
                 uid('1')
-                dtstamp('20090803T093000Z', parameters: parameters() {
-                    value('DATE-TIME')})
+                dtstamp(new DtStamp())
+                dtstart('20090810', parameters: parameters() {
+                    value('DATE')})
                 action('DISPLAY')
                 attach('http://example.com/attachment', parameters: parameters() {
                     value('URI')})

@@ -63,6 +63,7 @@ public class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('attach', new AttachFactory())
         registerFactory('attendee', new AttendeeFactory())
         registerFactory('dtstamp', new DtStampFactory())
+        registerFactory('dtstart', new DtStartFactory())
         registerFactory('prodid', new ProdIdFactory())
         registerFactory('uid', new UidFactory())
         registerFactory('version', new VersionFactory())
