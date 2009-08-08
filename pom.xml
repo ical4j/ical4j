@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
-		<version>1.0.6</version>
+		<version>1.0.7</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.fortuna.ical4j</groupId>
@@ -272,21 +272,21 @@
 				<configuration>
 					<linkXref>true</linkXref>
 					<targetJdk>1.4</targetJdk>
-					<rulesets>
-						<ruleset>/rulesets/basic.xml</ruleset>
-						<ruleset>/rulesets/imports.xml</ruleset>
-						<ruleset>/rulesets/unusedcode.xml</ruleset>
-						<ruleset>/rulesets/optimizations.xml</ruleset>
-					</rulesets>
+                    <rulesets>
+                        <ruleset>http://svn.mnode.org/tools/pmd/mnode_ruleset.xml</ruleset>
+                    </rulesets>
 				</configuration>
 			</plugin>
-		
-			<plugin>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<configLocation>etc/checkstyle.xml</configLocation>
-				</configuration>
-			</plugin>
+
+            <!-- Override default suppressions.. -->        
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                   <configLocation>http://svn.mnode.org/tools/checkstyle/mnode_checks.xml</configLocation>
+                   <suppressionsFile>etc/checkstyle-suppressions.xml</suppressionsFile>
+                </configuration>
+            </plugin>
 			
 			<plugin>
 				<artifactId>maven-clover-plugin</artifactId>
@@ -302,7 +302,7 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
-					<comparisonVersion>1.0-rc1</comparisonVersion>
+					<comparisonVersion>1.0-rc2</comparisonVersion>
 				</configuration>
 			</plugin>
 			<plugin>
