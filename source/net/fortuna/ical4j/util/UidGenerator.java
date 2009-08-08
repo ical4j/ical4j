@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.Enumeration;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.property.Uid;
@@ -49,9 +46,9 @@ import net.fortuna.ical4j.model.property.Uid;
  */
 public class UidGenerator {
 
-    private String pid;
+    private final String pid;
 
-    private InetAddress hostAddress;
+    private final HostInfo hostInfo;
 
     private static long lastMillis;
 
@@ -59,14 +56,15 @@ public class UidGenerator {
      * Default constructor.
      */
     public UidGenerator(String pid) throws SocketException {
-        this(findNonLoopbackAddress(), pid);
+        this(new InetAddressHostInfo(), pid);
     }
 
     /**
-     * @param hostAddress
+     * @param hostInfo
+     * @param pid
      */
-    public UidGenerator(InetAddress hostAddress, String pid) {
-        this.hostAddress = hostAddress;
+    public UidGenerator(HostInfo hostInfo, String pid) {
+        this.hostInfo = hostInfo;
         this.pid = pid;
     }
 
@@ -78,9 +76,9 @@ public class UidGenerator {
         b.append(uniqueTimestamp());
         b.append('-');
         b.append(pid);
-        if (hostAddress != null) {
+        if (hostInfo != null) {
             b.append('@');
-            b.append(hostAddress.getHostName());
+            b.append(hostInfo.getHostName());
         }
         return new Uid(b.toString());
     }
@@ -106,27 +104,5 @@ public class UidGenerator {
         final DateTime timestamp = new DateTime(currentMillis);
         timestamp.setUtc(true);
         return timestamp;
-    }
-
-    /**
-     * Find a non loopback address for this machine on which to start the server.
-     * @return a non loopback address
-     * @throws SocketException if a socket error occurs
-     */
-    private static InetAddress findNonLoopbackAddress() throws SocketException {
-        final Enumeration enumInterfaceAddress = NetworkInterface.getNetworkInterfaces();
-        while (enumInterfaceAddress.hasMoreElements()) {
-            final NetworkInterface netIf = (NetworkInterface) enumInterfaceAddress.nextElement();
-
-            // Iterate over inet address
-            final Enumeration enumInetAdress = netIf.getInetAddresses();
-            while (enumInetAdress.hasMoreElements()) {
-                final InetAddress address = (InetAddress) enumInetAdress.nextElement();
-                if (!address.isLoopbackAddress()) {
-                    return address;
-                }
-            }
-        }
-        return null;
     }
 }
