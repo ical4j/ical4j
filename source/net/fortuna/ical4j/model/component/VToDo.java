@@ -504,7 +504,7 @@ public class VToDo extends CalendarComponent {
             
             for (Iterator i = getAlarms().iterator(); i.hasNext();) {
                 VAlarm alarm = (VAlarm) i.next();
-                alarm.validateAdd();
+                alarm.validate(Method.ADD);
             }
         }
     }
@@ -687,7 +687,7 @@ public class VToDo extends CalendarComponent {
             
             for (Iterator i = getAlarms().iterator(); i.hasNext();) {
                 VAlarm alarm = (VAlarm) i.next();
-                alarm.validateCounter();
+                alarm.validate(Method.COUNTER);
             }
         }
     }
@@ -870,7 +870,7 @@ public class VToDo extends CalendarComponent {
             
             for (Iterator i = getAlarms().iterator(); i.hasNext();) {
                 VAlarm alarm = (VAlarm) i.next();
-                alarm.validatePublish();
+                alarm.validate(Method.PUBLISH);
             }
         }
     }
@@ -1145,7 +1145,7 @@ public class VToDo extends CalendarComponent {
             
             for (Iterator i = getAlarms().iterator(); i.hasNext();) {
                 VAlarm alarm = (VAlarm) i.next();
-                alarm.validateRequest();
+                alarm.validate(Method.REQUEST);
             }
         }
     }

@@ -206,7 +206,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      * Class under test for void VFreeBusy(ComponentList)
      */
     public final void testVFreeBusyComponentList2() throws Exception {
-        FileInputStream fin = new FileInputStream("etc/samples/valid/core.ics");
+        FileInputStream fin = new FileInputStream("etc/samples/invalid/core.ics");
 
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(fin);
