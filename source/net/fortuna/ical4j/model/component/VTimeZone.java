@@ -240,62 +240,6 @@ public class VTimeZone extends CalendarComponent {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public void validatePublish() throws ValidationException {
-        itipValidator.validate();
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void validateAdd() throws ValidationException {
-        itipValidator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateCancel() throws ValidationException {
-        itipValidator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateCounter() throws ValidationException {
-        itipValidator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateDeclineCounter() throws ValidationException {
-        itipValidator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateRefresh() throws ValidationException {
-        itipValidator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateReply() throws ValidationException {
-        itipValidator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateRequest() throws ValidationException {
-        itipValidator.validate();
-    }
-
-    /**
      * Common validation for all iTIP methods.
      * 
      * <pre>

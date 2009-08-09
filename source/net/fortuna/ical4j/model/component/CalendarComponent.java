@@ -94,56 +94,72 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
-    public abstract void validatePublish() throws ValidationException;
+    public final void validatePublish() throws ValidationException {
+        validate(Method.PUBLISH);
+    }
 
     /**
      * Apply validation for METHOD=REQUEST.
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
-    public abstract void validateRequest() throws ValidationException;
+    public final void validateRequest() throws ValidationException {
+        validate(Method.REQUEST);
+    }
 
     /**
      * Apply validation for METHOD=REPLY.
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
-    public abstract void validateReply() throws ValidationException;
+    public final void validateReply() throws ValidationException {
+        validate(Method.REPLY);
+    }
 
     /**
      * Apply validation for METHOD=ADD.
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
-    public abstract void validateAdd() throws ValidationException;
+    public final void validateAdd() throws ValidationException {
+        validate(Method.ADD);
+    }
 
     /**
      * Apply validation for METHOD=CANCEL.
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
-    public abstract void validateCancel() throws ValidationException;
+    public final void validateCancel() throws ValidationException {
+        validate(Method.CANCEL);
+    }
 
     /**
      * Apply validation for METHOD=REFRESH.
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
-    public abstract void validateRefresh() throws ValidationException;
+    public final void validateRefresh() throws ValidationException {
+        validate(Method.REFRESH);
+    }
 
     /**
      * Apply validation for METHOD=COUNTER.
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
-    public abstract void validateCounter() throws ValidationException;
+    public final void validateCounter() throws ValidationException {
+        validate(Method.COUNTER);
+    }
 
     /**
      * Apply validation for METHOD=DECLINE-COUNTER.
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */
-    public abstract void validateDeclineCounter() throws ValidationException;
+    public final void validateDeclineCounter() throws ValidationException {
+        validate(Method.DECLINE_COUNTER);
+    }
     
     private static class EmptyValidator implements Validator {
         

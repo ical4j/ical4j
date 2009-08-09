@@ -230,65 +230,6 @@ public class VJournal extends CalendarComponent {
     protected Validator getValidator(Method method) {
         return (Validator) methodValidators.get(method);
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void validatePublish() throws ValidationException {
-        Validator validator = (Validator) methodValidators.get(Method.PUBLISH);
-        validator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateAdd() throws ValidationException {
-        Validator validator = (Validator) methodValidators.get(Method.ADD);
-        validator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateCancel() throws ValidationException {
-        Validator validator = (Validator) methodValidators.get(Method.CANCEL);
-        validator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateCounter() throws ValidationException {
-        throw new ValidationException("METHOD:COUNTER not supported for VJOURNAL components");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateDeclineCounter() throws ValidationException {
-        throw new ValidationException("METHOD:DECLINE-COUNTER not supported for VJOURNAL components");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateRefresh() throws ValidationException {
-        throw new ValidationException("METHOD:REFRESH not supported for VJOURNAL components");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateReply() throws ValidationException {
-        throw new ValidationException("METHOD:REPLY not supported for VJOURNAL components");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateRequest() throws ValidationException {
-        throw new ValidationException("METHOD:REQUEST not supported for VJOURNAL components");
-    }
 
     /**
      * <pre>

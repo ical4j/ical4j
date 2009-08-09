@@ -342,7 +342,11 @@ public class VFreeBusy extends CalendarComponent {
             // Initialise with all free time of at least the specified duration..
             DateTime freeStart = new DateTime(start.getDate());
             DateTime freeEnd = new DateTime(end.getDate());
-            FreeBusy fb = createFreeTime(freeStart, freeEnd, duration.getDuration(), components);
+            FreeBusy fb = new FreeTimeBuilder().start(freeStart)
+                .end(freeEnd)
+                .duration(duration.getDuration())
+                .components(components)
+                .build();
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
@@ -351,7 +355,10 @@ public class VFreeBusy extends CalendarComponent {
             // initialise with all busy time for the specified period..
             DateTime busyStart = new DateTime(start.getDate());
             DateTime busyEnd = new DateTime(end.getDate());
-            FreeBusy fb = createBusyTime(busyStart, busyEnd, components);
+            FreeBusy fb = new BusyTimeBuilder().start(busyStart)
+                .end(busyEnd)
+                .components(components)
+                .build();
             if (fb != null && !fb.getPeriods().isEmpty()) {
                 getProperties().add(fb);
             }
@@ -363,22 +370,43 @@ public class VFreeBusy extends CalendarComponent {
      * applicable to FREEBUSY time, or if the component is outside the bounds of the start and end dates, null is
      * returned. If no valid busy periods are identified in the component an empty FREEBUSY property is returned (i.e.
      * empty period list).
-     * @param component a component to base the FREEBUSY property on
-     * @return a FreeBusy instance or null if the component is not applicable
      */
-    private FreeBusy createBusyTime(final DateTime start, final DateTime end,
-            final ComponentList components) {
-        final PeriodList periods = getConsumedTime(components, start, end);
-        // periods must be in UTC time for freebusy..
-        periods.setUtc(true);
-        for (final Iterator i = periods.iterator(); i.hasNext();) {
-            final Period period = (Period) i.next();
-            // check if period outside bounds..
-            if (period.getStart().after(end) || period.getEnd().before(start)) {
-                periods.remove(period);
-            }
+    private class BusyTimeBuilder {
+        
+        private DateTime start;
+        
+        private DateTime end;
+        
+        private ComponentList components;
+        
+        public BusyTimeBuilder start(DateTime start) {
+            this.start = start;
+            return this;
         }
-        return new FreeBusy(periods);
+        
+        public BusyTimeBuilder end(DateTime end) {
+            this.end = end;
+            return this;
+        }
+        
+        public BusyTimeBuilder components(ComponentList components) {
+            this.components = components;
+            return this;
+        }
+        
+        public FreeBusy build() {
+            final PeriodList periods = getConsumedTime(components, start, end);
+            // periods must be in UTC time for freebusy..
+            periods.setUtc(true);
+            for (final Iterator i = periods.iterator(); i.hasNext();) {
+                final Period period = (Period) i.next();
+                // check if period outside bounds..
+                if (period.getStart().after(end) || period.getEnd().before(start)) {
+                    periods.remove(period);
+                }
+            }
+            return new FreeBusy(periods);
+        }
     }
 
     /**
@@ -386,41 +414,66 @@ public class VFreeBusy extends CalendarComponent {
      * components. component. If the component is not applicable to FREEBUSY time, or if the component is outside the
      * bounds of the start and end dates, null is returned. If no valid busy periods are identified in the component an
      * empty FREEBUSY property is returned (i.e. empty period list).
-     * @param start
-     * @param end
-     * @param duration
-     * @param components
-     * @return
      */
-    private FreeBusy createFreeTime(final DateTime start, final DateTime end,
-            final Dur duration, final ComponentList components) {
-        final FreeBusy fb = new FreeBusy();
-        fb.getParameters().add(FbType.FREE);
-        final PeriodList periods = getConsumedTime(components, start, end);
-        // Add final consumed time to avoid special-case end-of-list processing
-        periods.add(new Period(end, end));
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Busy periods: " + periods);
+    private class FreeTimeBuilder {
+        
+        private DateTime start;
+        
+        private DateTime end;
+        
+        private Dur duration;
+        
+        private ComponentList components;
+        
+        public FreeTimeBuilder start(DateTime start) {
+            this.start = start;
+            return this;
         }
-        DateTime lastPeriodEnd = new DateTime(start);
-        // where no time is consumed set the last period end as the range start..
-        for (final Iterator i = periods.iterator(); i.hasNext();) {
-            final Period period = (Period) i.next();
-            // check if period outside bounds..
-            if (period.getStart().after(end) || period.getEnd().before(start)) {
-                continue;
-            }
-            // calculate duration between this period start and last period end..
-            final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
-            if (freeDuration.getDuration().compareTo(duration) >= 0) {
-                fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
-            }
-            if (period.getEnd().after(lastPeriodEnd)) {
-                lastPeriodEnd = period.getEnd();
-            }
+        
+        public FreeTimeBuilder end(DateTime end) {
+            this.end = end;
+            return this;
         }
-        return fb;
+        
+        private FreeTimeBuilder duration(Dur duration) {
+            this.duration = duration;
+            return this;
+        }
+        
+        public FreeTimeBuilder components(ComponentList components) {
+            this.components = components;
+            return this;
+        }
+        
+        public FreeBusy build() {
+            final FreeBusy fb = new FreeBusy();
+            fb.getParameters().add(FbType.FREE);
+            final PeriodList periods = getConsumedTime(components, start, end);
+            // Add final consumed time to avoid special-case end-of-list processing
+            periods.add(new Period(end, end));
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Busy periods: " + periods);
+            }
+            DateTime lastPeriodEnd = new DateTime(start);
+            // where no time is consumed set the last period end as the range start..
+            for (final Iterator i = periods.iterator(); i.hasNext();) {
+                final Period period = (Period) i.next();
+                // check if period outside bounds..
+                if (period.getStart().after(end) || period.getEnd().before(start)) {
+                    continue;
+                }
+                // calculate duration between this period start and last period end..
+                final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
+                if (freeDuration.getDuration().compareTo(duration) >= 0) {
+                    fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
+                }
+                if (period.getEnd().after(lastPeriodEnd)) {
+                    lastPeriodEnd = period.getEnd();
+                }
+            }
+            return fb;
+        }
     }
 
     /**
@@ -529,65 +582,6 @@ public class VFreeBusy extends CalendarComponent {
      */
     protected Validator getValidator(Method method) {
         return (Validator) methodValidators.get(method);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void validatePublish() throws ValidationException {
-        Validator validator = (Validator) methodValidators.get(Method.PUBLISH);
-        validator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateRequest() throws ValidationException {
-        Validator validator = (Validator) methodValidators.get(Method.REQUEST);
-        validator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateReply() throws ValidationException {
-        Validator validator = (Validator) methodValidators.get(Method.REPLY);
-        validator.validate();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateRefresh() throws ValidationException {
-        throw new ValidationException("METHOD:REFRESH not supported for VFREEBUSY components");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateAdd() throws ValidationException {
-        throw new ValidationException("METHOD:ADD not supported for VFREEBUSY components");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateCancel() throws ValidationException {
-        throw new ValidationException("METHOD:CANCEL not supported for VFREEBUSY components");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateCounter() throws ValidationException {
-        throw new ValidationException("METHOD:COUNTER not supported for VFREEBUSY components");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validateDeclineCounter() throws ValidationException {
-        throw new ValidationException("METHOD:DECLINE-COUNTER not supported for VFREEBUSY components");
     }
 
     /**
