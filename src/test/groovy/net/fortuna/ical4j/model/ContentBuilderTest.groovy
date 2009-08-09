@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.property.Version
-import net.fortuna.ical4j.model.property.DtStamp/**
+import net.fortuna.ical4j.model.property.DtStampimport net.fortuna.ical4j.model.component.VFreeBusyimport net.fortuna.ical4j.util.UidGeneratorimport net.fortuna.ical4j.util.SimpleHostInfo/**
  * $Id$
  *
  * Created on: 03/08/2009
@@ -76,6 +76,22 @@ public class ContentBuilderTest extends GroovyTestCase {
         println(parameters)
     }
     
+    void testBuildVFreeBusy() {
+        def builder = new ContentBuilder()
+        
+        def request = new VFreeBusy(builder.vfreebusy() {
+            dtstart('20080101', parameters: parameters() {
+                value('DATE')})
+            dtend('20100101', parameters: parameters() {
+                value('DATE')})
+        }, new ComponentList())
+        
+        def vfreebusy1 = builder.vfreebusy(request)
+        
+        assert vfreebusy1 == request
+        println(vfreebusy1)
+    }
+    
     void testBuildDtStamp() {
         def dtStamp = new ContentBuilder().dtstamp('20090803T093000Z')
         assert dtStamp.value == '20090803T093000Z'
@@ -91,6 +107,10 @@ public class ContentBuilderTest extends GroovyTestCase {
     void testBuildUid() {
         def uid = new ContentBuilder().uid('1')
         assert uid.value == '1'
+        println(uid)
+        
+        uid = new UidGenerator(new SimpleHostInfo('example.com'), '1').generateUid()
+        assert uid == new ContentBuilder().uid(uid)
         println(uid)
     }
     

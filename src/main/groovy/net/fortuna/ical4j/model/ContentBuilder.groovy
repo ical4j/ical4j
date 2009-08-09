@@ -62,10 +62,13 @@ public class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('action', new ActionFactory())
         registerFactory('attach', new AttachFactory())
         registerFactory('attendee', new AttendeeFactory())
+        registerFactory('dtend', new DtEndFactory())
         registerFactory('dtstamp', new DtStampFactory())
         registerFactory('dtstart', new DtStartFactory())
+        registerFactory('duration', new DurationFactory())
         registerFactory('prodid', new ProdIdFactory())
         registerFactory('uid', new UidFactory())
+        registerFactory('url', new UrlFactory())
         registerFactory('version', new VersionFactory())
         // parameters..
         registerFactory('abbrev', new AbbrevFactory())
