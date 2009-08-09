@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.component;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -43,6 +45,7 @@ import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.Validator;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.property.Contact;
 import net.fortuna.ical4j.model.property.DtEnd;
@@ -50,6 +53,7 @@ import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.FreeBusy;
+import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Url;
@@ -221,6 +225,13 @@ public class VFreeBusy extends CalendarComponent {
 
     private transient Log log = LogFactory.getLog(VFreeBusy.class);
 
+    private final Map methodValidators = new HashMap();
+    {
+        methodValidators.put(Method.PUBLISH, new PublishValidator());
+        methodValidators.put(Method.REPLY, new ReplyValidator());
+        methodValidators.put(Method.REQUEST, new RequestValidator());
+    }
+    
     /**
      * Default constructor.
      */
@@ -514,159 +525,34 @@ public class VFreeBusy extends CalendarComponent {
     }
 
     /**
-     * <pre>
-     * Component/Property  Presence
-     * ------------------- ----------------------------------------------
-     * METHOD              1       MUST be "PUBLISH"
-     * 
-     * VFREEBUSY           1+
-     *     DTSTAMP         1
-     *     DTSTART         1       DateTime values must be in UTC
-     *     DTEND           1       DateTime values must be in UTC
-     *     FREEBUSY        1+      MUST be BUSYTIME. Multiple instances are
-     *                             allowed. Multiple instances must be sorted
-     *                             in ascending order
-     *     ORGANIZER       1       MUST contain the address of originator of
-     *                             busy time data.
-     *     UID             1
-     *     COMMENT         0 or 1
-     *     CONTACT         0+
-     *     X-PROPERTY      0+
-     *     URL             0 or 1  Specifies busy time URL
-     * 
-     *     ATTENDEE        0
-     *     DURATION        0
-     *     REQUEST-STATUS  0
-     * 
-     * X-COMPONENT         0+
-     * 
-     * VEVENT              0
-     * VTODO               0
-     * VJOURNAL            0
-     * VTIMEZONE           0
-     * VALARM              0
-     * </pre>
-     * 
-     * @throws ValidationException where component does not conform to RFC2446
+     * {@inheritDoc}
+     */
+    protected Validator getValidator(Method method) {
+        return (Validator) methodValidators.get(method);
+    }
+    
+    /**
+     * {@inheritDoc}
      */
     public void validatePublish() throws ValidationException {
-        PropertyValidator.getInstance().assertOneOrMore(Property.FREEBUSY, getProperties());
-        
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTEND, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
-        
-        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
-        
-        PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
-        PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
-        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+        Validator validator = (Validator) methodValidators.get(Method.PUBLISH);
+        validator.validate();
     }
 
     /**
-     * <pre>
-     * Component/Property  Presence
-     * ------------------- ----------------------------------------------
-     * METHOD              1      MUST be "REQUEST"
-     * 
-     * VFREEBUSY           1
-     *     ATTENDEE        1+     contain the address of the calendar store
-     *     DTEND           1      DateTime values must be in UTC
-     *     DTSTAMP         1
-     *     DTSTART         1      DateTime values must be in UTC
-     *     ORGANIZER       1      MUST be the request originator's address
-     *     UID             1
-     *     COMMENT         0 or 1
-     *     CONTACT         0+
-     *     X-PROPERTY      0+
-     * 
-     *     FREEBUSY        0
-     *     DURATION        0
-     *     REQUEST-STATUS  0
-     *     URL             0
-     * 
-     * X-COMPONENT         0+
-     * VALARM              0
-     * VEVENT              0
-     * VTODO               0
-     * VJOURNAL            0
-     * VTIMEZONE           0
-     * </pre>
-     * 
-     * @throws ValidationException where component does not conform to RFC2446
+     * {@inheritDoc}
      */
     public void validateRequest() throws ValidationException {
-        PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
-        
-        PropertyValidator.getInstance().assertOne(Property.DTEND, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
-        
-        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
-        
-        PropertyValidator.getInstance().assertNone(Property.FREEBUSY, getProperties());
-        PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
-        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
-        PropertyValidator.getInstance().assertNone(Property.URL, getProperties());
+        Validator validator = (Validator) methodValidators.get(Method.REQUEST);
+        validator.validate();
     }
 
     /**
-     * <pre>
-     * Component/Property  Presence
-     * ------------------- ----------------------------------------------
-     * METHOD              1      MUST be "REPLY"
-     * 
-     * VFREEBUSY           1
-     *     ATTENDEE        1      (address of recipient replying)
-     *     DTSTAMP         1
-     *     DTEND           1      DateTime values must be in UTC
-     *     DTSTART         1      DateTime values must be in UTC
-     *     FREEBUSY        0+      (values MUST all be of the same data
-     *                             type. Multiple instances are allowed.
-     *                             Multiple instances MUST be sorted in
-     *                             ascending order. Values MAY NOT overlap)
-     *     ORGANIZER       1       MUST be the request originator's address
-     *     UID             1
-     * 
-     *     COMMENT         0 or 1
-     *     CONTACT         0+
-     *     REQUEST-STATUS  0+
-     *     URL             0 or 1  (specifies busy time URL)
-     *     X-PROPERTY      0+
-     *     DURATION        0
-     *     SEQUENCE        0
-     * 
-     * X-COMPONENT         0+
-     * VALARM              0
-     * VEVENT              0
-     * VTODO               0
-     * VJOURNAL            0
-     * VTIMEZONE           0
-     * </pre>
-     * 
-     * @throws ValidationException where component does not conform to RFC2446
+     * {@inheritDoc}
      */
     public void validateReply() throws ValidationException {
-
-        // FREEBUSY is 1+ in RFC2446 but 0+ in Calsify
-        
-        PropertyValidator.getInstance().assertOne(Property.ATTENDEE, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTEND, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
-        
-        PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
-        
-        PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
-        PropertyValidator.getInstance().assertNone(Property.SEQUENCE, getProperties());
+        Validator validator = (Validator) methodValidators.get(Method.REPLY);
+        validator.validate();
     }
 
     /**
@@ -704,6 +590,168 @@ public class VFreeBusy extends CalendarComponent {
         throw new ValidationException("METHOD:DECLINE-COUNTER not supported for VFREEBUSY components");
     }
 
+    /**
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1       MUST be "PUBLISH"
+     * 
+     * VFREEBUSY           1+
+     *     DTSTAMP         1
+     *     DTSTART         1       DateTime values must be in UTC
+     *     DTEND           1       DateTime values must be in UTC
+     *     FREEBUSY        1+      MUST be BUSYTIME. Multiple instances are
+     *                             allowed. Multiple instances must be sorted
+     *                             in ascending order
+     *     ORGANIZER       1       MUST contain the address of originator of
+     *                             busy time data.
+     *     UID             1
+     *     COMMENT         0 or 1
+     *     CONTACT         0+
+     *     X-PROPERTY      0+
+     *     URL             0 or 1  Specifies busy time URL
+     * 
+     *     ATTENDEE        0
+     *     DURATION        0
+     *     REQUEST-STATUS  0
+     * 
+     * X-COMPONENT         0+
+     * 
+     * VEVENT              0
+     * VTODO               0
+     * VJOURNAL            0
+     * VTIMEZONE           0
+     * VALARM              0
+     * </pre>
+     * 
+     */
+    private class PublishValidator implements Validator {
+        
+        public void validate() throws ValidationException {
+            PropertyValidator.getInstance().assertOneOrMore(Property.FREEBUSY, getProperties());
+            
+            PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.DTEND, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+            
+            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+            PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+            
+            PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
+            PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+            PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+        }
+    }
+    
+    /**
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1      MUST be "REPLY"
+     * 
+     * VFREEBUSY           1
+     *     ATTENDEE        1      (address of recipient replying)
+     *     DTSTAMP         1
+     *     DTEND           1      DateTime values must be in UTC
+     *     DTSTART         1      DateTime values must be in UTC
+     *     FREEBUSY        0+      (values MUST all be of the same data
+     *                             type. Multiple instances are allowed.
+     *                             Multiple instances MUST be sorted in
+     *                             ascending order. Values MAY NOT overlap)
+     *     ORGANIZER       1       MUST be the request originator's address
+     *     UID             1
+     * 
+     *     COMMENT         0 or 1
+     *     CONTACT         0+
+     *     REQUEST-STATUS  0+
+     *     URL             0 or 1  (specifies busy time URL)
+     *     X-PROPERTY      0+
+     *     DURATION        0
+     *     SEQUENCE        0
+     * 
+     * X-COMPONENT         0+
+     * VALARM              0
+     * VEVENT              0
+     * VTODO               0
+     * VJOURNAL            0
+     * VTIMEZONE           0
+     * </pre>
+     * 
+     */
+    private class ReplyValidator implements Validator {
+        
+        public void validate() throws ValidationException {
+
+            // FREEBUSY is 1+ in RFC2446 but 0+ in Calsify
+            
+            PropertyValidator.getInstance().assertOne(Property.ATTENDEE, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.DTEND, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+            
+            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+            PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+            
+            PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+            PropertyValidator.getInstance().assertNone(Property.SEQUENCE, getProperties());
+        }
+    }
+    
+    /**
+     * <pre>
+     * Component/Property  Presence
+     * ------------------- ----------------------------------------------
+     * METHOD              1      MUST be "REQUEST"
+     * 
+     * VFREEBUSY           1
+     *     ATTENDEE        1+     contain the address of the calendar store
+     *     DTEND           1      DateTime values must be in UTC
+     *     DTSTAMP         1
+     *     DTSTART         1      DateTime values must be in UTC
+     *     ORGANIZER       1      MUST be the request originator's address
+     *     UID             1
+     *     COMMENT         0 or 1
+     *     CONTACT         0+
+     *     X-PROPERTY      0+
+     * 
+     *     FREEBUSY        0
+     *     DURATION        0
+     *     REQUEST-STATUS  0
+     *     URL             0
+     * 
+     * X-COMPONENT         0+
+     * VALARM              0
+     * VEVENT              0
+     * VTODO               0
+     * VJOURNAL            0
+     * VTIMEZONE           0
+     * </pre>
+     * 
+     */
+    private class RequestValidator implements Validator {
+        
+        public void validate() throws ValidationException {
+            PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
+            
+            PropertyValidator.getInstance().assertOne(Property.DTEND, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+            PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+            
+            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
+            
+            PropertyValidator.getInstance().assertNone(Property.FREEBUSY, getProperties());
+            PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+            PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+            PropertyValidator.getInstance().assertNone(Property.URL, getProperties());
+        }
+    }
+    
     /**
      * @return the CONTACT property or null if not specified
      */

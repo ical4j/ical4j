@@ -39,10 +39,12 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.Validator;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
 
@@ -247,6 +249,14 @@ public class VAvailability extends CalendarComponent {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected Validator getValidator(Method method) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
     /**
      * {@inheritDoc}
      */

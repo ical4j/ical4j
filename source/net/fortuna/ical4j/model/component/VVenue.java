@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.Validator;
+import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
 
@@ -184,6 +186,14 @@ public class VVenue extends CalendarComponent {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    protected Validator getValidator(Method method) {
+        // No method validation required.. 
+        return EMPTY_VALIDATOR;
+    }
+    
     /**
      * {@inheritDoc}
      */

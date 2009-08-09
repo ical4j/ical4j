@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.Validator;
+import net.fortuna.ical4j.model.property.Method;
 
 /**
  * $Id$
@@ -49,7 +51,9 @@ public abstract class CalendarComponent extends Component {
      * 
      */
     private static final long serialVersionUID = -5832972592377720592L;
-
+    
+    protected static final Validator EMPTY_VALIDATOR = new EmptyValidator();
+    
     /**
      * @param name component name
      */
@@ -66,50 +70,86 @@ public abstract class CalendarComponent extends Component {
     }
 
     /**
+     * Perform ITIP validation.
+     * @throws ValidationException where the component does not comply with RFC2446
+     */
+    public final void validate(Method method) throws ValidationException {
+        Validator validator = getValidator(method);
+        if (validator != null) {
+            validator.validate();
+        }
+        else {
+            throw new ValidationException("Unsupported method: " + method);
+        }
+    }
+
+    /**
+     * @param method a method to validate on
+     * @return a validator for the specified method or null if the method is not supported
+     */
+    protected abstract Validator getValidator(Method method);
+    
+    /**
      * Apply validation for METHOD=PUBLISH.
      * @throws ValidationException where the component does not comply with RFC2446
+     * @deprecated
      */
     public abstract void validatePublish() throws ValidationException;
 
     /**
      * Apply validation for METHOD=REQUEST.
      * @throws ValidationException where the component does not comply with RFC2446
+     * @deprecated
      */
     public abstract void validateRequest() throws ValidationException;
 
     /**
      * Apply validation for METHOD=REPLY.
      * @throws ValidationException where the component does not comply with RFC2446
+     * @deprecated
      */
     public abstract void validateReply() throws ValidationException;
 
     /**
      * Apply validation for METHOD=ADD.
      * @throws ValidationException where the component does not comply with RFC2446
+     * @deprecated
      */
     public abstract void validateAdd() throws ValidationException;
 
     /**
      * Apply validation for METHOD=CANCEL.
      * @throws ValidationException where the component does not comply with RFC2446
+     * @deprecated
      */
     public abstract void validateCancel() throws ValidationException;
 
     /**
      * Apply validation for METHOD=REFRESH.
      * @throws ValidationException where the component does not comply with RFC2446
+     * @deprecated
      */
     public abstract void validateRefresh() throws ValidationException;
 
     /**
      * Apply validation for METHOD=COUNTER.
      * @throws ValidationException where the component does not comply with RFC2446
+     * @deprecated
      */
     public abstract void validateCounter() throws ValidationException;
 
     /**
      * Apply validation for METHOD=DECLINE-COUNTER.
      * @throws ValidationException where the component does not comply with RFC2446
+     * @deprecated
      */
     public abstract void validateDeclineCounter() throws ValidationException;
+    
+    private static class EmptyValidator implements Validator {
+        
+        public void validate() throws ValidationException {
+            // TODO Auto-generated method stub
+            
+        }
+    }
 }
