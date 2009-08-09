@@ -77,15 +77,17 @@ import org.apache.commons.logging.LogFactory;
  * @version 2.0
  * @author Ben Fortuna
  */
-public class CalendarBuilder implements ContentHandler {
+public class CalendarBuilder {
 
     private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
     private Log log = LogFactory.getLog(CalendarBuilder.class);
 
-    private CalendarParser parser;
+    private final CalendarParser parser;
+    
+    private final ContentHandler contentHandler;
 
-    private TimeZoneRegistry registry;
+    private final TimeZoneRegistry registry;
 
     protected Calendar calendar;
 
@@ -131,6 +133,7 @@ public class CalendarBuilder implements ContentHandler {
             final TimeZoneRegistry registry) {
         this.parser = parser;
         this.registry = registry;
+        this.contentHandler = new ContentHandlerImpl();
     }
 
     /**
@@ -173,7 +176,7 @@ public class CalendarBuilder implements ContentHandler {
         property = null;
         datesMissingTimezones = new ArrayList();
 
-        parser.parse(uin, this);
+        parser.parse(uin, contentHandler);
 
         if(datesMissingTimezones.size()>0 && registry!=null)
             resolveTimezones();
@@ -181,156 +184,158 @@ public class CalendarBuilder implements ContentHandler {
         return calendar;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.data.ContentHandler#endCalendar()
-     */
-    public void endCalendar() {
-        // do nothing..
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.data.ContentHandler#endComponent(java.lang.String)
-     */
-    public void endComponent(final String name) {
-        if (component != null) {
-            if (subComponent != null) {
-                if (component instanceof VTimeZone) {
-                    ((VTimeZone) component).getObservances().add(subComponent);
-                }
-                else if (component instanceof VEvent) {
-                    ((VEvent) component).getAlarms().add(subComponent);
-                }
-                else if (component instanceof VToDo) {
-                    ((VToDo) component).getAlarms().add(subComponent);
-                }
-                else if (component instanceof VAvailability) {
-                    ((VAvailability) component).getAvailable().add(subComponent);
-                }
-                subComponent = null;
-            }
-            else {
-                calendar.getComponents().add(component);
-                if (component instanceof VTimeZone && registry != null) {
-                    // register the timezone for use with iCalendar objects..
-                    registry.register(new TimeZone((VTimeZone) component));
-                }
-                component = null;
-            }
+    private class ContentHandlerImpl implements ContentHandler {
+        /*
+         * (non-Javadoc)
+         * @see net.fortuna.ical4j.data.ContentHandler#endCalendar()
+         */
+        public void endCalendar() {
+            // do nothing..
         }
-    }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.data.ContentHandler#endProperty(java.lang.String)
-     */
-    public void endProperty(final String name) {
-        if (property != null) {
-            // replace with a constant instance if applicable..
-            property = Constants.forProperty(property);
+        /*
+         * (non-Javadoc)
+         * @see net.fortuna.ical4j.data.ContentHandler#endComponent(java.lang.String)
+         */
+        public void endComponent(final String name) {
             if (component != null) {
                 if (subComponent != null) {
-                    subComponent.getProperties().add(property);
+                    if (component instanceof VTimeZone) {
+                        ((VTimeZone) component).getObservances().add(subComponent);
+                    }
+                    else if (component instanceof VEvent) {
+                        ((VEvent) component).getAlarms().add(subComponent);
+                    }
+                    else if (component instanceof VToDo) {
+                        ((VToDo) component).getAlarms().add(subComponent);
+                    }
+                    else if (component instanceof VAvailability) {
+                        ((VAvailability) component).getAvailable().add(subComponent);
+                    }
+                    subComponent = null;
                 }
                 else {
-                    component.getProperties().add(property);
+                    calendar.getComponents().add(component);
+                    if (component instanceof VTimeZone && registry != null) {
+                        // register the timezone for use with iCalendar objects..
+                        registry.register(new TimeZone((VTimeZone) component));
+                    }
+                    component = null;
                 }
             }
-            else if (calendar != null) {
-                calendar.getProperties().add(property);
-            }
-
-            property = null;
         }
-    }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.data.ContentHandler#parameter(java.lang.String, java.lang.String)
-     */
-    public void parameter(final String name, final String value) throws URISyntaxException {
-        if (property != null) {
-            // parameter names are case-insensitive, but convert to upper case to simplify further processing
-            final Parameter param = ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value);
-            property.getParameters().add(param);
-            if (param instanceof TzId && registry != null) {
-                final TimeZone timezone = registry.getTimeZone(param.getValue());
-                if (timezone != null) {
-                    try {
-                        ((DateProperty) property).setTimeZone(timezone);
+        /*
+         * (non-Javadoc)
+         * @see net.fortuna.ical4j.data.ContentHandler#endProperty(java.lang.String)
+         */
+        public void endProperty(final String name) {
+            if (property != null) {
+                // replace with a constant instance if applicable..
+                property = Constants.forProperty(property);
+                if (component != null) {
+                    if (subComponent != null) {
+                        subComponent.getProperties().add(property);
                     }
-                    catch (ClassCastException e) {
+                    else {
+                        component.getProperties().add(property);
+                    }
+                }
+                else if (calendar != null) {
+                    calendar.getProperties().add(property);
+                }
+
+                property = null;
+            }
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see net.fortuna.ical4j.data.ContentHandler#parameter(java.lang.String, java.lang.String)
+         */
+        public void parameter(final String name, final String value) throws URISyntaxException {
+            if (property != null) {
+                // parameter names are case-insensitive, but convert to upper case to simplify further processing
+                final Parameter param = ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value);
+                property.getParameters().add(param);
+                if (param instanceof TzId && registry != null) {
+                    final TimeZone timezone = registry.getTimeZone(param.getValue());
+                    if (timezone != null) {
                         try {
-                            ((DateListProperty) property).setTimeZone(timezone);
+                            ((DateProperty) property).setTimeZone(timezone);
                         }
-                        catch (ClassCastException e2) {
-                            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
-                                log.warn("Error setting timezone [" + param
-                                        + "] on property [" + property.getName()
-                                        + "]", e);
+                        catch (ClassCastException e) {
+                            try {
+                                ((DateListProperty) property).setTimeZone(timezone);
                             }
-                            else {
-                                throw e2;
+                            catch (ClassCastException e2) {
+                                if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                                    log.warn("Error setting timezone [" + param
+                                            + "] on property [" + property.getName()
+                                            + "]", e);
+                                }
+                                else {
+                                    throw e2;
+                                }
                             }
                         }
+                    } else {
+                        // VTIMEZONE may be defined later, so so keep
+                        // track of dates until all components have been
+                        // parsed, and then try again later
+                        datesMissingTimezones.add(property);
                     }
-                } else {
-                    // VTIMEZONE may be defined later, so so keep
-                    // track of dates until all components have been
-                    // parsed, and then try again later
-                    datesMissingTimezones.add(property);
                 }
             }
         }
-    }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.data.ContentHandler#propertyValue(java.lang.String)
-     */
-    public void propertyValue(final String value) throws URISyntaxException,
-            ParseException, IOException {
-        
-        if (property != null) {
-            if (property instanceof Escapable) {
-                property.setValue(Strings.unescape(value));
+        /*
+         * (non-Javadoc)
+         * @see net.fortuna.ical4j.data.ContentHandler#propertyValue(java.lang.String)
+         */
+        public void propertyValue(final String value) throws URISyntaxException,
+                ParseException, IOException {
+            
+            if (property != null) {
+                if (property instanceof Escapable) {
+                    property.setValue(Strings.unescape(value));
+                }
+                else {
+                    property.setValue(value);
+                }
+            }
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see net.fortuna.ical4j.data.ContentHandler#startCalendar()
+         */
+        public void startCalendar() {
+            calendar = new Calendar();
+        }
+
+        /*
+         * (non-Javadoc)
+         * @see net.fortuna.ical4j.data.ContentHandler#startComponent(java.lang.String)
+         */
+        public void startComponent(final String name) {
+            if (component != null) {
+                subComponent = ComponentFactory.getInstance().createComponent(name);
             }
             else {
-                property.setValue(value);
+                component = ComponentFactory.getInstance().createComponent(name);
             }
         }
-    }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.data.ContentHandler#startCalendar()
-     */
-    public void startCalendar() {
-        calendar = new Calendar();
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.data.ContentHandler#startComponent(java.lang.String)
-     */
-    public void startComponent(final String name) {
-        if (component != null) {
-            subComponent = ComponentFactory.getInstance().createComponent(name);
+        /*
+         * (non-Javadoc)
+         * @see net.fortuna.ical4j.data.ContentHandler#startProperty(java.lang.String)
+         */
+        public void startProperty(final String name) {
+            // property names are case-insensitive, but convert to upper case to simplify further processing
+            property = PropertyFactoryImpl.getInstance().createProperty(
+                    name.toUpperCase());
         }
-        else {
-            component = ComponentFactory.getInstance().createComponent(name);
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.data.ContentHandler#startProperty(java.lang.String)
-     */
-    public void startProperty(final String name) {
-        // property names are case-insensitive, but convert to upper case to simplify further processing
-        property = PropertyFactoryImpl.getInstance().createProperty(
-                name.toUpperCase());
     }
 
     /**

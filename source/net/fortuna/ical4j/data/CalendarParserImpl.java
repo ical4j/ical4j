@@ -67,6 +67,18 @@ public class CalendarParserImpl implements CalendarParser {
 
     private Log log = LogFactory.getLog(CalendarParserImpl.class);
 
+    private final ComponentListParser componentListParser = new ComponentListParser();
+
+    private final ComponentParser componentParser = new ComponentParser();
+
+    private final PropertyListParser propertyListParser = new PropertyListParser();
+
+    private final PropertyParser propertyParser = new PropertyParser();
+
+    private final ParameterListParser paramListParser = new ParameterListParser();
+
+    private final ParameterParser paramParser = new ParameterParser();
+    
     /**
      * {@inheritDoc}
      */
@@ -107,10 +119,10 @@ public class CalendarParserImpl implements CalendarParser {
             handler.startCalendar();
 
             // parse calendar properties..
-            parsePropertyList(tokeniser, in, handler);
+            propertyListParser.parse(tokeniser, in, handler);
 
             // parse components..
-            parseComponentList(tokeniser, in, handler);
+            componentListParser.parse(tokeniser, in, handler);
 
             // END:VCALENDAR
             // assertToken(tokeniser,Calendar.END);
@@ -144,24 +156,27 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParserException
      */
-    private void parsePropertyList(final StreamTokenizer tokeniser, Reader in,
-            final ContentHandler handler) throws IOException, ParseException,
-            URISyntaxException, ParserException {
+    private class PropertyListParser {
+        
+        public void parse(final StreamTokenizer tokeniser, Reader in,
+                final ContentHandler handler) throws IOException, ParseException,
+                URISyntaxException, ParserException {
 
-        assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
+            assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
-        while (/*
-                 * !Component.BEGIN.equals(tokeniser.sval) &&
-                 */!Component.END.equals(tokeniser.sval)) {
-            // check for timezones observances or vevent/vtodo alarms..
-            if (Component.BEGIN.equals(tokeniser.sval)) {
-                parseComponent(tokeniser, in, handler);
+            while (/*
+                     * !Component.BEGIN.equals(tokeniser.sval) &&
+                     */!Component.END.equals(tokeniser.sval)) {
+                // check for timezones observances or vevent/vtodo alarms..
+                if (Component.BEGIN.equals(tokeniser.sval)) {
+                    componentParser.parse(tokeniser, in, handler);
+                }
+                else {
+                    propertyParser.parse(tokeniser, in, handler);
+                }
+                absorbWhitespace(tokeniser);
+                // assertToken(tokeniser, StreamTokenizer.TT_WORD);
             }
-            else {
-                parseProperty(tokeniser, in, handler);
-            }
-            absorbWhitespace(tokeniser);
-            // assertToken(tokeniser, StreamTokenizer.TT_WORD);
         }
     }
 
@@ -173,71 +188,74 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParseException
      */
-    private void parseProperty(final StreamTokenizer tokeniser, Reader in,
-            final ContentHandler handler) throws IOException, ParserException,
-            URISyntaxException, ParseException {
+    private class PropertyParser {
+        
+        private void parse(final StreamTokenizer tokeniser, Reader in,
+                final ContentHandler handler) throws IOException, ParserException,
+                URISyntaxException, ParseException {
 
-        final String name = tokeniser.sval;
+            final String name = tokeniser.sval;
 
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Property [" + name + "]");
-        }
-
-        handler.startProperty(name);
-
-        parseParameterList(tokeniser, in, handler);
-
-        // it appears that control tokens (ie. ':') are allowed
-        // after the first instance on a line is used.. as such
-        // we must continue appending to value until EOL is
-        // reached..
-        // assertToken(tokeniser, StreamTokenizer.TT_WORD);
-
-        // String value = tokeniser.sval;
-        final StringBuffer value = new StringBuffer();
-
-        // assertToken(tokeniser,StreamTokenizer.TT_EOL);
-
-        // DQUOTE is ordinary char for property value
-        // From sec 4.3.11 of rfc-2445:
-        // text       = *(TSAFE-CHAR / ":" / DQUOTE / ESCAPED-CHAR)
-        //
-        tokeniser.ordinaryChar('"');
-        int nextToken = tokeniser.nextToken();
-
-        while (nextToken != StreamTokenizer.TT_EOL
-                && nextToken != StreamTokenizer.TT_EOF) {
-
-            if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
-                value.append(tokeniser.sval);
-            }
-            else {
-                value.append((char) tokeniser.ttype);
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Property [" + name + "]");
             }
 
-            nextToken = tokeniser.nextToken();
-        }
-        
-        // reset DQUOTE to be quote char
-        tokeniser.quoteChar('"');
-        
-        if (nextToken == StreamTokenizer.TT_EOF) {
-            throw new ParserException("Unexpected end of file",
-                    getLineNumber(tokeniser, in));
-        }
+            handler.startProperty(name);
 
-        try {
-            handler.propertyValue(value.toString());
-        }
-        catch (ParseException e) {
-            ParseException eNew = new ParseException("[" + name + "] " + e.getMessage(), e.getErrorOffset());
-            eNew.initCause(e);
-            throw eNew;
-        }
+            paramListParser.parse(tokeniser, in, handler);
 
-        handler.endProperty(name);
+            // it appears that control tokens (ie. ':') are allowed
+            // after the first instance on a line is used.. as such
+            // we must continue appending to value until EOL is
+            // reached..
+            // assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
+            // String value = tokeniser.sval;
+            final StringBuffer value = new StringBuffer();
+
+            // assertToken(tokeniser,StreamTokenizer.TT_EOL);
+
+            // DQUOTE is ordinary char for property value
+            // From sec 4.3.11 of rfc-2445:
+            // text       = *(TSAFE-CHAR / ":" / DQUOTE / ESCAPED-CHAR)
+            //
+            tokeniser.ordinaryChar('"');
+            int nextToken = tokeniser.nextToken();
+
+            while (nextToken != StreamTokenizer.TT_EOL
+                    && nextToken != StreamTokenizer.TT_EOF) {
+
+                if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
+                    value.append(tokeniser.sval);
+                }
+                else {
+                    value.append((char) tokeniser.ttype);
+                }
+
+                nextToken = tokeniser.nextToken();
+            }
+            
+            // reset DQUOTE to be quote char
+            tokeniser.quoteChar('"');
+            
+            if (nextToken == StreamTokenizer.TT_EOF) {
+                throw new ParserException("Unexpected end of file",
+                        getLineNumber(tokeniser, in));
+            }
+
+            try {
+                handler.propertyValue(value.toString());
+            }
+            catch (ParseException e) {
+                ParseException eNew = new ParseException("[" + name + "] " + e.getMessage(), e.getErrorOffset());
+                eNew.initCause(e);
+                throw eNew;
+            }
+
+            handler.endProperty(name);
+
+        }
     }
 
     /**
@@ -247,12 +265,15 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws ParserException
      * @throws URISyntaxException
      */
-    private void parseParameterList(final StreamTokenizer tokeniser, Reader in,
-            final ContentHandler handler) throws IOException, ParserException,
-            URISyntaxException {
+    private class ParameterListParser {
+        
+        public void parse(final StreamTokenizer tokeniser, Reader in,
+                final ContentHandler handler) throws IOException, ParserException,
+                URISyntaxException {
 
-        while (tokeniser.nextToken() == ';') {
-            parseParameter(tokeniser, in, handler);
+            while (tokeniser.nextToken() == ';') {
+                paramParser.parse(tokeniser, in, handler);
+            }
         }
     }
 
@@ -263,38 +284,41 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws ParserException
      * @throws URISyntaxException
      */
-    private void parseParameter(final StreamTokenizer tokeniser, Reader in,
-            final ContentHandler handler) throws IOException, ParserException,
-            URISyntaxException {
+    private class ParameterParser {
+        
+        private void parse(final StreamTokenizer tokeniser, Reader in,
+                final ContentHandler handler) throws IOException, ParserException,
+                URISyntaxException {
 
-        assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
+            assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
-        final String paramName = tokeniser.sval;
+            final String paramName = tokeniser.sval;
 
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Parameter [" + paramName + "]");
-        }
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Parameter [" + paramName + "]");
+            }
 
-        assertToken(tokeniser, in, '=');
+            assertToken(tokeniser, in, '=');
 
-        final StringBuffer paramValue = new StringBuffer();
+            final StringBuffer paramValue = new StringBuffer();
 
-        // preserve quote chars..
-        if (tokeniser.nextToken() == '"') {
-            paramValue.append('"');
-            paramValue.append(tokeniser.sval);
-            paramValue.append('"');
-        }
-        else {
-            paramValue.append(tokeniser.sval);
-        }
+            // preserve quote chars..
+            if (tokeniser.nextToken() == '"') {
+                paramValue.append('"');
+                paramValue.append(tokeniser.sval);
+                paramValue.append('"');
+            }
+            else {
+                paramValue.append(tokeniser.sval);
+            }
 
-        try {
-            handler.parameter(paramName, paramValue.toString());
-        }
-        catch (ClassCastException cce) {
-            throw new ParserException("Error parsing parameter", getLineNumber(tokeniser, in), cce);
+            try {
+                handler.parameter(paramName, paramValue.toString());
+            }
+            catch (ClassCastException cce) {
+                throw new ParserException("Error parsing parameter", getLineNumber(tokeniser, in), cce);
+            }
         }
     }
 
@@ -306,14 +330,17 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParserException
      */
-    private void parseComponentList(final StreamTokenizer tokeniser, Reader in,
-            final ContentHandler handler) throws IOException, ParseException,
-            URISyntaxException, ParserException {
+    private class ComponentListParser {
+        
+        private void parse(final StreamTokenizer tokeniser, Reader in,
+                final ContentHandler handler) throws IOException, ParseException,
+                URISyntaxException, ParserException {
 
-        while (Component.BEGIN.equals(tokeniser.sval)) {
-            parseComponent(tokeniser, in, handler);
-            absorbWhitespace(tokeniser);
-            // assertToken(tokeniser, StreamTokenizer.TT_WORD);
+            while (Component.BEGIN.equals(tokeniser.sval)) {
+                componentParser.parse(tokeniser, in, handler);
+                absorbWhitespace(tokeniser);
+                // assertToken(tokeniser, StreamTokenizer.TT_WORD);
+            }
         }
     }
 
@@ -325,43 +352,46 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParserException
      */
-    private void parseComponent(final StreamTokenizer tokeniser, Reader in,
-            final ContentHandler handler) throws IOException, ParseException,
-            URISyntaxException, ParserException {
+    private class ComponentParser {
+        
+        private void parse(final StreamTokenizer tokeniser, Reader in,
+                final ContentHandler handler) throws IOException, ParseException,
+                URISyntaxException, ParserException {
 
-        assertToken(tokeniser, in, ':');
+            assertToken(tokeniser, in, ':');
 
-        assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
+            assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
-        final String name = tokeniser.sval;
+            final String name = tokeniser.sval;
 
-        handler.startComponent(name);
+            handler.startComponent(name);
 
-        assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
+            assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
 
-        parsePropertyList(tokeniser, in, handler);
+            propertyListParser.parse(tokeniser, in, handler);
 
-        /*
-         * // a special case for VTIMEZONE component which contains
-         * // sub-components.. 
-         * if (Component.VTIMEZONE.equals(name)) {
-         *     parseComponentList(tokeniser, handler);
-         * }
-         * // VEVENT/VTODO components may optionally have embedded VALARM
-         * // components.. 
-         * else if ((Component.VEVENT.equals(name) || Component.VTODO.equals(name))
-         *         &amp;&amp; Component.BEGIN.equals(tokeniser.sval)) {
-         *     parseComponentList(tokeniser, handler);
-         * }
-         */
+            /*
+             * // a special case for VTIMEZONE component which contains
+             * // sub-components.. 
+             * if (Component.VTIMEZONE.equals(name)) {
+             *     parseComponentList(tokeniser, handler);
+             * }
+             * // VEVENT/VTODO components may optionally have embedded VALARM
+             * // components.. 
+             * else if ((Component.VEVENT.equals(name) || Component.VTODO.equals(name))
+             *         &amp;&amp; Component.BEGIN.equals(tokeniser.sval)) {
+             *     parseComponentList(tokeniser, handler);
+             * }
+             */
 
-        assertToken(tokeniser, in, ':');
+            assertToken(tokeniser, in, ':');
 
-        assertToken(tokeniser, in, name);
+            assertToken(tokeniser, in, name);
 
-        assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
+            assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
 
-        handler.endComponent(name);
+            handler.endComponent(name);
+        }
     }
 
     /**
