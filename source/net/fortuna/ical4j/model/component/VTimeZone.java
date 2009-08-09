@@ -42,6 +42,7 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.Validator;
 import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzUrl;
@@ -128,6 +129,8 @@ public class VTimeZone extends CalendarComponent {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
+    private final Validator itipValidator = new ITIPValidator();
+    
     private ComponentList observances;
 
     /**
@@ -232,61 +235,60 @@ public class VTimeZone extends CalendarComponent {
      * {@inheritDoc}
      */
     public void validatePublish() throws ValidationException {
-        validateITIP();
+        itipValidator.validate();
     }
     
     /**
      * {@inheritDoc}
      */
     public void validateAdd() throws ValidationException {
-        validateITIP();
+        itipValidator.validate();
     }
 
     /**
      * {@inheritDoc}
      */
     public void validateCancel() throws ValidationException {
-        validateITIP();
+        itipValidator.validate();
     }
 
     /**
      * {@inheritDoc}
      */
     public void validateCounter() throws ValidationException {
-        validateITIP();
+        itipValidator.validate();
     }
 
     /**
      * {@inheritDoc}
      */
     public void validateDeclineCounter() throws ValidationException {
-        validateITIP();
+        itipValidator.validate();
     }
 
     /**
      * {@inheritDoc}
      */
     public void validateRefresh() throws ValidationException {
-        validateITIP();
+        itipValidator.validate();
     }
 
     /**
      * {@inheritDoc}
      */
     public void validateReply() throws ValidationException {
-        validateITIP();
+        itipValidator.validate();
     }
 
     /**
      * {@inheritDoc}
      */
     public void validateRequest() throws ValidationException {
-        validateITIP();
+        itipValidator.validate();
     }
 
     /**
      * Common validation for all iTIP methods.
-     * @throws ValidationException
      * 
      * <pre>
      *    Component/Property  Presence
@@ -320,15 +322,21 @@ public class VTimeZone extends CalendarComponent {
      *        X-PROPERTY      0+
      * </pre>
      */
-    private void validateITIP() throws ValidationException {
-        for (Iterator i = getObservances().iterator(); i.hasNext();) {
-            Observance observance = (Observance) i.next();
-            PropertyValidator.getInstance().assertOne(Property.DTSTART, observance.getProperties());
-            PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM, observance.getProperties());
-            PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO, observance.getProperties());
-            
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, observance.getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.TZNAME, observance.getProperties());
+    private class ITIPValidator implements Validator {
+        
+        /**
+         * {@inheritDoc}
+         */
+        public void validate() throws ValidationException {
+            for (Iterator i = getObservances().iterator(); i.hasNext();) {
+                Observance observance = (Observance) i.next();
+                PropertyValidator.getInstance().assertOne(Property.DTSTART, observance.getProperties());
+                PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM, observance.getProperties());
+                PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO, observance.getProperties());
+                
+                PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, observance.getProperties());
+                PropertyValidator.getInstance().assertOneOrLess(Property.TZNAME, observance.getProperties());
+            }
         }
     }
     
