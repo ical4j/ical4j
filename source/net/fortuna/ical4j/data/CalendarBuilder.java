@@ -40,6 +40,7 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -88,6 +89,8 @@ public class CalendarBuilder {
     private final ContentHandler contentHandler;
 
     private final TimeZoneRegistry registry;
+    
+    private List datesMissingTimezones;
 
     protected Calendar calendar;
 
@@ -96,8 +99,6 @@ public class CalendarBuilder {
     protected Component subComponent;
 
     protected Property property;
-    
-    protected ArrayList datesMissingTimezones;
 
     /**
      * Default constructor.
