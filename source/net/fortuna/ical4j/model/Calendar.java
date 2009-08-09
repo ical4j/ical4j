@@ -309,7 +309,8 @@ public class Calendar implements Serializable {
 
 //        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // validate method..
-            if (Method.PUBLISH.equals(getProperty(Property.METHOD))) {
+            Method method = (Method) getProperty(Property.METHOD);
+            if (Method.PUBLISH.equals(method)) {
                 if (getComponent(Component.VEVENT) != null) {
                     ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
                     ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
@@ -334,11 +335,6 @@ public class Calendar implements Serializable {
 //                    ComponentValidator.assertNone(Component.VEVENT, getComponents());
 //                    ComponentValidator.assertNone(Component.VTODO, getComponents());
                 }
-                
-                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
-                    final CalendarComponent component = (CalendarComponent) i.next();
-                    component.validatePublish();
-                }
             }
             else if (Method.REQUEST.equals(getProperty(Property.METHOD))) {
                 if (getComponent(Component.VEVENT) != null) {
@@ -356,11 +352,6 @@ public class Calendar implements Serializable {
 //                  ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
 //                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
                     ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-                
-                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
-                    final CalendarComponent component = (CalendarComponent) i.next();
-                    component.validateRequest();
                 }
             }
             else if (Method.REPLY.equals(getProperty(Property.METHOD))) {
@@ -386,11 +377,6 @@ public class Calendar implements Serializable {
 //                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
                     ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
                 }
-                
-                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
-                    final CalendarComponent component = (CalendarComponent) i.next();
-                    component.validateReply();
-                }
             }
             else if (Method.ADD.equals(getProperty(Property.METHOD))) {
                 if (getComponent(Component.VEVENT) != null) {
@@ -409,11 +395,6 @@ public class Calendar implements Serializable {
                     ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
 //                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
 //                  ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                
-                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
-                    final CalendarComponent component = (CalendarComponent) i.next();
-                    component.validateAdd();
                 }
             }
             else if (Method.CANCEL.equals(getProperty(Property.METHOD))) {
@@ -437,11 +418,6 @@ public class Calendar implements Serializable {
 //                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
 //                  ComponentValidator.assertNone(Component.VTODO, getComponents());
                 }
-                
-                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
-                    final CalendarComponent component = (CalendarComponent) i.next();
-                    component.validateCancel();
-                }
             }
             else if (Method.REFRESH.equals(getProperty(Property.METHOD))) {
                 if (getComponent(Component.VEVENT) != null) {
@@ -457,11 +433,6 @@ public class Calendar implements Serializable {
                     ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
                     ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
                 }
-                
-                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
-                    final CalendarComponent component = (CalendarComponent) i.next();
-                    component.validateRefresh();
-                }
             }
             else if (Method.COUNTER.equals(getProperty(Property.METHOD))) {
                 if (getComponent(Component.VEVENT) != null) {
@@ -475,11 +446,6 @@ public class Calendar implements Serializable {
                     ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
 //                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
                     ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-                
-                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
-                    final CalendarComponent component = (CalendarComponent) i.next();
-                    component.validateCounter();
                 }
             }
             else if (Method.DECLINE_COUNTER.equals(getProperty(Property.METHOD))) {
@@ -496,13 +462,16 @@ public class Calendar implements Serializable {
 //                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
                     ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
                 }
-                
-                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
-                    final CalendarComponent component = (CalendarComponent) i.next();
-                    component.validateDeclineCounter();
-                }
             }
 //        }
+            
+            // perform ITIP validation on components..
+            if (method != null) {
+                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
+                    final CalendarComponent component = (CalendarComponent) i.next();
+                    component.validate(method);
+                }
+            }
         
         if (recurse) {
             validateProperties();
