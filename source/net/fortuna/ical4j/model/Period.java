@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Date;
 
@@ -49,23 +48,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * 
  * @author Ben Fortuna
  */
-public class Period implements Serializable, Comparable {
-
-    /**
-     * A flag indicating whether to include the start of the period in test functions.
-     */
-    public static final int INCLUSIVE_START = 1;
-
-    /**
-     * A flag indicating whether to include the end of the period in test functions.
-     */
-    public static final int INCLUSIVE_END = 2;
+public class Period extends DateRange implements Comparable {
     
     private static final long serialVersionUID = 7321090422911676490L;
-
-    private DateTime start;
-
-    private DateTime end;
 
     private Dur duration;
 
@@ -78,16 +63,17 @@ public class Period implements Serializable, Comparable {
      *             where the specified string is not a valid representation
      */
     public Period(final String aValue) throws ParseException {
-        start = new DateTime(aValue.substring(0, aValue.indexOf('/')));
+        super(parseStartDate(aValue), parseEndDate(aValue, true));
 
         // period may end in either a date-time or a duration..
         try {
-            end = new DateTime(aValue.substring(aValue.indexOf('/') + 1));
+            parseEndDate(aValue, false);
         }
         catch (ParseException pe) {
             // duration = DurationFormat.getInstance().parse(aValue);
-            duration = new Dur(aValue);
+            duration = parseDuration(aValue);
         }
+        normalise();
     }
 
     /**
@@ -99,16 +85,8 @@ public class Period implements Serializable, Comparable {
      *            the end date of the period
      */
     public Period(final DateTime start, final DateTime end) {
-        this.start = start;
-        this.end = end;
-
-        // ensure the end timezone is the same as the start..
-        if (end != null) {
-            end.setUtc(start.isUtc());
-            if (!start.isUtc()) {
-                end.setTimeZone(start.getTimeZone());
-            }
-        }
+        super(start, end);
+        normalise();
     }
 
     /**
@@ -120,10 +98,46 @@ public class Period implements Serializable, Comparable {
      *            the duration of the period
      */
     public Period(final DateTime start, final Dur duration) {
-        this.start = start;
+        super(start, new DateTime(duration.getTime(start)));
         this.duration = duration;
+        normalise();
     }
 
+    private static DateTime parseStartDate(String value) throws ParseException {
+        return new DateTime(value.substring(0, value.indexOf('/')));
+    }
+    
+    private static DateTime parseEndDate(String value, boolean resolve) throws ParseException {
+        DateTime end = null;
+        try {
+            end = new DateTime(value.substring(value.indexOf('/') + 1));
+        }
+        catch (ParseException e) {
+            if (resolve) {
+                Dur duration = parseDuration(value);
+                end = new DateTime(duration.getTime(parseStartDate(value)));
+            }
+            else {
+                throw e;
+            }
+        }
+        return end;
+    }
+    
+    private static Dur parseDuration(String value) {
+        return new Dur(value.substring(value.indexOf('/') + 1));
+    }
+    
+    private void normalise() {
+        // ensure the end timezone is the same as the start..
+        if (getStart().isUtc()) {
+            getEnd().setUtc(true);
+        }
+        else {
+            getEnd().setTimeZone(getStart().getTimeZone());
+        }
+    }
+    
     /**
      * Returns the duration of this period. If an explicit duration is not
      * specified, the duration is derived from the end date.
@@ -131,8 +145,8 @@ public class Period implements Serializable, Comparable {
      * @return the duration of this period in milliseconds.
      */
     public final Dur getDuration() {
-        if (end != null) {
-            return new Dur(start, end);
+        if (duration == null) {
+            return new Dur(getStart(), getEnd());
         }
         return duration;
     }
@@ -144,35 +158,14 @@ public class Period implements Serializable, Comparable {
      * @return the end date of this period.
      */
     public final DateTime getEnd() {
-        if (end == null) {
-            final DateTime derived = new DateTime(duration.getTime(start).getTime());
-            if (start.isUtc()) {
-                derived.setUtc(true);
-            }
-            else {
-                derived.setTimeZone(start.getTimeZone());
-            }
-            return derived;
-        }
-        return end;
+        return (DateTime) getRangeEnd();
     }
 
     /**
      * @return Returns the start.
      */
     public final DateTime getStart() {
-        return start;
-    }
-
-    /**
-     * Determines if the specified date occurs within this period (inclusive of
-     * period start and end).
-     * @param date a date to test for inclusion
-     * @return true if the specified date occurs within the current period
-     * 
-     */
-    public final boolean includes(final Date date) {
-        return includes(date, INCLUSIVE_START | INCLUSIVE_END);
+        return (DateTime) getRangeStart();
     }
 
     /**
@@ -188,106 +181,6 @@ public class Period implements Serializable, Comparable {
         else {
             return includes(date, 0);
         }
-    }
-
-    /**
-     * Decides whether a date falls within this period.
-     * @param date the date to be tested
-     * @param inclusiveMask specifies whether period start and end are included
-     * in the calculation
-     * @return true if the date is in the period, false otherwise
-     * @see Period#INCLUSIVE_START
-     * @see Period#INCLUSIVE_END
-     */
-    public final boolean includes(final Date date, final int inclusiveMask) {
-        boolean includes = true;
-        if ((inclusiveMask & INCLUSIVE_START) > 0) {
-            includes = includes && !getStart().after(date);
-        }
-        else {
-            includes = includes && getStart().before(date);
-        }
-        if ((inclusiveMask & INCLUSIVE_END) > 0) {
-            includes = includes && !getEnd().before(date);
-        }
-        else {
-            includes = includes && getEnd().after(date);
-        }
-        return includes;
-    }
-
-    /**
-     * Decides whether this period is completed before the given period starts.
-     * 
-     * @param period
-     *            a period that may or may not start after this period ends
-     * @return true if the specified period starts after this periods ends,
-     *         otherwise false
-     */
-    public final boolean before(final Period period) {
-        return (getEnd().before(period.getStart()));
-    }
-
-    /**
-     * Decides whether this period starts after the given period ends.
-     * 
-     * @param period
-     *            a period that may or may not end before this period starts
-     * @return true if the specified period end before this periods starts,
-     *         otherwise false
-     */
-    public final boolean after(final Period period) {
-        return (getStart().after(period.getEnd()));
-    }
-
-    /**
-     * Decides whether this period intersects with another one.
-     * 
-     * @param period
-     *            a possible intersecting period
-     * @return true if the specified period intersects this one, false
-     *         otherwise.
-     */
-    public final boolean intersects(final Period period) {
-        // Test for our start date in period
-        // (Exclude if it is the end date of test range)
-        if (period.includes(getStart()) && !period.getEnd().equals(getStart())) {
-            return true;
-        }
-        // Test for test range's start date in our range
-        // (Exclude if it is the end date of our range)
-        else if (includes(period.getStart())
-                && !getEnd().equals(period.getStart())) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Decides whether these periods are serial without a gap.
-     * @param period a period to test for adjacency
-     * @return true if one period immediately follows the other, false otherwise
-     */
-    public final boolean adjacent(final Period period) {
-        if (getStart().equals(period.getEnd())) {
-            return true;
-        } else if (getEnd().equals(period.getStart())) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Decides whether the given period is completely contained within this one.
-     * 
-     * @param period
-     *            the period that may be contained by this one
-     * @return true if this period covers all the dates of the specified period,
-     *         otherwise false
-     */
-    public final boolean contains(final Period period) {
-        // Test for period's start and end dates in our range
-        return (includes(period.getStart()) && includes(period.getEnd()));
     }
 
     /**
@@ -385,10 +278,8 @@ public class Period implements Serializable, Comparable {
      * @param utc indicates whether the period is in UTC time
      */
     public void setUtc(final boolean utc) {
-        start.setUtc(utc);
-        if (end != null) {
-            getEnd().setUtc(utc);
-        }
+        getStart().setUtc(utc);
+        getEnd().setUtc(utc);
     }
     
     /**
@@ -397,12 +288,10 @@ public class Period implements Serializable, Comparable {
      * @param timezone a timezone for the period
      */
     public final void setTimeZone(final TimeZone timezone) {
-        start.setUtc(false);
-        start.setTimeZone(timezone);
-        if (end != null) {
-            getEnd().setUtc(false);
-            getEnd().setTimeZone(timezone);
-        }
+        getStart().setUtc(false);
+        getStart().setTimeZone(timezone);
+        getEnd().setUtc(false);
+        getEnd().setTimeZone(timezone);
     }
     
     /**
@@ -410,11 +299,12 @@ public class Period implements Serializable, Comparable {
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
-        b.append(start);
+        b.append(getStart());
         b.append('/');
-        if (end != null) {
-            b.append(end);
-        } else {
+        if (duration == null) {
+            b.append(getEnd());
+        }
+        else {
             // b.append(DurationFormat.getInstance().format(duration));
             b.append(duration);
         }
@@ -445,8 +335,8 @@ public class Period implements Serializable, Comparable {
             return startCompare;
         }
         // start dates are equal, compare end dates..
-        else if (end != null) {
-            final int endCompare = end.compareTo(arg0.getEnd());
+        else if (duration == null) {
+            final int endCompare = getEnd().compareTo(arg0.getEnd());
             if (endCompare != 0) {
                 return endCompare;
             }
@@ -475,7 +365,7 @@ public class Period implements Serializable, Comparable {
      * {@inheritDoc}
      */
     public final int hashCode() {
-        return new HashCodeBuilder().append(start)
-            .append((end != null) ? (Object) end : duration).toHashCode();
+        return new HashCodeBuilder().append(getStart())
+            .append((duration == null) ? (Object) getEnd() : duration).toHashCode();
     }
 }

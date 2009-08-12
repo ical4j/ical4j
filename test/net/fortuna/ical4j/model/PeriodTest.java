@@ -511,8 +511,8 @@ public class PeriodTest extends TestCase {
                 (todayMillis - testMillis) < 5000);
         */
 
-        testPeriod = new Period(past, (DateTime) null);
-        suite.addTest(new PeriodTest("testGetStart", testPeriod, past));
+//        testPeriod = new Period(past, (DateTime) null);
+//        suite.addTest(new PeriodTest("testGetStart", testPeriod, past));
 
         /*
         testMillis = testPeriod.getEnd().getTime();
