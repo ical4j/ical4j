@@ -464,7 +464,6 @@ public class VFreeBusy extends CalendarComponent {
                 final Period period = (Period) i.next();
                 
                 // check if period outside bounds..
-//                if (period.getStart().after(end) || period.getEnd().before(start)) {
                 if (range.contains(period)) {
                     
                     // calculate duration between this period start and last period end..
@@ -472,11 +471,9 @@ public class VFreeBusy extends CalendarComponent {
                     if (freeDuration.getDuration().compareTo(duration) >= 0) {
                         fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
                     }
-                    if (period.getEnd().after(lastPeriodEnd)) {
-                        lastPeriodEnd = period.getEnd();
-                    }
                 }
-                else if (range.intersects(period) && lastPeriodEnd.before(period.getEnd())) {
+                
+                if (period.getEnd().after(lastPeriodEnd)) {
                     lastPeriodEnd = period.getEnd();
                 }
             }
