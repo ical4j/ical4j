@@ -38,6 +38,7 @@ import java.util.Map;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.DateRange;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Period;
@@ -396,12 +397,13 @@ public class VFreeBusy extends CalendarComponent {
         
         public FreeBusy build() {
             final PeriodList periods = getConsumedTime(components, start, end);
+            final DateRange range = new DateRange(start, end);
             // periods must be in UTC time for freebusy..
             periods.setUtc(true);
             for (final Iterator i = periods.iterator(); i.hasNext();) {
                 final Period period = (Period) i.next();
                 // check if period outside bounds..
-                if (period.getStart().after(end) || period.getEnd().before(start)) {
+                if (!range.intersects(period)) {
                     periods.remove(period);
                 }
             }
@@ -449,6 +451,7 @@ public class VFreeBusy extends CalendarComponent {
             final FreeBusy fb = new FreeBusy();
             fb.getParameters().add(FbType.FREE);
             final PeriodList periods = getConsumedTime(components, start, end);
+            final DateRange range = new DateRange(start, end);
             // Add final consumed time to avoid special-case end-of-list processing
             periods.add(new Period(end, end));
             // debugging..
@@ -459,16 +462,21 @@ public class VFreeBusy extends CalendarComponent {
             // where no time is consumed set the last period end as the range start..
             for (final Iterator i = periods.iterator(); i.hasNext();) {
                 final Period period = (Period) i.next();
+                
                 // check if period outside bounds..
-                if (period.getStart().after(end) || period.getEnd().before(start)) {
-                    continue;
+//                if (period.getStart().after(end) || period.getEnd().before(start)) {
+                if (range.contains(period)) {
+                    
+                    // calculate duration between this period start and last period end..
+                    final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
+                    if (freeDuration.getDuration().compareTo(duration) >= 0) {
+                        fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
+                    }
+                    if (period.getEnd().after(lastPeriodEnd)) {
+                        lastPeriodEnd = period.getEnd();
+                    }
                 }
-                // calculate duration between this period start and last period end..
-                final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
-                if (freeDuration.getDuration().compareTo(duration) >= 0) {
-                    fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
-                }
-                if (period.getEnd().after(lastPeriodEnd)) {
+                else if (range.intersects(period) && lastPeriodEnd.before(period.getEnd())) {
                     lastPeriodEnd = period.getEnd();
                 }
             }
