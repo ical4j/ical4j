@@ -71,18 +71,16 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * A {@link CalendarParser} that parses XHTML documents that include
- * calendar data marked up with the hCalendar microformat.
+ * A {@link CalendarParser} that parses XHTML documents that include calendar data marked up with the hCalendar
+ * microformat.
  * <p>
- * The parser treats the entire document as a single "vcalendar" context,
- * ignoring any <code>vcalendar</code> elements and adding all components in
- * the document to a single generated calendar.
+ * The parser treats the entire document as a single "vcalendar" context, ignoring any <code>vcalendar</code> elements
+ * and adding all components in the document to a single generated calendar.
  * </p>
  * <p>
- * Since hCalendar does not include product information,
- * the <code>PRODID</code> property is omitted from the generated calendar.
- * The hCalendar profile is supposed to define the iCalendar version that it
- * represents, but it does not, so version 2.0 is assumed.
+ * Since hCalendar does not include product information, the <code>PRODID</code> property is omitted from the generated
+ * calendar. The hCalendar profile is supposed to define the iCalendar version that it represents, but it does not, so
+ * version 2.0 is assumed.
  * </p>
  * <h3>Supported Components</h3>
  * <p>
@@ -93,57 +91,52 @@ import org.xml.sax.SAXParseException;
  * This parser recognizes the following properties:
  * </p>
  * <ul>
- * <li> "dtstart"</li>
- * <li> "dtend" </li>
- * <li> "duration" </li>
- * <li> "summary"</li>
- * <li> "uid" </li>
- * <li> "dtstamp" </li>
- * <li> "category" </li>
- * <li> "location" </li>
- * <li> "url" </li>
- * <li> "description" </li>
- * <li> "last-modified" </li>
- * <li> "status" </li>
- * <li> "class" </li>
- * <li> "attendee" </li>
- * <li> "contact" </li>
- * <li> "organizer" </li>
+ * <li>"dtstart"</li>
+ * <li>"dtend"</li>
+ * <li>"duration"</li>
+ * <li>"summary"</li>
+ * <li>"uid"</li>
+ * <li>"dtstamp"</li>
+ * <li>"category"</li>
+ * <li>"location"</li>
+ * <li>"url"</li>
+ * <li>"description"</li>
+ * <li>"last-modified"</li>
+ * <li>"status"</li>
+ * <li>"class"</li>
+ * <li>"attendee"</li>
+ * <li>"contact"</li>
+ * <li>"organizer"</li>
  * </ul>
  * <p>
- * hCalendar allows for some properties to be represented by nested
- * microformat records, including hCard, adr and geo. This parser does not
- * recognize these records. It simply accumulates the text content of any
- * child elements of the property element and uses the resulting string as
- * the property value.
+ * hCalendar allows for some properties to be represented by nested microformat records, including hCard, adr and geo.
+ * This parser does not recognize these records. It simply accumulates the text content of any child elements of the
+ * property element and uses the resulting string as the property value.
  * </p>
  * <h4>Date and Date-Time Properties</h4>
  * <p>
- * hCalendar date-time values are formatted according to RFC 3339. There is no
- * representation in this specification for time zone ids. All date-times
- * are specified either in UTC or with an offset that can be used to convert
- * the local time into UTC. Neither does hCal provide a reprsentation for
- * floating date-times. Therefore, all date-time values produced by this
- * parser are in UTC.
+ * hCalendar date-time values are formatted according to RFC 3339. There is no representation in this specification for
+ * time zone ids. All date-times are specified either in UTC or with an offset that can be used to convert the local
+ * time into UTC. Neither does hCal provide a reprsentation for floating date-times. Therefore, all date-time values
+ * produced by this parser are in UTC.
  * </p>
  * <p>
- * Some examples in the wild provide date and date-time values in iCalendar
- * format rather than RFC 3339 format. Although not technically legal
- * according to spec, these values are accepted. In this case, floating
- * date-times are produced by the parser.
+ * Some examples in the wild provide date and date-time values in iCalendar format rather than RFC 3339 format. Although
+ * not technically legal according to spec, these values are accepted. In this case, floating date-times are produced by
+ * the parser.
  * </p>
  * <h3>Supported Parameters</h3>
  * <p>
- * hCalendar does not define attributes, nested elements or other information
- * elements representing parameter data. Therefore, this parser does not
- * set any property parameters except as implied by property value data
- * (e.g. VALUE=DATE-TIME or VALUE=DATE for date-time properties).
+ * hCalendar does not define attributes, nested elements or other information elements representing parameter data.
+ * Therefore, this parser does not set any property parameters except as implied by property value data (e.g.
+ * VALUE=DATE-TIME or VALUE=DATE for date-time properties).
  * </p>
  */
 public class HCalendarParser implements CalendarParser {
-    private static final Log log = LogFactory.getLog(HCalendarParser.class);
-    private static final DocumentBuilderFactory BUILDER_FACTORY =
-        DocumentBuilderFactory.newInstance();
+    
+    private static final Log LOG = LogFactory.getLog(HCalendarParser.class);
+    
+    private static final DocumentBuilderFactory BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
     private static final XPath XPATH = XPathFactory.newInstance().newXPath();
     private static final XPathExpression XPATH_METHOD;
     private static final XPathExpression XPATH_VEVENTS;
@@ -166,39 +159,37 @@ public class HCalendarParser implements CalendarParser {
     private static final XPathExpression XPATH_SEQUENCE;
     private static final XPathExpression XPATH_ATTACH;
     private static final String HCAL_DATE_PATTERN = "yyyy-MM-dd";
-    private static final SimpleDateFormat HCAL_DATE_FORMAT =
-        new SimpleDateFormat(HCAL_DATE_PATTERN);
+    private static final SimpleDateFormat HCAL_DATE_FORMAT = new SimpleDateFormat(HCAL_DATE_PATTERN);
     private static final String HCAL_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ssz";
-    private static final SimpleDateFormat HCAL_DATE_TIME_FORMAT =
-        new SimpleDateFormat(HCAL_DATE_TIME_PATTERN);
+    private static final SimpleDateFormat HCAL_DATE_TIME_FORMAT = new SimpleDateFormat(HCAL_DATE_TIME_PATTERN);
 
     static {
         BUILDER_FACTORY.setNamespaceAware(true);
         BUILDER_FACTORY.setIgnoringComments(true);
 
-        XPATH_METHOD = _compileExpression("//*[contains(@class, 'method')]");
-        XPATH_VEVENTS = _compileExpression("//*[contains(@class, 'vevent')]");
-        XPATH_DTSTART = _compileExpression(".//*[contains(@class, 'dtstart')]");
-        XPATH_DTEND = _compileExpression(".//*[contains(@class, 'dtend')]");
-        XPATH_DURATION = _compileExpression(".//*[contains(@class, 'duration')]");
-        XPATH_SUMMARY = _compileExpression(".//*[contains(@class, 'summary')]");
-        XPATH_UID = _compileExpression(".//*[contains(@class, 'uid')]");
-        XPATH_DTSTAMP = _compileExpression(".//*[contains(@class, 'dtstamp')]");
-        XPATH_CATEGORY = _compileExpression(".//*[contains(@class, 'category')]");
-        XPATH_LOCATION = _compileExpression(".//*[contains(@class, 'location')]");
-        XPATH_URL = _compileExpression(".//*[contains(@class, 'url')]");
-        XPATH_DESCRIPTION = _compileExpression(".//*[contains(@class, 'description')]");
-        XPATH_LAST_MODIFIED = _compileExpression(".//*[contains(@class, 'last-modified')]");
-        XPATH_STATUS = _compileExpression(".//*[contains(@class, 'status')]");
-        XPATH_CLASS = _compileExpression(".//*[contains(@class, 'class')]");
-        XPATH_ATTENDEE = _compileExpression(".//*[contains(@class, 'attendee')]");
-        XPATH_CONTACT = _compileExpression(".//*[contains(@class, 'contact')]");
-        XPATH_ORGANIZER = _compileExpression(".//*[contains(@class, 'organizer')]");
-        XPATH_SEQUENCE = _compileExpression(".//*[contains(@class, 'sequence')]");
-        XPATH_ATTACH = _compileExpression(".//*[contains(@class, 'attach')]");
+        XPATH_METHOD = compileExpression("//*[contains(@class, 'method')]");
+        XPATH_VEVENTS = compileExpression("//*[contains(@class, 'vevent')]");
+        XPATH_DTSTART = compileExpression(".//*[contains(@class, 'dtstart')]");
+        XPATH_DTEND = compileExpression(".//*[contains(@class, 'dtend')]");
+        XPATH_DURATION = compileExpression(".//*[contains(@class, 'duration')]");
+        XPATH_SUMMARY = compileExpression(".//*[contains(@class, 'summary')]");
+        XPATH_UID = compileExpression(".//*[contains(@class, 'uid')]");
+        XPATH_DTSTAMP = compileExpression(".//*[contains(@class, 'dtstamp')]");
+        XPATH_CATEGORY = compileExpression(".//*[contains(@class, 'category')]");
+        XPATH_LOCATION = compileExpression(".//*[contains(@class, 'location')]");
+        XPATH_URL = compileExpression(".//*[contains(@class, 'url')]");
+        XPATH_DESCRIPTION = compileExpression(".//*[contains(@class, 'description')]");
+        XPATH_LAST_MODIFIED = compileExpression(".//*[contains(@class, 'last-modified')]");
+        XPATH_STATUS = compileExpression(".//*[contains(@class, 'status')]");
+        XPATH_CLASS = compileExpression(".//*[contains(@class, 'class')]");
+        XPATH_ATTENDEE = compileExpression(".//*[contains(@class, 'attendee')]");
+        XPATH_CONTACT = compileExpression(".//*[contains(@class, 'contact')]");
+        XPATH_ORGANIZER = compileExpression(".//*[contains(@class, 'organizer')]");
+        XPATH_SEQUENCE = compileExpression(".//*[contains(@class, 'sequence')]");
+        XPATH_ATTACH = compileExpression(".//*[contains(@class, 'attach')]");
     }
 
-    private static XPathExpression _compileExpression(String expr) {
+    private static XPathExpression compileExpression(String expr) {
         try {
             return XPATH.compile(expr);
         } catch (XPathException e) {
@@ -206,21 +197,21 @@ public class HCalendarParser implements CalendarParser {
         }
     }
 
-    public void parse(InputStream in,
-                      ContentHandler handler)
-        throws IOException, ParserException {
-         parse(new InputSource(in), handler);
-    }
-
-    public void parse(Reader in,
-                      ContentHandler handler)
-        throws IOException, ParserException {
+    /**
+     * {@inheritDoc}
+     */
+    public void parse(InputStream in, ContentHandler handler) throws IOException, ParserException {
         parse(new InputSource(in), handler);
     }
 
-    private void parse(InputSource in,
-                       ContentHandler handler)
-        throws IOException, ParserException {
+    /**
+     * {@inheritDoc}
+     */
+    public void parse(Reader in, ContentHandler handler) throws IOException, ParserException {
+        parse(new InputSource(in), handler);
+    }
+
+    private void parse(InputSource in, ContentHandler handler) throws IOException, ParserException {
         try {
             Document d = BUILDER_FACTORY.newDocumentBuilder().parse(in);
             buildCalendar(d, handler);
@@ -235,9 +226,7 @@ public class HCalendarParser implements CalendarParser {
         }
     }
 
-    private static NodeList findNodes(XPathExpression expr,
-                                      Object context)
-        throws ParserException {
+    private static NodeList findNodes(XPathExpression expr, Object context) throws ParserException {
         try {
             return (NodeList) expr.evaluate(context, XPathConstants.NODESET);
         } catch (XPathException e) {
@@ -245,9 +234,7 @@ public class HCalendarParser implements CalendarParser {
         }
     }
 
-    private static Node findNode(XPathExpression expr,
-                                 Object context)
-        throws ParserException {
+    private static Node findNode(XPathExpression expr, Object context) throws ParserException {
         try {
             return (Node) expr.evaluate(context, XPathConstants.NODE);
         } catch (XPathException e) {
@@ -255,12 +242,10 @@ public class HCalendarParser implements CalendarParser {
         }
     }
 
-    private static List findElements(XPathExpression expr,
-                                              Object context)
-        throws ParserException {
+    private static List findElements(XPathExpression expr, Object context) throws ParserException {
         NodeList nodes = findNodes(expr, context);
         ArrayList elements = new ArrayList();
-        for (int i=0; i<nodes.getLength(); i++) {
+        for (int i = 0; i < nodes.getLength(); i++) {
             Node n = nodes.item(i);
             if (n instanceof Element)
                 elements.add((Element) n);
@@ -268,17 +253,14 @@ public class HCalendarParser implements CalendarParser {
         return elements;
     }
 
-    private static Element findElement(XPathExpression expr,
-                                       Object context)
-        throws ParserException {
+    private static Element findElement(XPathExpression expr, Object context) throws ParserException {
         Node n = findNode(expr, context);
-        if (n == null || (! (n instanceof Element)))
+        if (n == null || (!(n instanceof Element)))
             return null;
         return (Element) n;
     }
 
-    private static String getTextContent(Element element)
-        throws ParserException {
+    private static String getTextContent(Element element) throws ParserException {
         try {
             String content = element.getFirstChild().getNodeValue();
             if (content != null) {
@@ -290,9 +272,7 @@ public class HCalendarParser implements CalendarParser {
         }
     }
 
-    private void buildCalendar(Document d,
-                               ContentHandler handler)
-        throws ParserException {
+    private void buildCalendar(Document d, ContentHandler handler) throws ParserException {
         // "The root class name for hCalendar is "vcalendar". An element with a
         // class name of "vcalendar" is itself called an hCalendar.
         //
@@ -309,22 +289,26 @@ public class HCalendarParser implements CalendarParser {
         // vcalendar element. In this case, we should probably only process
         // that element and log a warning about skipping the others.
 
-        if (log.isDebugEnabled())
-            log.debug("Building calendar");
+        if (LOG.isDebugEnabled())
+            LOG.debug("Building calendar");
 
         handler.startCalendar();
 
         // no PRODID, as the using application should set that itself
 
         handler.startProperty(Property.VERSION);
-        try { handler.propertyValue(Version.VERSION_2_0.getValue()); } catch (Exception e) {};
+        try {
+            handler.propertyValue(Version.VERSION_2_0.getValue());
+        } catch (Exception e) {
+        }
+        ;
         handler.endProperty(Property.VERSION);
 
         Element method = findElement(XPATH_METHOD, d);
         if (method != null) {
             buildProperty(method, Property.METHOD, handler);
         }
-        
+
         List vevents = findElements(XPATH_VEVENTS, d);
         for (Iterator i = vevents.iterator(); i.hasNext();) {
             Element vevent = (Element) i.next();
@@ -337,11 +321,9 @@ public class HCalendarParser implements CalendarParser {
         handler.endCalendar();
     }
 
-    private void buildEvent(Element element,
-                            ContentHandler handler)
-        throws ParserException {
-        if (log.isDebugEnabled())
-            log.debug("Building event");
+    private void buildEvent(Element element, ContentHandler handler) throws ParserException {
+        if (LOG.isDebugEnabled())
+            LOG.debug("Building event");
 
         handler.startComponent(Component.VEVENT);
 
@@ -371,21 +353,18 @@ public class HCalendarParser implements CalendarParser {
         buildProperty(findElement(XPATH_ORGANIZER, element), Property.ORGANIZER, handler);
         buildProperty(findElement(XPATH_SEQUENCE, element), Property.SEQUENCE, handler);
         buildProperty(findElement(XPATH_ATTACH, element), Property.ATTACH, handler);
-        
+
         handler.endComponent(Component.VEVENT);
     }
 
-    private void buildProperty(Element element,
-                               String propName,
-                               ContentHandler handler)
-        throws ParserException {
+    private void buildProperty(Element element, String propName, ContentHandler handler) throws ParserException {
         if (element == null)
             return;
 
-        if (log.isDebugEnabled())
-            log.debug("Building property " + propName);
+        if (LOG.isDebugEnabled())
+            LOG.debug("Building property " + propName);
 
-        String className = _className(propName);
+        String className = className(propName);
         String elementName = element.getLocalName().toLowerCase();
 
         String value = null;
@@ -397,50 +376,50 @@ public class HCalendarParser implements CalendarParser {
             value = element.getAttribute("title");
             if (StringUtils.isBlank(value))
                 throw new ParserException("Abbr element '" + className + "' requires a non-empty title", -1);
-            if (log.isDebugEnabled())
-                log.debug("Setting value '" + value + "' from title attribute");
+            if (LOG.isDebugEnabled())
+                LOG.debug("Setting value '" + value + "' from title attribute");
         } else if (isHeaderElement(elementName)) {
             // try title first. if that's not set, fall back to text content.
             value = element.getAttribute("title");
-            if (! StringUtils.isBlank(value)) {
-                if (log.isDebugEnabled())
-                    log.debug("Setting value '" + value + "' from title attribute");
+            if (!StringUtils.isBlank(value)) {
+                if (LOG.isDebugEnabled())
+                    LOG.debug("Setting value '" + value + "' from title attribute");
             } else {
                 value = getTextContent(element);
-                if (log.isDebugEnabled())
-                    log.debug("Setting value '" + value + "' from text content");
+                if (LOG.isDebugEnabled())
+                    LOG.debug("Setting value '" + value + "' from text content");
             }
         } else if (elementName.equals("a") && isUrlProperty(propName)) {
             value = element.getAttribute("href");
             if (StringUtils.isBlank(value))
                 throw new ParserException("A element '" + className + "' requires a non-empty href", -1);
-            if (log.isDebugEnabled())
-                log.debug("Setting value '" + value + "' from href attribute");
+            if (LOG.isDebugEnabled())
+                LOG.debug("Setting value '" + value + "' from href attribute");
         } else if (elementName.equals("img")) {
             if (isUrlProperty(propName)) {
                 value = element.getAttribute("src");
                 if (StringUtils.isBlank(value))
                     throw new ParserException("Img element '" + className + "' requires a non-empty src", -1);
-                 if (log.isDebugEnabled())
-                     log.debug("Setting value '" + value + "' from src attribute");
+                if (LOG.isDebugEnabled())
+                    LOG.debug("Setting value '" + value + "' from src attribute");
             } else {
                 value = element.getAttribute("alt");
                 if (StringUtils.isBlank(value))
                     throw new ParserException("Img element '" + className + "' requires a non-empty alt", -1);
-                if (log.isDebugEnabled())
-                    log.debug("Setting value '" + value + "' from alt attribute");
+                if (LOG.isDebugEnabled())
+                    LOG.debug("Setting value '" + value + "' from alt attribute");
             }
         } else {
             value = getTextContent(element);
-            if (! StringUtils.isBlank(value)) {
-                if (log.isDebugEnabled())
-                    log.debug("Setting value '" + value + "' from text content");
+            if (!StringUtils.isBlank(value)) {
+                if (LOG.isDebugEnabled())
+                    LOG.debug("Setting value '" + value + "' from text content");
             }
         }
 
         if (StringUtils.isBlank(value)) {
-            if (log.isDebugEnabled())
-                log.debug("Skipping property with empty value");
+            if (LOG.isDebugEnabled())
+                LOG.debug("Skipping property with empty value");
             return;
         }
 
@@ -450,11 +429,14 @@ public class HCalendarParser implements CalendarParser {
         // hCalendar-formatted date (RFC 3339) to an iCalendar-formatted date
         if (isDateProperty(propName)) {
             try {
-                Date date = _icalDate(value);
+                Date date = icalDate(value);
                 value = date.toString();
 
-                if (! (date instanceof DateTime))
-                    try { handler.parameter(Parameter.VALUE, Value.DATE.getValue()); } catch (Exception e) {}
+                if (!(date instanceof DateTime))
+                    try {
+                        handler.parameter(Parameter.VALUE, Value.DATE.getValue());
+                    } catch (Exception e) {
+                    }
             } catch (ParseException e) {
                 throw new ParserException("Malformed date value for element '" + className + "'", -1, e);
             }
@@ -462,8 +444,11 @@ public class HCalendarParser implements CalendarParser {
 
         if (isTextProperty(propName)) {
             String lang = element.getAttributeNS(XMLConstants.XML_NS_URI, "lang");
-            if (! StringUtils.isBlank(lang))
-                try { handler.parameter(Parameter.LANGUAGE, lang); } catch (Exception e) {}
+            if (!StringUtils.isBlank(lang))
+                try {
+                    handler.parameter(Parameter.LANGUAGE, lang);
+                } catch (Exception e) {
+                }
         }
 
         // XXX: other parameters?
@@ -484,25 +469,22 @@ public class HCalendarParser implements CalendarParser {
     // "The basic format of hCalendar is to use iCalendar object/property
     // names in lower-case for class names ..."
     /*
-    private static String _icalName(Element element) {
-        return element.getAttribute("class").toUpperCase();
-    }
-    */
+     * private static String _icalName(Element element) { return element.getAttribute("class").toUpperCase(); }
+     */
 
-    private static String _className(String propName) {
+    private static String className(String propName) {
         return propName.toLowerCase();
     }
 
     private static boolean isHeaderElement(String name) {
-        return (name.equals("h1") || name.equals("h2") || name.equals("h3") ||
-                name.equals("h4") || name.equals("h5") || name.equals("h6"));
+        return (name.equals("h1") || name.equals("h2") || name.equals("h3")
+                || name.equals("h4") || name.equals("h5") || name
+                .equals("h6"));
     }
 
     private static boolean isDateProperty(String name) {
-        return (name.equals(Property.DTSTART) ||
-                name.equals(Property.DTEND) ||
-                name.equals(Property.DTSTAMP) ||
-                name.equals(Property.LAST_MODIFIED));
+        return (name.equals(Property.DTSTART) || name.equals(Property.DTEND) || name.equals(Property.DTSTAMP) || name
+                .equals(Property.LAST_MODIFIED));
     }
 
     private static boolean isUrlProperty(String name) {
@@ -510,17 +492,13 @@ public class HCalendarParser implements CalendarParser {
     }
 
     private static boolean isTextProperty(String name) {
-        return (name.equals(Property.SUMMARY) ||
-                name.equals(Property.LOCATION) ||
-                name.equals(Property.CATEGORIES) ||
-                name.equals(Property.DESCRIPTION) ||
-                name.equals(Property.ATTENDEE) ||
-                name.equals(Property.CONTACT) ||
-                name.equals(Property.ORGANIZER));
+        return (name.equals(Property.SUMMARY) || name.equals(Property.LOCATION) || name.equals(Property.CATEGORIES)
+                || name.equals(Property.DESCRIPTION) || name.equals(Property.ATTENDEE)
+                || name.equals(Property.CONTACT) || name
+                .equals(Property.ORGANIZER));
     }
 
-    private static Date _icalDate(String original)
-        throws ParseException {
+    private static Date icalDate(String original) throws ParseException {
         // in the real world, some generators use iCalendar formatted
         // dates and date-times, so try parsing those formats first before
         // going to RFC 3339 formats
@@ -532,34 +510,34 @@ public class HCalendarParser implements CalendarParser {
                 // don't check it if we find -
                 if (original.indexOf('-') == -1)
                     return new Date(original);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
             return new Date(HCAL_DATE_FORMAT.parse(original));
         }
 
         try {
             return new DateTime(original);
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
 
         // the date-time value can represent its time zone in a few different
         // ways. we have to normalize those to match our pattern.
 
         String normalized = null;
 
-        if (log.isDebugEnabled())
-            log.debug("normalizing date-time " + original);
+        if (LOG.isDebugEnabled())
+            LOG.debug("normalizing date-time " + original);
 
         // 2002-10-09T19:00:00Z
-        if (original.charAt(original.length()-1) == 'Z') {
+        if (original.charAt(original.length() - 1) == 'Z') {
             normalized = original.replaceAll("Z", "GMT-00:00");
         }
         // 2002-10-10T00:00:00+05:00
-        else if (original.indexOf("GMT") == -1 && 
-                 (original.charAt(original.length()-6) == '+' ||
-                  original.charAt(original.length()-6) == '-')) {
-            String tzId = "GMT" + original.substring(original.length()-6);
-            normalized = original.substring(0, original.length()-6) + tzId;
-        }
-        else {
+        else if (original.indexOf("GMT") == -1
+                && (original.charAt(original.length() - 6) == '+' || original.charAt(original.length() - 6) == '-')) {
+            String tzId = "GMT" + original.substring(original.length() - 6);
+            normalized = original.substring(0, original.length() - 6) + tzId;
+        } else {
             // 2002-10-10T00:00:00GMT+05:00
             normalized = original;
         }

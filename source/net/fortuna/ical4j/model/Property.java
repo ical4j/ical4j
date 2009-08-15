@@ -220,7 +220,7 @@ public abstract class Property extends Content {
      * the specified property. This constructor should only be called from sub-classes to ensure type integrity is
      * maintained.
      * @param property a property to copy
-     * @throws URISyntaxException
+     * @throws URISyntaxException where the specified property contains an invalid URI value
      */
     protected Property(final Property property) throws IOException,
             URISyntaxException, ParseException {
@@ -230,7 +230,7 @@ public abstract class Property extends Content {
     }
 
     /**
-     * @see java.lang.Object#toString()
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
@@ -311,9 +311,7 @@ public abstract class Property extends Content {
     public abstract void validate() throws ValidationException;
 
     /**
-     * Uses {@link EqualsBuilder} to test equality. Two properties are equal if and only if their name, value and
-     * parameter list are equal.
-     * @see java.lang.Object#equals(java.lang.Object)
+     * {@inheritDoc}
      */
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
@@ -329,7 +327,7 @@ public abstract class Property extends Content {
     }
 
     /**
-     * Uses {@link HashCodeBuilder} to build hashcode.
+     * {@inheritDoc}
      */
     public final int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
@@ -340,6 +338,9 @@ public abstract class Property extends Content {
     /**
      * Create a (deep) copy of this property.
      * @return the copy of the property
+     * @throws IOException where an error occurs reading property data
+     * @throws URISyntaxException where the property contains an invalid URI value
+     * @throws ParseException where the property contains an invalid date value
      */
     public Property copy() throws IOException, URISyntaxException, ParseException {
         // Deep copy parameter list..

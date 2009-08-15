@@ -61,9 +61,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public abstract class DateProperty extends Property {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 3160883132732961321L;
 
     private Log log = LogFactory.getLog(DateProperty.class);
@@ -73,15 +70,15 @@ public abstract class DateProperty extends Property {
     private TimeZone timeZone;
 
     /**
-     * @param aName
-     * @param aList
+     * @param name the property name
+     * @param parameters a list of initial parameters
      */
     public DateProperty(final String name, final ParameterList parameters) {
         super(name, parameters);
     }
 
     /**
-     * @param aName
+     * @param name the property name
      */
     public DateProperty(final String name) {
         super(name);
@@ -90,7 +87,7 @@ public abstract class DateProperty extends Property {
     /**
      * Creates a new instance of the named property with an initial timezone.
      * @param name property name
-     * @param timeZone initial timezone
+     * @param timezone initial timezone
      */
     public DateProperty(final String name, TimeZone timezone) {
         super(name);
@@ -133,6 +130,10 @@ public abstract class DateProperty extends Property {
 
     /**
      * Default setValue() implementation. Allows for either DATE or DATE-TIME values.
+     * 
+     * @param value a string representation of a DATE or DATE-TIME value
+     * @throws ParseException where the specified value is not a valid DATE or DATE-TIME
+     * representation
      */
     public void setValue(final String value) throws ParseException {
         // value can be either a date-time or a date..
@@ -146,9 +147,8 @@ public abstract class DateProperty extends Property {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public String getValue() {
         return Strings.valueOf(getDate());
@@ -156,7 +156,7 @@ public abstract class DateProperty extends Property {
 
     /**
      * Publically available method to update the current timezone.
-     * @param timeZone
+     * @param timezone a timezone instance
      */
     public void setTimeZone(final TimeZone timezone) {
         updateTimeZone(timezone);
@@ -210,7 +210,7 @@ public abstract class DateProperty extends Property {
      * Resets the VTIMEZONE associated with the property. If utc is true, any TZID parameters are removed and the Java
      * timezone is updated to UTC time. If utc is false, TZID parameters are removed and the Java timezone is set to the
      * default timezone (i.e. represents a "floating" local time)
-     * @param utc
+     * @param utc a UTC value
      */
     public final void setUtc(final boolean utc) {
         if (getDate() != null && (getDate() instanceof DateTime)) {
@@ -221,7 +221,7 @@ public abstract class DateProperty extends Property {
 
     /**
      * Indicates whether the current date value is specified in UTC time.
-     * @return
+     * @return true if the property is in UTC time, otherwise false
      */
     public final boolean isUtc() {
         if (getDate() instanceof DateTime) {
@@ -230,9 +230,8 @@ public abstract class DateProperty extends Property {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public void validate() throws ValidationException {
 
@@ -283,8 +282,8 @@ public abstract class DateProperty extends Property {
         }
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#copy()
+    /**
+     * {@inheritDoc}
      */
     public Property copy() throws IOException, URISyntaxException, ParseException {
         Property copy = super.copy();

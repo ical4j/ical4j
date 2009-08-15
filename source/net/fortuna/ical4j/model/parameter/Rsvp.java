@@ -75,9 +75,8 @@ public class Rsvp extends Parameter {
         return rsvp;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Parameter#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return getRsvp().toString().toUpperCase();

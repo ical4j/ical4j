@@ -72,7 +72,7 @@ public class WeekDay implements Serializable {
     private int offset;
     
     /**
-     * @param value
+     * @param value a string representation of a week day
      */
     public WeekDay(final String value) {
         if (value.length() > 2) {
@@ -86,9 +86,14 @@ public class WeekDay implements Serializable {
     }
     
     /**
+<<<<<<< WeekDay.java
+     * @param day a string representation of a week day
+     * @param offset a month offset value
+=======
      * Constructor used to construct constant instances.
      * @param day
      * @param offset
+>>>>>>> 1.13
      */
     private WeekDay(final String day, final int offset) {
         this.day = day;
@@ -98,8 +103,8 @@ public class WeekDay implements Serializable {
     /**
      * Constructs a new weekday instance based on the specified
      * instance and offset.
-     * @param weekDay
-     * @param offset
+     * @param weekDay a week day template for the instance
+     * @param offset a month offset value
      */
     public WeekDay(final WeekDay weekDay, final int offset) {
         this.day = weekDay.getDay();
@@ -131,8 +136,8 @@ public class WeekDay implements Serializable {
         return offset;
     }
         
-    /* (non-Javadoc)
-     * @see java.lang.Object#toString()
+    /**
+     * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
@@ -193,8 +198,8 @@ public class WeekDay implements Serializable {
     /**
      * Returns the corresponding <code>java.util.Calendar.DAY_OF_WEEK</code>
      * constant for the specified <code>WeekDay</code>.
-     * @param weekday
-     * @return
+     * @param weekday a week day instance
+     * @return the corresponding <code>java.util.Calendar</code> day
      */
     public static int getCalendarDay(final WeekDay weekday) {
         if (SU.getDay().equals(weekday.getDay())) {
@@ -222,7 +227,7 @@ public class WeekDay implements Serializable {
     }
     
     /**
-     * Uses {@link ObjectUtils} to test equality.
+     * {@inheritDoc}
      */
     public final boolean equals(final Object arg0) {
         if (arg0 == null) {
@@ -237,7 +242,7 @@ public class WeekDay implements Serializable {
     }
     
     /**
-     * Uses {@link HashCodeBuilder} to build hashcode.
+     * {@inheritDoc}
      */
     public final int hashCode() {
         return new HashCodeBuilder().append(getDay())

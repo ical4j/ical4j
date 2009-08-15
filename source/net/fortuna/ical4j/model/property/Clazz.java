@@ -114,9 +114,8 @@ public class Clazz extends Property {
             super(new ParameterList(true), value);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+        /**
+         * {@inheritDoc}
          */
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
@@ -150,25 +149,22 @@ public class Clazz extends Property {
         this.value = aValue;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public void setValue(final String aValue) {
         this.value = aValue;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return value;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
