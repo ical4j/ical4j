@@ -75,7 +75,11 @@ public final class CompatibilityHints {
      */
     public static final String KEY_NOTES_COMPATIBILITY = "ical4j.compatibility.notes";
 
-    private static final Map HINTS = new HashMap();
+    private static final ThreadLocal HINTS = new ThreadLocal() {
+    	protected Object initialValue() {
+    		return new HashMap();
+    	}
+    };
     
     /**
      * Constructor made private to enforce static nature.
@@ -88,7 +92,7 @@ public final class CompatibilityHints {
      * @param value
      */
     public static void setHintEnabled(final String key, final boolean enabled) {
-        HINTS.put(key, Boolean.valueOf(enabled));
+        ((Map) HINTS.get()).put(key, Boolean.valueOf(enabled));
     }
 
     /**
@@ -96,8 +100,8 @@ public final class CompatibilityHints {
      * @return
      */
     public static boolean isHintEnabled(final String key) {
-        if (HINTS.get(key) != null) {
-            return ((Boolean) HINTS.get(key)).booleanValue();
+        if (((Map) HINTS.get()).get(key) != null) {
+            return ((Boolean) ((Map) HINTS.get()).get(key)).booleanValue();
         }
         return "true".equals(Configurator.getProperty(key));
     }
