@@ -66,6 +66,15 @@ public class AttendeeTest extends TestCase {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    protected void tearDown() throws Exception {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
+        super.tearDown();
+    }
+    
+    /**
      * Test method for {@link net.fortuna.ical4j.model.property.Attendee#Attendee(java.lang.String)}.
      */
     public void testAttendeeString() throws URISyntaxException {

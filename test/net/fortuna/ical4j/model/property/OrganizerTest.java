@@ -63,8 +63,7 @@ public class OrganizerTest extends TestCase {
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_PARSING, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
     
     /**

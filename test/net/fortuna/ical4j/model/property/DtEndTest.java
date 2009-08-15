@@ -109,7 +109,7 @@ public class DtEndTest extends PropertyTest {
         suite.addTest(new DtEndTest("testValidationException", dtEnd));
         
         // disable relaxed parsing after copying invalid properties..
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
 
         return suite;
     }

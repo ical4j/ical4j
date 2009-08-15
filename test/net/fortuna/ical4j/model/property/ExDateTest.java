@@ -71,8 +71,8 @@ public class ExDateTest extends TestCase {
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
     
     /**

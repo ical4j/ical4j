@@ -148,8 +148,7 @@ public class VEventTest extends CalendarComponentTest {
      */
     protected void tearDown() throws Exception {
         // relax validation to avoid UID requirement..
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_VALIDATION, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
         super.tearDown();
     }
     
@@ -755,7 +754,7 @@ public class VEventTest extends CalendarComponentTest {
 //        suite.addTest(new VEventTest("testValidationException", event));
         
         // disable relaxed parsing after copying invalid events..
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         
         suite.addTest(new VEventTest("testChristmas"));
         suite.addTest(new VEventTest("testMelbourneCup"));
@@ -793,8 +792,8 @@ public class VEventTest extends CalendarComponentTest {
             }
         }
         
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
         
         return suite;
     }

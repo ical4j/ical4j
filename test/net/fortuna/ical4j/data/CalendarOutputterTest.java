@@ -87,7 +87,7 @@ public class CalendarOutputterTest extends TestCase {
      * @see junit.framework.TestCase#tearDown()
      */
     protected final void tearDown() throws Exception {
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
     }
 
     /**

@@ -80,8 +80,7 @@ public class CalendarParserImplTest extends TestCase {
      */
     protected void tearDown() throws Exception {
         super.tearDown();
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
     }
     
     /**

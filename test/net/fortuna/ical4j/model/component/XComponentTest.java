@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model.component;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
-import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * $Id$
@@ -51,14 +50,6 @@ public class XComponentTest extends ComponentTest {
      */
     public XComponentTest(String testMethod, XComponent component) {
         super(testMethod, component);
-    }
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#tearDown()
-     */
-    protected void tearDown() throws Exception {
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION,
-                false);
     }
     
     /**

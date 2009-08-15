@@ -91,7 +91,7 @@ public class AddressListTest extends TestCase {
      */
     protected void tearDown() throws Exception {
     	for (int i = 0; i < compatibilityHints.length; i++) {
-    		CompatibilityHints.setHintEnabled(compatibilityHints[i], false);
+    		CompatibilityHints.clearHintEnabled(compatibilityHints[i]);
     	}
     }
     

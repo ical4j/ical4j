@@ -168,8 +168,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_VALIDATION, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
         super.tearDown();
     }
 

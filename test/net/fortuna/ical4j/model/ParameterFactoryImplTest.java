@@ -89,12 +89,10 @@ public class ParameterFactoryImplTest extends TestCase {
      * @throws Exception
      */
     public void testRelaxedParsing() throws Exception {
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_PARSING, true);
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
         
         ParameterFactoryImpl.getInstance().createParameter("VVENUE", "My Place");
         
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_PARSING, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 }

@@ -60,6 +60,12 @@ public class AltRepTest extends TestCase {
                 CompatibilityHints.KEY_NOTES_COMPATIBILITY, false);
     }
     
+    protected void tearDown() throws Exception {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
+        super.tearDown();
+    }
+    
     /*
      * Class to test for void AltRep(String)
      */

@@ -68,12 +68,9 @@ public class CalendarBuilderTimezoneTest extends TestCase {
      * @see junit.framework.TestCase#tearDown()
      */
     protected final void tearDown() throws Exception {
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_NOTES_COMPATIBILITY, false);
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_VALIDATION, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
     
 

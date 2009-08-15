@@ -95,8 +95,7 @@ public class PeriodRuleTest extends FilterTest {
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        CompatibilityHints.setHintEnabled(
-                CompatibilityHints.KEY_RELAXED_VALIDATION, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
     
     /**
@@ -197,7 +196,7 @@ public class PeriodRuleTest extends FilterTest {
         // Asia/Singapore test..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         calendar = Calendars.load("etc/samples/valid/2207678.ics");
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, false);
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         
         TimeZone timeZone = TimeZone.getTimeZone("Asia/Singapore");
         java.util.Calendar day = java.util.Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT")); //timeZone);
