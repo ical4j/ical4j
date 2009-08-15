@@ -97,6 +97,13 @@ public final class CompatibilityHints {
 
     /**
      * @param key
+     */
+    public static void clearHintEnabled(final String key) {
+        ((Map) HINTS.get()).remove(key);
+    }
+
+    /**
+     * @param key
      * @return
      */
     public static boolean isHintEnabled(final String key) {
