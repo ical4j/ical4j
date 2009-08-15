@@ -88,23 +88,23 @@ public final class CompatibilityHints {
     }
 
     /**
-     * @param key
-     * @param value
+     * @param key a compatibility hint key
+     * @param value indicates whether to enable or disable the compatibility hint
      */
     public static void setHintEnabled(final String key, final boolean enabled) {
         ((Map) HINTS.get()).put(key, Boolean.valueOf(enabled));
     }
 
     /**
-     * @param key
+     * @param key a compatibility hint key
      */
     public static void clearHintEnabled(final String key) {
         ((Map) HINTS.get()).remove(key);
     }
 
     /**
-     * @param key
-     * @return
+     * @param key a compatibility hint key
+     * @return true if the specified compatibility hint is enabled, otherwise false
      */
     public static boolean isHintEnabled(final String key) {
         if (((Map) HINTS.get()).get(key) != null) {

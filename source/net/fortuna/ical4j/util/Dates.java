@@ -51,20 +51,44 @@ import net.fortuna.ical4j.model.parameter.Value;
  */
 public final class Dates {
 
+    /**
+     * Number of milliseconds in one second.
+     */
     public static final long MILLIS_PER_SECOND = 1000;
 
+    /**
+     * Number of milliseconds in one minute.
+     */
     public static final long MILLIS_PER_MINUTE = 60000;
 
+    /**
+     * Number of milliseconds in one hour.
+     */
     public static final long MILLIS_PER_HOUR = 3600000;
 
+    /**
+     * Number of milliseconds in one day.
+     */
     public static final long MILLIS_PER_DAY = 86400000;
 
+    /**
+     * Number of milliseconds in one week.
+     */
     public static final long MILLIS_PER_WEEK = 604800000;
     
+    /**
+     * Number of days in one week.
+     */
     public static final int DAYS_PER_WEEK = 7;
 
+    /**
+     * Constant indicating precision to the second.
+     */
     public static final int PRECISION_SECOND = 0;
 
+    /**
+     * Constant indicating precision to the day.
+     */
     public static final int PRECISION_DAY = 1;
 
     /**
@@ -78,9 +102,9 @@ public final class Dates {
      * supplied date. Note that a value of zero (0) is invalid for the
      * weekNo parameter and an <code>IllegalArgumentException</code>
      * will be thrown.
-     * @param date
-     * @param weekNo
-     * @return
+     * @param date a date instance representing a week of the year
+     * @param weekNo a week number offset
+     * @return the absolute week of the year for the specified offset
      */
     public static int getAbsWeekNo(final java.util.Date date, final int weekNo) {
         if (weekNo == 0 || weekNo < -53 || weekNo > 53) {
@@ -107,9 +131,9 @@ public final class Dates {
      * supplied date. Note that a value of zero (0) is invalid for the
      * yearDay parameter and an <code>IllegalArgumentException</code>
      * will be thrown.
-     * @param date
-     * @param yearDay
-     * @return
+     * @param date a date instance representing a day of the year
+     * @param yearDay a day of year offset
+     * @return the absolute day of month for the specified offset
      */
     public static int getAbsYearDay(final java.util.Date date, final int yearDay) {
         if (yearDay == 0 || yearDay < -366 || yearDay > 366) {
@@ -136,9 +160,9 @@ public final class Dates {
      * supplied date. Note that a value of zero (0) is invalid for the
      * monthDay parameter and an <code>IllegalArgumentException</code>
      * will be thrown.
-     * @param date
-     * @param monthDay
-     * @return
+     * @param date a date instance representing a day of the month
+     * @param monthDay a day of month offset
+     * @return the absolute day of month for the specified offset
      */
     public static int getAbsMonthDay(final java.util.Date date, final int monthDay) {
         if (monthDay == 0 || monthDay < -31 || monthDay > 31) {
@@ -200,9 +224,9 @@ public final class Dates {
     }
     
     /**
-     * @param time
-     * @param precision
-     * @return
+     * @param time the time value to round
+     * @param precision the rounding precision
+     * @return a round time value
      * @deprecated It is not all that useful to perform rounding without specifying an
      * explicit timezone.
      */
@@ -213,7 +237,8 @@ public final class Dates {
         long newTime = time;
         if (precision == PRECISION_DAY) {
             long remainder = newTime%(1000*60*60); // get the mod remainder using milliseconds*seconds*min
-            newTime = newTime-remainder;  // remove the remainder from the time to clear the milliseconds, seconds and minutes
+            newTime = newTime-remainder;
+              // remove the remainder from the time to clear the milliseconds, seconds and minutes
         }
         else if (precision == PRECISION_SECOND) {
             long remainder = newTime%(1000); // get the mod remainder using milliseconds
@@ -226,6 +251,8 @@ public final class Dates {
     /**
      * Rounds a time value to remove any precision smaller than specified.
      * @param time the time value to round
+     * @param precision the rounding precision
+     * @param tz the timezone of the rounded value
      * @return a round time value
      */
     public static long round(final long time, final int precision, final TimeZone tz) {

@@ -62,8 +62,9 @@ public final class Constants {
      * Returns a constant equivalent to the specified property
      * if one is applicable. Otherwise will return the specified
      * property.
-     * @param property
-     * @return a Property instance
+     * @param property a property instance
+     * @return an equivalent constant property, or the specified property if no equivalent
+     * constant exists
      */
     public static Property forProperty(final Property property) {
         if (Action.AUDIO.equals(property)) {

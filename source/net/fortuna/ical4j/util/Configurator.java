@@ -68,8 +68,8 @@ public final class Configurator {
     }
     
     /**
-     * @param key
-     * @return
+     * @param key a compatibility hint key
+     * @return true if the specified compatibility hint is enabled, otherwise false
      */
     public static String getProperty(final String key) {
         String property = CONFIG.getProperty(key);
