@@ -36,10 +36,11 @@ import java.util.Map;
 
 /**
  * $Id$
- *
+ * 
  * Created on 9/03/2006
- *
+ * 
  * A set of keys used to enable compatibility features.
+ * 
  * @author Ben Fortuna
  */
 public final class CompatibilityHints {
@@ -76,11 +77,11 @@ public final class CompatibilityHints {
     public static final String KEY_NOTES_COMPATIBILITY = "ical4j.compatibility.notes";
 
     private static final ThreadLocal HINTS = new ThreadLocal() {
-    	protected Object initialValue() {
-    		return new HashMap();
-    	}
+        protected Object initialValue() {
+            return new HashMap();
+        }
     };
-    
+
     /**
      * Constructor made private to enforce static nature.
      */
@@ -88,22 +89,26 @@ public final class CompatibilityHints {
     }
 
     /**
-     * @param key a compatibility hint key
-     * @param value indicates whether to enable or disable the compatibility hint
+     * @param key
+     *            a compatibility hint key
+     * @param value
+     *            indicates whether to enable or disable the compatibility hint
      */
     public static void setHintEnabled(final String key, final boolean enabled) {
         ((Map) HINTS.get()).put(key, Boolean.valueOf(enabled));
     }
 
     /**
-     * @param key a compatibility hint key
+     * @param key
+     *            a compatibility hint key
      */
     public static void clearHintEnabled(final String key) {
         ((Map) HINTS.get()).remove(key);
     }
 
     /**
-     * @param key a compatibility hint key
+     * @param key
+     *            a compatibility hint key
      * @return true if the specified compatibility hint is enabled, otherwise false
      */
     public static boolean isHintEnabled(final String key) {
