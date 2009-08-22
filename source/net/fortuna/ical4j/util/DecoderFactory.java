@@ -73,7 +73,7 @@ public abstract class DecoderFactory {
 
     /**
      * Returns a new {@link BinaryDecoder} for the specified encoding.
-     * @param encoding
+     * @param encoding an encoding type
      * @return a {@link BinaryDecoder} instance
      * @throws UnsupportedEncodingException where an encoder supporting the
      * specified encoding is not available.
@@ -83,7 +83,7 @@ public abstract class DecoderFactory {
     
     /**
      * Returns a new {@link StringDecoder} for the specified encoding.
-     * @param encoding
+     * @param encoding an encoding type
      * @return a {@link StringDecoder} instance
      * @throws UnsupportedEncodingException where an encoder supporting the
      * specified encoding is not available.

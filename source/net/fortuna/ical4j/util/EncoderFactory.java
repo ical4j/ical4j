@@ -73,7 +73,7 @@ public abstract class EncoderFactory {
 
     /**
      * Returns a new {@link BinaryEncoder} for the specified encoding.
-     * @param encoding
+     * @param encoding an encoding type
      * @return a {@link BinaryEncoder} instance
      * @throws UnsupportedEncodingException where an encoder supporting the
      * specified encoding is not available.
@@ -83,7 +83,7 @@ public abstract class EncoderFactory {
     
     /**
      * Returns a new {@link StringEncoder} for the specified encoding.
-     * @param encoding
+     * @param encoding an encoding type
      * @return a {@link StringEncoder} instance
      * @throws UnsupportedEncodingException where an encoder supporting the
      * specified encoding is not available.

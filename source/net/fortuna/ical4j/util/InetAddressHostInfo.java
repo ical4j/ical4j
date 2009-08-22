@@ -52,7 +52,7 @@ public class InetAddressHostInfo implements HostInfo {
     }
     
     /**
-     * @param address
+     * @param address a host address
      */
     public InetAddressHostInfo(InetAddress address) {
         this.hostAddress = address;

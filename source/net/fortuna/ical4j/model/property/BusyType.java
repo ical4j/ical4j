@@ -60,10 +60,19 @@ public class BusyType extends Property {
 
 	private static final long serialVersionUID = -5140360270562621159L;
 
+	/**
+	 * Constant for busy time.
+	 */
 	public static final BusyType BUSY = new ImmutableBusyType("BUSY");
 
+    /**
+     * Constant for busy unavailable time.
+     */
     public static final BusyType BUSY_UNAVAILABLE = new ImmutableBusyType("BUSY-UNAVAILABLE");
 
+    /**
+     * Constant for tentatively busy time.
+     */
     public static final BusyType BUSY_TENTATIVE = new ImmutableBusyType("BUSY-TENTATIVE");
 
     /** An immutable instance of BusyType.

@@ -187,7 +187,7 @@ public class DtStart extends DateProperty {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Property#validate()
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         super.validate();

@@ -49,8 +49,8 @@ import org.apache.commons.codec.net.QuotedPrintableCodec;
  */
 public class DefaultEncoderFactory extends EncoderFactory {
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.util.EncoderFactory#createBinaryEncoder(net.fortuna.ical4j.model.parameter.Encoding)
+    /**
+     * {@inheritDoc}
      */
     public BinaryEncoder createBinaryEncoder(final Encoding encoding)
             throws UnsupportedEncodingException {
@@ -65,8 +65,8 @@ public class DefaultEncoderFactory extends EncoderFactory {
                 "Encoder not available for encoding [" + encoding + "]");
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.util.EncoderFactory#createStringEncoder(net.fortuna.ical4j.model.parameter.Encoding)
+    /**
+     * {@inheritDoc}
      */
     public StringEncoder createStringEncoder(final Encoding encoding)
             throws UnsupportedEncodingException {

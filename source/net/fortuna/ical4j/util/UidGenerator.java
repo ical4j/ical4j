@@ -53,15 +53,16 @@ public class UidGenerator {
     private static long lastMillis;
 
     /**
-     * Default constructor.
+     * @param pid a unique process identifier for the host machine
+     * @throws SocketException where host information cannot be retrieved
      */
     public UidGenerator(String pid) throws SocketException {
         this(new InetAddressHostInfo(), pid);
     }
 
     /**
-     * @param hostInfo
-     * @param pid
+     * @param hostInfo custom host information
+     * @param pid a unique process identifier for the host machine
      */
     public UidGenerator(HostInfo hostInfo, String pid) {
         this.hostInfo = hostInfo;
@@ -69,7 +70,7 @@ public class UidGenerator {
     }
 
     /**
-     * @return
+     * @return a unique component identifier
      */
     public Uid generateUid() {
         final StringBuffer b = new StringBuffer();

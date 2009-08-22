@@ -42,10 +42,19 @@ import java.util.TimeZone;
  */
 public final class TimeZones {
     
+    /**
+     * The timezone identifier for UTC time.
+     */
     public static final String UTC_ID = "Etc/UTC";
     
+    /**
+     * The timezone identifier for UTC time in the IBM JVM.
+     */
     public static final String IBM_UTC_ID = "GMT";
     
+    /**
+     * The timezone identifier for GMT time.
+     */
     public static final String GMT_ID = "Etc/GMT";
 
     /**
@@ -57,7 +66,7 @@ public final class TimeZones {
     /**
      * Indicates whether the specified timezone is equivalent to
      * UTC time.
-     * @param timezone
+     * @param timezone a timezone instance
      * @return true if the timezone is UTC time, otherwise false
      */
     public static boolean isUtc(final TimeZone timezone) {

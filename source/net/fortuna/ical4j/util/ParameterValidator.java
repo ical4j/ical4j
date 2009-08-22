@@ -93,8 +93,8 @@ public final class ParameterValidator {
     
     /**
      * Ensure a parameter doesn't occur in the specified list.
-     * @param propertyName the name of a property
-     * @param properties a list of properties
+     * @param paramName the name of a parameter
+     * @param parameters a list of parameters
      * @throws ValidationException thrown when the specified property
      * is found in the list of properties
      */
@@ -106,9 +106,9 @@ public final class ParameterValidator {
     }
 
     /**
-     * @param param
-     * @param parameters
-     * @throws ValidationException
+     * @param param a parameter instance
+     * @param parameters a list of parameters
+     * @throws ValidationException where the assertion fails
      */
     public void assertNullOrEqual(final Parameter param, final ParameterList parameters) throws ValidationException {
         final Parameter p = parameters.getParameter(param.getName());

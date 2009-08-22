@@ -109,7 +109,7 @@ public class Duration extends Property {
     }
 
     /**
-     * @param duration
+     * @param duration a duration  value
      */
     public Duration(final Dur duration) {
         super(DURATION);
@@ -118,7 +118,7 @@ public class Duration extends Property {
 
     /**
      * @param aList a list of parameters for this component
-     * @param aDuration a duration specified in milliseconds
+     * @param duration a duration value
      */
     public Duration(final ParameterList aList, final Dur duration) {
         super(DURATION, aList);
@@ -142,18 +142,16 @@ public class Duration extends Property {
         return duration;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
         // duration = DurationFormat.getInstance().parse(aValue);
         duration = new Dur(aValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         // return DurationFormat.getInstance().format(getDuration());
@@ -167,9 +165,8 @@ public class Duration extends Property {
         this.duration = duration;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub

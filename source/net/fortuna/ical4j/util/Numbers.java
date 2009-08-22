@@ -50,8 +50,8 @@ public final class Numbers {
     /**
      * Wraps <code>java.lang.Integer.parseInt()</code> to accept values with
      * a PLUS character (i.e. "+2").
-     * @param value
-     * @return
+     * @param value an integer string
+     * @return a parsed integer value
      */
     public static int parseInt(final String value) {
         if (value != null && value.charAt(0) == '+') {

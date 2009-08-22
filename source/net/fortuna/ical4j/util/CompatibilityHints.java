@@ -91,7 +91,7 @@ public final class CompatibilityHints {
     /**
      * @param key
      *            a compatibility hint key
-     * @param value
+     * @param enabled
      *            indicates whether to enable or disable the compatibility hint
      */
     public static void setHintEnabled(final String key, final boolean enabled) {

@@ -94,8 +94,8 @@ public class DtStamp extends UtcProperty {
     }
 
     /**
-     * @param aValue
-     * @throws ParseException
+     * @param aValue a string representation of a DTSTAMP value
+     * @throws ParseException if the specified value is not a valid representation
      */
     public DtStamp(final String aValue) throws ParseException {
     	this(new ParameterList(), aValue);
@@ -113,7 +113,7 @@ public class DtStamp extends UtcProperty {
     }
 
     /**
-     * @param aDate a date representing a date-time
+     * @param aDate a date representing a date-time 
      */
     public DtStamp(final DateTime aDate) {
         super(DTSTAMP);

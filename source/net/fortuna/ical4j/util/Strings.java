@@ -234,8 +234,8 @@ public final class Strings {
     /**
      * Wraps <code>java.lang.String.valueOf()</code> to return an empty string
      * where the specified object is null.
-     * @param object
-     * @return
+     * @param object an object instance
+     * @return a string representation of the object
      */
     public static String valueOf(final Object object) {
         if (object == null) {

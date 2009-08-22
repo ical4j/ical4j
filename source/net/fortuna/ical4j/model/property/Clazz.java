@@ -94,10 +94,19 @@ public class Clazz extends Property {
 
     private static final long serialVersionUID = 4939943639175551481L;
 
+    /**
+     * Constant for public classification.
+     */
     public static final Clazz PUBLIC = new ImmutableClazz("PUBLIC");
 
+    /**
+     * Constant for private classification.
+     */
     public static final Clazz PRIVATE = new ImmutableClazz("PRIVATE");
 
+    /**
+     * Constant for confidential classification.
+     */
     public static final Clazz CONFIDENTIAL = new ImmutableClazz("CONFIDENTIAL");
 
     /**

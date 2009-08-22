@@ -47,12 +47,24 @@ public class Action extends Property {
 
     private static final long serialVersionUID = -2353353838411753712L;
 
+    /**
+     * Constant action for playing an audible sound.
+     */
     public static final Action AUDIO = new ImmutableAction("AUDIO");
 
+    /**
+     * Constant action for displaying a visible notification.
+     */
     public static final Action DISPLAY = new ImmutableAction("DISPLAY");
 
+    /**
+     * Constant action for sending an email.
+     */
     public static final Action EMAIL = new ImmutableAction("EMAIL");
 
+    /**
+     * Constant action for a procedure.
+     */
     public static final Action PROCEDURE = new ImmutableAction("PROCEDURE");
 
     /**
