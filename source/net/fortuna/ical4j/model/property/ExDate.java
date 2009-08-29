@@ -86,7 +86,7 @@ public class ExDate extends DateListProperty {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Property#validate()
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
 
