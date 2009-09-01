@@ -116,33 +116,63 @@ public class Status extends Property {
     private static final long serialVersionUID = 7401102230299289898L;
 
     // Status values for a "VEVENT"
+    /**
+     * Tentative VEVENT status.
+     */
     public static final Status VEVENT_TENTATIVE = new ImmutableStatus(
             "TENTATIVE");
 
+    /**
+     * Confirmed VEVENT status.
+     */
     public static final Status VEVENT_CONFIRMED = new ImmutableStatus(
             "CONFIRMED");
 
+    /**
+     * Cancelled VEVENT status.
+     */
     public static final Status VEVENT_CANCELLED = new ImmutableStatus(
             "CANCELLED");
 
     // Status values for "VTODO"
+    /**
+     * Tentative VTODO status.
+     */
     public static final Status VTODO_NEEDS_ACTION = new ImmutableStatus(
             "NEEDS-ACTION");
 
+    /**
+     * Completed VTODO status.
+     */
     public static final Status VTODO_COMPLETED = new ImmutableStatus(
             "COMPLETED");
 
+    /**
+     * In-process VTODO status.
+     */
     public static final Status VTODO_IN_PROCESS = new ImmutableStatus(
             "IN-PROCESS");
 
+    /**
+     * Cancelled VTODO status.
+     */
     public static final Status VTODO_CANCELLED = new ImmutableStatus(
             "CANCELLED");
 
     // Status values for "VJOURNAL"
+    /**
+     * Draft VJOURNAL status.
+     */
     public static final Status VJOURNAL_DRAFT = new ImmutableStatus("DRAFT");
 
+    /**
+     * Final VJOURNAL status.
+     */
     public static final Status VJOURNAL_FINAL = new ImmutableStatus("FINAL");
 
+    /**
+     * Cancelled VJOURNAL status.
+     */
     public static final Status VJOURNAL_CANCELLED = new ImmutableStatus(
             "CANCELLED");
 

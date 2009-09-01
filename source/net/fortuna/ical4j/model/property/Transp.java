@@ -94,8 +94,14 @@ public class Transp extends Property {
 
     private static final long serialVersionUID = 3801479657311785518L;
 
+    /**
+     * Opaque.
+     */
     public static final Transp OPAQUE = new ImmutableTransp("OPAQUE");
 
+    /**
+     * Transparent.
+     */
     public static final Transp TRANSPARENT = new ImmutableTransp("TRANSPARENT");
 
     /**

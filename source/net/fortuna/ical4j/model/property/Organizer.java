@@ -143,7 +143,8 @@ public class Organizer extends Property {
 
     /**
      * Constructs a new instance with the specified value.
-     * @param value
+     * @param value an organizer URI
+     * @throws URISyntaxException where the specified value is not a valid URI
      */
     public Organizer(String value) throws URISyntaxException {
         super(ORGANIZER);

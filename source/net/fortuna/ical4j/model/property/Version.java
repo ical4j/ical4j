@@ -50,6 +50,9 @@ public class Version extends Property {
 
     private static final long serialVersionUID = 8872508067309087704L;
 
+    /**
+     * iCalendar version 2.0.
+     */
     public static final Version VERSION_2_0 = new ImmutableVersion("2.0");
 
     /**

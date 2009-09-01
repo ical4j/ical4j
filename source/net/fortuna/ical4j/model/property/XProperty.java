@@ -71,6 +71,7 @@ public class XProperty extends Property implements Escapable {
     /**
      * @param aName a non-standard property name
      * @param aList a list of parameters
+     * @param aValue a property value
      */
     public XProperty(final String aName, final ParameterList aList,
             final String aValue) {

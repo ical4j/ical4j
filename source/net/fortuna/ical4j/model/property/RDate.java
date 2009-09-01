@@ -100,7 +100,8 @@ import net.fortuna.ical4j.util.Strings;
  *                     ; the following are optional,
  *                     ; but MUST NOT occur more than once
  *     
- *                     (&quot;;&quot; &quot;VALUE&quot; &quot;=&quot; (&quot;DATE-TIME&quot; / &quot;DATE&quot; / &quot;PERIOD&quot;)) /
+ *                     (&quot;;&quot; &quot;VALUE&quot; &quot;=&quot; (&quot;DATE-TIME&quot;
+ *                      / &quot;DATE&quot; / &quot;PERIOD&quot;)) /
  *                     (&quot;;&quot; tzidparam) /
  *     
  *                     ; the following is optional,
@@ -154,7 +155,7 @@ public class RDate extends DateListProperty {
 
     /**
      * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
-     * @param aDate a date representation of a date or date-time
+     * @param dates a list of dates
      */
     public RDate(final DateList dates) {
         super(RDATE, dates);
@@ -163,7 +164,7 @@ public class RDate extends DateListProperty {
     /**
      * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
      * @param aList a list of parameters for this component
-     * @param aDate a date representation of a date or date-time
+     * @param dates a list of dates
      */
     public RDate(final ParameterList aList, final DateList dates) {
         super(RDATE, aList, dates);
@@ -171,7 +172,7 @@ public class RDate extends DateListProperty {
 
     /**
      * Constructor.
-     * @param aPeriod a period
+     * @param periods a list of periods
      */
     public RDate(final PeriodList periods) {
         super(RDATE, (DateList) null);
@@ -181,7 +182,7 @@ public class RDate extends DateListProperty {
     /**
      * Constructor.
      * @param aList a list of parameters for this component
-     * @param aPeriod a period
+     * @param periods a list of periods
      */
     public RDate(final ParameterList aList, final PeriodList periods) {
         super(RDATE, aList, (DateList) null);

@@ -120,8 +120,8 @@ public class FreeBusy extends Property {
     }
 
     /**
-     * @param aValue
-     * @throws ParseException
+     * @param aValue a freebusy value
+     * @throws ParseException where the specified string is not a valid freebusy value
      */
     public FreeBusy(final String aValue) throws ParseException {
         super(FREEBUSY);

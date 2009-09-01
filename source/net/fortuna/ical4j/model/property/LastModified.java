@@ -87,8 +87,8 @@ public class LastModified extends UtcProperty {
     }
 
     /**
-     * @param aValue
-     * @throws ParseException
+     * @param aValue a date-time value
+     * @throws ParseException where the specified string is not a valid date-time
      */
     public LastModified(final String aValue) throws ParseException {
     	this(new ParameterList(), aValue);

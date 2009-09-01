@@ -62,6 +62,7 @@ public class RRule extends Property {
 
     /**
      * @param value a rule string
+     * @throws ParseException where the specified string is not a valid rule
      */
     public RRule(String value) throws ParseException {
         super(RRULE);

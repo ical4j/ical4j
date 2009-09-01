@@ -73,7 +73,8 @@ import net.fortuna.ical4j.model.ValidationException;
  *        the normal or &quot;MEDIUM&quot; priority. A value in the range of six (US-
  *        ASCII decimal 54) to nine (US-ASCII decimal 58) is &quot;LOW&quot; priority.
  *     
- *        A CUA with a priority schema of &quot;A1&quot;, &quot;A2&quot;, &quot;A3&quot;, &quot;B1&quot;, &quot;B2&quot;, ...,
+ *        A CUA with a priority schema of &quot;A1&quot;, &quot;A2&quot;, &quot;A3&quot;,
+ *         &quot;B1&quot;, &quot;B2&quot;, ...,
  *        &quot;C3&quot; is mapped into this property such that a property value of one
  *        (US-ASCII decimal 49) specifies &quot;A1&quot;, a property value of two (US-
  *        ASCII decimal 50) specifies &quot;A2&quot;, a property value of three (US-ASCII
@@ -122,12 +123,24 @@ public class Priority extends Property {
 
     private static final long serialVersionUID = -5654367843953827397L;
 
+    /**
+     * Undefined priority.
+     */
     public static final Priority UNDEFINED = new ImmutablePriority(0);
 
+    /**
+     * High priority.
+     */
     public static final Priority HIGH = new ImmutablePriority(1);
 
+    /**
+     * Medium priority.
+     */
     public static final Priority MEDIUM = new ImmutablePriority(5);
 
+    /**
+     * Low priority.
+     */
     public static final Priority LOW = new ImmutablePriority(9);
 
     /**

@@ -146,7 +146,7 @@ public class Geo extends Property {
 
     /**
      * Creates a new instance by parsing the specified string representation.
-     * @param value
+     * @param value a geo value
      */
     public Geo(final String value) {
         super(GEO);
