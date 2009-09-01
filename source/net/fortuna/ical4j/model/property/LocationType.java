@@ -94,16 +94,15 @@ public class LocationType extends Property {
         locationTypes = cList;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
         locationTypes = new LocationTypeList(aValue);
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Property#validate()
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
 
@@ -125,9 +124,8 @@ public class LocationType extends Property {
         return locationTypes;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return getLocationTypes().toString();

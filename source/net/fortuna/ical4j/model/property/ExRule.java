@@ -96,17 +96,15 @@ public class ExRule extends Property {
         return recur;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) throws ParseException {
         recur = new Recur(aValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return getRecur().toString();
@@ -119,9 +117,8 @@ public class ExRule extends Property {
         this.recur = recur;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub

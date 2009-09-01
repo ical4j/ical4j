@@ -124,7 +124,7 @@ public class Summary extends Property implements Escapable {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Property#validate()
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
 
@@ -141,17 +141,15 @@ public class Summary extends Property implements Escapable {
          */
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return value;

@@ -53,13 +53,15 @@ public class XProperty extends Property implements Escapable {
 
     /**
      * Constructs an uninitialised non-standard property.
+     * @param name a non-standard property name
      */
     public XProperty(final String name) {
         super(name);
     }
 
     /**
-     * @param aName
+     * @param aName a non-standard property name
+     * @param aValue a property value
      */
     public XProperty(final String aName, final String aValue) {
         super(aName);
@@ -67,8 +69,8 @@ public class XProperty extends Property implements Escapable {
     }
 
     /**
-     * @param aName
-     * @param aList
+     * @param aName a non-standard property name
+     * @param aList a list of parameters
      */
     public XProperty(final String aName, final ParameterList aList,
             final String aValue) {
@@ -76,25 +78,22 @@ public class XProperty extends Property implements Escapable {
         setValue(aValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return value;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         

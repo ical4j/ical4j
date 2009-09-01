@@ -89,17 +89,15 @@ public class Repeat extends Property {
         return count;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
         count = Integer.parseInt(aValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return String.valueOf(getCount());
@@ -112,9 +110,8 @@ public class Repeat extends Property {
         this.count = count;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub

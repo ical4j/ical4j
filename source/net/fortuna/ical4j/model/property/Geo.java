@@ -198,18 +198,16 @@ public class Geo extends Property {
         return longitude;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
         latitude = new BigDecimal(aValue.substring(0, aValue.indexOf(';')));
         longitude = new BigDecimal(aValue.substring(aValue.indexOf(';') + 1));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return String.valueOf(getLatitude()) + ";"
@@ -230,9 +228,8 @@ public class Geo extends Property {
         this.longitude = longitude;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub

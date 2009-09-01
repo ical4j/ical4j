@@ -163,7 +163,7 @@ public class FreeBusy extends Property {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Property#validate()
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
 
@@ -189,17 +189,15 @@ public class FreeBusy extends Property {
         return periods;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) throws ParseException {
         periods = new PeriodList(aValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return getPeriods().toString();

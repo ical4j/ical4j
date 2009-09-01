@@ -52,8 +52,8 @@ public abstract class UtcProperty extends DateProperty {
     private static final long serialVersionUID = 4850079486497487938L;
 
     /**
-     * @param name
-     * @param parameters
+     * @param name a property name
+     * @param parameters list of parameters
      */
     public UtcProperty(final String name, final ParameterList parameters) {
         super(name, parameters);
@@ -61,7 +61,7 @@ public abstract class UtcProperty extends DateProperty {
     }
 
     /**
-     * @param name
+     * @param name a property name
      */
     public UtcProperty(final String name) {
         super(name);
@@ -86,16 +86,15 @@ public abstract class UtcProperty extends DateProperty {
         setDate(dateTime);
     }
 
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.property.DateProperty#setTimeZone(net.fortuna.ical4j.model.TimeZone)
+    /**
+     * {@inheritDoc}
      */
     public void setTimeZone(TimeZone timezone) {
         throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
     }
     
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public void validate() throws ValidationException {
         super.validate();

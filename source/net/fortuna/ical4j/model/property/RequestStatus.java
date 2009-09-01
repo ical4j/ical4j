@@ -109,7 +109,7 @@ public class RequestStatus extends Property {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Property#validate()
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
 
@@ -145,9 +145,8 @@ public class RequestStatus extends Property {
         return statusCode;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
         StringTokenizer t = new StringTokenizer(aValue, ";");
@@ -165,9 +164,8 @@ public class RequestStatus extends Property {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         StringBuffer b = new StringBuffer();

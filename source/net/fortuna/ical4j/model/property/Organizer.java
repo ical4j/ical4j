@@ -179,7 +179,7 @@ public class Organizer extends Property {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Property#validate()
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
 
@@ -208,17 +208,15 @@ public class Organizer extends Property {
         return calAddress;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) throws URISyntaxException {
         calAddress = Uris.create(aValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getCalAddress()));

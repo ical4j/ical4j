@@ -59,35 +59,20 @@ public class Version extends Property {
 
         private static final long serialVersionUID = -5040679357859594835L;
 
-        /**
-         * @param value
-         */
         private ImmutableVersion(final String value) {
             super(new ParameterList(true), value);
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
-         */
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.model.property.Version#setMaxVersion(java.lang.String)
-         */
         public void setMaxVersion(final String maxVersion) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.model.property.Version#setMinVersion(java.lang.String)
-         */
         public void setMinVersion(final String minVersion) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -156,9 +141,8 @@ public class Version extends Property {
         return minVersion;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public void setValue(final String aValue) {
         if (aValue.indexOf(';') >= 0) {
@@ -170,9 +154,8 @@ public class Version extends Property {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         StringBuffer b = new StringBuffer();
@@ -202,9 +185,8 @@ public class Version extends Property {
         this.minVersion = minVersion;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub

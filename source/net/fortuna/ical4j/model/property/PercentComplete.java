@@ -89,17 +89,15 @@ public class PercentComplete extends Property {
         return percentage;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
         percentage = Integer.parseInt(aValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         return String.valueOf(getPercentage());
@@ -112,9 +110,8 @@ public class PercentComplete extends Property {
         this.percentage = percentage;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         if (percentage < 0 || percentage > 100) {

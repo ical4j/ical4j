@@ -189,7 +189,7 @@ public class RDate extends DateListProperty {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Property#validate()
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
 
@@ -224,9 +224,8 @@ public class RDate extends DateListProperty {
         return periods;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) throws ParseException {
         if (Value.PERIOD.equals(getParameter(Parameter.VALUE))) {
@@ -237,9 +236,8 @@ public class RDate extends DateListProperty {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         if (getPeriods() != null) {
@@ -248,8 +246,8 @@ public class RDate extends DateListProperty {
         return super.getValue();
     }
     
-    /* (non-Javadoc)
-     * @see net.fortuna.ical4j.model.property.DateListProperty#setTimeZone(net.fortuna.ical4j.model.TimeZone)
+    /**
+     * {@inheritDoc}
      */
     public final void setTimeZone(TimeZone timezone) {
         if (periods != null) {

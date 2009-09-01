@@ -58,7 +58,7 @@ public class TzOffsetTo extends Property {
     }
 
     /**
-     * @param value
+     * @param value an offset value
      */
     public TzOffsetTo(String value) {
         super(TZOFFSETTO);
@@ -98,17 +98,15 @@ public class TzOffsetTo extends Property {
         return offset;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
         offset = new UtcOffset(aValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         if (offset != null) {
@@ -124,9 +122,8 @@ public class TzOffsetTo extends Property {
         this.offset = offset;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#validate()
+    /**
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub

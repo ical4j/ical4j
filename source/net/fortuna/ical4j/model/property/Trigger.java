@@ -166,7 +166,7 @@ public class Trigger extends UtcProperty {
     }
 
     /**
-     * @param aDuration a duration in milliseconds
+     * @param duration a duration in milliseconds
      */
     public Trigger(final Dur duration) {
         super(TRIGGER);
@@ -175,7 +175,7 @@ public class Trigger extends UtcProperty {
 
     /**
      * @param aList a list of parameters for this component
-     * @param aDuration a duration in milliseconds
+     * @param duration a duration in milliseconds
      */
     public Trigger(final ParameterList aList, final Dur duration) {
         super(TRIGGER, aList);
@@ -183,7 +183,7 @@ public class Trigger extends UtcProperty {
     }
 
     /**
-     * @param aDate a date representation of a date-time
+     * @param dateTime a date representation of a date-time
      */
     public Trigger(final DateTime dateTime) {
         super(TRIGGER);
@@ -192,7 +192,7 @@ public class Trigger extends UtcProperty {
 
     /**
      * @param aList a list of parameters for this component
-     * @param aDate a date representation of a date-time
+     * @param dateTime a date representation of a date-time
      */
     public Trigger(final ParameterList aList, final DateTime dateTime) {
         super(TRIGGER, aList);
@@ -200,7 +200,7 @@ public class Trigger extends UtcProperty {
     }
 
     /**
-     * @see net.fortuna.ical4j.model.Property#validate()
+     * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         super.validate();
@@ -240,9 +240,8 @@ public class Trigger extends UtcProperty {
         return duration;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
+    /**
+     * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
         try {
@@ -255,9 +254,8 @@ public class Trigger extends UtcProperty {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * @see net.fortuna.ical4j.model.Property#getValue()
+    /**
+     * {@inheritDoc}
      */
     public final String getValue() {
         if (duration != null) {
