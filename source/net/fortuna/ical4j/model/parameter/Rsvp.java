@@ -47,8 +47,14 @@ public class Rsvp extends Parameter {
 
     private static final String VALUE_FALSE = "FALSE";
 
+    /**
+     * RSVP is required.
+     */
     public static final Rsvp TRUE = new Rsvp(VALUE_TRUE);
 
+    /**
+     * RSVP not required.
+     */
     public static final Rsvp FALSE = new Rsvp(VALUE_FALSE);
 
     private Boolean rsvp;

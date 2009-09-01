@@ -48,8 +48,14 @@ public class Range extends Parameter {
 
     private static final String VALUE_THISANDFUTURE = "THISANDFUTURE";
 
+    /**
+     * This and prior.
+     */
     public static final Range THISANDPRIOR = new Range(VALUE_THISANDPRIOR);
 
+    /**
+     * This and future.
+     */
     public static final Range THISANDFUTURE = new Range(VALUE_THISANDFUTURE);
 
     private String value;

@@ -54,14 +54,29 @@ public class CuType extends Parameter {
 
     private static final String VALUE_UNKNOWN = "UNKNOWN";
 
+    /**
+     * Individual.
+     */
     public static final CuType INDIVIDUAL = new CuType(VALUE_INDIVIDUAL);
 
+    /**
+     * Group.
+     */
     public static final CuType GROUP = new CuType(VALUE_GROUP);
 
+    /**
+     * Resource.
+     */
     public static final CuType RESOURCE = new CuType(VALUE_RESOURCE);
 
+    /**
+     * Room.
+     */
     public static final CuType ROOM = new CuType(VALUE_ROOM);
 
+    /**
+     * Unknown.
+     */
     public static final CuType UNKNOWN = new CuType(VALUE_UNKNOWN);
 
     private String value;

@@ -52,12 +52,24 @@ public class Role extends Parameter {
 
     private static final String VALUE_NON_PARTICIPANT = "NON-PARTICIPANT";
 
+    /**
+     * Chair.
+     */
     public static final Role CHAIR = new Role(VALUE_CHAIR);
 
+    /**
+     * Required participant.
+     */
     public static final Role REQ_PARTICIPANT = new Role(VALUE_REQ_PARTICIPANT);
 
+    /**
+     * Optional participant.
+     */
     public static final Role OPT_PARTICIPANT = new Role(VALUE_OPT_PARTICIPANT);
 
+    /**
+     * Non-participant.
+     */
     public static final Role NON_PARTICIPANT = new Role(VALUE_NON_PARTICIPANT);
 
     private String value;

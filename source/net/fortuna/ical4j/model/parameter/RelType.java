@@ -50,10 +50,19 @@ public class RelType extends Parameter {
 
     private static final String VALUE_SIBLING = "SIBLING";
 
+    /**
+     * Parent.
+     */
     public static final RelType PARENT = new RelType(VALUE_PARENT);
 
+    /**
+     * Child.
+     */
     public static final RelType CHILD = new RelType(VALUE_CHILD);
 
+    /**
+     * Sibling.
+     */
     public static final RelType SIBLING = new RelType(VALUE_SIBLING);
 
     private String value;

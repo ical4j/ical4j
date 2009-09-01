@@ -48,8 +48,14 @@ public class Related extends Parameter {
 
     private static final String VALUE_END = "END";
 
+    /**
+     * Trigger start.
+     */
     public static final Related START = new Related(VALUE_START);
 
+    /**
+     * Trigger end.
+     */
     public static final Related END = new Related(VALUE_END);
 
     private String value;

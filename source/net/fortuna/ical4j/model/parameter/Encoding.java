@@ -95,15 +95,30 @@ public class Encoding extends Parameter {
 
     private static final String VALUE_BASE64 = "BASE64";
 
+    /**
+     * 7 bit encoding.
+     */
     public static final Encoding SEVEN_BIT = new Encoding(VALUE_SEVEN_BIT);
 
+    /**
+     * 8 bit encoding.
+     */
     public static final Encoding EIGHT_BIT = new Encoding(VALUE_EIGHT_BIT);
 
+    /**
+     * Binary encoding.
+     */
     public static final Encoding BINARY = new Encoding(VALUE_BINARY);
 
+    /**
+     * Quoted printable encoding.
+     */
     public static final Encoding QUOTED_PRINTABLE = new Encoding(
             VALUE_QUOTED_PRINTABLE);
 
+    /**
+     * Base64 encoding.
+     */
     public static final Encoding BASE64 = new Encoding(VALUE_BASE64);
 
     private String value;

@@ -52,13 +52,25 @@ public class FbType extends Parameter {
 
     private static final String VALUE_BUSY_TENTATIVE = "BUSY-TENTATIVE";
 
+    /**
+     * Free time.
+     */
     public static final FbType FREE = new FbType(VALUE_FREE);
 
+    /**
+     * Busy time.
+     */
     public static final FbType BUSY = new FbType(VALUE_BUSY);
 
+    /**
+     * Busy (unavailable) time.
+     */
     public static final FbType BUSY_UNAVAILABLE = new FbType(
             VALUE_BUSY_UNAVAILABLE);
 
+    /**
+     * Busy (tentative) time.
+     */
     public static final FbType BUSY_TENTATIVE = new FbType(VALUE_BUSY_TENTATIVE);
 
     private String value;

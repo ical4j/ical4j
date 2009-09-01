@@ -58,18 +58,39 @@ public class PartStat extends Parameter {
 
     private static final String VALUE_IN_PROCESS = "IN-PROCESS";
 
+    /**
+     * Needs action.
+     */
     public static final PartStat NEEDS_ACTION = new PartStat(VALUE_NEEDS_ACTION);
 
+    /**
+     * Accepted.
+     */
     public static final PartStat ACCEPTED = new PartStat(VALUE_ACCEPTED);
 
+    /**
+     * Declined.
+     */
     public static final PartStat DECLINED = new PartStat(VALUE_DECLINED);
 
+    /**
+     * Tentative.
+     */
     public static final PartStat TENTATIVE = new PartStat(VALUE_TENTATIVE);
 
+    /**
+     * Delegated.
+     */
     public static final PartStat DELEGATED = new PartStat(VALUE_DELEGATED);
 
+    /**
+     * Completed.
+     */
     public static final PartStat COMPLETED = new PartStat(VALUE_COMPLETED);
 
+    /**
+     * In-process.
+     */
     public static final PartStat IN_PROCESS = new PartStat(VALUE_IN_PROCESS);
 
     private String value;

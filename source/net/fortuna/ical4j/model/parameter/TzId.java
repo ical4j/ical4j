@@ -45,6 +45,9 @@ public class TzId extends Parameter implements Escapable {
 
     private static final long serialVersionUID = 2366516258055857879L;
 
+    /**
+     * Timezone identifier prefix.
+     */
     public static final String PREFIX = "/";
 
     private String value;

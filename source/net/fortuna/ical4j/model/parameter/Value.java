@@ -72,32 +72,74 @@ public class Value extends Parameter {
 
     private static final String VALUE_UTC_OFFSET = "UTC-OFFSET";
 
+    /**
+     * Binary value type.
+     */
     public static final Value BINARY = new Value(VALUE_BINARY);
 
+    /**
+     * Boolean value type.
+     */
     public static final Value BOOLEAN = new Value(VALUE_BOOLEAN);
 
+    /**
+     * Calendar address value type.
+     */
     public static final Value CAL_ADDRESS = new Value(VALUE_CAL_ADDRESS);
 
+    /**
+     * Date value type.
+     */
     public static final Value DATE = new Value(VALUE_DATE);
 
+    /**
+     * Date-time value type.
+     */
     public static final Value DATE_TIME = new Value(VALUE_DATE_TIME);
 
+    /**
+     * Duration value type.
+     */
     public static final Value DURATION = new Value(VALUE_DURATION);
 
+    /**
+     * Float value type.
+     */
     public static final Value FLOAT = new Value(VALUE_FLOAT);
 
+    /**
+     * Integer value type.
+     */
     public static final Value INTEGER = new Value(VALUE_INTEGER);
 
+    /**
+     * Period value type.
+     */
     public static final Value PERIOD = new Value(VALUE_PERIOD);
 
+    /**
+     * Recurrence value type.
+     */
     public static final Value RECUR = new Value(VALUE_RECUR);
 
+    /**
+     * Text value type.
+     */
     public static final Value TEXT = new Value(VALUE_TEXT);
 
+    /**
+     * Time value type.
+     */
     public static final Value TIME = new Value(VALUE_TIME);
 
+    /**
+     * URI value type.
+     */
     public static final Value URI = new Value(VALUE_URI);
 
+    /**
+     * UTC offset value type.
+     */
     public static final Value UTC_OFFSET = new Value(VALUE_UTC_OFFSET);
 
     private String value;
