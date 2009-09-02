@@ -53,18 +53,39 @@ public class WeekDay implements Serializable {
     
     private static final long serialVersionUID = -4412000990022011469L;
 
+    /**
+     * Sunday.
+     */
     public static final WeekDay SU = new WeekDay("SU", 0);
 
+    /**
+     * Monday.
+     */
     public static final WeekDay MO = new WeekDay("MO", 0);
 
+    /**
+     * Tuesday.
+     */
     public static final WeekDay TU = new WeekDay("TU", 0);
 
+    /**
+     * Wednesday.
+     */
     public static final WeekDay WE = new WeekDay("WE", 0);
 
+    /**
+     * Thursday.
+     */
     public static final WeekDay TH = new WeekDay("TH", 0);
 
+    /**
+     * Friday.
+     */
     public static final WeekDay FR = new WeekDay("FR", 0);
 
+    /**
+     * Saturday.
+     */
     public static final WeekDay SA = new WeekDay("SA", 0);
 
     private String day;
@@ -86,14 +107,8 @@ public class WeekDay implements Serializable {
     }
     
     /**
-<<<<<<< WeekDay.java
      * @param day a string representation of a week day
      * @param offset a month offset value
-=======
-     * Constructor used to construct constant instances.
-     * @param day
-     * @param offset
->>>>>>> 1.13
      */
     private WeekDay(final String day, final int offset) {
         this.day = day;

@@ -89,19 +89,39 @@ public class Recur implements Serializable {
 
     private static final String WKST = "WKST";
 
-    // frequencies..
+    /**
+     * Second frequency resolution.
+     */
     public static final String SECONDLY = "SECONDLY";
 
+    /**
+     * Minute frequency resolution.
+     */
     public static final String MINUTELY = "MINUTELY";
 
+    /**
+     * Hour frequency resolution.
+     */
     public static final String HOURLY = "HOURLY";
 
+    /**
+     * Day frequency resolution.
+     */
     public static final String DAILY = "DAILY";
 
+    /**
+     * Week frequency resolution.
+     */
     public static final String WEEKLY = "WEEKLY";
 
+    /**
+     * Month frequency resolution.
+     */
     public static final String MONTHLY = "MONTHLY";
 
+    /**
+     * Year frequency resolution.
+     */
     public static final String YEARLY = "YEARLY";
 
     /**

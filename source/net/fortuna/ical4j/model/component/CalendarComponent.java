@@ -52,6 +52,9 @@ public abstract class CalendarComponent extends Component {
      */
     private static final long serialVersionUID = -5832972592377720592L;
     
+    /**
+     * Validator instance that does nothing.
+     */
     protected static final Validator EMPTY_VALIDATOR = new EmptyValidator();
     
     /**
@@ -70,7 +73,8 @@ public abstract class CalendarComponent extends Component {
     }
 
     /**
-     * Perform ITIP validation.
+     * Performs method-specific ITIP validation.
+     * @param method the applicable method
      * @throws ValidationException where the component does not comply with RFC2446
      */
     public final void validate(Method method) throws ValidationException {

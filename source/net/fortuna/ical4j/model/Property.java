@@ -57,140 +57,295 @@ public abstract class Property extends Content {
     // iCalendar properties..
 
     /**
-     * 'prodid' and 'version' are both REQUIRED, but MUST NOT occur more than once.
+     * Product identifier property name.
      */
     public static final String PRODID = "PRODID";
 
+    /**
+     * iCalendar version property name.
+     */
     public static final String VERSION = "VERSION";
 
     /**
-     * 'calscale' and 'method' are optional, but MUST NOT occur more than once.
+     * Calendar scale property name.
      */
     public static final String CALSCALE = "CALSCALE";
 
+    /**
+     * iTIP method property name.
+     */
     public static final String METHOD = "METHOD";
 
     // Component properties..
 
     /**
-     * the following are optional, but MUST NOT occur more than once.
+     * Busy type property name.
      */
     public static final String BUSYTYPE = "BUSYTYPE";
 
+    /**
+     * Classifier property name.
+     */
     public static final String CLASS = "CLASS";
 
+    /**
+     * Creation date property name.
+     */
     public static final String CREATED = "CREATED";
 
+    /**
+     * Description property name.
+     */
     public static final String DESCRIPTION = "DESCRIPTION";
 
+    /**
+     * Start date property name.
+     */
     public static final String DTSTART = "DTSTART";
 
+    /**
+     * Geographic location property name.
+     */
     public static final String GEO = "GEO";
 
+    /**
+     * Last modified date property name.
+     */
     public static final String LAST_MODIFIED = "LAST-MODIFIED";
 
+    /**
+     * Location property name.
+     */
     public static final String LOCATION = "LOCATION";
 
+    /**
+     * Organiser property name.
+     */
     public static final String ORGANIZER = "ORGANIZER";
 
+    /**
+     * Percentage complete property name.
+     */
     public static final String PERCENT_COMPLETE = "PERCENT-COMPLETE";
 
+    /**
+     * Prority property name.
+     */
     public static final String PRIORITY = "PRIORITY";
 
+    /**
+     * Date-stamp property name.
+     */
     public static final String DTSTAMP = "DTSTAMP";
 
+    /**
+     * Sequence property name.
+     */
     public static final String SEQUENCE = "SEQUENCE";
 
+    /**
+     * Status property name.
+     */
     public static final String STATUS = "STATUS";
 
+    /**
+     * Summary property name.
+     */
     public static final String SUMMARY = "SUMMARY";
 
+    /**
+     * Transparency property name.
+     */
     public static final String TRANSP = "TRANSP";
 
+    /**
+     * Unique identifier property name.
+     */
     public static final String UID = "UID";
 
+    /**
+     * Uniform resource locator property name.
+     */
     public static final String URL = "URL";
 
+    /**
+     * Recurrence identifier property name.
+     */
     public static final String RECURRENCE_ID = "RECURRENCE-ID";
 
+    /**
+     * Completed date property name.
+     */
     public static final String COMPLETED = "COMPLETED";
 
+    /**
+     * Due date property name.
+     */
     public static final String DUE = "DUE";
 
+    /**
+     * Free/busy property name.
+     */
     public static final String FREEBUSY = "FREEBUSY";
 
+    /**
+     * Timezone identifier property name.
+     */
     public static final String TZID = "TZID";
 
+    /**
+     * Timezone name property name.
+     */
     public static final String TZNAME = "TZNAME";
 
+    /**
+     * Prior timezone offset property name.
+     */
     public static final String TZOFFSETFROM = "TZOFFSETFROM";
 
+    /**
+     * New timezone offset property name.
+     */
     public static final String TZOFFSETTO = "TZOFFSETTO";
 
+    /**
+     * URL for timezone definition property name.
+     */
     public static final String TZURL = "TZURL";
 
+    /**
+     * Alarm action property name.
+     */
     public static final String ACTION = "ACTION";
 
+    /**
+     * Repeat rule property name.
+     */
     public static final String REPEAT = "REPEAT";
 
+    /**
+     * Alarm trigger property name.
+     */
     public static final String TRIGGER = "TRIGGER";
 
+    /**
+     * Request status property name.
+     */
     public static final String REQUEST_STATUS = "REQUEST-STATUS";
 
     /**
-     * either 'dtend' or 'duration' may appear in a 'eventprop', but 'dtend' and 'duration' MUST NOT occur in the same
-     * 'eventprop'.
+     * End date property name.
      */
     public static final String DTEND = "DTEND";
 
+    /**
+     * Duration property name.
+     */
     public static final String DURATION = "DURATION";
 
     /**
-     * the following are optional, and MAY occur more than once.
+     * Attachment property name.
      */
     public static final String ATTACH = "ATTACH";
 
+    /**
+     * Attendee property name.
+     */
     public static final String ATTENDEE = "ATTENDEE";
 
+    /**
+     * Categories property name.
+     */
     public static final String CATEGORIES = "CATEGORIES";
 
+    /**
+     * Comment property name.
+     */
     public static final String COMMENT = "COMMENT";
 
+    /**
+     * Contact property name.
+     */
     public static final String CONTACT = "CONTACT";
 
+    /**
+     * Exclusion date property name.
+     */
     public static final String EXDATE = "EXDATE";
 
+    /**
+     * Exclusion rule property name.
+     */
     public static final String EXRULE = "EXRULE";
 
+    /**
+     * Relationship property name.
+     */
     public static final String RELATED_TO = "RELATED-TO";
 
+    /**
+     * Resources property name.
+     */
     public static final String RESOURCES = "RESOURCES";
 
+    /**
+     * Recurrence date property name.
+     */
     public static final String RDATE = "RDATE";
 
+    /**
+     * Recurrence rule property name.
+     */
     public static final String RRULE = "RRULE";
 
+    /**
+     * Prefix for non-standard properties.
+     */
     public static final String EXPERIMENTAL_PREFIX = "X-";
 
     /**
-     * the following are vvenue only properties.
+     * VVENUE country property name.
      */
     public static final String COUNTRY = "COUNTRY";
 
+    /**
+     * VVENUE extended address property name.
+     */
     public static final String EXTENDED_ADDRESS = "EXTENDED-ADDRESS";
 
+    /**
+     * VVENUE locality property name.
+     */
     public static final String LOCALITY = "LOCALITY";
 
+    /**
+     * VVENUE location type property name.
+     */
     public static final String LOCATION_TYPE = "LOCATION-TYPE";
 
+    /**
+     * VVENUE name property name.
+     */
     public static final String NAME = "NAME";
 
+    /**
+     * VVENUE postal code property name.
+     */
     public static final String POSTALCODE = "POSTAL-CODE";
 
+    /**
+     * VVENUE region property name.
+     */
     public static final String REGION = "REGION";
 
+    /**
+     * VVENUE street address property name.
+     */
     public static final String STREET_ADDRESS = "STREET-ADDRESS";
 
+    /**
+     * VVENUE telephone property name.
+     */
     public static final String TEL = "TEL";
 
     private String name;
@@ -221,6 +376,8 @@ public abstract class Property extends Content {
      * maintained.
      * @param property a property to copy
      * @throws URISyntaxException where the specified property contains an invalid URI value
+     * @throws ParseException where the specified property has invalid data
+     * @throws IOException where an error occurs reading data from the specified property
      */
     protected Property(final Property property) throws IOException,
             URISyntaxException, ParseException {
