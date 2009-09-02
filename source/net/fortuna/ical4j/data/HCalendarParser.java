@@ -50,6 +50,7 @@ import javax.xml.xpath.XPathException;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 
+import net.fortuna.ical4j.model.CalendarException;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
@@ -193,7 +194,7 @@ public class HCalendarParser implements CalendarParser {
         try {
             return XPATH.compile(expr);
         } catch (XPathException e) {
-            throw new RuntimeException("Unable to compile expression '" + expr + "'", e);
+            throw new CalendarException(e);
         }
     }
 
@@ -216,7 +217,7 @@ public class HCalendarParser implements CalendarParser {
             Document d = BUILDER_FACTORY.newDocumentBuilder().parse(in);
             buildCalendar(d, handler);
         } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
+            throw new CalendarException(e);
         } catch (SAXException e) {
             if (e instanceof SAXParseException) {
                 SAXParseException pe = (SAXParseException) e;
@@ -460,7 +461,7 @@ public class HCalendarParser implements CalendarParser {
         } catch (ParseException e) {
             throw new ParserException("Malformed value for element '" + className + "'", -1, e);
         } catch (IOException e) {
-            throw new RuntimeException("Unknown error setting property value for element '" + className + "'", e);
+            throw new CalendarException(e);
         }
 
         handler.endProperty(propName);

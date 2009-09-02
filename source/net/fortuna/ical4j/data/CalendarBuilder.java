@@ -43,6 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.CalendarException;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentFactory;
 import net.fortuna.ical4j.model.Escapable;
@@ -372,10 +373,10 @@ public class CalendarBuilder {
                     property.setValue(strDate);
                 } catch (ParseException e) {
                     // shouldn't happen as its already been parsed
-                    throw new RuntimeException(e);
+                    throw new CalendarException(e);
                 } catch (URISyntaxException e) {
                     // shouldn't happen as its already been parsed
-                    throw new RuntimeException(e);
+                    throw new CalendarException(e);
                 }
             }
         }
