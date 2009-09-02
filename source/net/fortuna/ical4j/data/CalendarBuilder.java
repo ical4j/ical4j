@@ -92,12 +92,24 @@ public class CalendarBuilder {
     
     private List datesMissingTimezones;
 
+    /**
+     * The calendar instance created by the builder.
+     */
     protected Calendar calendar;
 
+    /**
+     * The current component instance created by the builder.
+     */
     protected Component component;
 
+    /**
+     * The current sub-component instance created by the builder.
+     */
     protected Component subComponent;
 
+    /**
+     * The current property instance created by the builder.
+     */
     protected Property property;
 
     /**
@@ -118,7 +130,7 @@ public class CalendarBuilder {
 
     /**
      * Constructs a new calendar builder using the specified timezone registry.
-     * @param parser a calendar parser used to parse calendar files
+     * @param registry a timezone registry to populate with discovered timezones
      */
     public CalendarBuilder(final TimeZoneRegistry registry) {
         this(CalendarParserFactory.getInstance().createParser(), registry);
@@ -127,7 +139,8 @@ public class CalendarBuilder {
     /**
      * Constructs a new instance using the specified parser and registry.
      * @param parser a calendar parser used to construct the calendar
-     * @param registry a timezone registry used to retrieve {@link TimeZone}s and register additional timezone information found
+     * @param registry a timezone registry used to retrieve {@link TimeZone}s and
+     *  register additional timezone information found
      * in the calendar
      */
     public CalendarBuilder(final CalendarParser parser,
@@ -139,10 +152,10 @@ public class CalendarBuilder {
 
     /**
      * Builds an iCalendar model from the specified input stream.
-     * @param in
-     * @return a calendar
-     * @throws IOException
-     * @throws ParserException
+     * @param in an input stream to read calendar data from
+     * @return a calendar parsed from the specified input stream
+     * @throws IOException where an error occurs reading data from the specified stream
+     * @throws ParserException where an error occurs parsing data from the stream
      */
     public Calendar build(final InputStream in) throws IOException,
             ParserException {
@@ -152,10 +165,10 @@ public class CalendarBuilder {
     /**
      * Builds an iCalendar model from the specified reader. An <code>UnfoldingReader</code> is applied to the
      * specified reader to ensure the data stream is correctly unfolded where appropriate.
-     * @param in
-     * @return a calendar
-     * @throws IOException
-     * @throws ParserException
+     * @param in a reader to read calendar data from
+     * @return a calendar parsed from the specified reader
+     * @throws IOException where an error occurs reading data from the specified reader
+     * @throws ParserException where an error occurs parsing data from the reader
      */
     public Calendar build(final Reader in) throws IOException, ParserException {
         return build(new UnfoldingReader(in));
@@ -164,9 +177,9 @@ public class CalendarBuilder {
     /**
      * Build an iCalendar model by parsing data from the specified reader.
      * @param uin an unfolding reader to read data from
-     * @return a calendar model
-     * @throws IOException
-     * @throws ParserException
+     * @return a calendar parsed from the specified reader
+     * @throws IOException where an error occurs reading data from the specified reader
+     * @throws ParserException where an error occurs parsing data from the reader
      */
     public Calendar build(final UnfoldingReader uin) throws IOException,
             ParserException {
@@ -186,18 +199,11 @@ public class CalendarBuilder {
     }
 
     private class ContentHandlerImpl implements ContentHandler {
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.data.ContentHandler#endCalendar()
-         */
+
         public void endCalendar() {
             // do nothing..
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.data.ContentHandler#endComponent(java.lang.String)
-         */
         public void endComponent(final String name) {
             if (component != null) {
                 if (subComponent != null) {
@@ -226,10 +232,6 @@ public class CalendarBuilder {
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.data.ContentHandler#endProperty(java.lang.String)
-         */
         public void endProperty(final String name) {
             if (property != null) {
                 // replace with a constant instance if applicable..
@@ -250,10 +252,6 @@ public class CalendarBuilder {
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.data.ContentHandler#parameter(java.lang.String, java.lang.String)
-         */
         public void parameter(final String name, final String value) throws URISyntaxException {
             if (property != null) {
                 // parameter names are case-insensitive, but convert to upper case to simplify further processing
@@ -290,9 +288,8 @@ public class CalendarBuilder {
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.data.ContentHandler#propertyValue(java.lang.String)
+        /**
+         * {@inheritDoc}
          */
         public void propertyValue(final String value) throws URISyntaxException,
                 ParseException, IOException {
@@ -307,17 +304,15 @@ public class CalendarBuilder {
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.data.ContentHandler#startCalendar()
+        /**
+         * {@inheritDoc}
          */
         public void startCalendar() {
             calendar = new Calendar();
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.data.ContentHandler#startComponent(java.lang.String)
+        /**
+         * {@inheritDoc}
          */
         public void startComponent(final String name) {
             if (component != null) {
@@ -328,9 +323,8 @@ public class CalendarBuilder {
             }
         }
 
-        /*
-         * (non-Javadoc)
-         * @see net.fortuna.ical4j.data.ContentHandler#startProperty(java.lang.String)
+        /**
+         * {@inheritDoc}
          */
         public void startProperty(final String name) {
             // property names are case-insensitive, but convert to upper case to simplify further processing
