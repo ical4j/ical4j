@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -45,6 +46,8 @@ import java.util.Map;
  */
 public class IndexedPropertyList {
 
+    private static final PropertyList EMPTY_LIST = new PropertyList();
+    
     private Map index;
     
     /**
@@ -53,14 +56,20 @@ public class IndexedPropertyList {
      * @param parameterName the name of parameters on which to index
      */
     public IndexedPropertyList(final PropertyList list, final String parameterName) {
-        index = new HashMap();
+        Map indexedProperties = new HashMap();
         for (Iterator i = list.iterator(); i.hasNext();) {
             Property property = (Property) i.next();
             for (Iterator j = property.getParameters(parameterName).iterator(); j.hasNext();) {
                 Parameter parameter = (Parameter) j.next();
-                getProperties(parameter.getValue()).add(property);
+                PropertyList properties = (PropertyList) indexedProperties.get(parameter.getValue());
+                if (properties == null) {
+                    properties = new PropertyList();
+                    indexedProperties.put(parameter.getValue(), properties);
+                }
+                properties.add(property);
             }
         }
+        this.index = Collections.unmodifiableMap(indexedProperties);
     }
     
     /**
@@ -73,8 +82,7 @@ public class IndexedPropertyList {
     public PropertyList getProperties(final String paramValue) {
         PropertyList properties = (PropertyList) index.get(paramValue);
         if (properties == null) {
-            properties = new PropertyList();
-            index.put(paramValue, properties);
+            properties = EMPTY_LIST;
         }
         return properties;
     }

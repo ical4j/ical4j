@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -45,6 +46,8 @@ import java.util.Map;
  */
 public class IndexedComponentList {
 
+    private static final ComponentList EMPTY_LIST = new ComponentList();
+    
     private Map index;
     
     /**
@@ -53,14 +56,20 @@ public class IndexedComponentList {
      * @param propertyName the name of the properties to index on
      */
     public IndexedComponentList(final ComponentList list, final String propertyName) {
-        index = new HashMap();
+        Map indexedComponents = new HashMap();
         for (Iterator i = list.iterator(); i.hasNext();) {
             Component component = (Component) i.next();
             for (Iterator j = component.getProperties(propertyName).iterator(); j.hasNext();) {
                 Property property = (Property) j.next();
-                getComponents(property.getValue()).add(component);
+                ComponentList components = (ComponentList) indexedComponents.get(property.getValue());
+                if (components == null) {
+                    components = new ComponentList();
+                    indexedComponents.put(property.getValue(), components);
+                }
+                components.add(component);
             }
         }
+        this.index = Collections.unmodifiableMap(indexedComponents);
     }
     
     /**
@@ -73,8 +82,7 @@ public class IndexedComponentList {
     public ComponentList getComponents(final String propertyValue) {
         ComponentList components = (ComponentList) index.get(propertyValue);
         if (components == null) {
-            components = new ComponentList();
-            index.put(propertyValue, components);
+            components = EMPTY_LIST;
         }
         return components;
     }

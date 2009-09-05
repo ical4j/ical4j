@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -48,6 +47,8 @@ import net.fortuna.ical4j.util.Configurator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
 /**
  * $Id$
@@ -68,7 +69,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     
     private Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
 
-    private static final Map DEFAULT_TIMEZONES = new HashMap();
+    private static final Map DEFAULT_TIMEZONES = new ConcurrentHashMap();
 
     private static final Properties ALIASES = new Properties();
     static {
@@ -99,7 +100,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      */
     public TimeZoneRegistryImpl(final String resourcePrefix) {
         this.resourcePrefix = resourcePrefix;
-        timezones = new HashMap();
+        timezones = new ConcurrentHashMap();
     }
 
     /**
