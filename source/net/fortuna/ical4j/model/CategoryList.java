@@ -32,12 +32,13 @@
 package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 import net.fortuna.ical4j.util.Strings;
 
@@ -57,7 +58,7 @@ public class CategoryList implements Serializable {
      * Default constructor.
      */
     public CategoryList() {
-        categories = new ArrayList();
+        categories = new CopyOnWriteArrayList();
     }
 
     /**
@@ -65,7 +66,7 @@ public class CategoryList implements Serializable {
      * @param aValue a string representation of a list of categories
      */
     public CategoryList(final String aValue) {
-        categories = new ArrayList();
+        categories = new CopyOnWriteArrayList();
 
         Pattern pattern = Pattern.compile("([^\\\\](?:\\\\{2})),|([^\\\\]),");
         Matcher matcher = pattern.matcher(aValue);

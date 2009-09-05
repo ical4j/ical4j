@@ -32,10 +32,11 @@
 package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -54,7 +55,7 @@ public class ResourceList implements Serializable {
      * Default constructor.
      */
     public ResourceList() {
-        resources = new ArrayList();
+        resources = new CopyOnWriteArrayList();
     }
 
     /**
@@ -64,7 +65,7 @@ public class ResourceList implements Serializable {
      * resources
      */
     public ResourceList(final String aValue) {
-        resources = new ArrayList();
+        resources = new CopyOnWriteArrayList();
 
         for (StringTokenizer t = new StringTokenizer(aValue, ","); t
                 .hasMoreTokens();) {

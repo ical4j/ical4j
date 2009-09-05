@@ -41,6 +41,8 @@ import java.util.List;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
+
 /**
  * $Id$ [Apr 5, 2004]
  *
@@ -70,7 +72,7 @@ public class ParameterList implements Serializable {
             parameters = Collections.unmodifiableList(new ArrayList());
         }
         else {
-            parameters = new ArrayList();
+            parameters = new CopyOnWriteArrayList();
         }
     }
 
@@ -83,7 +85,7 @@ public class ParameterList implements Serializable {
      */
     public ParameterList(final ParameterList list, final boolean unmodifiable)
             throws URISyntaxException {
-        parameters = new ArrayList();
+        parameters = new CopyOnWriteArrayList();
         for (Iterator i = list.iterator(); i.hasNext();) {
             Parameter parameter = (Parameter) i.next();
             parameters.add(parameter.copy());
