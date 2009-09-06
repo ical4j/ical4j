@@ -37,6 +37,7 @@
 		<pathelement location="lib/commons-logging.jar" />
 		<pathelement location="lib/commons-codec.jar" />
 		<pathelement location="lib/commons-lang.jar" />
+        <pathelement location="lib/backport-util-concurrent.jar" />
 		<!--
 		<pathelement location="${output.dir}"/>
 		-->
