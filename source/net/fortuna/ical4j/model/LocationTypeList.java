@@ -67,7 +67,8 @@ public class LocationTypeList implements Serializable {
     public LocationTypeList(final String aValue) {
         locationTypes = new CopyOnWriteArrayList();
 
-        for (StringTokenizer t = new StringTokenizer(aValue, ","); t.hasMoreTokens();) {
+        final StringTokenizer t = new StringTokenizer(aValue, ",");
+        while (t.hasMoreTokens()) {
             locationTypes.add(t.nextToken());
         }
     }

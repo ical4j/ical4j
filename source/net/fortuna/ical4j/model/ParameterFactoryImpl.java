@@ -147,21 +147,21 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
 
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                final CuType parameter = new CuType(value);
+                CuType parameter = new CuType(value);
                 if (CuType.INDIVIDUAL.equals(parameter)) {
-                    return CuType.INDIVIDUAL;
+                    parameter = CuType.INDIVIDUAL;
                 }
                 else if (CuType.GROUP.equals(parameter)) {
-                    return CuType.GROUP;
+                    parameter = CuType.GROUP;
                 }
                 else if (CuType.RESOURCE.equals(parameter)) {
-                    return CuType.RESOURCE;
+                    parameter = CuType.RESOURCE;
                 }
                 else if (CuType.ROOM.equals(parameter)) {
-                    return CuType.ROOM;
+                    parameter = CuType.ROOM;
                 }
                 else if (CuType.UNKNOWN.equals(parameter)) {
-                    return CuType.UNKNOWN;
+                    parameter = CuType.UNKNOWN;
                 }
                 return parameter;
             }
@@ -215,12 +215,12 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
 
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                final Encoding parameter = new Encoding(value);
+                Encoding parameter = new Encoding(value);
                 if (Encoding.EIGHT_BIT.equals(parameter)) {
-                    return Encoding.EIGHT_BIT;
+                    parameter = Encoding.EIGHT_BIT;
                 }
                 else if (Encoding.BASE64.equals(parameter)) {
-                    return Encoding.BASE64;
+                    parameter = Encoding.BASE64;
                 }
                 return parameter;
             }
@@ -248,18 +248,18 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
 
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                final FbType parameter = new FbType(value);
+                FbType parameter = new FbType(value);
                 if (FbType.FREE.equals(parameter)) {
-                    return FbType.FREE;
+                    parameter = FbType.FREE;
                 }
                 else if (FbType.BUSY.equals(parameter)) {
-                    return FbType.BUSY;
+                    parameter = FbType.BUSY;
                 }
                 else if (FbType.BUSY_TENTATIVE.equals(parameter)) {
-                    return FbType.BUSY_TENTATIVE;
+                    parameter = FbType.BUSY_TENTATIVE;
                 }
                 else if (FbType.BUSY_UNAVAILABLE.equals(parameter)) {
-                    return FbType.BUSY_UNAVAILABLE;
+                    parameter = FbType.BUSY_UNAVAILABLE;
                 }
                 return parameter;
             }
@@ -300,27 +300,27 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
 
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                final PartStat parameter = new PartStat(value);
+                PartStat parameter = new PartStat(value);
                 if (PartStat.NEEDS_ACTION.equals(parameter)) {
-                    return PartStat.NEEDS_ACTION;
+                    parameter = PartStat.NEEDS_ACTION;
                 }
                 else if (PartStat.ACCEPTED.equals(parameter)) {
-                    return PartStat.ACCEPTED;
+                    parameter = PartStat.ACCEPTED;
                 }
                 else if (PartStat.DECLINED.equals(parameter)) {
-                    return PartStat.DECLINED;
+                    parameter = PartStat.DECLINED;
                 }
                 else if (PartStat.TENTATIVE.equals(parameter)) {
-                    return PartStat.TENTATIVE;
+                    parameter = PartStat.TENTATIVE;
                 }
                 else if (PartStat.DELEGATED.equals(parameter)) {
-                    return PartStat.DELEGATED;
+                    parameter = PartStat.DELEGATED;
                 }
                 else if (PartStat.COMPLETED.equals(parameter)) {
-                    return PartStat.COMPLETED;
+                    parameter = PartStat.COMPLETED;
                 }
                 else if (PartStat.IN_PROCESS.equals(parameter)) {
-                    return PartStat.IN_PROCESS;
+                    parameter = PartStat.IN_PROCESS;
                 }
                 return parameter;
             }
@@ -335,12 +335,12 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
 
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                final Range parameter = new Range(value);
+                Range parameter = new Range(value);
                 if (Range.THISANDFUTURE.equals(parameter)) {
-                    return Range.THISANDFUTURE;
+                    parameter = Range.THISANDFUTURE;
                 }
                 else if (Range.THISANDPRIOR.equals(parameter)) {
-                    return Range.THISANDPRIOR;
+                    parameter = Range.THISANDPRIOR;
                 }
                 return parameter;
             }
@@ -355,12 +355,12 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
 
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                final Related parameter = new Related(value);
+                Related parameter = new Related(value);
                 if (Related.START.equals(parameter)) {
-                    return Related.START;
+                    parameter = Related.START;
                 }
                 else if (Related.END.equals(parameter)) {
-                    return Related.END;
+                    parameter = Related.END;
                 }
                 return parameter;
             }
@@ -375,15 +375,15 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
 
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                final RelType parameter = new RelType(value);
+                RelType parameter = new RelType(value);
                 if (RelType.PARENT.equals(parameter)) {
-                    return RelType.PARENT;
+                    parameter = RelType.PARENT;
                 }
                 else if (RelType.CHILD.equals(parameter)) {
-                    return RelType.CHILD;
+                    parameter = RelType.CHILD;
                 }
                 if (RelType.SIBLING.equals(parameter)) {
-                    return RelType.SIBLING;
+                    parameter = RelType.SIBLING;
                 }
                 return parameter;
             }
@@ -398,18 +398,18 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
 
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                final Role parameter = new Role(value);
+                Role parameter = new Role(value);
                 if (Role.CHAIR.equals(parameter)) {
-                    return Role.CHAIR;
+                    parameter = Role.CHAIR;
                 }
                 else if (Role.REQ_PARTICIPANT.equals(parameter)) {
-                    return Role.REQ_PARTICIPANT;
+                    parameter = Role.REQ_PARTICIPANT;
                 }
                 else if (Role.OPT_PARTICIPANT.equals(parameter)) {
-                    return Role.OPT_PARTICIPANT;
+                    parameter = Role.OPT_PARTICIPANT;
                 }
                 else if (Role.NON_PARTICIPANT.equals(parameter)) {
-                    return Role.NON_PARTICIPANT;
+                    parameter = Role.NON_PARTICIPANT;
                 }
                 return parameter;
             }
@@ -424,12 +424,12 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
 
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                final Rsvp parameter = new Rsvp(value);
+                Rsvp parameter = new Rsvp(value);
                 if (Rsvp.TRUE.equals(parameter)) {
-                    return Rsvp.TRUE;
+                    parameter = Rsvp.TRUE;
                 }
                 else if (Rsvp.FALSE.equals(parameter)) {
-                    return Rsvp.FALSE;
+                    parameter = Rsvp.FALSE;
                 }
                 return parameter;
             }
@@ -496,48 +496,48 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
 
             public Parameter createParameter(final String name,
                     final String value) throws URISyntaxException {
-                final Value parameter = new Value(value);
+                Value parameter = new Value(value);
                 if (Value.BINARY.equals(parameter)) {
-                    return Value.BINARY;
+                    parameter = Value.BINARY;
                 }
                 else if (Value.BOOLEAN.equals(parameter)) {
-                    return Value.BOOLEAN;
+                    parameter = Value.BOOLEAN;
                 }
                 else if (Value.CAL_ADDRESS.equals(parameter)) {
-                    return Value.CAL_ADDRESS;
+                    parameter = Value.CAL_ADDRESS;
                 }
                 else if (Value.DATE.equals(parameter)) {
-                    return Value.DATE;
+                    parameter = Value.DATE;
                 }
                 else if (Value.DATE_TIME.equals(parameter)) {
-                    return Value.DATE_TIME;
+                    parameter = Value.DATE_TIME;
                 }
                 else if (Value.DURATION.equals(parameter)) {
-                    return Value.DURATION;
+                    parameter = Value.DURATION;
                 }
                 else if (Value.FLOAT.equals(parameter)) {
-                    return Value.FLOAT;
+                    parameter = Value.FLOAT;
                 }
                 else if (Value.INTEGER.equals(parameter)) {
-                    return Value.INTEGER;
+                    parameter = Value.INTEGER;
                 }
                 else if (Value.PERIOD.equals(parameter)) {
-                    return Value.PERIOD;
+                    parameter = Value.PERIOD;
                 }
                 else if (Value.RECUR.equals(parameter)) {
-                    return Value.RECUR;
+                    parameter = Value.RECUR;
                 }
                 else if (Value.TEXT.equals(parameter)) {
-                    return Value.TEXT;
+                    parameter = Value.TEXT;
                 }
                 else if (Value.TIME.equals(parameter)) {
-                    return Value.TIME;
+                    parameter = Value.TIME;
                 }
                 else if (Value.URI.equals(parameter)) {
-                    return Value.URI;
+                    parameter = Value.URI;
                 }
                 else if (Value.UTC_OFFSET.equals(parameter)) {
-                    return Value.UTC_OFFSET;
+                    parameter = Value.UTC_OFFSET;
                 }
                 return parameter;
             }
@@ -562,19 +562,21 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
     public Parameter createParameter(final String name, final String value)
             throws URISyntaxException {
         final ParameterFactory factory = (ParameterFactory) factories.get(name);
+        Parameter parameter = null;
         if (factory != null) {
-            return factory.createParameter(name, value);
+            parameter = factory.createParameter(name, value);
         }
         else if (isExperimentalName(name)) {
-            return new XParameter(name, value);
+            parameter = new XParameter(name, value);
         }
         else if (allowIllegalNames()) {
-            return new XParameter(name, value);
+            parameter = new XParameter(name, value);
         }
         else {
             throw new IllegalArgumentException("Invalid parameter name: "
                     + name);
         }
+        return parameter;
     }
 
     /**

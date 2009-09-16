@@ -91,7 +91,7 @@ public class UtcOffset implements Serializable {
                     + "] - must be of the form: (+/-)HHMM[SS]");
         }
         
-        boolean negative = value.charAt(0) == '-';
+        final boolean negative = value.charAt(0) == '-';
 
         if (!negative && !(value.charAt(0) == '+')) {
             throw new IllegalArgumentException("UTC offset value must be signed");

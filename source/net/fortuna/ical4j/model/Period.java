@@ -114,7 +114,7 @@ public class Period extends DateRange implements Comparable {
         }
         catch (ParseException e) {
             if (resolve) {
-                Dur duration = parseDuration(value);
+                final Dur duration = parseDuration(value);
                 end = new DateTime(duration.getTime(parseStartDate(value)));
             }
             else {

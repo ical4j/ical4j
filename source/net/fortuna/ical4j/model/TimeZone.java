@@ -63,7 +63,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     public TimeZone(final VTimeZone vTimeZone) {
         this.vTimeZone = vTimeZone;
-        TzId tzId = (TzId) vTimeZone.getProperty(Property.TZID);
+        final TzId tzId = (TzId) vTimeZone.getProperty(Property.TZID);
         setID(tzId.getValue());
     }
 

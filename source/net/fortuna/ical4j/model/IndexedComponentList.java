@@ -56,11 +56,11 @@ public class IndexedComponentList {
      * @param propertyName the name of the properties to index on
      */
     public IndexedComponentList(final ComponentList list, final String propertyName) {
-        Map indexedComponents = new HashMap();
-        for (Iterator i = list.iterator(); i.hasNext();) {
-            Component component = (Component) i.next();
-            for (Iterator j = component.getProperties(propertyName).iterator(); j.hasNext();) {
-                Property property = (Property) j.next();
+        final Map indexedComponents = new HashMap();
+        for (final Iterator i = list.iterator(); i.hasNext();) {
+            final Component component = (Component) i.next();
+            for (final Iterator j = component.getProperties(propertyName).iterator(); j.hasNext();) {
+                final Property property = (Property) j.next();
                 ComponentList components = (ComponentList) indexedComponents.get(property.getValue());
                 if (components == null) {
                     components = new ComponentList();

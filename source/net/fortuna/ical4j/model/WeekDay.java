@@ -217,28 +217,29 @@ public class WeekDay implements Serializable {
      * @return the corresponding <code>java.util.Calendar</code> day
      */
     public static int getCalendarDay(final WeekDay weekday) {
+        int calendarDay = -1;
         if (SU.getDay().equals(weekday.getDay())) {
-            return Calendar.SUNDAY;
+            calendarDay = Calendar.SUNDAY;
         }
         else if (MO.getDay().equals(weekday.getDay())) {
-            return Calendar.MONDAY;
+            calendarDay = Calendar.MONDAY;
         }
         else if (TU.getDay().equals(weekday.getDay())) {
-            return Calendar.TUESDAY;
+            calendarDay = Calendar.TUESDAY;
         }
         else if (WE.getDay().equals(weekday.getDay())) {
-            return Calendar.WEDNESDAY;
+            calendarDay = Calendar.WEDNESDAY;
         }
         else if (TH.getDay().equals(weekday.getDay())) {
-            return Calendar.THURSDAY;
+            calendarDay = Calendar.THURSDAY;
         }
         else if (FR.getDay().equals(weekday.getDay())) {
-            return Calendar.FRIDAY;
+            calendarDay = Calendar.FRIDAY;
         }
         else if (SA.getDay().equals(weekday.getDay())) {
-            return Calendar.SATURDAY;
+            calendarDay = Calendar.SATURDAY;
         }
-        return -1;
+        return calendarDay;
     }
     
     /**

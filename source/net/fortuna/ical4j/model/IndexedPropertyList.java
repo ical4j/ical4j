@@ -56,11 +56,11 @@ public class IndexedPropertyList {
      * @param parameterName the name of parameters on which to index
      */
     public IndexedPropertyList(final PropertyList list, final String parameterName) {
-        Map indexedProperties = new HashMap();
-        for (Iterator i = list.iterator(); i.hasNext();) {
-            Property property = (Property) i.next();
-            for (Iterator j = property.getParameters(parameterName).iterator(); j.hasNext();) {
-                Parameter parameter = (Parameter) j.next();
+        final Map indexedProperties = new HashMap();
+        for (final Iterator i = list.iterator(); i.hasNext();) {
+            final Property property = (Property) i.next();
+            for (final Iterator j = property.getParameters(parameterName).iterator(); j.hasNext();) {
+                final Parameter parameter = (Parameter) j.next();
                 PropertyList properties = (PropertyList) indexedProperties.get(parameter.getValue());
                 if (properties == null) {
                     properties = new PropertyList();

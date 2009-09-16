@@ -71,8 +71,8 @@ public class PropertyList extends ArrayList implements Serializable {
      */
     public PropertyList(PropertyList properties) throws ParseException, IOException, URISyntaxException {
         super();
-        for (Iterator i = properties.iterator(); i.hasNext();) {
-            Property p = (Property) i.next();
+        for (final Iterator i = properties.iterator(); i.hasNext();) {
+            final Property p = (Property) i.next();
             add(p.copy());
         }
     }

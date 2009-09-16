@@ -134,7 +134,7 @@ public class Recur implements Serializable {
 
     private static int maxIncrementCount;
     static {
-        String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
+        final String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
         if (value != null && value.length() > 0) {
             maxIncrementCount = Integer.parseInt(value);
         } else {
@@ -183,14 +183,14 @@ public class Recur implements Serializable {
      * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
      */
     public Recur(final String aValue) throws ParseException {
-        StringTokenizer t = new StringTokenizer(aValue, ";=");
+        final StringTokenizer t = new StringTokenizer(aValue, ";=");
         while (t.hasMoreTokens()) {
-            String token = t.nextToken();
+            final String token = t.nextToken();
             if (FREQ.equals(token)) {
                 frequency = nextToken(t, token);
             }
             else if (UNTIL.equals(token)) {
-                String untilString = nextToken(t, token);
+                final String untilString = nextToken(t, token);
                 if (untilString != null && untilString.indexOf("T") >= 0) {
                     until = new DateTime(untilString);
                     // UNTIL must be specified in UTC time..

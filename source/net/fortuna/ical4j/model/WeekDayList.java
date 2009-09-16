@@ -68,11 +68,11 @@ public class WeekDayList extends ArrayList implements Serializable {
      * @param aString a string representation of a day list
      */
     public WeekDayList(final String aString) {
-        boolean outlookCompatibility =
+        final boolean outlookCompatibility =
             CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
         
-        for (StringTokenizer t = new StringTokenizer(aString, ","); t
-                .hasMoreTokens();) {
+        final StringTokenizer t = new StringTokenizer(aString, ",");
+        while (t.hasMoreTokens()) {
             if (outlookCompatibility) {
                 add(new WeekDay(t.nextToken().replaceAll(" ", "")));
             }

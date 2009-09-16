@@ -90,8 +90,9 @@ public class NumberList extends ArrayList implements Serializable {
      */
     public NumberList(final String aString, int minValue, int maxValue, boolean allowsNegativeValues) {
     	this(minValue, maxValue, allowsNegativeValues);
-        for (StringTokenizer t = new StringTokenizer(aString, ","); t.hasMoreTokens();) {
-        	int value = Numbers.parseInt(t.nextToken());
+        final StringTokenizer t = new StringTokenizer(aString, ",");
+        while (t.hasMoreTokens()) {
+        	final int value = Numbers.parseInt(t.nextToken());
             add(Integer.valueOf(value));
         }
     }

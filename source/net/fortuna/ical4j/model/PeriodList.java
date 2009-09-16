@@ -79,8 +79,8 @@ public class PeriodList extends TreeSet implements Serializable {
      */
     public PeriodList(final String aValue) throws ParseException {
         this();
-        for (StringTokenizer t = new StringTokenizer(aValue, ","); t
-                .hasMoreTokens();) {
+        final StringTokenizer t = new StringTokenizer(aValue, ",");
+        while (t.hasMoreTokens()) {
             add((Object) new Period(t.nextToken()));
         }
     }

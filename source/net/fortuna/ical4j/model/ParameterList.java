@@ -86,8 +86,8 @@ public class ParameterList implements Serializable {
     public ParameterList(final ParameterList list, final boolean unmodifiable)
             throws URISyntaxException {
         parameters = new CopyOnWriteArrayList();
-        for (Iterator i = list.iterator(); i.hasNext();) {
-            Parameter parameter = (Parameter) i.next();
+        for (final Iterator i = list.iterator(); i.hasNext();) {
+            final Parameter parameter = (Parameter) i.next();
             parameters.add(parameter.copy());
         }
         if (unmodifiable) {

@@ -67,8 +67,8 @@ public class ResourceList implements Serializable {
     public ResourceList(final String aValue) {
         resources = new CopyOnWriteArrayList();
 
-        for (StringTokenizer t = new StringTokenizer(aValue, ","); t
-                .hasMoreTokens();) {
+        final StringTokenizer t = new StringTokenizer(aValue, ",");
+        while (t.hasMoreTokens()) {
             resources.add(t.nextToken());
         }
     }

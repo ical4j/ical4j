@@ -163,7 +163,7 @@ public abstract class Parameter extends Content {
     public static final String VALUE = "VALUE";
 
     /**
-     * Reference to vvenue component
+     * Reference to vvenue component.
      */
     public static final String VVENUE = "VVENUE";
 
