@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
-		<version>1.0.7</version>
+		<version>1.0.8-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.fortuna.ical4j</groupId>
