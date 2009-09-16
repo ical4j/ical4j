@@ -106,30 +106,12 @@ public class Filter {
             }
 
             if (type == MATCH_ALL) {
-                List list = new ArrayList(c);
-                List temp = new ArrayList();
-                for (int n = 0; n < getRules().length; n++) {
-                    for (final Iterator i = list.iterator(); i.hasNext();) {
-                        final Object o = i.next();
-                        if (getRules()[n].match(o)) {
-                            temp.add(o);
-                        }
-                    }
-                    list = temp;
-                    temp = new ArrayList();
-                }
-                filtered.addAll(list);
+                filtered.addAll(matchAll(c));
             }
             else {
-                final Iterator i = c.iterator();
-                while (i.hasNext()) {
-                    final Object o = i.next();
-                    for (int n = 0; n < getRules().length; n++) {
-                        if (getRules()[n].match(o)) {
-                            filtered.add(o);
-                            break;
-                        }
-                    }
+                final Object match = matchAny(c);
+                if (match != null) {
+                    filtered.add(match);
                 }
             }
             return filtered;
@@ -137,6 +119,35 @@ public class Filter {
         return c;
     }
 
+    private List matchAll(Collection c) {
+        List list = new ArrayList(c);
+        List temp = new ArrayList();
+        for (int n = 0; n < getRules().length; n++) {
+            for (final Iterator i = list.iterator(); i.hasNext();) {
+                final Object o = i.next();
+                if (getRules()[n].match(o)) {
+                    temp.add(o);
+                }
+            }
+            list = temp;
+            temp = new ArrayList();
+        }
+        return list;
+    }
+
+    private Object matchAny(Collection c) {
+        final Iterator i = c.iterator();
+        while (i.hasNext()) {
+            final Object o = i.next();
+            for (int n = 0; n < getRules().length; n++) {
+                if (getRules()[n].match(o)) {
+                    return o;
+                }
+            }
+        }
+        return null;
+    }
+    
     /**
      * Returns a filtered subset of the specified array.
      * @param objects an array to filter

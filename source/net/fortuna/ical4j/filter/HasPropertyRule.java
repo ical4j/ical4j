@@ -76,16 +76,17 @@ public class HasPropertyRule extends ComponentRule {
      * {@inheritDoc}
      */
     public final boolean match(final Component component) {
+        boolean match = false;
         final PropertyList properties = component.getProperties(property.getName());
         for (final Iterator i = properties.iterator(); i.hasNext();) {
             final Property p = (Property) i.next();
             if (matchEquals && property.equals(p)) {
-                return true;
+                match = true;
             }
             else if (property.getValue().equals(p.getValue())) {
-                return true;
+                match = true;
             }
         }
-        return false;
+        return match;
     }
 }

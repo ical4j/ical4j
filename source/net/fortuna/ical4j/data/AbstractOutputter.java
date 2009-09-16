@@ -36,6 +36,8 @@ import java.nio.charset.Charset;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
+ * Base class for model outputters.
+ * 
  * <pre>
  * $Id$
  *

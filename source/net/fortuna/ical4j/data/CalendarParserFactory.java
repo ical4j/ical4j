@@ -59,7 +59,7 @@ public abstract class CalendarParserFactory {
     private static CalendarParserFactory instance;
     static {
         try {
-            Class factoryClass = Class.forName(
+            final Class factoryClass = Class.forName(
                     Configurator.getProperty(KEY_FACTORY_CLASS));
             instance = (CalendarParserFactory) factoryClass.newInstance();
         }

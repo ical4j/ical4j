@@ -69,8 +69,8 @@ public class AddressList implements Serializable {
      */
     public AddressList(final String aValue) throws URISyntaxException {
         addresses = new CopyOnWriteArrayList();
-        for (StringTokenizer t = new StringTokenizer(aValue, ","); t
-                .hasMoreTokens();) {
+        final StringTokenizer t = new StringTokenizer(aValue, ",");
+        while (t.hasMoreTokens()) {
 
             try {
                 addresses.add(new URI(Uris.encode(Strings

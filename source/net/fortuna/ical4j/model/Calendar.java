@@ -309,7 +309,7 @@ public class Calendar implements Serializable {
 
 //        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // validate method..
-            Method method = (Method) getProperty(Property.METHOD);
+            final Method method = (Method) getProperty(Property.METHOD);
             if (Method.PUBLISH.equals(method)) {
                 if (getComponent(Component.VEVENT) != null) {
                     ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());

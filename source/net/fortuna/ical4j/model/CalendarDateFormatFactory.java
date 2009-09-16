@@ -75,39 +75,40 @@ public final class CalendarDateFormatFactory {
      * @return an optimized DateFormat instance if possible, otherwise a normal SimpleDateFormat instance
      */
     public static java.text.DateFormat getInstance(String pattern) {
-
+        java.text.DateFormat instance = null;
+        
         // if (true) {
         // return new SimpleDateFormat(pattern);
         // }
 
         if (pattern.equals(DATETIME_PATTERN) || pattern.equals(DATETIME_UTC_PATTERN)) {
-            return new DateTimeFormat(pattern);
+            instance = new DateTimeFormat(pattern);
         }
-
-        if (pattern.equals(DATE_PATTERN)) {
-            return new DateFormat(pattern);
+        else if (pattern.equals(DATE_PATTERN)) {
+            instance = new DateFormat(pattern);
         }
-
-        if (pattern.equals(TIME_PATTERN) || pattern.equals(TIME_UTC_PATTERN)) {
-            return new TimeFormat(pattern);
+        else if (pattern.equals(TIME_PATTERN) || pattern.equals(TIME_UTC_PATTERN)) {
+            instance = new TimeFormat(pattern);
         }
+        else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("unexpected date format pattern: " + pattern);
+            }
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("unexpected date format pattern: " + pattern);
+            instance = new SimpleDateFormat(pattern);
         }
-
-        return new SimpleDateFormat(pattern);
+        return instance;
     }
 
-    private static abstract class CalendarDateFormat extends java.text.DateFormat {
+    private abstract static class CalendarDateFormat extends java.text.DateFormat {
         /**
 		 * 
 		 */
         private static final long serialVersionUID = -4191402739860280205L;
 
-        static private final java.util.TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
+        private static final java.util.TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
 
-        final private String pattern;
+        private final String pattern;
 
         private boolean lenient = true;
 
@@ -151,28 +152,34 @@ public final class CalendarDateFormatFactory {
 
         public Object clone() {
             // don't call super.clone()
-            CalendarDateFormat f = (CalendarDateFormat) CalendarDateFormatFactory.getInstance(pattern);
+            final CalendarDateFormat f = (CalendarDateFormat) CalendarDateFormatFactory.getInstance(pattern);
             f.setTimeZone(getTimeZone());
             f.setLenient(isLenient());
             return f;
         }
 
         public boolean equals(Object o) {
-            if (this == o)
+            if (this == o) {
                 return true;
-            if (o == null || getClass() != o.getClass())
+            }
+            if (o == null || getClass() != o.getClass()) {
                 return false;
-            if (!super.equals(o))
+            }
+            if (!super.equals(o)) {
                 return false;
+            }
 
-            CalendarDateFormat that = (CalendarDateFormat) o;
+            final CalendarDateFormat that = (CalendarDateFormat) o;
 
-            if (lenient != that.lenient)
+            if (lenient != that.lenient) {
                 return false;
-            if (!pattern.equals(that.pattern))
+            }
+            if (!pattern.equals(that.pattern)) {
                 return false;
-            if (!timeZone.equals(that.timeZone))
+            }
+            if (!timeZone.equals(that.timeZone)) {
                 return false;
+            }
 
             return true;
         }
@@ -187,6 +194,7 @@ public final class CalendarDateFormatFactory {
     }
 
     /**
+     * A custom date-time formatter.
      * Parses and formats these patterns:
      * 
      * <pre>
@@ -209,7 +217,7 @@ public final class CalendarDateFormatFactory {
         }
 
         public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
-            GregorianCalendar cal = new GregorianCalendar(getTimeZone());
+            final java.util.Calendar cal = new GregorianCalendar(getTimeZone());
             cal.setTimeInMillis(date.getTime());
 
             appendPadded(toAppendTo, cal.get(GregorianCalendar.YEAR), 4);
@@ -250,14 +258,15 @@ public final class CalendarDateFormatFactory {
                     return null;
                 }
 
-                int year = Integer.parseInt(source.substring(0, 4));
-                int month = Integer.parseInt(source.substring(4, 6)) - 1;
-                int day = Integer.parseInt(source.substring(6, 8));
-                int hour = Integer.parseInt(source.substring(9, 11));
-                int minute = Integer.parseInt(source.substring(11, 13));
-                int second = Integer.parseInt(source.substring(13, 15));
+                final int year = Integer.parseInt(source.substring(0, 4));
+                final int month = Integer.parseInt(source.substring(4, 6)) - 1;
+                final int day = Integer.parseInt(source.substring(6, 8));
+                final int hour = Integer.parseInt(source.substring(9, 11));
+                final int minute = Integer.parseInt(source.substring(11, 13));
+                final int second = Integer.parseInt(source.substring(13, 15));
 
-                Date d = makeCalendar(isLenient(), getTimeZone(), year, month, day, hour, minute, second).getTime();
+                final Date d = makeCalendar(isLenient(), getTimeZone(),
+                        year, month, day, hour, minute, second).getTime();
                 pos.setIndex(15);
                 return d;
             } catch (Exception e) {
@@ -267,6 +276,7 @@ public final class CalendarDateFormatFactory {
     }
 
     /**
+     * Custom date formatter.
      * Parses and formats this pattern:
      * 
      * <pre>
@@ -285,7 +295,7 @@ public final class CalendarDateFormatFactory {
         }
 
         public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
-            java.util.Calendar cal = java.util.Calendar.getInstance(getTimeZone());
+            final java.util.Calendar cal = java.util.Calendar.getInstance(getTimeZone());
             cal.setTimeInMillis(date.getTime());
 
             appendPadded(toAppendTo, cal.get(GregorianCalendar.YEAR), 4);
@@ -303,11 +313,11 @@ public final class CalendarDateFormatFactory {
             }
 
             try {
-                int year = Integer.parseInt(source.substring(0, 4));
-                int month = Integer.parseInt(source.substring(4, 6)) - 1;
-                int day = Integer.parseInt(source.substring(6, 8));
+                final int year = Integer.parseInt(source.substring(0, 4));
+                final int month = Integer.parseInt(source.substring(4, 6)) - 1;
+                final int day = Integer.parseInt(source.substring(6, 8));
 
-                Date d = makeCalendar(isLenient(), getTimeZone(), year, month, day).getTime();
+                final Date d = makeCalendar(isLenient(), getTimeZone(), year, month, day).getTime();
                 pos.setIndex(8);
                 return d;
             } catch (Exception e) {
@@ -317,6 +327,7 @@ public final class CalendarDateFormatFactory {
     }
 
     /**
+     * Custom time formatter.
      * Parses and formats these patterns:
      * 
      * <pre>
@@ -339,7 +350,7 @@ public final class CalendarDateFormatFactory {
         }
 
         public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
-            GregorianCalendar cal = new GregorianCalendar(getTimeZone());
+            final java.util.Calendar cal = new GregorianCalendar(getTimeZone());
             cal.setTimeInMillis(date.getTime());
 
             appendPadded(toAppendTo, cal.get(GregorianCalendar.HOUR_OF_DAY), 2);
@@ -371,11 +382,11 @@ public final class CalendarDateFormatFactory {
                     return null;
                 }
 
-                int hour = Integer.parseInt(source.substring(0, 2));
-                int minute = Integer.parseInt(source.substring(2, 4));
-                int second = Integer.parseInt(source.substring(4, 6));
+                final int hour = Integer.parseInt(source.substring(0, 2));
+                final int minute = Integer.parseInt(source.substring(2, 4));
+                final int second = Integer.parseInt(source.substring(4, 6));
 
-                Date d = makeCalendar(isLenient(), getTimeZone(), 1970, 0, 1, hour, minute, second).getTime();
+                final Date d = makeCalendar(isLenient(), getTimeZone(), 1970, 0, 1, hour, minute, second).getTime();
                 pos.setIndex(6);
                 return d;
             } catch (Exception e) {
@@ -384,22 +395,23 @@ public final class CalendarDateFormatFactory {
         }
     }
 
-    private static GregorianCalendar makeCalendar(boolean lenient, java.util.TimeZone timeZone, int year,
+    private static java.util.Calendar makeCalendar(boolean lenient, java.util.TimeZone timeZone, int year,
             int zeroBasedMonth, int day, int hour, int minutes, int seconds) {
-        GregorianCalendar cal = new GregorianCalendar(timeZone);
+        final java.util.Calendar cal = new GregorianCalendar(timeZone);
         cal.setLenient(lenient);
         cal.set(year, zeroBasedMonth, day, hour, minutes, seconds);
         cal.set(java.util.Calendar.MILLISECOND, 0);
         return cal;
     }
 
-    private static GregorianCalendar makeCalendar(boolean lenient, TimeZone timeZone, int year, int month, int day) {
+    private static java.util.Calendar makeCalendar(boolean lenient, TimeZone timeZone, int year, int month, int day) {
         return makeCalendar(lenient, timeZone, year, month, day, 0, 0, 0);
     }
 
     private static void appendPadded(StringBuffer toAppendTo, int value, int fieldWidth) {
-        String s = Integer.toString(value);
-        for (int i = 0, max = fieldWidth - s.length(); i < max; i++) {
+        final String s = Integer.toString(value);
+        final int max = fieldWidth - s.length();
+        for (int i = 0; i < max; i++) {
             toAppendTo.append("0");
         }
         toAppendTo.append(s);

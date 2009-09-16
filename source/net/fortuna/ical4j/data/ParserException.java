@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.data;
 
+import java.text.MessageFormat;
+
 /**
  * <pre>
  * $Id$ [Apr 5, 2004]
@@ -43,7 +45,7 @@ public class ParserException extends Exception {
 
     private static final long serialVersionUID = 6116644246112002214L;
 
-    private static final String ERROR_MESSAGE_PREFIX = "Error at line ";
+    private static final String ERROR_MESSAGE_PATTERN = "Error at line {0}:";
 
     private int lineNo;
 
@@ -60,7 +62,7 @@ public class ParserException extends Exception {
      * @param lineNo line number where parsing error ocurred
      */
     public ParserException(final String message, final int lineNo) {
-        super(ERROR_MESSAGE_PREFIX + lineNo + ": " + message);
+        super(MessageFormat.format(ERROR_MESSAGE_PATTERN, new Object[] { Integer.valueOf(lineNo)}) + message);
         this.lineNo = lineNo;
     }
 
@@ -73,7 +75,7 @@ public class ParserException extends Exception {
     public ParserException(final String message, final int lineNo,
             final Throwable cause) {
 
-        super(ERROR_MESSAGE_PREFIX + lineNo + ": " + message, cause);
+        super(MessageFormat.format(ERROR_MESSAGE_PATTERN, new Object[] { Integer.valueOf(lineNo)}) + message, cause);
         this.lineNo = lineNo;
     }
 

@@ -32,6 +32,8 @@
 package net.fortuna.ical4j.data;
 
 /**
+ * A parser factory for the hCal microformat.
+ * 
  * <pre>
  * $Id$
  *
