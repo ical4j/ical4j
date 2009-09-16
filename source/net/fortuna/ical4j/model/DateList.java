@@ -117,8 +117,8 @@ public class DateList extends ArrayList implements Serializable {
     public DateList(final String aValue, final Value aType, final TimeZone timezone)
             throws ParseException {
         this(aType, timezone);
-        for (StringTokenizer t = new StringTokenizer(aValue, ","); t
-                .hasMoreTokens();) {
+        final StringTokenizer t = new StringTokenizer(aValue, ",");
+        while (t.hasMoreTokens()) {
             if (Value.DATE.equals(type)) {
                 add((Object) new Date(t.nextToken()));
             }
@@ -141,12 +141,12 @@ public class DateList extends ArrayList implements Serializable {
         }
         this.type = type;
         if (Value.DATE.equals(type)) {
-            for (Iterator i = list.iterator(); i.hasNext();) {
+            for (final Iterator i = list.iterator(); i.hasNext();) {
                 add(new Date((Date) i.next()));
             }
         }
         else {
-            for (Iterator i = list.iterator(); i.hasNext();) {
+            for (final Iterator i = list.iterator(); i.hasNext();) {
                 add(new DateTime((Date) i.next()));
             }
         }

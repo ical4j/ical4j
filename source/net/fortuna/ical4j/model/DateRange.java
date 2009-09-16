@@ -158,18 +158,19 @@ public class DateRange implements Serializable {
      *         otherwise.
      */
     public final boolean intersects(final DateRange range) {
+        boolean intersects = false;
         // Test for our start date in period
         // (Exclude if it is the end date of test range)
         if (range.includes(rangeStart) && !range.getRangeEnd().equals(rangeStart)) {
-            return true;
+            intersects = true;
         }
         // Test for test range's start date in our range
         // (Exclude if it is the end date of our range)
         else if (includes(range.getRangeStart())
                 && !rangeEnd.equals(range.getRangeStart())) {
-            return true;
+            intersects = true;
         }
-        return false;
+        return intersects;
     }
 
     /**
@@ -178,12 +179,13 @@ public class DateRange implements Serializable {
      * @return true if one period immediately follows the other, false otherwise
      */
     public final boolean adjacent(final DateRange range) {
+        boolean adjacent = false;
         if (rangeStart.equals(range.getRangeEnd())) {
-            return true;
+            adjacent = true;
         } else if (rangeEnd.equals(range.getRangeStart())) {
-            return true;
+            adjacent = true;
         }
-        return false;
+        return adjacent;
     }
 
     /**

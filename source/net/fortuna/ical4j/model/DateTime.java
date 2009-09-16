@@ -168,7 +168,7 @@ public class DateTime extends Date {
      private static final ThreadLocal UTC_FORMAT =
              new ThreadLocal () {
                 protected Object initialValue() {
-                    DateFormat format = new SimpleDateFormat(UTC_PATTERN);
+                    final DateFormat format = new SimpleDateFormat(UTC_PATTERN);
                     format.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
                     format.setLenient(false);
                     return (Object)format;
@@ -181,7 +181,7 @@ public class DateTime extends Date {
      private static final ThreadLocal DEFAULT_FORMAT =
              new ThreadLocal () {
                 protected Object initialValue() {
-                    DateFormat format = new SimpleDateFormat(DEFAULT_PATTERN);
+                    final DateFormat format = new SimpleDateFormat(DEFAULT_PATTERN);
                     format.setLenient(false);
                     return format;
                 }
@@ -237,7 +237,7 @@ public class DateTime extends Date {
         this.time = new Time(date.getTime(), getFormat().getTimeZone());
         // copy timezone information if applicable..
         if (date instanceof DateTime) {
-            DateTime dateTime = (DateTime) date;
+            final DateTime dateTime = (DateTime) date;
             if (dateTime.isUtc()) {
                 setUtc(true);
             }
@@ -318,7 +318,7 @@ public class DateTime extends Date {
         super(Dates.PRECISION_SECOND, timezone != null ? timezone : java.util.TimeZone.getDefault());
         this.time = new Time(System.currentTimeMillis(), getFormat().getTimeZone());
 
-        DateFormat format = CalendarDateFormatFactory.getInstance(pattern);
+        final DateFormat format = CalendarDateFormatFactory.getInstance(pattern);
         setTime(value, format, timezone);
     }
     
@@ -330,7 +330,7 @@ public class DateTime extends Date {
      */
     public DateTime(String value, String pattern, boolean utc) throws ParseException {
         this();
-        DateFormat format = CalendarDateFormatFactory.getInstance(pattern);
+        final DateFormat format = CalendarDateFormatFactory.getInstance(pattern);
         if (utc) {
             setTime(value, format, ((DateFormat) UTC_FORMAT.get()).getTimeZone());
         }

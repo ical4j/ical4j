@@ -72,8 +72,8 @@ public class ComponentList extends ArrayList implements Serializable {
     public ComponentList(ComponentList components) throws ParseException,
             IOException, URISyntaxException {
 
-        for (Iterator i = components.iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        for (final Iterator i = components.iterator(); i.hasNext();) {
+            final Component c = (Component) i.next();
             add(c.copy());
         }
     }

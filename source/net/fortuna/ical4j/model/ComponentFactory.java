@@ -84,51 +84,52 @@ public final class ComponentFactory {
      * @param properties a list of component properties
      * @return a component
      */
-    public Component createComponent(final String name,
-            final PropertyList properties) {
+    public Component createComponent(final String name, final PropertyList properties) {
+        Component component = null;
         if (Component.VALARM.equals(name)) {
-            return new VAlarm(properties);
+            component = new VAlarm(properties);
         }
         else if (Component.VEVENT.equals(name)) {
-            return new VEvent(properties);
+            component = new VEvent(properties);
         }
         else if (Component.VFREEBUSY.equals(name)) {
-            return new VFreeBusy(properties);
+            component = new VFreeBusy(properties);
         }
         else if (Component.VJOURNAL.equals(name)) {
-            return new VJournal(properties);
+            component = new VJournal(properties);
         }
         else if (Component.VTODO.equals(name)) {
-            return new VToDo(properties);
+            component = new VToDo(properties);
         }
         else if (Observance.STANDARD.equals(name)) {
-            return new Standard(properties);
+            component = new Standard(properties);
         }
         else if (Observance.DAYLIGHT.equals(name)) {
-            return new Daylight(properties);
+            component = new Daylight(properties);
         }
         else if (Component.VTIMEZONE.equals(name)) {
-            return new VTimeZone(properties);
+            component = new VTimeZone(properties);
         }
         else if (Component.VVENUE.equals(name)) {
-            return new VVenue(properties);
+            component = new VVenue(properties);
         }
         else if (Component.VAVAILABILITY.equals(name)) {
-            return new VAvailability(properties);
+            component = new VAvailability(properties);
         }
         else if (Component.AVAILABLE.equals(name)) {
-            return new Available(properties);
+            component = new Available(properties);
         }
         else if (isExperimentalName(name)) {
-            return new XComponent(name, properties);
+            component = new XComponent(name, properties);
         }
         else if (allowIllegalNames()) {
-            return new XComponent(name, properties);
+            component = new XComponent(name, properties);
         }
         else {
             throw new IllegalArgumentException("Illegal component [" + name
                     + "]");
         }
+        return component;
     }
 
     /**
@@ -138,19 +139,22 @@ public final class ComponentFactory {
      * @param components a list of sub-components (namely standard/daylight timezones)
      * @return a component
      */
-    public Component createComponent(final String name,
-            final PropertyList properties, final ComponentList components) {
+    public Component createComponent(final String name, final PropertyList properties,
+            final ComponentList components) {
+        
         if (components != null) {
+            Component component = null;
             if (Component.VTIMEZONE.equals(name)) {
-                return new VTimeZone(properties, components);
+                component = new VTimeZone(properties, components);
             }
             else if (Component.VEVENT.equals(name)) {
-                return new VEvent(properties, components);
+                component = new VEvent(properties, components);
             }
             else {
                 throw new IllegalArgumentException("Illegal component [" + name
                         + "]");
             }
+            return component;
         }
         return createComponent(name, properties);
     }

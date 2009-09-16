@@ -116,8 +116,8 @@ public class Dur implements Comparable, Serializable {
         String token = null;
         String prevToken = null;
 
-        for (StringTokenizer t = new StringTokenizer(value, "+-PWDTHMS", true); t
-                .hasMoreTokens();) {
+        final StringTokenizer t = new StringTokenizer(value, "+-PWDTHMS", true);
+        while (t.hasMoreTokens()) {
             prevToken = token;
             token = t.nextToken();
 
@@ -219,9 +219,9 @@ public class Dur implements Comparable, Serializable {
             end = date2;
         }
 
-        Calendar startCal = Calendar.getInstance();
+        final Calendar startCal = Calendar.getInstance();
         startCal.setTime(start);
-        Calendar endCal = Calendar.getInstance();
+        final Calendar endCal = Calendar.getInstance();
         endCal.setTime(end);
 
         // Init our duration interval (which is in units that evolve as we
@@ -399,8 +399,9 @@ public class Dur implements Comparable, Serializable {
                 }
             }
             // handle case of zero length duration
-            if ((hours + minutes + seconds + days + weeks) == 0)
+            if ((hours + minutes + seconds + days + weeks) == 0) {
                 b.append("T0S");
+            }
         }
         return b.toString();
     }
@@ -419,6 +420,7 @@ public class Dur implements Comparable, Serializable {
      * lengths are equal, otherwise a negative value
      */
     public final int compareTo(final Dur arg0) {
+        int result;
         if (isNegative() != arg0.isNegative()) {
             // return Boolean.valueOf(isNegative()).compareTo(Boolean.valueOf(arg0.isNegative()));
             // for pre-java 1.5 compatibility..
@@ -429,8 +431,7 @@ public class Dur implements Comparable, Serializable {
                 return Integer.MAX_VALUE;
             }
         }
-        int result;
-        if (getWeeks() != arg0.getWeeks()) {
+        else if (getWeeks() != arg0.getWeeks()) {
             result = getWeeks() - arg0.getWeeks();
         }
         else if (getDays() != arg0.getDays()) {

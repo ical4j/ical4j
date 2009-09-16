@@ -68,8 +68,8 @@ public class CategoryList implements Serializable {
     public CategoryList(final String aValue) {
         categories = new CopyOnWriteArrayList();
 
-        Pattern pattern = Pattern.compile("([^\\\\](?:\\\\{2})),|([^\\\\]),");
-        Matcher matcher = pattern.matcher(aValue);
+        final Pattern pattern = Pattern.compile("([^\\\\](?:\\\\{2})),|([^\\\\]),");
+        final Matcher matcher = pattern.matcher(aValue);
         String[] categoryValues = null;
 
         if (matcher.find()) {
