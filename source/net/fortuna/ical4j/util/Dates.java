@@ -113,11 +113,11 @@ public final class Dates {
         if (weekNo > 0) {
             return weekNo;
         }
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        int year = cal.get(Calendar.YEAR);
+        final int year = cal.get(Calendar.YEAR);
         // construct a list of possible week numbers..
-        List weeks = new ArrayList();
+        final List weeks = new ArrayList();
         cal.set(Calendar.WEEK_OF_YEAR, 1);
         while (cal.get(Calendar.YEAR) == year) {
             weeks.add(Integer.valueOf(cal.get(Calendar.WEEK_OF_YEAR)));
@@ -142,11 +142,11 @@ public final class Dates {
         if (yearDay > 0) {
             return yearDay;
         }
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        int year = cal.get(Calendar.YEAR);
+        final int year = cal.get(Calendar.YEAR);
         // construct a list of possible year days..
-        List days = new ArrayList();
+        final List days = new ArrayList();
         cal.set(Calendar.DAY_OF_YEAR, 1);
         while (cal.get(Calendar.YEAR) == year) {
             days.add(Integer.valueOf(cal.get(Calendar.DAY_OF_YEAR)));
@@ -171,11 +171,11 @@ public final class Dates {
         if (monthDay > 0) {
             return monthDay;
         }
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        int month = cal.get(Calendar.MONTH);
+        final int month = cal.get(Calendar.MONTH);
         // construct a list of possible month days..
-        List days = new ArrayList();
+        final List days = new ArrayList();
         cal.set(Calendar.DAY_OF_MONTH, 1);
         while (cal.get(Calendar.MONTH) == month) {
             days.add(Integer.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
@@ -206,7 +206,7 @@ public final class Dates {
      */
     public static Calendar getCalendarInstance(final Date date) {
         if (date instanceof DateTime) {
-            DateTime dateTime = (DateTime) date;
+            final DateTime dateTime = (DateTime) date;
             if (dateTime.getTimeZone() != null) {
                 return Calendar.getInstance(dateTime.getTimeZone());
             }
@@ -256,7 +256,7 @@ public final class Dates {
      * @return a round time value
      */
     public static long round(final long time, final int precision, final TimeZone tz) {
-        Calendar cal = Calendar.getInstance(tz);
+        final Calendar cal = Calendar.getInstance(tz);
         cal.setTimeInMillis(time);
         if (precision == PRECISION_DAY) {
 //            return (long) Math.floor(time / (double) Dates.MILLIS_PER_DAY) * Dates.MILLIS_PER_DAY;

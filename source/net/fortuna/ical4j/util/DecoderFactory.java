@@ -56,7 +56,7 @@ public abstract class DecoderFactory {
     private static DecoderFactory instance;
     static {
         try {
-            Class factoryClass = Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
+            final Class factoryClass = Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
             instance = (DecoderFactory) factoryClass.newInstance();
         }
         catch (Exception e) {

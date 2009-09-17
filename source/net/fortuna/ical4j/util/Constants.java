@@ -67,105 +67,106 @@ public final class Constants {
      * constant exists
      */
     public static Property forProperty(final Property property) {
+        Property retVal = property;
         if (Action.AUDIO.equals(property)) {
-            return Action.AUDIO;
+            retVal = Action.AUDIO;
         }
         else if (Action.DISPLAY.equals(property)) {
-            return Action.DISPLAY;
+            retVal = Action.DISPLAY;
         }
         else if (Action.EMAIL.equals(property)) {
-            return Action.EMAIL;
+            retVal = Action.EMAIL;
         }
         else if (Action.PROCEDURE.equals(property)) {
-            return Action.PROCEDURE;
+            retVal = Action.PROCEDURE;
         }
         else if (CalScale.GREGORIAN.equals(property)) {
-            return CalScale.GREGORIAN;
+            retVal = CalScale.GREGORIAN;
         }
         else if (Clazz.CONFIDENTIAL.equals(property)) {
-            return Clazz.CONFIDENTIAL;
+            retVal = Clazz.CONFIDENTIAL;
         }
         else if (Clazz.PRIVATE.equals(property)) {
-            return Clazz.PRIVATE;
+            retVal = Clazz.PRIVATE;
         }
         else if (Clazz.PUBLIC.equals(property)) {
-            return Clazz.PUBLIC;
+            retVal = Clazz.PUBLIC;
         }
         else if (Method.ADD.equals(property)) {
-            return Method.ADD;
+            retVal = Method.ADD;
         }
         else if (Method.CANCEL.equals(property)) {
-            return Method.CANCEL;
+            retVal = Method.CANCEL;
         }
         else if (Method.COUNTER.equals(property)) {
-            return Method.COUNTER;
+            retVal = Method.COUNTER;
         }
         else if (Method.DECLINE_COUNTER.equals(property)) {
-            return Method.DECLINE_COUNTER;
+            retVal = Method.DECLINE_COUNTER;
         }
         else if (Method.PUBLISH.equals(property)) {
-            return Method.PUBLISH;
+            retVal = Method.PUBLISH;
         }
         else if (Method.REFRESH.equals(property)) {
-            return Method.REFRESH;
+            retVal = Method.REFRESH;
         }
         else if (Method.REPLY.equals(property)) {
-            return Method.REPLY;
+            retVal = Method.REPLY;
         }
         else if (Method.REQUEST.equals(property)) {
-            return Method.REQUEST;
+            retVal = Method.REQUEST;
         }
         else if (Priority.HIGH.equals(property)) {
-            return Priority.HIGH;
+            retVal = Priority.HIGH;
         }
         else if (Priority.LOW.equals(property)) {
-            return Priority.LOW;
+            retVal = Priority.LOW;
         }
         else if (Priority.MEDIUM.equals(property)) {
-            return Priority.MEDIUM;
+            retVal = Priority.MEDIUM;
         }
         else if (Priority.UNDEFINED.equals(property)) {
-            return Priority.UNDEFINED;
+            retVal = Priority.UNDEFINED;
         }
         else if (Status.VEVENT_CANCELLED.equals(property)) {
-            return Status.VEVENT_CANCELLED;
+            retVal = Status.VEVENT_CANCELLED;
         }
         else if (Status.VEVENT_CONFIRMED.equals(property)) {
-            return Status.VEVENT_CONFIRMED;
+            retVal = Status.VEVENT_CONFIRMED;
         }
         else if (Status.VEVENT_TENTATIVE.equals(property)) {
-            return Status.VEVENT_TENTATIVE;
+            retVal = Status.VEVENT_TENTATIVE;
         }
         else if (Status.VJOURNAL_CANCELLED.equals(property)) {
-            return Status.VJOURNAL_CANCELLED;
+            retVal = Status.VJOURNAL_CANCELLED;
         }
         else if (Status.VJOURNAL_DRAFT.equals(property)) {
-            return Status.VJOURNAL_DRAFT;
+            retVal = Status.VJOURNAL_DRAFT;
         }
         else if (Status.VJOURNAL_FINAL.equals(property)) {
-            return Status.VJOURNAL_FINAL;
+            retVal = Status.VJOURNAL_FINAL;
         }
         else if (Status.VTODO_CANCELLED.equals(property)) {
-            return Status.VTODO_CANCELLED;
+            retVal = Status.VTODO_CANCELLED;
         }
         else if (Status.VTODO_COMPLETED.equals(property)) {
-            return Status.VTODO_COMPLETED;
+            retVal = Status.VTODO_COMPLETED;
         }
         else if (Status.VTODO_IN_PROCESS.equals(property)) {
-            return Status.VTODO_IN_PROCESS;
+            retVal = Status.VTODO_IN_PROCESS;
         }
         else if (Status.VTODO_NEEDS_ACTION.equals(property)) {
-            return Status.VTODO_NEEDS_ACTION;
+            retVal = Status.VTODO_NEEDS_ACTION;
         }
         else if (Transp.OPAQUE.equals(property)) {
-            return Transp.OPAQUE;
+            retVal = Transp.OPAQUE;
         }
         else if (Transp.TRANSPARENT.equals(property)) {
-            return Transp.TRANSPARENT;
+            retVal = Transp.TRANSPARENT;
         }
         else if (Version.VERSION_2_0.equals(property)) {
-            return Version.VERSION_2_0;
+            retVal = Version.VERSION_2_0;
         }
-        return property;
+        return retVal;
     }
 }

@@ -56,7 +56,7 @@ public abstract class EncoderFactory {
     private static EncoderFactory instance;
     static {
         try {
-            Class factoryClass = Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
+            final Class factoryClass = Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
             instance = (EncoderFactory) factoryClass.newInstance();
         }
         catch (Exception e) {
