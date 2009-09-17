@@ -161,7 +161,7 @@ public class RequestStatus extends Property {
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        StringTokenizer t = new StringTokenizer(aValue, ";");
+        final StringTokenizer t = new StringTokenizer(aValue, ";");
 
         if (t.hasMoreTokens()) {
             statusCode = t.nextToken();
@@ -180,7 +180,7 @@ public class RequestStatus extends Property {
      * {@inheritDoc}
      */
     public final String getValue() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
 
         if ((getStatusCode() != null)) {
             b.append(getStatusCode());

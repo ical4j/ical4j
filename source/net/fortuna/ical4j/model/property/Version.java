@@ -161,7 +161,7 @@ public class Version extends Property {
      * {@inheritDoc}
      */
     public final String getValue() {
-        StringBuffer b = new StringBuffer();
+        final StringBuffer b = new StringBuffer();
         if (getMinVersion() != null) {
             b.append(getMinVersion());
             if (getMaxVersion() != null) {

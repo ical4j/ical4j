@@ -187,7 +187,7 @@ public abstract class DateProperty extends Property {
                 ((DateTime) getDate()).setTimeZone(timezone);
             }
 
-            TzId tzId = new TzId(timezone.getID());
+            final TzId tzId = new TzId(timezone.getID());
             
             if (log.isTraceEnabled()) {
                 log.trace("Replacing current timezone ["
@@ -247,7 +247,7 @@ public abstract class DateProperty extends Property {
                     getParameters());
         }
 
-        Value value = (Value) getParameter(Parameter.VALUE);
+        final Value value = (Value) getParameter(Parameter.VALUE);
 
         if (getDate() instanceof DateTime) {
 
@@ -256,10 +256,10 @@ public abstract class DateProperty extends Property {
                         + "] is invalid for DATE-TIME instance");
             }
 
-            DateTime dateTime = (DateTime) date;
+            final DateTime dateTime = (DateTime) date;
 
             // ensure tzid matches date-time timezone..
-            Parameter tzId = getParameter(Parameter.TZID);
+            final Parameter tzId = getParameter(Parameter.TZID);
             if (dateTime.getTimeZone() != null
                     && (tzId == null || !tzId.getValue().equals(
                             dateTime.getTimeZone().getID()))) {
@@ -286,7 +286,7 @@ public abstract class DateProperty extends Property {
      * {@inheritDoc}
      */
     public Property copy() throws IOException, URISyntaxException, ParseException {
-        Property copy = super.copy();
+        final Property copy = super.copy();
         
        ((DateProperty) copy).timeZone = timeZone;
        ((DateProperty) copy).setValue(getValue());

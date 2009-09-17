@@ -201,7 +201,7 @@ public class RDate extends DateListProperty {
         ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
-        Parameter valueParam = getParameter(Parameter.VALUE);
+        final Parameter valueParam = getParameter(Parameter.VALUE);
 
         if (valueParam != null && !Value.DATE_TIME.equals(valueParam)
                 && !Value.DATE.equals(valueParam)

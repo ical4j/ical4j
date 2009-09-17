@@ -237,7 +237,7 @@ public class Attach extends Property {
         if (getParameter(Parameter.ENCODING) != null) {
             // binary = Base64.decode(aValue);
             try {
-                BinaryDecoder decoder = DecoderFactory.getInstance()
+                final BinaryDecoder decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(
                                 (Encoding) getParameter(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
@@ -265,7 +265,7 @@ public class Attach extends Property {
         else if (getBinary() != null) {
             // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
             try {
-                BinaryEncoder encoder = EncoderFactory.getInstance()
+                final BinaryEncoder encoder = EncoderFactory.getInstance()
                         .createBinaryEncoder(
                                 (Encoding) getParameter(Parameter.ENCODING));
                 return new String(encoder.encode(getBinary()));

@@ -104,7 +104,7 @@ public abstract class UtcProperty extends DateProperty {
                     "Property must have a DATE-TIME value");
         }
 
-        DateTime dateTime = (DateTime) getDate();
+        final DateTime dateTime = (DateTime) getDate();
 
         if (dateTime != null && !dateTime.isUtc()) {
             throw new ValidationException(

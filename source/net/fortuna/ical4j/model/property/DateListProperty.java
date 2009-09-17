@@ -136,7 +136,7 @@ public abstract class DateListProperty extends Property {
             }
             dates.setTimeZone(timezone);
             getParameters().remove(getParameter(Parameter.TZID));
-            TzId tzId = new TzId(timezone.getID());
+            final TzId tzId = new TzId(timezone.getID());
             getParameters().replace(tzId);
         }
         else {

@@ -205,8 +205,8 @@ public class Trigger extends UtcProperty {
     public final void validate() throws ValidationException {
         super.validate();
 
-        Parameter relParam = getParameter(Parameter.RELATED);
-        Parameter valueParam = getParameter(Parameter.VALUE);
+        final Parameter relParam = getParameter(Parameter.RELATED);
+        final Parameter valueParam = getParameter(Parameter.VALUE);
 
         if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
 
