@@ -280,8 +280,8 @@ public class VTimeZone extends CalendarComponent {
          * {@inheritDoc}
          */
         public void validate() throws ValidationException {
-            for (Iterator i = getObservances().iterator(); i.hasNext();) {
-                Observance observance = (Observance) i.next();
+            for (final Iterator i = getObservances().iterator(); i.hasNext();) {
+                final Observance observance = (Observance) i.next();
                 PropertyValidator.getInstance().assertOne(Property.DTSTART, observance.getProperties());
                 PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM, observance.getProperties());
                 PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO, observance.getProperties());

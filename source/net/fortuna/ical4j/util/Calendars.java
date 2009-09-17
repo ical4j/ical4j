@@ -214,9 +214,9 @@ public final class Calendars {
      * @return a content type string
      */
     public static String getContentType(Calendar calendar, Charset charset) {
-        StringBuffer b = new StringBuffer("text/calendar");
+        final StringBuffer b = new StringBuffer("text/calendar");
         
-        Method method = (Method) calendar.getProperty(Property.METHOD);
+        final Method method = (Method) calendar.getProperty(Property.METHOD);
         if (method != null) {
             b.append("; method=");
             b.append(method.getValue());

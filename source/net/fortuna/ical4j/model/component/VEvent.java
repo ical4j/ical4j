@@ -481,6 +481,8 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
+     * METHOD:ADD Validator.
+     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -561,14 +563,16 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, getProperties());
             PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
             
-            for (Iterator i = getAlarms().iterator(); i.hasNext();) {
-                VAlarm alarm = (VAlarm) i.next();
+            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
+                final VAlarm alarm = (VAlarm) i.next();
                 alarm.validate(Method.ADD);
             }
         }
     }
     
     /**
+     * METHOD:CANCEL Validator.
+     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -661,6 +665,8 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
+     * METHOD:COUNTER Validator.
+     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -746,14 +752,16 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
             
-            for (Iterator i = getAlarms().iterator(); i.hasNext();) {
-                VAlarm alarm = (VAlarm) i.next();
+            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
+                final VAlarm alarm = (VAlarm) i.next();
                 alarm.validate(Method.COUNTER);
             }
         }
     }
     
     /**
+     * METHOD:DECLINECOUNTER Validator.
+     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -847,6 +855,8 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
+     * METHOD:PUBLISH Validator.
+     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -937,14 +947,16 @@ public class VEvent extends CalendarComponent {
             
             PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
             
-            for (Iterator i = getAlarms().iterator(); i.hasNext();) {
-                VAlarm alarm = (VAlarm) i.next();
+            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
+                final VAlarm alarm = (VAlarm) i.next();
                 alarm.validate(Method.PUBLISH);
             }
         }
     }
     
     /**
+     * METHOD:REFRESH Validator.
+     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -1040,6 +1052,8 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
+     * METHOD:REPLY Validator.
+     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------
@@ -1129,6 +1143,8 @@ public class VEvent extends CalendarComponent {
     }
     
     /**
+     * METHOD:REQUEST Validator.
+     * 
      * <pre>
      * Component/Property  Presence
      * -----------------------------------------------------------------
@@ -1212,8 +1228,8 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
             
-            for (Iterator i = getAlarms().iterator(); i.hasNext();) {
-                VAlarm alarm = (VAlarm) i.next();
+            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
+                final VAlarm alarm = (VAlarm) i.next();
                 alarm.validate(Method.REQUEST);
             }
         }
@@ -1243,23 +1259,22 @@ public class VEvent extends CalendarComponent {
             final Date rangeEnd, final boolean normalise) {
         PeriodList periods = new PeriodList();
         // if component is transparent return empty list..
-        if (Transp.TRANSPARENT.equals(getProperty(Property.TRANSP))) {
-            return periods;
-        }
+        if (!Transp.TRANSPARENT.equals(getProperty(Property.TRANSP))) {
 
-//        try {
-        periods = calculateRecurrenceSet(new Period(new DateTime(rangeStart),
-                new DateTime(rangeEnd)));
-//        }
-//        catch (ValidationException ve) {
-//            log.error("Invalid event data", ve);
-//            return periods;
-//        }
+//          try {
+          periods = calculateRecurrenceSet(new Period(new DateTime(rangeStart),
+                  new DateTime(rangeEnd)));
+//          }
+//          catch (ValidationException ve) {
+//              log.error("Invalid event data", ve);
+//              return periods;
+//          }
 
-        // if periods already specified through recurrence, return..
-        // ..also normalise before returning.
-        if (!periods.isEmpty() && normalise) {
-            return periods.normalise();
+          // if periods already specified through recurrence, return..
+          // ..also normalise before returning.
+          if (!periods.isEmpty() && normalise) {
+              periods = periods.normalise();
+          }
         }
 
         return periods;

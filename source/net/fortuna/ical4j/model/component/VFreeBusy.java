@@ -317,11 +317,11 @@ public class VFreeBusy extends CalendarComponent {
     public VFreeBusy(final VFreeBusy request, final ComponentList components) {
         this();
         
-        DtStart start = (DtStart) request.getProperty(Property.DTSTART);
+        final DtStart start = (DtStart) request.getProperty(Property.DTSTART);
         
-        DtEnd end = (DtEnd) request.getProperty(Property.DTEND);
+        final DtEnd end = (DtEnd) request.getProperty(Property.DTEND);
         
-        Duration duration = (Duration) request.getProperty(Property.DURATION);
+        final Duration duration = (Duration) request.getProperty(Property.DURATION);
         
         // 4.8.2.4 Date/Time Start:
         //
@@ -341,9 +341,9 @@ public class VFreeBusy extends CalendarComponent {
         if (duration != null) {
             getProperties().add(new Duration(duration.getDuration()));
             // Initialise with all free time of at least the specified duration..
-            DateTime freeStart = new DateTime(start.getDate());
-            DateTime freeEnd = new DateTime(end.getDate());
-            FreeBusy fb = new FreeTimeBuilder().start(freeStart)
+            final DateTime freeStart = new DateTime(start.getDate());
+            final DateTime freeEnd = new DateTime(end.getDate());
+            final FreeBusy fb = new FreeTimeBuilder().start(freeStart)
                 .end(freeEnd)
                 .duration(duration.getDuration())
                 .components(components)
@@ -354,9 +354,9 @@ public class VFreeBusy extends CalendarComponent {
         }
         else {
             // initialise with all busy time for the specified period..
-            DateTime busyStart = new DateTime(start.getDate());
-            DateTime busyEnd = new DateTime(end.getDate());
-            FreeBusy fb = new BusyTimeBuilder().start(busyStart)
+            final DateTime busyStart = new DateTime(start.getDate());
+            final DateTime busyEnd = new DateTime(end.getDate());
+            final FreeBusy fb = new BusyTimeBuilder().start(busyStart)
                 .end(busyEnd)
                 .components(components)
                 .build();
@@ -489,10 +489,10 @@ public class VFreeBusy extends CalendarComponent {
     private PeriodList getConsumedTime(final ComponentList components, final DateTime rangeStart,
             final DateTime rangeEnd) {
         
-        PeriodList periods = new PeriodList();
+        final PeriodList periods = new PeriodList();
         // only events consume time..
-        for (Iterator i = components.getComponents(Component.VEVENT).iterator(); i.hasNext();) {
-            Component component = (Component) i.next();
+        for (final Iterator i = components.getComponents(Component.VEVENT).iterator(); i.hasNext();) {
+            final Component component = (Component) i.next();
             periods.addAll(((VEvent) component).getConsumedTime(rangeStart, rangeEnd, false));
         }
         return periods.normalise();
@@ -518,7 +518,7 @@ public class VFreeBusy extends CalendarComponent {
                     getProperties());
         }
 
-        PropertyValidator validator = PropertyValidator.getInstance();
+        final PropertyValidator validator = PropertyValidator.getInstance();
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once contact / dtstart / dtend / duration /
@@ -548,7 +548,7 @@ public class VFreeBusy extends CalendarComponent {
         validator.assertNone(Property.EXDATE, getProperties());
 
         // DtEnd value must be later in time that DtStart..
-        DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
+        final DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
         
         // 4.8.2.4 Date/Time Start:
         //
@@ -559,7 +559,7 @@ public class VFreeBusy extends CalendarComponent {
             throw new ValidationException("DTSTART must be specified in UTC time");
         }
         
-        DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
+        final DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
         
         // 4.8.2.2 Date/Time End
         //
@@ -701,6 +701,8 @@ public class VFreeBusy extends CalendarComponent {
     }
     
     /**
+     * METHOD:REQUEST Validator.
+     * 
      * <pre>
      * Component/Property  Presence
      * ------------------- ----------------------------------------------

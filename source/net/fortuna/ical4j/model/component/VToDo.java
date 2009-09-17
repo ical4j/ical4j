@@ -438,8 +438,8 @@ public class VToDo extends CalendarComponent {
             PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, getProperties());
             PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
             
-            for (Iterator i = getAlarms().iterator(); i.hasNext();) {
-                VAlarm alarm = (VAlarm) i.next();
+            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
+                final VAlarm alarm = (VAlarm) i.next();
                 alarm.validate(Method.ADD);
             }
         }
@@ -621,8 +621,8 @@ public class VToDo extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
             
-            for (Iterator i = getAlarms().iterator(); i.hasNext();) {
-                VAlarm alarm = (VAlarm) i.next();
+            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
+                final VAlarm alarm = (VAlarm) i.next();
                 alarm.validate(Method.COUNTER);
             }
         }
@@ -804,8 +804,8 @@ public class VToDo extends CalendarComponent {
             PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
             PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
             
-            for (Iterator i = getAlarms().iterator(); i.hasNext();) {
-                VAlarm alarm = (VAlarm) i.next();
+            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
+                final VAlarm alarm = (VAlarm) i.next();
                 alarm.validate(Method.PUBLISH);
             }
         }
@@ -1079,8 +1079,8 @@ public class VToDo extends CalendarComponent {
             
             PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
             
-            for (Iterator i = getAlarms().iterator(); i.hasNext();) {
-                VAlarm alarm = (VAlarm) i.next();
+            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
+                final VAlarm alarm = (VAlarm) i.next();
                 alarm.validate(Method.REQUEST);
             }
         }

@@ -198,16 +198,18 @@ public class WeekDay implements Serializable {
      * specified
      */
     public static WeekDay getDay(final int calDay) {
+        WeekDay day = null;
         switch (calDay) {
-            case Calendar.SUNDAY: return SU;
-            case Calendar.MONDAY: return MO;
-            case Calendar.TUESDAY: return TU;
-            case Calendar.WEDNESDAY: return WE;
-            case Calendar.THURSDAY: return TH;
-            case Calendar.FRIDAY: return FR;
-            case Calendar.SATURDAY: return SA;
-            default: return null;
+            case Calendar.SUNDAY: day = SU;
+            case Calendar.MONDAY: day = MO;
+            case Calendar.TUESDAY: day = TU;
+            case Calendar.WEDNESDAY: day = WE;
+            case Calendar.THURSDAY: day = TH;
+            case Calendar.FRIDAY: day = FR;
+            case Calendar.SATURDAY: day = SA;
+            default: break;
         }
+        return day;
     }
     
     /**

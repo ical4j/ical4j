@@ -83,7 +83,7 @@ public abstract class Observance extends Component implements Comparable {
     public static final String STANDARD = "STANDARD";
 
     /**
-     * Token for daylight observance
+     * Token for daylight observance.
      */
     public static final String DAYLIGHT = "DAYLIGHT";
 
@@ -182,7 +182,7 @@ public abstract class Observance extends Component implements Comparable {
             return null;
         }
 
-        long start = System.currentTimeMillis();
+        final long start = System.currentTimeMillis();
 
         if ((onsetLimit != null) && (date.after(onsetLimit))) {
             onsets.clear();
@@ -191,22 +191,22 @@ public abstract class Observance extends Component implements Comparable {
 
         Date onset = getCachedOnset(date);
 
-        boolean cacheHit = onset != null;
+        final boolean cacheHit = onset != null;
         
         if (onset == null) {
             onset = initialOnset;
             // collect all onsets for the purposes of caching..
-            DateList cacheableOnsets = new DateList();
+            final DateList cacheableOnsets = new DateList();
             // Date nextOnset = null;
 
             if (!rdatesCached) {
                 // check rdates for latest applicable onset..
-                PropertyList rdates = getProperties(Property.RDATE);
-                for (Iterator i = rdates.iterator(); i.hasNext();) {
-                    RDate rdate = (RDate) i.next();
-                    for (Iterator j = rdate.getDates().iterator(); j.hasNext();) {
+                final PropertyList rdates = getProperties(Property.RDATE);
+                for (final Iterator i = rdates.iterator(); i.hasNext();) {
+                    final RDate rdate = (RDate) i.next();
+                    for (final Iterator j = rdate.getDates().iterator(); j.hasNext();) {
                         try {
-                            Date rdateOnset = calculateOnset((Date) j.next());
+                            final Date rdateOnset = calculateOnset((Date) j.next());
                             if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
                                 onset = rdateOnset;
                             }
@@ -224,7 +224,7 @@ public abstract class Observance extends Component implements Comparable {
             }
 
             // check recurrence rules for latest applicable onset..
-            PropertyList rrules = getProperties(Property.RRULE);
+            final PropertyList rrules = getProperties(Property.RRULE);
             Value dateType;
             if (date instanceof DateTime) {
                 dateType = Value.DATE_TIME;
@@ -232,17 +232,17 @@ public abstract class Observance extends Component implements Comparable {
             else {
                 dateType = Value.DATE;
             }
-            for (Iterator i = rrules.iterator(); i.hasNext();) {
-                RRule rrule = (RRule) i.next();
+            for (final Iterator i = rrules.iterator(); i.hasNext();) {
+                final RRule rrule = (RRule) i.next();
                 // include future onsets to determine onset period..
-                Calendar cal = Dates.getCalendarInstance(date);
+                final Calendar cal = Dates.getCalendarInstance(date);
                 cal.setTime(date);
                 cal.add(Calendar.YEAR, 10);
                 onsetLimit = Dates.getInstance(cal.getTime(), dateType);
-                DateList recurrenceDates = rrule.getRecur().getDates(onset,
+                final DateList recurrenceDates = rrule.getRecur().getDates(onset,
                          onsetLimit, dateType);
-                for (Iterator j = recurrenceDates.iterator(); j.hasNext();) {
-                    Date rruleOnset = (Date) j.next();
+                for (final Iterator j = recurrenceDates.iterator(); j.hasNext();) {
+                    final Date rruleOnset = (Date) j.next();
                     if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
                         onset = rruleOnset;
                     }
@@ -258,7 +258,7 @@ public abstract class Observance extends Component implements Comparable {
             Collections.sort(cacheableOnsets);
             Date cacheableOnset = null;
             Date nextOnset = null;
-            for (Iterator i = cacheableOnsets.iterator(); i.hasNext();) {
+            for (final Iterator i = cacheableOnsets.iterator(); i.hasNext();) {
                 cacheableOnset = nextOnset;
                 nextOnset = (Date) i.next();
                 if (cacheableOnset != null) {
@@ -270,7 +270,7 @@ public abstract class Observance extends Component implements Comparable {
             // as we don't have an onset following the final onset, we must
             // cache it with an arbitrary period length..
             if (nextOnset != null) {
-                Calendar finalOnsetPeriodEnd = Calendar.getInstance();
+                final Calendar finalOnsetPeriodEnd = Calendar.getInstance();
                 finalOnsetPeriodEnd.setTime(nextOnset);
                 finalOnsetPeriodEnd.add(Calendar.YEAR, 100);
                 onsets.put(new Period(new DateTime(nextOnset), new DateTime(
@@ -299,8 +299,8 @@ public abstract class Observance extends Component implements Comparable {
      * @return a cached onset date or null if no cached onset is applicable for the specified date
      */
     private Date getCachedOnset(final Date date) {
-        for (Iterator i = onsets.keySet().iterator(); i.hasNext();) {
-            Period onsetPeriod = (Period) i.next();
+        for (final Iterator i = onsets.keySet().iterator(); i.hasNext();) {
+            final Period onsetPeriod = (Period) i.next();
             if (onsetPeriod.includes(date, Period.INCLUSIVE_START)) {
                 return (Date) onsets.get(onsetPeriod);
             }
@@ -347,8 +347,8 @@ public abstract class Observance extends Component implements Comparable {
      */
     public final int compareTo(final Observance arg0) {
         // TODO: sort by RDATE??
-        DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
-        DtStart dtStart0 = (DtStart) arg0.getProperty(Property.DTSTART);
+        final DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
+        final DtStart dtStart0 = (DtStart) arg0.getProperty(Property.DTSTART);
         return dtStart.getDate().compareTo(dtStart0.getDate());
     }
 
@@ -382,7 +382,7 @@ public abstract class Observance extends Component implements Comparable {
                 utcOnset = UTC_FORMAT.parse(dateStr);
             }
             
-            long offset = getOffsetFrom().getOffset().getOffset();
+            final long offset = getOffsetFrom().getOffset().getOffset();
             return new DateTime(utcOnset.getTime() - offset);
 //        } catch (ParseException e) {
 //            throw new RuntimeException(e);
