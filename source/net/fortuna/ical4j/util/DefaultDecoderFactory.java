@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.util;
 
 import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 
 import net.fortuna.ical4j.model.parameter.Encoding;
 
@@ -41,6 +42,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
 
 /**
+ * Default decoder factory implementation.
+ * 
  * $Id$
  *
  * Created on 13/05/2006
@@ -48,6 +51,8 @@ import org.apache.commons.codec.net.QuotedPrintableCodec;
  * @author Ben Fortuna
  */
 public class DefaultDecoderFactory extends DecoderFactory {
+
+    private static final String UNSUPPORTED_ENCODING_MESSAGE = "Decoder not available for encoding [{0}]";
 
     /**
      * {@inheritDoc}
@@ -61,8 +66,8 @@ public class DefaultDecoderFactory extends DecoderFactory {
         else if (Encoding.BASE64.equals(encoding)) {
             return new Base64();
         }
-        throw new UnsupportedEncodingException(
-                "Decoder not available for decoding [" + encoding + "]");
+        throw new UnsupportedEncodingException(MessageFormat.format(UNSUPPORTED_ENCODING_MESSAGE,
+                new Object[] {encoding}));
     }
 
     /**
@@ -74,7 +79,7 @@ public class DefaultDecoderFactory extends DecoderFactory {
         if (Encoding.QUOTED_PRINTABLE.equals(encoding)) {
             return new QuotedPrintableCodec();
         }
-        throw new UnsupportedEncodingException(
-                "Decoder not available for decoding [" + encoding + "]");
+        throw new UnsupportedEncodingException(MessageFormat.format(UNSUPPORTED_ENCODING_MESSAGE,
+                new Object[] {encoding}));
     }
 }

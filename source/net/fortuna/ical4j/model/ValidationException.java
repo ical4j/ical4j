@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.text.MessageFormat;
+
 /**
  * $Id$ [23-Apr-2004]
  *
@@ -55,5 +57,14 @@ public class ValidationException extends Exception {
      */
     public ValidationException(final String message) {
         super(message);
+    }
+
+    /**
+     * Constructor with message pattern and arguments.
+     * @param message a message pattern
+     * @param args message arguments
+     */
+    public ValidationException(final String message, Object[] args) {
+        super(MessageFormat.format(message, args));
     }
 }

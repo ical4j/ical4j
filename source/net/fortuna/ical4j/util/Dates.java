@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.util;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -92,6 +93,27 @@ public final class Dates {
     public static final int PRECISION_DAY = 1;
 
     /**
+     * Maximum number of weeks per year.
+     */
+    public static final int MAX_WEEKS_PER_YEAR = 53;
+
+    /**
+     * Maximum number of days per year.
+     */
+    public static final int MAX_DAYS_PER_YEAR = 366;
+
+    /**
+     * Maximum number of days per month.
+     */
+    public static final int MAX_DAYS_PER_MONTH = 31;
+
+    private static final String INVALID_WEEK_MESSAGE = "Invalid week number [{0}]";
+    
+    private static final String INVALID_YEAR_DAY_MESSAGE = "Invalid year day [{0}]";
+    
+    private static final String INVALID_MONTH_DAY_MESSAGE = "Invalid month day [{0}]";
+    
+    /**
      * Constructor made private to prevent instantiation.
      */
     private Dates() {
@@ -107,8 +129,9 @@ public final class Dates {
      * @return the absolute week of the year for the specified offset
      */
     public static int getAbsWeekNo(final java.util.Date date, final int weekNo) {
-        if (weekNo == 0 || weekNo < -53 || weekNo > 53) {
-            throw new IllegalArgumentException("Invalid week number [" + weekNo + "]");
+        if (weekNo == 0 || weekNo < -MAX_WEEKS_PER_YEAR || weekNo > MAX_WEEKS_PER_YEAR) {
+            throw new IllegalArgumentException(MessageFormat.format(INVALID_WEEK_MESSAGE,
+                    new Object[] {Integer.valueOf(weekNo)}));
         }
         if (weekNo > 0) {
             return weekNo;
@@ -136,8 +159,9 @@ public final class Dates {
      * @return the absolute day of month for the specified offset
      */
     public static int getAbsYearDay(final java.util.Date date, final int yearDay) {
-        if (yearDay == 0 || yearDay < -366 || yearDay > 366) {
-            throw new IllegalArgumentException("Invalid year day [" + yearDay + "]");
+        if (yearDay == 0 || yearDay < -MAX_DAYS_PER_YEAR || yearDay > MAX_DAYS_PER_YEAR) {
+            throw new IllegalArgumentException(MessageFormat.format(INVALID_YEAR_DAY_MESSAGE,
+                    new Object[] {Integer.valueOf(yearDay)}));
         }
         if (yearDay > 0) {
             return yearDay;
@@ -165,8 +189,9 @@ public final class Dates {
      * @return the absolute day of month for the specified offset
      */
     public static int getAbsMonthDay(final java.util.Date date, final int monthDay) {
-        if (monthDay == 0 || monthDay < -31 || monthDay > 31) {
-            throw new IllegalArgumentException("Invalid month day [" + monthDay + "]");
+        if (monthDay == 0 || monthDay < -MAX_DAYS_PER_MONTH || monthDay > MAX_DAYS_PER_MONTH) {
+            throw new IllegalArgumentException(MessageFormat.format(INVALID_MONTH_DAY_MESSAGE,
+                    new Object[] {Integer.valueOf(monthDay)}));
         }
         if (monthDay > 0) {
             return monthDay;
@@ -205,22 +230,24 @@ public final class Dates {
      * @return a <code>java.util.Calendar</code>
      */
     public static Calendar getCalendarInstance(final Date date) {
+        Calendar instance = null;
         if (date instanceof DateTime) {
             final DateTime dateTime = (DateTime) date;
             if (dateTime.getTimeZone() != null) {
-                return Calendar.getInstance(dateTime.getTimeZone());
+                instance = Calendar.getInstance(dateTime.getTimeZone());
             }
             else if (dateTime.isUtc()) {
-                return Calendar.getInstance(TimeZone.getTimeZone(TimeZones.UTC_ID));
+                instance = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.UTC_ID));
             }
             else {
             	// a date-time without a timezone but not UTC is floating
-            	return Calendar.getInstance();
+                instance = Calendar.getInstance();
             }
         }
         else {
-            return Calendar.getInstance(TimeZones.getDateTimeZone());
+            instance = Calendar.getInstance(TimeZones.getDateTimeZone());
         }
+        return instance;
     }
     
     /**

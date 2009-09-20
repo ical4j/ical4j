@@ -43,6 +43,14 @@ import net.fortuna.ical4j.model.ValidationException;
  */
 public final class PropertyValidator {
 
+    private static final String ASSERT_NONE_MESSAGE = "Property [{0}] is not applicable";
+
+    private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Property [{0}] must only be specified once";
+
+    private static final String ASSERT_ONE_MESSAGE = "Property [{0}] must be specified once";
+
+    private static final String ASSERT_ONE_OR_MORE_MESSAGE = "Property [{0}] must be specified at least once";
+
     private static PropertyValidator instance = new PropertyValidator();
 
     /**
@@ -65,8 +73,7 @@ public final class PropertyValidator {
             final PropertyList properties) throws ValidationException {
 
         if (properties.getProperties(propertyName).size() > 1) {
-            throw new ValidationException(
-                "Property [" + propertyName + "] must only be specified once");
+            throw new ValidationException(ASSERT_ONE_OR_LESS_MESSAGE, new Object[] {propertyName});
         }
     }
 
@@ -84,9 +91,7 @@ public final class PropertyValidator {
             final PropertyList properties) throws ValidationException {
 
         if (properties.getProperties(propertyName).size() < 1) {
-            throw new ValidationException(
-                "Property [" + propertyName
-                        + "] must be specified at least once");
+            throw new ValidationException(ASSERT_ONE_OR_MORE_MESSAGE, new Object[] {propertyName});
         }
     }
 
@@ -104,8 +109,7 @@ public final class PropertyValidator {
             final PropertyList properties) throws ValidationException {
 
         if (properties.getProperties(propertyName).size() != 1) {
-            throw new ValidationException(
-                "Property [" + propertyName + "] must be specified once");
+            throw new ValidationException(ASSERT_ONE_MESSAGE, new Object[] {propertyName});
         }
     }
     
@@ -118,8 +122,7 @@ public final class PropertyValidator {
      */
     public void assertNone(final String propertyName, final PropertyList properties) throws ValidationException {
         if (properties.getProperty(propertyName) != null) {
-            throw new ValidationException(
-                "Property [" + propertyName + "] is not applicable");
+            throw new ValidationException(ASSERT_NONE_MESSAGE, new Object[] {propertyName});
         }
     }
 

@@ -45,6 +45,14 @@ import net.fortuna.ical4j.model.ValidationException;
  */
 public final class ParameterValidator {
 
+    private static final String ASSERT_NONE_MESSAGE = "Parameter [{0}] is not applicable";
+
+    private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Parameter [{0}] must only be specified once";
+
+    private static final String ASSERT_ONE_MESSAGE = "Parameter [{0}] must be specified once";
+
+    private static final String ASSERT_NULL_OR_EQUAL_MESSAGE = "Parameter [{0}] is invalid";
+
     private static ParameterValidator instance = new ParameterValidator();
 
     /**
@@ -67,8 +75,7 @@ public final class ParameterValidator {
             final ParameterList parameters) throws ValidationException {
 
         if (parameters.getParameters(paramName).size() > 1) {
-            throw new ValidationException(
-                "Parameter [" + paramName + "] must only be specified once");
+            throw new ValidationException(ASSERT_ONE_OR_LESS_MESSAGE, new Object[] {paramName});
         }
     }
 
@@ -86,8 +93,7 @@ public final class ParameterValidator {
             final ParameterList parameters) throws ValidationException {
 
         if (parameters.getParameters(paramName).size() != 1) {
-            throw new ValidationException(
-                "Parameter [" + paramName + "] must be specified once");
+            throw new ValidationException(ASSERT_ONE_MESSAGE, new Object[] {paramName});
         }
     }
     
@@ -100,8 +106,7 @@ public final class ParameterValidator {
      */
     public void assertNone(final String paramName, final ParameterList parameters) throws ValidationException {
         if (parameters.getParameter(paramName) != null) {
-            throw new ValidationException(
-                "Parameter [" + paramName + "] is not applicable");
+            throw new ValidationException(ASSERT_NONE_MESSAGE, new Object[] {paramName});
         }
     }
 
@@ -113,7 +118,7 @@ public final class ParameterValidator {
     public void assertNullOrEqual(final Parameter param, final ParameterList parameters) throws ValidationException {
         final Parameter p = parameters.getParameter(param.getName());
         if (p != null && !param.equals(p)) {
-            throw new ValidationException("Parameter [" + p + "] is invalid");
+            throw new ValidationException(ASSERT_NULL_OR_EQUAL_MESSAGE, new Object[] {p});
         }
     }
     

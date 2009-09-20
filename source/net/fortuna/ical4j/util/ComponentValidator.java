@@ -44,6 +44,10 @@ import net.fortuna.ical4j.model.ValidationException;
  */
 public final class ComponentValidator {
 
+    private static final String ASSERT_NONE_MESSAGE = "Component [{0}] is not applicable";
+
+    private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Component [{0}] must only be specified once";
+    
     /**
      * Constructor made private to enforce static nature.
      */
@@ -57,7 +61,7 @@ public final class ComponentValidator {
      */
     public static void assertNone(String componentName, ComponentList components) throws ValidationException {
         if (components.getComponent(componentName) != null) {
-            throw new ValidationException("Component [" + componentName + "] is not applicable");
+            throw new ValidationException(ASSERT_NONE_MESSAGE, new Object[] {componentName});
         }
     }
     
@@ -68,7 +72,7 @@ public final class ComponentValidator {
      */
     public static void assertOneOrLess(String componentName, ComponentList components) throws ValidationException {
         if (components.getComponents(componentName).size() > 1) {
-            throw new ValidationException("Component [" + componentName + "] must only be specified once");
+            throw new ValidationException(ASSERT_ONE_OR_LESS_MESSAGE, new Object[] {componentName});
         }
     }
 }

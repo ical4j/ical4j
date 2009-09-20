@@ -39,6 +39,8 @@ import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.StringEncoder;
 
 /**
+ * Abstract base class for encoder factory implementations.
+ * 
  * $Id$
  *
  * Created on 13/05/2006

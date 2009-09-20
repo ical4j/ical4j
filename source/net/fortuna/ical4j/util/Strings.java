@@ -104,10 +104,16 @@ import java.util.regex.Pattern;
  */
 public final class Strings {
 
+    private static final String BACKSLASH_PATTERN = "\\\\";
+
+    private static final String NEWLINE_PATTERN = BACKSLASH_PATTERN + "n";
+
+    private static final String QUOTE_PATTERN = "\"";
+    
 //    private static final Pattern CHECK_ESCAPE = Pattern.compile("[,;\"\n\\\\]");
     private static final Pattern CHECK_ESCAPE = Pattern.compile("[,;\n\\\\]");
 
-    private static final Pattern CHECK_UNESCAPE = Pattern.compile("\\\\");
+    private static final Pattern CHECK_UNESCAPE = Pattern.compile(BACKSLASH_PATTERN);
 
 //    private static final Pattern ESCAPE_PATTERN_1 =
 //        Pattern.compile("([,;\"])");
@@ -118,7 +124,7 @@ public final class Strings {
         Pattern.compile("\r?\n");
 
     private static final Pattern ESCAPE_PATTERN_3 =
-        Pattern.compile("\\\\");
+        Pattern.compile(BACKSLASH_PATTERN);
 
     // include escaped quotes for backwards compatibility..
     private static final Pattern UNESCAPE_PATTERN_1 =
@@ -127,10 +133,10 @@ public final class Strings {
 //        Pattern.compile("\\\\([,;])");
 
     private static final Pattern UNESCAPE_PATTERN_2 =
-        Pattern.compile("\\\\n", Pattern.CASE_INSENSITIVE);
+        Pattern.compile(NEWLINE_PATTERN, Pattern.CASE_INSENSITIVE);
 
     private static final Pattern UNESCAPE_PATTERN_3 =
-        Pattern.compile("\\\\\\\\");
+        Pattern.compile(BACKSLASH_PATTERN + BACKSLASH_PATTERN);
 
     /**
      * Defines a regular expression representing all parameter strings that
@@ -158,10 +164,10 @@ public final class Strings {
      */
     public static String quote(final Object aValue) {
         if (aValue != null) {
-            return "\"" + aValue + "\"";
+            return QUOTE_PATTERN + aValue + QUOTE_PATTERN;
         }
 
-        return "\"\"";
+        return QUOTE_PATTERN + QUOTE_PATTERN;
     }
 
     /**
@@ -171,10 +177,9 @@ public final class Strings {
      * @return an un-quoted string
      */
     public static String unquote(final String aValue) {
-        if (aValue != null && aValue.startsWith("\"") && aValue.endsWith("\"")) {
+        if (aValue != null && aValue.startsWith(QUOTE_PATTERN) && aValue.endsWith(QUOTE_PATTERN)) {
             return aValue.substring(0, aValue.length() - 1).substring(1);
         }
-
         return aValue;
     }
 
@@ -188,8 +193,8 @@ public final class Strings {
         if (aValue != null && CHECK_ESCAPE.matcher(aValue).find()) {
             return ESCAPE_PATTERN_1.matcher(
                     ESCAPE_PATTERN_2.matcher(
-                            ESCAPE_PATTERN_3.matcher(aValue).replaceAll("\\\\\\\\"))
-                        .replaceAll("\\\\n"))
+                            ESCAPE_PATTERN_3.matcher(aValue).replaceAll(BACKSLASH_PATTERN + BACKSLASH_PATTERN))
+                        .replaceAll(NEWLINE_PATTERN))
                 .replaceAll("\\\\$1");
 /*
             return aValue.replaceAll("\\\\", "\\\\\\\\")
@@ -217,7 +222,7 @@ public final class Strings {
                     UNESCAPE_PATTERN_2.matcher(
                             UNESCAPE_PATTERN_1.matcher(aValue).replaceAll("$1"))
                         .replaceAll("\n"))
-                .replaceAll("\\\\");
+                .replaceAll(BACKSLASH_PATTERN);
 /*
             return aValue.replaceAll("\\\\\"", "\"")
                             .replaceAll("\\\\N", "\n")
