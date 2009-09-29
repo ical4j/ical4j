@@ -48,8 +48,10 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentFactory;
 import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
@@ -148,7 +150,8 @@ public class CalendarBuilder {
             final TimeZoneRegistry registry) {
         this.parser = parser;
         this.registry = registry;
-        this.contentHandler = new ContentHandlerImpl();
+        this.contentHandler = new ContentHandlerImpl(ComponentFactory.getInstance(),
+                PropertyFactoryImpl.getInstance(), ParameterFactoryImpl.getInstance());
     }
 
     /**
@@ -193,14 +196,29 @@ public class CalendarBuilder {
 
         parser.parse(uin, contentHandler);
 
-        if(datesMissingTimezones.size()>0 && registry!=null)
+        if (datesMissingTimezones.size() > 0 && registry != null) {
             resolveTimezones();
+        }
         
         return calendar;
     }
 
     private class ContentHandlerImpl implements ContentHandler {
 
+        private final ComponentFactory componentFactory;
+        
+        private final PropertyFactory propertyFactory;
+        
+        private final ParameterFactory parameterFactory;
+        
+        public ContentHandlerImpl(ComponentFactory componentFactory, PropertyFactory propertyFactory,
+                ParameterFactory parameterFactory) {
+            
+            this.componentFactory = componentFactory;
+            this.propertyFactory = propertyFactory;
+            this.parameterFactory = parameterFactory;
+        }
+        
         public void endCalendar() {
             // do nothing..
         }
@@ -256,7 +274,7 @@ public class CalendarBuilder {
         public void parameter(final String name, final String value) throws URISyntaxException {
             if (property != null) {
                 // parameter names are case-insensitive, but convert to upper case to simplify further processing
-                final Parameter param = ParameterFactoryImpl.getInstance().createParameter(name.toUpperCase(), value);
+                final Parameter param = parameterFactory.createParameter(name.toUpperCase(), value);
                 property.getParameters().add(param);
                 if (param instanceof TzId && registry != null) {
                     final TimeZone timezone = registry.getTimeZone(param.getValue());
@@ -317,10 +335,10 @@ public class CalendarBuilder {
          */
         public void startComponent(final String name) {
             if (component != null) {
-                subComponent = ComponentFactory.getInstance().createComponent(name);
+                subComponent = componentFactory.createComponent(name);
             }
             else {
-                component = ComponentFactory.getInstance().createComponent(name);
+                component = componentFactory.createComponent(name);
             }
         }
 
@@ -329,8 +347,7 @@ public class CalendarBuilder {
          */
         public void startProperty(final String name) {
             // property names are case-insensitive, but convert to upper case to simplify further processing
-            property = PropertyFactoryImpl.getInstance().createProperty(
-                    name.toUpperCase());
+            property = propertyFactory.createProperty(name.toUpperCase());
         }
     }
 
