@@ -119,7 +119,8 @@ public class CalendarBuilder {
      * Default constructor.
      */
     public CalendarBuilder() {
-        this(CalendarParserFactory.getInstance().createParser(),
+        this(CalendarParserFactory.getInstance().createParser(), ComponentFactory.getInstance(),
+                PropertyFactoryImpl.getInstance(), ParameterFactoryImpl.getInstance(),
                 TimeZoneRegistryFactory.getInstance().createRegistry());
     }
 
@@ -128,7 +129,8 @@ public class CalendarBuilder {
      * @param parser a calendar parser used to parse calendar files
      */
     public CalendarBuilder(final CalendarParser parser) {
-        this(parser, TimeZoneRegistryFactory.getInstance().createRegistry());
+        this(parser, ComponentFactory.getInstance(), PropertyFactoryImpl.getInstance(),
+                ParameterFactoryImpl.getInstance(), TimeZoneRegistryFactory.getInstance().createRegistry());
     }
 
     /**
@@ -136,7 +138,8 @@ public class CalendarBuilder {
      * @param registry a timezone registry to populate with discovered timezones
      */
     public CalendarBuilder(final TimeZoneRegistry registry) {
-        this(CalendarParserFactory.getInstance().createParser(), registry);
+        this(CalendarParserFactory.getInstance().createParser(), ComponentFactory.getInstance(),
+                PropertyFactoryImpl.getInstance(), ParameterFactoryImpl.getInstance(), registry);
     }
 
     /**
@@ -146,12 +149,18 @@ public class CalendarBuilder {
      *  register additional timezone information found
      * in the calendar
      */
-    public CalendarBuilder(final CalendarParser parser,
-            final TimeZoneRegistry registry) {
+    public CalendarBuilder(CalendarParser parser, TimeZoneRegistry registry) {
+        this(parser, ComponentFactory.getInstance(), PropertyFactoryImpl.getInstance(),
+                ParameterFactoryImpl.getInstance(), registry);
+    }
+    
+    public CalendarBuilder(CalendarParser parser, ComponentFactory componentFactory,
+            PropertyFactory propertyFactory, ParameterFactory parameterFactory, TimeZoneRegistry registry) {
+
         this.parser = parser;
         this.registry = registry;
-        this.contentHandler = new ContentHandlerImpl(ComponentFactory.getInstance(),
-                PropertyFactoryImpl.getInstance(), ParameterFactoryImpl.getInstance());
+        this.contentHandler = new ContentHandlerImpl(componentFactory, propertyFactory,
+                parameterFactory);
     }
 
     /**

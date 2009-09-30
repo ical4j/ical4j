@@ -100,7 +100,7 @@ import net.fortuna.ical4j.model.property.XProperty;
  * property: icalj.parsing.relaxed=true) illegal property names are allowed.
  * @author Ben Fortuna
  */
-public final class PropertyFactoryImpl extends AbstractContentFactory implements
+public class PropertyFactoryImpl extends AbstractContentFactory implements
         PropertyFactory {
 
     private static PropertyFactoryImpl instance = new PropertyFactoryImpl();
@@ -108,64 +108,63 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
     /**
      * Constructor made private to prevent instantiation.
      */
-    private PropertyFactoryImpl() {
-        factories.put(Property.ACTION, createActionFactory());
-        factories.put(Property.ATTACH, createAttachFactory());
-        factories.put(Property.ATTENDEE, createAttendeeFactory());
-        factories.put(Property.CALSCALE, createCalScaleFactory());
-        factories.put(Property.CATEGORIES, createCategoriesFactory());
-        factories.put(Property.CLASS, createClazzFactory());
-        factories.put(Property.COMMENT, createCommentFactory());
-        factories.put(Property.COMPLETED, createCompletedFactory());
-        factories.put(Property.CONTACT, createContactFactory());
-        factories.put(Property.COUNTRY, createCountryFactory());
-        factories.put(Property.CREATED, createCreatedFactory());
-        factories.put(Property.DESCRIPTION, createDescriptionFactory());
-        factories.put(Property.DTEND, createDtEndFactory());
-        factories.put(Property.DTSTAMP, createDtStampFactory());
-        factories.put(Property.DTSTART, createDtStartFactory());
-        factories.put(Property.DUE, createDueFactory());
-        factories.put(Property.DURATION, createDurationFactory());
-        factories.put(Property.EXDATE, createExDateFactory());
-        factories.put(Property.EXRULE, createExRuleFactory());
-        factories.put(Property.EXTENDED_ADDRESS, createExtendedAddressFactory());
-        factories.put(Property.FREEBUSY, createFreeBusyFactory());
-        factories.put(Property.GEO, createGeoFactory());
-        factories.put(Property.LAST_MODIFIED, createLastModifiedFactory());
-        factories.put(Property.LOCALITY, createLocalityFactory());
-        factories.put(Property.LOCATION, createLocationFactory());
-        factories.put(Property.LOCATION_TYPE, createLocationTypeFactory());
-        factories.put(Property.METHOD, createMethodFactory());
-        factories.put(Property.NAME, createNameFactory());
-        factories.put(Property.ORGANIZER, createOrganizerFactory());
-        factories
-                .put(Property.PERCENT_COMPLETE, createPercentCompleteFactory());
-        factories.put(Property.POSTALCODE, createPostalcodeFactory());
-        factories.put(Property.PRIORITY, createPriorityFactory());
-        factories.put(Property.PRODID, createProdIdFactory());
-        factories.put(Property.RDATE, createRDateFactory());
-        factories.put(Property.RECURRENCE_ID, createRecurrenceIdFactory());
-        factories.put(Property.REGION, createRegionFactory());
-        factories.put(Property.RELATED_TO, createRelatedToFactory());
-        factories.put(Property.REPEAT, createRepeatFactory());
-        factories.put(Property.REQUEST_STATUS, createRequestStatusFactory());
-        factories.put(Property.RESOURCES, createResourcesFactory());
-        factories.put(Property.RRULE, createRRuleFactory());
-        factories.put(Property.SEQUENCE, createSequenceFactory());
-        factories.put(Property.STATUS, createStatusFactory());
-        factories.put(Property.STREET_ADDRESS, createStreetAddressFactory());
-        factories.put(Property.SUMMARY, createSummaryFactory());
-        factories.put(Property.TEL, createTelFactory());
-        factories.put(Property.TRANSP, createTranspFactory());
-        factories.put(Property.TRIGGER, createTriggerFactory());
-        factories.put(Property.TZID, createTzIdFactory());
-        factories.put(Property.TZNAME, createTzNameFactory());
-        factories.put(Property.TZOFFSETFROM, createTzOffsetFromFactory());
-        factories.put(Property.TZOFFSETTO, createTzOffsetToFactory());
-        factories.put(Property.TZURL, createTzUrlFactory());
-        factories.put(Property.UID, createUidFactory());
-        factories.put(Property.URL, createUrlFactory());
-        factories.put(Property.VERSION, createVersionFactory());
+    protected PropertyFactoryImpl() {
+        registerDefaultFactory(Property.ACTION, createActionFactory());
+        registerDefaultFactory(Property.ATTACH, createAttachFactory());
+        registerDefaultFactory(Property.ATTENDEE, createAttendeeFactory());
+        registerDefaultFactory(Property.CALSCALE, createCalScaleFactory());
+        registerDefaultFactory(Property.CATEGORIES, createCategoriesFactory());
+        registerDefaultFactory(Property.CLASS, createClazzFactory());
+        registerDefaultFactory(Property.COMMENT, createCommentFactory());
+        registerDefaultFactory(Property.COMPLETED, createCompletedFactory());
+        registerDefaultFactory(Property.CONTACT, createContactFactory());
+        registerDefaultFactory(Property.COUNTRY, createCountryFactory());
+        registerDefaultFactory(Property.CREATED, createCreatedFactory());
+        registerDefaultFactory(Property.DESCRIPTION, createDescriptionFactory());
+        registerDefaultFactory(Property.DTEND, createDtEndFactory());
+        registerDefaultFactory(Property.DTSTAMP, createDtStampFactory());
+        registerDefaultFactory(Property.DTSTART, createDtStartFactory());
+        registerDefaultFactory(Property.DUE, createDueFactory());
+        registerDefaultFactory(Property.DURATION, createDurationFactory());
+        registerDefaultFactory(Property.EXDATE, createExDateFactory());
+        registerDefaultFactory(Property.EXRULE, createExRuleFactory());
+        registerDefaultFactory(Property.EXTENDED_ADDRESS, createExtendedAddressFactory());
+        registerDefaultFactory(Property.FREEBUSY, createFreeBusyFactory());
+        registerDefaultFactory(Property.GEO, createGeoFactory());
+        registerDefaultFactory(Property.LAST_MODIFIED, createLastModifiedFactory());
+        registerDefaultFactory(Property.LOCALITY, createLocalityFactory());
+        registerDefaultFactory(Property.LOCATION, createLocationFactory());
+        registerDefaultFactory(Property.LOCATION_TYPE, createLocationTypeFactory());
+        registerDefaultFactory(Property.METHOD, createMethodFactory());
+        registerDefaultFactory(Property.NAME, createNameFactory());
+        registerDefaultFactory(Property.ORGANIZER, createOrganizerFactory());
+        registerDefaultFactory(Property.PERCENT_COMPLETE, createPercentCompleteFactory());
+        registerDefaultFactory(Property.POSTALCODE, createPostalcodeFactory());
+        registerDefaultFactory(Property.PRIORITY, createPriorityFactory());
+        registerDefaultFactory(Property.PRODID, createProdIdFactory());
+        registerDefaultFactory(Property.RDATE, createRDateFactory());
+        registerDefaultFactory(Property.RECURRENCE_ID, createRecurrenceIdFactory());
+        registerDefaultFactory(Property.REGION, createRegionFactory());
+        registerDefaultFactory(Property.RELATED_TO, createRelatedToFactory());
+        registerDefaultFactory(Property.REPEAT, createRepeatFactory());
+        registerDefaultFactory(Property.REQUEST_STATUS, createRequestStatusFactory());
+        registerDefaultFactory(Property.RESOURCES, createResourcesFactory());
+        registerDefaultFactory(Property.RRULE, createRRuleFactory());
+        registerDefaultFactory(Property.SEQUENCE, createSequenceFactory());
+        registerDefaultFactory(Property.STATUS, createStatusFactory());
+        registerDefaultFactory(Property.STREET_ADDRESS, createStreetAddressFactory());
+        registerDefaultFactory(Property.SUMMARY, createSummaryFactory());
+        registerDefaultFactory(Property.TEL, createTelFactory());
+        registerDefaultFactory(Property.TRANSP, createTranspFactory());
+        registerDefaultFactory(Property.TRIGGER, createTriggerFactory());
+        registerDefaultFactory(Property.TZID, createTzIdFactory());
+        registerDefaultFactory(Property.TZNAME, createTzNameFactory());
+        registerDefaultFactory(Property.TZOFFSETFROM, createTzOffsetFromFactory());
+        registerDefaultFactory(Property.TZOFFSETTO, createTzOffsetToFactory());
+        registerDefaultFactory(Property.TZURL, createTzUrlFactory());
+        registerDefaultFactory(Property.UID, createUidFactory());
+        registerDefaultFactory(Property.URL, createUrlFactory());
+        registerDefaultFactory(Property.VERSION, createVersionFactory());
     }
 
     private PropertyFactory createActionFactory() {
@@ -1022,7 +1021,7 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
      * {@inheritDoc}
      */
     public Property createProperty(final String name) {
-        final PropertyFactory factory = (PropertyFactory) factories.get(name);
+        final PropertyFactory factory = (PropertyFactory) getFactory(name);
         if (factory != null) {
             return factory.createProperty(name);
         }
@@ -1045,7 +1044,7 @@ public final class PropertyFactoryImpl extends AbstractContentFactory implements
             final ParameterList parameters, final String value)
             throws IOException, URISyntaxException, ParseException {
 
-        final PropertyFactory factory = (PropertyFactory) factories.get(name);
+        final PropertyFactory factory = (PropertyFactory) getFactory(name);
         if (factory != null) {
             return factory.createProperty(name, parameters, value);
         }

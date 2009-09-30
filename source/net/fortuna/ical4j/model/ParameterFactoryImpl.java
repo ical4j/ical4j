@@ -67,7 +67,7 @@ import net.fortuna.ical4j.util.Strings;
  * A factory for creating iCalendar parameters.
  * @author Ben Fortuna
  */
-public final class ParameterFactoryImpl extends AbstractContentFactory
+public class ParameterFactoryImpl extends AbstractContentFactory
     implements ParameterFactory {
 
     private static ParameterFactoryImpl instance = new ParameterFactoryImpl();
@@ -75,30 +75,30 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
     /**
      * Constructor made private to prevent instantiation.
      */
-    private ParameterFactoryImpl() {
-        factories.put(Parameter.ABBREV, createAbbrevFactory());
-        factories.put(Parameter.ALTREP, createAltRepFactory());
-        factories.put(Parameter.CN, createCnFactory());
-        factories.put(Parameter.CUTYPE, createCuTypeFactory());
-        factories.put(Parameter.DELEGATED_FROM, createDelegatedFromFactory());
-        factories.put(Parameter.DELEGATED_TO, createDelegatedToFactory());
-        factories.put(Parameter.DIR, createDirFactory());
-        factories.put(Parameter.ENCODING, createEncodingFactory());
-        factories.put(Parameter.FMTTYPE, createFmtTypeFactory());
-        factories.put(Parameter.FBTYPE, createFbTypeFactory());
-        factories.put(Parameter.LANGUAGE, createLanguageFactory());
-        factories.put(Parameter.MEMBER, createMemberFactory());
-        factories.put(Parameter.PARTSTAT, createPartStatFactory());
-        factories.put(Parameter.RANGE, createRangeFactory());
-        factories.put(Parameter.RELATED, createRelatedFactory());
-        factories.put(Parameter.RELTYPE, createRelTypeFactory());
-        factories.put(Parameter.ROLE, createRoleFactory());
-        factories.put(Parameter.RSVP, createRsvpFactory());
-        factories.put(Parameter.SENT_BY, createSentByFactory());
-        factories.put(Parameter.TYPE, createTypeFactory());
-        factories.put(Parameter.TZID, createTzIdFactory());
-        factories.put(Parameter.VALUE, createValueFactory());
-        factories.put(Parameter.VVENUE, createVvenueFactory());
+    protected ParameterFactoryImpl() {
+        registerDefaultFactory(Parameter.ABBREV, createAbbrevFactory());
+        registerDefaultFactory(Parameter.ALTREP, createAltRepFactory());
+        registerDefaultFactory(Parameter.CN, createCnFactory());
+        registerDefaultFactory(Parameter.CUTYPE, createCuTypeFactory());
+        registerDefaultFactory(Parameter.DELEGATED_FROM, createDelegatedFromFactory());
+        registerDefaultFactory(Parameter.DELEGATED_TO, createDelegatedToFactory());
+        registerDefaultFactory(Parameter.DIR, createDirFactory());
+        registerDefaultFactory(Parameter.ENCODING, createEncodingFactory());
+        registerDefaultFactory(Parameter.FMTTYPE, createFmtTypeFactory());
+        registerDefaultFactory(Parameter.FBTYPE, createFbTypeFactory());
+        registerDefaultFactory(Parameter.LANGUAGE, createLanguageFactory());
+        registerDefaultFactory(Parameter.MEMBER, createMemberFactory());
+        registerDefaultFactory(Parameter.PARTSTAT, createPartStatFactory());
+        registerDefaultFactory(Parameter.RANGE, createRangeFactory());
+        registerDefaultFactory(Parameter.RELATED, createRelatedFactory());
+        registerDefaultFactory(Parameter.RELTYPE, createRelTypeFactory());
+        registerDefaultFactory(Parameter.ROLE, createRoleFactory());
+        registerDefaultFactory(Parameter.RSVP, createRsvpFactory());
+        registerDefaultFactory(Parameter.SENT_BY, createSentByFactory());
+        registerDefaultFactory(Parameter.TYPE, createTypeFactory());
+        registerDefaultFactory(Parameter.TZID, createTzIdFactory());
+        registerDefaultFactory(Parameter.VALUE, createValueFactory());
+        registerDefaultFactory(Parameter.VVENUE, createVvenueFactory());
     }
 
     /**
@@ -561,7 +561,7 @@ public final class ParameterFactoryImpl extends AbstractContentFactory
      */
     public Parameter createParameter(final String name, final String value)
             throws URISyntaxException {
-        final ParameterFactory factory = (ParameterFactory) factories.get(name);
+        final ParameterFactory factory = (ParameterFactory) getFactory(name);
         Parameter parameter = null;
         if (factory != null) {
             parameter = factory.createParameter(name, value);

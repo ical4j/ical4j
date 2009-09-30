@@ -49,15 +49,40 @@ public abstract class AbstractContentFactory {
     /**
      * Map of delegate factories.
      */
-    protected Map factories;
+    private final Map defaultFactories;
+
+    private final Map extendedFactories;
 
     /**
      * Default constructor.
      */
     public AbstractContentFactory() {
-        factories = new HashMap();
+        defaultFactories = new HashMap();
+        extendedFactories = new HashMap();
     }
 
+    /**
+     * Register a standard content factory.
+     */
+    protected final void registerDefaultFactory(String key, Object factory) {
+        defaultFactories.put(key, factory);
+    }
+
+    /**
+     * Register a non-standard content factory.
+     */
+    protected final void registerExtendedFactory(String key, Object factory) {
+        extendedFactories.put(key, factory);
+    }
+
+    protected final Object getFactory(String key) {
+        Object factory = defaultFactories.get(key);
+        if (factory == null) {
+            factory = extendedFactories.get(key);
+        }
+        return factory;
+    }
+    
     /**
      * @return true if non-standard names are allowed, otherwise false
      */
