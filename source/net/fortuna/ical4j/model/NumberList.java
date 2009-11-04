@@ -93,7 +93,7 @@ public class NumberList extends ArrayList implements Serializable {
         final StringTokenizer t = new StringTokenizer(aString, ",");
         while (t.hasMoreTokens()) {
         	final int value = Numbers.parseInt(t.nextToken());
-            add(Integer.valueOf(value));
+            add(new Integer(value));
         }
     }
 

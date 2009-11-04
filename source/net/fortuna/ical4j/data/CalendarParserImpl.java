@@ -37,6 +37,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StreamTokenizer;
 import java.net.URISyntaxException;
+import java.text.MessageFormat;
 import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Calendar;
@@ -64,6 +65,8 @@ public class CalendarParserImpl implements CalendarParser {
     private static final int WHITESPACE_CHAR_START = 0;
 
     private static final int WHITESPACE_CHAR_END = 20;
+    
+    private static final String UNEXPECTED_TOKEN_MESSAGE = "Expected [{0}], read [{1}]";
 
     private Log log = LogFactory.getLog(CalendarParserImpl.class);
 
@@ -190,6 +193,10 @@ public class CalendarParserImpl implements CalendarParser {
      */
     private class PropertyParser {
         
+        private static final String PARSE_DEBUG_MESSAGE = "Property [{0}]";
+        
+        private static final String PARSE_EXCEPTION_MESSAGE = "Property [{0}]";
+        
         private void parse(final StreamTokenizer tokeniser, Reader in,
                 final ContentHandler handler) throws IOException, ParserException,
                 URISyntaxException, ParseException {
@@ -198,7 +205,7 @@ public class CalendarParserImpl implements CalendarParser {
 
             // debugging..
             if (log.isDebugEnabled()) {
-                log.debug("Property [" + name + "]");
+                log.debug(MessageFormat.format(PARSE_DEBUG_MESSAGE, new Object[] {name}));
             }
 
             handler.startProperty(name);
@@ -248,7 +255,8 @@ public class CalendarParserImpl implements CalendarParser {
                 handler.propertyValue(value.toString());
             }
             catch (ParseException e) {
-                ParseException eNew = new ParseException("[" + name + "] " + e.getMessage(), e.getErrorOffset());
+                final ParseException eNew = new ParseException("[" + name + "] "
+                        + e.getMessage(), e.getErrorOffset());
                 eNew.initCause(e);
                 throw eNew;
             }
@@ -405,9 +413,9 @@ public class CalendarParserImpl implements CalendarParser {
             throws IOException, ParserException {
 
         if (tokeniser.nextToken() != token) {
-            throw new ParserException(
-                    "Expected [" + token + "], read [" + tokeniser.ttype + "]",
-                    getLineNumber(tokeniser, in));
+            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Object[] {
+                    new Integer(token), new Integer(tokeniser.ttype),
+            }), getLineNumber(tokeniser, in));
         }
 
         if (log.isDebugEnabled()) {
@@ -443,15 +451,15 @@ public class CalendarParserImpl implements CalendarParser {
 
         if (ignoreCase) {
             if (!token.equalsIgnoreCase(tokeniser.sval)) {
-                throw new ParserException(
-                        "Expected [" + token + "], read [" + tokeniser.sval + "]",
-                        getLineNumber(tokeniser, in));
+                throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Object[] {
+                        Integer.valueOf(token), new Integer(tokeniser.ttype),
+                }), getLineNumber(tokeniser, in));
             }
         }
         else if (!token.equals(tokeniser.sval)) {
-            throw new ParserException(
-                    "Expected [" + token + "], read [" + tokeniser.sval + "]",
-                    getLineNumber(tokeniser, in));
+            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Object[] {
+                    Integer.valueOf(token), new Integer(tokeniser.ttype),
+            }), getLineNumber(tokeniser, in));
         }
 
         if (log.isDebugEnabled()) {

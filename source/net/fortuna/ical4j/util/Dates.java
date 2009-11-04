@@ -131,7 +131,7 @@ public final class Dates {
     public static int getAbsWeekNo(final java.util.Date date, final int weekNo) {
         if (weekNo == 0 || weekNo < -MAX_WEEKS_PER_YEAR || weekNo > MAX_WEEKS_PER_YEAR) {
             throw new IllegalArgumentException(MessageFormat.format(INVALID_WEEK_MESSAGE,
-                    new Object[] {Integer.valueOf(weekNo)}));
+                    new Object[] {new Integer(weekNo)}));
         }
         if (weekNo > 0) {
             return weekNo;
@@ -143,7 +143,7 @@ public final class Dates {
         final List weeks = new ArrayList();
         cal.set(Calendar.WEEK_OF_YEAR, 1);
         while (cal.get(Calendar.YEAR) == year) {
-            weeks.add(Integer.valueOf(cal.get(Calendar.WEEK_OF_YEAR)));
+            weeks.add(new Integer(cal.get(Calendar.WEEK_OF_YEAR)));
             cal.add(Calendar.WEEK_OF_YEAR, 1);
         }
         return ((Integer) weeks.get(weeks.size() + weekNo)).intValue();
@@ -161,7 +161,7 @@ public final class Dates {
     public static int getAbsYearDay(final java.util.Date date, final int yearDay) {
         if (yearDay == 0 || yearDay < -MAX_DAYS_PER_YEAR || yearDay > MAX_DAYS_PER_YEAR) {
             throw new IllegalArgumentException(MessageFormat.format(INVALID_YEAR_DAY_MESSAGE,
-                    new Object[] {Integer.valueOf(yearDay)}));
+                    new Object[] {new Integer(yearDay)}));
         }
         if (yearDay > 0) {
             return yearDay;
@@ -173,7 +173,7 @@ public final class Dates {
         final List days = new ArrayList();
         cal.set(Calendar.DAY_OF_YEAR, 1);
         while (cal.get(Calendar.YEAR) == year) {
-            days.add(Integer.valueOf(cal.get(Calendar.DAY_OF_YEAR)));
+            days.add(new Integer(cal.get(Calendar.DAY_OF_YEAR)));
             cal.add(Calendar.DAY_OF_YEAR, 1);
         }
         return ((Integer) days.get(days.size() + yearDay)).intValue();
@@ -191,7 +191,7 @@ public final class Dates {
     public static int getAbsMonthDay(final java.util.Date date, final int monthDay) {
         if (monthDay == 0 || monthDay < -MAX_DAYS_PER_MONTH || monthDay > MAX_DAYS_PER_MONTH) {
             throw new IllegalArgumentException(MessageFormat.format(INVALID_MONTH_DAY_MESSAGE,
-                    new Object[] {Integer.valueOf(monthDay)}));
+                    new Object[] {new Integer(monthDay)}));
         }
         if (monthDay > 0) {
             return monthDay;
@@ -203,7 +203,7 @@ public final class Dates {
         final List days = new ArrayList();
         cal.set(Calendar.DAY_OF_MONTH, 1);
         while (cal.get(Calendar.MONTH) == month) {
-            days.add(Integer.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
+            days.add(new Integer(cal.get(Calendar.DAY_OF_MONTH)));
             cal.add(Calendar.DAY_OF_MONTH, 1);
         }
         return ((Integer) days.get(days.size() + monthDay)).intValue();
