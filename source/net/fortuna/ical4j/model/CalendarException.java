@@ -40,6 +40,13 @@ public class CalendarException extends RuntimeException {
     private static final long serialVersionUID = 3994967097251100771L;
 
     /**
+     * @param message an exception detail message
+     */
+    public CalendarException(String message) {
+        super(message);
+    }
+    
+    /**
      * @param cause the cause exception
      */
     public CalendarException(Throwable cause) {
