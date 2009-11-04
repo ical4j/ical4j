@@ -75,6 +75,11 @@ public abstract class AbstractContentFactory {
         extendedFactories.put(key, factory);
     }
 
+    /**
+     * @param key a factory key
+     * @return a factory associated with the specified key, giving preference to
+     * standard factories
+     */
     protected final Object getFactory(String key) {
         Object factory = defaultFactories.get(key);
         if (factory == null) {
