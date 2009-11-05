@@ -103,7 +103,7 @@ public class NumberList extends ArrayList implements Serializable {
      */
     public final boolean add(final Integer aNumber) {
         int abs = aNumber.intValue();
-        if (Integer.signum(abs) < 0) {
+        if ((abs >> 31 | -abs >>> 31) < 0) {
             if (!allowsNegativeValues) {
                 throw new IllegalArgumentException("Negative value not allowed: " + aNumber);
             }
