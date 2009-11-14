@@ -207,9 +207,11 @@ public class PeriodList extends TreeSet implements Serializable {
     }
 
     /**
-     * A convenience method that adds all the periods in the specified list to
-     * this list. Normalisation is also performed automatically after all
-     * periods have been added.
+     * A convenience method that combines all the periods in the specified list to
+     * this list. The result returned is a new PeriodList instance, except where
+     * no periods are specified in the arguments. In such cases this instance is returned.
+     * 
+     * Normalisation is also performed automatically after all periods have been added.
      * 
      * @param periods a list of periods to add
      * @return a period list instance
