@@ -60,11 +60,12 @@ import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.util.Strings;
 
 /**
+ * A factory for creating iCalendar parameters.
+ * 
  * $Id $
  *
  * [05-Apr-2004]
  *
- * A factory for creating iCalendar parameters.
  * @author Ben Fortuna
  */
 public class ParameterFactoryImpl extends AbstractContentFactory
@@ -76,472 +77,29 @@ public class ParameterFactoryImpl extends AbstractContentFactory
      * Constructor made private to prevent instantiation.
      */
     protected ParameterFactoryImpl() {
-        registerDefaultFactory(Parameter.ABBREV, createAbbrevFactory());
-        registerDefaultFactory(Parameter.ALTREP, createAltRepFactory());
-        registerDefaultFactory(Parameter.CN, createCnFactory());
-        registerDefaultFactory(Parameter.CUTYPE, createCuTypeFactory());
-        registerDefaultFactory(Parameter.DELEGATED_FROM, createDelegatedFromFactory());
-        registerDefaultFactory(Parameter.DELEGATED_TO, createDelegatedToFactory());
-        registerDefaultFactory(Parameter.DIR, createDirFactory());
-        registerDefaultFactory(Parameter.ENCODING, createEncodingFactory());
-        registerDefaultFactory(Parameter.FMTTYPE, createFmtTypeFactory());
-        registerDefaultFactory(Parameter.FBTYPE, createFbTypeFactory());
-        registerDefaultFactory(Parameter.LANGUAGE, createLanguageFactory());
-        registerDefaultFactory(Parameter.MEMBER, createMemberFactory());
-        registerDefaultFactory(Parameter.PARTSTAT, createPartStatFactory());
-        registerDefaultFactory(Parameter.RANGE, createRangeFactory());
-        registerDefaultFactory(Parameter.RELATED, createRelatedFactory());
-        registerDefaultFactory(Parameter.RELTYPE, createRelTypeFactory());
-        registerDefaultFactory(Parameter.ROLE, createRoleFactory());
-        registerDefaultFactory(Parameter.RSVP, createRsvpFactory());
-        registerDefaultFactory(Parameter.SENT_BY, createSentByFactory());
-        registerDefaultFactory(Parameter.TYPE, createTypeFactory());
-        registerDefaultFactory(Parameter.TZID, createTzIdFactory());
-        registerDefaultFactory(Parameter.VALUE, createValueFactory());
-        registerDefaultFactory(Parameter.VVENUE, createVvenueFactory());
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createAbbrevFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name, final String value) throws URISyntaxException {
-                return new Abbrev(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createAltRepFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new AltRep(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createCnFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new Cn(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createCuTypeFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                CuType parameter = new CuType(value);
-                if (CuType.INDIVIDUAL.equals(parameter)) {
-                    parameter = CuType.INDIVIDUAL;
-                }
-                else if (CuType.GROUP.equals(parameter)) {
-                    parameter = CuType.GROUP;
-                }
-                else if (CuType.RESOURCE.equals(parameter)) {
-                    parameter = CuType.RESOURCE;
-                }
-                else if (CuType.ROOM.equals(parameter)) {
-                    parameter = CuType.ROOM;
-                }
-                else if (CuType.UNKNOWN.equals(parameter)) {
-                    parameter = CuType.UNKNOWN;
-                }
-                return parameter;
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createDelegatedFromFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new DelegatedFrom(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createDelegatedToFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new DelegatedTo(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createDirFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new Dir(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createEncodingFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                Encoding parameter = new Encoding(value);
-                if (Encoding.EIGHT_BIT.equals(parameter)) {
-                    parameter = Encoding.EIGHT_BIT;
-                }
-                else if (Encoding.BASE64.equals(parameter)) {
-                    parameter = Encoding.BASE64;
-                }
-                return parameter;
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createFmtTypeFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new FmtType(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createFbTypeFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                FbType parameter = new FbType(value);
-                if (FbType.FREE.equals(parameter)) {
-                    parameter = FbType.FREE;
-                }
-                else if (FbType.BUSY.equals(parameter)) {
-                    parameter = FbType.BUSY;
-                }
-                else if (FbType.BUSY_TENTATIVE.equals(parameter)) {
-                    parameter = FbType.BUSY_TENTATIVE;
-                }
-                else if (FbType.BUSY_UNAVAILABLE.equals(parameter)) {
-                    parameter = FbType.BUSY_UNAVAILABLE;
-                }
-                return parameter;
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createLanguageFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new Language(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createMemberFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new Member(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createPartStatFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                PartStat parameter = new PartStat(value);
-                if (PartStat.NEEDS_ACTION.equals(parameter)) {
-                    parameter = PartStat.NEEDS_ACTION;
-                }
-                else if (PartStat.ACCEPTED.equals(parameter)) {
-                    parameter = PartStat.ACCEPTED;
-                }
-                else if (PartStat.DECLINED.equals(parameter)) {
-                    parameter = PartStat.DECLINED;
-                }
-                else if (PartStat.TENTATIVE.equals(parameter)) {
-                    parameter = PartStat.TENTATIVE;
-                }
-                else if (PartStat.DELEGATED.equals(parameter)) {
-                    parameter = PartStat.DELEGATED;
-                }
-                else if (PartStat.COMPLETED.equals(parameter)) {
-                    parameter = PartStat.COMPLETED;
-                }
-                else if (PartStat.IN_PROCESS.equals(parameter)) {
-                    parameter = PartStat.IN_PROCESS;
-                }
-                return parameter;
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createRangeFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                Range parameter = new Range(value);
-                if (Range.THISANDFUTURE.equals(parameter)) {
-                    parameter = Range.THISANDFUTURE;
-                }
-                else if (Range.THISANDPRIOR.equals(parameter)) {
-                    parameter = Range.THISANDPRIOR;
-                }
-                return parameter;
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createRelatedFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                Related parameter = new Related(value);
-                if (Related.START.equals(parameter)) {
-                    parameter = Related.START;
-                }
-                else if (Related.END.equals(parameter)) {
-                    parameter = Related.END;
-                }
-                return parameter;
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createRelTypeFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                RelType parameter = new RelType(value);
-                if (RelType.PARENT.equals(parameter)) {
-                    parameter = RelType.PARENT;
-                }
-                else if (RelType.CHILD.equals(parameter)) {
-                    parameter = RelType.CHILD;
-                }
-                if (RelType.SIBLING.equals(parameter)) {
-                    parameter = RelType.SIBLING;
-                }
-                return parameter;
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createRoleFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                Role parameter = new Role(value);
-                if (Role.CHAIR.equals(parameter)) {
-                    parameter = Role.CHAIR;
-                }
-                else if (Role.REQ_PARTICIPANT.equals(parameter)) {
-                    parameter = Role.REQ_PARTICIPANT;
-                }
-                else if (Role.OPT_PARTICIPANT.equals(parameter)) {
-                    parameter = Role.OPT_PARTICIPANT;
-                }
-                else if (Role.NON_PARTICIPANT.equals(parameter)) {
-                    parameter = Role.NON_PARTICIPANT;
-                }
-                return parameter;
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createRsvpFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                Rsvp parameter = new Rsvp(value);
-                if (Rsvp.TRUE.equals(parameter)) {
-                    parameter = Rsvp.TRUE;
-                }
-                else if (Rsvp.FALSE.equals(parameter)) {
-                    parameter = Rsvp.FALSE;
-                }
-                return parameter;
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createSentByFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new SentBy(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createVvenueFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name, final String value)
-                    throws URISyntaxException {
-                return new Vvenue(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createTypeFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new Type(value);
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createTzIdFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                return new TzId(Strings.unescape(value));
-            }
-        };
-    }
-
-    /**
-     * @return
-     */
-    private ParameterFactory createValueFactory() {
-        return new ParameterFactory() {
-
-            public Parameter createParameter(final String name,
-                    final String value) throws URISyntaxException {
-                Value parameter = new Value(value);
-                if (Value.BINARY.equals(parameter)) {
-                    parameter = Value.BINARY;
-                }
-                else if (Value.BOOLEAN.equals(parameter)) {
-                    parameter = Value.BOOLEAN;
-                }
-                else if (Value.CAL_ADDRESS.equals(parameter)) {
-                    parameter = Value.CAL_ADDRESS;
-                }
-                else if (Value.DATE.equals(parameter)) {
-                    parameter = Value.DATE;
-                }
-                else if (Value.DATE_TIME.equals(parameter)) {
-                    parameter = Value.DATE_TIME;
-                }
-                else if (Value.DURATION.equals(parameter)) {
-                    parameter = Value.DURATION;
-                }
-                else if (Value.FLOAT.equals(parameter)) {
-                    parameter = Value.FLOAT;
-                }
-                else if (Value.INTEGER.equals(parameter)) {
-                    parameter = Value.INTEGER;
-                }
-                else if (Value.PERIOD.equals(parameter)) {
-                    parameter = Value.PERIOD;
-                }
-                else if (Value.RECUR.equals(parameter)) {
-                    parameter = Value.RECUR;
-                }
-                else if (Value.TEXT.equals(parameter)) {
-                    parameter = Value.TEXT;
-                }
-                else if (Value.TIME.equals(parameter)) {
-                    parameter = Value.TIME;
-                }
-                else if (Value.URI.equals(parameter)) {
-                    parameter = Value.URI;
-                }
-                else if (Value.UTC_OFFSET.equals(parameter)) {
-                    parameter = Value.UTC_OFFSET;
-                }
-                return parameter;
-            }
-        };
+        registerDefaultFactory(Parameter.ABBREV, new AbbrevFactory());
+        registerDefaultFactory(Parameter.ALTREP, new AltRepFactory());
+        registerDefaultFactory(Parameter.CN, new CnFactory());
+        registerDefaultFactory(Parameter.CUTYPE, new CuTypeFactory());
+        registerDefaultFactory(Parameter.DELEGATED_FROM, new DelegatedFromFactory());
+        registerDefaultFactory(Parameter.DELEGATED_TO, new DelegatedToFactory());
+        registerDefaultFactory(Parameter.DIR, new DirFactory());
+        registerDefaultFactory(Parameter.ENCODING, new EncodingFactory());
+        registerDefaultFactory(Parameter.FMTTYPE, new FmtTypeFactory());
+        registerDefaultFactory(Parameter.FBTYPE, new FbTypeFactory());
+        registerDefaultFactory(Parameter.LANGUAGE, new LanguageFactory());
+        registerDefaultFactory(Parameter.MEMBER, new MemberFactory());
+        registerDefaultFactory(Parameter.PARTSTAT, new PartStatFactory());
+        registerDefaultFactory(Parameter.RANGE, new RangeFactory());
+        registerDefaultFactory(Parameter.RELATED, new RelatedFactory());
+        registerDefaultFactory(Parameter.RELTYPE, new RelTypeFactory());
+        registerDefaultFactory(Parameter.ROLE, new RoleFactory());
+        registerDefaultFactory(Parameter.RSVP, new RsvpFactory());
+        registerDefaultFactory(Parameter.SENT_BY, new SentByFactory());
+        registerDefaultFactory(Parameter.TYPE, new TypeFactory());
+        registerDefaultFactory(Parameter.TZID, new TzIdFactory());
+        registerDefaultFactory(Parameter.VALUE, new ValueFactory());
+        registerDefaultFactory(Parameter.VVENUE, new VvenueFactory());
     }
 
     /**
@@ -587,4 +145,308 @@ public class ParameterFactoryImpl extends AbstractContentFactory
         return name.startsWith(Parameter.EXPERIMENTAL_PREFIX)
                 && name.length() > Parameter.EXPERIMENTAL_PREFIX.length();
     }
+    
+    private static class AbbrevFactory implements ParameterFactory {
+        public Parameter createParameter(final String name, final String value) throws URISyntaxException {
+            return new Abbrev(value);
+        }
+    }
+    
+    private static class AltRepFactory implements ParameterFactory {
+        public Parameter createParameter(final String name, final String value) throws URISyntaxException {
+            return new AltRep(value);
+        }
+    }
+    
+    private static class CnFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            return new Cn(value);
+        }
+    }
+    
+    private static class CuTypeFactory implements ParameterFactory {
+        public Parameter createParameter(final String name, final String value) throws URISyntaxException {
+            CuType parameter = new CuType(value);
+            if (CuType.INDIVIDUAL.equals(parameter)) {
+                parameter = CuType.INDIVIDUAL;
+            }
+            else if (CuType.GROUP.equals(parameter)) {
+                parameter = CuType.GROUP;
+            }
+            else if (CuType.RESOURCE.equals(parameter)) {
+                parameter = CuType.RESOURCE;
+            }
+            else if (CuType.ROOM.equals(parameter)) {
+                parameter = CuType.ROOM;
+            }
+            else if (CuType.UNKNOWN.equals(parameter)) {
+                parameter = CuType.UNKNOWN;
+            }
+            return parameter;
+        }
+    }
+    
+    private static class DelegatedFromFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            return new DelegatedFrom(value);
+        }
+    }
+    
+    private static class DelegatedToFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            return new DelegatedTo(value);
+        }
+    }
+    
+    private static class DirFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            return new Dir(value);
+        }
+    }
+    
+    private static class EncodingFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            Encoding parameter = new Encoding(value);
+            if (Encoding.EIGHT_BIT.equals(parameter)) {
+                parameter = Encoding.EIGHT_BIT;
+            }
+            else if (Encoding.BASE64.equals(parameter)) {
+                parameter = Encoding.BASE64;
+            }
+            return parameter;
+        }
+    }
+    
+    private static class FmtTypeFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            return new FmtType(value);
+        }
+    }
+    
+    private static class FbTypeFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            FbType parameter = new FbType(value);
+            if (FbType.FREE.equals(parameter)) {
+                parameter = FbType.FREE;
+            }
+            else if (FbType.BUSY.equals(parameter)) {
+                parameter = FbType.BUSY;
+            }
+            else if (FbType.BUSY_TENTATIVE.equals(parameter)) {
+                parameter = FbType.BUSY_TENTATIVE;
+            }
+            else if (FbType.BUSY_UNAVAILABLE.equals(parameter)) {
+                parameter = FbType.BUSY_UNAVAILABLE;
+            }
+            return parameter;
+        }
+    }
+    
+    private static class LanguageFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            return new Language(value);
+        }
+    }
+    
+    private static class MemberFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            return new Member(value);
+        }
+    }
+    
+    private static class PartStatFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            PartStat parameter = new PartStat(value);
+            if (PartStat.NEEDS_ACTION.equals(parameter)) {
+                parameter = PartStat.NEEDS_ACTION;
+            }
+            else if (PartStat.ACCEPTED.equals(parameter)) {
+                parameter = PartStat.ACCEPTED;
+            }
+            else if (PartStat.DECLINED.equals(parameter)) {
+                parameter = PartStat.DECLINED;
+            }
+            else if (PartStat.TENTATIVE.equals(parameter)) {
+                parameter = PartStat.TENTATIVE;
+            }
+            else if (PartStat.DELEGATED.equals(parameter)) {
+                parameter = PartStat.DELEGATED;
+            }
+            else if (PartStat.COMPLETED.equals(parameter)) {
+                parameter = PartStat.COMPLETED;
+            }
+            else if (PartStat.IN_PROCESS.equals(parameter)) {
+                parameter = PartStat.IN_PROCESS;
+            }
+            return parameter;
+        }
+    }
+    
+    private static class RangeFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            Range parameter = new Range(value);
+            if (Range.THISANDFUTURE.equals(parameter)) {
+                parameter = Range.THISANDFUTURE;
+            }
+            else if (Range.THISANDPRIOR.equals(parameter)) {
+                parameter = Range.THISANDPRIOR;
+            }
+            return parameter;
+        }
+    }
+    
+    private static class RelatedFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            Related parameter = new Related(value);
+            if (Related.START.equals(parameter)) {
+                parameter = Related.START;
+            }
+            else if (Related.END.equals(parameter)) {
+                parameter = Related.END;
+            }
+            return parameter;
+        }
+    }
+    
+    private static class RelTypeFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            RelType parameter = new RelType(value);
+            if (RelType.PARENT.equals(parameter)) {
+                parameter = RelType.PARENT;
+            }
+            else if (RelType.CHILD.equals(parameter)) {
+                parameter = RelType.CHILD;
+            }
+            if (RelType.SIBLING.equals(parameter)) {
+                parameter = RelType.SIBLING;
+            }
+            return parameter;
+        }
+    }
+    
+    private static class RoleFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            Role parameter = new Role(value);
+            if (Role.CHAIR.equals(parameter)) {
+                parameter = Role.CHAIR;
+            }
+            else if (Role.REQ_PARTICIPANT.equals(parameter)) {
+                parameter = Role.REQ_PARTICIPANT;
+            }
+            else if (Role.OPT_PARTICIPANT.equals(parameter)) {
+                parameter = Role.OPT_PARTICIPANT;
+            }
+            else if (Role.NON_PARTICIPANT.equals(parameter)) {
+                parameter = Role.NON_PARTICIPANT;
+            }
+            return parameter;
+        }
+    }
+    
+    private static class RsvpFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            Rsvp parameter = new Rsvp(value);
+            if (Rsvp.TRUE.equals(parameter)) {
+                parameter = Rsvp.TRUE;
+            }
+            else if (Rsvp.FALSE.equals(parameter)) {
+                parameter = Rsvp.FALSE;
+            }
+            return parameter;
+        }
+    }
+    
+    private static class SentByFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            return new SentBy(value);
+        }
+    }
+    
+    private static class VvenueFactory implements ParameterFactory {
+        public Parameter createParameter(final String name, final String value)
+                throws URISyntaxException {
+            return new Vvenue(value);
+        }
+    }
+    
+    private static class TypeFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            return new Type(value);
+        }
+    }
+    
+    private static class TzIdFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            return new TzId(Strings.unescape(value));
+        }
+    }
+    
+    private static class ValueFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            Value parameter = new Value(value);
+            if (Value.BINARY.equals(parameter)) {
+                parameter = Value.BINARY;
+            }
+            else if (Value.BOOLEAN.equals(parameter)) {
+                parameter = Value.BOOLEAN;
+            }
+            else if (Value.CAL_ADDRESS.equals(parameter)) {
+                parameter = Value.CAL_ADDRESS;
+            }
+            else if (Value.DATE.equals(parameter)) {
+                parameter = Value.DATE;
+            }
+            else if (Value.DATE_TIME.equals(parameter)) {
+                parameter = Value.DATE_TIME;
+            }
+            else if (Value.DURATION.equals(parameter)) {
+                parameter = Value.DURATION;
+            }
+            else if (Value.FLOAT.equals(parameter)) {
+                parameter = Value.FLOAT;
+            }
+            else if (Value.INTEGER.equals(parameter)) {
+                parameter = Value.INTEGER;
+            }
+            else if (Value.PERIOD.equals(parameter)) {
+                parameter = Value.PERIOD;
+            }
+            else if (Value.RECUR.equals(parameter)) {
+                parameter = Value.RECUR;
+            }
+            else if (Value.TEXT.equals(parameter)) {
+                parameter = Value.TEXT;
+            }
+            else if (Value.TIME.equals(parameter)) {
+                parameter = Value.TIME;
+            }
+            else if (Value.URI.equals(parameter)) {
+                parameter = Value.URI;
+            }
+            else if (Value.UTC_OFFSET.equals(parameter)) {
+                parameter = Value.UTC_OFFSET;
+            }
+            return parameter;
+        }
+    }
+    
 }
