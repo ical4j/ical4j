@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -199,14 +200,14 @@ public class Status extends Property {
      * Default constructor.
      */
     public Status() {
-        super(STATUS);
+        super(STATUS, PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Status(final String aValue) {
-        super(STATUS);
+        super(STATUS, PropertyFactoryImpl.getInstance());
         this.value = aValue;
     }
 
@@ -215,7 +216,7 @@ public class Status extends Property {
      * @param aValue a value string for this component
      */
     public Status(final ParameterList aList, final String aValue) {
-        super(STATUS, aList);
+        super(STATUS, aList, PropertyFactoryImpl.getInstance());
         this.value = aValue;
     }
 

@@ -36,6 +36,7 @@ import java.text.ParseException;
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
@@ -56,7 +57,7 @@ public class ExDate extends DateListProperty {
      * Default constructor.
      */
     public ExDate() {
-        super(EXDATE);
+        super(EXDATE, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -66,7 +67,7 @@ public class ExDate extends DateListProperty {
      */
     public ExDate(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(EXDATE, aList);
+        super(EXDATE, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -74,7 +75,7 @@ public class ExDate extends DateListProperty {
      * @param dList a list of dates
      */
     public ExDate(final DateList dList) {
-        super(EXDATE, dList);
+        super(EXDATE, dList, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -82,7 +83,7 @@ public class ExDate extends DateListProperty {
      * @param dList a list of dates
      */
     public ExDate(final ParameterList aList, final DateList dList) {
-        super(EXDATE, aList, dList);
+        super(EXDATE, aList, dList, PropertyFactoryImpl.getInstance());
     }
 
     /**

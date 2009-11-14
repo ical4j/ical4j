@@ -36,6 +36,7 @@ import java.text.ParseException;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 
@@ -100,7 +101,7 @@ public class Due extends DateProperty {
      * Default constructor. The time value is initialised to the time of instantiation.
      */
     public Due() {
-        super(DUE);
+        super(DUE, PropertyFactoryImpl.getInstance());
         // defaults to UTC time..
         setDate(new DateTime(true));
     }
@@ -110,7 +111,7 @@ public class Due extends DateProperty {
      * @param timezone initial timezone
      */
     public Due(TimeZone timezone) {
-        super(DUE, timezone);
+        super(DUE, timezone, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -119,7 +120,7 @@ public class Due extends DateProperty {
      * @throws ParseException where the specified string is not a valid DUE value representation
      */
     public Due(final String value) throws ParseException {
-        super(DUE);
+        super(DUE, PropertyFactoryImpl.getInstance());
         setValue(value);
     }
 
@@ -131,7 +132,7 @@ public class Due extends DateProperty {
      * representation
      */
     public Due(String value, TimeZone timezone) throws ParseException {
-        super(DUE, timezone);
+        super(DUE, timezone, PropertyFactoryImpl.getInstance());
         setValue(value);
     }
 
@@ -142,7 +143,7 @@ public class Due extends DateProperty {
      */
     public Due(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(DUE, aList);
+        super(DUE, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -151,7 +152,7 @@ public class Due extends DateProperty {
      * @param aDate a date
      */
     public Due(final Date aDate) {
-        super(DUE);
+        super(DUE, PropertyFactoryImpl.getInstance());
         setDate(aDate);
     }
 
@@ -161,7 +162,7 @@ public class Due extends DateProperty {
      * @param aDate a date
      */
     public Due(final ParameterList aList, final Date aDate) {
-        super(DUE, aList);
+        super(DUE, aList, PropertyFactoryImpl.getInstance());
         setDate(aDate);
     }
 

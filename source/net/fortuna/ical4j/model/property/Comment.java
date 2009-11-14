@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
@@ -56,14 +57,14 @@ public class Comment extends Property implements Escapable {
      * Default constructor.
      */
     public Comment() {
-        super(COMMENT);
+        super(COMMENT, PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Comment(final String aValue) {
-        super(COMMENT);
+        super(COMMENT, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -72,7 +73,7 @@ public class Comment extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Comment(final ParameterList aList, final String aValue) {
-        super(COMMENT, aList);
+        super(COMMENT, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 

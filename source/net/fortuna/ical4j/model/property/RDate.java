@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PeriodList;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -139,7 +140,7 @@ public class RDate extends DateListProperty {
      * Default constructor.
      */
     public RDate() {
-        super(RDATE);
+        super(RDATE, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -149,7 +150,7 @@ public class RDate extends DateListProperty {
      */
     public RDate(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(RDATE, aList);
+        super(RDATE, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -158,7 +159,7 @@ public class RDate extends DateListProperty {
      * @param dates a list of dates
      */
     public RDate(final DateList dates) {
-        super(RDATE, dates);
+        super(RDATE, dates, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -167,7 +168,7 @@ public class RDate extends DateListProperty {
      * @param dates a list of dates
      */
     public RDate(final ParameterList aList, final DateList dates) {
-        super(RDATE, aList, dates);
+        super(RDATE, aList, dates, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -175,7 +176,7 @@ public class RDate extends DateListProperty {
      * @param periods a list of periods
      */
     public RDate(final PeriodList periods) {
-        super(RDATE, (DateList) null);
+        super(RDATE, (DateList) null, PropertyFactoryImpl.getInstance());
         this.periods = periods;
     }
 
@@ -185,7 +186,7 @@ public class RDate extends DateListProperty {
      * @param periods a list of periods
      */
     public RDate(final ParameterList aList, final PeriodList periods) {
-        super(RDATE, aList, (DateList) null);
+        super(RDATE, aList, (DateList) null, PropertyFactoryImpl.getInstance());
         this.periods = periods;
     }
 

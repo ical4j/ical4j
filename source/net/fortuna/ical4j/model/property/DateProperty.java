@@ -40,6 +40,7 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -73,15 +74,15 @@ public abstract class DateProperty extends Property {
      * @param name the property name
      * @param parameters a list of initial parameters
      */
-    public DateProperty(final String name, final ParameterList parameters) {
-        super(name, parameters);
+    public DateProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
+        super(name, parameters, factory);
     }
 
     /**
      * @param name the property name
      */
-    public DateProperty(final String name) {
-        super(name);
+    public DateProperty(final String name, PropertyFactory factory) {
+        super(name, factory);
     }
 
     /**
@@ -89,8 +90,8 @@ public abstract class DateProperty extends Property {
      * @param name property name
      * @param timezone initial timezone
      */
-    public DateProperty(final String name, TimeZone timezone) {
-        super(name);
+    public DateProperty(final String name, TimeZone timezone, PropertyFactory factory) {
+        super(name, factory);
         updateTimeZone(timezone);
     }
 

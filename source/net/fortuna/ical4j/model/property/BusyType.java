@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -106,14 +107,14 @@ public class BusyType extends Property {
      * Default constructor.
      */
     public BusyType() {
-        super(BUSYTYPE);
+        super(BUSYTYPE, PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public BusyType(final String aValue) {
-        super(BUSYTYPE);
+        super(BUSYTYPE, PropertyFactoryImpl.getInstance());
         this.value = aValue;
     }
 
@@ -122,7 +123,7 @@ public class BusyType extends Property {
      * @param aValue a value string for this component
      */
     public BusyType(final ParameterList aList, final String aValue) {
-        super(BUSYTYPE, aList);
+        super(BUSYTYPE, aList, PropertyFactoryImpl.getInstance());
         this.value = aValue;
     }
 

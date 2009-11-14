@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -96,14 +97,14 @@ public class Action extends Property {
      * Default constructor.
      */
     public Action() {
-        super(ACTION);
+        super(ACTION, PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Action(final String aValue) {
-        super(ACTION);
+        super(ACTION, PropertyFactoryImpl.getInstance());
         this.value = aValue;
     }
 
@@ -112,7 +113,7 @@ public class Action extends Property {
      * @param aValue a value string for this component
      */
     public Action(final ParameterList aList, final String aValue) {
-        super(ACTION, aList);
+        super(ACTION, aList, PropertyFactoryImpl.getInstance());
         this.value = aValue;
     }
 

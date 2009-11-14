@@ -35,6 +35,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 
@@ -113,7 +114,7 @@ public class DtStart extends DateProperty {
      * Default constructor. The time value is initialised to the time of instantiation.
      */
     public DtStart() {
-        super(DTSTART);
+        super(DTSTART, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -121,7 +122,7 @@ public class DtStart extends DateProperty {
      * @param timezone initial timezone
      */
     public DtStart(TimeZone timezone) {
-        super(DTSTART, timezone);
+        super(DTSTART, timezone, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -129,7 +130,7 @@ public class DtStart extends DateProperty {
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
     public DtStart(final String aValue) throws ParseException {
-        super(DTSTART);
+        super(DTSTART, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -141,7 +142,7 @@ public class DtStart extends DateProperty {
      * representation
      */
     public DtStart(String value, TimeZone timezone) throws ParseException {
-        super(DTSTART, timezone);
+        super(DTSTART, timezone, PropertyFactoryImpl.getInstance());
         setValue(value);
     }
 
@@ -152,7 +153,7 @@ public class DtStart extends DateProperty {
      */
     public DtStart(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(DTSTART, aList);
+        super(DTSTART, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -161,7 +162,7 @@ public class DtStart extends DateProperty {
      * @param aDate a date
      */
     public DtStart(final Date aDate) {
-        super(DTSTART);
+        super(DTSTART, PropertyFactoryImpl.getInstance());
         setDate(aDate);
     }
 
@@ -171,7 +172,7 @@ public class DtStart extends DateProperty {
      * @param utc specifies whether time is UTC
      */
     public DtStart(final Date time, final boolean utc) {
-        super(DTSTART);
+        super(DTSTART, PropertyFactoryImpl.getInstance());
         setDate(time);
         setUtc(utc);
     }
@@ -182,7 +183,7 @@ public class DtStart extends DateProperty {
      * @param aDate a date
      */
     public DtStart(final ParameterList aList, final Date aDate) {
-        super(DTSTART, aList);
+        super(DTSTART, aList, PropertyFactoryImpl.getInstance());
         setDate(aDate);
     }
 

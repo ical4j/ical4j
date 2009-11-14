@@ -36,6 +36,7 @@ import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
@@ -94,7 +95,7 @@ public class Url extends Property {
      * Default constructor.
      */
     public Url() {
-        super(URL);
+        super(URL, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -104,7 +105,7 @@ public class Url extends Property {
      */
     public Url(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(URL, aList);
+        super(URL, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -112,7 +113,7 @@ public class Url extends Property {
      * @param aUri a URI
      */
     public Url(final URI aUri) {
-        super(URL);
+        super(URL, PropertyFactoryImpl.getInstance());
         uri = aUri;
     }
 
@@ -121,7 +122,7 @@ public class Url extends Property {
      * @param aUri a URI
      */
     public Url(final ParameterList aList, final URI aUri) {
-        super(URL, aList);
+        super(URL, aList, PropertyFactoryImpl.getInstance());
         uri = aUri;
     }
 

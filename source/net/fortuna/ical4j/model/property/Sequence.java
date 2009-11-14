@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -135,7 +136,7 @@ public class Sequence extends Property {
      * Default constructor.
      */
     public Sequence() {
-        super(SEQUENCE);
+        super(SEQUENCE, PropertyFactoryImpl.getInstance());
         sequenceNo = 0;
     }
 
@@ -143,7 +144,7 @@ public class Sequence extends Property {
      * @param aValue a value string for this component
      */
     public Sequence(final String aValue) {
-        super(SEQUENCE);
+        super(SEQUENCE, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -152,7 +153,7 @@ public class Sequence extends Property {
      * @param aValue a value string for this component
      */
     public Sequence(final ParameterList aList, final String aValue) {
-        super(SEQUENCE, aList);
+        super(SEQUENCE, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -160,7 +161,7 @@ public class Sequence extends Property {
      * @param aSequenceNo a sequence number
      */
     public Sequence(final int aSequenceNo) {
-        super(SEQUENCE);
+        super(SEQUENCE, PropertyFactoryImpl.getInstance());
         sequenceNo = aSequenceNo;
     }
 
@@ -169,7 +170,7 @@ public class Sequence extends Property {
      * @param aSequenceNo a sequence number
      */
     public Sequence(final ParameterList aList, final int aSequenceNo) {
-        super(SEQUENCE, aList);
+        super(SEQUENCE, aList, PropertyFactoryImpl.getInstance());
         sequenceNo = aSequenceNo;
     }
 

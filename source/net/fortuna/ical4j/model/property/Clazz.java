@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -138,14 +139,14 @@ public class Clazz extends Property {
      * Default constructor.
      */
     public Clazz() {
-        super(CLASS);
+        super(CLASS, PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Clazz(final String aValue) {
-        super(CLASS);
+        super(CLASS, PropertyFactoryImpl.getInstance());
         this.value = aValue;
     }
 
@@ -154,7 +155,7 @@ public class Clazz extends Property {
      * @param aValue a value string for this component
      */
     public Clazz(final ParameterList aList, final String aValue) {
-        super(CLASS, aList);
+        super(CLASS, aList, PropertyFactoryImpl.getInstance());
         this.value = aValue;
     }
 

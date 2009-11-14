@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.UtcOffset;
 import net.fortuna.ical4j.model.ValidationException;
 
@@ -54,14 +55,14 @@ public class TzOffsetFrom extends Property {
      * Default constructor.
      */
     public TzOffsetFrom() {
-        super(TZOFFSETFROM);
+        super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzOffsetFrom(final String aValue) {
-        super(TZOFFSETFROM);
+        super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -70,7 +71,7 @@ public class TzOffsetFrom extends Property {
      * @param aValue a value string for this component
      */
     public TzOffsetFrom(final ParameterList aList, final String aValue) {
-        super(TZOFFSETFROM, aList);
+        super(TZOFFSETFROM, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -78,7 +79,7 @@ public class TzOffsetFrom extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetFrom(final UtcOffset anOffset) {
-        super(TZOFFSETFROM);
+        super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
         offset = anOffset;
     }
 
@@ -87,7 +88,7 @@ public class TzOffsetFrom extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetFrom(final ParameterList aList, final UtcOffset anOffset) {
-        super(TZOFFSETFROM, aList);
+        super(TZOFFSETFROM, aList, PropertyFactoryImpl.getInstance());
         offset = anOffset;
     }
 

@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -53,7 +54,7 @@ public class PercentComplete extends Property {
      * Default constructor.
      */
     public PercentComplete() {
-        super(PERCENT_COMPLETE);
+        super(PERCENT_COMPLETE, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -61,7 +62,7 @@ public class PercentComplete extends Property {
      * @param aValue a value string for this component
      */
     public PercentComplete(final ParameterList aList, final String aValue) {
-        super(PERCENT_COMPLETE, aList);
+        super(PERCENT_COMPLETE, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -69,7 +70,7 @@ public class PercentComplete extends Property {
      * @param aPercentage an int representation of a percentage
      */
     public PercentComplete(final int aPercentage) {
-        super(PERCENT_COMPLETE);
+        super(PERCENT_COMPLETE, PropertyFactoryImpl.getInstance());
         percentage = aPercentage;
     }
 
@@ -78,7 +79,7 @@ public class PercentComplete extends Property {
      * @param aPercentage an int representation of a percentage
      */
     public PercentComplete(final ParameterList aList, final int aPercentage) {
-        super(PERCENT_COMPLETE, aList);
+        super(PERCENT_COMPLETE, aList, PropertyFactoryImpl.getInstance());
         percentage = aPercentage;
     }
 

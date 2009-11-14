@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -53,7 +54,7 @@ public class Repeat extends Property {
      * Default constructor.
      */
     public Repeat() {
-        super(REPEAT);
+        super(REPEAT, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -61,7 +62,7 @@ public class Repeat extends Property {
      * @param aValue a value string for this component
      */
     public Repeat(final ParameterList aList, final String aValue) {
-        super(REPEAT, aList);
+        super(REPEAT, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -69,7 +70,7 @@ public class Repeat extends Property {
      * @param aCount a repetition count
      */
     public Repeat(final int aCount) {
-        super(REPEAT);
+        super(REPEAT, PropertyFactoryImpl.getInstance());
         count = aCount;
     }
 
@@ -78,7 +79,7 @@ public class Repeat extends Property {
      * @param aCount a repetition count
      */
     public Repeat(final ParameterList aList, final int aCount) {
-        super(REPEAT, aList);
+        super(REPEAT, aList, PropertyFactoryImpl.getInstance());
         count = aCount;
     }
 

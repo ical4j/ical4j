@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.LocationTypeList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
@@ -56,7 +57,7 @@ public class LocationType extends Property {
      * Default constructor.
      */
     public LocationType() {
-        super(LOCATION_TYPE);
+        super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
         locationTypes = new LocationTypeList();
     }
 
@@ -64,7 +65,7 @@ public class LocationType extends Property {
      * @param aValue a value string for this component
      */
     public LocationType(final String aValue) {
-        super(LOCATION_TYPE);
+        super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -73,7 +74,7 @@ public class LocationType extends Property {
      * @param aValue a value string for this component
      */
     public LocationType(final ParameterList aList, final String aValue) {
-        super(LOCATION_TYPE, aList);
+        super(LOCATION_TYPE, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -81,7 +82,7 @@ public class LocationType extends Property {
      * @param cList a list of locationTypes
      */
     public LocationType(final LocationTypeList cList) {
-        super(LOCATION_TYPE);
+        super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
         locationTypes = cList;
     }
 
@@ -90,7 +91,7 @@ public class LocationType extends Property {
      * @param cList a list of locationTypes
      */
     public LocationType(final ParameterList aList, final LocationTypeList cList) {
-        super(LOCATION_TYPE, aList);
+        super(LOCATION_TYPE, aList, PropertyFactoryImpl.getInstance());
         locationTypes = cList;
     }
 

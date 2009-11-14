@@ -41,17 +41,19 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * $Id$ [Apr 5, 2004]
- *
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
  * iCalendar properties.
+ * 
+ * Note that subclasses must provide a reference to the factory used to create the
+ * property to support property cloning (copy). If no factory is specified an
+ * {@link UnsupportedOperationException} will be thrown by the {@link #copy()} method.
+ * 
  * @author Ben Fortuna
+ * 
+ * $Id$ [Apr 5, 2004]
  */
 public abstract class Property extends Content {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 7048785558435608687L;
 
     // iCalendar properties..
@@ -352,12 +354,15 @@ public abstract class Property extends Content {
 
     private ParameterList parameters;
 
+    private final PropertyFactory factory;
+    
     /**
      * Constructor.
      * @param aName property name
+     * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName) {
-        this(aName, new ParameterList());
+    protected Property(final String aName, PropertyFactory factory) {
+        this(aName, new ParameterList(), factory);
     }
 
     /**
@@ -365,11 +370,21 @@ public abstract class Property extends Content {
      * @param aName property name
      * @param aList a list of parameters
      */
-    protected Property(final String aName, final ParameterList aList) {
+//    protected Property(final String aName, final ParameterList aList) {
+//        this(aName, aList, PropertyFactoryImpl.getInstance());
+//    }
+
+    /**
+     * @param aName a property identifier
+     * @param aList a list of initial parameters
+     * @param factory the factory used to create the property instance
+     */
+    protected Property(final String aName, final ParameterList aList, PropertyFactory factory) {
         this.name = aName;
         this.parameters = aList;
+        this.factory = factory;
     }
-
+    
     /**
      * Creates a deep copy of the specified property. That is, the name, parameter list, and value are duplicated from
      * the specified property. This constructor should only be called from sub-classes to ensure type integrity is
@@ -378,11 +393,12 @@ public abstract class Property extends Content {
      * @throws URISyntaxException where the specified property contains an invalid URI value
      * @throws ParseException where the specified property has invalid data
      * @throws IOException where an error occurs reading data from the specified property
+     * @deprecated Use {@link #copy()} instead
      */
     protected Property(final Property property) throws IOException,
             URISyntaxException, ParseException {
-        this.name = property.getName();
-        this.parameters = new ParameterList(property.getParameters(), false);
+        this(property.getName(), new ParameterList(property.getParameters(), false),
+                property.factory);
         setValue(property.getValue());
     }
 
@@ -500,9 +516,11 @@ public abstract class Property extends Content {
      * @throws ParseException where the property contains an invalid date value
      */
     public Property copy() throws IOException, URISyntaxException, ParseException {
+        if (factory == null) {
+            throw new UnsupportedOperationException("No factory specified");
+        }
         // Deep copy parameter list..
         final ParameterList params = new ParameterList(getParameters(), false);
-        return PropertyFactoryImpl.getInstance().createProperty(getName(),
-                params, getValue());
+        return factory.createProperty(getName(), params, getValue());
     }
 }

@@ -35,6 +35,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.ValidationException;
 
@@ -56,7 +57,7 @@ public class ExRule extends Property {
      * Default constructor.
      */
     public ExRule() {
-        super(EXRULE);
+        super(EXRULE, PropertyFactoryImpl.getInstance());
         recur = new Recur(Recur.DAILY, 1);
     }
 
@@ -68,7 +69,7 @@ public class ExRule extends Property {
      */
     public ExRule(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(EXRULE, aList);
+        super(EXRULE, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -76,7 +77,7 @@ public class ExRule extends Property {
      * @param aRecur a recurrence
      */
     public ExRule(final Recur aRecur) {
-        super(EXRULE);
+        super(EXRULE, PropertyFactoryImpl.getInstance());
         recur = aRecur;
     }
 
@@ -85,7 +86,7 @@ public class ExRule extends Property {
      * @param aRecur a recurrence
      */
     public ExRule(final ParameterList aList, final Recur aRecur) {
-        super(EXRULE, aList);
+        super(EXRULE, aList, PropertyFactoryImpl.getInstance());
         recur = aRecur;
     }
 

@@ -32,19 +32,23 @@
 package net.fortuna.ical4j.model;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
 /**
- * $Id$
- *
- * Created on 16/06/2005
- *
  * A factory for creating iCalendar properties.
  * 
  * @author Ben Fortuna
+ * 
+ * Note that implementations must be {@link Serializable} to support referencing
+ * from {@link Property} instances.
+ * 
+ * $Id$
+ *
+ * Created on 16/06/2005
  */
-public interface PropertyFactory {
+public interface PropertyFactory extends Serializable {
 
     /**
      * @param name a property name

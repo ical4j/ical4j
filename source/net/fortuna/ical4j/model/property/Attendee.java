@@ -37,6 +37,7 @@ import java.net.URISyntaxException;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
@@ -60,7 +61,7 @@ public class Attendee extends Property {
      * Default constructor.
      */
     public Attendee() {
-        super(ATTENDEE);
+        super(ATTENDEE, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -68,7 +69,7 @@ public class Attendee extends Property {
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public Attendee(final String aValue) throws URISyntaxException {
-        super(ATTENDEE);
+        super(ATTENDEE, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -79,7 +80,7 @@ public class Attendee extends Property {
      */
     public Attendee(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(ATTENDEE, aList);
+        super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -87,7 +88,7 @@ public class Attendee extends Property {
      * @param aUri a URI
      */
     public Attendee(final URI aUri) {
-        super(ATTENDEE);
+        super(ATTENDEE, PropertyFactoryImpl.getInstance());
         calAddress = aUri;
     }
 
@@ -96,7 +97,7 @@ public class Attendee extends Property {
      * @param aUri a URI
      */
     public Attendee(final ParameterList aList, final URI aUri) {
-        super(ATTENDEE, aList);
+        super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
         calAddress = aUri;
     }
 

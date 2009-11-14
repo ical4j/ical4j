@@ -39,6 +39,7 @@ import java.net.URISyntaxException;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -123,7 +124,7 @@ public class Attach extends Property {
      * Default constructor.
      */
     public Attach() {
-        super(ATTACH);
+        super(ATTACH, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -134,7 +135,7 @@ public class Attach extends Property {
      */
     public Attach(final ParameterList aList, final String aValue)
             throws IOException, URISyntaxException {
-        super(ATTACH, aList);
+        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -142,7 +143,7 @@ public class Attach extends Property {
      * @param data binary data
      */
     public Attach(final byte[] data) {
-        super(ATTACH);
+        super(ATTACH, PropertyFactoryImpl.getInstance());
         // add required parameters..
         getParameters().add(Encoding.BASE64);
         getParameters().add(Value.BINARY);
@@ -154,7 +155,7 @@ public class Attach extends Property {
      * @param data binary data
      */
     public Attach(final ParameterList aList, final byte[] data) {
-        super(ATTACH, aList);
+        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
         this.binary = data;
     }
 
@@ -162,7 +163,7 @@ public class Attach extends Property {
      * @param aUri a URI
      */
     public Attach(final URI aUri) {
-        super(ATTACH);
+        super(ATTACH, PropertyFactoryImpl.getInstance());
         this.uri = aUri;
     }
 
@@ -171,7 +172,7 @@ public class Attach extends Property {
      * @param aUri a URI
      */
     public Attach(final ParameterList aList, final URI aUri) {
-        super(ATTACH, aList);
+        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
         this.uri = aUri;
     }
 

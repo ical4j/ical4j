@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -90,7 +91,7 @@ public class Version extends Property {
      * Default constructor.
      */
     public Version() {
-        super(VERSION);
+        super(VERSION, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -98,7 +99,7 @@ public class Version extends Property {
      * @param aValue a value string for this component
      */
     public Version(final ParameterList aList, final String aValue) {
-        super(VERSION, aList);
+        super(VERSION, aList, PropertyFactoryImpl.getInstance());
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
             this.maxVersion = aValue.substring(aValue.indexOf(';'));
@@ -113,7 +114,7 @@ public class Version extends Property {
      * @param maxVersion a string representation of the maximum version
      */
     public Version(final String minVersion, final String maxVersion) {
-        super(VERSION);
+        super(VERSION, PropertyFactoryImpl.getInstance());
         this.minVersion = minVersion;
         this.maxVersion = maxVersion;
     }
@@ -125,7 +126,7 @@ public class Version extends Property {
      */
     public Version(final ParameterList aList, final String aVersion1,
             final String aVersion2) {
-        super(VERSION, aList);
+        super(VERSION, aList, PropertyFactoryImpl.getInstance());
         minVersion = aVersion1;
         maxVersion = aVersion2;
     }

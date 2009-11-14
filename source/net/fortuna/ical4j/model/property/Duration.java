@@ -36,6 +36,7 @@ import java.util.Date;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -96,7 +97,7 @@ public class Duration extends Property {
      * Default constructor.
      */
     public Duration() {
-        super(DURATION);
+        super(DURATION, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -104,7 +105,7 @@ public class Duration extends Property {
      * @param aValue a value string for this component
      */
     public Duration(final ParameterList aList, final String aValue) {
-        super(DURATION, aList);
+        super(DURATION, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -112,7 +113,7 @@ public class Duration extends Property {
      * @param duration a duration  value
      */
     public Duration(final Dur duration) {
-        super(DURATION);
+        super(DURATION, PropertyFactoryImpl.getInstance());
         this.duration = duration;
     }
 
@@ -121,7 +122,7 @@ public class Duration extends Property {
      * @param duration a duration value
      */
     public Duration(final ParameterList aList, final Dur duration) {
-        super(DURATION, aList);
+        super(DURATION, aList, PropertyFactoryImpl.getInstance());
         setDuration(duration);
     }
 
@@ -131,7 +132,7 @@ public class Duration extends Property {
      * @param end the end time for the duration
      */
     public Duration(final Date start, final Date end) {
-        super(DURATION);
+        super(DURATION, PropertyFactoryImpl.getInstance());
         setDuration(new Dur(start, end));
     }
 

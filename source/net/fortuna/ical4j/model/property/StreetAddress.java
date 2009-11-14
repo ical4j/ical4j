@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -55,14 +56,14 @@ public class StreetAddress extends Property implements Escapable {
      * Default constructor.
      */
     public StreetAddress() {
-        super(STREET_ADDRESS);
+        super(STREET_ADDRESS, PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public StreetAddress(final String aValue) {
-        super(STREET_ADDRESS);
+        super(STREET_ADDRESS, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -71,7 +72,7 @@ public class StreetAddress extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public StreetAddress(final ParameterList aList, final String aValue) {
-        super(STREET_ADDRESS, aList);
+        super(STREET_ADDRESS, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 

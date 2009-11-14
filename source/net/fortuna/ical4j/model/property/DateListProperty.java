@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -64,24 +65,24 @@ public abstract class DateListProperty extends Property {
     /**
      * @param name the property name
      */
-    public DateListProperty(final String name) {
-        this(name, new DateList(Value.DATE_TIME));
+    public DateListProperty(final String name, PropertyFactory factory) {
+        this(name, new DateList(Value.DATE_TIME), factory);
     }
 
     /**
      * @param name the property name
      * @param parameters property parameters
      */
-    public DateListProperty(final String name, final ParameterList parameters) {
-        super(name, parameters);
+    public DateListProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
+        super(name, parameters, factory);
     }
 
     /**
      * @param name the property name
      * @param dates a list of initial dates for the property
      */
-    public DateListProperty(final String name, final DateList dates) {
-        this(name, new ParameterList(), dates);
+    public DateListProperty(final String name, final DateList dates, PropertyFactory factory) {
+        this(name, new ParameterList(), dates, factory);
     }
 
     /**
@@ -89,8 +90,9 @@ public abstract class DateListProperty extends Property {
      * @param parameters property parameters
      * @param dates a list of initial dates for the property
      */
-    public DateListProperty(final String name, final ParameterList parameters, final DateList dates) {
-        super(name, parameters);
+    public DateListProperty(final String name, final ParameterList parameters, final DateList dates,
+            PropertyFactory factory) {
+        super(name, parameters, factory);
         this.dates = dates;
         if (dates != null && !Value.DATE_TIME.equals(dates.getType())) {
             getParameters().add(dates.getType());

@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
@@ -103,14 +104,14 @@ public class Summary extends Property implements Escapable {
      * Default constructor.
      */
     public Summary() {
-        super(SUMMARY);
+        super(SUMMARY, PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Summary(final String aValue) {
-        super(SUMMARY);
+        super(SUMMARY, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -119,7 +120,7 @@ public class Summary extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Summary(final ParameterList aList, final String aValue) {
-        super(SUMMARY, aList);
+        super(SUMMARY, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 

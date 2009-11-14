@@ -35,7 +35,7 @@ package net.fortuna.ical4j.model;
  * @author fortuna
  *
  */
-public class PropertyFactoryRegistry extends PropertyFactoryImpl {
+public final class PropertyFactoryRegistry extends PropertyFactoryImpl {
 
     /**
      * @param name a non-standard property name

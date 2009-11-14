@@ -92,7 +92,7 @@ public class PropertyTest extends AbstractPropertyTest {
     public void testEquals() {
         assertTrue(property.equals(property));
 
-        Property notEqual = new Property("notEqual") {
+        Property notEqual = new Property("notEqual", null) {
             public String getValue() {
                 return "";
             }
@@ -182,52 +182,28 @@ public class PropertyTest extends AbstractPropertyTest {
     public static TestSuite suite() throws Exception {
         TestSuite suite = new TestSuite();
 
-        Property property = new Property("name") {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.Property#getValue()
-             */
+        Property property = new Property("name", null) {
             public String getValue() {
                 return "value";
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
-             */
             public void setValue(String value) throws IOException,
                     URISyntaxException, ParseException {
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.Property#validate()
-             */
             public void validate() throws ValidationException {
             }
         };
 
-        Property invalidProperty = new Property("name") {
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.Property#getValue()
-             */
+        Property invalidProperty = new Property("name", null) {
             public String getValue() {
                 return "value";
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.Property#setValue(java.lang.String)
-             */
             public void setValue(String value) throws IOException,
                     URISyntaxException, ParseException {
             }
 
-            /*
-             * (non-Javadoc)
-             * @see net.fortuna.ical4j.model.Property#validate()
-             */
             public void validate() throws ValidationException {
                 throw new ValidationException();
             }

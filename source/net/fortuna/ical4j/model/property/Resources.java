@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ResourceList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
@@ -56,7 +57,7 @@ public class Resources extends Property {
      * Default constructor.
      */
     public Resources() {
-        super(RESOURCES);
+        super(RESOURCES, PropertyFactoryImpl.getInstance());
         resources = new ResourceList();
     }
 
@@ -65,7 +66,7 @@ public class Resources extends Property {
      * @param aValue a value string for this component
      */
     public Resources(final ParameterList aList, final String aValue) {
-        super(RESOURCES, aList);
+        super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -73,7 +74,7 @@ public class Resources extends Property {
      * @param rList a list of resources
      */
     public Resources(final ResourceList rList) {
-        super(RESOURCES);
+        super(RESOURCES, PropertyFactoryImpl.getInstance());
         resources = rList;
     }
 
@@ -82,7 +83,7 @@ public class Resources extends Property {
      * @param rList a list of resources
      */
     public Resources(final ParameterList aList, final ResourceList rList) {
-        super(RESOURCES, aList);
+        super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
         resources = rList;
     }
 

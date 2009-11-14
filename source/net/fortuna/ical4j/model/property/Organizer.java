@@ -37,6 +37,7 @@ import java.net.URISyntaxException;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
@@ -138,7 +139,7 @@ public class Organizer extends Property {
      * Default constructor.
      */
     public Organizer() {
-        super(ORGANIZER);
+        super(ORGANIZER, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -147,7 +148,7 @@ public class Organizer extends Property {
      * @throws URISyntaxException where the specified value is not a valid URI
      */
     public Organizer(String value) throws URISyntaxException {
-        super(ORGANIZER);
+        super(ORGANIZER, PropertyFactoryImpl.getInstance());
         setValue(value);
     }
     
@@ -158,7 +159,7 @@ public class Organizer extends Property {
      */
     public Organizer(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(ORGANIZER, aList);
+        super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -166,7 +167,7 @@ public class Organizer extends Property {
      * @param aUri a URI representation of a calendar address
      */
     public Organizer(final URI aUri) {
-        super(ORGANIZER);
+        super(ORGANIZER, PropertyFactoryImpl.getInstance());
         calAddress = aUri;
     }
 
@@ -175,7 +176,7 @@ public class Organizer extends Property {
      * @param aUri a URI representation of a calendar address
      */
     public Organizer(final ParameterList aList, final URI aUri) {
-        super(ORGANIZER, aList);
+        super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
         calAddress = aUri;
     }
 

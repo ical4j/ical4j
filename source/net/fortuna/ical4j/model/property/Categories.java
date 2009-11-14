@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.CategoryList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
@@ -98,7 +99,7 @@ public class Categories extends Property {
      * Default constructor.
      */
     public Categories() {
-        super(CATEGORIES);
+        super(CATEGORIES, PropertyFactoryImpl.getInstance());
         categories = new CategoryList();
     }
 
@@ -106,7 +107,7 @@ public class Categories extends Property {
      * @param aValue a value string for this component
      */
     public Categories(final String aValue) {
-        super(CATEGORIES);
+        super(CATEGORIES, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -115,7 +116,7 @@ public class Categories extends Property {
      * @param aValue a value string for this component
      */
     public Categories(final ParameterList aList, final String aValue) {
-        super(CATEGORIES, aList);
+        super(CATEGORIES, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -123,7 +124,7 @@ public class Categories extends Property {
      * @param cList a list of categories
      */
     public Categories(final CategoryList cList) {
-        super(CATEGORIES);
+        super(CATEGORIES, PropertyFactoryImpl.getInstance());
         categories = cList;
     }
 
@@ -132,7 +133,7 @@ public class Categories extends Property {
      * @param cList a list of categories
      */
     public Categories(final ParameterList aList, final CategoryList cList) {
-        super(CATEGORIES, aList);
+        super(CATEGORIES, aList, PropertyFactoryImpl.getInstance());
         categories = cList;
     }
 

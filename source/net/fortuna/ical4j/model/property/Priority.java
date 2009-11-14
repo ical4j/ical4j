@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -171,7 +172,7 @@ public class Priority extends Property {
      * Default constructor.
      */
     public Priority() {
-        super(PRIORITY);
+        super(PRIORITY, PropertyFactoryImpl.getInstance());
         level = UNDEFINED.getLevel();
     }
 
@@ -180,7 +181,7 @@ public class Priority extends Property {
      * @param aValue a value string for this component
      */
     public Priority(final ParameterList aList, final String aValue) {
-        super(PRIORITY, aList);
+        super(PRIORITY, aList, PropertyFactoryImpl.getInstance());
         level = Integer.parseInt(aValue);
     }
 
@@ -188,7 +189,7 @@ public class Priority extends Property {
      * @param aLevel an int representation of a priority level
      */
     public Priority(final int aLevel) {
-        super(PRIORITY);
+        super(PRIORITY, PropertyFactoryImpl.getInstance());
         level = aLevel;
     }
 
@@ -197,7 +198,7 @@ public class Priority extends Property {
      * @param aLevel an int representation of a priority level
      */
     public Priority(final ParameterList aList, final int aLevel) {
-        super(PRIORITY, aList);
+        super(PRIORITY, aList, PropertyFactoryImpl.getInstance());
         level = aLevel;
     }
 

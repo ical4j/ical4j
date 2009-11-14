@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
@@ -115,7 +116,7 @@ public class FreeBusy extends Property {
      * Default constructor.
      */
     public FreeBusy() {
-        super(FREEBUSY);
+        super(FREEBUSY, PropertyFactoryImpl.getInstance());
         periods = new PeriodList();
     }
 
@@ -124,7 +125,7 @@ public class FreeBusy extends Property {
      * @throws ParseException where the specified string is not a valid freebusy value
      */
     public FreeBusy(final String aValue) throws ParseException {
-        super(FREEBUSY);
+        super(FREEBUSY, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
     
@@ -135,7 +136,7 @@ public class FreeBusy extends Property {
      */
     public FreeBusy(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(FREEBUSY, aList);
+        super(FREEBUSY, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -143,7 +144,7 @@ public class FreeBusy extends Property {
      * @param pList a list of periods
      */
     public FreeBusy(final PeriodList pList) {
-        super(FREEBUSY);
+        super(FREEBUSY, PropertyFactoryImpl.getInstance());
         if (!pList.isUtc()) {
             throw new IllegalArgumentException("Periods must be in UTC format");
         }
@@ -155,7 +156,7 @@ public class FreeBusy extends Property {
      * @param pList a list of periods
      */
     public FreeBusy(final ParameterList aList, final PeriodList pList) {
-        super(FREEBUSY, aList);
+        super(FREEBUSY, aList, PropertyFactoryImpl.getInstance());
         if (!pList.isUtc()) {
             throw new IllegalArgumentException("Periods must be in UTC format");
         }

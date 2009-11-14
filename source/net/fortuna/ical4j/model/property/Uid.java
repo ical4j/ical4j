@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 
 /**
@@ -122,14 +123,14 @@ public class Uid extends Property implements Escapable {
      * Default constructor.
      */
     public Uid() {
-        super(UID);
+        super(UID, PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Uid(final String aValue) {
-        super(UID);
+        super(UID, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -138,7 +139,7 @@ public class Uid extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Uid(final ParameterList aList, final String aValue) {
-        super(UID, aList);
+        super(UID, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 

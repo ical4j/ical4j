@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -56,7 +57,7 @@ public class XProperty extends Property implements Escapable {
      * @param name a non-standard property name
      */
     public XProperty(final String name) {
-        super(name);
+        super(name, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -64,7 +65,7 @@ public class XProperty extends Property implements Escapable {
      * @param aValue a property value
      */
     public XProperty(final String aName, final String aValue) {
-        super(aName);
+        super(aName, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -75,7 +76,7 @@ public class XProperty extends Property implements Escapable {
      */
     public XProperty(final String aName, final ParameterList aList,
             final String aValue) {
-        super(aName, aList);
+        super(aName, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 

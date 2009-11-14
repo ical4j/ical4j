@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
@@ -57,14 +58,14 @@ public class Country extends Property implements Escapable {
      * Default constructor.
      */
     public Country() {
-        super(COUNTRY);
+        super(COUNTRY, PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Country(final String aValue) {
-        super(COUNTRY);
+        super(COUNTRY, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -73,7 +74,7 @@ public class Country extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Country(final ParameterList aList, final String aValue) {
-        super(COUNTRY, aList);
+        super(COUNTRY, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
