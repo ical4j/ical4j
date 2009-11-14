@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -51,8 +52,7 @@ public class XParameter extends Parameter {
      * @param aValue parameter value
      */
     public XParameter(final String aName, final String aValue) {
-        super(aName);
-
+        super(aName, ParameterFactoryImpl.getInstance());
         this.value = Strings.unquote(aValue);
     }
 

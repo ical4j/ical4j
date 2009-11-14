@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -78,7 +79,7 @@ public class Role extends Parameter {
      * @param aValue a string representation of a participation role
      */
     public Role(final String aValue) {
-        super(ROLE);
+        super(ROLE, ParameterFactoryImpl.getInstance());
         this.value = Strings.unquote(aValue);
     }
 

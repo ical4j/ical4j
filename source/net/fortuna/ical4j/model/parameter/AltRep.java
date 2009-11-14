@@ -35,6 +35,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
@@ -62,8 +63,7 @@ public class AltRep extends Parameter {
      * @param aUri a URI representing an alternate text representation
      */
     public AltRep(final URI aUri) {
-        super(ALTREP);
-
+        super(ALTREP, ParameterFactoryImpl.getInstance());
         this.uri = aUri;
     }
 

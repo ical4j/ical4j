@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -53,8 +54,7 @@ public class Abbrev extends Parameter {
      *            a string abbreviation
      */
     public Abbrev(final String aValue) {
-        super(ABBREV);
-
+        super(ABBREV, ParameterFactoryImpl.getInstance());
         this.value = Strings.unquote(aValue);
     }
 

@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -71,7 +72,7 @@ public class RelType extends Parameter {
      * @param aValue a string representation of a relationship type
      */
     public RelType(final String aValue) {
-        super(RELTYPE);
+        super(RELTYPE, ParameterFactoryImpl.getInstance());
         this.value = Strings.unquote(aValue);
     }
 

@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -127,7 +128,7 @@ public class Encoding extends Parameter {
      * @param aValue a string representation of an Inline Encoding
      */
     public Encoding(final String aValue) {
-        super(ENCODING);
+        super(ENCODING, ParameterFactoryImpl.getInstance());
         this.value = Strings.unquote(aValue);
     }
 

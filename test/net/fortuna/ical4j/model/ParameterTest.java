@@ -86,7 +86,7 @@ public class ParameterTest extends TestCase {
 	public static TestSuite suite() throws Exception {
 		TestSuite suite = new TestSuite();
 		
-		Parameter p = new Parameter("name") {
+		Parameter p = new Parameter("name", null) {
 			public String getValue() {
 				return "value";
 			}

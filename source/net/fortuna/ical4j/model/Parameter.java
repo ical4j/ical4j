@@ -39,17 +39,19 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
- * $Id$ [Apr 5, 2004]
- *
  * Defines an iCalendar parameter. Subclasses of this class provide additional validation and typed values for specific
  * iCalendar parameters.
+ * 
+ * Note that subclasses must provide a reference to the factory used to create the
+ * parameter to support parameter cloning (copy). If no factory is specified an
+ * {@link UnsupportedOperationException} will be thrown by the {@link #copy()} method.
+ * 
  * @author Ben Fortuna
+ * 
+ * $Id$ [Apr 5, 2004]
  */
 public abstract class Parameter extends Content {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -2058497904769713528L;
 
     /**
@@ -174,14 +176,17 @@ public abstract class Parameter extends Content {
 
     private String name;
 
-    /**
-     * Constructor.
-     * @param aName name of this parameter
-     */
-    public Parameter(final String aName) {
-        this.name = aName;
-    }
+    private final ParameterFactory factory;
 
+    /**
+     * @param aName the parameter identifier
+     * @param factory the factory used to create the parameter
+     */
+    public Parameter(final String aName, ParameterFactory factory) {
+        this.name = aName;
+        this.factory = factory;
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -241,7 +246,9 @@ public abstract class Parameter extends Content {
      * @throws URISyntaxException where an invalid URI is encountered
      */
     public final Parameter copy() throws URISyntaxException {
-        return ParameterFactoryImpl.getInstance().createParameter(
-                getName(), getValue());
+        if (factory == null) {
+            throw new UnsupportedOperationException("No factory specified");
+        }
+        return factory.createParameter(getName(), getValue());
     }
 }

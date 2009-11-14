@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Escapable;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -56,7 +57,7 @@ public class TzId extends Parameter implements Escapable {
      * @param aValue a string representation of a time zone identifier
      */
     public TzId(final String aValue) {
-        super(TZID);
+        super(TZID, ParameterFactoryImpl.getInstance());
         // parameter values may be quoted if they contain characters in the
         // set [:;,]..
         this.value = Strings.unquote(aValue);

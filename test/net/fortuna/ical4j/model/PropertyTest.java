@@ -165,11 +165,7 @@ public class PropertyTest extends AbstractPropertyTest {
         }
 
         try {
-            property.getParameters().add(new Parameter("name") {
-                /*
-                 * (non-Javadoc)
-                 * @see net.fortuna.ical4j.model.Parameter#getValue()
-                 */
+            property.getParameters().add(new Parameter("name", null) {
                 public String getValue() {
                     return null;
                 }

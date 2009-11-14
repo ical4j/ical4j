@@ -35,19 +35,24 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.net.URISyntaxException;
 
 
 /**
+ * Implementors provide parameter creation services.
+ * 
+ * Note that implementations must be {@link Serializable} to support referencing
+ * from {@link Parameter} instances.
+ * 
+ * @author Ben Fortuna
+ * 
  * $Id$ [05-Apr-2004]
  * 
  * Created on 14/06/2005
  *
- * Implementors provide parameter creation services.
- * 
- * @author Ben Fortuna
  */
-public interface ParameterFactory {
+public interface ParameterFactory extends Serializable {
 
     /**
      * Returns a parameter instance of the appropriate type with the specified value.

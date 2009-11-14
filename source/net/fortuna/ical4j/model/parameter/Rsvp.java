@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -70,7 +71,7 @@ public class Rsvp extends Parameter {
      * @param aValue a boolean value
      */
     public Rsvp(final Boolean aValue) {
-        super(RSVP);
+        super(RSVP, ParameterFactoryImpl.getInstance());
         this.rsvp = aValue;
     }
 

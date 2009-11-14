@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -51,8 +52,7 @@ public class Vvenue extends Parameter {
      * @param aValue a string abbreviation
      */
     public Vvenue(final String aValue) {
-        super(VVENUE);
-
+        super(VVENUE, ParameterFactoryImpl.getInstance());
         this.value = Strings.unquote(aValue);
     }
 

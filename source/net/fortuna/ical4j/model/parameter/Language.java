@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -50,8 +51,7 @@ public class Language extends Parameter {
      * @param aValue a string representation of a Language
      */
     public Language(final String aValue) {
-        super(LANGUAGE);
-
+        super(LANGUAGE, ParameterFactoryImpl.getInstance());
         this.value = Strings.unquote(aValue);
     }
 

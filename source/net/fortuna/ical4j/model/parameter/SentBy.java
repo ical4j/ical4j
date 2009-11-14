@@ -35,6 +35,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
@@ -62,7 +63,7 @@ public class SentBy extends Parameter {
      * @param aUri a URI representing a sent by
      */
     public SentBy(final URI aUri) {
-        super(SENT_BY);
+        super(SENT_BY, ParameterFactoryImpl.getInstance());
         this.address = aUri;
     }
 

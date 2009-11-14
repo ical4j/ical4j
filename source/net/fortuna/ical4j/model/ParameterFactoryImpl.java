@@ -68,14 +68,12 @@ import net.fortuna.ical4j.util.Strings;
  *
  * @author Ben Fortuna
  */
-public class ParameterFactoryImpl extends AbstractContentFactory
-    implements ParameterFactory {
+public class ParameterFactoryImpl extends AbstractContentFactory implements ParameterFactory {
 
+    private static final long serialVersionUID = -4034423507432249165L;
+    
     private static ParameterFactoryImpl instance = new ParameterFactoryImpl();
 
-    /**
-     * Constructor made private to prevent instantiation.
-     */
     protected ParameterFactoryImpl() {
         registerDefaultFactory(Parameter.ABBREV, new AbbrevFactory());
         registerDefaultFactory(Parameter.ALTREP, new AltRepFactory());

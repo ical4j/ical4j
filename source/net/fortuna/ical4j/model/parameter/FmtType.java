@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -50,7 +51,7 @@ public class FmtType extends Parameter {
      * @param aValue a string representation of a format type
      */
     public FmtType(final String aValue) {
-        super(FMTTYPE);
+        super(FMTTYPE, ParameterFactoryImpl.getInstance());
         this.value = Strings.unquote(aValue);
     }
 

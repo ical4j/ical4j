@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -64,7 +65,7 @@ public class Range extends Parameter {
      * @param aValue a string representation of a recurrence identifier range
      */
     public Range(final String aValue) {
-        super(RANGE);
+        super(RANGE, ParameterFactoryImpl.getInstance());
         this.value = Strings.unquote(aValue);
 
         // value must be one of finite list..
