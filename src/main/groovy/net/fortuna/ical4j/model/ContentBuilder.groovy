@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model
 
 import groovy.util.FactoryBuilderSupportimport net.fortuna.ical4j.model.component.*
-import net.fortuna.ical4j.model.property.*import net.fortuna.ical4j.model.parameter.*/**
+import net.fortuna.ical4j.model.property.*import net.fortuna.ical4j.model.parameter.*import net.fortuna.ical4j.model.property.BusyTypeFactory/**
  * $Id$
  *
  * Created on: 03/08/2009
@@ -45,6 +45,7 @@ public class ContentBuilder extends FactoryBuilderSupport {
     public ContentBuilder() {
         registerFactory('calendar', new CalendarFactory())
         registerFactory('parameters', new ParameterListFactory())
+        
         // components..
         registerFactory('available', new AvailableFactory())
         registerFactory('daylight', new DaylightFactory())
@@ -58,18 +59,65 @@ public class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('vtodo', new VToDoFactory())
         registerFactory('vvenue', new VVenueFactory())
         registerFactory('xcomponent', new XComponentFactory())
+        
         // properties..
         registerFactory('action', new ActionFactory())
         registerFactory('attach', new AttachFactory())
         registerFactory('attendee', new AttendeeFactory())
+        registerFactory('busytype', new BusyTypeFactory())
+        registerFactory('calscale', new CalScaleFactory())
+        registerFactory('categories', new CategoriesFactory())
+        registerFactory('class', new ClazzFactory())
+        registerFactory('comment', new CommentFactory())
+        registerFactory('completed', new CompletedFactory())
+        registerFactory('contact', new ContactFactory())
+        registerFactory('country', new CountryFactory())
+        registerFactory('created', new CreatedFactory())
+        registerFactory('description', new DescriptionFactory())
         registerFactory('dtend', new DtEndFactory())
         registerFactory('dtstamp', new DtStampFactory())
         registerFactory('dtstart', new DtStartFactory())
+        registerFactory('due', new DueFactory())
         registerFactory('duration', new DurationFactory())
+        registerFactory('exdate', new ExDateFactory())
+        registerFactory('exrule', new ExRuleFactory())
+        registerFactory('freebusy', new FreeBusyFactory())
+        registerFactory('geo', new GeoFactory())
+        registerFactory('lastmodified', new LastModifiedFactory())
+        registerFactory('location', new LocationFactory())
+        registerFactory('locationtype', new LocationTypeFactory())
+        registerFactory('method', new MethodFactory())
+        registerFactory('name', new NameFactory())
+        registerFactory('organizer', new OrganizerFactory())
+        registerFactory('percentcomplete', new PercentCompleteFactory())
+        registerFactory('postalcode', new PostalCodeFactory())
+        registerFactory('priority', new PriorityFactory())
         registerFactory('prodid', new ProdIdFactory())
+        registerFactory('rdate', new RDateFactory())
+        registerFactory('recurrenceid', new RecurrenceIdFactory())
+        registerFactory('region', new RegionFactory())
+        registerFactory('relatedto', new RelatedToFactory())
+        registerFactory('repeat', new RepeatFactory())
+        registerFactory('requeststatus', new RequestStatusFactory())
+        registerFactory('resources', new ResourcesFactory())
+        registerFactory('rrule', new RRuleFactory())
+        registerFactory('sequence', new SequenceFactory())
+        registerFactory('status', new StatusFactory())
+        registerFactory('streetaddress', new StreetAddressFactory())
+        registerFactory('summary', new SummaryFactory())
+        registerFactory('tel', new TelFactory())
+        registerFactory('transp', new TranspFactory())
+        registerFactory('trigger', new TriggerFactory())
+        registerFactory('tzid', new TzIdFactory())
+        registerFactory('tzname', new TzNameFactory())
+        registerFactory('tzoffsetfrom', new TzOffsetFromFactory())
+        registerFactory('tzoffsetto', new TzOffsetToFactory())
+        registerFactory('tzurl', new TzUrlFactory())
         registerFactory('uid', new UidFactory())
         registerFactory('url', new UrlFactory())
         registerFactory('version', new VersionFactory())
+        registerFactory('xproperty', new XPropertyFactory())
+        
         // parameters..
         registerFactory('abbrev', new AbbrevFactory())
         registerFactory('altrep', new AltRepFactory())
