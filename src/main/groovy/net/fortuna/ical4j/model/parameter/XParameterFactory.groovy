@@ -45,10 +45,10 @@ public class XParameterFactory extends AbstractParameterFactory {
         }
         else {
             def paramName = attributes.remove('name')
-            def paramValue = attributes.remove('value')
-            if (paramValue == null) {
-                paramValue = value
+            if (paramName == null) {
+                paramName = value
             }
+            def paramValue = attributes.remove('value')
             parameter = new XParameter(paramName, paramValue)
         }
         return parameter
