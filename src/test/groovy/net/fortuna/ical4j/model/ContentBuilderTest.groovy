@@ -141,10 +141,26 @@ public class ContentBuilderTest extends GroovyTestCase {
     }
     
     void testBuildXComponent() {
-        def component = new ContentBuilder().xcomponent('test')
-        assert component.name == 'test'
+        def xcomponent = new ContentBuilder().xcomponent('test')
+        assert xcomponent.name == 'test'
         
-        component = new ContentBuilder().xcomponent(name: 'test')
-        assert component.name == 'test'
+        xcomponent = new ContentBuilder().xcomponent(name: 'test')
+        assert xcomponent.name == 'test'
+    }
+    
+    void testBuildXProperty() {
+        def xproperty = new ContentBuilder().xproperty('test')
+        assert xproperty.name == 'test'
+        
+        xproperty = new ContentBuilder().xproperty(name: 'test')
+        assert xproperty.name == 'test'
+    }
+    
+    void testBuildXParameter() {
+        def xparameter = new ContentBuilder().xparameter('test')
+        assert xparameter.name == 'test'
+        
+        xparameter = new ContentBuilder().xparameter(name: 'test')
+        assert xparameter.name == 'test'
     }
 }

@@ -51,18 +51,26 @@ public class XPropertyFactory extends AbstractPropertyFactory{
         }
         else {
             String instanceValue = attributes.remove('value')
+            ParameterList parameters = attributes.remove('parameters')
+            if (parameters == null) {
+                parameters = new ParameterList()
+            }
             if (instanceValue != null) {
-                attributes.put('value', instanceValue)
-                instance = super.newInstance(builder, name, value, attributes)
+//                attributes.put('value', instanceValue)
+                instance = newInstance(name, parameters, instanceValue)
             }
             else {
-                instance = super.newInstance(builder, name, value, attributes)
+                instance = newInstance(name, parameters, value)
             }
         }
         return instance
     }
     
+    protected Object newInstance(String name, ParameterList parameters, String value) {
+        return new XProperty(name, parameters, value)
+    }
+    
     protected Object newInstance(ParameterList parameters, String value) {
-        return new XProperty(parameters, value)
+        return null
     }
 }

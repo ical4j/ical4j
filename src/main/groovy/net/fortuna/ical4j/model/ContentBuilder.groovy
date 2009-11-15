@@ -90,7 +90,7 @@ public class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('name', new NameFactory())
         registerFactory('organizer', new OrganizerFactory())
         registerFactory('percentcomplete', new PercentCompleteFactory())
-        registerFactory('postalcode', new PostalCodeFactory())
+        registerFactory('postalcode', new PostalcodeFactory())
         registerFactory('priority', new PriorityFactory())
         registerFactory('prodid', new ProdIdFactory())
         registerFactory('rdate', new RDateFactory())
