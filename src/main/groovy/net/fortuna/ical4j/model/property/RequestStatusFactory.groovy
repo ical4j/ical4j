@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
+
 /**
  * $Id$
  *
@@ -41,55 +42,55 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class ActionFactory extends AbstractPropertyFactory{
+public class RequestStatusFactory extends AbstractPropertyFactory{
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        Action action
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Action.class)) {
-            action = (Action) value
+        RequestStatus instance
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, RequestStatus.class)) {
+            instance = (RequestStatus) value
         }
         else {
-            String actionValue = attributes.remove('value')
-            if (actionValue != null) {
-                if (Action.AUDIO.getValue().equals(actionValue)) {
-                    action = Action.AUDIO
+            String instanceValue = attributes.remove('value')
+            if (instanceValue != null) {
+                if (RequestStatus.CLIENT_ERROR.getValue().equals(instanceValue)) {
+                    instance = RequestStatus.CLIENT_ERROR
                 }
-                else if (Action.DISPLAY.getValue().equals(actionValue)) {
-                    action = Action.DISPLAY
+                else if (RequestStatus.PRELIM_SUCCESS.getValue().equals(instanceValue)) {
+                    instance = RequestStatus.PRELIM_SUCCESS
                 }
-                else if (Action.EMAIL.getValue().equals(actionValue)) {
-                    action = Action.EMAIL
+                else if (RequestStatus.SCHEDULING_ERROR.getValue().equals(instanceValue)) {
+                    instance = RequestStatus.SCHEDULING_ERROR
                 }
-                else if (Action.PROCEDURE.getValue().equals(actionValue)) {
-                    action = Action.PROCEDURE
+                else if (RequestStatus.SUCCESS.getValue().equals(instanceValue)) {
+                    instance = RequestStatus.SUCCESS
                 }
                 else {
-                    attributes.put('value', actionValue)
-                    action = super.newInstance(builder, name, value, attributes)
+                    attributes.put('value', instanceValue)
+                    instance = super.newInstance(builder, name, value, attributes)
                 }
             }
             else {
-                if (Action.AUDIO.getValue().equals(value)) {
-                    action = Action.AUDIO
+                if (RequestStatus.CLIENT_ERROR.getValue().equals(value)) {
+                    instance = RequestStatus.CLIENT_ERROR
                 }
-                else if (Action.DISPLAY.getValue().equals(value)) {
-                    action = Action.DISPLAY
+                else if (RequestStatus.PRELIM_SUCCESS.getValue().equals(value)) {
+                    instance = RequestStatus.PRELIM_SUCCESS
                 }
-                else if (Action.EMAIL.getValue().equals(value)) {
-                    action = Action.EMAIL
+                else if (RequestStatus.SCHEDULING_ERROR.getValue().equals(value)) {
+                    instance = RequestStatus.SCHEDULING_ERROR
                 }
-                else if (Action.PROCEDURE.getValue().equals(value)) {
-                    action = Action.PROCEDURE
+                else if (RequestStatus.SUCCESS.getValue().equals(value)) {
+                    instance = RequestStatus.SUCCESS
                 }
                 else {
-                    action = super.newInstance(builder, name, value, attributes)
+                    instance = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
-        return action
+        return instance
     }
     
     protected Object newInstance(ParameterList parameters, String value) {
-        return new Action(parameters, value)
+        return new RequestStatus(parameters, value)
     }
 }

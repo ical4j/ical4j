@@ -41,55 +41,52 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class ActionFactory extends AbstractPropertyFactory{
+public class BusyTypeFactory extends AbstractPropertyFactory{
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        Action action
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Action.class)) {
-            action = (Action) value
+        BusyType busyType
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, BusyType.class)) {
+            busyType = (BusyType) value
         }
         else {
-            String actionValue = attributes.remove('value')
-            if (actionValue != null) {
-                if (Action.AUDIO.getValue().equals(actionValue)) {
-                    action = Action.AUDIO
+            String busyTypeValue = attributes.remove('value')
+            if (busyTypeValue != null) {
+                if (BusyType.BUSY.getValue().equals(busyTypeValue)) {
+                    busyType = BusyType.BUSY
                 }
-                else if (Action.DISPLAY.getValue().equals(actionValue)) {
-                    action = Action.DISPLAY
+                else if (BusyType.BUSY_TENTATIVE.getValue().equals(busyTypeValue)) {
+                    busyType = BusyType.BUSY_TENTATIVE
                 }
-                else if (Action.EMAIL.getValue().equals(actionValue)) {
-                    action = Action.EMAIL
-                }
-                else if (Action.PROCEDURE.getValue().equals(actionValue)) {
-                    action = Action.PROCEDURE
+                else if (BusyType.UNAVAILABLE.getValue().equals(busyTypeValue)) {
+                    busyType = BusyType.UNAVAILABLE
                 }
                 else {
-                    attributes.put('value', actionValue)
-                    action = super.newInstance(builder, name, value, attributes)
+                    attributes.put('value', busyTypeValue)
+                    busyType = super.newInstance(builder, name, value, attributes)
                 }
             }
             else {
-                if (Action.AUDIO.getValue().equals(value)) {
-                    action = Action.AUDIO
+                if (BusyType.AUDIO.getValue().equals(value)) {
+                    busyType = BusyType.AUDIO
                 }
-                else if (Action.DISPLAY.getValue().equals(value)) {
-                    action = Action.DISPLAY
+                else if (BusyType.DISPLAY.getValue().equals(value)) {
+                    busyType = BusyType.DISPLAY
                 }
-                else if (Action.EMAIL.getValue().equals(value)) {
-                    action = Action.EMAIL
+                else if (BusyType.EMAIL.getValue().equals(value)) {
+                    busyType = BusyType.EMAIL
                 }
-                else if (Action.PROCEDURE.getValue().equals(value)) {
-                    action = Action.PROCEDURE
+                else if (BusyType.PROCEDURE.getValue().equals(value)) {
+                    busyType = BusyType.PROCEDURE
                 }
                 else {
-                    action = super.newInstance(builder, name, value, attributes)
+                    busyType = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
-        return action
+        return busyType
     }
     
     protected Object newInstance(ParameterList parameters, String value) {
-        return new Action(parameters, value)
+        return new BusyType(parameters, value)
     }
 }

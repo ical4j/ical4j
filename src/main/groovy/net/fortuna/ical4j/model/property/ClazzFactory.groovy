@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
+
 /**
  * $Id$
  *
@@ -41,55 +42,49 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class ActionFactory extends AbstractPropertyFactory{
+public class ClazzFactory extends AbstractPropertyFactory{
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        Action action
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Action.class)) {
-            action = (Action) value
+        Clazz clazz
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Clazz.class)) {
+            clazz = (Clazz) value
         }
         else {
-            String actionValue = attributes.remove('value')
-            if (actionValue != null) {
-                if (Action.AUDIO.getValue().equals(actionValue)) {
-                    action = Action.AUDIO
+            String clazzValue = attributes.remove('value')
+            if (clazzValue != null) {
+                if (Clazz.CONFIDENTIAL.getValue().equals(clazzValue)) {
+                    clazz = Clazz.CONFIDENTIAL
                 }
-                else if (Action.DISPLAY.getValue().equals(actionValue)) {
-                    action = Action.DISPLAY
+                else if (Clazz.PRIVATE.getValue().equals(clazzValue)) {
+                    clazz = Clazz.PRIVATE
                 }
-                else if (Action.EMAIL.getValue().equals(actionValue)) {
-                    action = Action.EMAIL
-                }
-                else if (Action.PROCEDURE.getValue().equals(actionValue)) {
-                    action = Action.PROCEDURE
+                else if (Clazz.PUBLIC.getValue().equals(clazzValue)) {
+                    clazz = Clazz.PUBLIC
                 }
                 else {
-                    attributes.put('value', actionValue)
-                    action = super.newInstance(builder, name, value, attributes)
+                    attributes.put('value', clazzValue)
+                    clazz = super.newInstance(builder, name, value, attributes)
                 }
             }
             else {
-                if (Action.AUDIO.getValue().equals(value)) {
-                    action = Action.AUDIO
+                if (Clazz.CONFIDENTIAL.getValue().equals(value)) {
+                    clazz = Clazz.CONFIDENTIAL
                 }
-                else if (Action.DISPLAY.getValue().equals(value)) {
-                    action = Action.DISPLAY
+                else if (Clazz.PRIVATE.getValue().equals(value)) {
+                    clazz = Clazz.PRIVATE
                 }
-                else if (Action.EMAIL.getValue().equals(value)) {
-                    action = Action.EMAIL
-                }
-                else if (Action.PROCEDURE.getValue().equals(value)) {
-                    action = Action.PROCEDURE
+                else if (Clazz.PUBLIC.getValue().equals(value)) {
+                    clazz = Clazz.PUBLIC
                 }
                 else {
-                    action = super.newInstance(builder, name, value, attributes)
+                    clazz = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
-        return action
+        return clazz
     }
     
     protected Object newInstance(ParameterList parameters, String value) {
-        return new Action(parameters, value)
+        return new Clazz(parameters, value)
     }
 }

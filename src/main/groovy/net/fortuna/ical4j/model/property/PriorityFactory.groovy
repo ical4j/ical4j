@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
+
 /**
  * $Id$
  *
@@ -41,55 +42,55 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class ActionFactory extends AbstractPropertyFactory{
+public class PriorityFactory extends AbstractPropertyFactory{
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        Action action
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Action.class)) {
-            action = (Action) value
+        Priority instance
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Priority.class)) {
+            instance = (Priority) value
         }
         else {
-            String actionValue = attributes.remove('value')
-            if (actionValue != null) {
-                if (Action.AUDIO.getValue().equals(actionValue)) {
-                    action = Action.AUDIO
+            String instanceValue = attributes.remove('value')
+            if (instanceValue != null) {
+                if (Priority.HIGH.getValue().equals(instanceValue)) {
+                    instance = Priority.HIGH
                 }
-                else if (Action.DISPLAY.getValue().equals(actionValue)) {
-                    action = Action.DISPLAY
+                else if (Priority.MEDIUM.getValue().equals(instanceValue)) {
+                    instance = Priority.MEDIUM
                 }
-                else if (Action.EMAIL.getValue().equals(actionValue)) {
-                    action = Action.EMAIL
+                else if (Priority.LOW.getValue().equals(instanceValue)) {
+                    instance = Priority.LOW
                 }
-                else if (Action.PROCEDURE.getValue().equals(actionValue)) {
-                    action = Action.PROCEDURE
+                else if (Priority.UNDEFINED.getValue().equals(instanceValue)) {
+                    instance = Priority.UNDEFINED
                 }
                 else {
-                    attributes.put('value', actionValue)
-                    action = super.newInstance(builder, name, value, attributes)
+                    attributes.put('value', instanceValue)
+                    instance = super.newInstance(builder, name, value, attributes)
                 }
             }
             else {
-                if (Action.AUDIO.getValue().equals(value)) {
-                    action = Action.AUDIO
+                if (Priority.HIGH.getValue().equals(value)) {
+                    instance = Priority.HIGH
                 }
-                else if (Action.DISPLAY.getValue().equals(value)) {
-                    action = Action.DISPLAY
+                else if (Priority.MEDIUM.getValue().equals(value)) {
+                    instance = Priority.MEDIUM
                 }
-                else if (Action.EMAIL.getValue().equals(value)) {
-                    action = Action.EMAIL
+                else if (Priority.LOW.getValue().equals(value)) {
+                    instance = Priority.LOW
                 }
-                else if (Action.PROCEDURE.getValue().equals(value)) {
-                    action = Action.PROCEDURE
+                else if (Priority.UNDEFINED.getValue().equals(value)) {
+                    instance = Priority.UNDEFINED
                 }
                 else {
-                    action = super.newInstance(builder, name, value, attributes)
+                    instance = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
-        return action
+        return instance
     }
     
     protected Object newInstance(ParameterList parameters, String value) {
-        return new Action(parameters, value)
+        return new Priority(parameters, value)
     }
 }

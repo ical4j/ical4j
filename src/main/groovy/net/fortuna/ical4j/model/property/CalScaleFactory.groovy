@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
+
 /**
  * $Id$
  *
@@ -41,55 +42,37 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class ActionFactory extends AbstractPropertyFactory{
+public class CalScaleFactory extends AbstractPropertyFactory{
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        Action action
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Action.class)) {
-            action = (Action) value
+        CalScale calScale
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, CalScale.class)) {
+            calScale = (CalScale) value
         }
         else {
-            String actionValue = attributes.remove('value')
-            if (actionValue != null) {
-                if (Action.AUDIO.getValue().equals(actionValue)) {
-                    action = Action.AUDIO
-                }
-                else if (Action.DISPLAY.getValue().equals(actionValue)) {
-                    action = Action.DISPLAY
-                }
-                else if (Action.EMAIL.getValue().equals(actionValue)) {
-                    action = Action.EMAIL
-                }
-                else if (Action.PROCEDURE.getValue().equals(actionValue)) {
-                    action = Action.PROCEDURE
+            String calScaleValue = attributes.remove('value')
+            if (calScaleValue != null) {
+                if (CalScale.GREGORIAN.getValue().equals(calScaleValue)) {
+                    calScale = CalScale.GREGORIAN
                 }
                 else {
-                    attributes.put('value', actionValue)
-                    action = super.newInstance(builder, name, value, attributes)
+                    attributes.put('value', calScaleValue)
+                    calScale = super.newInstance(builder, name, value, attributes)
                 }
             }
             else {
-                if (Action.AUDIO.getValue().equals(value)) {
-                    action = Action.AUDIO
-                }
-                else if (Action.DISPLAY.getValue().equals(value)) {
-                    action = Action.DISPLAY
-                }
-                else if (Action.EMAIL.getValue().equals(value)) {
-                    action = Action.EMAIL
-                }
-                else if (Action.PROCEDURE.getValue().equals(value)) {
-                    action = Action.PROCEDURE
+                if (CalScale.GREGORIAN.getValue().equals(value)) {
+                    calScale = CalScale.GREGORIAN
                 }
                 else {
-                    action = super.newInstance(builder, name, value, attributes)
+                    calScale = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
-        return action
+        return calScale
     }
     
     protected Object newInstance(ParameterList parameters, String value) {
-        return new Action(parameters, value)
+        return new CalScale(parameters, value)
     }
 }

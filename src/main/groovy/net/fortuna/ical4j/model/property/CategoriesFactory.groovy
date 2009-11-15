@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
+
 /**
  * $Id$
  *
@@ -41,55 +42,27 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class ActionFactory extends AbstractPropertyFactory{
+public class CategoriesFactory extends AbstractPropertyFactory{
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        Action action
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Action.class)) {
-            action = (Action) value
+        Categories categories
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Categories.class)) {
+            categories = (Categories) value
         }
         else {
-            String actionValue = attributes.remove('value')
-            if (actionValue != null) {
-                if (Action.AUDIO.getValue().equals(actionValue)) {
-                    action = Action.AUDIO
-                }
-                else if (Action.DISPLAY.getValue().equals(actionValue)) {
-                    action = Action.DISPLAY
-                }
-                else if (Action.EMAIL.getValue().equals(actionValue)) {
-                    action = Action.EMAIL
-                }
-                else if (Action.PROCEDURE.getValue().equals(actionValue)) {
-                    action = Action.PROCEDURE
-                }
-                else {
-                    attributes.put('value', actionValue)
-                    action = super.newInstance(builder, name, value, attributes)
-                }
+            String categoriesValue = attributes.remove('value')
+            if (categoriesValue != null) {
+                attributes.put('value', categoriesValue)
+                categories = super.newInstance(builder, name, value, attributes)
             }
             else {
-                if (Action.AUDIO.getValue().equals(value)) {
-                    action = Action.AUDIO
-                }
-                else if (Action.DISPLAY.getValue().equals(value)) {
-                    action = Action.DISPLAY
-                }
-                else if (Action.EMAIL.getValue().equals(value)) {
-                    action = Action.EMAIL
-                }
-                else if (Action.PROCEDURE.getValue().equals(value)) {
-                    action = Action.PROCEDURE
-                }
-                else {
-                    action = super.newInstance(builder, name, value, attributes)
-                }
+                categories = super.newInstance(builder, name, value, attributes)
             }
         }
-        return action
+        return categories
     }
     
     protected Object newInstance(ParameterList parameters, String value) {
-        return new Action(parameters, value)
+        return new Categories(parameters, value)
     }
 }
