@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
@@ -153,7 +154,7 @@ public class Trigger extends UtcProperty {
      * Default constructor.
      */
     public Trigger() {
-        super(TRIGGER);
+        super(TRIGGER, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -161,7 +162,7 @@ public class Trigger extends UtcProperty {
      * @param aValue a value string for this component
      */
     public Trigger(final ParameterList aList, final String aValue) {
-        super(TRIGGER, aList);
+        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -169,7 +170,7 @@ public class Trigger extends UtcProperty {
      * @param duration a duration in milliseconds
      */
     public Trigger(final Dur duration) {
-        super(TRIGGER);
+        super(TRIGGER, PropertyFactoryImpl.getInstance());
         setDuration(duration);
     }
 
@@ -178,7 +179,7 @@ public class Trigger extends UtcProperty {
      * @param duration a duration in milliseconds
      */
     public Trigger(final ParameterList aList, final Dur duration) {
-        super(TRIGGER, aList);
+        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
         setDuration(duration);
     }
 
@@ -186,7 +187,7 @@ public class Trigger extends UtcProperty {
      * @param dateTime a date representation of a date-time
      */
     public Trigger(final DateTime dateTime) {
-        super(TRIGGER);
+        super(TRIGGER, PropertyFactoryImpl.getInstance());
         setDateTime(dateTime);
     }
 
@@ -195,7 +196,7 @@ public class Trigger extends UtcProperty {
      * @param dateTime a date representation of a date-time
      */
     public Trigger(final ParameterList aList, final DateTime dateTime) {
-        super(TRIGGER, aList);
+        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
         setDateTime(dateTime);
     }
 

@@ -35,6 +35,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 
 /**
  * $Id$
@@ -90,7 +91,7 @@ public class DtStamp extends UtcProperty {
      * Default constructor. Initialises the dateTime value to the time of instantiation.
      */
     public DtStamp() {
-        super(DTSTAMP);
+        super(DTSTAMP, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -108,7 +109,7 @@ public class DtStamp extends UtcProperty {
      */
     public DtStamp(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(DTSTAMP, aList);
+        super(DTSTAMP, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -116,7 +117,7 @@ public class DtStamp extends UtcProperty {
      * @param aDate a date representing a date-time 
      */
     public DtStamp(final DateTime aDate) {
-        super(DTSTAMP);
+        super(DTSTAMP, PropertyFactoryImpl.getInstance());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
@@ -127,7 +128,7 @@ public class DtStamp extends UtcProperty {
      * @param aDate a date representing a date-time
      */
     public DtStamp(final ParameterList aList, final DateTime aDate) {
-        super(DTSTAMP, aList);
+        super(DTSTAMP, aList, PropertyFactoryImpl.getInstance());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);

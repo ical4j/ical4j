@@ -35,6 +35,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 
 /**
  * $Id$
@@ -83,7 +84,7 @@ public class LastModified extends UtcProperty {
      * Default constructor.
      */
     public LastModified() {
-        super(LAST_MODIFIED);
+        super(LAST_MODIFIED, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -101,7 +102,7 @@ public class LastModified extends UtcProperty {
      */
     public LastModified(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(LAST_MODIFIED, aList);
+        super(LAST_MODIFIED, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -109,7 +110,7 @@ public class LastModified extends UtcProperty {
      * @param aDate a date representation of a date-time value
      */
     public LastModified(final DateTime aDate) {
-        super(LAST_MODIFIED);
+        super(LAST_MODIFIED, PropertyFactoryImpl.getInstance());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
@@ -120,7 +121,7 @@ public class LastModified extends UtcProperty {
      * @param aDate a date representation of a date-time value
      */
     public LastModified(final ParameterList aList, final DateTime aDate) {
-        super(LAST_MODIFIED, aList);
+        super(LAST_MODIFIED, aList, PropertyFactoryImpl.getInstance());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);

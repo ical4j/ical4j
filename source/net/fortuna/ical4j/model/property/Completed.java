@@ -35,6 +35,7 @@ import java.text.ParseException;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 
 /**
  * $Id$
@@ -78,7 +79,7 @@ public class Completed extends UtcProperty {
      * Default constructor.
      */
     public Completed() {
-        super(COMPLETED);
+        super(COMPLETED, PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -86,7 +87,7 @@ public class Completed extends UtcProperty {
      * @throws ParseException when the specified string is not a valid date-time represenation
      */
     public Completed(final String aValue) throws ParseException {
-        super(COMPLETED);
+        super(COMPLETED, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -97,7 +98,7 @@ public class Completed extends UtcProperty {
      */
     public Completed(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(COMPLETED, aList);
+        super(COMPLETED, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -105,7 +106,7 @@ public class Completed extends UtcProperty {
      * @param aDate a date
      */
     public Completed(final DateTime aDate) {
-        super(COMPLETED);
+        super(COMPLETED, PropertyFactoryImpl.getInstance());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
@@ -116,7 +117,7 @@ public class Completed extends UtcProperty {
      * @param aDate a date
      */
     public Completed(final ParameterList aList, final DateTime aDate) {
-        super(COMPLETED, aList);
+        super(COMPLETED, aList, PropertyFactoryImpl.getInstance());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
