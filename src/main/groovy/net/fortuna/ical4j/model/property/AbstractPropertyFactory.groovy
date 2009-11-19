@@ -41,7 +41,7 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public abstract class AbstractPropertyFactory extends AbstractFactory{
+public abstract class AbstractPropertyFactory extends AbstractFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         ParameterList parameters = attributes.remove('parameters')
