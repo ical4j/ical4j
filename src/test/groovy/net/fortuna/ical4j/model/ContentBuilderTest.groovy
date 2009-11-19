@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.property.Version
-import net.fortuna.ical4j.model.property.DtStampimport net.fortuna.ical4j.model.component.VFreeBusyimport net.fortuna.ical4j.util.UidGeneratorimport net.fortuna.ical4j.util.SimpleHostInfo/**
+import net.fortuna.ical4j.model.component.VFreeBusyimport net.fortuna.ical4j.util.UidGeneratorimport net.fortuna.ical4j.util.SimpleHostInfo/**
  * $Id$
  *
  * Created on: 03/08/2009
@@ -49,7 +49,7 @@ public class ContentBuilderTest extends GroovyTestCase {
             version('2.0')
             vevent() {
                 uid('1')
-                dtstamp(new DtStamp())
+                dtstamp()
                 dtstart('20090810', parameters: parameters() {
                     value('DATE')})
                 action('DISPLAY')

@@ -33,7 +33,7 @@ package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
-/**
+import net.fortuna.ical4j.model.DateTime/**
  * $Id$
  *
  * Created on: 02/08/2009
@@ -45,7 +45,7 @@ public class DtStampFactory extends AbstractPropertyFactory{
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         DtStamp dtStamp
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, DtStamp.class)) {
+        if (value && FactoryBuilderSupport.checkValueIsTypeNotString(value, name, DtStamp.class)) {
             dtStamp = (DtStamp) value
         }
         else {
@@ -55,6 +55,14 @@ public class DtStampFactory extends AbstractPropertyFactory{
     }
     
     protected Object newInstance(ParameterList parameters, String value) {
-        return new DtStamp(parameters, value)
+        if (value) {
+            return new DtStamp(parameters, value)
+        }
+        else if (parameters) {
+            return new DtStamp(parameters, new DateTime(true))
+        }
+        else {
+            return new DtStamp()
+        }
     }
 }
