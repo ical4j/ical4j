@@ -31,6 +31,9 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
 import net.fortuna.ical4j.util.Dates;
@@ -113,6 +116,38 @@ public class Time extends Iso8601 {
         super(time.getTime(), (utc ? UTC_PATTERN : DEFAULT_PATTERN), Dates.PRECISION_SECOND, timezone);
         getFormat().setTimeZone(timezone);
         this.utc = utc;
+    }
+    
+    /**
+     * @param value
+     * @param timezone
+     * @throws ParseException where the specified value is not a valid time string
+     */
+    public Time(String value, TimeZone timezone) throws ParseException {
+        this(value, timezone, TimeZones.isUtc(timezone));
+    }
+    
+    /**
+     * @param value
+     * @param timezone
+     * @param utc
+     * @throws ParseException where the specified value is not a valid time string
+     */
+    public Time(String value, TimeZone timezone, boolean utc) throws ParseException {
+        this(parseDate(value, timezone), timezone, utc);
+    }
+    
+    private static java.util.Date parseDate(String value, TimeZone timezone) throws ParseException {
+        DateFormat df = new SimpleDateFormat(DEFAULT_PATTERN);
+        df.setTimeZone(timezone);
+        try {
+            return df.parse(value);
+        }
+        catch (ParseException e) {
+            df = new SimpleDateFormat(UTC_PATTERN);
+            df.setTimeZone(timezone);
+        }
+        return df.parse(value);
     }
     
     /**
