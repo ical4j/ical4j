@@ -328,7 +328,7 @@ public abstract class Component implements Serializable {
             }
             else {
                 for (final Iterator j = rdate.getDates().iterator(); j.hasNext();) {
-                    final Date rdateDate = (DateTime) j.next();
+                    final Date rdateDate = (Date) j.next();
                     if (period.includes(rdateDate)) {
                         recurrenceSet.add(new Period(new DateTime(rdateDate), rDuration));
                     }
