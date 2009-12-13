@@ -316,11 +316,11 @@ public class RecurTest extends TestCase {
         
         Recur recur = new Recur(Recur.YEARLY, -1);
         recur.setInterval(2);
-        recur.getMonthList().add(Integer.valueOf(1));
+        recur.getMonthList().add(new Integer(1));
         recur.getDayList().add(WeekDay.SU);
-        recur.getHourList().add(Integer.valueOf(8));
-        recur.getHourList().add(Integer.valueOf(9));
-        recur.getMinuteList().add(Integer.valueOf(30));
+        recur.getHourList().add(new Integer(8));
+        recur.getHourList().add(new Integer(9));
+        recur.getMinuteList().add(new Integer(30));
 
         Calendar cal = Calendar.getInstance();
         Date start = new DateTime(cal.getTime().getTime());
@@ -421,7 +421,7 @@ public class RecurTest extends TestCase {
         recur.getDayList().add(WeekDay.WE);
         recur.getDayList().add(WeekDay.TH);
         recur.getDayList().add(WeekDay.FR);
-        recur.getSetPosList().add(Integer.valueOf(-1));
+        recur.getSetPosList().add(new Integer(-1));
         log.debug(recur);
 
         Calendar cal = Calendar.getInstance();
@@ -449,7 +449,7 @@ public class RecurTest extends TestCase {
         // FREQ=MONTHLY;INTERVAL=1;COUNT=4;BYMONTHDAY=2
         Recur recur = new Recur(Recur.MONTHLY, 4);
         recur.setInterval(1);
-        recur.getMonthDayList().add(Integer.valueOf(2));
+        recur.getMonthDayList().add(new Integer(2));
         getDates(rangeStart, rangeEnd, eventStart, recur);
         
         // FREQ=MONTHLY;INTERVAL=2;COUNT=4;BYDAY=2MO
@@ -460,13 +460,13 @@ public class RecurTest extends TestCase {
         
         // FREQ=YEARLY;COUNT=4;BYMONTH=2;BYMONTHDAY=3
         recur = new Recur(Recur.YEARLY, 4);
-        recur.getMonthList().add(Integer.valueOf(2));
-        recur.getMonthDayList().add(Integer.valueOf(3));
+        recur.getMonthList().add(new Integer(2));
+        recur.getMonthDayList().add(new Integer(3));
         getDates(rangeStart, rangeEnd, eventStart, recur);
         
         // FREQ=YEARLY;COUNT=4;BYMONTH=2;BYDAY=2SU
         recur = new Recur(Recur.YEARLY, 4);
-        recur.getMonthList().add(Integer.valueOf(2));
+        recur.getMonthList().add(new Integer(2));
         recur.getDayList().add(new WeekDay(WeekDay.SU, 2));
         getDates(rangeStart, rangeEnd, eventStart, recur);
     }
