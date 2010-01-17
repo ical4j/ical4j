@@ -730,7 +730,11 @@ public class VEvent extends CalendarComponent {
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
             PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+            
+            if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+                PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+            }
+            
             PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
             PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
             PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
