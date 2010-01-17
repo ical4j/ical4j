@@ -207,7 +207,7 @@ public abstract class Parameter extends Content {
      * Indicates whether the current parameter value should be quoted.
      * @return true if the value should be quoted, otherwise false
      */
-    private boolean isQuotable() {
+    protected boolean isQuotable() {
         return Strings.PARAM_QUOTE_PATTERN.matcher(Strings.valueOf(getValue()))
                 .find();
     }

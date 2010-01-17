@@ -64,7 +64,10 @@ public class DelegatedToTest extends ParameterTest {
      */
     public static TestSuite suite() throws URISyntaxException {
         TestSuite suite = new TestSuite();
-        suite.addTest(new DelegatedToTest("testGetValue", new DelegatedTo(""), ""));
+        suite.addTest(new DelegatedToTest("testGetValue",
+                new DelegatedTo("test@example.com,test2@example.com"), "\"test@example.com\",\"test2@example.com\""));
+        suite.addTest(new DelegatedToTest("testToString",
+                new DelegatedTo("test@example.com,test2@example.com"), "\"test@example.com\",\"test2@example.com\""));
         return suite;
     }
 }

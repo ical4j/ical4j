@@ -79,4 +79,12 @@ public class DelegatedFrom extends Parameter {
     public final String getValue() {
         return getDelegators().toString();
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    protected boolean isQuotable() {
+        // override default behaviour as quoting is handled by the implementation..
+        return false;
+    }
 }

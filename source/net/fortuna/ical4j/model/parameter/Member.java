@@ -79,4 +79,12 @@ public class Member extends Parameter {
     public final String getValue() {
         return getGroups().toString();
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    protected boolean isQuotable() {
+        // override default behaviour as quoting is handled by the implementation..
+        return false;
+    }
 }

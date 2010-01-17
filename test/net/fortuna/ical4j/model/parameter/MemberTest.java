@@ -60,7 +60,10 @@ public class MemberTest extends ParameterTest {
      */
     public static TestSuite suite() throws URISyntaxException {
         TestSuite suite = new TestSuite();
-        suite.addTest(new MemberTest("testGetValue", new Member(""), ""));
+        suite.addTest(new MemberTest("testGetValue",
+                new Member("test@example.com,test2@example.com"), "\"test@example.com\",\"test2@example.com\""));
+        suite.addTest(new MemberTest("testToString",
+                new Member("test@example.com,test2@example.com"), "\"test@example.com\",\"test2@example.com\""));
         return suite;
     }
 }
