@@ -86,10 +86,7 @@
 				</excludes>
 			</resource>
 			<resource>
-				<directory>source</directory>
-				<includes>
-					<include>overview.html</include>
-				</includes>
+				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
