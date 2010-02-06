@@ -452,13 +452,13 @@ public class CalendarParserImpl implements CalendarParser {
         if (ignoreCase) {
             if (!token.equalsIgnoreCase(tokeniser.sval)) {
                 throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Object[] {
-                        Integer.valueOf(token), new Integer(tokeniser.ttype),
+                        token, tokeniser.sval,
                 }), getLineNumber(tokeniser, in));
             }
         }
         else if (!token.equals(tokeniser.sval)) {
             throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Object[] {
-                    Integer.valueOf(token), new Integer(tokeniser.ttype),
+                    token, tokeniser.sval,
             }), getLineNumber(tokeniser, in));
         }
 
