@@ -62,7 +62,12 @@ public class UnfoldingReader extends PushbackReader {
     /**
      * The pattern used to identify a fold in an iCalendar data stream.
      */
-    private static final char[] DEFAULT_FOLD_PATTERN = { '\r', '\n', ' ' };
+    private static final char[] DEFAULT_FOLD_PATTERN_1 = { '\r', '\n', ' ' };
+    
+    /** 
+     * The pattern used to identify a fold in Microsoft Outlook 2007. 
+     */ 
+    private static final char[] DEFAULT_FOLD_PATTERN_2 = { '\r', '\n', '\t' };
 
     /**
      * The pattern used to identify a fold in Mozilla Calendar/Sunbird and KOrganizer.
@@ -72,12 +77,7 @@ public class UnfoldingReader extends PushbackReader {
     /** 
      * The pattern used to identify a fold in Microsoft Outlook 2007. 
      */ 
-    private static final char[] RELAXED_FOLD_PATTERN_2 = { '\r', '\n', '\t' };
-    
-    /** 
-     * The pattern used to identify a fold in Microsoft Outlook 2007. 
-     */ 
-    private static final char[] RELAXED_FOLD_PATTERN_3 = { '\n', '\t' };
+    private static final char[] RELAXED_FOLD_PATTERN_2 = { '\n', '\t' };
     
     private char[][] patterns;
 
@@ -92,7 +92,7 @@ public class UnfoldingReader extends PushbackReader {
      * @param in the reader to unfold from
      */
     public UnfoldingReader(final Reader in) {
-        this(in, DEFAULT_FOLD_PATTERN.length, CompatibilityHints
+        this(in, DEFAULT_FOLD_PATTERN_1.length, CompatibilityHints
                 .isHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING));
     }
     
@@ -109,7 +109,7 @@ public class UnfoldingReader extends PushbackReader {
      * @param relaxed indicates whether relaxed unfolding is enabled
      */
     public UnfoldingReader(final Reader in, boolean relaxed) {
-        this(in, DEFAULT_FOLD_PATTERN.length, relaxed); 
+        this(in, DEFAULT_FOLD_PATTERN_1.length, relaxed); 
     }
 
     /**
@@ -122,14 +122,15 @@ public class UnfoldingReader extends PushbackReader {
         super(in, size);
         if (relaxed) {
             patterns = new char[4][];
-            patterns[0] = DEFAULT_FOLD_PATTERN;
-            patterns[1] = RELAXED_FOLD_PATTERN_1;
-            patterns[2] = RELAXED_FOLD_PATTERN_2;
-            patterns[3] = RELAXED_FOLD_PATTERN_3;
+            patterns[0] = DEFAULT_FOLD_PATTERN_1;
+            patterns[1] = DEFAULT_FOLD_PATTERN_2;
+            patterns[2] = RELAXED_FOLD_PATTERN_1;
+            patterns[3] = RELAXED_FOLD_PATTERN_2;
         }
         else {
-            patterns = new char[1][];
-            patterns[0] = DEFAULT_FOLD_PATTERN;
+            patterns = new char[2][];
+            patterns[0] = DEFAULT_FOLD_PATTERN_1;
+            patterns[1] = DEFAULT_FOLD_PATTERN_2;
         }
         buffers = new char[patterns.length][];
         for (int i = 0; i < patterns.length; i++) {
