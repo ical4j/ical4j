@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2010b//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_rc1/Asia/Yakutsk
+TZID:Asia/Yakutsk
+TZURL:http://tzurl.org/zoneinfo-global/Asia/Yakutsk
 X-LIC-LOCATION:Asia/Yakutsk
 BEGIN:DAYLIGHT
 TZOFFSETFROM:+0900

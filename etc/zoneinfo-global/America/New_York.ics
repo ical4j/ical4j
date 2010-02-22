@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2010b//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_rc1/America/New_York
+TZID:America/New_York
+TZURL:http://tzurl.org/zoneinfo-global/America/New_York
 X-LIC-LOCATION:America/New_York
 BEGIN:DAYLIGHT
 TZOFFSETFROM:-0500

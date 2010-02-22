@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2010b//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_rc1/America/Indiana/Vevay
+TZID:America/Indiana/Vevay
+TZURL:http://tzurl.org/zoneinfo-global/America/Indiana/Vevay
 X-LIC-LOCATION:America/Indiana/Vevay
 BEGIN:DAYLIGHT
 TZOFFSETFROM:-0500

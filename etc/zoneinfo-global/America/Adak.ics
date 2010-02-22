@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2010b//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_rc1/America/Adak
+TZID:America/Adak
+TZURL:http://tzurl.org/zoneinfo-global/America/Adak
 X-LIC-LOCATION:America/Adak
 BEGIN:DAYLIGHT
 TZOFFSETFROM:-1000

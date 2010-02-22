@@ -1,8 +1,9 @@
 BEGIN:VCALENDAR
-PRODID:-//iCal4j//NONSGML iCal4j 1.0-rc1//EN
+PRODID:-//tzurl.org//NONSGML Olson 2010b//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/ical4j_1_0_rc1/America/La_Paz
+TZID:America/La_Paz
+TZURL:http://tzurl.org/zoneinfo-global/America/La_Paz
 X-LIC-LOCATION:America/La_Paz
 BEGIN:STANDARD
 TZOFFSETFROM:-043236
