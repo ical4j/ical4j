@@ -317,10 +317,10 @@
 							<type>tag</type>
 							<tags>
 								<tag implementation="java.lang.String">
-									ical4j-1_0-rc1
+									ical4j-1_0-rc2
 								</tag>
 								<tag implementation="java.lang.String">
-									ical4j-1_0-rc2
+									ical4j-1_0-rc3
 								</tag>
 							</tags>
 						</configuration>
