@@ -1,9 +1,5 @@
-/*
- * $Id$
- *
- * Created on 08/01/2009
- *
- * Copyright (c) 2009, Ben Fortuna
+/**
+ * Copyright (c) 2010, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
