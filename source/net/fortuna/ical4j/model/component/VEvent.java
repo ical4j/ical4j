@@ -404,9 +404,9 @@ public class VEvent extends CalendarComponent {
                 getProperties());
 
         final Status status = (Status) getProperty(Property.STATUS);
-        if (status != null && !Status.VEVENT_TENTATIVE.equals(status)
-                && !Status.VEVENT_CONFIRMED.equals(status)
-                && !Status.VEVENT_CANCELLED.equals(status)) {
+        if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
+                && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
+                && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
             throw new ValidationException("Status property ["
                     + status.toString() + "] is not applicable for VEVENT");
         }

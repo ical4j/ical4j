@@ -207,9 +207,9 @@ public class VJournal extends CalendarComponent {
                 getProperties());
 
         final Status status = (Status) getProperty(Property.STATUS);
-        if (status != null && !Status.VJOURNAL_DRAFT.equals(status)
-                && !Status.VJOURNAL_FINAL.equals(status)
-                && !Status.VJOURNAL_CANCELLED.equals(status)) {
+        if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
+                && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
+                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {
             throw new ValidationException("Status property ["
                     + status.toString() + "] may not occur in VJOURNAL");
         }

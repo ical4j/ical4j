@@ -316,10 +316,10 @@ public class VToDo extends CalendarComponent {
                 getProperties());
 
         final Status status = (Status) getProperty(Property.STATUS);
-        if (status != null && !Status.VTODO_NEEDS_ACTION.equals(status)
-                && !Status.VTODO_COMPLETED.equals(status)
-                && !Status.VTODO_IN_PROCESS.equals(status)
-                && !Status.VTODO_CANCELLED.equals(status)) {
+        if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
+                && !Status.VTODO_COMPLETED.getValue().equals(status.getValue())
+                && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())
+                && !Status.VTODO_CANCELLED.getValue().equals(status.getValue())) {
             throw new ValidationException("Status property ["
                     + status.toString() + "] may not occur in VTODO");
         }
