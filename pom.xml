@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
@@ -29,10 +30,12 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j</connection>
-		<developerConnection>scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j</developerConnection>
+		<connection>scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
+		</connection>
+		<developerConnection>scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
+		</developerConnection>
 		<url>http://ical4j.cvs.sourceforge.net/ical4j/iCal4j</url>
-  </scm>
+	</scm>
 
 	<contributors>
 		<contributor>
@@ -53,18 +56,13 @@
 		</contributor>
 	</contributors>
 
-<!-- 
-	<distributionManagement>
-		<relocation>
-			<groupId>net.fortuna.ical4j</groupId>
-			<artifactId>ical4j</artifactId>
-			<version>1.0-beta5</version>
-			<message>
-				Updated group id to conform with maven standards
-			</message>
-		</relocation>
-	</distributionManagement>
- -->
+	<!--
+		<distributionManagement> <relocation>
+		<groupId>net.fortuna.ical4j</groupId> <artifactId>ical4j</artifactId>
+		<version>1.0-beta5</version> <message> Updated group id to conform
+		with maven standards </message> </relocation>
+		</distributionManagement>
+	-->
 
 	<build>
 		<sourceDirectory>source</sourceDirectory>
@@ -116,18 +114,12 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<!-- 
-						<systemProperties>
-						<property>
-						<name>ical4j.unfolding.relaxed</name>
-						<value>true</value>
-						</property>
-						<property>
-						<name>ical4j.parsing.relaxed</name>
-						<value>true</value>
-						</property>
-						</systemProperties>
-					<forkMode>pertest</forkMode>
+					<!--
+						<systemProperties> <property>
+						<name>ical4j.unfolding.relaxed</name> <value>true</value>
+						</property> <property> <name>ical4j.parsing.relaxed</name>
+						<value>true</value> </property> </systemProperties>
+						<forkMode>pertest</forkMode>
 					-->
 					<excludes>
 						<exclude>**/CalendarOutputterTest.java</exclude>
@@ -135,8 +127,8 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			
-			<plugin>   
+
+			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
 				<extensions>true</extensions>
@@ -183,20 +175,42 @@
 				</executions>
 			</plugin>
 
-            <plugin>
-                <groupId>org.codehaus.groovy.maven</groupId>
-                <artifactId>gmaven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generateStubs</goal>
-                            <goal>compile</goal>
-                            <goal>generateTestStubs</goal>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+			<plugin>
+				<groupId>org.codehaus.gmaven</groupId>
+				<artifactId>gmaven-plugin</artifactId>
+				<version>1.2</version>
+				<configuration>
+					<providerSelection>1.7</providerSelection>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.gmaven.runtime</groupId>
+						<artifactId>gmaven-runtime-1.7</artifactId>
+						<version>1.2</version>
+						<exclusions>
+							<exclusion>
+								<groupId>org.codehaus.groovy</groupId>
+								<artifactId>groovy-all</artifactId>
+							</exclusion>
+						</exclusions>
+					</dependency>
+					<dependency>
+						<groupId>org.codehaus.groovy</groupId>
+						<artifactId>groovy-all</artifactId>
+						<version>1.7.1</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generateStubs</goal>
+							<goal>compile</goal>
+							<goal>generateTestStubs</goal>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -228,17 +242,17 @@
 			<version>1.4</version>
 			<scope>test</scope>
 		</dependency>
-        <dependency>
-            <groupId>org.codehaus.groovy.maven.runtime</groupId>
-            <artifactId>gmaven-runtime-1.6</artifactId>
-            <version>1.0-rc-5</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-        	<groupId>backport-util-concurrent</groupId>
-        	<artifactId>backport-util-concurrent</artifactId>
-        	<version>3.1</version>
-        </dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>1.7.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>backport-util-concurrent</groupId>
+			<artifactId>backport-util-concurrent</artifactId>
+			<version>3.1</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>
@@ -274,22 +288,25 @@
 				<configuration>
 					<linkXref>true</linkXref>
 					<targetJdk>1.4</targetJdk>
-                    <rulesets>
-                        <ruleset>http://svn.mnode.org/tools/pmd/mnode_ruleset.xml</ruleset>
-                    </rulesets>
+					<rulesets>
+						<ruleset>http://svn.mnode.org/tools/pmd/mnode_ruleset.xml
+						</ruleset>
+					</rulesets>
 				</configuration>
 			</plugin>
 
-            <!-- Override default suppressions.. -->        
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                   <configLocation>http://svn.mnode.org/tools/checkstyle/mnode_checks.xml</configLocation>
-                   <suppressionsFile>etc/checkstyle-suppressions.xml</suppressionsFile>
-                </configuration>
-            </plugin>
-			
+			<!-- Override default suppressions.. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<configLocation>http://svn.mnode.org/tools/checkstyle/mnode_checks.xml
+					</configLocation>
+					<suppressionsFile>etc/checkstyle-suppressions.xml
+					</suppressionsFile>
+				</configuration>
+			</plugin>
+
 			<plugin>
 				<artifactId>maven-clover-plugin</artifactId>
 				<configuration>
@@ -301,7 +318,7 @@
 					</excludes>
 				</configuration>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>clirr-maven-plugin</artifactId>
