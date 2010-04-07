@@ -41,6 +41,7 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -170,6 +171,23 @@ public class ComponentTest extends TestCase {
         expectedPeriods.add(new Period("20080606T100000Z/PT2H"));
         expectedPeriods.add(new Period("20080607T100000Z/PT2H"));
         suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"), new Dur(7, 0, 0, 0)), expectedPeriods));
+
+        component = new Component("test") {
+            public void validate(boolean recurse) throws ValidationException {
+            }
+        };
+        // weekly for 5 instances using DATE format and due date.
+        component.getProperties().add(new DtStart(new Date("20080601")));
+        component.getProperties().add(new Due(new Date("20080602")));
+        recur = new Recur(Recur.WEEKLY, 5);
+        component.getProperties().add(new RRule(recur));
+        expectedPeriods = new PeriodList();
+        expectedPeriods.add(new Period("20080601T000000Z/P1D"));
+        expectedPeriods.add(new Period("20080608T000000Z/P1D"));
+        expectedPeriods.add(new Period("20080615T000000Z/P1D"));
+        expectedPeriods.add(new Period("20080622T000000Z/P1D"));
+        expectedPeriods.add(new Period("20080629T000000Z/P1D"));
+        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"), new Dur(6)), expectedPeriods));
         return suite;
     }
 }

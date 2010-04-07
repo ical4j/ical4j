@@ -38,7 +38,7 @@ import java.text.ParseException;
 import java.util.Iterator;
 
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.ExDate;
@@ -259,10 +259,14 @@ public abstract class Component implements Serializable {
     
     /**
      * Calculates the recurrence set for this component using the specified period.
-     * The recurrence set is derived from a combination of the event start date,
+     * The recurrence set is derived from a combination of the component start date,
      * recurrence rules and dates, and exception rules and dates. Note that component
      * transparency and anniversary-style dates do not affect the resulting
      * intersection.
+     * <p>If an explicit DURATION is not specified, the effective duration of each
+     *  returned period is derived from the DTSTART and DTEND or DUE properties.
+     * If the component has no DURATION, DTEND or DUE, the effective duration is set
+     *  to PT0S</p>
      * @param period a range to calculate recurrences for
      * @return a list of periods
      */
@@ -273,7 +277,10 @@ public abstract class Component implements Serializable {
         final PeriodList recurrenceSet = new PeriodList();
 
         final DtStart start = (DtStart) getProperty(Property.DTSTART);
-        final DtEnd end = (DtEnd) getProperty(Property.DTEND);
+        DateProperty end = (DateProperty) getProperty(Property.DTEND);
+        if (end == null) {
+            end = (DateProperty) getProperty(Property.DUE);
+        }
         Duration duration = (Duration) getProperty(Property.DURATION);
         
         // if no start date specified return empty list..
