@@ -167,6 +167,8 @@ public abstract class CalendarComponent extends Component {
     
     private static class EmptyValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             // TODO Auto-generated method stub
             

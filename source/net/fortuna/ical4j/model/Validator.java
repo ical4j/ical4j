@@ -31,11 +31,13 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
+
 /**
  * @author fortuna
  *
  */
-public interface Validator {
+public interface Validator extends Serializable {
 
     /**
      * Validates the associated model against an applicable standard.

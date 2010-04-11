@@ -626,6 +626,8 @@ public class VFreeBusy extends CalendarComponent {
      */
     private class PublishValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+ 
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOneOrMore(Property.FREEBUSY, getProperties());
             
@@ -681,6 +683,8 @@ public class VFreeBusy extends CalendarComponent {
      */
     private class ReplyValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
 
             // FREEBUSY is 1+ in RFC2446 but 0+ in Calsify
@@ -735,6 +739,8 @@ public class VFreeBusy extends CalendarComponent {
      */
     private class RequestValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
             

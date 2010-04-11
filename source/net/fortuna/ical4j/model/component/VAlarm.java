@@ -297,6 +297,8 @@ public class VAlarm extends CalendarComponent {
     
     private class AudioValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         /**
          * {@inheritDoc}
          */
@@ -310,6 +312,8 @@ public class VAlarm extends CalendarComponent {
 
     private class DisplayValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         /**
          * {@inheritDoc}
          */
@@ -323,6 +327,8 @@ public class VAlarm extends CalendarComponent {
 
     private class EmailValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         /**
          * {@inheritDoc}
          */
@@ -347,6 +353,8 @@ public class VAlarm extends CalendarComponent {
 
     private class ProcedureValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         /**
          * {@inheritDoc}
          */
@@ -386,6 +394,8 @@ public class VAlarm extends CalendarComponent {
      */
     private class ITIPValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         /**
          * {@inheritDoc}
          */

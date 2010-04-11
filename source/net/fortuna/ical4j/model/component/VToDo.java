@@ -411,6 +411,8 @@ public class VToDo extends CalendarComponent {
      */
     private class AddValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
             PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
@@ -505,6 +507,8 @@ public class VToDo extends CalendarComponent {
      */
     private class CancelValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
             PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -593,6 +597,8 @@ public class VToDo extends CalendarComponent {
      */
     private class CounterValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
             
@@ -682,6 +688,8 @@ public class VToDo extends CalendarComponent {
      */
     private class DeclineCounterValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
             
@@ -771,6 +779,8 @@ public class VToDo extends CalendarComponent {
      */
     private class PublishValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
             
@@ -864,6 +874,8 @@ public class VToDo extends CalendarComponent {
      */
     private class RefreshValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOne(Property.ATTENDEE, getProperties());
             PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -958,6 +970,8 @@ public class VToDo extends CalendarComponent {
      */
     private class ReplyValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
             
@@ -1050,6 +1064,8 @@ public class VToDo extends CalendarComponent {
      */
     private class RequestValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
             

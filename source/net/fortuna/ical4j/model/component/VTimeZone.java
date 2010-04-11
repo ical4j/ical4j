@@ -276,6 +276,8 @@ public class VTimeZone extends CalendarComponent {
      */
     private class ITIPValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         /**
          * {@inheritDoc}
          */

@@ -277,6 +277,8 @@ public class VJournal extends CalendarComponent {
      */
     private class AddValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+        
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
@@ -348,6 +350,8 @@ public class VJournal extends CalendarComponent {
      */
     private class CancelValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
             PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
@@ -420,6 +424,8 @@ public class VJournal extends CalendarComponent {
      */
     private class PublishValidator implements Validator {
         
+		private static final long serialVersionUID = 1L;
+
         public void validate() throws ValidationException {
             PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
