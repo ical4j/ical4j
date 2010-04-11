@@ -104,40 +104,6 @@ import java.util.regex.Pattern;
  */
 public final class Strings {
 
-    private static final String BACKSLASH_PATTERN = "\\\\";
-
-    private static final String NEWLINE_PATTERN = BACKSLASH_PATTERN + "n";
-
-    private static final String QUOTE_PATTERN = "\"";
-    
-//    private static final Pattern CHECK_ESCAPE = Pattern.compile("[,;\"\n\\\\]");
-    private static final Pattern CHECK_ESCAPE = Pattern.compile("[,;\n\\\\]");
-
-    private static final Pattern CHECK_UNESCAPE = Pattern.compile(BACKSLASH_PATTERN);
-
-//    private static final Pattern ESCAPE_PATTERN_1 =
-//        Pattern.compile("([,;\"])");
-    private static final Pattern ESCAPE_PATTERN_1 =
-        Pattern.compile("([,;])");
-
-    private static final Pattern ESCAPE_PATTERN_2 =
-        Pattern.compile("\r?\n");
-
-    private static final Pattern ESCAPE_PATTERN_3 =
-        Pattern.compile(BACKSLASH_PATTERN);
-
-    // include escaped quotes for backwards compatibility..
-    private static final Pattern UNESCAPE_PATTERN_1 =
-        Pattern.compile("\\\\([,;\"])");
-//    private static final Pattern UNESCAPE_PATTERN_1 =
-//        Pattern.compile("\\\\([,;])");
-
-    private static final Pattern UNESCAPE_PATTERN_2 =
-        Pattern.compile(NEWLINE_PATTERN, Pattern.CASE_INSENSITIVE);
-
-    private static final Pattern UNESCAPE_PATTERN_3 =
-        Pattern.compile(BACKSLASH_PATTERN + BACKSLASH_PATTERN);
-
     /**
      * Defines a regular expression representing all parameter strings that
      * should be quoted.
@@ -164,10 +130,9 @@ public final class Strings {
      */
     public static String quote(final Object aValue) {
         if (aValue != null) {
-            return QUOTE_PATTERN + aValue + QUOTE_PATTERN;
+            return "\"" + aValue + "\"";
         }
-
-        return QUOTE_PATTERN + QUOTE_PATTERN;
+        return "\"\"";
     }
 
     /**
@@ -177,7 +142,7 @@ public final class Strings {
      * @return an un-quoted string
      */
     public static String unquote(final String aValue) {
-        if (aValue != null && aValue.startsWith(QUOTE_PATTERN) && aValue.endsWith(QUOTE_PATTERN)) {
+        if (aValue != null && aValue.startsWith("\"") && aValue.endsWith("\"")) {
             return aValue.substring(0, aValue.length() - 1).substring(1);
         }
         return aValue;
@@ -190,24 +155,9 @@ public final class Strings {
      * string
      */
     public static String escape(final String aValue) {
-        if (aValue != null && CHECK_ESCAPE.matcher(aValue).find()) {
-            return ESCAPE_PATTERN_1.matcher(
-                    ESCAPE_PATTERN_2.matcher(
-                            ESCAPE_PATTERN_3.matcher(aValue).replaceAll(BACKSLASH_PATTERN + BACKSLASH_PATTERN))
-                        .replaceAll(NEWLINE_PATTERN))
-                .replaceAll("\\\\$1");
-/*
-            return aValue.replaceAll("\\\\", "\\\\\\\\")
-                            .replaceAll(";", "\\\\;")
-                            .replaceAll(",", "\\\\,")
-                            .replaceAll("\n", "\\\\n")
-                            .replaceAll("\"", "\\\\\"");
-*/
-        }
-
-        return aValue;
+        return escapePunctuation(escapeNewline(escapeBackslash(aValue)));
     }
-
+    
     /**
      * Convenience method for replacing escaped special characters
      * with their original form.
@@ -217,23 +167,49 @@ public final class Strings {
      * original form
      */
     public static String unescape(final String aValue) {
-        if (aValue != null && CHECK_UNESCAPE.matcher(aValue).find()) {
-            return UNESCAPE_PATTERN_3.matcher(
-                    UNESCAPE_PATTERN_2.matcher(
-                            UNESCAPE_PATTERN_1.matcher(aValue).replaceAll("$1"))
-                        .replaceAll("\n"))
-                .replaceAll(BACKSLASH_PATTERN);
-/*
-            return aValue.replaceAll("\\\\\"", "\"")
-                            .replaceAll("\\\\N", "\n")
-                            .replaceAll("\\\\n", "\n")
-                            .replaceAll("\\\\,", ",")
-                            .replaceAll("\\\\;", ";")
-                            .replaceAll("\\\\\\\\", "\\\\");
-*/
-        }
+        return unescapeBackslash(unescapeNewline(unescapePunctuation(aValue)));
+    }
 
-        return aValue;
+    private static String escapePunctuation(String value) {
+        if (value != null) {
+            return value.replaceAll("([,;])", "\\\\$1");
+        }
+        return value;
+    }
+
+    private static String unescapePunctuation(String value) {
+        if (value != null) {
+            return value.replaceAll("\\\\([,;\"])", "$1");
+        }
+        return value;
+    }
+
+    private static String escapeNewline(String value) {
+        if (value != null) {
+            return value.replaceAll("\r?\n", "\\\\n");
+        }
+        return value;
+    }
+
+    private static String unescapeNewline(String value) {
+        if (value != null) {
+            return value.replaceAll("(?<!\\\\)\\\\n", "\n");
+        }
+        return value;
+    }
+
+    private static String escapeBackslash(String value) {
+        if (value != null) {
+            return value.replaceAll("\\\\", "\\\\\\\\");
+        }
+        return value;
+    }
+
+    private static String unescapeBackslash(String value) {
+        if (value != null) {
+            return value.replaceAll("\\\\\\\\", "\\\\");
+        }
+        return value;
     }
     
     /**

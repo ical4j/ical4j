@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.util;
 
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 /**
  * $Id$ [17-Jan-2005]
@@ -56,29 +57,27 @@ public class StringsTest extends TestCase {
     private static final String NEWLINE = "\nXXX\n\n";
     private static final String ESCAPED_NEWLINE = "\\nXXX\\n\\n";
 
-    public void testEscapeSemiColon() {
-        assertEquals("EscapeSemiColon", ESCAPED_SEMI_COLON, 
-            Strings.escape(SEMI_COLON));
+    private final String testString;
+    
+    private final String expectedValue;
+    
+    public StringsTest(String testMethod) {
+        super(testMethod);
+        testString = null;
+        expectedValue = null;
     }
-
-    public void testUnEscapeSemiColon() {
-        assertEquals("UnEscapeSemiColon", SEMI_COLON, 
-            Strings.unescape(ESCAPED_SEMI_COLON));
+    
+    public StringsTest(String testString, String expectedValue) {
+        super("testEscapeUnescape");
+        this.testString = testString;
+        this.expectedValue = expectedValue;
     }
-
-    public void testEscapeComma() {
-        assertEquals("EscapeComma", ESCAPED_COMMA , Strings.escape(COMMA));
+    
+    public void testEscapeUnescape() {
+        final String value = Strings.escape(testString);
+        assertEquals("Escape failed", expectedValue, value);
+        assertEquals("Unescape failed", testString, Strings.unescape(value));
     }
-
-    public void testUnEscapeComma() {
-        assertEquals("UnEscapeComma", COMMA, Strings.unescape(ESCAPED_COMMA));
-    }
-
-    /*
-    public void testEscapeQuote() {
-        assertEquals("EscapeQuote", ESCAPED_QUOTE, Strings.escape(QUOTE));
-    }
-    */
 
     /**
      * Test un-escaping of quotes (not part of spec, but remains for
@@ -86,24 +85,6 @@ public class StringsTest extends TestCase {
      */
     public void testUnEscapeQuote() {
         assertEquals("UnEscapeQuote", QUOTE, Strings.unescape(ESCAPED_QUOTE));
-    }
-
-    public void testEscapeDoubleBackSlash() {
-        assertEquals("EscapeDoubleBackSlash", ESCAPED_DOUBLE_BACKSLASH, 
-            Strings.escape(DOUBLE_BACKSLASH));
-    }
-
-    public void testUnEscapeDoubleBackSlash() {
-        assertEquals("UnEscapeDoubleBackSlash", DOUBLE_BACKSLASH, 
-            Strings.unescape(ESCAPED_DOUBLE_BACKSLASH));
-    }    
-
-    public void testEscapeNewline() {
-        assertEquals("EscapeNewline", ESCAPED_NEWLINE, Strings.escape(NEWLINE));
-    }
-
-    public void testUnEscapeNewline() {
-        assertEquals("UnEscapeNewline", NEWLINE, Strings.unescape(ESCAPED_NEWLINE));
     }
 
     /**
@@ -116,5 +97,26 @@ public class StringsTest extends TestCase {
         assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(",").find());
         assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(
                 "Pacific Time (US & Canada), Tijuana").find());
+    }
+    
+    public String getName() {
+        if (testString != null) {
+            return super.getName() + " [" + Strings.escape(testString) + "]";
+        }
+        return super.getName();
+    }
+    
+    public static TestSuite suite() {
+        TestSuite suite = new TestSuite();
+        suite.addTest(new StringsTest(SEMI_COLON, ESCAPED_SEMI_COLON));
+        suite.addTest(new StringsTest(COMMA, ESCAPED_COMMA));
+//        suite.addTest(new StringsTest(QUOTE, ESCAPED_QUOTE));
+        suite.addTest(new StringsTest(DOUBLE_BACKSLASH, ESCAPED_DOUBLE_BACKSLASH));
+        suite.addTest(new StringsTest(NEWLINE, ESCAPED_NEWLINE));
+        suite.addTest(new StringsTest("a\\nb", "a\\\\nb"));
+        
+        suite.addTest(new StringsTest("testUnEscapeQuote"));
+        suite.addTest(new StringsTest("testQuotableParamString"));
+        return suite;
     }
 }
