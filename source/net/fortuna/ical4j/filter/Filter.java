@@ -109,10 +109,7 @@ public class Filter {
                 filtered.addAll(matchAll(c));
             }
             else {
-                final Object match = matchAny(c);
-                if (match != null) {
-                    filtered.add(match);
-                }
+                filtered.addAll(matchAny(c));
             }
             return filtered;
         }
@@ -135,17 +132,18 @@ public class Filter {
         return list;
     }
 
-    private Object matchAny(Collection c) {
-        final Iterator i = c.iterator();
-        while (i.hasNext()) {
+    private List matchAny(Collection c) {
+        final List matches = new ArrayList();
+        for (Iterator i = c.iterator(); i.hasNext();) {
             final Object o = i.next();
             for (int n = 0; n < getRules().length; n++) {
                 if (getRules()[n].match(o)) {
-                    return o;
+                    matches.add(o);
+                    break;
                 }
             }
         }
-        return null;
+        return matches;
     }
     
     /**
