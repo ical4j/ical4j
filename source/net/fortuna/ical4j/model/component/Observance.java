@@ -299,10 +299,10 @@ public abstract class Observance extends Component implements Comparable {
      * @return a cached onset date or null if no cached onset is applicable for the specified date
      */
     private Date getCachedOnset(final Date date) {
-        for (final Iterator i = onsets.keySet().iterator(); i.hasNext();) {
-            final Period onsetPeriod = (Period) i.next();
-            if (onsetPeriod.includes(date, Period.INCLUSIVE_START)) {
-                return (Date) onsets.get(onsetPeriod);
+        for (final Iterator i = onsets.entrySet().iterator(); i.hasNext();) {
+            final Map.Entry entry = (Map.Entry)i.next();
+            if (((Period)entry.getKey()).includes(date, Period.INCLUSIVE_START)) {
+                return (Date) entry.getValue();
             }
         }
         return null;
