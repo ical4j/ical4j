@@ -283,6 +283,9 @@ public final class Dates {
      * @return a round time value
      */
     public static long round(final long time, final int precision, final TimeZone tz) {
+        if ((precision == PRECISION_SECOND) && ((time % Dates.MILLIS_PER_SECOND) == 0)) {
+            return time;
+        }
         final Calendar cal = Calendar.getInstance(tz);
         cal.setTimeInMillis(time);
         if (precision == PRECISION_DAY) {
