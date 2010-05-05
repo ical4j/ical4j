@@ -88,6 +88,7 @@ public class TimeZoneTest extends TestCase {
      */
     public TimeZoneTest(String testMethod, String timezoneId) {
         super(testMethod);
+        // java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("America/Los_Angeles"));
         registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         tz = java.util.TimeZone.getTimeZone(timezoneId);
         timezone = registry.getTimeZone(timezoneId);
@@ -350,6 +351,11 @@ public class TimeZoneTest extends TestCase {
         //testHonoluluPreHistoricOffset..
         cal = new GregorianCalendar(1800, 0, 1);
 //        suite.addTest(new TimeZoneTest("testGetOffset", "Pacific/Honolulu", cal.getTime(), GMT_MINUS_103126));
+        cal = Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"));
+        cal.set(2010, 9, 30, 4, 0, 0);
+        suite.addTest(new TimeZoneTest("testInDaylightTime", "Europe/Paris", cal.getTime(), true));
+        cal.set(2010, 9, 31, 4, 0, 0);
+        suite.addTest(new TimeZoneTest("testInDaylightTime", "Europe/Paris", cal.getTime(), false));
 
         return suite;
     }
