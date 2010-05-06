@@ -230,7 +230,13 @@ public class RecurTest extends TestCase {
      */
     public void testGetDatesCalendarField() {
         DateList dates = recur.getDates(periodStart, periodEnd, value);
-        Calendar cal = Calendar.getInstance();
+        Calendar cal;
+        if ((value != null) && (value == Value.DATE)) {
+            cal = Calendar.getInstance(TimeZones.getDateTimeZone());
+        } else {
+            cal = Calendar.getInstance();
+        }
+         
         for (Iterator i = dates.iterator(); i.hasNext();) {
             Date recurrence = (Date) i.next();
             cal.setTime(recurrence);
@@ -532,7 +538,7 @@ public class RecurTest extends TestCase {
      */
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
-        
+
         // testGetDates..
         Recur recur = new Recur(Recur.DAILY, 10);
         recur.setInterval(2);
