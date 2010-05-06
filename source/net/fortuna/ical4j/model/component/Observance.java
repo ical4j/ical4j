@@ -169,7 +169,7 @@ public abstract class Observance extends Component implements Comparable {
         
         if (initialOnset == null) {
             try {
-                initialOnset = calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate());
+                initialOnset = applyOffsetFrom(calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate()));
             } catch (ParseException e) {
                 log.error("Unexpected error calculating initial onset", e);
                 // XXX: is this correct?
@@ -189,14 +189,24 @@ public abstract class Observance extends Component implements Comparable {
             rdatesCached = false;
         }
 
-        Date onset = getCachedOnset(date);
+        DateTime onset = getCachedOnset(date);
 
         final boolean cacheHit = onset != null;
         
         if (onset == null) {
-            onset = initialOnset;
+            // get first onset without adding TZFROM as this may lead to a day boundary
+            // change which would be incompatible with BYDAY RRULES
+            // we will have to add the offset to all cacheable onsets
+            try {
+                onset = calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate());
+            } catch (ParseException e) {
+                log.error("Unexpected error calculating initial onset", e);
+                // XXX: is this correct?
+                return null;
+            }
             // collect all onsets for the purposes of caching..
             final DateList cacheableOnsets = new DateList();
+            cacheableOnsets.setUtc(true);
             // Date nextOnset = null;
 
             if (!rdatesCached) {
@@ -206,7 +216,7 @@ public abstract class Observance extends Component implements Comparable {
                     final RDate rdate = (RDate) i.next();
                     for (final Iterator j = rdate.getDates().iterator(); j.hasNext();) {
                         try {
-                            final Date rdateOnset = calculateOnset((Date) j.next());
+                            final DateTime rdateOnset = applyOffsetFrom(calculateOnset((Date) j.next()));
                             if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
                                 onset = rdateOnset;
                             }
@@ -225,24 +235,17 @@ public abstract class Observance extends Component implements Comparable {
 
             // check recurrence rules for latest applicable onset..
             final PropertyList rrules = getProperties(Property.RRULE);
-            Value dateType;
-            if (date instanceof DateTime) {
-                dateType = Value.DATE_TIME;
-            }
-            else {
-                dateType = Value.DATE;
-            }
             for (final Iterator i = rrules.iterator(); i.hasNext();) {
                 final RRule rrule = (RRule) i.next();
                 // include future onsets to determine onset period..
                 final Calendar cal = Dates.getCalendarInstance(date);
                 cal.setTime(date);
                 cal.add(Calendar.YEAR, 10);
-                onsetLimit = Dates.getInstance(cal.getTime(), dateType);
+                onsetLimit = Dates.getInstance(cal.getTime(), Value.DATE_TIME);
                 final DateList recurrenceDates = rrule.getRecur().getDates(onset,
-                         onsetLimit, dateType);
+                         onsetLimit, Value.DATE_TIME);
                 for (final Iterator j = recurrenceDates.iterator(); j.hasNext();) {
-                    final Date rruleOnset = (Date) j.next();
+                    final DateTime rruleOnset = applyOffsetFrom((DateTime) j.next());
                     if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
                         onset = rruleOnset;
                     }
@@ -256,14 +259,13 @@ public abstract class Observance extends Component implements Comparable {
 
             // cache onsets..
             Collections.sort(cacheableOnsets);
-            Date cacheableOnset = null;
-            Date nextOnset = null;
+            DateTime cacheableOnset = null;
+            DateTime nextOnset = null;
             for (final Iterator i = cacheableOnsets.iterator(); i.hasNext();) {
                 cacheableOnset = nextOnset;
-                nextOnset = (Date) i.next();
+                nextOnset = (DateTime) i.next();
                 if (cacheableOnset != null) {
-                    onsets.put(new Period(new DateTime(cacheableOnset),
-                            new DateTime(nextOnset)), cacheableOnset);
+                    onsets.put(new Period(cacheableOnset, nextOnset), cacheableOnset);
                 }
             }
 
@@ -273,7 +275,7 @@ public abstract class Observance extends Component implements Comparable {
                 final Calendar finalOnsetPeriodEnd = Calendar.getInstance();
                 finalOnsetPeriodEnd.setTime(nextOnset);
                 finalOnsetPeriodEnd.add(Calendar.YEAR, 100);
-                onsets.put(new Period(new DateTime(nextOnset), new DateTime(
+                onsets.put(new Period(nextOnset, new DateTime(
                         finalOnsetPeriodEnd.getTime())), nextOnset);
             }
 
@@ -298,11 +300,11 @@ public abstract class Observance extends Component implements Comparable {
      * @param date
      * @return a cached onset date or null if no cached onset is applicable for the specified date
      */
-    private Date getCachedOnset(final Date date) {
+    private DateTime getCachedOnset(final Date date) {
         for (final Iterator i = onsets.entrySet().iterator(); i.hasNext();) {
             final Map.Entry entry = (Map.Entry)i.next();
             if (((Period)entry.getKey()).includes(date, Period.INCLUSIVE_START)) {
-                return (Date) entry.getValue();
+                return (DateTime) entry.getValue();
             }
         }
         return null;
@@ -367,25 +369,29 @@ public abstract class Observance extends Component implements Comparable {
 //        return calculateOnset(dateProperty.getValue());
 //    }
 //    
-    private Date calculateOnset(Date date) throws ParseException {
+    private DateTime calculateOnset(Date date) throws ParseException {
         return calculateOnset(date.toString());
     }
     
-    private Date calculateOnset(String dateStr) throws ParseException {
+    private DateTime calculateOnset(String dateStr) throws ParseException {
         
         // Translate local onset into UTC time by parsing local time 
-        // as GMT and adjusting by TZOFFSETFROM
-//        try {
-            java.util.Date utcOnset = null;
+        // as GMT and adjusting by TZOFFSETFROM if required
+        long utcOnset;
        
-            synchronized(UTC_FORMAT) {
-                utcOnset = UTC_FORMAT.parse(dateStr);
-            }
-            
-            final long offset = getOffsetFrom().getOffset().getOffset();
-            return new DateTime(utcOnset.getTime() - offset);
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
+        synchronized (UTC_FORMAT) {
+            utcOnset = UTC_FORMAT.parse(dateStr).getTime();
+        }
+
+        // return a UTC
+        DateTime onset = new DateTime(true);
+        onset.setTime(utcOnset);
+        return onset;
+    }
+
+    private DateTime applyOffsetFrom(DateTime orig) {
+        DateTime withOffset = new DateTime(true);
+        withOffset.setTime(orig.getTime() - getOffsetFrom().getOffset().getOffset());
+        return withOffset;
     }
 }
