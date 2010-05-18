@@ -55,7 +55,8 @@ public class TimeZone extends java.util.TimeZone {
     
     private static final long serialVersionUID = -5620979316746547234L;
     
-    private VTimeZone vTimeZone;
+    private final VTimeZone vTimeZone;
+    private final int rawOffset;
     
     /**
      * Constructs a new instance based on the specified VTimeZone.
@@ -65,6 +66,7 @@ public class TimeZone extends java.util.TimeZone {
         this.vTimeZone = vTimeZone;
         final TzId tzId = (TzId) vTimeZone.getProperty(Property.TZID);
         setID(tzId.getValue());
+        this.rawOffset = getRawOffset(vTimeZone);
     }
 
     /**
@@ -92,20 +94,7 @@ public class TimeZone extends java.util.TimeZone {
      * {@inheritDoc}
      */
     public final int getRawOffset() {
-        List seasonalTimes = vTimeZone.getObservances().getComponents(Observance.STANDARD);
-        // if no standard time use daylight time..
-        if (seasonalTimes.size() == 0) {
-            seasonalTimes = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
-        }
-        if (seasonalTimes.size() > 0) {
-            Collections.sort(seasonalTimes);
-            final Component latestSeasonalTime = (Component) seasonalTimes.get(seasonalTimes.size() - 1);
-            final TzOffsetTo offsetTo = (TzOffsetTo) latestSeasonalTime.getProperty(Property.TZOFFSETTO);
-            if (offsetTo != null) {
-                return (int) offsetTo.getOffset().getOffset();
-            }
-        }
-        return 0;
+        return rawOffset;
     }
 
     /**
@@ -141,5 +130,22 @@ public class TimeZone extends java.util.TimeZone {
      */
     public final VTimeZone getVTimeZone() {
         return vTimeZone;
+    }
+
+    private static final int getRawOffset(VTimeZone vt) {
+        List seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
+        // if no standard time use daylight time..
+        if (seasonalTimes.size() == 0) {
+            seasonalTimes = vt.getObservances().getComponents(Observance.DAYLIGHT);
+        }
+        if (seasonalTimes.size() > 0) {
+            Collections.sort(seasonalTimes);
+            final Component latestSeasonalTime = (Component) seasonalTimes.get(seasonalTimes.size() - 1);
+            final TzOffsetTo offsetTo = (TzOffsetTo) latestSeasonalTime.getProperty(Property.TZOFFSETTO);
+            if (offsetTo != null) {
+                return (int) offsetTo.getOffset().getOffset();
+            }
+        }
+        return 0;
     }
 }
