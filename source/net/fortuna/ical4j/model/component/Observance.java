@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
@@ -90,6 +91,8 @@ public abstract class Observance extends Component implements Comparable {
     private transient Log log = LogFactory.getLog(Observance.class);
 
     // TODO: clear cache when observance definition changes (??)
+    private long[] onsetsMillisec;
+    private DateTime[] onsetsDates;
     private Map onsets = new TreeMap();
     private Date initialOnset = null;
     
@@ -107,8 +110,6 @@ public abstract class Observance extends Component implements Comparable {
 
     /* If this is set we have rrules. If we get a date after this rebuild onsets */
     private Date onsetLimit;
-
-    private boolean rdatesCached = false;
 
     /**
      * Constructs a timezone observance with the specified name and no properties.
@@ -182,114 +183,82 @@ public abstract class Observance extends Component implements Comparable {
             return null;
         }
 
-        final long start = System.currentTimeMillis();
-
-        if ((onsetLimit != null) && (date.after(onsetLimit))) {
-            onsets.clear();
-            rdatesCached = false;
+        if ((onsetsMillisec != null) && (onsetLimit == null || date.before(onsetLimit))) {
+            return getCachedOnset(date);
         }
 
-        DateTime onset = getCachedOnset(date);
+        Date onset = initialOnset;
+        Date initialOnsetUTC;
+        // get first onset without adding TZFROM as this may lead to a day boundary
+        // change which would be incompatible with BYDAY RRULES
+        // we will have to add the offset to all cacheable onsets
+        try {
+            initialOnsetUTC = calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate());
+        } catch (ParseException e) {
+            log.error("Unexpected error calculating initial onset", e);
+            // XXX: is this correct?
+            return null;
+        }
+        // collect all onsets for the purposes of caching..
+        final DateList cacheableOnsets = new DateList();
+        cacheableOnsets.setUtc(true);
+        cacheableOnsets.add(initialOnset);
 
-        final boolean cacheHit = onset != null;
-        
-        if (onset == null) {
-            // get first onset without adding TZFROM as this may lead to a day boundary
-            // change which would be incompatible with BYDAY RRULES
-            // we will have to add the offset to all cacheable onsets
-            try {
-                onset = calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate());
-            } catch (ParseException e) {
-                log.error("Unexpected error calculating initial onset", e);
-                // XXX: is this correct?
-                return null;
-            }
-            // collect all onsets for the purposes of caching..
-            final DateList cacheableOnsets = new DateList();
-            cacheableOnsets.setUtc(true);
-            // Date nextOnset = null;
-
-            if (!rdatesCached) {
-                // check rdates for latest applicable onset..
-                final PropertyList rdates = getProperties(Property.RDATE);
-                for (final Iterator i = rdates.iterator(); i.hasNext();) {
-                    final RDate rdate = (RDate) i.next();
-                    for (final Iterator j = rdate.getDates().iterator(); j.hasNext();) {
-                        try {
-                            final DateTime rdateOnset = applyOffsetFrom(calculateOnset((Date) j.next()));
-                            if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
-                                onset = rdateOnset;
-                            }
-                            /*
-                             * else if (rdateOnset.after(date) && rdateOnset.after(onset) && (nextOnset == null ||
-                             * rdateOnset.before(nextOnset))) { nextOnset = rdateOnset; }
-                             */
-                            cacheableOnsets.add(rdateOnset);
-                        } catch (ParseException e) {
-                            log.error("Unexpected error calculating onset", e);
-                        }
-                    }
-                }
-                rdatesCached = true;
-            }
-
-            // check recurrence rules for latest applicable onset..
-            final PropertyList rrules = getProperties(Property.RRULE);
-            for (final Iterator i = rrules.iterator(); i.hasNext();) {
-                final RRule rrule = (RRule) i.next();
-                // include future onsets to determine onset period..
-                final Calendar cal = Dates.getCalendarInstance(date);
-                cal.setTime(date);
-                cal.add(Calendar.YEAR, 10);
-                onsetLimit = Dates.getInstance(cal.getTime(), Value.DATE_TIME);
-                final DateList recurrenceDates = rrule.getRecur().getDates(onset,
-                         onsetLimit, Value.DATE_TIME);
-                for (final Iterator j = recurrenceDates.iterator(); j.hasNext();) {
-                    final DateTime rruleOnset = applyOffsetFrom((DateTime) j.next());
-                    if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
-                        onset = rruleOnset;
+        // check rdates for latest applicable onset..
+        final PropertyList rdates = getProperties(Property.RDATE);
+        for (final Iterator i = rdates.iterator(); i.hasNext();) {
+            final RDate rdate = (RDate) i.next();
+            for (final Iterator j = rdate.getDates().iterator(); j.hasNext();) {
+                try {
+                    final DateTime rdateOnset = applyOffsetFrom(calculateOnset((Date) j.next()));
+                    if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
+                        onset = rdateOnset;
                     }
                     /*
-                     * else if (rruleOnset.after(date) && rruleOnset.after(onset) && (nextOnset == null ||
-                     * rruleOnset.before(nextOnset))) { nextOnset = rruleOnset; }
+                     * else if (rdateOnset.after(date) && rdateOnset.after(onset) && (nextOnset == null ||
+                     * rdateOnset.before(nextOnset))) { nextOnset = rdateOnset; }
                      */
-                    cacheableOnsets.add(rruleOnset);
+                    cacheableOnsets.add(rdateOnset);
+                } catch (ParseException e) {
+                    log.error("Unexpected error calculating onset", e);
                 }
             }
-
-            // cache onsets..
-            Collections.sort(cacheableOnsets);
-            DateTime cacheableOnset = null;
-            DateTime nextOnset = null;
-            for (final Iterator i = cacheableOnsets.iterator(); i.hasNext();) {
-                cacheableOnset = nextOnset;
-                nextOnset = (DateTime) i.next();
-                if (cacheableOnset != null) {
-                    onsets.put(new Period(cacheableOnset, nextOnset), cacheableOnset);
-                }
-            }
-
-            // as we don't have an onset following the final onset, we must
-            // cache it with an arbitrary period length..
-            if (nextOnset != null) {
-                final Calendar finalOnsetPeriodEnd = Calendar.getInstance();
-                finalOnsetPeriodEnd.setTime(nextOnset);
-                finalOnsetPeriodEnd.add(Calendar.YEAR, 100);
-                onsets.put(new Period(nextOnset, new DateTime(
-                        finalOnsetPeriodEnd.getTime())), nextOnset);
-            }
-
-            /*
-             * Period onsetPeriod = null; if (nextOnset != null) { onsetPeriod = new Period(new DateTime(onset), new
-             * DateTime(nextOnset)); } else { onsetPeriod = new Period(new DateTime(onset), new DateTime(date)); }
-             * onsets.put(onsetPeriod, onset);
-             */
         }
-        
-        if (log.isTraceEnabled()) {
-            log.trace("Cache " + (cacheHit ? "hit" : "miss")
-                    + " - retrieval time: "
-                    + (System.currentTimeMillis() - start) + "ms");
+
+        // check recurrence rules for latest applicable onset..
+        final PropertyList rrules = getProperties(Property.RRULE);
+        for (final Iterator i = rrules.iterator(); i.hasNext();) {
+            final RRule rrule = (RRule) i.next();
+            // include future onsets to determine onset period..
+            final Calendar cal = Dates.getCalendarInstance(date);
+            cal.setTime(date);
+            cal.add(Calendar.YEAR, 10);
+            onsetLimit = Dates.getInstance(cal.getTime(), Value.DATE_TIME);
+            final DateList recurrenceDates = rrule.getRecur().getDates(initialOnsetUTC,
+                    onsetLimit, Value.DATE_TIME);
+            for (final Iterator j = recurrenceDates.iterator(); j.hasNext();) {
+                final DateTime rruleOnset = applyOffsetFrom((DateTime) j.next());
+                if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
+                    onset = rruleOnset;
+                }
+                /*
+                 * else if (rruleOnset.after(date) && rruleOnset.after(onset) && (nextOnset == null ||
+                 * rruleOnset.before(nextOnset))) { nextOnset = rruleOnset; }
+                 */
+                cacheableOnsets.add(rruleOnset);
+            }
+        }
+
+        // cache onsets..
+        Collections.sort(cacheableOnsets);
+        DateTime cacheableOnset = null;
+        this.onsetsMillisec = new long[cacheableOnsets.size()];
+        this.onsetsDates = new DateTime[onsetsMillisec.length];
+
+        for (int i = 0; i < onsetsMillisec.length; i++) {
+            cacheableOnset = (DateTime)cacheableOnsets.get(i);
+            onsetsMillisec[i] = cacheableOnset.getTime();
+            onsetsDates[i] = cacheableOnset;
         }
 
         return onset;
@@ -301,13 +270,13 @@ public abstract class Observance extends Component implements Comparable {
      * @return a cached onset date or null if no cached onset is applicable for the specified date
      */
     private DateTime getCachedOnset(final Date date) {
-        for (final Iterator i = onsets.entrySet().iterator(); i.hasNext();) {
-            final Map.Entry entry = (Map.Entry)i.next();
-            if (((Period)entry.getKey()).includes(date, Period.INCLUSIVE_START)) {
-                return (DateTime) entry.getValue();
-            }
+        int index = Arrays.binarySearch(onsetsMillisec, date.getTime());
+        if (index >= 0) {
+            return onsetsDates[index];
+        } else {
+            int insertionIndex = -index -1;
+            return onsetsDates[insertionIndex -1];
         }
-        return null;
     }
 
     /**
