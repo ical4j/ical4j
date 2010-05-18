@@ -209,7 +209,14 @@ public class UnfoldingReader extends PushbackReader {
             didUnfold = false;
 
             for (int i = 0; i < buffers.length; i++) {
-                final int read = super.read(buffers[i], 0, buffers[i].length);
+                int read = 0;             
+                while (read < buffers[i].length) {
+                    final int partialRead = super.read(buffers[i], read, buffers[i].length - read);
+                    if (partialRead < 0) {
+                        break;
+                    }
+                    read += partialRead;
+                }
                 if (read > 0) {
                     if (!Arrays.equals(patterns[i], buffers[i])) {
                         unread(buffers[i], 0, read);
