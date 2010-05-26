@@ -51,7 +51,9 @@ public class WeekDayTest extends TestCase {
 
     public void testGetWeekDay() {
         Calendar cal = Calendar.getInstance();
-        log.info("Weekday: " + WeekDay.getWeekDay(cal));
+        cal.setLenient(false);
+        cal.set(2010, 4, 26, 12, 0);
+        assertEquals(WeekDay.WE, WeekDay.getWeekDay(cal));
     }
 
     public void testGetMonthlyOffset() {

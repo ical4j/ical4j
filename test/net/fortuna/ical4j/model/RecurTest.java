@@ -539,6 +539,8 @@ public class RecurTest extends TestCase {
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
 
+        // java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Europe/Paris"));
+
         // testGetDates..
         Recur recur = new Recur(Recur.DAILY, 10);
         recur.setInterval(2);
