@@ -963,7 +963,7 @@ public class Recur implements Serializable {
                 // if BYYEARDAY or BYMONTHDAY is specified filter existing
                 // list..
                 if (!getYearDayList().isEmpty() || !getMonthDayList().isEmpty()) {
-                    final Calendar cal = Calendar.getInstance();
+                    final Calendar cal = Dates.getCalendarInstance(date);
                     cal.setTime(date);
                     if (weekDay.equals(WeekDay.getWeekDay(cal))) {
                         weekDayDates.add(date);
