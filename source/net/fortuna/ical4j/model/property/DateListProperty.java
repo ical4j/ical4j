@@ -95,7 +95,7 @@ public abstract class DateListProperty extends Property {
         super(name, parameters, factory);
         this.dates = dates;
         if (dates != null && !Value.DATE_TIME.equals(dates.getType())) {
-            getParameters().add(dates.getType());
+            getParameters().replace(dates.getType());
         }
     }
 
