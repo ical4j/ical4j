@@ -63,6 +63,10 @@ public class DateTimeTest extends TestCase {
     private DateTime dateTime;
     
     private String expectedToString;
+
+    // static {
+        // TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
+    // }
     
     /**
      * @param testMethod
@@ -203,6 +207,7 @@ public class DateTimeTest extends TestCase {
         suite.addTest(new DateTimeTest(new DateTime("20070101T080000"), "20070101T080000"));
         suite.addTest(new DateTimeTest(new DateTime("20050630T093000"), "20050630T093000"));
         suite.addTest(new DateTimeTest(new DateTime("20050630T093000Z"), "20050630T093000Z"));
+        suite.addTest(new DateTimeTest(new DateTime("19390901T000000"), "19390901T000000"));
         
         suite.addTest(new DateTimeTest(new DateTime("20000402T020000",
                 registry.getTimeZone("Australia/Melbourne")), "20000402T020000"));
