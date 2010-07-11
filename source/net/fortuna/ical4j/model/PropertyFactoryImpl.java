@@ -111,905 +111,849 @@ public class PropertyFactoryImpl extends AbstractContentFactory implements Prope
      * Constructor made private to prevent instantiation.
      */
     protected PropertyFactoryImpl() {
-        registerDefaultFactory(Property.ACTION, createActionFactory());
-        registerDefaultFactory(Property.ATTACH, createAttachFactory());
-        registerDefaultFactory(Property.ATTENDEE, createAttendeeFactory());
-        registerDefaultFactory(Property.CALSCALE, createCalScaleFactory());
-        registerDefaultFactory(Property.CATEGORIES, createCategoriesFactory());
-        registerDefaultFactory(Property.CLASS, createClazzFactory());
-        registerDefaultFactory(Property.COMMENT, createCommentFactory());
-        registerDefaultFactory(Property.COMPLETED, createCompletedFactory());
-        registerDefaultFactory(Property.CONTACT, createContactFactory());
-        registerDefaultFactory(Property.COUNTRY, createCountryFactory());
-        registerDefaultFactory(Property.CREATED, createCreatedFactory());
-        registerDefaultFactory(Property.DESCRIPTION, createDescriptionFactory());
-        registerDefaultFactory(Property.DTEND, createDtEndFactory());
-        registerDefaultFactory(Property.DTSTAMP, createDtStampFactory());
-        registerDefaultFactory(Property.DTSTART, createDtStartFactory());
-        registerDefaultFactory(Property.DUE, createDueFactory());
-        registerDefaultFactory(Property.DURATION, createDurationFactory());
-        registerDefaultFactory(Property.EXDATE, createExDateFactory());
-        registerDefaultFactory(Property.EXRULE, createExRuleFactory());
-        registerDefaultFactory(Property.EXTENDED_ADDRESS, createExtendedAddressFactory());
-        registerDefaultFactory(Property.FREEBUSY, createFreeBusyFactory());
-        registerDefaultFactory(Property.GEO, createGeoFactory());
-        registerDefaultFactory(Property.LAST_MODIFIED, createLastModifiedFactory());
-        registerDefaultFactory(Property.LOCALITY, createLocalityFactory());
-        registerDefaultFactory(Property.LOCATION, createLocationFactory());
-        registerDefaultFactory(Property.LOCATION_TYPE, createLocationTypeFactory());
-        registerDefaultFactory(Property.METHOD, createMethodFactory());
-        registerDefaultFactory(Property.NAME, createNameFactory());
-        registerDefaultFactory(Property.ORGANIZER, createOrganizerFactory());
-        registerDefaultFactory(Property.PERCENT_COMPLETE, createPercentCompleteFactory());
-        registerDefaultFactory(Property.POSTALCODE, createPostalcodeFactory());
-        registerDefaultFactory(Property.PRIORITY, createPriorityFactory());
-        registerDefaultFactory(Property.PRODID, createProdIdFactory());
-        registerDefaultFactory(Property.RDATE, createRDateFactory());
-        registerDefaultFactory(Property.RECURRENCE_ID, createRecurrenceIdFactory());
-        registerDefaultFactory(Property.REGION, createRegionFactory());
-        registerDefaultFactory(Property.RELATED_TO, createRelatedToFactory());
-        registerDefaultFactory(Property.REPEAT, createRepeatFactory());
-        registerDefaultFactory(Property.REQUEST_STATUS, createRequestStatusFactory());
-        registerDefaultFactory(Property.RESOURCES, createResourcesFactory());
-        registerDefaultFactory(Property.RRULE, createRRuleFactory());
-        registerDefaultFactory(Property.SEQUENCE, createSequenceFactory());
-        registerDefaultFactory(Property.STATUS, createStatusFactory());
-        registerDefaultFactory(Property.STREET_ADDRESS, createStreetAddressFactory());
-        registerDefaultFactory(Property.SUMMARY, createSummaryFactory());
-        registerDefaultFactory(Property.TEL, createTelFactory());
-        registerDefaultFactory(Property.TRANSP, createTranspFactory());
-        registerDefaultFactory(Property.TRIGGER, createTriggerFactory());
-        registerDefaultFactory(Property.TZID, createTzIdFactory());
-        registerDefaultFactory(Property.TZNAME, createTzNameFactory());
-        registerDefaultFactory(Property.TZOFFSETFROM, createTzOffsetFromFactory());
-        registerDefaultFactory(Property.TZOFFSETTO, createTzOffsetToFactory());
-        registerDefaultFactory(Property.TZURL, createTzUrlFactory());
-        registerDefaultFactory(Property.UID, createUidFactory());
-        registerDefaultFactory(Property.URL, createUrlFactory());
-        registerDefaultFactory(Property.VERSION, createVersionFactory());
+        registerDefaultFactory(Property.ACTION, new ActionFactory());
+        registerDefaultFactory(Property.ATTACH, new AttachFactory());
+        registerDefaultFactory(Property.ATTENDEE, new AttendeeFactory());
+        registerDefaultFactory(Property.CALSCALE, new CalScaleFactory());
+        registerDefaultFactory(Property.CATEGORIES, new CategoriesFactory());
+        registerDefaultFactory(Property.CLASS, new ClazzFactory());
+        registerDefaultFactory(Property.COMMENT, new CommentFactory());
+        registerDefaultFactory(Property.COMPLETED, new CompletedFactory());
+        registerDefaultFactory(Property.CONTACT, new ContactFactory());
+        registerDefaultFactory(Property.COUNTRY, new CountryFactory());
+        registerDefaultFactory(Property.CREATED, new CreatedFactory());
+        registerDefaultFactory(Property.DESCRIPTION, new DescriptionFactory());
+        registerDefaultFactory(Property.DTEND, new DtEndFactory());
+        registerDefaultFactory(Property.DTSTAMP, new DtStampFactory());
+        registerDefaultFactory(Property.DTSTART, new DtStartFactory());
+        registerDefaultFactory(Property.DUE, new DueFactory());
+        registerDefaultFactory(Property.DURATION, new DurationFactory());
+        registerDefaultFactory(Property.EXDATE, new ExDateFactory());
+        registerDefaultFactory(Property.EXRULE, new ExRuleFactory());
+        registerDefaultFactory(Property.EXTENDED_ADDRESS, new ExtendedAddressFactory());
+        registerDefaultFactory(Property.FREEBUSY, new FreeBusyFactory());
+        registerDefaultFactory(Property.GEO, new GeoFactory());
+        registerDefaultFactory(Property.LAST_MODIFIED, new LastModifiedFactory());
+        registerDefaultFactory(Property.LOCALITY, new LocalityFactory());
+        registerDefaultFactory(Property.LOCATION, new LocationFactory());
+        registerDefaultFactory(Property.LOCATION_TYPE, new LocationTypeFactory());
+        registerDefaultFactory(Property.METHOD, new MethodFactory());
+        registerDefaultFactory(Property.NAME, new NameFactory());
+        registerDefaultFactory(Property.ORGANIZER, new OrganizerFactory());
+        registerDefaultFactory(Property.PERCENT_COMPLETE, new PercentCompleteFactory());
+        registerDefaultFactory(Property.POSTALCODE, new PostalcodeFactory());
+        registerDefaultFactory(Property.PRIORITY, new PriorityFactory());
+        registerDefaultFactory(Property.PRODID, new ProdIdFactory());
+        registerDefaultFactory(Property.RDATE, new RDateFactory());
+        registerDefaultFactory(Property.RECURRENCE_ID, new RecurrenceIdFactory());
+        registerDefaultFactory(Property.REGION, new RegionFactory());
+        registerDefaultFactory(Property.RELATED_TO, new RelatedToFactory());
+        registerDefaultFactory(Property.REPEAT, new RepeatFactory());
+        registerDefaultFactory(Property.REQUEST_STATUS, new RequestStatusFactory());
+        registerDefaultFactory(Property.RESOURCES, new ResourcesFactory());
+        registerDefaultFactory(Property.RRULE, new RRuleFactory());
+        registerDefaultFactory(Property.SEQUENCE, new SequenceFactory());
+        registerDefaultFactory(Property.STATUS, new StatusFactory());
+        registerDefaultFactory(Property.STREET_ADDRESS, new StreetAddressFactory());
+        registerDefaultFactory(Property.SUMMARY, new SummaryFactory());
+        registerDefaultFactory(Property.TEL, new TelFactory());
+        registerDefaultFactory(Property.TRANSP, new TranspFactory());
+        registerDefaultFactory(Property.TRIGGER, new TriggerFactory());
+        registerDefaultFactory(Property.TZID, new TzIdFactory());
+        registerDefaultFactory(Property.TZNAME, new TzNameFactory());
+        registerDefaultFactory(Property.TZOFFSETFROM, new TzOffsetFromFactory());
+        registerDefaultFactory(Property.TZOFFSETTO, new TzOffsetToFactory());
+        registerDefaultFactory(Property.TZURL, new TzUrlFactory());
+        registerDefaultFactory(Property.UID, new UidFactory());
+        registerDefaultFactory(Property.URL, new UrlFactory());
+        registerDefaultFactory(Property.VERSION, new VersionFactory());
     }
 
-    private PropertyFactory createActionFactory() {
-        return new PropertyFactory() {
+    private static class ActionFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Action(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Action(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Action();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Action();
+        }
     }
 
-    private PropertyFactory createAttachFactory() {
-        return new PropertyFactory() {
+    private static class AttachFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Attach(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Attach(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Attach();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Attach();
+        }
     }
 
-    private PropertyFactory createAttendeeFactory() {
-        return new PropertyFactory() {
+    private static class AttendeeFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Attendee(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Attendee(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Attendee();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Attendee();
+        }
     }
 
-    private PropertyFactory createCalScaleFactory() {
-        return new PropertyFactory() {
+    private static class CalScaleFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new CalScale(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new CalScale(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new CalScale();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new CalScale();
+        }
     }
 
-    private PropertyFactory createCategoriesFactory() {
-        return new PropertyFactory() {
+    private static class CategoriesFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Categories(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Categories(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Categories();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Categories();
+        }
     }
 
-    private PropertyFactory createClazzFactory() {
-        return new PropertyFactory() {
+    private static class ClazzFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Clazz(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Clazz(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Clazz();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Clazz();
+        }
     }
 
-    private PropertyFactory createCommentFactory() {
-        return new PropertyFactory() {
+    private static class CommentFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Comment(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Comment(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Comment();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Comment();
+        }
     }
 
-    private PropertyFactory createCompletedFactory() {
-        return new PropertyFactory() {
+    private static class CompletedFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Completed(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Completed(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Completed();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Completed();
+        }
     }
 
-    private PropertyFactory createContactFactory() {
-        return new PropertyFactory() {
+    private static class ContactFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Contact(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Contact(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Contact();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Contact();
+        }
     }
 
-    private PropertyFactory createCountryFactory() {
-        return new PropertyFactory() {
+    private static class CountryFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Country(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Country(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Country();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Country();
+        }
     }
 
-    private PropertyFactory createCreatedFactory() {
-        return new PropertyFactory() {
+    private static class CreatedFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Created(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Created(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Created();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Created();
+        }
     }
 
-    private PropertyFactory createDescriptionFactory() {
-        return new PropertyFactory() {
+    private static class DescriptionFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Description(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Description(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Description();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Description();
+        }
     }
 
-    private PropertyFactory createDtEndFactory() {
-        return new PropertyFactory() {
+    private static class DtEndFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new DtEnd(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new DtEnd(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new DtEnd();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new DtEnd();
+        }
     }
 
-    private PropertyFactory createDtStampFactory() {
-        return new PropertyFactory() {
+    private static class DtStampFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new DtStamp(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new DtStamp(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new DtStamp();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new DtStamp();
+        }
     }
 
     /**
      * @return
      */
-    private PropertyFactory createDtStartFactory() {
-        return new PropertyFactory() {
+    private static class DtStartFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new DtStart(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new DtStart(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new DtStart();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new DtStart();
+        }
     }
 
-    private PropertyFactory createDueFactory() {
-        return new PropertyFactory() {
+    private static class DueFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Due(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Due(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Due();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Due();
+        }
     }
 
-    private PropertyFactory createDurationFactory() {
-        return new PropertyFactory() {
+    private static class DurationFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Duration(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Duration(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Duration();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Duration();
+        }
     }
 
-    private PropertyFactory createExDateFactory() {
-        return new PropertyFactory() {
+    private static class ExDateFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new ExDate(parameters, value);
-            }
+        public Property createProperty(final String name,
+               final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new ExDate(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new ExDate();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new ExDate();
+        }
     }
 
-    private PropertyFactory createExRuleFactory() {
-        return new PropertyFactory() {
+    private static class ExRuleFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new ExRule(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new ExRule(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new ExRule();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new ExRule();
+        }
     }
 
-    private PropertyFactory createExtendedAddressFactory() {
-        return new PropertyFactory() {
+    private static class ExtendedAddressFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new ExtendedAddress(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new ExtendedAddress(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new ExtendedAddress();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new ExtendedAddress();
+        }
     }
 
-    private PropertyFactory createFreeBusyFactory() {
-        return new PropertyFactory() {
+    private static class FreeBusyFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new FreeBusy(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new FreeBusy(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new FreeBusy();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new FreeBusy();
+        }
     }
 
-    private PropertyFactory createGeoFactory() {
-        return new PropertyFactory() {
+    private static class GeoFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Geo(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Geo(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Geo();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Geo();
+        }
     }
 
-    private PropertyFactory createLastModifiedFactory() {
-        return new PropertyFactory() {
+    private static class LastModifiedFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new LastModified(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new LastModified(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new LastModified();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new LastModified();
+        }
     }
 
-    private PropertyFactory createLocalityFactory() {
-        return new PropertyFactory() {
+    private static class LocalityFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Locality(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Locality(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Locality();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Locality();
+        }
     }
 
-    private PropertyFactory createLocationFactory() {
-        return new PropertyFactory() {
+    private static class LocationFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Location(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Location(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Location();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Location();
+        }
     }
 
-    private PropertyFactory createLocationTypeFactory() {
-        return new PropertyFactory() {
+    private static class LocationTypeFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new LocationType(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new LocationType(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new LocationType();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new LocationType();
+        }
     }
 
-    private PropertyFactory createMethodFactory() {
-        return new PropertyFactory() {
+    private static class MethodFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Method(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Method(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Method();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Method();
+        }
     }
 
-    private PropertyFactory createNameFactory() {
-        return new PropertyFactory() {
+    private static class NameFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Name(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Name(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Name();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Name();
+        }
     }
 
-    private PropertyFactory createOrganizerFactory() {
-        return new PropertyFactory() {
+    private static class OrganizerFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Organizer(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Organizer(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Organizer();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Organizer();
+        }
     }
 
-    private PropertyFactory createPercentCompleteFactory() {
-        return new PropertyFactory() {
+    private static class PercentCompleteFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new PercentComplete(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new PercentComplete(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new PercentComplete();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new PercentComplete();
+        }
     }
 
-    private PropertyFactory createPostalcodeFactory() {
-        return new PropertyFactory() {
+    private static class PostalcodeFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Postalcode(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Postalcode(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Postalcode();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Postalcode();
+        }
     }
 
-    private PropertyFactory createPriorityFactory() {
-        return new PropertyFactory() {
+    private static class PriorityFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Priority(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Priority(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Priority();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Priority();
+        }
     }
 
-    private PropertyFactory createProdIdFactory() {
-        return new PropertyFactory() {
+    private static class ProdIdFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new ProdId(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new ProdId(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new ProdId();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new ProdId();
+        }
     }
 
-    private PropertyFactory createRDateFactory() {
-        return new PropertyFactory() {
+    private static class RDateFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new RDate(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new RDate(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new RDate();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new RDate();
+        }
     }
 
-    private PropertyFactory createRecurrenceIdFactory() {
-        return new PropertyFactory() {
+    private static class RecurrenceIdFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new RecurrenceId(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new RecurrenceId(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new RecurrenceId();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new RecurrenceId();
+        }
     }
 
-    private PropertyFactory createRegionFactory() {
-        return new PropertyFactory() {
+    private static class RegionFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Region(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Region(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Region();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Region();
+        }
     }
 
-    private PropertyFactory createRelatedToFactory() {
-        return new PropertyFactory() {
+    private static class RelatedToFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new RelatedTo(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new RelatedTo(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new RelatedTo();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new RelatedTo();
+        }
     }
 
-    private PropertyFactory createRepeatFactory() {
-        return new PropertyFactory() {
+    private static class RepeatFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Repeat(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Repeat(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Repeat();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Repeat();
+        }
     }
 
-    private PropertyFactory createRequestStatusFactory() {
-        return new PropertyFactory() {
+    private static class RequestStatusFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new RequestStatus(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new RequestStatus(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new RequestStatus();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new RequestStatus();
+        }
     }
 
-    private PropertyFactory createResourcesFactory() {
-        return new PropertyFactory() {
+    private static class ResourcesFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Resources(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Resources(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Resources();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Resources();
+        }
     }
 
-    private PropertyFactory createRRuleFactory() {
-        return new PropertyFactory() {
+    private static class RRuleFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new RRule(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new RRule(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new RRule();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new RRule();
+        }
     }
 
-    private PropertyFactory createSequenceFactory() {
-        return new PropertyFactory() {
+    private static class SequenceFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Sequence(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Sequence(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Sequence();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Sequence();
+        }
     }
 
-    private PropertyFactory createStatusFactory() {
-        return new PropertyFactory() {
+    private static class StatusFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Status(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Status(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Status();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Status();
+        }
     }
 
-    private PropertyFactory createStreetAddressFactory() {
-        return new PropertyFactory() {
+    private static class StreetAddressFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new StreetAddress(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new StreetAddress(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new StreetAddress();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new StreetAddress();
+        }
     }
 
-    private PropertyFactory createSummaryFactory() {
-        return new PropertyFactory() {
+    private static class SummaryFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Summary(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Summary(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Summary();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Summary();
+        }
     }
 
-    private PropertyFactory createTelFactory() {
-        return new PropertyFactory() {
+    private static class TelFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Tel(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Tel(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Tel();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Tel();
+        }
     }
 
-    private PropertyFactory createTranspFactory() {
-        return new PropertyFactory() {
+    private static class TranspFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Transp(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Transp(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Transp();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Transp();
+        }
     }
 
-    private PropertyFactory createTriggerFactory() {
-        return new PropertyFactory() {
+    private static class TriggerFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Trigger(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Trigger(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Trigger();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Trigger();
+        }
     }
 
-    private PropertyFactory createTzIdFactory() {
-        return new PropertyFactory() {
+    private static class TzIdFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new TzId(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new TzId(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new TzId();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new TzId();
+        }
     }
 
-    private PropertyFactory createTzNameFactory() {
-        return new PropertyFactory() {
+    private static class TzNameFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new TzName(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new TzName(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new TzName();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new TzName();
+        }
     }
 
-    private PropertyFactory createTzOffsetFromFactory() {
-        return new PropertyFactory() {
+    private static class TzOffsetFromFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new TzOffsetFrom(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new TzOffsetFrom(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new TzOffsetFrom();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new TzOffsetFrom();
+        }
     }
 
-    private PropertyFactory createTzOffsetToFactory() {
-        return new PropertyFactory() {
+    private static class TzOffsetToFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new TzOffsetTo(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new TzOffsetTo(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new TzOffsetTo();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new TzOffsetTo();
+        }
     }
 
-    private PropertyFactory createTzUrlFactory() {
-        return new PropertyFactory() {
+    private static class TzUrlFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new TzUrl(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new TzUrl(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new TzUrl();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new TzUrl();
+        }
     }
 
-    private PropertyFactory createUidFactory() {
-        return new PropertyFactory() {
+    private static class UidFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Uid(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Uid(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Uid();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Uid();
+        }
     }
 
-    private PropertyFactory createUrlFactory() {
-        return new PropertyFactory() {
+    private static class UrlFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Url(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Url(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Url();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Url();
+        }
     }
 
-    private PropertyFactory createVersionFactory() {
-        return new PropertyFactory() {
+    private static class VersionFactory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
 
-            public Property createProperty(final String name,
-                    final ParameterList parameters, final String value)
-                    throws IOException, URISyntaxException, ParseException {
-                return new Version(parameters, value);
-            }
+        public Property createProperty(final String name,
+                final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Version(parameters, value);
+        }
 
-            public Property createProperty(final String name) {
-                return new Version();
-            }
-        };
+        public Property createProperty(final String name) {
+            return new Version();
+        }
     }
 
     /**
