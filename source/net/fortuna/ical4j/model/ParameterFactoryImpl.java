@@ -145,18 +145,24 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class AbbrevFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name, final String value) throws URISyntaxException {
             return new Abbrev(value);
         }
     }
     
     private static class AltRepFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name, final String value) throws URISyntaxException {
             return new AltRep(value);
         }
     }
     
     private static class CnFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             return new Cn(value);
@@ -164,6 +170,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class CuTypeFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name, final String value) throws URISyntaxException {
             CuType parameter = new CuType(value);
             if (CuType.INDIVIDUAL.equals(parameter)) {
@@ -186,6 +194,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class DelegatedFromFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             return new DelegatedFrom(value);
@@ -193,6 +203,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class DelegatedToFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             return new DelegatedTo(value);
@@ -200,6 +212,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class DirFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             return new Dir(value);
@@ -207,6 +221,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class EncodingFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             Encoding parameter = new Encoding(value);
@@ -221,6 +237,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class FmtTypeFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             return new FmtType(value);
@@ -228,6 +246,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class FbTypeFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             FbType parameter = new FbType(value);
@@ -248,6 +268,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class LanguageFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             return new Language(value);
@@ -255,6 +277,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class MemberFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             return new Member(value);
@@ -262,6 +286,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class PartStatFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             PartStat parameter = new PartStat(value);
@@ -291,6 +317,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class RangeFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             Range parameter = new Range(value);
@@ -305,6 +333,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class RelatedFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             Related parameter = new Related(value);
@@ -319,6 +349,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class RelTypeFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             RelType parameter = new RelType(value);
@@ -336,6 +368,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class RoleFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             Role parameter = new Role(value);
@@ -356,6 +390,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class RsvpFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             Rsvp parameter = new Rsvp(value);
@@ -370,6 +406,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class SentByFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             return new SentBy(value);
@@ -377,6 +415,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class VvenueFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name, final String value)
                 throws URISyntaxException {
             return new Vvenue(value);
@@ -384,6 +424,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class TypeFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             return new Type(value);
@@ -391,6 +433,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class TzIdFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             return new TzId(Strings.unescape(value));
@@ -398,6 +442,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
     
     private static class ValueFactory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
         public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             Value parameter = new Value(value);
