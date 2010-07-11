@@ -37,6 +37,8 @@ package net.fortuna.ical4j.model;
  */
 public final class PropertyFactoryRegistry extends PropertyFactoryImpl {
 
+    private static final long serialVersionUID = 3924903719847189199L;
+
     /**
      * @param name a non-standard property name
      * @param factory a factory for the non-standard property
