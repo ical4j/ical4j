@@ -190,7 +190,7 @@ import net.fortuna.ical4j.util.PropertyValidator;
  *
  * // repeat reminder four (4) more times every fifteen (15) minutes..
  * reminder.getProperties().add(new Repeat(4));
- * reminder.getProperties().add(new Duration(new Dur(0, 0, 15, 0));
+ * reminder.getProperties().add(new Duration(new Dur(0, 0, 15, 0)));
  *
  * // display a message..
  * reminder.getProperties().add(Action.DISPLAY);
