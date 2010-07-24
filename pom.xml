@@ -180,12 +180,12 @@
 				<artifactId>gmaven-plugin</artifactId>
 				<version>1.2</version>
 				<configuration>
-					<providerSelection>1.7</providerSelection>
+					<providerSelection>1.6</providerSelection>
 				</configuration>
 				<dependencies>
 					<dependency>
 						<groupId>org.codehaus.gmaven.runtime</groupId>
-						<artifactId>gmaven-runtime-1.7</artifactId>
+						<artifactId>gmaven-runtime-1.6</artifactId>
 						<version>1.2</version>
 						<exclusions>
 							<exclusion>
@@ -197,7 +197,7 @@
 					<dependency>
 						<groupId>org.codehaus.groovy</groupId>
 						<artifactId>groovy-all</artifactId>
-						<version>1.7.1</version>
+						<version>1.6.9</version>
 					</dependency>
 				</dependencies>
 				<executions>
@@ -245,7 +245,7 @@
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-all</artifactId>
-			<version>1.7.1</version>
+			<version>1.6.9</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
