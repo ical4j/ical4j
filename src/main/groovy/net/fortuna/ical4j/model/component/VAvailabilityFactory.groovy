@@ -42,7 +42,7 @@ public class VAvailabilityFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VAvailability availability
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, VAvailability.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, VAvailability.class)) {
              availability = (VAvailability) value
          }
          else {

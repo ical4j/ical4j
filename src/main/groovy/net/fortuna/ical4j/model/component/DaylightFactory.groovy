@@ -42,7 +42,7 @@ public class DaylightFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          Daylight daylight
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Daylight.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, Daylight.class)) {
              daylight = (Daylight) value
          }
          else {

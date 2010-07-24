@@ -42,7 +42,7 @@ public class VEventFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VEvent event
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, VEvent.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, VEvent.class)) {
              event = (VEvent) value
          }
          else {

@@ -42,7 +42,7 @@ public class StandardFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          Standard standard
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Standard.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, Standard.class)) {
              standard = (Standard) value
          }
          else {

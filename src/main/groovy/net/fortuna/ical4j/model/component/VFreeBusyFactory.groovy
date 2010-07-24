@@ -42,7 +42,7 @@ public class VFreeBusyFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VFreeBusy freeBusy
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, VFreeBusy.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, VFreeBusy.class)) {
              freeBusy = (VFreeBusy) value
          }
          else {

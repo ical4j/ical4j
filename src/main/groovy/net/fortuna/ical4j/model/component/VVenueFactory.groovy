@@ -42,7 +42,7 @@ public class VVenueFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VVenue venue
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, VVenue.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, VVenue.class)) {
              venue = (VVenue) value
          }
          else {

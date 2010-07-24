@@ -42,7 +42,7 @@ public class VJournalFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VJournal journal
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, VJournal.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, VJournal.class)) {
              journal = (VJournal) value
          }
          else {

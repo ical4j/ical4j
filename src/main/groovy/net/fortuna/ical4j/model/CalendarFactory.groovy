@@ -43,7 +43,7 @@ public class CalendarFactory extends AbstractFactory{
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Calendar calendar
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Calendar.class)) {
+        if (FactoryBuilderSupport.checkValueIsType(value, name, Calendar.class)) {
             calendar = (Calendar) value
         }
         else {

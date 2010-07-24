@@ -42,7 +42,7 @@ public class VTimeZoneFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VTimeZone timeZone
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, VTimeZone.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, VTimeZone.class)) {
              timeZone = (VTimeZone) value
          }
          else {

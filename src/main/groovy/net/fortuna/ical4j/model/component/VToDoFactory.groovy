@@ -42,7 +42,7 @@ public class VToDoFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VToDo toDo
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, VToDo.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, VToDo.class)) {
              toDo = (VToDo) value
          }
          else {

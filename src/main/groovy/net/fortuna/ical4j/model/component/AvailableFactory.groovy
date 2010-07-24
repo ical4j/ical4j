@@ -42,7 +42,7 @@ public class AvailableFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          Available available
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Available.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, Available.class)) {
              available = (Available) value
          }
          else {

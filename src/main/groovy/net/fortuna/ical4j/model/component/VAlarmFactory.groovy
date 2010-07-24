@@ -42,7 +42,7 @@ public class VAlarmFactory extends AbstractComponentFactory{
 
      public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VAlarm alarm
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, VAlarm.class)) {
+         if (FactoryBuilderSupport.checkValueIsType(value, name, VAlarm.class)) {
              alarm = (VAlarm) value
          }
          else {
