@@ -42,10 +42,16 @@ import net.fortuna.ical4j.model.property.*import net.fortuna.ical4j.model.param
  */
 public class ContentBuilder extends FactoryBuilderSupport {
 
-    public ContentBuilder() {
+    public ContentBuilder(boolean init = true) {
+        super(init)
+    }
+    
+    def registerCalendarAndCollections() {
         registerFactory('calendar', new CalendarFactory())
         registerFactory('parameters', new ParameterListFactory())
-        
+    }
+    
+    def registerComponents() {
         // components..
         registerFactory('available', new AvailableFactory())
         registerFactory('daylight', new DaylightFactory())
@@ -59,7 +65,9 @@ public class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('vtodo', new VToDoFactory())
         registerFactory('vvenue', new VVenueFactory())
         registerFactory('xcomponent', new XComponentFactory())
-        
+    }
+    
+    def registerProperties() {
         // properties..
         registerFactory('action', new ActionFactory())
         registerFactory('attach', new AttachFactory())
@@ -117,7 +125,9 @@ public class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('url', new UrlFactory())
         registerFactory('version', new VersionFactory())
         registerFactory('xproperty', new XPropertyFactory())
-        
+    }
+    
+    def registerParameters() {
         // parameters..
         registerFactory('abbrev', new AbbrevFactory())
         registerFactory('altrep', new AltRepFactory())
