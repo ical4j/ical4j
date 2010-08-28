@@ -33,6 +33,8 @@ package net.fortuna.ical4j.model.property;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang.StringUtils;
+
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactoryImpl;
@@ -203,8 +205,21 @@ public class Geo extends Property {
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        latitude = new BigDecimal(aValue.substring(0, aValue.indexOf(';')));
-        longitude = new BigDecimal(aValue.substring(aValue.indexOf(';') + 1));
+        final String latitudeString = aValue.substring(0, aValue.indexOf(';'));
+        if (StringUtils.isNotBlank(latitudeString)) {
+            latitude = new BigDecimal(latitudeString);
+        }
+        else {
+            latitude = BigDecimal.valueOf(0);
+        }
+        
+        final String longitudeString = aValue.substring(aValue.indexOf(';') + 1);
+        if (StringUtils.isNotBlank(longitudeString)) {
+            longitude = new BigDecimal(longitudeString);
+        }
+        else {
+            longitude = BigDecimal.valueOf(0);
+        }
     }
 
     /**
