@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Dates;
@@ -44,9 +46,9 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * $Id$
- *
+ * 
  * Created on 26/06/2005
- *
+ * 
  * Represents a time of day on a specific date.
  * 
  * <pre>
@@ -154,304 +156,352 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  */
 public class DateTime extends Date {
 
-    private static final long serialVersionUID = -6407231357919440387L;
+	private static final long serialVersionUID = -6407231357919440387L;
 
-    private static final String DEFAULT_PATTERN = "yyyyMMdd'T'HHmmss";
+	private static final String DEFAULT_PATTERN = "yyyyMMdd'T'HHmmss";
 
-    private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss'Z'";
+	private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss'Z'";
 
-    private static final String RELAXED_PATTERN = "yyyyMMdd";
+	private static final String RELAXED_PATTERN = "yyyyMMdd";
 
-    /**
-     * Used for parsing times in a UTC date-time representation.
-     */
-     private static final ThreadLocal UTC_FORMAT =
-             new ThreadLocal () {
-                protected Object initialValue() {
-                    final DateFormat format = new SimpleDateFormat(UTC_PATTERN);
-                    format.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
-                    format.setLenient(false);
-                    return (Object)format;
-                }
-            };
+	/**
+	 * Used for parsing times in a UTC date-time representation.
+	 */
+	private static final DateFormatCache UTC_FORMAT;
+	static {
+		final DateFormat format = new SimpleDateFormat(UTC_PATTERN);
+		format.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+		format.setLenient(false);
 
-    /**
-     * Used for parsing times in a local date-time representation.
-     */
-     private static final ThreadLocal DEFAULT_FORMAT =
-             new ThreadLocal () {
-                protected Object initialValue() {
-                    final DateFormat format = new SimpleDateFormat(DEFAULT_PATTERN);
-                    format.setLenient(false);
-                    return format;
-                }
-            };
+		UTC_FORMAT = new DateFormatCache(format);
+	}
 
-     private static final ThreadLocal LENIENT_DEFAULT_FORMAT =
-             new ThreadLocal () {
-                protected Object initialValue() {
-                    return new SimpleDateFormat(DEFAULT_PATTERN);
-                }
-            };
+	/**
+	 * Used for parsing times in a local date-time representation.
+	 */
+	private static final DateFormatCache DEFAULT_FORMAT;
+	static {
+		final DateFormat format = new SimpleDateFormat(DEFAULT_PATTERN);
+		format.setLenient(false);
+		DEFAULT_FORMAT = new DateFormatCache(format);
+	}
 
-     private static final ThreadLocal RELAXED_FORMAT =
-             new ThreadLocal () {
-                protected Object initialValue() {
-                    return new SimpleDateFormat(RELAXED_PATTERN);
-                }
-            };
+	private static final DateFormatCache LENIENT_DEFAULT_FORMAT;
+	static {
+		final DateFormat format = new SimpleDateFormat(DEFAULT_PATTERN);
+		LENIENT_DEFAULT_FORMAT = new DateFormatCache(format);
+	}
 
-    private Time time;
+	private static final DateFormatCache RELAXED_FORMAT;
+	static {
+		final DateFormat format = new SimpleDateFormat(RELAXED_PATTERN);
+		RELAXED_FORMAT = new DateFormatCache(format);
+	}
 
-    private TimeZone timezone;
+	private Time time;
 
-    /**
-     * Default constructor.
-     */
-    public DateTime() {
-        super(Dates.PRECISION_SECOND, java.util.TimeZone.getDefault());
-        this.time = new Time(getTime(), getFormat().getTimeZone());
-    }
+	private TimeZone timezone;
 
-    /**
-     * @param utc indicates if the date is in UTC time
-     */
-    public DateTime(final boolean utc) {
-        this();
-        setUtc(utc);
-    }
+	/**
+	 * Default constructor.
+	 */
+	public DateTime() {
+		super(Dates.PRECISION_SECOND, java.util.TimeZone.getDefault());
+		this.time = new Time(getTime(), getFormat().getTimeZone());
+	}
 
-    /**
-     * @param time a date-time value in milliseconds
-     */
-    public DateTime(final long time) {
-        super(time, Dates.PRECISION_SECOND, java.util.TimeZone.getDefault());
-        this.time = new Time(time, getFormat().getTimeZone());
-    }
+	/**
+	 * @param utc
+	 *            indicates if the date is in UTC time
+	 */
+	public DateTime(final boolean utc) {
+		this();
+		setUtc(utc);
+	}
 
-    /**
-     * @param date a date-time value
-     */
-    public DateTime(final java.util.Date date) {
-        super(date.getTime(), Dates.PRECISION_SECOND, java.util.TimeZone.getDefault());
-        this.time = new Time(date.getTime(), getFormat().getTimeZone());
-        // copy timezone information if applicable..
-        if (date instanceof DateTime) {
-            final DateTime dateTime = (DateTime) date;
-            if (dateTime.isUtc()) {
-                setUtc(true);
-            }
-            else {
-                setTimeZone(dateTime.getTimeZone());
-            }
-        }
-    }
+	/**
+	 * @param time
+	 *            a date-time value in milliseconds
+	 */
+	public DateTime(final long time) {
+		super(time, Dates.PRECISION_SECOND, java.util.TimeZone.getDefault());
+		this.time = new Time(time, getFormat().getTimeZone());
+	}
 
-    /**
-     * Constructs a new DateTime instance from parsing the specified string representation in the default (local)
-     * timezone.
-     * @param value a string representation of a date-time
-     * @throws ParseException where the specified string is not a valid date-time
-     */
-    public DateTime(final String value) throws ParseException {
-        this(value, null);
-        /*
-         * long time = 0; try { synchronized (UTC_FORMAT) { time = UTC_FORMAT.parse(value).getTime(); } setUtc(true); }
-         * catch (ParseException pe) { synchronized (DEFAULT_FORMAT) {
-         * DEFAULT_FORMAT.setTimeZone(getFormat().getTimeZone()); time = DEFAULT_FORMAT.parse(value).getTime(); }
-         * this.time = new Time(time, getFormat().getTimeZone()); } setTime(time);
-         */
-    }
+	/**
+	 * @param date
+	 *            a date-time value
+	 */
+	public DateTime(final java.util.Date date) {
+		super(date.getTime(), Dates.PRECISION_SECOND, java.util.TimeZone.getDefault());
+		this.time = new Time(date.getTime(), getFormat().getTimeZone());
+		// copy timezone information if applicable..
+		if (date instanceof DateTime) {
+			final DateTime dateTime = (DateTime) date;
+			if (dateTime.isUtc()) {
+				setUtc(true);
+			} else {
+				setTimeZone(dateTime.getTimeZone());
+			}
+		}
+	}
 
-    /**
-     * Creates a new date-time instance from the specified value in the given timezone. If a timezone is not specified,
-     * the default timezone (as returned by {@link java.util.TimeZone#getDefault()}) is used.
-     * @param value a string representation of a date-time
-     * @param timezone the timezone for the date-time instance
-     * @throws ParseException where the specified string is not a valid date-time
-     */
-    public DateTime(final String value, final TimeZone timezone)
-            throws ParseException {
-//        this();
-        super(Dates.PRECISION_SECOND, timezone != null ? timezone : java.util.TimeZone.getDefault());
-        this.time = new Time(getTime(), getFormat().getTimeZone());
+	/**
+	 * Constructs a new DateTime instance from parsing the specified string
+	 * representation in the default (local) timezone.
+	 * 
+	 * @param value
+	 *            a string representation of a date-time
+	 * @throws ParseException
+	 *             where the specified string is not a valid date-time
+	 */
+	public DateTime(final String value) throws ParseException {
+		this(value, null);
+		/*
+		 * long time = 0; try { synchronized (UTC_FORMAT) { time =
+		 * UTC_FORMAT.parse(value).getTime(); } setUtc(true); } catch
+		 * (ParseException pe) { synchronized (DEFAULT_FORMAT) {
+		 * DEFAULT_FORMAT.setTimeZone(getFormat().getTimeZone()); time =
+		 * DEFAULT_FORMAT.parse(value).getTime(); } this.time = new Time(time,
+		 * getFormat().getTimeZone()); } setTime(time);
+		 */
+	}
 
-        try {
-            setTime(value, (DateFormat)UTC_FORMAT.get(), null);
-            setUtc(true);
-        }
-        catch (ParseException pe) {
-            try {
-                if (timezone != null) {
-                    setTime(value, (DateFormat)DEFAULT_FORMAT.get(), timezone);
-                }
-                else {
-                    // Use lenient parsing for floating times. This is to overcome
-                    // the problem of parsing VTimeZone dates that specify dates
-                    // that the strict parser does not accept.
-                    setTime(value, (DateFormat)LENIENT_DEFAULT_FORMAT.get(), getFormat()
-                            .getTimeZone());
-                }
-            }
-            catch (ParseException pe2) {
-                if (CompatibilityHints
-                        .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+	/**
+	 * Creates a new date-time instance from the specified value in the given
+	 * timezone. If a timezone is not specified, the default timezone (as
+	 * returned by {@link java.util.TimeZone#getDefault()}) is used.
+	 * 
+	 * @param value
+	 *            a string representation of a date-time
+	 * @param timezone
+	 *            the timezone for the date-time instance
+	 * @throws ParseException
+	 *             where the specified string is not a valid date-time
+	 */
+	public DateTime(final String value, final TimeZone timezone)
+			throws ParseException {
+		// this();
+		super(Dates.PRECISION_SECOND, timezone != null ? timezone
+				: java.util.TimeZone.getDefault());
+		this.time = new Time(getTime(), getFormat().getTimeZone());
 
-                    setTime(value, (DateFormat)RELAXED_FORMAT.get(), timezone);
-                }
-                else {
-                    throw pe2;
-                }
-            }
-            setTimeZone(timezone);
-        }
-    }
+		try {
+			setTime(value, (DateFormat) UTC_FORMAT.get(), null);
+			setUtc(true);
+		} catch (ParseException pe) {
+			try {
+				if (timezone != null) {
+					setTime(value, (DateFormat) DEFAULT_FORMAT.get(), timezone);
+				} else {
+					// Use lenient parsing for floating times. This is to
+					// overcome
+					// the problem of parsing VTimeZone dates that specify dates
+					// that the strict parser does not accept.
+					setTime(value, (DateFormat) LENIENT_DEFAULT_FORMAT.get(),
+							getFormat().getTimeZone());
+				}
+			} catch (ParseException pe2) {
+				if (CompatibilityHints
+						.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
 
-    /**
-     * @param value a string representation of a date-time
-     * @param pattern a pattern to apply when parsing the date-time value
-     * @param timezone the timezone for the date-time instance
-     * @throws ParseException where the specified string is not a valid date-time
-     */
-    public DateTime(String value, String pattern, TimeZone timezone) throws ParseException {
-//        this();
-        super(Dates.PRECISION_SECOND, timezone != null ? timezone : java.util.TimeZone.getDefault());
-        this.time = new Time(getTime(), getFormat().getTimeZone());
+					setTime(value, (DateFormat) RELAXED_FORMAT.get(), timezone);
+				} else {
+					throw pe2;
+				}
+			}
+			setTimeZone(timezone);
+		}
+	}
 
-        final DateFormat format = CalendarDateFormatFactory.getInstance(pattern);
-        setTime(value, format, timezone);
-    }
-    
-    /**
-     * @param value a string representation of a date-time
-     * @param pattern a pattern to apply when parsing the date-time value
-     * @param utc indicates whether the date-time is in UTC time
-     * @throws ParseException where the specified string is not a valid date-time
-     */
-    public DateTime(String value, String pattern, boolean utc) throws ParseException {
-        this();
-        final DateFormat format = CalendarDateFormatFactory.getInstance(pattern);
-        if (utc) {
-            setTime(value, format, ((DateFormat) UTC_FORMAT.get()).getTimeZone());
-        }
-        else {
-            setTime(value, format, null);
-        }
-        setUtc(utc);
-    }
-    
-    /**
-     * Internal set of time by parsing value string.
-     * @param value
-     * @param format a {@code DateFormat}, protected by the use of a ThreadLocal.
-     * @param tz
-     * @throws ParseException
-     */
-    private void setTime(final String value, final DateFormat format, final java.util.TimeZone tz)
-            throws ParseException {
+	/**
+	 * @param value
+	 *            a string representation of a date-time
+	 * @param pattern
+	 *            a pattern to apply when parsing the date-time value
+	 * @param timezone
+	 *            the timezone for the date-time instance
+	 * @throws ParseException
+	 *             where the specified string is not a valid date-time
+	 */
+	public DateTime(String value, String pattern, TimeZone timezone)
+			throws ParseException {
+		// this();
+		super(Dates.PRECISION_SECOND, timezone != null ? timezone
+				: java.util.TimeZone.getDefault());
+		this.time = new Time(getTime(), getFormat().getTimeZone());
 
-        if (tz != null) {
-            format.setTimeZone(tz);
-        }
-        setTime(format.parse(value).getTime());
-    }
+		final DateFormat format = CalendarDateFormatFactory
+				.getInstance(pattern);
+		setTime(value, format, timezone);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void setTime(final long time) {
-        super.setTime(time);
-        // need to check for null time due to Android java.util.Date(long) constructor
-        // calling this method..
-        if (this.time != null) {
-            this.time.setTime(time);
-        }
-    }
+	/**
+	 * @param value
+	 *            a string representation of a date-time
+	 * @param pattern
+	 *            a pattern to apply when parsing the date-time value
+	 * @param utc
+	 *            indicates whether the date-time is in UTC time
+	 * @throws ParseException
+	 *             where the specified string is not a valid date-time
+	 */
+	public DateTime(String value, String pattern, boolean utc)
+			throws ParseException {
+		this();
+		final DateFormat format = CalendarDateFormatFactory
+				.getInstance(pattern);
+		if (utc) {
+			setTime(value, format,
+					((DateFormat) UTC_FORMAT.get()).getTimeZone());
+		} else {
+			setTime(value, format, null);
+		}
+		setUtc(utc);
+	}
 
-    /**
-     * @return Returns the utc.
-     */
-    public final boolean isUtc() {
-        return time.isUtc();
-    }
+	/**
+	 * Internal set of time by parsing value string.
+	 * 
+	 * @param value
+	 * @param format
+	 *            a {@code DateFormat}, protected by the use of a ThreadLocal.
+	 * @param tz
+	 * @throws ParseException
+	 */
+	private void setTime(final String value, final DateFormat format,
+			final java.util.TimeZone tz) throws ParseException {
 
-    /**
-     * Updates this date-time to display in UTC time if the argument is true. Otherwise, resets to the default timezone.
-     * @param utc The utc to set.
-     */
-    public final void setUtc(final boolean utc) {
-        // reset the timezone associated with this instance..
-        this.timezone = null;
-        if (utc) {
-            getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
-        }
-        else {
-            resetTimeZone();
-        }
-        time = new Time(time, getFormat().getTimeZone(), utc);
-    }
+		if (tz != null) {
+			format.setTimeZone(tz);
+		}
+		setTime(format.parse(value).getTime());
+	}
 
-    /**
-     * Sets the timezone associated with this date-time instance. If the specified timezone is null, it will reset
-     * to the default timezone.  If the date-time instance is utc, it will turn into
-     * either a floating (no timezone) date-time, or a date-time with a timezone.
-     * @param timezone a timezone to apply to the instance
-     */
-    public final void setTimeZone(final TimeZone timezone) {
-        this.timezone = timezone;
-        if (timezone != null) {
-            getFormat().setTimeZone(timezone);    
-        }
-        else {
-            resetTimeZone();
-        }
-        time = new Time(time, getFormat().getTimeZone(), false);
-    }
-    
-    /**
-     * Reset the timezone to default.
-     */
-    private void resetTimeZone() {
-        // use GMT timezone to avoid daylight savings rules affecting floating
-        // time values..
-        getFormat().setTimeZone(TimeZone.getDefault());
-//         getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	public final void setTime(final long time) {
+		super.setTime(time);
+		// need to check for null time due to Android java.util.Date(long)
+		// constructor
+		// calling this method..
+		if (this.time != null) {
+			this.time.setTime(time);
+		}
+	}
 
-    /**
-     * Returns the current timezone associated with this date-time value.
-     * @return a Java timezone
-     */
-    public final TimeZone getTimeZone() {
-        return timezone;
-    }
+	/**
+	 * @return Returns the utc.
+	 */
+	public final boolean isUtc() {
+		return time.isUtc();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String toString() {
-        final StringBuffer b = new StringBuffer(super.toString());
-        b.append('T');
-        b.append(time.toString());
-        return b.toString();
-    }
+	/**
+	 * Updates this date-time to display in UTC time if the argument is true.
+	 * Otherwise, resets to the default timezone.
+	 * 
+	 * @param utc
+	 *            The utc to set.
+	 */
+	public final void setUtc(final boolean utc) {
+		// reset the timezone associated with this instance..
+		this.timezone = null;
+		if (utc) {
+			getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+		} else {
+			resetTimeZone();
+		}
+		time = new Time(time, getFormat().getTimeZone(), utc);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean equals(final Object arg0) {
-        // TODO: what about compareTo, before, after, etc.?
+	/**
+	 * Sets the timezone associated with this date-time instance. If the
+	 * specified timezone is null, it will reset to the default timezone. If the
+	 * date-time instance is utc, it will turn into either a floating (no
+	 * timezone) date-time, or a date-time with a timezone.
+	 * 
+	 * @param timezone
+	 *            a timezone to apply to the instance
+	 */
+	public final void setTimeZone(final TimeZone timezone) {
+		this.timezone = timezone;
+		if (timezone != null) {
+			getFormat().setTimeZone(timezone);
+		} else {
+			resetTimeZone();
+		}
+		time = new Time(time, getFormat().getTimeZone(), false);
+	}
 
-        if (arg0 instanceof DateTime) {
-            return new EqualsBuilder().append(time, ((DateTime) arg0).time).isEquals();
-        }
-        return super.equals(arg0);
-    }
+	/**
+	 * Reset the timezone to default.
+	 */
+	private void resetTimeZone() {
+		// use GMT timezone to avoid daylight savings rules affecting floating
+		// time values..
+		getFormat().setTimeZone(TimeZone.getDefault());
+		// getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    public int hashCode() {
-        return new HashCodeBuilder().append(time).append(timezone).toHashCode();
-    }
+	/**
+	 * Returns the current timezone associated with this date-time value.
+	 * 
+	 * @return a Java timezone
+	 */
+	public final TimeZone getTimeZone() {
+		return timezone;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public final String toString() {
+		final StringBuffer b = new StringBuffer(super.toString());
+		b.append('T');
+		b.append(time.toString());
+		return b.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean equals(final Object arg0) {
+		// TODO: what about compareTo, before, after, etc.?
+
+		if (arg0 instanceof DateTime) {
+			return new EqualsBuilder().append(time, ((DateTime) arg0).time)
+					.isEquals();
+		}
+		return super.equals(arg0);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int hashCode() {
+		return new HashCodeBuilder().append(time).append(timezone).toHashCode();
+	}
+
+	private static class DateFormatCache {
+
+		private final Map threadMap = new WeakHashMap();
+
+		private final DateFormat templateFormat;
+
+		private DateFormatCache(DateFormat dateFormat) {
+			this.templateFormat = dateFormat;
+		}
+
+		public DateFormat get() {
+			DateFormat dateFormat = (DateFormat) threadMap.get(Thread
+					.currentThread());
+			if (dateFormat == null) {
+				dateFormat = (DateFormat) templateFormat.clone();
+				threadMap.put(Thread.currentThread(), dateFormat);
+			}
+			return dateFormat;
+		}
+	}
 }
