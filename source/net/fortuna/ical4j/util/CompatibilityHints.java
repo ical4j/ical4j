@@ -31,8 +31,9 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
 
 /**
  * $Id$
@@ -76,11 +77,7 @@ public final class CompatibilityHints {
      */
     public static final String KEY_NOTES_COMPATIBILITY = "ical4j.compatibility.notes";
 
-    private static final ThreadLocal HINTS = new ThreadLocal() {
-        protected Object initialValue() {
-            return new HashMap();
-        }
-    };
+    private static final Map HINTS = new ConcurrentHashMap();
 
     /**
      * Constructor made private to enforce static nature.
@@ -95,7 +92,7 @@ public final class CompatibilityHints {
      *            indicates whether to enable or disable the compatibility hint
      */
     public static void setHintEnabled(final String key, final boolean enabled) {
-        ((Map) HINTS.get()).put(key, Boolean.valueOf(enabled));
+        HINTS.put(key, Boolean.valueOf(enabled));
     }
 
     /**
@@ -103,7 +100,7 @@ public final class CompatibilityHints {
      *            a compatibility hint key
      */
     public static void clearHintEnabled(final String key) {
-        ((Map) HINTS.get()).remove(key);
+        HINTS.remove(key);
     }
 
     /**
@@ -112,8 +109,8 @@ public final class CompatibilityHints {
      * @return true if the specified compatibility hint is enabled, otherwise false
      */
     public static boolean isHintEnabled(final String key) {
-        if (((Map) HINTS.get()).get(key) != null) {
-            return ((Boolean) ((Map) HINTS.get()).get(key)).booleanValue();
+        if (HINTS.get(key) != null) {
+            return ((Boolean) HINTS.get(key)).booleanValue();
         }
         return "true".equals(Configurator.getProperty(key));
     }
