@@ -44,6 +44,7 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
+import net.fortuna.ical4j.util.ResourceLoader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +62,7 @@ import edu.emory.mathcs.backport.java.util.concurrent.ConcurrentHashMap;
  */
 public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
-    private static final String DEFAULT_RESOURCE_PREFIX = "/zoneinfo/";
+    private static final String DEFAULT_RESOURCE_PREFIX = "zoneinfo/";
 
     private static final Pattern TZ_ID_SUFFIX = Pattern.compile("(?<=/)[^/]*/[^/]*$");
     
@@ -74,8 +75,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private static final Properties ALIASES = new Properties();
     static {
         try {
-            ALIASES.load(TimeZoneRegistryImpl.class
-                    .getResourceAsStream("/net/fortuna/ical4j/model/tz.alias"));
+            ALIASES.load(ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias"));
         }
         catch (IOException ioe) {
             LogFactory.getLog(TimeZoneRegistryImpl.class).warn(
@@ -180,7 +180,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * Loads an existing VTimeZone from the classpath corresponding to the specified Java timezone.
      */
     private VTimeZone loadVTimeZone(final String id) throws IOException, ParserException {
-        final URL resource = TimeZoneRegistryImpl.class.getResource(resourcePrefix + id + ".ics");
+        final URL resource = ResourceLoader.getResource(resourcePrefix + id + ".ics");
         if (resource != null) {
             final CalendarBuilder builder = new CalendarBuilder();
             final Calendar calendar = builder.build(resource.openStream());

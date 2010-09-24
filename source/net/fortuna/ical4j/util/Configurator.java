@@ -54,7 +54,7 @@ public final class Configurator {
     
     static {
         try {
-            CONFIG.load(Configurator.class.getResourceAsStream("/ical4j.properties"));
+            CONFIG.load(ResourceLoader.getResourceAsStream("ical4j.properties"));
         }
         catch (Exception e) {
             LOG.info("ical4j.properties not found.");
