@@ -317,7 +317,7 @@ public class CalendarParserImpl implements CalendarParser {
                 paramValue.append(tokeniser.sval);
                 paramValue.append('"');
             }
-            else {
+            else if (tokeniser.sval != null) {
                 paramValue.append(tokeniser.sval);
             }
 
