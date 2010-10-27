@@ -48,6 +48,10 @@ import org.apache.commons.logging.LogFactory;
  *
  * Performs collection filtering based on a set of rules. A filter may dictate whether at least one rule or all rules
  * are matched.
+ * 
+ * NOTE: Implementation of filter rules has changed in recent releases to fix behaviour. Please ensure you update
+ * your code to use explicit constructors.
+ * 
  * @author Ben Fortuna
  */
 public class Filter {
