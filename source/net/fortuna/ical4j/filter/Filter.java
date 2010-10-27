@@ -71,6 +71,8 @@ public class Filter {
     /**
      * Constructor.
      * @param rule a rule that defines this filter
+     * @deprecated Prior implementations of this class did not work as advertised, so
+     * to avoid confusion please use constructors that explicitly specify the desired behaviour
      */
     public Filter(final Rule rule) {
         this(new Rule[] { rule }, MATCH_ANY);
