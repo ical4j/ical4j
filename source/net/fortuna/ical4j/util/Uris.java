@@ -74,8 +74,9 @@ public final class Uris {
          * Reversing the process and converting URL special characters to their % encodings produces the original cid. A
          * "mid" URL is converted to a Message-ID or Message-ID/Content-ID pair in a similar fashion.
          */
-        if (CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY)) {
+        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY)
+        		&& s.matches("(?i)^cid:.*")) {
+        	
             return s.replaceAll("[<>]", "");
         }
         return s;
