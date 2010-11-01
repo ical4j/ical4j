@@ -63,6 +63,7 @@ import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Constants;
 import net.fortuna.ical4j.util.Strings;
@@ -291,7 +292,7 @@ public class CalendarBuilder {
             // parameter names are case-insensitive, but convert to upper case to simplify further processing
             final Parameter param = parameterFactory.createParameter(name.toUpperCase(), value);
             property.getParameters().add(param);
-            if (param instanceof TzId && tzRegistry != null) {
+            if (param instanceof TzId && tzRegistry != null && !(property instanceof XProperty)) {
                 final TimeZone timezone = tzRegistry.getTimeZone(param.getValue());
                 if (timezone != null) {
                     updateTimeZone(property, timezone);
