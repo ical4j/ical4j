@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 
 /**
@@ -68,10 +69,15 @@ public class Range extends Parameter {
         super(RANGE, ParameterFactoryImpl.getInstance());
         this.value = Strings.unquote(aValue);
 
-        // value must be one of finite list..
-        if (!VALUE_THISANDPRIOR.equals(value)
-                && !VALUE_THISANDFUTURE.equals(value)) {
-            throw new IllegalArgumentException("Invalid value [" + value + "]");
+        // allow arbitrary ranges for Lotus Notes..
+        // eg. X-LOTUS-RECURID;RANGE=ALL:20101006T203000Z
+        
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY)) {
+            // value must be one of finite list..
+            if (!VALUE_THISANDPRIOR.equals(value)
+                    && !VALUE_THISANDFUTURE.equals(value)) {
+                throw new IllegalArgumentException("Invalid value [" + value + "]");
+            }
         }
     }
 
