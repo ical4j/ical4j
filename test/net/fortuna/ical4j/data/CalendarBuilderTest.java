@@ -156,8 +156,8 @@ public class CalendarBuilderTest extends TestCase {
         File[] testFiles = null;
 
         // single test..
-//        suite.addTest(new CalendarBuilderTest("testBuildInputStream",
-//                new File("etc/samples/valid/Session6.ics").getPath(), true));
+//        suite.addTest(new CalendarBuilderTest("testBuildValid",
+//                new File("etc/samples/valid/oracle.ics").getPath()));
 
         // valid tests..
         testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
