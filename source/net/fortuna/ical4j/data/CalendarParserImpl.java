@@ -319,6 +319,21 @@ public class CalendarParserImpl implements CalendarParser {
             }
             else if (tokeniser.sval != null) {
                 paramValue.append(tokeniser.sval);
+                // check for additional words to account for equals (=) in param-value
+                int nextToken = tokeniser.nextToken();
+
+                while (nextToken != ';' && nextToken != ':' && nextToken != ',') {
+
+                    if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
+                        paramValue.append(tokeniser.sval);
+                    }
+                    else {
+                    	paramValue.append((char) tokeniser.ttype);
+                    }
+
+                    nextToken = tokeniser.nextToken();
+                }
+                tokeniser.pushBack();
             }
 
             try {
