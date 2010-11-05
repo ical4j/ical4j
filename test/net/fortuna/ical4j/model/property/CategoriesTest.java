@@ -58,6 +58,10 @@ import net.fortuna.ical4j.util.Calendars;
  */
 public class CategoriesTest extends PropertyTest {
 
+    private Categories value;
+    private int expectedCategories;
+
+
     /**
      * @param property
      * @param expectedValue
@@ -72,6 +76,16 @@ public class CategoriesTest extends PropertyTest {
      */
     public CategoriesTest(String testMethod, Categories property) {
         super(testMethod, property);
+    }
+
+    /**
+     * @param testMethod
+     * @param property
+     */
+    public CategoriesTest(String testMethod, Categories property, int expectedCategories) {
+        super(testMethod, property);
+        this.value = property;
+        this.expectedCategories = expectedCategories;
     }
 
     /**
@@ -105,6 +119,16 @@ public class CategoriesTest extends PropertyTest {
         assertEquals(cat1, categories.get(0));
         assertEquals(cat2, categories.get(1));
         assertEquals(cat3, categories.get(2));
+        assertEquals(3, cat3.getCategories().size());
+    }
+
+    /**
+     * Test escaping of commas in categories.
+     */
+    public void testCommaEscapingCount() throws ValidationException, IOException,
+            ParserException {
+
+        assertEquals(expectedCategories, value.getCategories().size());
     }
 
     /**
@@ -140,6 +164,8 @@ public class CategoriesTest extends PropertyTest {
 
         // other tests..
         suite.addTest(new CategoriesTest("testCommaEscaping", null));
+        // suite.addTest(new CategoriesTest("testCommaEscapingCount", new Categories("a\\,b"), 1));
+        suite.addTest(new CategoriesTest("testCommaEscapingCount", new Categories("a,b\\,c"), 2));
 
         return suite;
     }
