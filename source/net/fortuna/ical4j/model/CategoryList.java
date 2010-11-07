@@ -68,15 +68,19 @@ public class CategoryList implements Serializable {
     public CategoryList(final String aValue) {
         categories = new CopyOnWriteArrayList();
 
+        // match commas preceded by even number of backslashes..
         final Pattern pattern = Pattern.compile("([^\\\\](?:\\\\{2})),|([^\\\\]),");
+        
         final Matcher matcher = pattern.matcher(aValue);
         String[] categoryValues = null;
 
         if (matcher.find()) {
+        	// HACK: add a marker (&quot;) for easy string splitting..
             categoryValues = matcher.replaceAll("$1$2&quot;").split("&quot;");
         }
         else {
-            categoryValues = aValue.split(",");
+        	// no special cases, split on commas not preceded by backslash..
+            categoryValues = aValue.split("(?<!\\\\),");
         }
 
         for (int i = 0; i < categoryValues.length; i++) {

@@ -164,7 +164,7 @@ public class CategoriesTest extends PropertyTest {
 
         // other tests..
         suite.addTest(new CategoriesTest("testCommaEscaping", null));
-        // suite.addTest(new CategoriesTest("testCommaEscapingCount", new Categories("a\\,b"), 1));
+        suite.addTest(new CategoriesTest("testCommaEscapingCount", new Categories("a\\,b"), 1));
         suite.addTest(new CategoriesTest("testCommaEscapingCount", new Categories("a,b\\,c"), 2));
 
         return suite;
