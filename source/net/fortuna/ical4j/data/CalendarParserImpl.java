@@ -334,6 +334,8 @@ public class CalendarParserImpl implements CalendarParser {
                     nextToken = tokeniser.nextToken();
                 }
                 tokeniser.pushBack();
+            } else if(tokeniser.sval == null) { 
+            	tokeniser.pushBack();
             }
 
             try {
