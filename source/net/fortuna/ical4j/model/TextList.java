@@ -45,54 +45,54 @@ import net.fortuna.ical4j.util.Strings;
 /**
  * $Id$ [23-Apr-2004]
  *
- * Defines a list of iCalendar categories.
+ * Defines a list of iCalendar text elements.
  * @author Ben Fortuna
  */
-public class CategoryList implements Serializable {
+public class TextList implements Serializable {
 
-    private static final long serialVersionUID = 4387692697196974638L;
-
-    private List categories;
+	private static final long serialVersionUID = -417427815871330636L;
+	
+	private List texts;
 
     /**
      * Default constructor.
      */
-    public CategoryList() {
-        categories = new CopyOnWriteArrayList();
+    public TextList() {
+        texts = new CopyOnWriteArrayList();
     }
 
     /**
      * Parses the specified string representation to create a list of categories.
      * @param aValue a string representation of a list of categories
      */
-    public CategoryList(final String aValue) {
-        categories = new CopyOnWriteArrayList();
+    public TextList(final String aValue) {
+        texts = new CopyOnWriteArrayList();
 
         // match commas preceded by even number of backslashes..
         final Pattern pattern = Pattern.compile("([^\\\\](?:\\\\{2})),|([^\\\\]),");
         
         final Matcher matcher = pattern.matcher(aValue);
-        String[] categoryValues = null;
+        String[] textValues = null;
 
         if (matcher.find()) {
         	// HACK: add a marker (&quot;) for easy string splitting..
-            categoryValues = matcher.replaceAll("$1$2&quot;").split("&quot;");
+            textValues = matcher.replaceAll("$1$2&quot;").split("&quot;");
         }
         else {
         	// no special cases, split on commas not preceded by backslash..
-            categoryValues = aValue.split("(?<!\\\\),");
+            textValues = aValue.split("(?<!\\\\),");
         }
 
-        for (int i = 0; i < categoryValues.length; i++) {
-            categories.add(Strings.unescape(categoryValues[i]));
+        for (int i = 0; i < textValues.length; i++) {
+            texts.add(Strings.unescape(textValues[i]));
         }
     }
 
     /**
-     * @param categoryValues an array of category values
+     * @param textValues an array of text values
      */
-    public CategoryList(String[] categoryValues) {
-        categories = Arrays.asList(categoryValues);
+    public TextList(String[] textValues) {
+        texts = Arrays.asList(textValues);
     }
     
     /**
@@ -100,7 +100,7 @@ public class CategoryList implements Serializable {
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
-        for (final Iterator i = categories.iterator(); i.hasNext();) {
+        for (final Iterator i = texts.iterator(); i.hasNext();) {
             b.append(Strings.escape((String) i.next()));
             if (i.hasNext()) {
                 b.append(',');
@@ -111,12 +111,12 @@ public class CategoryList implements Serializable {
 
     /**
      * Add an address to the list.
-     * @param category the category to add
+     * @param text the category to add
      * @return true
      * @see List#add(java.lang.Object)
      */
-    public final boolean add(final String category) {
-        return categories.add(category);
+    public final boolean add(final String text) {
+        return texts.add(text);
     }
 
     /**
@@ -124,7 +124,7 @@ public class CategoryList implements Serializable {
      * @see List#isEmpty()
      */
     public final boolean isEmpty() {
-        return categories.isEmpty();
+        return texts.isEmpty();
     }
 
     /**
@@ -132,24 +132,24 @@ public class CategoryList implements Serializable {
      * @see List#iterator()
      */
     public final Iterator iterator() {
-        return categories.iterator();
+        return texts.iterator();
     }
 
     /**
-     * Remove a category from the list.
-     * @param category the category to remove
-     * @return true if the list contained the specified category
+     * Remove a text from the list.
+     * @param text the text element to remove
+     * @return true if the list contained the specified text element
      * @see List#remove(java.lang.Object)
      */
-    public final boolean remove(final String category) {
-        return categories.remove(category);
+    public final boolean remove(final String text) {
+        return texts.remove(text);
     }
 
     /**
-     * @return the number of categories in the list
+     * @return the number of text elements in the list
      * @see List#size()
      */
     public final int size() {
-        return categories.size();
+        return texts.size();
     }
 }

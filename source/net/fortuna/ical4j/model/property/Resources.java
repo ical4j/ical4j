@@ -35,7 +35,7 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ResourceList;
+import net.fortuna.ical4j.model.TextList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.ParameterValidator;
 
@@ -51,14 +51,14 @@ public class Resources extends Property {
 
     private static final long serialVersionUID = -848562477226746807L;
 
-    private ResourceList resources;
+    private TextList resources;
 
     /**
      * Default constructor.
      */
     public Resources() {
         super(RESOURCES, PropertyFactoryImpl.getInstance());
-        resources = new ResourceList();
+        resources = new TextList();
     }
 
     /**
@@ -73,7 +73,7 @@ public class Resources extends Property {
     /**
      * @param rList a list of resources
      */
-    public Resources(final ResourceList rList) {
+    public Resources(final TextList rList) {
         super(RESOURCES, PropertyFactoryImpl.getInstance());
         resources = rList;
     }
@@ -82,7 +82,7 @@ public class Resources extends Property {
      * @param aList a list of parameters for this component
      * @param rList a list of resources
      */
-    public Resources(final ParameterList aList, final ResourceList rList) {
+    public Resources(final ParameterList aList, final TextList rList) {
         super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
         resources = rList;
     }
@@ -108,7 +108,7 @@ public class Resources extends Property {
     /**
      * @return Returns the resources.
      */
-    public final ResourceList getResources() {
+    public final TextList getResources() {
         return resources;
     }
 
@@ -116,7 +116,7 @@ public class Resources extends Property {
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        resources = new ResourceList(aValue);
+        resources = new TextList(aValue);
     }
 
     /**

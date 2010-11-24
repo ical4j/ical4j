@@ -33,7 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
-import net.fortuna.ical4j.model.ResourceList;
+import net.fortuna.ical4j.model.TextList;
 
 /**
  * $Id$
@@ -66,7 +66,7 @@ public class ResourcesTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        Resources resources = new Resources(new ResourceList("value"));
+        Resources resources = new Resources(new TextList("value"));
         suite.addTest(new ResourcesTest(resources, "value"));
         suite.addTest(new ResourcesTest("testValidation", resources));
         suite.addTest(new ResourcesTest("testEquals", resources));

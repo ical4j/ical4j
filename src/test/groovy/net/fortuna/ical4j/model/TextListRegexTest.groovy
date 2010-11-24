@@ -37,7 +37,7 @@ import groovy.util.GroovyTestCase;
  * @author fortuna
  *
  */
-class CategoriesListRegexTest extends GroovyTestCase {
+class TextListRegexTest extends GroovyTestCase {
 
 	void testRegexMatch() {
 		def pattern = /([^\\](?:\\{2})),|([^\\]),/

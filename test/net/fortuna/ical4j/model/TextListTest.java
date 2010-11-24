@@ -40,11 +40,11 @@ import junit.framework.TestSuite;
  * Created on 16/11/2005
  *
  */
-public class ResourceListTest extends TestCase {
+public class TextListTest extends TestCase {
 
     private static final String VALUE_RESOURCE_LIST = "projector,laptop,pulpit";
     
-    private ResourceList resourcees;
+    private TextList resourcees;
     
     private int expectedSize;
     
@@ -53,7 +53,7 @@ public class ResourceListTest extends TestCase {
     /**
      * @param resources
      */
-    public ResourceListTest(ResourceList resources, int expectedSize) {
+    public TextListTest(TextList resources, int expectedSize) {
         super("testSize");
         this.resourcees = resources;
         this.expectedSize = expectedSize;
@@ -63,7 +63,7 @@ public class ResourceListTest extends TestCase {
      * @param resources
      * @param expectedToString
      */
-    public ResourceListTest(ResourceList resources, String expectedToString) {
+    public TextListTest(TextList resources, String expectedToString) {
         super("testToString");
         this.resourcees = resources;
         this.expectedToString = expectedToString;
@@ -88,9 +88,9 @@ public class ResourceListTest extends TestCase {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        ResourceList resources = new ResourceList(VALUE_RESOURCE_LIST);
-        suite.addTest(new ResourceListTest(resources, 3));
-        suite.addTest(new ResourceListTest(resources, VALUE_RESOURCE_LIST));
+        TextList resources = new TextList(VALUE_RESOURCE_LIST);
+        suite.addTest(new TextListTest(resources, 3));
+        suite.addTest(new TextListTest(resources, VALUE_RESOURCE_LIST));
         return suite;
     }
 }

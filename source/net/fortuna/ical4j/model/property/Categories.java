@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.CategoryList;
+import net.fortuna.ical4j.model.TextList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
@@ -93,14 +93,14 @@ public class Categories extends Property {
 
     private static final long serialVersionUID = -7769987073466681634L;
 
-    private CategoryList categories;
+    private TextList categories;
 
     /**
      * Default constructor.
      */
     public Categories() {
         super(CATEGORIES, PropertyFactoryImpl.getInstance());
-        categories = new CategoryList();
+        categories = new TextList();
     }
 
     /**
@@ -123,7 +123,7 @@ public class Categories extends Property {
     /**
      * @param cList a list of categories
      */
-    public Categories(final CategoryList cList) {
+    public Categories(final TextList cList) {
         super(CATEGORIES, PropertyFactoryImpl.getInstance());
         categories = cList;
     }
@@ -132,7 +132,7 @@ public class Categories extends Property {
      * @param aList a list of parameters for this component
      * @param cList a list of categories
      */
-    public Categories(final ParameterList aList, final CategoryList cList) {
+    public Categories(final ParameterList aList, final TextList cList) {
         super(CATEGORIES, aList, PropertyFactoryImpl.getInstance());
         categories = cList;
     }
@@ -141,7 +141,7 @@ public class Categories extends Property {
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        categories = new CategoryList(aValue);
+        categories = new TextList(aValue);
     }
 
     /**
@@ -163,7 +163,7 @@ public class Categories extends Property {
     /**
      * @return Returns the categories.
      */
-    public final CategoryList getCategories() {
+    public final TextList getCategories() {
         return categories;
     }
 
