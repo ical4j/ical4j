@@ -89,7 +89,11 @@ public class DateList extends ArrayList implements Serializable {
      * @param timezone the timezone to apply to dates contained by the instance
      */
     public DateList(final Value aType, final TimeZone timezone) {
-        this.type = aType;
+        if (aType != null) {
+            this.type = aType;
+        } else {
+            this.type = Value.DATE_TIME;
+        }
         this.timeZone = timezone;
     }
 
