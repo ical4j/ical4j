@@ -170,7 +170,7 @@ public class DateTime extends Date {
 	private static final DateFormatCache UTC_FORMAT;
 	static {
 		final DateFormat format = new SimpleDateFormat(UTC_PATTERN);
-		format.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+		format.setTimeZone(TimeZones.getUtcTimeZone());
 		format.setLenient(false);
 
 		UTC_FORMAT = new DateFormatCache(format);
@@ -409,7 +409,7 @@ public class DateTime extends Date {
 		// reset the timezone associated with this instance..
 		this.timezone = null;
 		if (utc) {
-			getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+			getFormat().setTimeZone(TimeZones.getUtcTimeZone());
 		} else {
 			resetTimeZone();
 		}

@@ -48,7 +48,6 @@ import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -103,7 +102,7 @@ public abstract class Observance extends Component implements Comparable {
             UTC_PATTERN);
     
     static {
-        UTC_FORMAT.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
+        UTC_FORMAT.setTimeZone(TimeZones.getUtcTimeZone());
         UTC_FORMAT.setLenient(false);
     }
 

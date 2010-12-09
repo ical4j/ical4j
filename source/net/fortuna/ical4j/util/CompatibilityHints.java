@@ -78,6 +78,14 @@ public final class CompatibilityHints {
     public static final String KEY_NOTES_COMPATIBILITY = "ical4j.compatibility.notes";
 
     private static final Map HINTS = new ConcurrentHashMap();
+    // preload known hints from the configurator
+    static {
+        setHintEnabled(KEY_RELAXED_UNFOLDING, "true".equals(Configurator.getProperty(KEY_RELAXED_UNFOLDING)));
+        setHintEnabled(KEY_RELAXED_PARSING, "true".equals(Configurator.getProperty(KEY_RELAXED_PARSING)));
+        setHintEnabled(KEY_RELAXED_VALIDATION, "true".equals(Configurator.getProperty(KEY_RELAXED_VALIDATION)));
+        setHintEnabled(KEY_OUTLOOK_COMPATIBILITY, "true".equals(Configurator.getProperty(KEY_OUTLOOK_COMPATIBILITY)));
+        setHintEnabled(KEY_NOTES_COMPATIBILITY, "true".equals(Configurator.getProperty(KEY_NOTES_COMPATIBILITY)));
+    }
 
     /**
      * Constructor made private to enforce static nature.

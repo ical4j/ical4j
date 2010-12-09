@@ -57,6 +57,11 @@ public final class TimeZones {
      */
     public static final String GMT_ID = "Etc/GMT";
 
+    private static final TimeZone UTC_TIMEZONE;
+    static {
+        UTC_TIMEZONE = TimeZone.getTimeZone(UTC_ID);
+    }
+
     /**
      * Constructor made private to enforce static nature.
      */
@@ -92,6 +97,13 @@ public final class TimeZones {
     	if ("true".equals(Configurator.getProperty("net.fortuna.ical4j.timezone.date.floating"))) {
     		return TimeZone.getDefault();
     	}
-    	return TimeZone.getTimeZone(UTC_ID);
+    	return getUtcTimeZone();
+    }
+
+    /**
+     * Get the UTC Timezone.
+     */
+    public static TimeZone getUtcTimeZone() {
+        return UTC_TIMEZONE;
     }
 }

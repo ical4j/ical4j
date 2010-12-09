@@ -48,9 +48,6 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * $Id$
  *
@@ -63,8 +60,6 @@ import org.apache.commons.logging.LogFactory;
 public abstract class DateProperty extends Property {
 
     private static final long serialVersionUID = 3160883132732961321L;
-
-    private Log log = LogFactory.getLog(DateProperty.class);
     
     private Date date;
 
@@ -188,20 +183,9 @@ public abstract class DateProperty extends Property {
                 ((DateTime) getDate()).setTimeZone(timezone);
             }
 
-            final TzId tzId = new TzId(timezone.getID());
-            
-            if (log.isTraceEnabled()) {
-                log.trace("Replacing current timezone ["
-                        + getParameter(Parameter.TZID) + "] with [" + tzId + "]");
-            }
-            
-            getParameters().replace(tzId);
+            getParameters().replace(new TzId(timezone.getID()));
         }
         else {
-            if (log.isTraceEnabled()) {
-                log.trace("Clearing timezone [" + getParameter(Parameter.TZID) + "]");
-            }
-            
             // use setUtc() to reset timezone..
             setUtc(isUtc());
         }

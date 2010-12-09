@@ -237,7 +237,7 @@ public final class Dates {
                 instance = Calendar.getInstance(dateTime.getTimeZone());
             }
             else if (dateTime.isUtc()) {
-                instance = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.UTC_ID));
+                instance = Calendar.getInstance(TimeZones.getUtcTimeZone());
             }
             else {
             	// a date-time without a timezone but not UTC is floating
