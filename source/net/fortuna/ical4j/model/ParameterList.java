@@ -147,6 +147,9 @@ public class ParameterList implements Serializable {
      * @see List#add(java.lang.Object)
      */
     public final boolean add(final Parameter parameter) {
+        if (parameter == null) {
+            throw new IllegalArgumentException("Trying to add null Parameter");
+        }
         return parameters.add(parameter);
     }
 
