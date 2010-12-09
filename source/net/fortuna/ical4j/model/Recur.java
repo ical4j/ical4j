@@ -364,7 +364,7 @@ public class Recur implements Serializable {
     }
 
     /**
-     * @return Returns the count.
+     * @return Returns the count or -1 if the rule does not have a count.
      */
     public final int getCount() {
         return count;
@@ -385,21 +385,21 @@ public class Recur implements Serializable {
     }
 
     /**
-     * @return Returns the interval.
+     * @return Returns the interval or -1 if the rule does not have an interval defined.
      */
     public final int getInterval() {
         return interval;
     }
 
     /**
-     * @return Returns the until.
+     * @return Returns the until or null if there is none.
      */
     public final Date getUntil() {
         return until;
     }
 
     /**
-     * @return Returns the weekStartDay.
+     * @return Returns the weekStartDay or null if there is none.
      */
     public final String getWeekStartDay() {
         return weekStartDay;
