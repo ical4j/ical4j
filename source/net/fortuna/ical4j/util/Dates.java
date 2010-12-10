@@ -302,4 +302,14 @@ public final class Dates {
         // unrecognised precision..
         return cal.getTimeInMillis();
     }
+
+    /**
+     * Returns the {@code System.currentTimeMillis()}, rounded to the second.
+     * <p>By doing a rough rounding here, we avoid an expensive java.util.Calendar based
+     *  rounding later on.</p>
+     * @return the current time in millisec.
+     */
+    public static long getCurrentTimeRounded() {
+        return (long) Math.floor(System.currentTimeMillis() / (double) Dates.MILLIS_PER_SECOND) * Dates.MILLIS_PER_SECOND;
+    }
 }

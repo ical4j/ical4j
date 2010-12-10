@@ -91,7 +91,7 @@ public abstract class Iso8601 extends Date {
      * @see Dates#PRECISION_SECOND
      */
     public Iso8601(final String pattern, final int precision, java.util.TimeZone tz) {
-        this(System.currentTimeMillis(), pattern, precision, tz);
+        this(Dates.getCurrentTimeRounded(), pattern, precision, tz);
     }
 
     /**

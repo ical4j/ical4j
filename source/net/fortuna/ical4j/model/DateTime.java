@@ -281,8 +281,8 @@ public class DateTime extends Date {
 	 */
 	public DateTime(final String value, final TimeZone timezone)
 			throws ParseException {
-		// this();
-		super(Dates.PRECISION_SECOND, timezone != null ? timezone
+		// setting the time to 0 since we are going to reset it anyway
+		super(0, Dates.PRECISION_SECOND, timezone != null ? timezone
 				: java.util.TimeZone.getDefault());
 		this.time = new Time(getTime(), getFormat().getTimeZone());
 
@@ -326,8 +326,8 @@ public class DateTime extends Date {
 	 */
 	public DateTime(String value, String pattern, TimeZone timezone)
 			throws ParseException {
-		// this();
-		super(Dates.PRECISION_SECOND, timezone != null ? timezone
+		// setting the time to 0 since we are going to reset it anyway
+		super(0, Dates.PRECISION_SECOND, timezone != null ? timezone
 				: java.util.TimeZone.getDefault());
 		this.time = new Time(getTime(), getFormat().getTimeZone());
 
@@ -348,7 +348,8 @@ public class DateTime extends Date {
 	 */
 	public DateTime(String value, String pattern, boolean utc)
 			throws ParseException {
-		this();
+                // setting the time to 0 since we are going to reset it anyway
+		this(0);
 		final DateFormat format = CalendarDateFormatFactory
 				.getInstance(pattern);
 		if (utc) {
