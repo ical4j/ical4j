@@ -66,8 +66,6 @@ public class Filter {
      */
     public static final int MATCH_ALL = 2;
 
-    private Log log = LogFactory.getLog(Filter.class);
-
     private Rule[] rules;
 
     private int type;
@@ -164,6 +162,7 @@ public class Filter {
                     .getClass(), filtered.size()));
         }
         catch (ArrayStoreException ase) {
+            Log log = LogFactory.getLog(Filter.class);
             log.warn("Error converting to array - using default approach", ase);
         }
         return filtered.toArray();

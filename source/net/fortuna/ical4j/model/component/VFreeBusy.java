@@ -224,8 +224,6 @@ public class VFreeBusy extends CalendarComponent {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
-    private transient Log log = LogFactory.getLog(VFreeBusy.class);
-
     private final Map methodValidators = new HashMap();
     {
         methodValidators.put(Method.PUBLISH, new PublishValidator());
@@ -454,10 +452,6 @@ public class VFreeBusy extends CalendarComponent {
             final DateRange range = new DateRange(start, end);
             // Add final consumed time to avoid special-case end-of-list processing
             periods.add(new Period(end, end));
-            // debugging..
-            if (log.isDebugEnabled()) {
-                log.debug("Busy periods: " + periods);
-            }
             DateTime lastPeriodEnd = new DateTime(start);
             // where no time is consumed set the last period end as the range start..
             for (final Iterator i = periods.iterator(); i.hasNext();) {
@@ -814,15 +808,5 @@ public class VFreeBusy extends CalendarComponent {
      */
     public final Uid getUid() {
         return (Uid) getProperty(Property.UID);
-    }
-    
-    /**
-     * @param stream
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        log = LogFactory.getLog(VFreeBusy.class);
     }
 }

@@ -73,18 +73,12 @@ public class UtcOffset implements Serializable {
 
     private static final NumberFormat SECOND_FORMAT = new DecimalFormat("00");
 
-    private transient Log log = LogFactory.getLog(UtcOffset.class);
-
     private long offset;
 
     /**
      * @param value a string representation of an offset
      */
     public UtcOffset(final String value) {
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Parsing string [" + value + "]");
-        }
 
         if (value.length() < MINUTE_END_INDEX) {
             throw new IllegalArgumentException("Invalid UTC offset [" + value
@@ -111,6 +105,7 @@ public class UtcOffset implements Serializable {
         }
         catch (Exception e) {
             // seconds not supplied..
+            Log log = LogFactory.getLog(UtcOffset.class);
             log.trace("Seconds not specified: " + e.getMessage());
         }
         if (negative) {
@@ -172,15 +167,5 @@ public class UtcOffset implements Serializable {
      */
     public final int hashCode() {
         return new HashCodeBuilder().append(getOffset()).toHashCode();
-    }
-    
-    /**
-     * @param stream
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        log = LogFactory.getLog(UtcOffset.class);
     }
 }

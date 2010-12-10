@@ -67,8 +67,6 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private static final Pattern TZ_ID_SUFFIX = Pattern.compile("(?<=/)[^/]*/[^/]*$");
     
     private static final String UPDATE_ENABLED = "net.fortuna.ical4j.timezone.update.enabled";
-    
-    private Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
 
     private static final Map DEFAULT_TIMEZONES = new ConcurrentHashMap();
 
@@ -166,6 +164,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                                 }
                             }
                             catch (Exception e) {
+                                Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
                                 log.warn("Error occurred loading VTimeZone", e);
                             }
                     	}
@@ -210,6 +209,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                 }
             }
             catch (Exception e) {
+                Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
                 log.warn("Unable to retrieve updates for timezone: " + vTimeZone.getTimeZoneId().getValue(), e);
             }
         }

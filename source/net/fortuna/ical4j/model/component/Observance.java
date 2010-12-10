@@ -86,8 +86,6 @@ public abstract class Observance extends Component implements Comparable {
      */
     public static final String DAYLIGHT = "DAYLIGHT";
 
-    private transient Log log = LogFactory.getLog(Observance.class);
-
     // TODO: clear cache when observance definition changes (??)
     private long[] onsetsMillisec;
     private DateTime[] onsetsDates;
@@ -170,6 +168,7 @@ public abstract class Observance extends Component implements Comparable {
             try {
                 initialOnset = applyOffsetFrom(calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate()));
             } catch (ParseException e) {
+                Log log = LogFactory.getLog(Observance.class);
                 log.error("Unexpected error calculating initial onset", e);
                 // XXX: is this correct?
                 return null;
@@ -193,6 +192,7 @@ public abstract class Observance extends Component implements Comparable {
         try {
             initialOnsetUTC = calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate());
         } catch (ParseException e) {
+            Log log = LogFactory.getLog(Observance.class);
             log.error("Unexpected error calculating initial onset", e);
             // XXX: is this correct?
             return null;
@@ -218,6 +218,7 @@ public abstract class Observance extends Component implements Comparable {
                      */
                     cacheableOnsets.add(rdateOnset);
                 } catch (ParseException e) {
+                    Log log = LogFactory.getLog(Observance.class);
                     log.error("Unexpected error calculating onset", e);
                 }
             }
@@ -319,17 +320,6 @@ public abstract class Observance extends Component implements Comparable {
         final DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
         final DtStart dtStart0 = (DtStart) arg0.getProperty(Property.DTSTART);
         return dtStart.getDate().compareTo(dtStart0.getDate());
-    }
-
-    /**
-     * @param stream
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private void readObject(java.io.ObjectInputStream stream)
-        throws IOException, ClassNotFoundException {
-        stream.defaultReadObject();
-        log = LogFactory.getLog(Observance.class);
     }
     
 //    private Date calculateOnset(DateProperty dateProperty) {

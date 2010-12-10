@@ -87,8 +87,6 @@ public class Dur implements Comparable, Serializable {
 
     private static final int DAYS_PER_YEAR = 365;
 
-    private transient Log log = LogFactory.getLog(Dur.class);
-
     private boolean negative;
 
     private int weeks;
@@ -129,9 +127,6 @@ public class Dur implements Comparable, Serializable {
             }
             else if ("P".equals(token)) {
                 // does nothing..
-                if (log.isDebugEnabled()) {
-                    log.debug("Redundant [P] token ignored.");
-                }
             }
             else if ("W".equals(token)) {
                 weeks = Integer.parseInt(prevToken);
@@ -141,9 +136,6 @@ public class Dur implements Comparable, Serializable {
             }
             else if ("T".equals(token)) {
                 // does nothing..
-                if (log.isDebugEnabled()) {
-                    log.debug("Redundant [T] token ignored.");
-                }
             }
             else if ("H".equals(token)) {
                 hours = Integer.parseInt(prevToken);
@@ -522,6 +514,5 @@ public class Dur implements Comparable, Serializable {
      */
     private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
-        log = LogFactory.getLog(Dur.class);
     }
 }

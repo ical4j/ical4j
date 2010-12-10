@@ -114,8 +114,6 @@ public class Attach extends Property {
 
     private static final long serialVersionUID = 4439949507756383452L;
 
-    private transient Log log = LogFactory.getLog(Attach.class);
-
     private URI uri;
 
     private byte[] binary;
@@ -244,9 +242,11 @@ public class Attach extends Property {
                 binary = decoder.decode(aValue.getBytes());
             }
             catch (UnsupportedEncodingException uee) {
+                Log log = LogFactory.getLog(Attach.class);
                 log.error("Error encoding binary data", uee);
             }
             catch (DecoderException de) {
+                Log log = LogFactory.getLog(Attach.class);
                 log.error("Error decoding binary data", de);
             }
         }
@@ -272,9 +272,11 @@ public class Attach extends Property {
                 return new String(encoder.encode(getBinary()));
             }
             catch (UnsupportedEncodingException uee) {
+                Log log = LogFactory.getLog(Attach.class);
                 log.error("Error encoding binary data", uee);
             }
             catch (EncoderException ee) {
+                Log log = LogFactory.getLog(Attach.class);
                 log.error("Error encoding binary data", ee);
             }
         }
@@ -297,17 +299,5 @@ public class Attach extends Property {
         this.uri = uri;
         // unset binary..
         this.binary = null;
-    }
-    
-    /**
-     * @param stream
-     * @throws IOException
-     * @throws ClassNotFoundException
-     */
-    private void readObject(java.io.ObjectInputStream stream)
-        throws IOException, ClassNotFoundException {
-        
-        stream.defaultReadObject();
-        log = LogFactory.getLog(Attach.class);
     }
 }

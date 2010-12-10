@@ -87,8 +87,6 @@ public class CalendarBuilder {
 
     private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
-    private Log log = LogFactory.getLog(CalendarBuilder.class);
-
     private final CalendarParser parser;
     
     private final ContentHandler contentHandler;
@@ -379,6 +377,7 @@ public class CalendarBuilder {
             }
             catch (ClassCastException e2) {
                 if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                    Log log = LogFactory.getLog(CalendarBuilder.class);
                     log.warn("Error setting timezone [" + timezone.getID()
                             + "] on property [" + property.getName()
                             + "]", e);
