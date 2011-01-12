@@ -175,8 +175,8 @@ public class DurTest extends TestCase {
                 new DateTime("20110326T200000", new TimeZoneRegistryImpl().getTimeZone("Europe/Paris")),
                 new DateTime("20110327T200000", new TimeZoneRegistryImpl().getTimeZone("Europe/Paris"))));
         suite.addTest(new DurTest(new Dur("P1D"),
-                new DateTime("20110326T200000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles")),
-                new DateTime("20110327T200000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles"))));
+                new DateTime("20110326T110000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles")),
+                new DateTime("20110327T110000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles"))));
         // PST change on 20110313T020000
         suite.addTest(new DurTest(new Dur("P1D"),
                 new DateTime("20110312T200000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles")),
