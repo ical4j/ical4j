@@ -157,6 +157,34 @@ public class DurTest extends TestCase {
         cal.add(Calendar.MINUTE, 15);
         suite.addTest(new DurTest(new Dur("PT15M"), startTime, cal.getTime()));
 
+        cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.set(Calendar.YEAR, 2011);
+        cal.set(Calendar.MONTH, Calendar.MARCH);
+        cal.set(Calendar.DAY_OF_MONTH, 26);
+        cal.set(Calendar.HOUR_OF_DAY, 20);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        Date startTime2 = cal.getTime();
+        cal.set(Calendar.DAY_OF_MONTH, 27);
+        cal.set(Calendar.HOUR_OF_DAY, 20);
+        suite.addTest(new DurTest(new Dur("P1D"), startTime2, cal.getTime()));
+
+        // tests around various Daylight Saving Times
+        // EST change on 20110327T020000
+        suite.addTest(new DurTest(new Dur("P1D"),
+                new DateTime("20110326T200000", new TimeZoneRegistryImpl().getTimeZone("Europe/Paris")),
+                new DateTime("20110327T200000", new TimeZoneRegistryImpl().getTimeZone("Europe/Paris"))));
+        suite.addTest(new DurTest(new Dur("P1D"),
+                new DateTime("20110326T200000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles")),
+                new DateTime("20110327T200000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles"))));
+        // PST change on 20110313T020000
+        suite.addTest(new DurTest(new Dur("P1D"),
+                new DateTime("20110312T200000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles")),
+                new DateTime("20110313T200000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles"))));
+        suite.addTest(new DurTest(new Dur("P1D"),
+                new DateTime("20110312T200000", new TimeZoneRegistryImpl().getTimeZone("Europe/Paris")),
+                new DateTime("20110313T200000", new TimeZoneRegistryImpl().getTimeZone("Europe/Paris"))));
+
         suite.addTest(new DurTest(new Dur(33), "P33W"));
         
         cal = Calendar.getInstance();

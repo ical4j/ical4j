@@ -36,10 +36,9 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
+import net.fortuna.ical4j.util.TimeZones;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$
@@ -270,7 +269,16 @@ public class Dur implements Comparable, Serializable {
      * @return the end of the duration as a date
      */
     public final Date getTime(final Date start) {
-        final Calendar cal = Calendar.getInstance();
+        java.util.TimeZone tz = null;
+        if (start instanceof DateTime) {
+            tz = ((DateTime)start).getTimeZone();
+            if (tz == null) {
+                tz = TimeZones.getUtcTimeZone();
+            }
+        } else {
+            tz = TimeZones.getUtcTimeZone();
+        }
+        final Calendar cal = Calendar.getInstance(tz);
         cal.setTime(start);
         if (isNegative()) {
             cal.add(Calendar.WEEK_OF_YEAR, -weeks);
