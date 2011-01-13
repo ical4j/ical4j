@@ -36,7 +36,7 @@ import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
-import net.fortuna.ical4j.util.TimeZones;
+import net.fortuna.ical4j.util.Dates;
 
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -210,9 +210,14 @@ public class Dur implements Comparable, Serializable {
             end = date2;
         }
 
-        final Calendar startCal = Calendar.getInstance();
+        final Calendar startCal;
+        if (start instanceof net.fortuna.ical4j.model.Date) {
+            startCal = Dates.getCalendarInstance((net.fortuna.ical4j.model.Date)start);
+        } else {
+            startCal = Calendar.getInstance();
+        }
         startCal.setTime(start);
-        final Calendar endCal = Calendar.getInstance();
+        final Calendar endCal = Calendar.getInstance(startCal.getTimeZone());
         endCal.setTime(end);
 
         // Init our duration interval (which is in units that evolve as we
@@ -269,16 +274,13 @@ public class Dur implements Comparable, Serializable {
      * @return the end of the duration as a date
      */
     public final Date getTime(final Date start) {
-        java.util.TimeZone tz = null;
-        if (start instanceof DateTime) {
-            tz = ((DateTime)start).getTimeZone();
-            if (tz == null) {
-                tz = TimeZones.getUtcTimeZone();
-            }
+        final Calendar cal;
+        if (start instanceof net.fortuna.ical4j.model.Date) {
+            cal = Dates.getCalendarInstance((net.fortuna.ical4j.model.Date)start);
         } else {
-            tz = TimeZones.getUtcTimeZone();
+            cal = Calendar.getInstance();
         }
-        final Calendar cal = Calendar.getInstance(tz);
+
         cal.setTime(start);
         if (isNegative()) {
             cal.add(Calendar.WEEK_OF_YEAR, -weeks);

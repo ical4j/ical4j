@@ -150,6 +150,7 @@ public class DurTest extends TestCase {
      */
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
+        TimeZoneRegistry tzreg = TimeZoneRegistryFactory.getInstance().createRegistry();
         suite.addTest(new DurTest(new Dur("PT15M"), "PT15M"));
         
         Calendar cal = Calendar.getInstance();
@@ -157,7 +158,7 @@ public class DurTest extends TestCase {
         cal.add(Calendar.MINUTE, 15);
         suite.addTest(new DurTest(new Dur("PT15M"), startTime, cal.getTime()));
 
-        cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2011);
         cal.set(Calendar.MONTH, Calendar.MARCH);
         cal.set(Calendar.DAY_OF_MONTH, 26);
@@ -172,18 +173,18 @@ public class DurTest extends TestCase {
         // tests around various Daylight Saving Times
         // EST change on 20110327T020000
         suite.addTest(new DurTest(new Dur("P1D"),
-                new DateTime("20110326T200000", new TimeZoneRegistryImpl().getTimeZone("Europe/Paris")),
-                new DateTime("20110327T200000", new TimeZoneRegistryImpl().getTimeZone("Europe/Paris"))));
+                new DateTime("20110326T200000", tzreg.getTimeZone("Europe/Paris")),
+                new DateTime("20110327T200000", tzreg.getTimeZone("Europe/Paris"))));
         suite.addTest(new DurTest(new Dur("P1D"),
-                new DateTime("20110326T110000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles")),
-                new DateTime("20110327T110000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles"))));
+                new DateTime("20110326T110000", tzreg.getTimeZone("America/Los_Angeles")),
+                new DateTime("20110327T110000", tzreg.getTimeZone("America/Los_Angeles"))));
         // PST change on 20110313T020000
         suite.addTest(new DurTest(new Dur("P1D"),
-                new DateTime("20110312T200000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles")),
-                new DateTime("20110313T200000", new TimeZoneRegistryImpl().getTimeZone("America/Los_Angeles"))));
+                new DateTime("20110312T200000", tzreg.getTimeZone("America/Los_Angeles")),
+                new DateTime("20110313T200000", tzreg.getTimeZone("America/Los_Angeles"))));
         suite.addTest(new DurTest(new Dur("P1D"),
-                new DateTime("20110312T200000", new TimeZoneRegistryImpl().getTimeZone("Europe/Paris")),
-                new DateTime("20110313T200000", new TimeZoneRegistryImpl().getTimeZone("Europe/Paris"))));
+                new DateTime("20110312T200000", tzreg.getTimeZone("Europe/Paris")),
+                new DateTime("20110313T200000", tzreg.getTimeZone("Europe/Paris"))));
 
         suite.addTest(new DurTest(new Dur(33), "P33W"));
         
@@ -227,7 +228,6 @@ public class DurTest extends TestCase {
 
         // test adjacent weeks..
 //        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
-        TimeZoneRegistry tzreg = TimeZoneRegistryFactory.getInstance().createRegistry();
         cal = Calendar.getInstance(TimeZone.getTimeZone("America/Los_Angeles"));
         cal.clear(Calendar.SECOND);
         cal.set(2005, 0, 1, 12, 00);
@@ -237,7 +237,13 @@ public class DurTest extends TestCase {
         cal.set(2005, 0, 2, 11, 59);
         Date end = cal.getTime();
         DtEnd dtEnd = new DtEnd(new DateTime(end));
+        dtEnd.setTimeZone(tzreg.getTimeZone("America/Los_Angeles"));
         suite.addTest(new DurTest(new Dur(dtStart.getDate(), dtEnd.getDate()), "PT23H59M"));
+
+        // test accross Europe/Paris DST boundary should not matter
+        start = new net.fortuna.ical4j.model.DateTime("20110326T110000", tzreg.getTimeZone("America/Los_Angeles"));
+        end = new net.fortuna.ical4j.model.DateTime("20110327T110000", tzreg.getTimeZone("America/Los_Angeles"));
+        suite.addTest(new DurTest(new Dur(start, end), "P1D"));
 
         // test cross-year..
         Dur duration = new Dur(new net.fortuna.ical4j.model.Date("20061231"),
