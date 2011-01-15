@@ -56,13 +56,9 @@
 		</contributor>
 	</contributors>
 
-	<!--
-		<distributionManagement> <relocation>
-		<groupId>net.fortuna.ical4j</groupId> <artifactId>ical4j</artifactId>
-		<version>1.0-beta5</version> <message> Updated group id to conform
-		with maven standards </message> </relocation>
-		</distributionManagement>
-	-->
+	<!-- <distributionManagement> <relocation> <groupId>net.fortuna.ical4j</groupId> 
+		<artifactId>ical4j</artifactId> <version>1.0-beta5</version> <message> Updated 
+		group id to conform with maven standards </message> </relocation> </distributionManagement> -->
 
 	<build>
 		<sourceDirectory>source</sourceDirectory>
@@ -114,13 +110,10 @@
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<!--
-						<systemProperties> <property>
-						<name>ical4j.unfolding.relaxed</name> <value>true</value>
-						</property> <property> <name>ical4j.parsing.relaxed</name>
-						<value>true</value> </property> </systemProperties>
-						<forkMode>pertest</forkMode>
-					-->
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*Spec.java</include>
+					</includes>
 					<excludes>
 						<exclude>**/CalendarOutputterTest.java</exclude>
 						<exclude>**/Abstract*.java</exclude>
@@ -205,7 +198,6 @@
 						<goals>
 							<goal>generateStubs</goal>
 							<goal>compile</goal>
-							<goal>generateTestStubs</goal>
 							<goal>testCompile</goal>
 						</goals>
 					</execution>
@@ -252,6 +244,12 @@
 			<groupId>backport-util-concurrent</groupId>
 			<artifactId>backport-util-concurrent</artifactId>
 			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.spockframework</groupId>
+			<artifactId>spock-core</artifactId>
+			<version>0.5-groovy-1.6</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
