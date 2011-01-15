@@ -65,7 +65,7 @@ class DurSpec extends Specification {
 		duration	| timezone					| start				| expectedEnd
 		'1D'		| 'America/Los_Angeles'		| '20110326T110000'	| '20110327T110000'
 	}
-	
+
 	def 'verify duration plus time operations in different timezones with overriden platform default'() {
 		setup: 'override platform default timezone'
 		def originalPlatformTz = TimeZone.default
@@ -84,5 +84,32 @@ class DurSpec extends Specification {
 		where:
 		duration	| timezone					| start				| expectedEnd
 		'1D'		| 'America/Los_Angeles'		| '20110326T110000'	| '20110327T110000'
+	}
+	
+	def 'verify duration plus date operations'() {
+		expect: 'derived end date value equals expected'
+		new Dur(duration).getTime(new Date(start)) == new Date(expectedEnd)
+		
+		where:
+		duration	| start				| expectedEnd
+		'1D'		| '20110312'		| '20110313'
+		'1D'		| '20110313'		| '20110314'
+	}
+
+	def 'verify duration plus date operations with overriden platform default timezone'() {
+		setup: 'override platform default timezone'
+		def originalPlatformTz = TimeZone.default
+		TimeZone.default = TimeZone.getTimeZone('America/New_York')
+
+		expect: 'derived end date value equals expected'
+		new Dur(duration).getTime(new Date(start)) == new Date(expectedEnd)
+		
+		cleanup: 'restore platform default timezone'
+		TimeZone.default = originalPlatformTz
+
+		where:
+		duration	| start				| expectedEnd
+		'1D'		| '20110312'		| '20110313'
+		'1D'		| '20110313'		| '20110314'
 	}
 }
