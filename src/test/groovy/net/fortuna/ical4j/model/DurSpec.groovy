@@ -36,7 +36,7 @@ import spock.lang.Specification;
 class DurSpec extends Specification {
 
 	def 'validate string representation'() {
-		expect:
+		expect: 'derived string representation equals expected'
 		dur.toString() == expectedString
 		
 		where:
@@ -45,7 +45,7 @@ class DurSpec extends Specification {
 	}
 	
 	def 'verify duration plus time operations'() {
-		expect:
+		expect: 'derived end time value equals expected'
 		new Dur(duration).getTime(new DateTime(start)) == new DateTime(expectedEnd)
 		
 		where:
@@ -57,7 +57,7 @@ class DurSpec extends Specification {
 		setup: 'initialise timezone registry'
 		def tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
 		
-		expect:
+		expect: 'derived end time value equals expected'
 		def tz = tzRegistry.getTimeZone(timezone)
 		new Dur(duration).getTime(new DateTime(start, tz)) == new DateTime(expectedEnd, tz)
 		
@@ -74,7 +74,7 @@ class DurSpec extends Specification {
 		and: 'initialise timezone registry'
 		def tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
 		
-		expect:
+		expect: 'derived end time value equals expected'
 		def tz = tzRegistry.getTimeZone(timezone)
 		new Dur(duration).getTime(new DateTime(start, tz)) == new DateTime(expectedEnd, tz)
 		
