@@ -29,19 +29,37 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model.parameter;
+package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ContentBuilder;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import groovy.util.GroovyTestCase;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Dur;
+import spock.lang.Specification;
 
-class CnParseTest extends GroovyTestCase {
+class TriggerSpec extends Specification {
 
-	void testParse() {
-		assert ':MAILTO:XXXX@isit.nl' == new ContentBuilder().cn(':MAILTO:XXXX@isit.nl').value
+	def 'verify trigger value is expected'() {
+		expect: 'derived value is expected'
+		new Trigger(value).value == expectedValue
+		
+		where:
+		value							| expectedValue
+		new Dur(0)						| 'PT0S'
+		new DateTime('20110131T012647Z')| '20110131T012647Z'
+	}
+
+	def 'verify trigger date-time converts to UTC'() {
+		setup: 'override platform default timezone'
+		def originalPlatformTz = TimeZone.default
+		TimeZone.default = TimeZone.getTimeZone('Australia/Melbourne')
+		
+		expect: 'derived value is expected'
+		new Trigger(value).value == expectedValue
+		
+		cleanup: 'restore platform default timezone'
+		TimeZone.default = originalPlatformTz
+
+		where:
+		value							| expectedValue
+		new DateTime('20110131T012647')	| '20110130T142647Z'
 	}
 }
