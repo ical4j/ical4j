@@ -34,12 +34,17 @@ package net.fortuna.ical4j.util;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * @author fortuna
  *
  */
 public class ResourceLoader {
 
+	private static final Log LOG = LogFactory.getLog(ResourceLoader.class);
+	
 	/**
 	 * Load a resource via the thread context classloader. If security permissions don't allow
 	 * this fallback to loading via current classloader.
@@ -47,12 +52,17 @@ public class ResourceLoader {
 	 * @return a {@link URL} or null if resource is not found
 	 */
 	public static URL getResource(String name) {
+		URL resource = null;
 		try {
-			return Thread.currentThread().getContextClassLoader().getResource(name);
+			resource = Thread.currentThread().getContextClassLoader().getResource(name);
 		}
 		catch (SecurityException e) {
-			return ResourceLoader.class.getResource("/" + name);
+			LOG.info("Unable to access context classloader, using default. " + e.getMessage());
 		}
+		if (resource == null) {
+			resource = ResourceLoader.class.getResource("/" + name);
+		}
+		return resource;
 	}
 
 	/**
@@ -62,11 +72,16 @@ public class ResourceLoader {
 	 * @return an {@link InputStream} or null if resource is not found
 	 */
 	public static InputStream getResourceAsStream(String name) {
+		InputStream stream = null;
 		try {
-			return Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+			stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
 		}
 		catch (SecurityException e) {
-			return ResourceLoader.class.getResourceAsStream("/" + name);
+			LOG.info("Unable to access context classloader, using default. " + e.getMessage());
 		}
+		if (stream == null) {
+			stream = ResourceLoader.class.getResourceAsStream("/" + name);
+		}
+		return stream;
 	}
 }
