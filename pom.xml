@@ -123,7 +123,6 @@
 					</includes>
 					<excludes>
 						<exclude>**/CalendarOutputterTest.java</exclude>
-						<exclude>**/Abstract*.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
@@ -255,7 +254,7 @@
 		<dependency>
 			<groupId>org.spockframework</groupId>
 			<artifactId>spock-core</artifactId>
-			<version>0.5-groovy-1.7</version>
+			<version>0.5-groovy-1.6</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -263,6 +262,13 @@
 			<artifactId>quartz</artifactId>
 			<version>1.8.4</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.ccil.cowan.tagsoup</groupId>
+			<artifactId>tagsoup</artifactId>
+			<version>1.2</version>
+			<type>jar</type>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
