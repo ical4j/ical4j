@@ -35,6 +35,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import junit.framework.TestCase;
@@ -57,6 +58,8 @@ import org.apache.commons.logging.LogFactory;
 public class RecurTest extends TestCase {
     
     private static Log log = LogFactory.getLog(RecurTest.class);
+
+    private static final Locale testLocale = Locale.US;
 
     private TimeZone originalDefault;
     
@@ -222,7 +225,14 @@ public class RecurTest extends TestCase {
      * 
      */
     public void testGetNextDate() {
-        assertEquals(expectedDate, recur.getNextDate(seed, periodStart));
+        Locale defaultLocale = Locale.getDefault();
+        try {
+            Locale.setDefault(testLocale);
+            assertEquals(expectedDate, recur.getNextDate(seed, periodStart));
+        } finally {
+            Locale.setDefault(defaultLocale);
+        }
+        
     }
     
     /**
@@ -791,10 +801,20 @@ public class RecurTest extends TestCase {
         seed = new DateTime("20081103T070000");
         Date periodStart = new DateTime("20081109T210000Z");
         Date periodEnd = new DateTime("20100104T210000Z");
-        
-        Date getDatesFirstResult = (Date) recur.getDates(seed, periodStart, periodEnd, Value.DATE_TIME).get(0);
+
+        Locale currentLocale = Locale.getDefault();
+        Date getDatesFirstResult;
+        try {
+            Locale.setDefault(testLocale);
+            getDatesFirstResult = (Date) recur.getDates(seed, periodStart, periodEnd, Value.DATE_TIME).get(0);
+        } finally {
+            Locale.setDefault(currentLocale);
+        }
         suite.addTest(new RecurTest(recur, seed, periodStart, getDatesFirstResult));
-                      
+
+        recur = new Recur("FREQ=WEEKLY;BYDAY=MO");
+        suite.addTest(new RecurTest(recur, new Date("20081212"), new Date("20081211"), new Date("20081215")));
+
         recur = new Recur("FREQ=YEARLY;BYMONTH=4;BYDAY=1SU");
         suite.addTest(new RecurTest(recur, seed, periodStart, new DateTime("20090405T070000")));
 
