@@ -97,7 +97,7 @@
 			<testResource>
 				<directory>test</directory>
 				<includes>
-					<include>log4j.properties</include>
+					<include>*.properties</include>
 				</includes>
 			</testResource>
 		</testResources>
