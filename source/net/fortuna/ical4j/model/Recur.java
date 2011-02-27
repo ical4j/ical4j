@@ -1009,8 +1009,12 @@ public class Recur implements Serializable {
         else if (WEEKLY.equals(getFrequency()) || !getWeekNoList().isEmpty()) {
             final int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
             // construct a list of possible week days..
-//            cal.set(Calendar.DAY_OF_WEEK_IN_MONTH, 1);
-            cal.set(Calendar.DAY_OF_WEEK, 1);
+            int calendarWeekStartDay = cal.getFirstDayOfWeek();
+            // XXX: not working - needs investigation..
+//            if (weekStartDay != null) {
+//            	calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
+//            }
+            cal.set(Calendar.DAY_OF_WEEK, calendarWeekStartDay);
             while (cal.get(Calendar.DAY_OF_WEEK) != calDay) {
                 cal.add(Calendar.DAY_OF_WEEK, 1);
             }

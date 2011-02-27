@@ -37,11 +37,106 @@ import spock.lang.Specification;
 class RecurSpec extends Specification {
 
 	def 'verify recurrence rules for date-time'() {
+		setup: 'parse recurrence rule'
+		def recur = new Recur(rule)
+		def startDate = new Date(start)
+		def endDate = new Date(end)
+		def expectedDates = []
+		expected.each {
+			expectedDates << new DateTime(it)
+		}
+
 		expect:
-		recur.getDates(start, end, Value.DATE_TIME) == expectedDates
+		recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
 		
 		where:
-		recur								| start					| end					| expectedDates
-		new Recur('FREQ=WEEKLY;BYDAY=MO')	| new Date('20110101')	| new Date('20110201')	| [new DateTime('20110103T110000'), new DateTime('20110110T110000'), new DateTime('20110117T110000'), new DateTime('20110124T110000'), new DateTime('20110131T110000')]
+		rule					| start			| end			| expected
+		'FREQ=WEEKLY;BYDAY=MO'	| '20110101'	| '20110201'	| ['20110103T110000', '20110110T110000', '20110117T110000', '20110124T110000', '20110131T110000']
+	}
+	
+	def 'verify recurrence rules in different locales'() {
+		setup: 'override platform default locale'
+		def originalLocale = Locale.default
+		Locale.default = Locale.FRANCE
+		
+		and: 'parse recurrence rule'
+		def recur = new Recur(rule)
+		def startDate = new Date(start)
+		def endDate = new Date(end)
+		def expectedDates = []
+		expected.each {
+			expectedDates << new DateTime(it)
+		}
+		
+		expect:
+		recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+		
+		cleanup:
+		Locale.default = originalLocale
+		
+		where:
+		rule					| start			| end			| expected
+		'FREQ=WEEKLY;BYDAY=MO'	| '20110101'	| '20110201'	| ['20110103T110000', '20110110T110000', '20110117T110000', '20110124T110000', '20110131T110000']
+	}
+
+	def 'verify recurrence rules with a specified interval'() {
+		setup: 'parse recurrence rule'
+		def recur = new Recur(rule)
+		def startDate = new Date(start)
+		def endDate = new Date(end)
+		def expectedDates = []
+		expected.each {
+			expectedDates << new DateTime(it)
+		}
+
+		expect:
+		recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+		
+		where:
+		rule								| start			| end			| expected
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110109T110000', '20110123T110000']
+	}
+	
+	def 'verify recurrence rules with a specified WKST'() {
+		setup: 'parse recurrence rule'
+		def recur = new Recur(rule)
+		def startDate = new Date(start)
+		def endDate = new Date(end)
+		def expectedDates = []
+		expected.each {
+			expectedDates << new DateTime(it)
+		}
+
+		expect:
+		recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+		
+		where:
+		rule										| start			| end			| expected
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;WKST=MO'	| '20110101'	| '20110201'	| ['20110109T110000', '20110123T110000']
+	}
+
+	def 'verify recurrence rules in different locales with a specified interval'() {
+		setup: 'override platform default locale'
+		def originalLocale = Locale.default
+		Locale.default = Locale.FRANCE
+		
+		and: 'parse recurrence rule'
+		def recur = new Recur(rule)
+		def startDate = new Date(start)
+		def endDate = new Date(end)
+		def expectedDates = []
+		expected.each {
+			expectedDates << new DateTime(it)
+		}
+
+		expect:
+		recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+		
+		cleanup:
+		Locale.default = originalLocale
+		
+		where:
+		rule								| start			| end			| expected
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102T110000', '20110116T110000', '20110130T110000']
 	}
 }
