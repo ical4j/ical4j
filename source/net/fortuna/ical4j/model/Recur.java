@@ -1019,9 +1019,9 @@ public class Recur implements Serializable {
                 cal.add(Calendar.DAY_OF_WEEK, 1);
             }
 //            final int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
-            while (cal.get(Calendar.WEEK_OF_YEAR) == weekNo) {
+            if (cal.get(Calendar.WEEK_OF_YEAR) == weekNo) {
                 days.add(Dates.getInstance(cal.getTime(), type));
-                cal.add(Calendar.DAY_OF_WEEK, Dates.DAYS_PER_WEEK);
+//                cal.add(Calendar.DAY_OF_WEEK, Dates.DAYS_PER_WEEK);
             }
         }
         else if (MONTHLY.equals(getFrequency()) || !getMonthList().isEmpty()) {
