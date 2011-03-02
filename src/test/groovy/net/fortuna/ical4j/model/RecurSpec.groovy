@@ -32,6 +32,8 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.Configurator;
+import spock.lang.IgnoreRest;
 import spock.lang.Specification;
 
 class RecurSpec extends Specification {
@@ -94,10 +96,13 @@ class RecurSpec extends Specification {
 		
 		where:
 		rule								| start			| end			| expected
-		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110109T110000', '20110123T110000']
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102T110000', '20110116T110000', '20110130T110000']
 	}
 	
 	def 'verify recurrence rules with a specified WKST'() {
+//		setup: 'configure floating date timezone'
+//		System.setProperty('net.fortuna.ical4j.timezone.date.floating', 'true')
+		
 		setup: 'parse recurrence rule'
 		def recur = new Recur(rule)
 		def startDate = new Date(start)
@@ -112,7 +117,9 @@ class RecurSpec extends Specification {
 		
 		where:
 		rule										| start			| end			| expected
-		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;WKST=MO'	| '20110101'	| '20110201'	| ['20110109T110000', '20110123T110000']
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;WKST=SU'	| '20110101'	| '20110201'	| ['20110109T110000', '20110123T110000']
+//		'FREQ=WEEKLY;BYDAY=SU,MO;WKST=MO'			| '20110306'	| '20110313'	| ['20110307T110000']
+		'FREQ=WEEKLY;BYDAY=SU,MO;WKST=SU'			| '20110306'	| '20110313'	| ['20110306T110000', '20110307T110000']
 	}
 
 	def 'verify recurrence rules in different locales with a specified interval'() {

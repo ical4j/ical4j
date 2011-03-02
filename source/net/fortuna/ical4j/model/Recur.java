@@ -986,7 +986,14 @@ public class Recur implements Serializable {
      */
     private List getAbsWeekDays(final Date date, final Value type, final WeekDay weekDay) {
         final Calendar cal = Dates.getCalendarInstance(date);
+        // default week start is Monday per RFC5545
+        int calendarWeekStartDay = Calendar.MONDAY;
+        if (weekStartDay != null) {
+        	calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
+        }
+        cal.setFirstDayOfWeek(calendarWeekStartDay);
         cal.setTime(date);
+        
         final DateList days = new DateList(type);
         if (date instanceof DateTime) {
             if (((DateTime) date).isUtc()) {
@@ -1009,12 +1016,7 @@ public class Recur implements Serializable {
         else if (WEEKLY.equals(getFrequency()) || !getWeekNoList().isEmpty()) {
             final int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
             // construct a list of possible week days..
-            int calendarWeekStartDay = cal.getFirstDayOfWeek();
-            // XXX: not working - needs investigation..
-//            if (weekStartDay != null) {
-//            	calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
-//            }
-            cal.set(Calendar.DAY_OF_WEEK, calendarWeekStartDay);
+            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
             while (cal.get(Calendar.DAY_OF_WEEK) != calDay) {
                 cal.add(Calendar.DAY_OF_WEEK, 1);
             }
