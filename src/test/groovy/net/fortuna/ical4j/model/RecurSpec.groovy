@@ -118,8 +118,8 @@ class RecurSpec extends Specification {
 		where:
 		rule										| start			| end			| expected
 		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;WKST=SU'	| '20110101'	| '20110201'	| ['20110109T110000', '20110123T110000']
-//		'FREQ=WEEKLY;BYDAY=SU,MO;WKST=MO'			| '20110306'	| '20110313'	| ['20110307T110000']
-		'FREQ=WEEKLY;BYDAY=SU,MO;WKST=SU'			| '20110306'	| '20110313'	| ['20110306T110000', '20110307T110000']
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO;WKST=MO'			| '20110306'	| '20110313'	| ['20110306T110000']
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO;WKST=SU'			| '20110306'	| '20110313'	| ['20110306T110000', '20110307T110000']
 	}
 
 	def 'verify recurrence rules in different locales with a specified interval'() {
