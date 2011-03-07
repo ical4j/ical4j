@@ -108,8 +108,8 @@ public abstract class UtcProperty extends DateProperty {
         final DateTime dateTime = (DateTime) getDate();
 
         if (dateTime != null && !dateTime.isUtc()) {
-            throw new ValidationException(
-                    "DATE-TIME value must be specified in UTC time");
+            throw new ValidationException(getName() + 
+                    ": DATE-TIME value must be specified in UTC time");
         }
     }
 }
