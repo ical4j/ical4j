@@ -10,7 +10,7 @@
 	<artifactId>ical4j</artifactId>
 	<packaging>bundle</packaging>
 	<name>iCal4j</name>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<description>
 		A Java library for reading and writing iCalendar (*.ics) files
 	</description>
@@ -34,6 +34,7 @@
 		<developerConnection>scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
 		</developerConnection>
 		<url>http://ical4j.cvs.sourceforge.net/ical4j/iCal4j</url>
+    <tag>ical4j-1_0</tag>
   </scm>
 
 	<contributors>
@@ -137,7 +138,7 @@
 					</instructions>
 				</configuration>
 			</plugin>
-
+<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clover-plugin</artifactId>
@@ -153,7 +154,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
+ -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -322,7 +323,7 @@
 					</suppressionsFile>
 				</configuration>
 			</plugin>
-
+<!-- 
 			<plugin>
 				<artifactId>maven-clover-plugin</artifactId>
 				<configuration>
@@ -334,13 +335,13 @@
 					</excludes>
 				</configuration>
 			</plugin>
-
+ -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
-					<comparisonVersion>1.0-rc2</comparisonVersion>
+					<comparisonVersion>1.0-rc3</comparisonVersion>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -353,10 +354,10 @@
 							<type>tag</type>
 							<tags>
 								<tag implementation="java.lang.String">
-									ical4j-1_0-rc2
+									ical4j-1_0-rc3
 								</tag>
 								<tag implementation="java.lang.String">
-									ical4j-1_0-rc3
+									ical4j-1_0
 								</tag>
 							</tags>
 						</configuration>
