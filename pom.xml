@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<artifactId>modularity-parent</artifactId>
 		<groupId>net.modularity</groupId>
@@ -11,7 +10,7 @@
 	<artifactId>ical4j</artifactId>
 	<packaging>bundle</packaging>
 	<name>iCal4j</name>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<description>
 		A Java library for reading and writing iCalendar (*.ics) files
 	</description>
@@ -35,7 +34,8 @@
 		<developerConnection>scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
 		</developerConnection>
 		<url>http://ical4j.cvs.sourceforge.net/ical4j/iCal4j</url>
-	</scm>
+	  <tag>ical4j-1_0</tag>
+  </scm>
 
 	<contributors>
 		<contributor>
