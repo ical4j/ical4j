@@ -38,6 +38,14 @@ import spock.lang.Specification;
 
 class RecurSpec extends Specification {
 
+	def setupSpec() {
+		System.setProperty 'net.fortuna.ical4j.timezone.date.floating', 'true'
+	}
+	
+	def cleanupSpec() {
+		System.clearProperty 'net.fortuna.ical4j.timezone.date.floating'
+	}
+	
 	def 'verify recurrence rules for date-time'() {
 		setup: 'parse recurrence rule'
 		def recur = new Recur(rule)
@@ -53,7 +61,7 @@ class RecurSpec extends Specification {
 		
 		where:
 		rule					| start			| end			| expected
-		'FREQ=WEEKLY;BYDAY=MO'	| '20110101'	| '20110201'	| ['20110103T110000', '20110110T110000', '20110117T110000', '20110124T110000', '20110131T110000']
+		'FREQ=WEEKLY;BYDAY=MO'	| '20110101'	| '20110201'	| ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000']
 	}
 	
 	def 'verify recurrence rules in different locales'() {
@@ -78,7 +86,7 @@ class RecurSpec extends Specification {
 		
 		where:
 		rule					| start			| end			| expected
-		'FREQ=WEEKLY;BYDAY=MO'	| '20110101'	| '20110201'	| ['20110103T110000', '20110110T110000', '20110117T110000', '20110124T110000', '20110131T110000']
+		'FREQ=WEEKLY;BYDAY=MO'	| '20110101'	| '20110201'	| ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000']
 	}
 
 	def 'verify recurrence rules with a specified interval'() {
@@ -96,7 +104,7 @@ class RecurSpec extends Specification {
 		
 		where:
 		rule								| start			| end			| expected
-		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102T110000', '20110116T110000', '20110130T110000']
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102T000000', '20110116T000000', '20110130T000000']
 	}
 	
 	def 'verify recurrence rules with a specified WKST'() {
@@ -117,9 +125,9 @@ class RecurSpec extends Specification {
 		
 		where:
 		rule										| start			| end			| expected
-		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;WKST=SU'	| '20110101'	| '20110201'	| ['20110109T110000', '20110123T110000']
-		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO;WKST=MO'			| '20110306'	| '20110313'	| ['20110306T110000']
-		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO;WKST=SU'			| '20110306'	| '20110313'	| ['20110306T110000', '20110307T110000']
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;WKST=SU'	| '20110101'	| '20110201'	| ['20110109T000000', '20110123T000000']
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO;WKST=MO'			| '20110306'	| '20110313'	| ['20110306T000000']
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO;WKST=SU'			| '20110306'	| '20110313'	| ['20110306T000000', '20110307T000000']
 	}
 
 	def 'verify recurrence rules in different locales with a specified interval'() {
@@ -144,6 +152,6 @@ class RecurSpec extends Specification {
 		
 		where:
 		rule								| start			| end			| expected
-		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102T110000', '20110116T110000', '20110130T110000']
+		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102T000000', '20110116T000000', '20110130T000000']
 	}
 }
