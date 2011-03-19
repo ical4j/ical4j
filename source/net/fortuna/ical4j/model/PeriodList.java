@@ -33,7 +33,9 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
@@ -46,10 +48,12 @@ import java.util.TreeSet;
  * 
  * @author Ben Fortuna
  */
-public class PeriodList extends TreeSet implements Serializable {
+public class PeriodList implements Set, Serializable {
 
-    private static final long serialVersionUID = -6319585959747194724L;
+	private static final long serialVersionUID = -2317587285790834492L;
 
+	private final Set periods;
+    
     private TimeZone timezone;
     
     private boolean utc;
@@ -65,6 +69,7 @@ public class PeriodList extends TreeSet implements Serializable {
      * @param utc indicates whether the period list is in UTC time
      */
     public PeriodList(boolean utc) {
+    	periods = new TreeSet();
         this.utc = utc;
     }
     
@@ -129,7 +134,7 @@ public class PeriodList extends TreeSet implements Serializable {
             throw new IllegalArgumentException("Argument not a "
                     + Period.class.getName());
         }
-        return super.add(period);
+        return periods.add(period);
     }
 
     /**
@@ -300,4 +305,91 @@ public class PeriodList extends TreeSet implements Serializable {
     public final TimeZone getTimeZone() {
         return timezone;
     }
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean addAll(Collection arg0) {
+		for (Iterator i = arg0.iterator(); i.hasNext();) {
+			add(i.next());
+		}
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void clear() {
+		periods.clear();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean contains(Object o) {
+		return periods.contains(o);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean containsAll(Collection arg0) {
+		return periods.containsAll(arg0);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isEmpty() {
+		return periods.isEmpty();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Iterator iterator() {
+		return periods.iterator();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean remove(Object o) {
+		return periods.remove(o);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean removeAll(Collection arg0) {
+		return periods.removeAll(arg0);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean retainAll(Collection arg0) {
+		return periods.retainAll(arg0);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int size() {
+		return periods.size();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object[] toArray() {
+		return periods.toArray();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object[] toArray(Object[] arg0) {
+		return periods.toArray(arg0);
+	}
 }
