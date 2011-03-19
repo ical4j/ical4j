@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -40,11 +41,10 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
 
+import net.fortuna.ical4j.model.parameter.Value;
+
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-
-import net.fortuna.ical4j.model.parameter.Value;
-import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -79,7 +79,7 @@ public class DateList implements List, Serializable {
         	dates = Collections.EMPTY_LIST;
         }
         else {
-            dates = new CopyOnWriteArrayList();
+            dates = new ArrayList();
         }
     }
 
@@ -113,7 +113,7 @@ public class DateList implements List, Serializable {
             this.type = Value.DATE_TIME;
         }
         this.timeZone = timezone;
-        dates = new CopyOnWriteArrayList();
+        dates = new ArrayList();
     }
 
     /**
@@ -165,7 +165,7 @@ public class DateList implements List, Serializable {
         }
         
         this.type = type;
-        dates = new CopyOnWriteArrayList();
+        dates = new ArrayList();
         
         if (Value.DATE.equals(type)) {
             for (final Iterator i = list.iterator(); i.hasNext();) {
