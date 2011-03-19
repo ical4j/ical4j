@@ -54,7 +54,7 @@ public class ParameterList implements Serializable {
 
     private static final long serialVersionUID = -1913059830016450169L;
 
-    private List parameters;
+    private final List parameters;
 
     /**
      * Default constructor. Creates a modifiable parameter list.
@@ -85,13 +85,17 @@ public class ParameterList implements Serializable {
      */
     public ParameterList(final ParameterList list, final boolean unmodifiable)
             throws URISyntaxException {
-        parameters = new CopyOnWriteArrayList();
+    	
+        final List parameterList = new CopyOnWriteArrayList();
         for (final Iterator i = list.iterator(); i.hasNext();) {
             final Parameter parameter = (Parameter) i.next();
-            parameters.add(parameter.copy());
+            parameterList.add(parameter.copy());
         }
         if (unmodifiable) {
-            parameters = Collections.unmodifiableList(parameters);
+            parameters = Collections.unmodifiableList(parameterList);
+        }
+        else {
+        	parameters = parameterList;
         }
     }
 
