@@ -33,11 +33,18 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 import net.fortuna.ical4j.model.parameter.Value;
+import edu.emory.mathcs.backport.java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -46,11 +53,13 @@ import net.fortuna.ical4j.model.parameter.Value;
  * defaults to DATE-TIME instances.
  * @author Ben Fortuna
  */
-public class DateList extends ArrayList implements Serializable {
+public class DateList implements List, Serializable {
 
-    private static final long serialVersionUID = 5925108767897130313L;
+	private static final long serialVersionUID = -3700862452550012357L;
 
-    private final Value type;
+	private final Value type;
+    
+    private final List dates;
 
     private TimeZone timeZone;
     
@@ -60,8 +69,18 @@ public class DateList extends ArrayList implements Serializable {
      * Default constructor.
      */
     public DateList() {
-        super();
+    	this(false);
+    }
+
+    public DateList(final boolean unmodifiable) {
+    
         this.type = Value.DATE_TIME;
+        if (unmodifiable) {
+        	dates = Collections.EMPTY_LIST;
+        }
+        else {
+            dates = new CopyOnWriteArrayList();
+        }
     }
 
     /**
@@ -70,8 +89,7 @@ public class DateList extends ArrayList implements Serializable {
      * @deprecated
      */
     public DateList(final int initialCapacity) {
-        super(initialCapacity);
-        this.type = Value.DATE_TIME;
+    	this();
     }
 
     /**
@@ -95,6 +113,7 @@ public class DateList extends ArrayList implements Serializable {
             this.type = Value.DATE_TIME;
         }
         this.timeZone = timezone;
+        dates = new CopyOnWriteArrayList();
     }
 
     /**
@@ -120,6 +139,7 @@ public class DateList extends ArrayList implements Serializable {
      */
     public DateList(final String aValue, final Value aType, final TimeZone timezone)
             throws ParseException {
+    	
         this(aType, timezone);
         final StringTokenizer t = new StringTokenizer(aValue, ",");
         while (t.hasMoreTokens()) {
@@ -143,7 +163,10 @@ public class DateList extends ArrayList implements Serializable {
             throw new IllegalArgumentException(
                     "Type must be either DATE or DATE-TIME");
         }
+        
         this.type = type;
+        dates = new CopyOnWriteArrayList();
+        
         if (Value.DATE.equals(type)) {
             for (final Iterator i = list.iterator(); i.hasNext();) {
                 add(new Date((Date) i.next()));
@@ -211,7 +234,7 @@ public class DateList extends ArrayList implements Serializable {
         if (!(date instanceof Date)) {
             throw new IllegalArgumentException("Argument not a " + Date.class.getName());
         }
-        return super.add(date);
+        return dates.add(date);
     }
 
     /**
@@ -284,4 +307,112 @@ public class DateList extends ArrayList implements Serializable {
     public final TimeZone getTimeZone() {
         return timeZone;
     }
+
+	public void add(int arg0, Object arg1) {
+		dates.add(arg0, arg1);
+	}
+
+	public boolean addAll(Collection arg0) {
+		return dates.addAll(arg0);
+	}
+
+	public boolean addAll(int arg0, Collection arg1) {
+		return dates.addAll(arg0, arg1);
+	}
+
+	public void clear() {
+		dates.clear();
+	}
+
+	public boolean contains(Object o) {
+		return dates.contains(o);
+	}
+
+	public boolean containsAll(Collection arg0) {
+		return dates.containsAll(arg0);
+	}
+
+	public Object get(int index) {
+		return dates.get(index);
+	}
+
+	public int indexOf(Object o) {
+		return dates.indexOf(o);
+	}
+
+	public boolean isEmpty() {
+		return dates.isEmpty();
+	}
+
+	public Iterator iterator() {
+		return dates.iterator();
+	}
+
+	public int lastIndexOf(Object o) {
+		return dates.lastIndexOf(o);
+	}
+
+	public ListIterator listIterator() {
+		return dates.listIterator();
+	}
+
+	public ListIterator listIterator(int index) {
+		return dates.listIterator(index);
+	}
+
+	public Object remove(int index) {
+		return dates.remove(index);
+	}
+
+	public boolean remove(Object o) {
+		return dates.remove(o);
+	}
+
+	public boolean removeAll(Collection arg0) {
+		return dates.removeAll(arg0);
+	}
+
+	public boolean retainAll(Collection arg0) {
+		return dates.retainAll(arg0);
+	}
+
+	public Object set(int arg0, Object arg1) {
+		return dates.set(arg0, arg1);
+	}
+
+	public int size() {
+		return dates.size();
+	}
+
+	public List subList(int fromIndex, int toIndex) {
+		return dates.subList(fromIndex, toIndex);
+	}
+
+	public Object[] toArray() {
+		return dates.toArray();
+	}
+
+	public Object[] toArray(Object[] arg0) {
+		return dates.toArray(arg0);
+	}
+	
+	public boolean equals(Object obj) {
+		if (!getClass().isAssignableFrom(obj.getClass())) {
+			return false;
+		}
+		final DateList rhs = (DateList) obj;
+		return new EqualsBuilder().append(dates, rhs.dates)
+			.append(type, rhs.type)
+			.append(timeZone, rhs.timeZone)
+			.append(utc, utc)
+			.isEquals();
+	}
+	
+	public int hashCode() {
+		return new HashCodeBuilder().append(dates)
+			.append(type)
+			.append(timeZone)
+			.append(utc)
+			.toHashCode();
+	}
 }

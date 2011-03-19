@@ -410,7 +410,7 @@ public class PeriodList implements Set, Serializable {
 	}
 	
 	public boolean equals(Object obj) {
-		if (!getClass().equals(obj.getClass())) {
+		if (!getClass().isAssignableFrom(obj.getClass())) {
 			return false;
 		}
 		final PeriodList rhs = (PeriodList) obj;

@@ -179,7 +179,7 @@ public class RDate extends DateListProperty {
      * @param periods a list of periods
      */
     public RDate(final PeriodList periods) {
-        super(RDATE, (DateList) null, PropertyFactoryImpl.getInstance());
+        super(RDATE, new DateList(true), PropertyFactoryImpl.getInstance());
         this.periods = periods;
     }
 
@@ -189,7 +189,7 @@ public class RDate extends DateListProperty {
      * @param periods a list of periods
      */
     public RDate(final ParameterList aList, final PeriodList periods) {
-        super(RDATE, aList, (DateList) null, PropertyFactoryImpl.getInstance());
+        super(RDATE, aList, new DateList(true), PropertyFactoryImpl.getInstance());
         this.periods = periods;
     }
 

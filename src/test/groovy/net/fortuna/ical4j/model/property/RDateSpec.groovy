@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.DateTime
 import net.fortuna.ical4j.model.Period
+import net.fortuna.ical4j.model.PeriodList;
 import spock.lang.Specification
 
 
@@ -57,6 +58,18 @@ class RDateSpec extends Specification {
 		when: 'add period to rdate'
 		RDate rdate = new RDate()
 		rdate.periods.add(period)
+		
+		then: 'exception is thrown'
+		thrown(UnsupportedOperationException)
+	}
+	
+	def 'should throw exception when trying to add date value to period rdate instance'() {
+		setup: 'create new date-time'
+		DateTime date = new DateTime('20110319T140400')
+		
+		when: 'add date to rdate'
+		RDate rdate = new RDate(new PeriodList())
+		rdate.dates.add(date)
 		
 		then: 'exception is thrown'
 		thrown(UnsupportedOperationException)
