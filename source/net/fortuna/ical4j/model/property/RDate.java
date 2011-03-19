@@ -141,6 +141,7 @@ public class RDate extends DateListProperty {
      */
     public RDate() {
         super(RDATE, PropertyFactoryImpl.getInstance());
+        periods = new PeriodList(false, true);
     }
 
     /**
@@ -160,6 +161,7 @@ public class RDate extends DateListProperty {
      */
     public RDate(final DateList dates) {
         super(RDATE, dates, PropertyFactoryImpl.getInstance());
+        periods = new PeriodList(false, true);
     }
 
     /**
@@ -169,6 +171,7 @@ public class RDate extends DateListProperty {
      */
     public RDate(final ParameterList aList, final DateList dates) {
         super(RDATE, aList, dates, PropertyFactoryImpl.getInstance());
+        periods = new PeriodList(false, true);
     }
 
     /**

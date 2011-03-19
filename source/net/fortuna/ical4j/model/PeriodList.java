@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -72,8 +73,20 @@ public class PeriodList implements Set, Serializable {
      * @param utc indicates whether the period list is in UTC time
      */
     public PeriodList(boolean utc) {
-    	periods = new TreeSet();
+    	this(utc, false);
+    }
+
+    /**
+     * @param utc indicates whether the period list is in UTC time
+     */
+    public PeriodList(boolean utc, final boolean unmodifiable) {
         this.utc = utc;
+        if (unmodifiable) {
+        	periods = Collections.EMPTY_SET;
+        }
+        else {
+        	periods = new TreeSet();
+        }
     }
     
     /**
