@@ -39,6 +39,9 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+
 /**
  * $Id$ [23-Apr-2004]
  *
@@ -391,5 +394,23 @@ public class PeriodList implements Set, Serializable {
 	 */
 	public Object[] toArray(Object[] arg0) {
 		return periods.toArray(arg0);
+	}
+	
+	public boolean equals(Object obj) {
+		if (!getClass().equals(obj.getClass())) {
+			return false;
+		}
+		final PeriodList rhs = (PeriodList) obj;
+		return new EqualsBuilder().append(periods, rhs.periods)
+			.append(timezone, rhs.timezone)
+			.append(utc, utc)
+			.isEquals();
+	}
+	
+	public int hashCode() {
+		return new HashCodeBuilder().append(periods)
+			.append(timezone)
+			.append(utc)
+			.toHashCode();
 	}
 }
