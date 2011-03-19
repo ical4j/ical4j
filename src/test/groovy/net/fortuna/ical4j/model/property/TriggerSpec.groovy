@@ -53,13 +53,13 @@ class TriggerSpec extends Specification {
 		TimeZone.default = TimeZone.getTimeZone('Australia/Melbourne')
 		
 		expect: 'derived value is expected'
-		new Trigger(value).value == expectedValue
+		new Trigger(new DateTime(value)).value == expectedValue
 		
 		cleanup: 'restore platform default timezone'
 		TimeZone.default = originalPlatformTz
 
 		where:
-		value							| expectedValue
-		new DateTime('20110131T012647')	| '20110130T142647Z'
+		value				| expectedValue
+		'20110131T012647'	| '20110130T142647Z'
 	}
 }
