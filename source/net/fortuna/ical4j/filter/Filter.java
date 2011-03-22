@@ -66,7 +66,7 @@ public class Filter {
      */
     public static final int MATCH_ALL = 2;
 
-    private Rule[] rules;
+    private List rules;
 
     private int type;
 
@@ -88,7 +88,7 @@ public class Filter {
      * @see Filter#MATCH_ANY
      */
     public Filter(final Rule[] rules, final int type) {
-        this.rules = rules;
+        this.rules = Arrays.asList(rules);
         this.type = type;
     }
 
@@ -172,13 +172,13 @@ public class Filter {
      * @return Returns the rules.
      */
     public final Rule[] getRules() {
-        return rules;
+        return (Rule[]) rules.toArray(new Rule[rules.size()]);
     }
 
     /**
      * @param rules The rules to set.
      */
     public final void setRules(final Rule[] rules) {
-        this.rules = rules;
+        this.rules = Arrays.asList(rules);
     }
 }
