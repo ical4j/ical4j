@@ -51,6 +51,8 @@ import net.fortuna.ical4j.model.parameter.RelType;
 import net.fortuna.ical4j.model.parameter.Related;
 import net.fortuna.ical4j.model.parameter.Role;
 import net.fortuna.ical4j.model.parameter.Rsvp;
+import net.fortuna.ical4j.model.parameter.ScheduleAgent;
+import net.fortuna.ical4j.model.parameter.ScheduleStatus;
 import net.fortuna.ical4j.model.parameter.SentBy;
 import net.fortuna.ical4j.model.parameter.Type;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -93,6 +95,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
         registerDefaultFactory(Parameter.RELTYPE, new RelTypeFactory());
         registerDefaultFactory(Parameter.ROLE, new RoleFactory());
         registerDefaultFactory(Parameter.RSVP, new RsvpFactory());
+        registerDefaultFactory(Parameter.SCHEDULE_AGENT, new ScheduleAgentFactory());
+        registerDefaultFactory(Parameter.SCHEDULE_STATUS, new ScheduleStatusFactory());
         registerDefaultFactory(Parameter.SENT_BY, new SentByFactory());
         registerDefaultFactory(Parameter.TYPE, new TypeFactory());
         registerDefaultFactory(Parameter.TZID, new TzIdFactory());
@@ -402,6 +406,30 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
                 parameter = Rsvp.FALSE;
             }
             return parameter;
+        }
+    }
+
+    private static class ScheduleAgentFactory implements ParameterFactory {
+        public Parameter createParameter(final String name,
+                final String value) throws URISyntaxException {
+            final ScheduleAgent parameter = new ScheduleAgent(value);
+            if (ScheduleAgent.SERVER.equals(parameter)) {
+                return ScheduleAgent.SERVER;
+            }
+            else if (ScheduleAgent.CLIENT.equals(parameter)) {
+                return ScheduleAgent.CLIENT;
+            }
+            else if (ScheduleAgent.NONE.equals(parameter)) {
+                return ScheduleAgent.NONE;
+            }
+            return parameter;
+        }
+    }
+
+    private static class ScheduleStatusFactory implements ParameterFactory {
+        public Parameter createParameter(final String name, 
+        		final String value) throws URISyntaxException {
+            return new ScheduleStatus(value);
         }
     }
     

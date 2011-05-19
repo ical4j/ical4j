@@ -54,7 +54,7 @@ import net.fortuna.ical4j.util.Strings;
  */
 public class CalendarBuilderCustomRegistryTest extends TestCase {
 
-    private static final String SCHEDULE_STATUS = "SCHEDULE-STATUS";
+    private static final String SCHEDULE_STATUS = "SCHEDULE-STATUS-1";
 
     private static final String VEVENT_WITH_SCHEDULE_STATUS =
             "BEGIN:VCALENDAR\r\n"
@@ -64,7 +64,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
              + "UID:12\r\n"
              + "DTSTAMP:20071212T121212Z\r\n"
              + "ORGANIZER:mailto:org@example.com\r\n"
-             + "ATTENDEE;SCHEDULE-STATUS=2.0:mailto:attendee@example.com\r\n"
+             + "ATTENDEE;SCHEDULE-STATUS-1=2.0:mailto:attendee@example.com\r\n"
              + "END:VEVENT\r\n"
              + "END:VCALENDAR";
 

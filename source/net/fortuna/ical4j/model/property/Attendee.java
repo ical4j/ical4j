@@ -141,6 +141,12 @@ public class Attendee extends Property {
         ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
+        /* scheduleagent and schedulestatus added for CalDAV scheduling
+         */
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_AGENT,
+                                                         getParameters());
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_STATUS,
+                                                         getParameters());
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */

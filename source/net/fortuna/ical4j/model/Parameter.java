@@ -145,6 +145,16 @@ public abstract class Parameter extends Content {
     public static final String RSVP = "RSVP";
 
     /**
+     * Schedule agent.
+     */
+    public static final String SCHEDULE_AGENT = "SCHEDULE-AGENT";
+
+    /**
+     * Schedule status.
+     */
+    public static final String SCHEDULE_STATUS = "SCHEDULE-STATUS";
+
+    /**
      * Sent by.
      */
     public static final String SENT_BY = "SENT-BY";

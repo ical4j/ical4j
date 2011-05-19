@@ -198,6 +198,11 @@ public class Organizer extends Property {
         ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
                 getParameters());
 
+        /* schedulestatus added for CalDAV scheduling
+         */
+        ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_STATUS,
+                                                         getParameters());
+
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
