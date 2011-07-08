@@ -151,6 +151,7 @@ public class VAvailability extends CalendarComponent {
         b.append(getName());
         b.append(Strings.LINE_SEPARATOR);
         b.append(getProperties());
+        b.append(getAvailable());
         b.append(END);
         b.append(':');
         b.append(getName());
