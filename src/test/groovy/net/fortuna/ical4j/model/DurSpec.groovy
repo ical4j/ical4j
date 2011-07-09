@@ -40,8 +40,10 @@ class DurSpec extends Specification {
 		dur.toString() == expectedString
 		
 		where:
-		dur			| expectedString
-		new Dur(33)	| 'P33W'
+		dur						| expectedString
+		new Dur(33)				| 'P33W'
+		new Dur('-P2D')			| '-P2D'
+		new Dur(-2, 0, 0, 0)	| '-P2D'
 	}
 	
 	def 'verify duration plus time operations'() {
