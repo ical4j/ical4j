@@ -108,7 +108,7 @@ public final class Strings {
      * Defines a regular expression representing all parameter strings that
      * should be quoted.
      */
-    public static final Pattern PARAM_QUOTE_PATTERN = Pattern.compile("[:;,]");
+    public static final Pattern PARAM_QUOTE_PATTERN = Pattern.compile("[:;,]|[^\\p{ASCII}]");
     
     /**
      * A string used to denote the start (and end) of iCalendar content lines.

@@ -51,6 +51,7 @@ class CnSpec extends Specification {
 		where:
 		value					| expectedString
 		':MAILTO:XXXX@isit.nl'	| 'CN=":MAILTO:XXXX@isit.nl"'
+		'HR kompetencia központ'| 'CN="HR kompetencia központ"'
 	}
 
 }
