@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -60,9 +59,6 @@ import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.PropertyValidator;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -457,8 +453,9 @@ public class VFreeBusy extends CalendarComponent {
             for (final Iterator i = periods.iterator(); i.hasNext();) {
                 final Period period = (Period) i.next();
                 
-                // check if period outside bounds..
-                if (range.contains(period)) {
+                // check if period outside bounds.. or period intersects with the end of the range..
+                if (range.contains(period) || 
+                		(range.intersects(period) && period.getStart().after(range.getRangeStart()))) {
                     
                     // calculate duration between this period start and last period end..
                     final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
@@ -466,6 +463,7 @@ public class VFreeBusy extends CalendarComponent {
                         fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
                     }
                 }
+                // TODO: period intersects with the start of the range..
                 
                 if (period.getEnd().after(lastPeriodEnd)) {
                     lastPeriodEnd = period.getEnd();
