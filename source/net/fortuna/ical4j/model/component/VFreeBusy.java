@@ -463,7 +463,6 @@ public class VFreeBusy extends CalendarComponent {
                         fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
                     }
                 }
-                // TODO: period intersects with the start of the range..
                 
                 if (period.getEnd().after(lastPeriodEnd)) {
                     lastPeriodEnd = period.getEnd();
