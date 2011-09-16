@@ -10,7 +10,7 @@
 	<artifactId>ical4j</artifactId>
 	<packaging>bundle</packaging>
 	<name>iCal4j</name>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<description>
 		A Java library for reading and writing iCalendar (*.ics) files
 	</description>
@@ -34,7 +34,6 @@
 		<developerConnection>scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
 		</developerConnection>
 		<url>http://ical4j.cvs.sourceforge.net/ical4j/iCal4j</url>
-    <tag>ical4j-1_0_1</tag>
   </scm>
 
 	<contributors>
