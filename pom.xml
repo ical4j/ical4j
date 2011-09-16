@@ -288,31 +288,63 @@
 
 	<reporting>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-pmd-plugin</artifactId>
-				<configuration>
-					<linkXref>true</linkXref>
-					<targetJdk>1.4</targetJdk>
-					<rulesets>
-						<ruleset>http://svn.mnode.org/tools/pmd/mnode_ruleset.xml
-						</ruleset>
-					</rulesets>
-				</configuration>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <overview>
+                        ${project.build.outputDirectory}/overview.html
+                    </overview>
+                </configuration>
+            </plugin>
 
-			<!-- Override default suppressions.. -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<configuration>
-					<configLocation>http://svn.mnode.org/tools/checkstyle/mnode_checks.xml
-					</configLocation>
-					<suppressionsLocation>etc/checkstyle-suppressions.xml</suppressionsLocation>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
+
+            <!-- Override default suppressions.. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>http://svn.mnode.org/tools/checkstyle/mnode_checks.xml</configLocation>
+                    <suppressionsLocation>etc/checkstyle-suppressions.xml</suppressionsLocation>
                     <suppressionsFileExpression>suppressions.file.mnode</suppressionsFileExpression>
                     <propertyExpansion>checkstyle.suppressions.file=etc/checkstyle-suppressions.xml</propertyExpansion>
-				</configuration>
-			</plugin>
+                    <propertyExpansion>checkstyle.suppressions.file=etc/checkstyle-suppressions.xml</propertyExpansion>
+                </configuration>
+            </plugin>
+        
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <configuration>
+                    <linkXref>true</linkXref>
+                    <targetJdk>1.4</targetJdk>
+                    <rulesets>
+                        <ruleset>http://svn.mnode.org/tools/pmd/mnode_ruleset.xml
+                        </ruleset>
+                    </rulesets>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jdepend-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>taglist-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+            </plugin>
 <!-- 
 			<plugin>
 				<artifactId>maven-clover-plugin</artifactId>
@@ -334,6 +366,7 @@
 					<comparisonVersion>1.0</comparisonVersion>
 				</configuration>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
