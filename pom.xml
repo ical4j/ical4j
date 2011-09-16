@@ -370,6 +370,9 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
+				<configuration>
+					<dateFormat>EEE MMM dd hh:mm:ss yyyy Z</dateFormat>
+				</configuration>
 				<reportSets>
 					<reportSet>
 						<id>changelog</id>
