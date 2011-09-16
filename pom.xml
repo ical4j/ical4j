@@ -339,7 +339,7 @@
 				<artifactId>clirr-maven-plugin</artifactId>
 				<configuration>
 					<minSeverity>info</minSeverity>
-					<comparisonVersion>1.0-rc3</comparisonVersion>
+					<comparisonVersion>1.0</comparisonVersion>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -352,10 +352,10 @@
 							<type>tag</type>
 							<tags>
 								<tag implementation="java.lang.String">
-									ical4j-1_0-rc3
+									ical4j-1_0
 								</tag>
 								<tag implementation="java.lang.String">
-									ical4j-1_0
+									ical4j-1_0_1
 								</tag>
 							</tags>
 						</configuration>
