@@ -29,11 +29,11 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:cvs:pserver:anonymous:@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
+		<connection>scm:hg:http://ical4j.hg.sourceforge.net:8000/hgroot/ical4j/ical4j
 		</connection>
-		<developerConnection>scm:cvs:ext:fortuna@ical4j.cvs.sourceforge.net:/cvsroot/ical4j:iCal4j
+		<developerConnection>scm:hg:ssh://ical4j.hg.sourceforge.net/hgroot/ical4j/ical4j
 		</developerConnection>
-		<url>http://ical4j.cvs.sourceforge.net/ical4j/iCal4j</url>
+		<url>http://ical4j.hg.sourceforge.net/hgweb/ical4j/ical4j/</url>
   </scm>
 
 	<contributors>
