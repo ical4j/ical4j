@@ -67,16 +67,9 @@
 		group id to conform with maven standards </message> </relocation> </distributionManagement> -->
 
 	<build>
-		<sourceDirectory>source</sourceDirectory>
 		<resources>
 			<resource>
-				<directory>source</directory>
-				<includes>
-					<include>**/tz.alias</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>etc</directory>
+				<directory>src/main/resources</directory>
 				<includes>
 					<include>zoneinfo/**</include>
 				</includes>
@@ -87,19 +80,13 @@
 			</resource>
 			<resource>
 				<directory>src/main/resources</directory>
+				<includes>
+				    <include>overview.html</include>
+				    <include>net/**</include>
+				</includes>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
-
-		<testSourceDirectory>test</testSourceDirectory>
-		<testResources>
-			<testResource>
-				<directory>test</directory>
-				<includes>
-					<include>*.properties</include>
-				</includes>
-			</testResource>
-		</testResources>
 
 		<plugins>
 			<plugin>
@@ -125,7 +112,12 @@
 					</excludes>
 				</configuration>
 			</plugin>
-
+			
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+            </plugin>
+            
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
