@@ -376,6 +376,7 @@
 				<reportSets>
 					<reportSet>
 						<id>changelog</id>
+						<!-- 
 						<configuration>
 							<type>tag</type>
 							<tags>
@@ -387,6 +388,7 @@
 								</tag>
 							</tags>
 						</configuration>
+						 -->
 						<reports>
 							<report>changelog</report>
 						</reports>
