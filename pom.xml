@@ -10,7 +10,7 @@
 	<artifactId>ical4j</artifactId>
 	<packaging>bundle</packaging>
 	<name>ical4j</name>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<description>
 		A Java library for reading and writing iCalendar (*.ics) files
 	</description>
