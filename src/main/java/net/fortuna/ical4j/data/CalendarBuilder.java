@@ -39,7 +39,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import net.fortuna.ical4j.model.Calendar;
@@ -56,6 +55,7 @@ import net.fortuna.ical4j.model.PropertyFactoryRegistry;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VAvailability;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -93,7 +93,7 @@ public class CalendarBuilder {
 
     private final TimeZoneRegistry tzRegistry;
     
-    private List datesMissingTimezones;
+    private List<Property> datesMissingTimezones;
 
     /**
      * The calendar instance created by the builder.
@@ -103,7 +103,7 @@ public class CalendarBuilder {
     /**
      * The current component instance created by the builder.
      */
-    protected Component component;
+    protected CalendarComponent component;
 
     /**
      * The current sub-component instance created by the builder.
@@ -205,7 +205,7 @@ public class CalendarBuilder {
         component = null;
         subComponent = null;
         property = null;
-        datesMissingTimezones = new ArrayList();
+        datesMissingTimezones = new ArrayList<Property>();
 
         parser.parse(uin, contentHandler);
 
@@ -393,8 +393,7 @@ public class CalendarBuilder {
         throws IOException {
         
         // Go through each property and try to resolve the TZID.
-        for (final Iterator it = datesMissingTimezones.iterator();it.hasNext();) {
-            final Property property = (Property) it.next();
+        for (Property property : datesMissingTimezones) {
             final Parameter tzParam = property.getParameter(Parameter.TZID);
 
             // tzParam might be null: 

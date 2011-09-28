@@ -74,7 +74,7 @@ public final class ComponentFactory {
      * @param name a component name
      * @return a new component instance of the specified type
      */
-    public Component createComponent(final String name) {
+    public <T extends Component> T createComponent(final String name) {
         return createComponent(name, new PropertyList());
     }
 
@@ -84,7 +84,8 @@ public final class ComponentFactory {
      * @param properties a list of component properties
      * @return a component
      */
-    public Component createComponent(final String name, final PropertyList properties) {
+    @SuppressWarnings("unchecked")
+	public <T extends Component> T createComponent(final String name, final PropertyList properties) {
         Component component = null;
         if (Component.VALARM.equals(name)) {
             component = new VAlarm(properties);
@@ -129,7 +130,7 @@ public final class ComponentFactory {
             throw new IllegalArgumentException("Illegal component [" + name
                     + "]");
         }
-        return component;
+        return (T) component;
     }
 
     /**
@@ -139,8 +140,9 @@ public final class ComponentFactory {
      * @param components a list of sub-components (namely standard/daylight timezones)
      * @return a component
      */
-    public Component createComponent(final String name, final PropertyList properties,
-            final ComponentList components) {
+    @SuppressWarnings("unchecked")
+	public <T extends Component> T createComponent(final String name, final PropertyList properties,
+            final ComponentList<Component> components) {
         
         if (components != null) {
             Component component = null;
@@ -154,7 +156,7 @@ public final class ComponentFactory {
                 throw new IllegalArgumentException("Illegal component [" + name
                         + "]");
             }
-            return component;
+            return (T) component;
         }
         return createComponent(name, properties);
     }

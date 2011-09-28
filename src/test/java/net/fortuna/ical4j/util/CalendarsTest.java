@@ -35,17 +35,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Property;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$
@@ -155,13 +155,11 @@ public class CalendarsTest extends TestCase {
         }
 
         for (int i = 0; i < calendars.length; i++) {
-            for (Iterator it = calendars[i].getProperties().iterator(); it.hasNext();) {
-                Object p = it.next();
+            for (Property p : calendars[i].getProperties()) {
                 assertTrue("Property [" + p + "] not found in merged calendar",
                         result.getProperties().contains(p));
             }
-            for (Iterator it = calendars[i].getComponents().iterator(); it.hasNext();) {
-                Object c = it.next();
+            for (Component c : calendars[i].getComponents()) {
                 assertTrue("Component [" + c + "] not found in merged calendar",
                         result.getComponents().contains(c));
             }
@@ -195,7 +193,7 @@ public class CalendarsTest extends TestCase {
         suite.addTest(new CalendarsTest("testLoadFileNotFoundException", "etc/samples/valid/doesnt-exist.ics"));
         suite.addTest(new CalendarsTest("testLoadParserException", "etc/samples/invalid/google_aus_holidays.ics"));
 
-        List calendars = new ArrayList();
+        List<Calendar> calendars = new ArrayList<Calendar>();
         calendars.add(Calendars.load("etc/samples/valid/Australian32Holidays.ics"));
         calendars.add(Calendars.load("etc/samples/valid/OZMovies.ics"));
         suite.addTest(new CalendarsTest("testMerge", (Calendar[]) calendars.toArray(new Calendar[calendars.size()])));

@@ -48,6 +48,7 @@ import net.fortuna.ical4j.model.ConstraintViolationException;
 import net.fortuna.ical4j.model.IndexedComponentList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.Method;
@@ -105,15 +106,13 @@ public final class Calendars {
     public static Calendar merge(final Calendar c1, final Calendar c2) {
         final Calendar result = new Calendar();
         result.getProperties().addAll(c1.getProperties());
-        for (final Iterator i = c2.getProperties().iterator(); i.hasNext();) {
-            final Property p = (Property) i.next();
+        for (final Property p : c2.getProperties()) {
             if (!result.getProperties().contains(p)) {
                 result.getProperties().add(p);
             }
         }
         result.getComponents().addAll(c1.getComponents());
-        for (final Iterator i = c2.getComponents().iterator(); i.hasNext();) {
-            final Component c = (Component) i.next();
+        for (final CalendarComponent c : c2.getComponents()) {
             if (!result.getComponents().contains(c)) {
                 result.getComponents().add(c);
             }
@@ -150,8 +149,7 @@ public final class Calendars {
                 Property.TZID);
         
         final Map calendars = new HashMap();
-        for (final Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            final Component c = (Component) i.next();
+        for (final CalendarComponent c : calendar.getComponents()) {
             if (c instanceof VTimeZone) {
                 continue;
             }

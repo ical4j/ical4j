@@ -139,20 +139,20 @@ public class Calendar implements Serializable {
 
     private PropertyList properties;
 
-    private ComponentList components;
+    private ComponentList<CalendarComponent> components;
 
     /**
      * Default constructor.
      */
     public Calendar() {
-        this(new PropertyList(), new ComponentList());
+        this(new PropertyList(), new ComponentList<CalendarComponent>());
     }
 
     /**
      * Constructs a new calendar with no properties and the specified components.
      * @param components a list of components to add to the calendar
      */
-    public Calendar(final ComponentList components) {
+    public Calendar(final ComponentList<CalendarComponent> components) {
         this(new PropertyList(), components);
     }
 
@@ -161,7 +161,7 @@ public class Calendar implements Serializable {
      * @param p a list of properties
      * @param c a list of components
      */
-    public Calendar(final PropertyList p, final ComponentList c) {
+    public Calendar(final PropertyList p, final ComponentList<CalendarComponent> c) {
         this.properties = p;
         this.components = c;
     }
@@ -176,8 +176,8 @@ public class Calendar implements Serializable {
     public Calendar(Calendar c) throws ParseException, IOException,
             URISyntaxException {
         
-        this(new PropertyList(c.getProperties()), new ComponentList(c
-                .getComponents()));
+        this(new PropertyList(c.getProperties()),
+        		new ComponentList<CalendarComponent>(c.getComponents()));
     }
 
     /**
@@ -202,7 +202,7 @@ public class Calendar implements Serializable {
     /**
      * @return Returns the components.
      */
-    public final ComponentList getComponents() {
+    public final ComponentList<CalendarComponent> getComponents() {
         return components;
     }
 
@@ -211,7 +211,7 @@ public class Calendar implements Serializable {
      * @param name name of components to retrieve
      * @return a component list containing only components with the specified name
      */
-    public final ComponentList getComponents(final String name) {
+    public final ComponentList<CalendarComponent> getComponents(final String name) {
         return getComponents().getComponents(name);
     }
 
@@ -220,7 +220,7 @@ public class Calendar implements Serializable {
      * @param name name of the component to retrieve
      * @return the first matching component in the component list with the specified name
      */
-    public final Component getComponent(final String name) {
+    public final CalendarComponent getComponent(final String name) {
         return getComponents().getComponent(name);
     }
 
@@ -296,14 +296,6 @@ public class Calendar implements Serializable {
                     && !property.isCalendarProperty()) {
                 throw new ValidationException("Invalid property: "
                         + property.getName());
-            }
-        }
-
-        // validate components..
-        for (final Iterator<Component> i = getComponents().iterator(); i.hasNext();) {
-            final Component component = i.next();
-            if (!(component instanceof CalendarComponent)) {
-                throw new ValidationException("Not a valid calendar component: " + component.getName());
             }
         }
 
@@ -467,8 +459,7 @@ public class Calendar implements Serializable {
             
             // perform ITIP validation on components..
             if (method != null) {
-                for (final Iterator<Component> i = getComponents().iterator(); i.hasNext();) {
-                    final CalendarComponent component = (CalendarComponent) i.next();
+                for (CalendarComponent component : getComponents()) {
                     component.validate(method);
                 }
             }
@@ -495,8 +486,7 @@ public class Calendar implements Serializable {
      * @throws ValidationException where any of the calendar components is not in a valid state
      */
     private void validateComponents() throws ValidationException {
-        for (final Iterator<Component> i = getComponents().iterator(); i.hasNext();) {
-            final Component component = i.next();
+        for (Component component : getComponents()) {
             component.validate();
         }
     }

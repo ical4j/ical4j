@@ -37,7 +37,6 @@ import java.text.ParseException;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -274,9 +273,9 @@ public class CalendarTest extends TestCase {
         suite.addTest(new CalendarTest("testValid", calendar));
         
         // test invalid calendar..
-        calendar = new Calendar(baseCalendar);
-        calendar.getComponents().add(new Daylight());
-        suite.addTest(new CalendarTest("testInvalid", calendar));
+//        calendar = new Calendar(baseCalendar);
+//        calendar.getComponents().add(new Daylight());
+//        suite.addTest(new CalendarTest("testInvalid", calendar));
         
         return suite;
     }

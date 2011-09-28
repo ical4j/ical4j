@@ -44,7 +44,7 @@ import java.util.Iterator;
  * Defines a list of iCalendar components.
  * @author Ben Fortuna
  */
-public class ComponentList extends ArrayList<Component> implements Serializable {
+public class ComponentList<T extends Component> extends ArrayList<T> implements Serializable {
 
     private static final long serialVersionUID = 7308557606558767449L;
 
@@ -69,11 +69,12 @@ public class ComponentList extends ArrayList<Component> implements Serializable 
      * @throws ParseException where component data cannot be parsed
      * @throws URISyntaxException where component data contains an invalid URI
      */
-    public ComponentList(ComponentList components) throws ParseException,
+    @SuppressWarnings("unchecked")
+	public ComponentList(ComponentList<T> components) throws ParseException,
             IOException, URISyntaxException {
 
-        for (Component c : components) {
-            add(c.copy());
+        for (T c : components) {
+            add((T) c.copy());
         }
     }
 
@@ -82,7 +83,7 @@ public class ComponentList extends ArrayList<Component> implements Serializable 
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
-        for (final Iterator<Component> i = iterator(); i.hasNext();) {
+        for (final Iterator<T> i = iterator(); i.hasNext();) {
             buffer.append(i.next().toString());
         }
         return buffer.toString();
@@ -93,9 +94,9 @@ public class ComponentList extends ArrayList<Component> implements Serializable 
      * @param aName name of component to return
      * @return a component or null if no matching component found
      */
-    public final Component getComponent(final String aName) {
-        for (final Iterator<Component> i = iterator(); i.hasNext();) {
-            final Component c = (Component) i.next();
+    public final T getComponent(final String aName) {
+        for (final Iterator<T> i = iterator(); i.hasNext();) {
+            final T c = i.next();
             if (c.getName().equals(aName)) {
                 return c;
             }
@@ -108,10 +109,10 @@ public class ComponentList extends ArrayList<Component> implements Serializable 
      * @param name name of components to return
      * @return a list of components with the matching name
      */
-    public final ComponentList getComponents(final String name) {
-        final ComponentList components = new ComponentList();
-        for (final Iterator<Component> i = iterator(); i.hasNext();) {
-            final Component c = i.next();
+    public final ComponentList<T> getComponents(final String name) {
+        final ComponentList<T> components = new ComponentList<T>();
+        for (final Iterator<T> i = iterator(); i.hasNext();) {
+            final T c = i.next();
             if (c.getName().equals(name)) {
                 components.add(c);
             }
@@ -139,7 +140,7 @@ public class ComponentList extends ArrayList<Component> implements Serializable 
      * @return true if the list contained the specified component
      * @see List#remove(java.lang.Object)
      */
-    public final boolean remove(final Component component) {
+    public final boolean remove(final T component) {
         return remove((Object) component);
     }
 
