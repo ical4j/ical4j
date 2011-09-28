@@ -49,16 +49,16 @@ public abstract class AbstractContentFactory {
     /**
      * Map of delegate factories.
      */
-    private final Map defaultFactories;
+    private final Map<String, Object> defaultFactories;
 
-    private final Map extendedFactories;
+    private final Map<String, Object> extendedFactories;
 
     /**
      * Default constructor.
      */
     public AbstractContentFactory() {
-        defaultFactories = new HashMap();
-        extendedFactories = new HashMap();
+        defaultFactories = new HashMap<String, Object>();
+        extendedFactories = new HashMap<String, Object>();
     }
 
     /**

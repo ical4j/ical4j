@@ -53,13 +53,13 @@ public class AddressList implements Serializable {
 
     private static final long serialVersionUID = 81383256078213569L;
 
-    private List addresses;
+    private List<URI> addresses;
 
     /**
      * Default constructor.
      */
     public AddressList() {
-        addresses = new CopyOnWriteArrayList();
+        addresses = new CopyOnWriteArrayList<URI>();
     }
 
     /**
@@ -68,7 +68,7 @@ public class AddressList implements Serializable {
      * @throws URISyntaxException where the specified string is not a valid representation
      */
     public AddressList(final String aValue) throws URISyntaxException {
-        addresses = new CopyOnWriteArrayList();
+        addresses = new CopyOnWriteArrayList<URI>();
         final StringTokenizer t = new StringTokenizer(aValue, ",");
         while (t.hasMoreTokens()) {
 
@@ -92,7 +92,7 @@ public class AddressList implements Serializable {
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
-        for (final Iterator i = addresses.iterator(); i.hasNext();) {
+        for (final Iterator<URI> i = addresses.iterator(); i.hasNext();) {
             b.append(Strings.quote(Uris.decode(Strings.valueOf(i.next()))));
             if (i.hasNext()) {
                 b.append(',');
@@ -123,7 +123,7 @@ public class AddressList implements Serializable {
      * @return an iterator
      * @see List#iterator()
      */
-    public final Iterator iterator() {
+    public final Iterator<URI> iterator() {
         return addresses.iterator();
     }
 

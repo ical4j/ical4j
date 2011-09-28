@@ -44,7 +44,7 @@ import java.util.Iterator;
  * Defines a list of iCalendar components.
  * @author Ben Fortuna
  */
-public class ComponentList extends ArrayList implements Serializable {
+public class ComponentList extends ArrayList<Component> implements Serializable {
 
     private static final long serialVersionUID = 7308557606558767449L;
 
@@ -72,8 +72,7 @@ public class ComponentList extends ArrayList implements Serializable {
     public ComponentList(ComponentList components) throws ParseException,
             IOException, URISyntaxException {
 
-        for (final Iterator i = components.iterator(); i.hasNext();) {
-            final Component c = (Component) i.next();
+        for (Component c : components) {
             add(c.copy());
         }
     }
@@ -83,7 +82,7 @@ public class ComponentList extends ArrayList implements Serializable {
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
-        for (final Iterator i = iterator(); i.hasNext();) {
+        for (final Iterator<Component> i = iterator(); i.hasNext();) {
             buffer.append(i.next().toString());
         }
         return buffer.toString();
@@ -95,7 +94,7 @@ public class ComponentList extends ArrayList implements Serializable {
      * @return a component or null if no matching component found
      */
     public final Component getComponent(final String aName) {
-        for (final Iterator i = iterator(); i.hasNext();) {
+        for (final Iterator<Component> i = iterator(); i.hasNext();) {
             final Component c = (Component) i.next();
             if (c.getName().equals(aName)) {
                 return c;
@@ -111,38 +110,13 @@ public class ComponentList extends ArrayList implements Serializable {
      */
     public final ComponentList getComponents(final String name) {
         final ComponentList components = new ComponentList();
-        for (final Iterator i = iterator(); i.hasNext();) {
-            final Component c = (Component) i.next();
+        for (final Iterator<Component> i = iterator(); i.hasNext();) {
+            final Component c = i.next();
             if (c.getName().equals(name)) {
                 components.add(c);
             }
         }
         return components;
-    }
-
-    /**
-     * Add a component to the list.
-     * @param component the component to add
-     * @return true
-     * @see List#add(java.lang.Object)
-     */
-    public final boolean add(final Component component) {
-        return add((Object) component);
-    }
-
-    /**
-     * Overrides superclass to throw an <code>IllegalArgumentException</code> where argument is not a
-     * <code>net.fortuna.ical4j.model.Component</code>.
-     * @param component a component to add
-     * @return true if the object was added, otherwise false
-     * @see List#add(E)
-     */
-    public final boolean add(final Object component) {
-        if (!(component instanceof Component)) {
-            throw new IllegalArgumentException("Argument not a "
-                    + Component.class.getName());
-        }
-        return super.add(component);
     }
 
     /**

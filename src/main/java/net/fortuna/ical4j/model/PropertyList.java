@@ -44,7 +44,7 @@ import java.util.Iterator;
  * Defines a list of iCalendar properties.
  * @author Ben Fortuna
  */
-public class PropertyList extends ArrayList implements Serializable {
+public class PropertyList extends ArrayList<Property> implements Serializable {
 
     private static final long serialVersionUID = -8875923766224921031L;
 
@@ -71,8 +71,7 @@ public class PropertyList extends ArrayList implements Serializable {
      */
     public PropertyList(PropertyList properties) throws ParseException, IOException, URISyntaxException {
         super();
-        for (final Iterator i = properties.iterator(); i.hasNext();) {
-            final Property p = (Property) i.next();
+        for (Property p : properties) {
             add(p.copy());
         }
     }
@@ -82,7 +81,7 @@ public class PropertyList extends ArrayList implements Serializable {
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
-        for (final Iterator i = iterator(); i.hasNext();) {
+        for (final Iterator<Property> i = iterator(); i.hasNext();) {
             buffer.append(i.next().toString());
         }
         return buffer.toString();
@@ -94,8 +93,8 @@ public class PropertyList extends ArrayList implements Serializable {
      * @return a property or null if no matching property found
      */
     public final Property getProperty(final String aName) {
-        for (final Iterator i = iterator(); i.hasNext();) {
-            final Property p = (Property) i.next();
+        for (final Iterator<Property> i = iterator(); i.hasNext();) {
+            final Property p = i.next();
             if (p.getName().equalsIgnoreCase(aName)) {
                 return p;
             }
@@ -110,38 +109,13 @@ public class PropertyList extends ArrayList implements Serializable {
      */
     public final PropertyList getProperties(final String name) {
         final PropertyList list = new PropertyList();
-        for (final Iterator i = iterator(); i.hasNext();) {
-            final Property p = (Property) i.next();
+        for (final Iterator<Property> i = iterator(); i.hasNext();) {
+            final Property p = i.next();
             if (p.getName().equalsIgnoreCase(name)) {
                 list.add(p);
             }
         }
         return list;
-    }
-
-    /**
-     * Add a property to the list.
-     * @param property the property to add
-     * @return true
-     * @see java.util.List#add(java.lang.Object)
-     */
-    public final boolean add(final Property property) {
-        return add((Object) property);
-    }
-
-    /**
-     * Overrides superclass to throw an <code>IllegalArgumentException</code> where argument is not a
-     * <code>net.fortuna.ical4j.model.Property</code>.
-     * @param property a property to add
-     * @return true if the property is added, otherwise false
-     * @see java.util.List#add(E)
-     */
-    public final boolean add(final Object property) {
-        if (!(property instanceof Property)) {
-            throw new IllegalArgumentException("Argument not a "
-                    + Property.class.getName());
-        }
-        return super.add(property);
     }
 
     /**

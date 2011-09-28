@@ -289,8 +289,8 @@ public class Calendar implements Serializable {
         }
 
         // validate properties..
-        for (final Iterator i = getProperties().iterator(); i.hasNext();) {
-            final Property property = (Property) i.next();
+        for (final Iterator<Property> i = getProperties().iterator(); i.hasNext();) {
+            final Property property = i.next();
 
             if (!(property instanceof XProperty)
                     && !property.isCalendarProperty()) {
@@ -300,8 +300,8 @@ public class Calendar implements Serializable {
         }
 
         // validate components..
-        for (final Iterator i = getComponents().iterator(); i.hasNext();) {
-            final Component component = (Component) i.next();
+        for (final Iterator<Component> i = getComponents().iterator(); i.hasNext();) {
+            final Component component = i.next();
             if (!(component instanceof CalendarComponent)) {
                 throw new ValidationException("Not a valid calendar component: " + component.getName());
             }
@@ -467,7 +467,7 @@ public class Calendar implements Serializable {
             
             // perform ITIP validation on components..
             if (method != null) {
-                for (final Iterator i = getComponents().iterator(); i.hasNext();) {
+                for (final Iterator<Component> i = getComponents().iterator(); i.hasNext();) {
                     final CalendarComponent component = (CalendarComponent) i.next();
                     component.validate(method);
                 }
@@ -484,8 +484,8 @@ public class Calendar implements Serializable {
      * @throws ValidationException where any of the calendar properties is not in a valid state
      */
     private void validateProperties() throws ValidationException {
-        for (final Iterator i = getProperties().iterator(); i.hasNext();) {
-            final Property property = (Property) i.next();
+        for (final Iterator<Property> i = getProperties().iterator(); i.hasNext();) {
+            final Property property = i.next();
             property.validate();
         }
     }
@@ -495,8 +495,8 @@ public class Calendar implements Serializable {
      * @throws ValidationException where any of the calendar components is not in a valid state
      */
     private void validateComponents() throws ValidationException {
-        for (final Iterator i = getComponents().iterator(); i.hasNext();) {
-            final Component component = (Component) i.next();
+        for (final Iterator<Component> i = getComponents().iterator(); i.hasNext();) {
+            final Component component = i.next();
             component.validate();
         }
     }
