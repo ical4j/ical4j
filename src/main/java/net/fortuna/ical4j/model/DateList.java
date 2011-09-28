@@ -53,13 +53,13 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * defaults to DATE-TIME instances.
  * @author Ben Fortuna
  */
-public class DateList implements List, Serializable {
+public class DateList implements List<Date>, Serializable {
 
 	private static final long serialVersionUID = -3700862452550012357L;
 
 	private final Value type;
     
-    private final List dates;
+    private final List<Date> dates;
 
     private TimeZone timeZone;
     
@@ -76,10 +76,10 @@ public class DateList implements List, Serializable {
     
         this.type = Value.DATE_TIME;
         if (unmodifiable) {
-        	dates = Collections.EMPTY_LIST;
+        	dates = Collections.emptyList();
         }
         else {
-            dates = new ArrayList();
+            dates = new ArrayList<Date>();
         }
     }
 
@@ -113,7 +113,7 @@ public class DateList implements List, Serializable {
             this.type = Value.DATE_TIME;
         }
         this.timeZone = timezone;
-        dates = new ArrayList();
+        dates = new ArrayList<Date>();
     }
 
     /**
@@ -144,10 +144,10 @@ public class DateList implements List, Serializable {
         final StringTokenizer t = new StringTokenizer(aValue, ",");
         while (t.hasMoreTokens()) {
             if (Value.DATE.equals(type)) {
-                add((Object) new Date(t.nextToken()));
+                add(new Date(t.nextToken()));
             }
             else {
-                add((Object) new DateTime(t.nextToken(), timezone));
+                add(new DateTime(t.nextToken(), timezone));
             }
         }
     }
@@ -165,16 +165,16 @@ public class DateList implements List, Serializable {
         }
         
         this.type = type;
-        dates = new ArrayList();
+        dates = new ArrayList<Date>();
         
         if (Value.DATE.equals(type)) {
-            for (final Iterator i = list.iterator(); i.hasNext();) {
-                add(new Date((Date) i.next()));
+            for (Date date : list) {
+                add(new Date(date));
             }
         }
         else {
-            for (final Iterator i = list.iterator(); i.hasNext();) {
-                add(new DateTime((Date) i.next()));
+            for (final Date dateTime : list) {
+                add(new DateTime(dateTime));
             }
         }
     }
@@ -184,7 +184,7 @@ public class DateList implements List, Serializable {
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
-        for (final Iterator i = iterator(); i.hasNext();) {
+        for (final Iterator<Date> i = iterator(); i.hasNext();) {
             /*
              * if (type != null && Value.DATE.equals(type)) {
              * b.append(DateFormat.getInstance().format((Date) i.next())); }
@@ -218,21 +218,7 @@ public class DateList implements List, Serializable {
         else if (!Value.DATE.equals(getType())) {
             final DateTime dateTime = new DateTime(date);
             dateTime.setTimeZone(getTimeZone());
-            return add((Object) dateTime);
-        }
-        return add((Object) date);
-    }
-    
-    /**
-     * Overrides superclass to throw an <code>IllegalArgumentException</code>
-     * Where argument is not a <code>net.fortuna.ical4j.model.Date</code>.
-     * @param date the date to add
-     * @return true if the object was added, otherwise false
-     * @see List#add(E)
-     */
-    public final boolean add(final Object date) {
-        if (!(date instanceof Date)) {
-            throw new IllegalArgumentException("Argument not a " + Date.class.getName());
+            return dates.add(dateTime);
         }
         return dates.add(date);
     }
@@ -277,7 +263,7 @@ public class DateList implements List, Serializable {
      */
     public final void setUtc(final boolean utc) {
         if (!Value.DATE.equals(type)) {
-            for (final Iterator i = iterator(); i.hasNext();) {
+            for (final Iterator<Date> i = iterator(); i.hasNext();) {
                 ((DateTime) i.next()).setUtc(utc);
             }
         }
@@ -293,7 +279,7 @@ public class DateList implements List, Serializable {
      */
     public final void setTimeZone(final TimeZone timeZone) {
         if (!Value.DATE.equals(type)) {
-            for (final Iterator i = iterator(); i.hasNext();) {
+            for (final Iterator<Date> i = iterator(); i.hasNext();) {
                 ((DateTime) i.next()).setTimeZone(timeZone);
             }
         }
@@ -308,15 +294,15 @@ public class DateList implements List, Serializable {
         return timeZone;
     }
 
-	public void add(int arg0, Object arg1) {
+	public void add(int arg0, Date arg1) {
 		dates.add(arg0, arg1);
 	}
 
-	public boolean addAll(Collection arg0) {
+	public boolean addAll(Collection<? extends Date> arg0) {
 		return dates.addAll(arg0);
 	}
 
-	public boolean addAll(int arg0, Collection arg1) {
+	public boolean addAll(int arg0, Collection<? extends Date> arg1) {
 		return dates.addAll(arg0, arg1);
 	}
 
@@ -328,11 +314,11 @@ public class DateList implements List, Serializable {
 		return dates.contains(o);
 	}
 
-	public boolean containsAll(Collection arg0) {
+	public boolean containsAll(Collection<?> arg0) {
 		return dates.containsAll(arg0);
 	}
 
-	public Object get(int index) {
+	public Date get(int index) {
 		return dates.get(index);
 	}
 
@@ -344,7 +330,7 @@ public class DateList implements List, Serializable {
 		return dates.isEmpty();
 	}
 
-	public Iterator iterator() {
+	public Iterator<Date> iterator() {
 		return dates.iterator();
 	}
 
@@ -352,15 +338,15 @@ public class DateList implements List, Serializable {
 		return dates.lastIndexOf(o);
 	}
 
-	public ListIterator listIterator() {
+	public ListIterator<Date> listIterator() {
 		return dates.listIterator();
 	}
 
-	public ListIterator listIterator(int index) {
+	public ListIterator<Date> listIterator(int index) {
 		return dates.listIterator(index);
 	}
 
-	public Object remove(int index) {
+	public Date remove(int index) {
 		return dates.remove(index);
 	}
 
@@ -368,15 +354,15 @@ public class DateList implements List, Serializable {
 		return dates.remove(o);
 	}
 
-	public boolean removeAll(Collection arg0) {
+	public boolean removeAll(Collection<?> arg0) {
 		return dates.removeAll(arg0);
 	}
 
-	public boolean retainAll(Collection arg0) {
+	public boolean retainAll(Collection<?> arg0) {
 		return dates.retainAll(arg0);
 	}
 
-	public Object set(int arg0, Object arg1) {
+	public Date set(int arg0, Date arg1) {
 		return dates.set(arg0, arg1);
 	}
 
@@ -384,7 +370,7 @@ public class DateList implements List, Serializable {
 		return dates.size();
 	}
 
-	public List subList(int fromIndex, int toIndex) {
+	public List<Date> subList(int fromIndex, int toIndex) {
 		return dates.subList(fromIndex, toIndex);
 	}
 
@@ -392,7 +378,7 @@ public class DateList implements List, Serializable {
 		return dates.toArray();
 	}
 
-	public Object[] toArray(Object[] arg0) {
+	public <T> T[] toArray(T[] arg0) {
 		return dates.toArray(arg0);
 	}
 	
