@@ -140,7 +140,7 @@ public final class Dates {
         cal.setTime(date);
         final int year = cal.get(Calendar.YEAR);
         // construct a list of possible week numbers..
-        final List weeks = new ArrayList();
+        final List<Integer> weeks = new ArrayList<Integer>();
         cal.set(Calendar.WEEK_OF_YEAR, 1);
         while (cal.get(Calendar.YEAR) == year) {
             weeks.add(new Integer(cal.get(Calendar.WEEK_OF_YEAR)));
@@ -170,7 +170,7 @@ public final class Dates {
         cal.setTime(date);
         final int year = cal.get(Calendar.YEAR);
         // construct a list of possible year days..
-        final List days = new ArrayList();
+        final List<Integer> days = new ArrayList<Integer>();
         cal.set(Calendar.DAY_OF_YEAR, 1);
         while (cal.get(Calendar.YEAR) == year) {
             days.add(new Integer(cal.get(Calendar.DAY_OF_YEAR)));
@@ -200,7 +200,7 @@ public final class Dates {
         cal.setTime(date);
         final int month = cal.get(Calendar.MONTH);
         // construct a list of possible month days..
-        final List days = new ArrayList();
+        final List<Integer> days = new ArrayList<Integer>();
         cal.set(Calendar.DAY_OF_MONTH, 1);
         while (cal.get(Calendar.MONTH) == month) {
             days.add(new Integer(cal.get(Calendar.DAY_OF_MONTH)));

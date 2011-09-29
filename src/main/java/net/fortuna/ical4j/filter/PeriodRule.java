@@ -43,7 +43,7 @@ import net.fortuna.ical4j.model.PeriodList;
  * A rule that matches any component that occurs in the specified time period.
  * @author Ben Fortuna
  */
-public class PeriodRule extends ComponentRule {
+public class PeriodRule implements Rule<Component> {
 
     private Period period;
 

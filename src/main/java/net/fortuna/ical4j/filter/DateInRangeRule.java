@@ -39,7 +39,7 @@ import net.fortuna.ical4j.model.DateRange;
  * @author fortuna
  *
  */
-public class DateInRangeRule extends AbstractDateRule {
+public class DateInRangeRule implements Rule<Date> {
 
     private final DateRange range;
     
@@ -57,7 +57,7 @@ public class DateInRangeRule extends AbstractDateRule {
     /**
      * {@inheritDoc}
      */
-    protected boolean match(Date date) {
+    public boolean match(Date date) {
         return range.includes(date, inclusiveMask);
     }
 

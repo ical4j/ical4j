@@ -35,7 +35,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -54,7 +53,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  * @author Ben Fortuna
  */
-public class Filter {
+public class Filter<T> {
 
     /**
      * Indicates that any rule may be matched to include an object in the filtered collection.
@@ -66,7 +65,7 @@ public class Filter {
      */
     public static final int MATCH_ALL = 2;
 
-    private List rules;
+    private List<Rule<T>> rules;
 
     private int type;
 
@@ -76,7 +75,8 @@ public class Filter {
      * @deprecated Prior implementations of this class did not work as advertised, so
      * to avoid confusion please use constructors that explicitly specify the desired behaviour
      */
-    public Filter(final Rule rule) {
+    @SuppressWarnings("unchecked")
+	public Filter(final Rule<T> rule) {
         this(new Rule[] { rule }, MATCH_ANY);
     }
 
@@ -87,7 +87,7 @@ public class Filter {
      * @see Filter#MATCH_ALL
      * @see Filter#MATCH_ANY
      */
-    public Filter(final Rule[] rules, final int type) {
+    public Filter(final Rule<T>[] rules, final int type) {
         this.rules = Arrays.asList(rules);
         this.type = type;
     }
@@ -97,16 +97,17 @@ public class Filter {
      * @param c a collection to filter
      * @return a filtered collection
      */
-    public final Collection filter(final Collection c) {
+    @SuppressWarnings("unchecked")
+	public final Collection<T> filter(final Collection<T> c) {
         if (getRules() != null && getRules().length > 0) {
             // attempt to use the same concrete collection type
             // as is passed in..
-            Collection filtered;
+            Collection<T> filtered;
             try {
-                filtered = (Collection) c.getClass().newInstance();
+                filtered = c.getClass().newInstance();
             }
             catch (Exception e) {
-                filtered = new ArrayList();
+                filtered = new ArrayList<T>();
             }
 
             if (type == MATCH_ALL) {
@@ -120,26 +121,24 @@ public class Filter {
         return c;
     }
 
-    private List matchAll(Collection c) {
-        List list = new ArrayList(c);
-        List temp = new ArrayList();
+    private List<T> matchAll(Collection<T> c) {
+        List<T> list = new ArrayList<T>(c);
+        List<T> temp = new ArrayList<T>();
         for (int n = 0; n < getRules().length; n++) {
-            for (final Iterator i = list.iterator(); i.hasNext();) {
-                final Object o = i.next();
+            for (final T o : list) {
                 if (getRules()[n].match(o)) {
                     temp.add(o);
                 }
             }
             list = temp;
-            temp = new ArrayList();
+            temp = new ArrayList<T>();
         }
         return list;
     }
 
-    private List matchAny(Collection c) {
-        final List matches = new ArrayList();
-        for (Iterator i = c.iterator(); i.hasNext();) {
-            final Object o = i.next();
+    private List<T> matchAny(Collection<T> c) {
+        final List<T> matches = new ArrayList<T>();
+        for (T o : c) {
             for (int n = 0; n < getRules().length; n++) {
                 if (getRules()[n].match(o)) {
                     matches.add(o);
@@ -155,30 +154,32 @@ public class Filter {
      * @param objects an array to filter
      * @return a filtered array
      */
-    public final Object[] filter(final Object[] objects) {
-        final Collection filtered = filter(Arrays.asList(objects));
+    @SuppressWarnings("unchecked")
+	public final T[] filter(final T[] objects) {
+        final Collection<T> filtered = filter(Arrays.asList(objects));
         try {
-            return filtered.toArray((Object[]) Array.newInstance(objects
+            return filtered.toArray((T[]) Array.newInstance(objects
                     .getClass(), filtered.size()));
         }
         catch (ArrayStoreException ase) {
             Log log = LogFactory.getLog(Filter.class);
             log.warn("Error converting to array - using default approach", ase);
         }
-        return filtered.toArray();
+        return (T[]) filtered.toArray();
     }
 
     /**
      * @return Returns the rules.
      */
-    public final Rule[] getRules() {
-        return (Rule[]) rules.toArray(new Rule[rules.size()]);
+    @SuppressWarnings("unchecked")
+	public final Rule<T>[] getRules() {
+        return rules.toArray(new Rule[rules.size()]);
     }
 
     /**
      * @param rules The rules to set.
      */
-    public final void setRules(final Rule[] rules) {
+    public final void setRules(final Rule<T>[] rules) {
         this.rules = Arrays.asList(rules);
     }
 }

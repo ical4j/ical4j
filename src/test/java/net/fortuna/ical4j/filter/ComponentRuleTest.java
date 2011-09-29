@@ -46,7 +46,7 @@ import junit.framework.TestSuite;
  */
 public class ComponentRuleTest extends TestCase {
 
-    private ComponentRule rule;
+    private Rule<Component> rule;
     
     private Component component;
     
@@ -55,7 +55,7 @@ public class ComponentRuleTest extends TestCase {
      * @param rule
      * @param component
      */
-    public ComponentRuleTest(String testMethod, ComponentRule rule, Component component) {
+    public ComponentRuleTest(String testMethod, Rule<Component> rule, Component component) {
         super(testMethod);
         this.rule = rule;
         this.component = component;
@@ -80,17 +80,18 @@ public class ComponentRuleTest extends TestCase {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        Component component = new Component("test") {
+        @SuppressWarnings("serial")
+		Component component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
             }
         };
-        ComponentRule matchRule = new ComponentRule() {
+        Rule<Component> matchRule = new Rule<Component>() {
             public boolean match(Component component) {
                 return true;
             }
         };
         suite.addTest(new ComponentRuleTest("testMatchComponent", matchRule, component));
-        ComponentRule notMatchRule = new ComponentRule() {
+        Rule<Component> notMatchRule = new Rule<Component>() {
             public boolean match(Component component) {
                 return false;
             }

@@ -31,8 +31,6 @@
  */
 package net.fortuna.ical4j.filter;
 
-import java.util.Iterator;
-
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
@@ -46,7 +44,7 @@ import net.fortuna.ical4j.model.PropertyList;
  * matching only on the value of the property.
  * @author Ben Fortuna
  */
-public class HasPropertyRule extends ComponentRule {
+public class HasPropertyRule implements Rule<Component> {
 
     private Property property;
 
@@ -78,8 +76,7 @@ public class HasPropertyRule extends ComponentRule {
     public final boolean match(final Component component) {
         boolean match = false;
         final PropertyList properties = component.getProperties(property.getName());
-        for (final Iterator i = properties.iterator(); i.hasNext();) {
-            final Property p = (Property) i.next();
+        for (final Property p : properties) {
             if (matchEquals && property.equals(p)) {
                 match = true;
             }

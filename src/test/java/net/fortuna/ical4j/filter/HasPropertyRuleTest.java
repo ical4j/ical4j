@@ -54,7 +54,7 @@ public class HasPropertyRuleTest extends ComponentRuleTest {
      * @param rule
      * @param component
      */
-    public HasPropertyRuleTest(String testMethod, ComponentRule rule, Component component) {
+    public HasPropertyRuleTest(String testMethod, Rule<Component> rule, Component component) {
         super(testMethod, rule, component);
     }
     
@@ -65,7 +65,8 @@ public class HasPropertyRuleTest extends ComponentRuleTest {
         TestSuite suite = new TestSuite();
         Organizer organiser = new Organizer(URI.create("Mailto:B@example.com"));
         Attendee attendee = new Attendee(URI.create("Mailto:A@example.com"));
-        Component component = new Component("test") {
+        @SuppressWarnings("serial")
+		Component component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
             }
         };
