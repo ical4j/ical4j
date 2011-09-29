@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,8 +38,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
@@ -69,7 +66,7 @@ import org.apache.commons.logging.LogFactory;
  * and Daylight instances are valid.
  * @author Ben Fortuna
  */
-public abstract class Observance extends Component implements Comparable {
+public abstract class Observance extends Component implements Comparable<Observance> {
 
     /**
      * 
@@ -89,7 +86,7 @@ public abstract class Observance extends Component implements Comparable {
     // TODO: clear cache when observance definition changes (??)
     private long[] onsetsMillisec;
     private DateTime[] onsetsDates;
-    private Map onsets = new TreeMap();
+//    private Map onsets = new TreeMap();
     private Date initialOnset = null;
     
     /**
@@ -204,11 +201,11 @@ public abstract class Observance extends Component implements Comparable {
 
         // check rdates for latest applicable onset..
         final PropertyList rdates = getProperties(Property.RDATE);
-        for (final Iterator i = rdates.iterator(); i.hasNext();) {
+        for (final Iterator<Property> i = rdates.iterator(); i.hasNext();) {
             final RDate rdate = (RDate) i.next();
-            for (final Iterator j = rdate.getDates().iterator(); j.hasNext();) {
+            for (final Date rdateDate : rdate.getDates()) {
                 try {
-                    final DateTime rdateOnset = applyOffsetFrom(calculateOnset((Date) j.next()));
+                    final DateTime rdateOnset = applyOffsetFrom(calculateOnset(rdateDate));
                     if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
                         onset = rdateOnset;
                     }
@@ -226,7 +223,7 @@ public abstract class Observance extends Component implements Comparable {
 
         // check recurrence rules for latest applicable onset..
         final PropertyList rrules = getProperties(Property.RRULE);
-        for (final Iterator i = rrules.iterator(); i.hasNext();) {
+        for (final Iterator<Property> i = rrules.iterator(); i.hasNext();) {
             final RRule rrule = (RRule) i.next();
             // include future onsets to determine onset period..
             final Calendar cal = Dates.getCalendarInstance(date);
@@ -235,8 +232,8 @@ public abstract class Observance extends Component implements Comparable {
             onsetLimit = Dates.getInstance(cal.getTime(), Value.DATE_TIME);
             final DateList recurrenceDates = rrule.getRecur().getDates(initialOnsetUTC,
                     onsetLimit, Value.DATE_TIME);
-            for (final Iterator j = recurrenceDates.iterator(); j.hasNext();) {
-                final DateTime rruleOnset = applyOffsetFrom((DateTime) j.next());
+            for (final Date recurDate : recurrenceDates) {
+                final DateTime rruleOnset = applyOffsetFrom((DateTime) recurDate);
                 if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
                     onset = rruleOnset;
                 }
@@ -300,13 +297,6 @@ public abstract class Observance extends Component implements Comparable {
      */
     public final TzOffsetTo getOffsetTo() {
         return (TzOffsetTo) getProperty(Property.TZOFFSETTO);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final int compareTo(final Object arg0) {
-        return compareTo((Observance) arg0);
     }
 
     /**

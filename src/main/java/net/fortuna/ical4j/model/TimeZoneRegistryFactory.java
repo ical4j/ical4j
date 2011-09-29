@@ -55,8 +55,9 @@ public abstract class TimeZoneRegistryFactory {
     private static TimeZoneRegistryFactory instance;
     static {
         try {
-            final Class factoryClass = Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
-            instance = (TimeZoneRegistryFactory) factoryClass.newInstance();
+            @SuppressWarnings("unchecked")
+			final Class<? extends TimeZoneRegistryFactory> factoryClass = (Class<? extends TimeZoneRegistryFactory>) Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
+            instance = factoryClass.newInstance();
         }
         catch (Exception e) {
             instance = new DefaultTimeZoneRegistryFactory();

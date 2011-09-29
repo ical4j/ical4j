@@ -52,11 +52,11 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * 
  * @author Ben Fortuna
  */
-public class PeriodList implements Set, Serializable {
+public class PeriodList implements Set<Period>, Serializable {
 
 	private static final long serialVersionUID = -2317587285790834492L;
 
-	private final Set periods;
+	private final Set<Period> periods;
     
     private TimeZone timezone;
     
@@ -82,10 +82,10 @@ public class PeriodList implements Set, Serializable {
     public PeriodList(boolean utc, final boolean unmodifiable) {
         this.utc = utc;
         if (unmodifiable) {
-        	periods = Collections.EMPTY_SET;
+        	periods = Collections.emptySet();
         }
         else {
-        	periods = new TreeSet();
+        	periods = new TreeSet<Period>();
         }
     }
     
@@ -102,7 +102,7 @@ public class PeriodList implements Set, Serializable {
         this();
         final StringTokenizer t = new StringTokenizer(aValue, ",");
         while (t.hasMoreTokens()) {
-            add((Object) new Period(t.nextToken()));
+            add(new Period(t.nextToken()));
         }
     }
 
@@ -111,7 +111,7 @@ public class PeriodList implements Set, Serializable {
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
-        for (final Iterator i = iterator(); i.hasNext();) {
+        for (final Iterator<Period> i = iterator(); i.hasNext();) {
             b.append(i.next().toString());
             if (i.hasNext()) {
                 b.append(',');
@@ -135,21 +135,6 @@ public class PeriodList implements Set, Serializable {
         else {
             period.setTimeZone(timezone);
         }
-        return add((Object) period);
-    }
-
-    /**
-     * Overrides superclass to throw an <code>IllegalArgumentException</code>
-     * where argument is not a <code>net.fortuna.ical4j.model.Period</code>.
-     * @param period a period to add to the list
-     * @return true if the period was added, otherwise false
-     * @see java.util.List#add(E)
-     */
-    public final boolean add(final Object period) {
-        if (!(period instanceof Period)) {
-            throw new IllegalArgumentException("Argument not a "
-                    + Period.class.getName());
-        }
         return periods.add(period);
     }
 
@@ -161,8 +146,8 @@ public class PeriodList implements Set, Serializable {
      * @return true if the list contained the specified period
      * @see java.util.List#remove(java.lang.Object)
      */
-    public final boolean remove(final Period period) {
-        return remove((Object) period);
+    public final boolean remove(final Object period) {
+        return periods.remove(period);
     }
 
     /**
@@ -182,8 +167,8 @@ public class PeriodList implements Set, Serializable {
             newList.setTimeZone(timezone);
         }
         boolean normalised = false;
-        for (final Iterator i = iterator(); i.hasNext();) {
-            period = (Period) i.next();
+        for (final Iterator<Period> i = iterator(); i.hasNext();) {
+            period = i.next();
             if (period.isEmpty()) {
                 period = prevPeriod;
                 normalised = true;
@@ -241,8 +226,8 @@ public class PeriodList implements Set, Serializable {
         if (periods != null) {
             final PeriodList newList = new PeriodList();
             newList.addAll(this);
-            for (final Iterator i = periods.iterator(); i.hasNext();) {
-                newList.add((Period) i.next());
+            for (final Period p : periods) {
+                newList.add(p);
             }
             return newList.normalise();
         }
@@ -266,10 +251,8 @@ public class PeriodList implements Set, Serializable {
         PeriodList result = this;
         PeriodList tmpResult = new PeriodList();
 
-        for (final Iterator i = subtractions.iterator(); i.hasNext();) {
-            final Period subtraction = (Period) i.next();
-            for (final Iterator j = result.iterator(); j.hasNext();) {
-                final Period period = (Period) j.next();
+        for (final Period subtraction : subtractions) {
+            for (final Period period : result) {
                 tmpResult.addAll(period.subtract(subtraction));
             }
             result = tmpResult;
@@ -292,8 +275,8 @@ public class PeriodList implements Set, Serializable {
      * @param utc The utc to set.
      */
     public final void setUtc(final boolean utc) {
-        for (final Iterator i = iterator(); i.hasNext();) {
-            final Period period = (Period) i.next();
+        for (final Iterator<Period> i = iterator(); i.hasNext();) {
+            final Period period = i.next();
             period.setUtc(utc);
         }
         this.timezone = null;
@@ -307,8 +290,8 @@ public class PeriodList implements Set, Serializable {
      * @param timeZone the timezone for the period list
      */
     public final void setTimeZone(final TimeZone timeZone) {
-        for (final Iterator i = iterator(); i.hasNext();) {
-            final Period period = (Period) i.next();
+        for (final Iterator<Period> i = iterator(); i.hasNext();) {
+            final Period period = i.next();
             period.setTimeZone(timeZone);
         }
         this.timezone = timeZone;
@@ -325,9 +308,9 @@ public class PeriodList implements Set, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean addAll(Collection arg0) {
-		for (Iterator i = arg0.iterator(); i.hasNext();) {
-			add(i.next());
+	public boolean addAll(Collection<? extends Period> arg0) {
+		for (Period p : arg0) {
+			add(p);
 		}
 		return true;
 	}
@@ -349,7 +332,7 @@ public class PeriodList implements Set, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean containsAll(Collection arg0) {
+	public boolean containsAll(Collection<?> arg0) {
 		return periods.containsAll(arg0);
 	}
 
@@ -363,28 +346,21 @@ public class PeriodList implements Set, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Iterator iterator() {
+	public Iterator<Period> iterator() {
 		return periods.iterator();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean remove(Object o) {
-		return periods.remove(o);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean removeAll(Collection arg0) {
+	public boolean removeAll(Collection<?> arg0) {
 		return periods.removeAll(arg0);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean retainAll(Collection arg0) {
+	public boolean retainAll(Collection<?> arg0) {
 		return periods.retainAll(arg0);
 	}
 
@@ -405,7 +381,7 @@ public class PeriodList implements Set, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object[] toArray(Object[] arg0) {
+	public <T> T[] toArray(T[] arg0) {
 		return periods.toArray(arg0);
 	}
 	

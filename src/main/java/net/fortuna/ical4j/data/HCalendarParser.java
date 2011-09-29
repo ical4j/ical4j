@@ -38,7 +38,6 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.XMLConstants;
@@ -243,9 +242,9 @@ public class HCalendarParser implements CalendarParser {
         }
     }
 
-    private static List findElements(XPathExpression expr, Object context) throws ParserException {
+    private static List<Element> findElements(XPathExpression expr, Object context) throws ParserException {
         NodeList nodes = findNodes(expr, context);
-        ArrayList elements = new ArrayList();
+        List<Element> elements = new ArrayList<Element>();
         for (int i = 0; i < nodes.getLength(); i++) {
             Node n = nodes.item(i);
             if (n instanceof Element)
@@ -310,9 +309,8 @@ public class HCalendarParser implements CalendarParser {
             buildProperty(method, Property.METHOD, handler);
         }
 
-        List vevents = findElements(XPATH_VEVENTS, d);
-        for (Iterator i = vevents.iterator(); i.hasNext();) {
-            Element vevent = (Element) i.next();
+        List<Element> vevents = findElements(XPATH_VEVENTS, d);
+        for (Element vevent : vevents) {
             buildEvent(vevent, handler);
         }
 
@@ -334,9 +332,8 @@ public class HCalendarParser implements CalendarParser {
         buildProperty(findElement(XPATH_SUMMARY, element), Property.SUMMARY, handler);
         buildProperty(findElement(XPATH_UID, element), Property.UID, handler);
         buildProperty(findElement(XPATH_DTSTAMP, element), Property.DTSTAMP, handler);
-        List categories = findElements(XPATH_CATEGORY, element);
-        for (Iterator i = categories.iterator(); i.hasNext();) {
-            Element category = (Element) i.next();
+        List<Element> categories = findElements(XPATH_CATEGORY, element);
+        for (Element category : categories) {
             buildProperty(category, Property.CATEGORIES, handler);
         }
         buildProperty(findElement(XPATH_LOCATION, element), Property.LOCATION, handler);
@@ -345,9 +342,8 @@ public class HCalendarParser implements CalendarParser {
         buildProperty(findElement(XPATH_LAST_MODIFIED, element), Property.LAST_MODIFIED, handler);
         buildProperty(findElement(XPATH_STATUS, element), Property.STATUS, handler);
         buildProperty(findElement(XPATH_CLASS, element), Property.CLASS, handler);
-        List attendees = findElements(XPATH_ATTENDEE, element);
-        for (Iterator i = attendees.iterator(); i.hasNext();) {
-            Element attendee = (Element) i.next();
+        List<Element> attendees = findElements(XPATH_ATTENDEE, element);
+        for (Element attendee : attendees) {
             buildProperty(attendee, Property.ATTENDEE, handler);
         }
         buildProperty(findElement(XPATH_CONTACT, element), Property.CONTACT, handler);

@@ -72,7 +72,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * 
  * @author Ben Fortuna
  */
-public class Dur implements Comparable, Serializable {
+public class Dur implements Comparable<Dur>, Serializable {
 
     private static final long serialVersionUID = 5013232281547134583L;
 
@@ -406,13 +406,6 @@ public class Dur implements Comparable, Serializable {
             }
         }
         return b.toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final int compareTo(final Object arg0) {
-        return compareTo((Dur) arg0);
     }
 
     /**

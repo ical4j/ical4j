@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +52,7 @@ public class ParameterList implements Serializable {
 
     private static final long serialVersionUID = -1913059830016450169L;
 
-    private final List parameters;
+    private final List<Parameter> parameters;
 
     /**
      * Default constructor. Creates a modifiable parameter list.
@@ -68,10 +67,10 @@ public class ParameterList implements Serializable {
      */
     public ParameterList(final boolean unmodifiable) {
         if (unmodifiable) {
-            parameters = Collections.unmodifiableList(new ArrayList());
+            parameters = Collections.emptyList();
         }
         else {
-            parameters = new CopyOnWriteArrayList();
+            parameters = new CopyOnWriteArrayList<Parameter>();
         }
     }
 
@@ -85,8 +84,8 @@ public class ParameterList implements Serializable {
     public ParameterList(final ParameterList list, final boolean unmodifiable)
             throws URISyntaxException {
     	
-        final List parameterList = new CopyOnWriteArrayList();
-        for (final Iterator i = list.iterator(); i.hasNext();) {
+        final List<Parameter> parameterList = new CopyOnWriteArrayList<Parameter>();
+        for (final Iterator<Parameter> i = list.iterator(); i.hasNext();) {
             final Parameter parameter = (Parameter) i.next();
             parameterList.add(parameter.copy());
         }
@@ -103,9 +102,9 @@ public class ParameterList implements Serializable {
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
-        for (final Iterator i = parameters.iterator(); i.hasNext();) {
+        for (final Parameter parameter : parameters) {
             buffer.append(';');
-            buffer.append(i.next().toString());
+            buffer.append(parameter.toString());
         }
         return buffer.toString();
     }
@@ -116,8 +115,7 @@ public class ParameterList implements Serializable {
      * @return the first matching parameter or null if no matching parameters
      */
     public final Parameter getParameter(final String aName) {
-        for (final Iterator i = parameters.iterator(); i.hasNext();) {
-            final Parameter p = (Parameter) i.next();
+        for (final Parameter p : parameters) {
             if (aName.equalsIgnoreCase(p.getName())) {
                 return p;
             }
@@ -132,8 +130,7 @@ public class ParameterList implements Serializable {
      */
     public final ParameterList getParameters(final String name) {
         final ParameterList list = new ParameterList();
-        for (final Iterator i = parameters.iterator(); i.hasNext();) {
-            final Parameter p = (Parameter) i.next();
+        for (final Parameter p : parameters) {
             if (p.getName().equalsIgnoreCase(name)) {
                 list.add(p);
             }
@@ -162,7 +159,7 @@ public class ParameterList implements Serializable {
      * @return true if successfully added to this list
      */
     public final boolean replace(final Parameter parameter) {
-        for (final Iterator i = getParameters(parameter.getName()).iterator(); i.hasNext();) {
+        for (final Iterator<Parameter> i = getParameters(parameter.getName()).iterator(); i.hasNext();) {
             remove((Parameter) i.next());
         }
         return add(parameter);
@@ -180,7 +177,7 @@ public class ParameterList implements Serializable {
      * @return an iterator
      * @see List#iterator()
      */
-    public final Iterator iterator() {
+    public final Iterator<Parameter> iterator() {
         return parameters.iterator();
     }
 

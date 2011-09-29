@@ -48,7 +48,7 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
  * 
  * @author Ben Fortuna
  */
-public class Period extends DateRange implements Comparable {
+public class Period extends DateRange implements Comparable<Period> {
     
     private static final long serialVersionUID = 7321090422911676490L;
 
@@ -309,13 +309,6 @@ public class Period extends DateRange implements Comparable {
             b.append(duration);
         }
         return b.toString();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final int compareTo(final Object arg0) {
-        return compareTo((Period) arg0);
     }
 
     /**

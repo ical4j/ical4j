@@ -45,7 +45,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
  * 
  * @author Ben Fortuna
  */
-public class WeekDayList extends ArrayList implements Serializable {
+public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
     
     private static final long serialVersionUID = 1243262497035300445L;
 
@@ -83,41 +83,11 @@ public class WeekDayList extends ArrayList implements Serializable {
     }
 
     /**
-     * @param weekDay a day to add to the list
-     * @return true if the week day is added, otherwise false
-     */
-    public final boolean add(final WeekDay weekDay) {
-        return add((Object) weekDay);
-    }
-    
-    /**
-     * Overrides superclass to throw an <code>IllegalArgumentException</code>
-     * where argument is not a <code>net.fortuna.ical4j.model.WeekDay</code>.
-     * @param weekday a week day to add
-     * @return true if the week day is added, otherwise false
-     * @see List#add(E)
-     */
-    public final boolean add(final Object weekday) {
-        if (!(weekday instanceof WeekDay)) {
-            throw new IllegalArgumentException("Argument not a " + WeekDay.class.getName());
-        }
-        return super.add(weekday);
-    }
-
-    /**
-     * @param weekDay a day to remove from the list
-     * @return true if the week day is removed, otherwise false
-     */
-    public final boolean remove(final WeekDay weekDay) {
-        return remove((Object) weekDay);
-    }
-
-    /**
      * {@inheritDoc}
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
-        for (final Iterator i = iterator(); i.hasNext();) {
+        for (final Iterator<WeekDay> i = iterator(); i.hasNext();) {
             b.append(i.next());
             if (i.hasNext()) {
                 b.append(',');

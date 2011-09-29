@@ -45,7 +45,7 @@ import net.fortuna.ical4j.util.Numbers;
  * 
  * @author Ben Fortuna
  */
-public class NumberList extends ArrayList implements Serializable {
+public class NumberList extends ArrayList<Integer> implements Serializable {
     
     private static final long serialVersionUID = -1667481795613729889L;
 
@@ -113,29 +113,7 @@ public class NumberList extends ArrayList implements Serializable {
     		throw new IllegalArgumentException(
     		        "Value not in range [" + minValue + ".." + maxValue + "]: " + aNumber);
     	}
-        return add((Object) aNumber);
-    }
-    
-    /**
-     * Overrides superclass to throw an <code>IllegalArgumentException</code>
-     * where argument is not a <code>java.lang.Integer</code>.
-     * @param arg0 an object to add
-     * @return true if the object was added, otherwise false
-     * @see List#add(E)
-     */
-    public final boolean add(final Object arg0) {
-        if (!(arg0 instanceof Integer)) {
-            throw new IllegalArgumentException("Argument not a " + Integer.class.getName());
-        }
-        return super.add(arg0);
-    }
-
-    /**
-     * @param aNumber a number to remove from the list
-     * @return true if the number was removed, otherwise false
-     */
-    public final boolean remove(final Integer aNumber) {
-        return remove((Object) aNumber);
+        return super.add(aNumber);
     }
 
     /**
@@ -143,7 +121,7 @@ public class NumberList extends ArrayList implements Serializable {
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
-        for (final Iterator i = iterator(); i.hasNext();) {
+        for (final Iterator<Integer> i = iterator(); i.hasNext();) {
             b.append(i.next());
             if (i.hasNext()) {
                 b.append(',');
