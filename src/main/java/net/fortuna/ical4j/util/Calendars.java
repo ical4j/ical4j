@@ -144,10 +144,9 @@ public final class Calendars {
             return new Calendar[] {calendar};
         }
         
-		@SuppressWarnings("unchecked")
+        final ComponentList<VTimeZone> timezoneList = calendar.getComponents(Component.VTIMEZONE);
 		final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<VTimeZone>(
-        		(ComponentList<VTimeZone>) calendar.getComponents(Component.VTIMEZONE),
-                Property.TZID);
+        		timezoneList, Property.TZID);
         
         final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
         for (final CalendarComponent c : calendar.getComponents()) {
