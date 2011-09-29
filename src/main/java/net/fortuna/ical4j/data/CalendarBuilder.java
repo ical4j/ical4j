@@ -55,7 +55,10 @@ import net.fortuna.ical4j.model.PropertyFactoryRegistry;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.component.Available;
 import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.Observance;
+import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VAvailability;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -241,16 +244,16 @@ public class CalendarBuilder {
 
             if (subComponent != null) {
                 if (component instanceof VTimeZone) {
-                    ((VTimeZone) component).getObservances().add(subComponent);
+                    ((VTimeZone) component).getObservances().add((Observance) subComponent);
                 }
                 else if (component instanceof VEvent) {
-                    ((VEvent) component).getAlarms().add(subComponent);
+                    ((VEvent) component).getAlarms().add((VAlarm) subComponent);
                 }
                 else if (component instanceof VToDo) {
-                    ((VToDo) component).getAlarms().add(subComponent);
+                    ((VToDo) component).getAlarms().add((VAlarm) subComponent);
                 }
                 else if (component instanceof VAvailability) {
-                    ((VAvailability) component).getAvailable().add(subComponent);
+                    ((VAvailability) component).getAvailable().add((Available) subComponent);
                 }
                 subComponent = null;
             }

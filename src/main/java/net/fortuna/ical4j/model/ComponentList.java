@@ -83,8 +83,8 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      */
     public final String toString() {
         final StringBuffer buffer = new StringBuffer();
-        for (final Iterator<T> i = iterator(); i.hasNext();) {
-            buffer.append(i.next().toString());
+        for (final T c : this) {
+            buffer.append(c.toString());
         }
         return buffer.toString();
     }
@@ -95,8 +95,7 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * @return a component or null if no matching component found
      */
     public final T getComponent(final String aName) {
-        for (final Iterator<T> i = iterator(); i.hasNext();) {
-            final T c = i.next();
+        for (final T c : this) {
             if (c.getName().equals(aName)) {
                 return c;
             }
@@ -109,53 +108,15 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * @param name name of components to return
      * @return a list of components with the matching name
      */
-    public final ComponentList<T> getComponents(final String name) {
-        final ComponentList<T> components = new ComponentList<T>();
+    @SuppressWarnings("unchecked")
+	public final <C extends T> ComponentList<C> getComponents(final String name) {
+        final ComponentList<C> components = new ComponentList<C>();
         for (final Iterator<T> i = iterator(); i.hasNext();) {
             final T c = i.next();
             if (c.getName().equals(name)) {
-                components.add(c);
+                components.add((C) c);
             }
         }
         return components;
     }
-
-    /**
-     * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
-     */
-    // public final boolean isEmpty() {
-    // return components.isEmpty();
-    // }
-    /**
-     * @return an iterator
-     * @see List#iterator()
-     */
-    // public final Iterator iterator() {
-    // return components.iterator();
-    // }
-    /**
-     * Remove a component from the list.
-     * @param component the component to remove
-     * @return true if the list contained the specified component
-     * @see List#remove(java.lang.Object)
-     */
-    public final boolean remove(final T component) {
-        return remove((Object) component);
-    }
-
-    /**
-     * @return the number of components in the list
-     * @see List#size()
-     */
-    // public final int size() {
-    // return components.size();
-    // }
-    /**
-     * Provides a list containing all components contained in this component list.
-     * @return a list
-     */
-    // public final List toList() {
-    // return new ArrayList(components);
-    // }
 }

@@ -31,9 +31,6 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Iterator;
-
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
@@ -103,14 +100,14 @@ public class VAvailability extends CalendarComponent {
 
 	private static final long serialVersionUID = -3001603309266267258L;
 	
-	private ComponentList available;
+	private ComponentList<Available> available;
 
     /**
      * Default constructor.
      */
     public VAvailability() {
         super(VAVAILABILITY);
-        this.available = new ComponentList();
+        this.available = new ComponentList<Available>();
         getProperties().add(new DtStamp());
     }
 
@@ -120,7 +117,7 @@ public class VAvailability extends CalendarComponent {
      */
     public VAvailability(final PropertyList properties) {
         super(VAVAILABILITY, properties);
-        this.available = new ComponentList();
+        this.available = new ComponentList<Available>();
     }
 
     /**
@@ -128,7 +125,7 @@ public class VAvailability extends CalendarComponent {
      * @param properties a list of properties
      * @param available a list of available components
      */
-    public VAvailability(final PropertyList properties, final ComponentList available) {
+    public VAvailability(final PropertyList properties, final ComponentList<Available> available) {
         super(VEVENT, properties);
         this.available = available;
     }
@@ -137,7 +134,7 @@ public class VAvailability extends CalendarComponent {
      * Returns the list of available times.
      * @return a component list
      */
-    public final ComponentList getAvailable() {
+    public final ComponentList<Available> getAvailable() {
         return available;
     }
 
@@ -166,15 +163,15 @@ public class VAvailability extends CalendarComponent {
             throws ValidationException {
 
         // validate that getAvailable() only contains Available components
-        final Iterator iterator = getAvailable().iterator();
-        while (iterator.hasNext()) {
-            final Component component = (Component) iterator.next();
-
-            if (!(component instanceof Available)) {
-                throw new ValidationException("Component ["
-                        + component.getName() + "] may not occur in VAVAILABILITY");
-            }
-        }
+//        final Iterator<Available> iterator = getAvailable().iterator();
+//        while (iterator.hasNext()) {
+//            final Component component = (Component) iterator.next();
+//
+//            if (!(component instanceof Available)) {
+//                throw new ValidationException("Component ["
+//                        + component.getName() + "] may not occur in VAVAILABILITY");
+//            }
+//        }
 
         /*
          * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /

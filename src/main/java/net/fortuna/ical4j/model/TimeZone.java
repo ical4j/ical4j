@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.Observance;
@@ -121,7 +120,8 @@ public class TimeZone extends java.util.TimeZone {
      * {@inheritDoc}
      */
     public final boolean useDaylightTime() {
-        final ComponentList daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
+        @SuppressWarnings("unchecked")
+		final ComponentList<Observance> daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
         return (!daylights.isEmpty());
     }
 
@@ -132,15 +132,16 @@ public class TimeZone extends java.util.TimeZone {
         return vTimeZone;
     }
 
-    private static final int getRawOffset(VTimeZone vt) {
-        List seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
+    @SuppressWarnings("unchecked")
+	private static final int getRawOffset(VTimeZone vt) {
+		ComponentList<Observance> seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
         // if no standard time use daylight time..
         if (seasonalTimes.size() == 0) {
             seasonalTimes = vt.getObservances().getComponents(Observance.DAYLIGHT);
         }
         if (seasonalTimes.size() > 0) {
             Collections.sort(seasonalTimes);
-            final Component latestSeasonalTime = (Component) seasonalTimes.get(seasonalTimes.size() - 1);
+            final Observance latestSeasonalTime = seasonalTimes.get(seasonalTimes.size() - 1);
             final TzOffsetTo offsetTo = (TzOffsetTo) latestSeasonalTime.getProperty(Property.TZOFFSETTO);
             if (offsetTo != null) {
                 return (int) offsetTo.getOffset().getOffset();

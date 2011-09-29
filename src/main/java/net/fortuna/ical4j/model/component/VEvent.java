@@ -35,7 +35,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import net.fortuna.ical4j.model.Component;
@@ -223,7 +222,7 @@ public class VEvent extends CalendarComponent {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
-    private final Map methodValidators = new HashMap();
+    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
     {
         methodValidators.put(Method.ADD, new AddValidator());
         methodValidators.put(Method.CANCEL, new CancelValidator());
@@ -235,14 +234,14 @@ public class VEvent extends CalendarComponent {
         methodValidators.put(Method.REQUEST, new RequestValidator());
     }
     
-    private ComponentList alarms;
+    private ComponentList<VAlarm> alarms;
 
     /**
      * Default constructor.
      */
     public VEvent() {
         super(VEVENT);
-        this.alarms = new ComponentList();
+        this.alarms = new ComponentList<VAlarm>();
         getProperties().add(new DtStamp());
     }
 
@@ -252,7 +251,7 @@ public class VEvent extends CalendarComponent {
      */
     public VEvent(final PropertyList properties) {
         super(VEVENT, properties);
-        this.alarms = new ComponentList();
+        this.alarms = new ComponentList<VAlarm>();
     }
 
     /**
@@ -260,7 +259,7 @@ public class VEvent extends CalendarComponent {
      * @param properties a list of properties
      * @param alarms a list of alarms
      */
-    public VEvent(final PropertyList properties, final ComponentList alarms) {
+    public VEvent(final PropertyList properties, final ComponentList<VAlarm> alarms) {
         super(VEVENT, properties);
         this.alarms = alarms;
     }
@@ -307,7 +306,7 @@ public class VEvent extends CalendarComponent {
      * Returns the list of alarms for this event.
      * @return a component list
      */
-    public final ComponentList getAlarms() {
+    public final ComponentList<VAlarm> getAlarms() {
         return alarms;
     }
 
@@ -335,17 +334,17 @@ public class VEvent extends CalendarComponent {
     public final void validate(final boolean recurse) throws ValidationException {
 
         // validate that getAlarms() only contains VAlarm components
-        final Iterator iterator = getAlarms().iterator();
-        while (iterator.hasNext()) {
-            final Component component = (Component) iterator.next();
-
-            if (!(component instanceof VAlarm)) {
-                throw new ValidationException("Component ["
-                        + component.getName() + "] may not occur in VEVENT");
-            }
-            
-            ((VAlarm) component).validate(recurse);
-        }
+//        final Iterator iterator = getAlarms().iterator();
+//        while (iterator.hasNext()) {
+//            final Component component = (Component) iterator.next();
+//
+//            if (!(component instanceof VAlarm)) {
+//                throw new ValidationException("Component ["
+//                        + component.getName() + "] may not occur in VEVENT");
+//            }
+//            
+//            ((VAlarm) component).validate(recurse);
+//        }
 
         if (!CompatibilityHints
                 .isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
@@ -565,8 +564,7 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, getProperties());
             PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
             
-            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
-                final VAlarm alarm = (VAlarm) i.next();
+            for (final VAlarm alarm : getAlarms()) {
                 alarm.validate(Method.ADD);
             }
         }
@@ -762,8 +760,7 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
             
-            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
-                final VAlarm alarm = (VAlarm) i.next();
+            for (final VAlarm alarm : getAlarms()) {
                 alarm.validate(Method.COUNTER);
             }
         }
@@ -961,8 +958,7 @@ public class VEvent extends CalendarComponent {
             
             PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
             
-            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
-                final VAlarm alarm = (VAlarm) i.next();
+            for (final VAlarm alarm : getAlarms()) {
                 alarm.validate(Method.PUBLISH);
             }
         }
@@ -1248,8 +1244,7 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
             
-            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
-                final VAlarm alarm = (VAlarm) i.next();
+            for (final VAlarm alarm : getAlarms()) {
                 alarm.validate(Method.REQUEST);
             }
         }
@@ -1313,8 +1308,7 @@ public class VEvent extends CalendarComponent {
         URISyntaxException, ParseException {
         
         final PeriodList consumedTime = getConsumedTime(date, date);
-        for (final Iterator i = consumedTime.iterator(); i.hasNext();) {
-            final Period p = (Period) i.next();
+        for (final Period p : consumedTime) {
             if (p.getStart().equals(date)) {
                 final VEvent occurrence = (VEvent) this.copy();
                 occurrence.getProperties().add(new RecurrenceId(date));
@@ -1514,7 +1508,7 @@ public class VEvent extends CalendarComponent {
     public Component copy() throws ParseException, IOException,
             URISyntaxException {
         final VEvent copy = (VEvent) super.copy();
-        copy.alarms = new ComponentList(alarms);
+        copy.alarms = new ComponentList<VAlarm>(alarms);
         return copy;
     }
 }

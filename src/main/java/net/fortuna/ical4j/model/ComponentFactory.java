@@ -142,15 +142,15 @@ public final class ComponentFactory {
      */
     @SuppressWarnings("unchecked")
 	public <T extends Component> T createComponent(final String name, final PropertyList properties,
-            final ComponentList<Component> components) {
+            final ComponentList<? extends Component> components) {
         
         if (components != null) {
             Component component = null;
             if (Component.VTIMEZONE.equals(name)) {
-                component = new VTimeZone(properties, components);
+                component = new VTimeZone(properties, (ComponentList<Observance>) components);
             }
             else if (Component.VEVENT.equals(name)) {
-                component = new VEvent(properties, components);
+                component = new VEvent(properties, (ComponentList<VAlarm>) components);
             }
             else {
                 throw new IllegalArgumentException("Illegal component [" + name
@@ -160,7 +160,7 @@ public final class ComponentFactory {
         }
         return createComponent(name, properties);
     }
-
+    
     /**
      * @param name
      * @return

@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.component;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Iterator;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -132,14 +131,14 @@ public class VTimeZone extends CalendarComponent {
 
     private final Validator itipValidator = new ITIPValidator();
     
-    private ComponentList observances;
+    private ComponentList<Observance> observances;
 
     /**
      * Default constructor.
      */
     public VTimeZone() {
         super(VTIMEZONE);
-        this.observances = new ComponentList();
+        this.observances = new ComponentList<Observance>();
     }
 
     /**
@@ -148,14 +147,14 @@ public class VTimeZone extends CalendarComponent {
      */
     public VTimeZone(final PropertyList properties) {
         super(VTIMEZONE, properties);
-        this.observances = new ComponentList();
+        this.observances = new ComponentList<Observance>();
     }
 
     /**
      * Constructs a new vtimezone component with no properties and the specified list of type components.
      * @param observances a list of type components
      */
-    public VTimeZone(final ComponentList observances) {
+    public VTimeZone(final ComponentList<Observance> observances) {
         super(VTIMEZONE);
         this.observances = observances;
     }
@@ -166,7 +165,7 @@ public class VTimeZone extends CalendarComponent {
      * @param observances a list of timezone types
      */
     public VTimeZone(final PropertyList properties,
-            final ComponentList observances) {
+            final ComponentList<Observance> observances) {
         super(VTIMEZONE, properties);
         this.observances = observances;
     }
@@ -219,8 +218,8 @@ public class VTimeZone extends CalendarComponent {
                     + "] must be specified at least once");
         }
 
-        for (final Iterator i = getObservances().iterator(); i.hasNext();) {
-            ((Component) i.next()).validate(recurse);
+        for (final Observance observance : getObservances()) {
+            observance.validate(recurse);
         }
         
         /*
@@ -282,8 +281,7 @@ public class VTimeZone extends CalendarComponent {
          * {@inheritDoc}
          */
         public void validate() throws ValidationException {
-            for (final Iterator i = getObservances().iterator(); i.hasNext();) {
-                final Observance observance = (Observance) i.next();
+            for (final Observance observance : getObservances()) {
                 PropertyValidator.getInstance().assertOne(Property.DTSTART, observance.getProperties());
                 PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM, observance.getProperties());
                 PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO, observance.getProperties());
@@ -297,7 +295,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * @return Returns the types.
      */
-    public final ComponentList getObservances() {
+    public final ComponentList<Observance> getObservances() {
         return observances;
     }
 
@@ -310,8 +308,7 @@ public class VTimeZone extends CalendarComponent {
     public final Observance getApplicableObservance(final Date date) {
         Observance latestObservance = null;
         Date latestOnset = null;
-        for (final Iterator i = getObservances().iterator(); i.hasNext();) {
-            final Observance observance = (Observance) i.next();
+        for (final Observance observance : getObservances()) {
             final Date onset = observance.getLatestOnset(date);
             if (latestOnset == null
                     || (onset != null && onset.after(latestOnset))) {
@@ -373,7 +370,7 @@ public class VTimeZone extends CalendarComponent {
      */
     public Component copy() throws ParseException, IOException, URISyntaxException {
         final VTimeZone copy = (VTimeZone) super.copy();
-        copy.observances = new ComponentList(observances);
+        copy.observances = new ComponentList<Observance>(observances);
         return copy;
     }
 }

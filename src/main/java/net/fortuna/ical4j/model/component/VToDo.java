@@ -146,7 +146,7 @@ public class VToDo extends CalendarComponent {
 
     private static final long serialVersionUID = -269658210065896668L;
 
-    private final Map methodValidators = new HashMap();
+    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
     {
         methodValidators.put(Method.ADD, new AddValidator());
         methodValidators.put(Method.CANCEL, new CancelValidator());
@@ -158,7 +158,7 @@ public class VToDo extends CalendarComponent {
         methodValidators.put(Method.REQUEST, new RequestValidator());
     }
     
-    private ComponentList alarms = new ComponentList();
+    private ComponentList<VAlarm> alarms = new ComponentList<VAlarm>();
 
     /**
      * Default constructor.
@@ -218,7 +218,7 @@ public class VToDo extends CalendarComponent {
      * Returns the list of alarms for this todo.
      * @return a component list
      */
-    public final ComponentList getAlarms() {
+    public final ComponentList<VAlarm> getAlarms() {
         return alarms;
     }
 
@@ -247,7 +247,7 @@ public class VToDo extends CalendarComponent {
             throws ValidationException {
 
         // validate that getAlarms() only contains VAlarm components
-        final Iterator iterator = getAlarms().iterator();
+        final Iterator<VAlarm> iterator = getAlarms().iterator();
         while (iterator.hasNext()) {
             final Component component = (Component) iterator.next();
             if (!(component instanceof VAlarm)) {
@@ -440,8 +440,7 @@ public class VToDo extends CalendarComponent {
             PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, getProperties());
             PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
             
-            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
-                final VAlarm alarm = (VAlarm) i.next();
+            for (final VAlarm alarm : getAlarms()) {
                 alarm.validate(Method.ADD);
             }
         }
@@ -627,8 +626,7 @@ public class VToDo extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
             
-            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
-                final VAlarm alarm = (VAlarm) i.next();
+            for (final VAlarm alarm : getAlarms()) {
                 alarm.validate(Method.COUNTER);
             }
         }
@@ -814,8 +812,7 @@ public class VToDo extends CalendarComponent {
             PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
             PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
             
-            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
-                final VAlarm alarm = (VAlarm) i.next();
+            for (final VAlarm alarm : getAlarms()) {
                 alarm.validate(Method.PUBLISH);
             }
         }
@@ -1095,8 +1092,7 @@ public class VToDo extends CalendarComponent {
             
             PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
             
-            for (final Iterator i = getAlarms().iterator(); i.hasNext();) {
-                final VAlarm alarm = (VAlarm) i.next();
+            for (final VAlarm alarm : getAlarms()) {
                 alarm.validate(Method.REQUEST);
             }
         }
@@ -1273,7 +1269,7 @@ public class VToDo extends CalendarComponent {
      */
     public Component copy() throws ParseException, IOException, URISyntaxException {
         final VToDo copy = (VToDo) super.copy();
-        copy.alarms = new ComponentList(alarms);
+        copy.alarms = new ComponentList<VAlarm>(alarms);
         return copy;
     }
 }

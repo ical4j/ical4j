@@ -477,14 +477,13 @@ public class VFreeBusy extends CalendarComponent {
      * @param components
      * @return
      */
-    private PeriodList getConsumedTime(final ComponentList components, final DateTime rangeStart,
+    private PeriodList getConsumedTime(final ComponentList<Component> components, final DateTime rangeStart,
             final DateTime rangeEnd) {
         
         final PeriodList periods = new PeriodList();
         // only events consume time..
-        for (final Iterator i = components.getComponents(Component.VEVENT).iterator(); i.hasNext();) {
-            final Component component = (Component) i.next();
-            periods.addAll(((VEvent) component).getConsumedTime(rangeStart, rangeEnd, false));
+        for (final Component event : components.getComponents(Component.VEVENT)) {
+            periods.addAll(((VEvent) event).getConsumedTime(rangeStart, rangeEnd, false));
         }
         return periods.normalise();
     }
