@@ -55,7 +55,7 @@ public final class ComponentValidator {
      * @param components a list of components
      * @throws ValidationException where the assertion fails
      */
-    public static void assertNone(String componentName, ComponentList components) throws ValidationException {
+    public static void assertNone(String componentName, ComponentList<?> components) throws ValidationException {
         if (components.getComponent(componentName) != null) {
             throw new ValidationException(ASSERT_NONE_MESSAGE, new Object[] {componentName});
         }
@@ -66,7 +66,7 @@ public final class ComponentValidator {
      * @param components a list of components
      * @throws ValidationException where the assertion fails
      */
-    public static void assertOneOrLess(String componentName, ComponentList components) throws ValidationException {
+    public static void assertOneOrLess(String componentName, ComponentList<?> components) throws ValidationException {
         if (components.getComponents(componentName).size() > 1) {
             throw new ValidationException(ASSERT_ONE_OR_LESS_MESSAGE, new Object[] {componentName});
         }
