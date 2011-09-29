@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.component;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import net.fortuna.ical4j.model.Component;
@@ -308,7 +307,7 @@ public class VFreeBusy extends CalendarComponent {
      * @param components a component list used to initialise busy time
      * @throws ValidationException 
      */
-    public VFreeBusy(final VFreeBusy request, final ComponentList components) {
+    public VFreeBusy(final VFreeBusy request, final ComponentList<CalendarComponent> components) {
         this();
         
         final DtStart start = (DtStart) request.getProperty(Property.DTSTART);
@@ -372,7 +371,7 @@ public class VFreeBusy extends CalendarComponent {
         
         private DateTime end;
         
-        private ComponentList components;
+        private ComponentList<CalendarComponent> components;
         
         public BusyTimeBuilder start(DateTime start) {
             this.start = start;
@@ -384,7 +383,7 @@ public class VFreeBusy extends CalendarComponent {
             return this;
         }
         
-        public BusyTimeBuilder components(ComponentList components) {
+        public BusyTimeBuilder components(ComponentList<CalendarComponent> components) {
             this.components = components;
             return this;
         }
@@ -394,8 +393,7 @@ public class VFreeBusy extends CalendarComponent {
             final DateRange range = new DateRange(start, end);
             // periods must be in UTC time for freebusy..
             periods.setUtc(true);
-            for (final Iterator i = periods.iterator(); i.hasNext();) {
-                final Period period = (Period) i.next();
+            for (final Period period : periods) {
                 // check if period outside bounds..
                 if (!range.intersects(period)) {
                     periods.remove(period);
@@ -419,7 +417,7 @@ public class VFreeBusy extends CalendarComponent {
         
         private Dur duration;
         
-        private ComponentList components;
+        private ComponentList<CalendarComponent> components;
         
         public FreeTimeBuilder start(DateTime start) {
             this.start = start;
@@ -436,7 +434,7 @@ public class VFreeBusy extends CalendarComponent {
             return this;
         }
         
-        public FreeTimeBuilder components(ComponentList components) {
+        public FreeTimeBuilder components(ComponentList<CalendarComponent> components) {
             this.components = components;
             return this;
         }
@@ -450,9 +448,7 @@ public class VFreeBusy extends CalendarComponent {
             periods.add(new Period(end, end));
             DateTime lastPeriodEnd = new DateTime(start);
             // where no time is consumed set the last period end as the range start..
-            for (final Iterator i = periods.iterator(); i.hasNext();) {
-                final Period period = (Period) i.next();
-                
+            for (final Period period : periods) {
                 // check if period outside bounds.. or period intersects with the end of the range..
                 if (range.contains(period) || 
                 		(range.intersects(period) && period.getStart().after(range.getRangeStart()))) {
@@ -477,7 +473,7 @@ public class VFreeBusy extends CalendarComponent {
      * @param components
      * @return
      */
-    private PeriodList getConsumedTime(final ComponentList<Component> components, final DateTime rangeStart,
+    private PeriodList getConsumedTime(final ComponentList<CalendarComponent> components, final DateTime rangeStart,
             final DateTime rangeEnd) {
         
         final PeriodList periods = new PeriodList();
