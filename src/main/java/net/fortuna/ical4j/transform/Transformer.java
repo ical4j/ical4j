@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.transform;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.util.Calendars;
 
 /**
@@ -58,7 +58,7 @@ public abstract class Transformer {
      * @param component a component to transform
      * @return a calendar containing the transformed component
      */
-    public final Calendar transform(final Component component) {
+    public final Calendar transform(final CalendarComponent component) {
         return transform(Calendars.wrap(component));
     }
 }

@@ -71,14 +71,14 @@ public class InetAddressHostInfo implements HostInfo {
      * @throws SocketException if a socket error occurs
      */
     private static InetAddress findNonLoopbackAddress() throws SocketException {
-        final Enumeration enumInterfaceAddress = NetworkInterface.getNetworkInterfaces();
+        final Enumeration<NetworkInterface> enumInterfaceAddress = NetworkInterface.getNetworkInterfaces();
         while (enumInterfaceAddress.hasMoreElements()) {
-            final NetworkInterface netIf = (NetworkInterface) enumInterfaceAddress.nextElement();
+            final NetworkInterface netIf = enumInterfaceAddress.nextElement();
 
             // Iterate over inet address
-            final Enumeration enumInetAdress = netIf.getInetAddresses();
+            final Enumeration<InetAddress> enumInetAdress = netIf.getInetAddresses();
             while (enumInetAdress.hasMoreElements()) {
-                final InetAddress address = (InetAddress) enumInetAdress.nextElement();
+                final InetAddress address = enumInetAdress.nextElement();
                 if (!address.isLoopbackAddress()) {
                     return address;
                 }

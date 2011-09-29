@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -125,8 +124,8 @@ public final class Calendars {
      * @param component the component to wrap with a calendar
      * @return a calendar containing the specified component
      */
-    public static Calendar wrap(final Component component) {
-        final ComponentList components = new ComponentList();
+    public static Calendar wrap(final CalendarComponent component) {
+        final ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
         components.add(component);
         return new Calendar(components);
     }
@@ -145,10 +144,12 @@ public final class Calendars {
             return new Calendar[] {calendar};
         }
         
-        final IndexedComponentList timezones = new IndexedComponentList(calendar.getComponents(Component.VTIMEZONE),
+		@SuppressWarnings("unchecked")
+		final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<VTimeZone>(
+        		(ComponentList<VTimeZone>) calendar.getComponents(Component.VTIMEZONE),
                 Property.TZID);
         
-        final Map calendars = new HashMap();
+        final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
         for (final CalendarComponent c : calendar.getComponents()) {
             if (c instanceof VTimeZone) {
                 continue;
@@ -158,16 +159,15 @@ public final class Calendars {
             
             Calendar uidCal = (Calendar) calendars.get(uid);
             if (uidCal == null) {
-                uidCal = new Calendar(calendar.getProperties(), new ComponentList());
+                uidCal = new Calendar(calendar.getProperties(), new ComponentList<CalendarComponent>());
                 // remove METHOD property for split calendars..
-                for (final Iterator mp = uidCal.getProperties(Property.METHOD).iterator(); mp.hasNext();) {
-                    uidCal.getProperties().remove(mp.next());
+                for (final Property mp : uidCal.getProperties(Property.METHOD)) {
+                    uidCal.getProperties().remove(mp);
                 }
                 calendars.put(uid, uidCal);
             }
             
-            for (final Iterator j = c.getProperties().iterator(); j.hasNext();) {
-                final Property p = (Property) j.next();
+            for (final Property p : c.getProperties()) {
                 final TzId tzid = (TzId) p.getParameter(Parameter.TZID);
                 if (tzid != null) {
                     final VTimeZone timezone = (VTimeZone) timezones.getComponent(tzid.getValue());
@@ -189,14 +189,12 @@ public final class Calendars {
      */
     public static Uid getUid(final Calendar calendar) throws ConstraintViolationException {
         Uid uid = null;
-        for (final Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            final Component c = (Component) i.next();
-            for (final Iterator j = c.getProperties(Property.UID).iterator(); j.hasNext();) {
-                final Uid foundUid = (Uid) j.next();
+        for (final Component c : calendar.getComponents()) {
+            for (final Property foundUid : c.getProperties(Property.UID)) {
                 if (uid != null && !uid.equals(foundUid)) {
                     throw new ConstraintViolationException("More than one UID found in calendar");
                 }
-                uid = foundUid;
+                uid = (Uid) foundUid;
             }
         }
         if (uid == null) {

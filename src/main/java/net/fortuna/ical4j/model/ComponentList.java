@@ -70,7 +70,7 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * @throws URISyntaxException where component data contains an invalid URI
      */
     @SuppressWarnings("unchecked")
-	public ComponentList(ComponentList<T> components) throws ParseException,
+	public ComponentList(ComponentList<? extends T> components) throws ParseException,
             IOException, URISyntaxException {
 
         for (T c : components) {

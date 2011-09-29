@@ -59,9 +59,10 @@ public abstract class CalendarParserFactory {
     private static CalendarParserFactory instance;
     static {
         try {
-            final Class factoryClass = Class.forName(
+            @SuppressWarnings("unchecked")
+			final Class<CalendarParserFactory> factoryClass = (Class<CalendarParserFactory>) Class.forName(
                     Configurator.getProperty(KEY_FACTORY_CLASS));
-            instance = (CalendarParserFactory) factoryClass.newInstance();
+            instance = factoryClass.newInstance();
         }
         catch (Exception e) {
             instance = new DefaultCalendarParserFactory();
