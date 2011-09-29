@@ -41,6 +41,8 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
@@ -53,11 +55,11 @@ import net.fortuna.ical4j.model.property.Organizer;
  * Unit tests for the filter implementation.
  * @author Ben Fortuna
  */
-public class FilterTest extends TestCase {
+public class FilterTest<T extends Component> extends TestCase {
 
-    private Filter filter;
+    private Filter<T> filter;
     
-    private Collection collection;
+    private Collection<T> collection;
     
     private int expectedFilteredSize;
     
@@ -66,7 +68,7 @@ public class FilterTest extends TestCase {
      * @param filter
      * @param collection
      */
-    public FilterTest(String testMethod, Filter filter, Collection collection) {
+    public FilterTest(String testMethod, Filter<T> filter, Collection<T> collection) {
         super(testMethod);
         this.filter = filter;
         this.collection = collection;
@@ -78,7 +80,7 @@ public class FilterTest extends TestCase {
      * @param collection
      * @param expectedFilteredSize
      */
-    public FilterTest(String testMethod, Filter filter, Collection collection, int expectedFilteredSize) {
+    public FilterTest(String testMethod, Filter<T> filter, Collection<T> collection, int expectedFilteredSize) {
         this(testMethod, filter, collection);
         this.expectedFilteredSize = expectedFilteredSize;
     }
@@ -111,7 +113,8 @@ public class FilterTest extends TestCase {
      * @throws FileNotFoundException 
      * @throws URISyntaxException 
      */
-    public static TestSuite suite() throws FileNotFoundException, IOException, ParserException, URISyntaxException {
+    @SuppressWarnings("unchecked")
+	public static TestSuite suite() throws FileNotFoundException, IOException, ParserException, URISyntaxException {
 //        CalendarBuilder builder = new CalendarBuilder();
 //        Calendar calendar = builder.build(new FileReader("etc/samples/valid/incoming.ics"));
         
@@ -137,32 +140,32 @@ public class FilterTest extends TestCase {
         calendar.getComponents().add(e2);
         calendar.getComponents().add(e3);
         
-        Rule organiserRuleMatch = new HasPropertyRule(organizer);
-        Rule attendee1RuleMatch = new HasPropertyRule(a1);
+        Rule<Component> organiserRuleMatch = new HasPropertyRule(organizer);
+        Rule<Component> attendee1RuleMatch = new HasPropertyRule(a1);
 
-        Rule organiserRuleNoMatch = new HasPropertyRule(new Organizer(new URI("Mailto:X@example.com")));
-        Rule attendeeRuleNoMatch = new HasPropertyRule(new Attendee(new URI("Mailto:X@example.com")));
+        Rule<Component> organiserRuleNoMatch = new HasPropertyRule(new Organizer(new URI("Mailto:X@example.com")));
+        Rule<Component> attendeeRuleNoMatch = new HasPropertyRule(new Attendee(new URI("Mailto:X@example.com")));
         
         TestSuite suite = new TestSuite();
         //testFilterMatchAll..
-        Filter filter = new Filter(new Rule[] {organiserRuleMatch, attendee1RuleMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest("testFilteredSize", filter, calendar.getComponents(), 2));
+        Filter<CalendarComponent> filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleMatch, attendee1RuleMatch}, Filter.MATCH_ALL);
+        suite.addTest(new FilterTest<CalendarComponent>("testFilteredSize", filter, calendar.getComponents(), 2));
 
-        filter = new Filter(new Rule[] {organiserRuleNoMatch, attendee1RuleMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest("testFilteredIsEmpty", filter, calendar.getComponents()));
+        filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleNoMatch, attendee1RuleMatch}, Filter.MATCH_ALL);
+        suite.addTest(new FilterTest<CalendarComponent>("testFilteredIsEmpty", filter, calendar.getComponents()));
 
-        filter = new Filter(new Rule[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest("testFilteredIsEmpty", filter, calendar.getComponents()));
+        filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ALL);
+        suite.addTest(new FilterTest<CalendarComponent>("testFilteredIsEmpty", filter, calendar.getComponents()));
         
         //testFilterMatchAny..
-        filter = new Filter(new Rule[] {organiserRuleMatch, attendee1RuleMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest("testFilteredSize", filter, calendar.getComponents(), 3));
+        filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleMatch, attendee1RuleMatch}, Filter.MATCH_ANY);
+        suite.addTest(new FilterTest<CalendarComponent>("testFilteredSize", filter, calendar.getComponents(), 3));
 
-        filter = new Filter(new Rule[] {organiserRuleNoMatch, attendee1RuleMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest("testFilteredSize", filter, calendar.getComponents(), 2));
+        filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleNoMatch, attendee1RuleMatch}, Filter.MATCH_ANY);
+        suite.addTest(new FilterTest<CalendarComponent>("testFilteredSize", filter, calendar.getComponents(), 2));
 
-        filter = new Filter(new Rule[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest("testFilteredSize", filter, calendar.getComponents(), 3));
+        filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ANY);
+        suite.addTest(new FilterTest<CalendarComponent>("testFilteredSize", filter, calendar.getComponents(), 3));
         return suite;
     }
 }
