@@ -220,7 +220,7 @@ public class VFreeBusy extends CalendarComponent {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
-    private final Map methodValidators = new HashMap();
+    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
     {
         methodValidators.put(Method.PUBLISH, new PublishValidator());
         methodValidators.put(Method.REPLY, new ReplyValidator());

@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;

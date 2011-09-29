@@ -76,7 +76,7 @@ public final class CompatibilityHints {
      */
     public static final String KEY_NOTES_COMPATIBILITY = "ical4j.compatibility.notes";
 
-    private static final Map HINTS = new ConcurrentHashMap();
+    private static final Map<String, Boolean> HINTS = new ConcurrentHashMap<String, Boolean>();
     // preload known hints from the configurator
     static {
         setHintEnabled(KEY_RELAXED_UNFOLDING, "true".equals(Configurator.getProperty(KEY_RELAXED_UNFOLDING)));

@@ -487,7 +487,7 @@ public class DateTime extends Date {
 
 	private static class DateFormatCache {
 
-		private final Map threadMap = new WeakHashMap();
+		private final Map<Thread, DateFormat> threadMap = new WeakHashMap<Thread, DateFormat>();
 
 		private final DateFormat templateFormat;
 
@@ -496,8 +496,7 @@ public class DateTime extends Date {
 		}
 
 		public DateFormat get() {
-			DateFormat dateFormat = (DateFormat) threadMap.get(Thread
-					.currentThread());
+			DateFormat dateFormat = threadMap.get(Thread.currentThread());
 			if (dateFormat == null) {
 				dateFormat = (DateFormat) templateFormat.clone();
 				threadMap.put(Thread.currentThread(), dateFormat);

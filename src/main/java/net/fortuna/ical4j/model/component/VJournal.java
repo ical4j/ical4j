@@ -119,7 +119,7 @@ public class VJournal extends CalendarComponent {
 
     private static final long serialVersionUID = -7635140949183238830L;
 
-    private final Map methodValidators = new HashMap();
+    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
     {
         methodValidators.put(Method.ADD, new AddValidator());
         methodValidators.put(Method.CANCEL, new CancelValidator());

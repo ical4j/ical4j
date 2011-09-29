@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.transform;
 
-import java.util.Iterator;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
@@ -65,9 +64,7 @@ public class PublishTransformer extends Transformer {
 
         // if a calendar component has already been published previously
         // update the sequence number..
-        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            Component component = (Component) i.next();
-
+        for (Component component : calendar.getComponents()) {
             PropertyList compProps = component.getProperties();
 
             Sequence sequence = (Sequence) compProps

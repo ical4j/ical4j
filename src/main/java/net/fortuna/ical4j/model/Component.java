@@ -214,8 +214,7 @@ public abstract class Component implements Serializable {
      * @throws ValidationException where any of the component properties is not in a valid state
      */
     protected final void validateProperties() throws ValidationException {
-        for (final Iterator i = getProperties().iterator(); i.hasNext();) {
-            final Property property = (Property) i.next();
+        for (final Property property : getProperties()) {
             property.validate();
         }
     }
@@ -314,28 +313,25 @@ public abstract class Component implements Serializable {
         }
         
         // add recurrence dates..
-        for (final Iterator i = getProperties(Property.RDATE).iterator(); i.hasNext();) {
+        for (final Iterator<Property> i = getProperties(Property.RDATE).iterator(); i.hasNext();) {
             final RDate rdate = (RDate) i.next();
             final Value rdateValue = (Value) rdate.getParameter(Parameter.VALUE);
             if (Value.PERIOD.equals(rdateValue)) {
-                for (final Iterator j = rdate.getPeriods().iterator(); j.hasNext();) {
-                    final Period rdatePeriod = (Period) j.next();
+                for (final Period rdatePeriod : rdate.getPeriods()) {
                     if (period.intersects(rdatePeriod)) {
                         recurrenceSet.add(rdatePeriod);
                     }
                 }
             }
             else if (Value.DATE_TIME.equals(rdateValue)) {
-                for (final Iterator j = rdate.getDates().iterator(); j.hasNext();) {
-                    final DateTime rdateTime = (DateTime) j.next();
+                for (final Date rdateTime : rdate.getDates()) {
                     if (period.includes(rdateTime)) {
-                        recurrenceSet.add(new Period(rdateTime, rDuration));
+                        recurrenceSet.add(new Period((DateTime) rdateTime, rDuration));
                     }
                 }
             }
             else {
-                for (final Iterator j = rdate.getDates().iterator(); j.hasNext();) {
-                    final Date rdateDate = (Date) j.next();
+                for (final Date rdateDate : rdate.getDates()) {
                     if (period.includes(rdateDate)) {
                         recurrenceSet.add(new Period(new DateTime(rdateDate), rDuration));
                     }
@@ -350,12 +346,11 @@ public abstract class Component implements Serializable {
                 period.getStart()).getTime());
             
         // add recurrence rules..
-        for (final Iterator i = getProperties(Property.RRULE).iterator(); i.hasNext();) {
+        for (final Iterator<Property> i = getProperties(Property.RRULE).iterator(); i.hasNext();) {
             final RRule rrule = (RRule) i.next();
             final DateList rruleDates = rrule.getRecur().getDates(start.getDate(),
                     new Period(startMinusDuration, period.getEnd()), startValue);
-            for (final Iterator j = rruleDates.iterator(); j.hasNext();) {
-                final Date rruleDate = (Date) j.next();
+            for (final Date rruleDate : rruleDates) {
                 recurrenceSet.add(new Period(new DateTime(rruleDate), rDuration));
             }
         }
@@ -383,10 +378,10 @@ public abstract class Component implements Serializable {
         }
         
         // subtract exception dates..
-        for (final Iterator i = getProperties(Property.EXDATE).iterator(); i.hasNext();) {
+        for (final Iterator<Property> i = getProperties(Property.EXDATE).iterator(); i.hasNext();) {
             final ExDate exdate = (ExDate) i.next();
-            for (final Iterator j = recurrenceSet.iterator(); j.hasNext();) {
-                final Period recurrence = (Period) j.next();
+            for (final Iterator<Period> j = recurrenceSet.iterator(); j.hasNext();) {
+                final Period recurrence = j.next();
                 // for DATE-TIME instances check for DATE-based exclusions also..
                 if (exdate.getDates().contains(recurrence.getStart())
                         || exdate.getDates().contains(new Date(recurrence.getStart()))) {
@@ -396,12 +391,12 @@ public abstract class Component implements Serializable {
         }
         
         // subtract exception rules..
-        for (final Iterator i = getProperties(Property.EXRULE).iterator(); i.hasNext();) {
+        for (final Iterator<Property> i = getProperties(Property.EXRULE).iterator(); i.hasNext();) {
             final ExRule exrule = (ExRule) i.next();
             final DateList exruleDates = exrule.getRecur().getDates(start.getDate(),
                     period, startValue);
-            for (final Iterator j = recurrenceSet.iterator(); j.hasNext();) {
-                final Period recurrence = (Period) j.next();
+            for (final Iterator<Period> j = recurrenceSet.iterator(); j.hasNext();) {
+                final Period recurrence = j.next();
                 // for DATE-TIME instances check for DATE-based exclusions also..
                 if (exruleDates.contains(recurrence.getStart())
                         || exruleDates.contains(new Date(recurrence.getStart()))) {

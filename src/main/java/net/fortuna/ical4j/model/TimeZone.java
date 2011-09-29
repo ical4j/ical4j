@@ -120,7 +120,6 @@ public class TimeZone extends java.util.TimeZone {
      * {@inheritDoc}
      */
     public final boolean useDaylightTime() {
-        @SuppressWarnings("unchecked")
 		final ComponentList<Observance> daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
         return (!daylights.isEmpty());
     }
@@ -132,7 +131,6 @@ public class TimeZone extends java.util.TimeZone {
         return vTimeZone;
     }
 
-    @SuppressWarnings("unchecked")
 	private static final int getRawOffset(VTimeZone vt) {
 		ComponentList<Observance> seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
         // if no standard time use daylight time..

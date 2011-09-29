@@ -203,7 +203,7 @@ public class VAlarm extends CalendarComponent {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
-    private final Map actionValidators = new HashMap();
+    private final Map<Action, Validator> actionValidators = new HashMap<Action, Validator>();
     {
         actionValidators.put(Action.AUDIO, new AudioValidator());
         actionValidators.put(Action.DISPLAY, new DisplayValidator());
