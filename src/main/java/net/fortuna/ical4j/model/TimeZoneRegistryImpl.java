@@ -67,7 +67,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     
     private static final String UPDATE_ENABLED = "net.fortuna.ical4j.timezone.update.enabled";
 
-    private static final Map DEFAULT_TIMEZONES = new ConcurrentHashMap();
+    private static final Map<String, TimeZone> DEFAULT_TIMEZONES = new ConcurrentHashMap<String, TimeZone>();
 
     private static final Properties ALIASES = new Properties();
     static {
@@ -80,7 +80,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         }
     }
 
-    private Map timezones;
+    private Map<String, TimeZone> timezones;
 
     private String resourcePrefix;
 
@@ -97,7 +97,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      */
     public TimeZoneRegistryImpl(final String resourcePrefix) {
         this.resourcePrefix = resourcePrefix;
-        timezones = new ConcurrentHashMap();
+        timezones = new ConcurrentHashMap<String, TimeZone>();
     }
 
     /**
@@ -132,9 +132,9 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * {@inheritDoc}
      */
     public final TimeZone getTimeZone(final String id) {
-        TimeZone timezone = (TimeZone) timezones.get(id);
+        TimeZone timezone = timezones.get(id);
         if (timezone == null) {
-            timezone = (TimeZone) DEFAULT_TIMEZONES.get(id);
+            timezone = DEFAULT_TIMEZONES.get(id);
             if (timezone == null) {
                 // if timezone not found with identifier, try loading an alias..
                 final String alias = ALIASES.getProperty(id);
@@ -144,7 +144,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                 else {
                     synchronized (DEFAULT_TIMEZONES) {
                     	// check again as it may be loaded now..
-                    	timezone = (TimeZone) DEFAULT_TIMEZONES.get(id);
+                    	timezone = DEFAULT_TIMEZONES.get(id);
                     	if (timezone == null) {
                             try {
                                 final VTimeZone vTimeZone = loadVTimeZone(id);

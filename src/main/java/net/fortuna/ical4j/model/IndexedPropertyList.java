@@ -48,7 +48,7 @@ public class IndexedPropertyList {
 
     private static final PropertyList EMPTY_LIST = new PropertyList();
     
-    private Map index;
+    private Map<String, PropertyList> index;
     
     /**
      * Creates a new instance indexed on the parameters with the specified name.
@@ -56,12 +56,11 @@ public class IndexedPropertyList {
      * @param parameterName the name of parameters on which to index
      */
     public IndexedPropertyList(final PropertyList list, final String parameterName) {
-        final Map indexedProperties = new HashMap();
-        for (final Iterator i = list.iterator(); i.hasNext();) {
-            final Property property = (Property) i.next();
-            for (final Iterator j = property.getParameters(parameterName).iterator(); j.hasNext();) {
+        final Map<String, PropertyList> indexedProperties = new HashMap<String, PropertyList>();
+        for (final Property property : list) {
+            for (final Iterator<Parameter> j = property.getParameters(parameterName).iterator(); j.hasNext();) {
                 final Parameter parameter = (Parameter) j.next();
-                PropertyList properties = (PropertyList) indexedProperties.get(parameter.getValue());
+                PropertyList properties = indexedProperties.get(parameter.getValue());
                 if (properties == null) {
                     properties = new PropertyList();
                     indexedProperties.put(parameter.getValue(), properties);
@@ -80,7 +79,7 @@ public class IndexedPropertyList {
      * @return a property list
      */
     public PropertyList getProperties(final String paramValue) {
-        PropertyList properties = (PropertyList) index.get(paramValue);
+        PropertyList properties = index.get(paramValue);
         if (properties == null) {
             properties = EMPTY_LIST;
         }
@@ -98,7 +97,7 @@ public class IndexedPropertyList {
     public Property getProperty(final String paramValue) {
         final PropertyList properties = getProperties(paramValue);
         if (!properties.isEmpty()) {
-            return (Property) properties.iterator().next();
+            return properties.get(0);
         }
         return null;
     }

@@ -48,13 +48,13 @@ public class LocationTypeList implements Serializable {
 
     private static final long serialVersionUID = -9181735547604179160L;
 
-    private List locationTypes;
+    private List<String> locationTypes;
 
     /**
      * Default constructor.
      */
     public LocationTypeList() {
-        locationTypes = new CopyOnWriteArrayList();
+        locationTypes = new CopyOnWriteArrayList<String>();
     }
 
     /**
@@ -64,7 +64,7 @@ public class LocationTypeList implements Serializable {
      *            a string representation of a list of categories
      */
     public LocationTypeList(final String aValue) {
-        locationTypes = new CopyOnWriteArrayList();
+        locationTypes = new CopyOnWriteArrayList<String>();
 
         final StringTokenizer t = new StringTokenizer(aValue, ",");
         while (t.hasMoreTokens()) {
@@ -77,7 +77,7 @@ public class LocationTypeList implements Serializable {
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
-        for (final Iterator i = locationTypes.iterator(); i.hasNext();) {
+        for (final Iterator<String> i = locationTypes.iterator(); i.hasNext();) {
             b.append(i.next());
             if (i.hasNext()) {
                 b.append(',');
@@ -109,7 +109,7 @@ public class LocationTypeList implements Serializable {
      * @return an iterator
      * @see List#iterator()
      */
-    public final Iterator iterator() {
+    public final Iterator<String> iterator() {
         return locationTypes.iterator();
     }
 

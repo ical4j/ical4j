@@ -51,13 +51,13 @@ public class TextList implements Serializable {
 
 	private static final long serialVersionUID = -417427815871330636L;
 	
-	private List texts;
+	private List<String> texts;
 
     /**
      * Default constructor.
      */
     public TextList() {
-        texts = new CopyOnWriteArrayList();
+        texts = new CopyOnWriteArrayList<String>();
     }
 
     /**
@@ -65,7 +65,7 @@ public class TextList implements Serializable {
      * @param aValue a string representation of a list of categories
      */
     public TextList(final String aValue) {
-        texts = new CopyOnWriteArrayList();
+        texts = new CopyOnWriteArrayList<String>();
 
         // match commas preceded by even number of backslashes..
         final Pattern pattern = Pattern.compile("([^\\\\](?:\\\\{2})),|([^\\\\]),");
@@ -99,7 +99,7 @@ public class TextList implements Serializable {
      */
     public final String toString() {
         final StringBuffer b = new StringBuffer();
-        for (final Iterator i = texts.iterator(); i.hasNext();) {
+        for (final Iterator<String> i = texts.iterator(); i.hasNext();) {
             b.append(Strings.escape((String) i.next()));
             if (i.hasNext()) {
                 b.append(',');
@@ -130,7 +130,7 @@ public class TextList implements Serializable {
      * @return an iterator
      * @see List#iterator()
      */
-    public final Iterator iterator() {
+    public final Iterator<String> iterator() {
         return texts.iterator();
     }
 
