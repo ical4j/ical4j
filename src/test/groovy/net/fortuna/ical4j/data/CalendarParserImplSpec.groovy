@@ -51,4 +51,18 @@ class CalendarParserImplSpec extends Specification {
 		contentLines																								| expectedProperty
 		'ATTENDEE;ROLE=CHAIR;PARTSTAT=ACCEPTED;CN="participant";\r\n RSVP=FALSE:mailto:participant@somewhere.com'	| 'ATTENDEE;ROLE=CHAIR;PARTSTAT=ACCEPTED;CN=participant;RSVP=FALSE:mailto:participant@somewhere.com\r\n'
 	}
+	
+	def 'verify parsing of calendar properties'() {
+		setup:
+		String input = "BEGIN:VCALENDAR\r\n$contentLines\r\nEND:VCALENDAR"
+		
+		expect:
+		Calendar calendar = builder.build(new StringReader(input))
+		assert calendar.properties[0] as String == expectedProperty
+		
+		where:
+		contentLines																																			| expectedProperty
+//		'PRODID;X-NO-QUOTES=a\nb;X-QUOTES="a\nb":sample'																										| 'PRODID;X-NO-QUOTES=a\\nb;X-QUOTES="a\\nb":sample\r\n'
+		'X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-ABUID="ab://Home";X-TITLE=1 Infinite Loop\nCupertino CA 95014\nUnited States:geo:37.331684,-122.030758'	| 'X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-ABUID="ab://Home";X-TITLE=1 Infinite Loop\\nCupertino CA 95014\\nUnited States:geo:37.331684\\,-122.030758\r\n'
+	}
 }
