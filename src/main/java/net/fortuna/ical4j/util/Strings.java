@@ -184,7 +184,7 @@ public final class Strings {
         return value;
     }
 
-    private static String escapeNewline(String value) {
+    public static String escapeNewline(String value) {
         if (value != null) {
             return value.replaceAll("\r?\n", "\\\\n");
         }
