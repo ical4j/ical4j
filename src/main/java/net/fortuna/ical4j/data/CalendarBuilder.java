@@ -288,7 +288,7 @@ public class CalendarBuilder {
             assertProperty(property);
 
             // parameter names are case-insensitive, but convert to upper case to simplify further processing
-            final Parameter param = parameterFactory.createParameter(name.toUpperCase(), value);
+            final Parameter param = parameterFactory.createParameter(name.toUpperCase(), Strings.escapeNewline(value));
             property.getParameters().add(param);
             if (param instanceof TzId && tzRegistry != null && !(property instanceof XProperty)) {
                 final TimeZone timezone = tzRegistry.getTimeZone(param.getValue());
