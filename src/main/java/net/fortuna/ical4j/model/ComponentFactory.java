@@ -75,7 +75,7 @@ public final class ComponentFactory {
      * @return a new component instance of the specified type
      */
     public <T extends Component> T createComponent(final String name) {
-        return createComponent(name, new PropertyList());
+        return (T)createComponent(name, new PropertyList());
     }
 
     /**
@@ -158,7 +158,7 @@ public final class ComponentFactory {
             }
             return (T) component;
         }
-        return createComponent(name, properties);
+        return (T)createComponent(name, properties);
     }
     
     /**
