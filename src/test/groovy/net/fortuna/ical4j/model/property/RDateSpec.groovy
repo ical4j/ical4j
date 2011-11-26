@@ -31,13 +31,23 @@
  */
 package net.fortuna.ical4j.model.property
 
+import net.fortuna.ical4j.model.DateList
 import net.fortuna.ical4j.model.DateTime
 import net.fortuna.ical4j.model.Period
-import net.fortuna.ical4j.model.PeriodList;
+import net.fortuna.ical4j.model.PeriodList
+import net.fortuna.ical4j.model.TimeZoneRegistry
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import spock.lang.Shared
 import spock.lang.Specification
 
 
 class RDateSpec extends Specification {
+	
+	@Shared TimeZoneRegistry tzRegistry
+	
+	def setupSpec() {
+		tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
+	}
 	
 	def 'should add date-time value to list'() {
 		setup: 'create new date-time'
@@ -73,5 +83,35 @@ class RDateSpec extends Specification {
 		
 		then: 'exception is thrown'
 		thrown(UnsupportedOperationException)
+	}
+	
+	def 'should set timezone for internal period list'() {
+		setup: 'load the timezone'
+		def tz = tzRegistry.getTimeZone(tzId)
+		
+		and: 'create an RDATE instance'
+		RDate rdate = [new PeriodList()]
+		rdate.timeZone = tz
+		
+		expect: 'timezone is set on the internal list'
+		rdate.periods.timeZone == tz
+		
+		where:
+		tzId << ['Australia/Melbourne', null]
+	}
+	
+	def 'should set timezone for internal date list'() {
+		setup: 'load the timezone'
+		def tz = tzRegistry.getTimeZone(tzId)
+		
+		and: 'create an RDATE instance'
+		RDate rdate = [new DateList()]
+		rdate.timeZone = tz
+		
+		expect: 'timezone is set on the internal list'
+		rdate.dates.timeZone == tz
+		
+		where:
+		tzId << ['Australia/Melbourne', null]
 	}
 }
