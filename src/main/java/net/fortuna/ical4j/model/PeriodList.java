@@ -61,6 +61,8 @@ public class PeriodList implements Set<Period>, Serializable {
     private TimeZone timezone;
     
     private boolean utc;
+    
+    private final boolean unmodifiable;
 
     /**
      * Default constructor.
@@ -81,6 +83,7 @@ public class PeriodList implements Set<Period>, Serializable {
      */
     public PeriodList(boolean utc, final boolean unmodifiable) {
         this.utc = utc;
+        this.unmodifiable = unmodifiable;
         if (unmodifiable) {
         	periods = Collections.emptySet();
         }
@@ -270,6 +273,10 @@ public class PeriodList implements Set<Period>, Serializable {
         return utc;
     }
 
+    public boolean isUnmodifiable() {
+		return unmodifiable;
+	}
+    
     /**
      * Sets whether this list is in UTC or local time format.
      * @param utc The utc to set.
