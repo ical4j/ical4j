@@ -132,6 +132,10 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * {@inheritDoc}
      */
     public final TimeZone getTimeZone(final String id) {
+    	if (id == null) {
+    		return null;
+    	}
+    	
         TimeZone timezone = timezones.get(id);
         if (timezone == null) {
             timezone = DEFAULT_TIMEZONES.get(id);
