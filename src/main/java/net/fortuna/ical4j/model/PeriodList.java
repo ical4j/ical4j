@@ -62,6 +62,8 @@ public class PeriodList implements Set, Serializable {
     
     private boolean utc;
 
+    private final boolean unmodifiable;
+
     /**
      * Default constructor.
      */
@@ -81,6 +83,7 @@ public class PeriodList implements Set, Serializable {
      */
     public PeriodList(boolean utc, final boolean unmodifiable) {
         this.utc = utc;
+        this.unmodifiable = unmodifiable;
         if (unmodifiable) {
         	periods = Collections.EMPTY_SET;
         }
@@ -277,6 +280,10 @@ public class PeriodList implements Set, Serializable {
         }
 
         return result;
+    }
+
+    public boolean isUnmodifiable() {
+        return unmodifiable;
     }
 
     /**

@@ -152,6 +152,7 @@ public class RDate extends DateListProperty {
     public RDate(final ParameterList aList, final String aValue)
             throws ParseException {
         super(RDATE, aList, PropertyFactoryImpl.getInstance());
+        periods = new PeriodList(false, true);
         setValue(aValue);
     }
 
@@ -245,7 +246,7 @@ public class RDate extends DateListProperty {
      * {@inheritDoc}
      */
     public final String getValue() {
-        if (getPeriods() != null) {
+        if (periods != null && !(periods.isEmpty() && periods.isUnmodifiable())) {
             return Strings.valueOf(getPeriods());
         }
         return super.getValue();
@@ -255,7 +256,7 @@ public class RDate extends DateListProperty {
      * {@inheritDoc}
      */
     public final void setTimeZone(TimeZone timezone) {
-        if (periods != null) {
+        if (periods != null && !(periods.isEmpty() && periods.isUnmodifiable())) {
             periods.setTimeZone(timezone);
         }
         else {
