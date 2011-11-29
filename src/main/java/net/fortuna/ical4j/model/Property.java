@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.XProperty;
 
 import net.fortuna.ical4j.util.Strings;
 
@@ -412,7 +414,16 @@ public abstract class Property extends Content {
             buffer.append(getParameters());
         }
         buffer.append(':');
-        if (this instanceof Escapable) {
+        boolean needsEscape = false;
+        if (this instanceof XProperty) {
+            Value valParam = (Value)getParameter(Parameter.VALUE);
+            if (valParam == null || valParam.equals(Value.TEXT)) {
+                needsEscape = true;
+            }
+        } else if (this instanceof Escapable) {
+            needsEscape = true;
+        }
+        if (needsEscape) {
             buffer.append(Strings.escape(Strings.valueOf(getValue())));
         }
         else {

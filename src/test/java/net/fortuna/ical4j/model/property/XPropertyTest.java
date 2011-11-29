@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.parameter.Value;
 
 /**
  * $Id$
@@ -73,6 +74,18 @@ public class XPropertyTest extends PropertyTest {
         
         p = new XProperty("X-TEST");
         suite.addTest(new XPropertyTest("testValidation", p));
+
+        p = new XProperty("TEST");
+        p.setValue("geo:37.331684,-122.030758");
+        suite.addTest(new XPropertyTest(p, "geo:37.331684,-122.030758"));
+        suite.addTest(new PropertyTest("testToString", p, "TEST:geo:37.331684\\,-122.030758\r\n"));
+
+        XProperty pUrl = new XProperty("TEST");
+        pUrl.getParameters().add(Value.URI);
+        pUrl.setValue("geo:37.331684,-122.030758");
+        suite.addTest(new XPropertyTest(pUrl, "geo:37.331684,-122.030758"));
+        suite.addTest(new PropertyTest("testToString", pUrl, "TEST;VALUE=URI:geo:37.331684,-122.030758\r\n"));
+
         return suite;
     }
 }

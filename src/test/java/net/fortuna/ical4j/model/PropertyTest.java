@@ -71,6 +71,16 @@ public class PropertyTest extends AbstractPropertyTest {
         this.expectedValue = expectedValue;
     }
 
+    /**
+     * @param property
+     * @param expectedValue
+     */
+    public PropertyTest(String testMethod, Property property, String expectedValue) {
+        super(testMethod);
+        this.property = property;
+        this.expectedValue = expectedValue;
+    }
+
     /*
      * (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
@@ -84,6 +94,13 @@ public class PropertyTest extends AbstractPropertyTest {
      */
     public void testGetValue() {
         assertEquals(expectedValue, property.getValue());
+    }
+
+    /**
+     *
+     */
+    public void testToString() {
+        assertEquals(expectedValue, property.toString());
     }
 
     /**
