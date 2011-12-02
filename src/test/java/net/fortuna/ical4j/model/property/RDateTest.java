@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PeriodList;
@@ -42,6 +42,10 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+
 /**
  * $Id$
  *
@@ -50,23 +54,19 @@ import net.fortuna.ical4j.util.Strings;
  * Unit tests for {@link RDate}.
  * @author Ben Fortuna
  */
-public class RDateTest extends TestCase {
+public class RDateTest {
 
 //    private static final Log LOG = LogFactory.getLog(RDateTest.class);
     
     private TimeZone timezone;
-    
-    /* (non-Javadoc)
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
+
+    @Before
+    public void setUp() throws Exception {
         TimeZoneRegistry tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
         timezone = tzReg.getTimeZone("Australia/Melbourne");
     }
-    
-    /**
-     * Test method for {@link net.fortuna.ical4j.model.property.DateListProperty#setTimeZone(net.fortuna.ical4j.model.TimeZone)}.
-     */
+
+    @Test
     public void testSetTimeZone() {
         RDate rDate = new RDate(new PeriodList());
         
@@ -92,6 +92,8 @@ public class RDateTest extends TestCase {
         assertEquals(timezone, rDate.getPeriods().getTimeZone());
     }
 
+    @Test
+    @Ignore
     public void testToString() throws Exception {
         RDate rDate = new RDate(new ParameterList(), "20121212T121212Z");
         assertEquals(Property.RDATE + ":20121212T121212Z" + Strings.LINE_SEPARATOR, rDate.toString());
