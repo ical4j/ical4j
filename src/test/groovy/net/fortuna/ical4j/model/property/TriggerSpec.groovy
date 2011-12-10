@@ -62,4 +62,13 @@ class TriggerSpec extends Specification {
 		value				| expectedValue
 		'20110131T012647'	| '20110130T142647Z'
 	}
+	
+	def 'verify original date-time is not modified'() {
+		setup:
+		DateTime dateTime = []
+		
+		expect:
+		Trigger trigger = [dateTime]
+		assert !dateTime.utc
+	}
 }
