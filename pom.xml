@@ -3,7 +3,7 @@
 	<parent>
 		<artifactId>mnode-parent</artifactId>
 		<groupId>org.mnode</groupId>
-		<version>1.5</version>
+		<version>1.6</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mnode.ical4j</groupId>
@@ -23,18 +23,16 @@
 	<inceptionYear>2004</inceptionYear>
 	<licenses>
 		<license>
-			<name>iCal4j - License</name>
-			<url>http://mnode.org/projects/ical4j/license.html</url>
+            <name>${pom.name} - License</name>
+			<url>${scm.url}/raw-file/tip/LICENSE</url>
 		</license>
 	</licenses>
 
 	<scm>
-		<connection>scm:hg:http://ical4j.hg.sourceforge.net:8000/hgroot/ical4j/ical4j
-		</connection>
-		<developerConnection>scm:hg:ssh://fortuna@ical4j.hg.sourceforge.net/hgroot/ical4j/ical4j
-		</developerConnection>
-		<url>http://ical4j.hg.sourceforge.net/hgweb/ical4j/ical4j/</url>
-  </scm>
+		<connection>scm:hg:http://ical4j.hg.sourceforge.net:8000/hgroot/ical4j/ical4j</connection>
+		<developerConnection>scm:hg:ssh://fortuna@ical4j.hg.sourceforge.net/hgroot/ical4j/ical4j</developerConnection>
+		<url>http://ical4j.hg.sourceforge.net/hgweb/ical4j/ical4j</url>
+	</scm>
 
 	<contributors>
 		<contributor>
@@ -133,11 +131,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.gmaven</groupId>
-				<artifactId>gmaven-plugin</artifactId>
-			</plugin>
 		</plugins>
 	</build>
 
@@ -214,6 +207,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
+                <!-- 
                 <configuration>
                     <configLocation>http://svn.mnode.org/tools/checkstyle/mnode_checks.xml</configLocation>
                     <suppressionsLocation>etc/checkstyle-suppressions.xml</suppressionsLocation>
@@ -221,6 +215,7 @@
                     <propertyExpansion>checkstyle.suppressions.file=etc/checkstyle-suppressions.xml</propertyExpansion>
                     <propertyExpansion>checkstyle.suppressions.file=etc/checkstyle-suppressions.xml</propertyExpansion>
                 </configuration>
+                 -->
             </plugin>
 
             <plugin>
