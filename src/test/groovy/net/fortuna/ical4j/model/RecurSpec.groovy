@@ -154,4 +154,10 @@ class RecurSpec extends Specification {
 		rule								| start			| end			| expected
 		'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102T000000', '20110116T000000', '20110130T000000']
 	}
+	
+	def 'verify no-args constructor has no side-effects'() {
+		expect:
+		new Recur(frequency: Recur.WEEKLY) as String == 'FREQ=WEEKLY'
+		new Recur(frequency: Recur.MONTHLY, interval: 3) as String == 'FREQ=MONTHLY;INTERVAL=3'
+	}
 }
