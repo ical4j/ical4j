@@ -178,6 +178,12 @@ public class Recur implements Serializable {
     private int calIncField;
 
     /**
+     * Default constructor.
+     */
+    public Recur() {
+    }
+    
+    /**
      * Constructs a new instance from the specified string value.
      * @param aValue a string representation of a recurrence.
      * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
