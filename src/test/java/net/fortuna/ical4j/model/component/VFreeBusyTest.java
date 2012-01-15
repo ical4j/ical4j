@@ -82,7 +82,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
 
     private TzId tzParam;
     
-    private ComponentList components;
+    private ComponentList<CalendarComponent> components;
     
     private VFreeBusy request;
     
@@ -112,7 +112,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      * @param component
      * @param expectedPeriodCount
      */
-    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList components, int expectedPeriodCount) {
+    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList<CalendarComponent> components, int expectedPeriodCount) {
         super(testMethod, component);
         this.request = component;
         this.components = components;
@@ -125,7 +125,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      * @param components
      * @param expectedFbType
      */
-    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList components, FbType expectedFbType) {
+    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList<CalendarComponent> components, FbType expectedFbType) {
         super(testMethod, component);
         this.request = component;
         this.components = components;
@@ -138,7 +138,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      * @param components
      * @param expectedPeriods
      */
-    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList components, PeriodList expectedPeriods) {
+    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList<CalendarComponent> components, PeriodList expectedPeriods) {
         super(testMethod, component);
         this.request = component;
         this.components = components;
@@ -176,7 +176,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      * Class under test for void VFreeBusy(ComponentList)
      */
     public final void testVFreeBusyComponentList() throws Exception {
-        ComponentList components = new ComponentList();
+        ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
 
         DateTime startDate = new DateTime(0);
         DateTime endDate = new DateTime();
@@ -235,7 +235,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
     }
 
     public final void testVFreeBusyComponentList3() throws Exception {
-        ComponentList components = new ComponentList();
+        ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
 
         DateTime eventStart = new DateTime(0);
 
@@ -277,7 +277,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
     }
 
     public final void testVFreeBusyComponentList4() throws Exception {
-        ComponentList components = new ComponentList();
+        ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
 
         java.util.Calendar cal = java.util.Calendar.getInstance();
 
@@ -434,7 +434,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         // A test for a request for free time where the VFreeBusy instance doesn't
         // consume any time in the specified range. Correct behaviour should see the
         // return of a VFreeBusy specifying the entire range as free.
-        ComponentList components = new ComponentList();
+        ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
         VEvent event1 = new VEvent(new DateTime("20050101T080000"), new Dur(0, 0, 15, 0), "Consultation 1");
         components.add(event1);
 
@@ -454,7 +454,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", requestFree, components, periods));
 
         //testBusyTime..
-        components = new ComponentList();
+        components = new ComponentList<CalendarComponent>();
         event1 = new VEvent(new DateTime("20050103T080000Z"), new Dur(0, 5, 0, 0), "Event 1");
         Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         RRule rRule = new RRule(rRuleRecur);
@@ -482,7 +482,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
 
         // anniversary-style events don't consume time..
-        components = new ComponentList();
+        components = new ComponentList<CalendarComponent>();
         event1 = new VEvent(new Date("20081225"), "Christmas 2008");
         components.add(event1);
 

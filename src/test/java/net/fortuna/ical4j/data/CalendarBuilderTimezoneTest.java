@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -90,7 +91,7 @@ public class CalendarBuilderTimezoneTest extends TestCase {
 
         calendar = builder.build(fin);
         assertNotNull("Calendar is null", calendar);
-        ComponentList comps = calendar.getComponents(Component.VEVENT);
+        ComponentList<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
         assertTrue("VEVENT not found", comps.size() == 1);
         VEvent vevent = (VEvent) comps.get(0);
 

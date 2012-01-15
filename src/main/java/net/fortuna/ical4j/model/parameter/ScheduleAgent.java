@@ -41,9 +41,9 @@ import net.fortuna.ical4j.util.Strings;
  */
 public class ScheduleAgent extends Parameter {
 
-    //private static final long serialVersionUID = -3134064324693983052L;
+	private static final long serialVersionUID = 4205758749959461020L;
 
-    private static final String VALUE_SERVER = "SERVER";
+	private static final String VALUE_SERVER = "SERVER";
 
     private static final String VALUE_CLIENT = "CLIENT";
 

@@ -36,7 +36,6 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;

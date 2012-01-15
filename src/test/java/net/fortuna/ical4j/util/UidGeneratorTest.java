@@ -61,7 +61,7 @@ public class UidGeneratorTest extends TestCase {
      * Test method for {@link net.fortuna.ical4j.util.UidGenerator#generateUid()}.
      */
     public void testGenerateUid() throws InterruptedException {
-        final List uids = new ArrayList();
+        final List<Uid> uids = new ArrayList<Uid>();
         
         Thread[] threads = new Thread[10];
         for (int i = 0; i < 10; i++) {
@@ -85,7 +85,7 @@ public class UidGeneratorTest extends TestCase {
         }
 
         for (int i = 0; i < uids.size(); i++) {
-            Uid uid = (Uid) uids.get(i);
+            Uid uid = uids.get(i);
             for (int j = 0; j < uids.size(); j++) {
                 if (j != i) {
                     assertFalse(uid.equals(uids.get(j)));

@@ -33,11 +33,11 @@ package net.fortuna.ical4j.model;
 
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,7 +69,7 @@ public class IndexedComponentListTest extends TestCase {
      */
     public void testIndexing() {
         long start = System.currentTimeMillis();
-        IndexedComponentList list = new IndexedComponentList(calendar.getComponents(),
+        IndexedComponentList<CalendarComponent> list = new IndexedComponentList<CalendarComponent>(calendar.getComponents(),
                 Property.LOCATION);
         LOG.info(list.getComponents("ABC").size() + " programs on ABC."
             + " (" + (System.currentTimeMillis() - start) + "ms)");
@@ -80,9 +80,8 @@ public class IndexedComponentListTest extends TestCase {
      */
     public void testManualIndexing() {
         long start = System.currentTimeMillis();
-        List list = new ArrayList();
-        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        List<Component> list = new ArrayList<Component>();
+        for (Component c : calendar.getComponents()) {
             if (c.getProperty(Property.LOCATION) != null
                     && "ABC".equals(c.getProperty(Property.LOCATION).getValue())) {
                 list.add(c);

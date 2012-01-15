@@ -410,7 +410,12 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
 
     private static class ScheduleAgentFactory implements ParameterFactory {
-        public Parameter createParameter(final String name,
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public Parameter createParameter(final String name,
                 final String value) throws URISyntaxException {
             final ScheduleAgent parameter = new ScheduleAgent(value);
             if (ScheduleAgent.SERVER.equals(parameter)) {
@@ -427,7 +432,12 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     }
 
     private static class ScheduleStatusFactory implements ParameterFactory {
-        public Parameter createParameter(final String name, 
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		public Parameter createParameter(final String name, 
         		final String value) throws URISyntaxException {
             return new ScheduleStatus(value);
         }
