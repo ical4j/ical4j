@@ -249,8 +249,27 @@
 			<version>2.6</version>
 		</dependency>
 		<dependency>
+			<groupId>backport-util-concurrent</groupId>
+			<artifactId>backport-util-concurrent</artifactId>
+			<version>3.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>${groovy.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.8.4</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<version>4.10</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -259,27 +278,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-			<version>${groovy.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>backport-util-concurrent</groupId>
-			<artifactId>backport-util-concurrent</artifactId>
-			<version>3.1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.spockframework</groupId>
 			<artifactId>spock-core</artifactId>
 			<version>0.5-groovy-1.6</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>1.8.4</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.ccil.cowan.tagsoup</groupId>
