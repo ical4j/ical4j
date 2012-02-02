@@ -62,6 +62,7 @@ class DateTimeSpec extends Specification {
 				rrule('FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU')
 			}
 		}
+		println vTimeZone
 		def customTimezone = new TimeZone(vTimeZone)
 		
 		expect:
@@ -71,7 +72,7 @@ class DateTimeSpec extends Specification {
 		TimeZone.default = originalTimezone
 		
 		where:
-		dateTimeString << ['20110327T000000', '20110327T010000']
+		dateTimeString << ['20110327T010000']
 	}
 	
 	def 'verify parse failure for invalid dates'() {
