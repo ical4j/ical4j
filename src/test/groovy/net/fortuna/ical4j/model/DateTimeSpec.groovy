@@ -40,6 +40,23 @@ class DateTimeSpec extends Specification {
 
 	@Shared def tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
 	
+	def 'test date time initialisation with a standard timezone'() {
+		setup:
+		def originalTimezone = TimeZone.default
+		TimeZone.default = TimeZone.getTimeZone('Europe/London')
+		
+		def timezone = tzRegistry.getTimeZone('Europe/London')
+		
+		expect:
+		assert new DateTime(dateTimeString, timezone) as String == dateTimeString
+		
+		cleanup:
+		TimeZone.default = originalTimezone
+		
+		where:
+		dateTimeString << ['20110327T000000']
+	}
+	
 	def 'test date time initialisation with a custom timezone'() {
 		setup:
 		def originalTimezone = TimeZone.default
@@ -72,9 +89,9 @@ class DateTimeSpec extends Specification {
 		TimeZone.default = originalTimezone
 		
 		where:
-		dateTimeString << ['20110327T010000']
+		dateTimeString << ['20110327T000000']
 	}
-	
+
 	def 'verify parse failure for invalid dates'() {
 		when:
 		new DateTime(dateTimeString, timezone)
