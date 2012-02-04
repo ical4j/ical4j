@@ -31,7 +31,8 @@
  */
 package net.fortuna.ical4j.model.component
 
-import net.fortuna.ical4j.model.PropertyList;
+import groovy.util.FactoryBuilderSupport
+import net.fortuna.ical4j.model.PropertyList
 
 /**
  * @author fortuna
@@ -54,4 +55,13 @@ public class VEventFactory extends AbstractComponentFactory{
      protected Object newInstance(PropertyList properties) {
          return new VEvent(properties)
      }
+    
+    public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+		if (child instanceof VAlarm) {
+			parent.alarms.add child
+		}
+		else {
+			super.setChild(build, parent, child)
+		}
+    }
 }

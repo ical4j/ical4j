@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, Ben Fortuna
+ * Copyright (c) 2011, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,39 +29,48 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model.component
+package net.fortuna.ical4j.model
 
-import groovy.util.FactoryBuilderSupport;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.parameter.Value
+import spock.lang.Specification
 
-/**
- * @author fortuna
- *
- */
-public class VToDoFactory extends AbstractComponentFactory{
-
-
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         VToDo toDo
-         if (FactoryBuilderSupport.checkValueIsType(value, name, VToDo.class)) {
-             toDo = (VToDo) value
-         }
-         else {
-             toDo = super.newInstance(builder, name, value, attributes);
-         }
-         return toDo
-     }
-     
-     protected Object newInstance(PropertyList properties) {
-         return new VToDo(properties)
-     }
-    
-    public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-		if (child instanceof VAlarm) {
-			parent.alarms.add child
+class ModelSerializationSpec extends Specification {
+	
+	def 'test object serialization'() {
+		setup: 'serialise object'
+		File ser = File.createTempFile('CalendarSerializationSpec', '.dat')
+		ser.withObjectOutputStream { oout ->
+			oout << modelObject
 		}
-		else {
-			super.setChild(build, parent, child)
+
+		and: 'de-serialise object'
+		def deserialised
+		ser.withObjectInputStream { oin ->
+			deserialised = oin.readObject()
 		}
-    }
+
+		expect: 'deserialised object equals test object'
+		assert deserialised == modelObject
+		
+		where:
+		modelObject << [
+			new Calendar(),
+		
+        	new ContentBuilder().calendar() {
+	            prodid('-//Ben Fortuna//iCal4j 1.0//EN')
+	            version('2.0')
+	            vevent() {
+	                uid('1')
+	                dtstamp()
+	                dtstart('20090810', parameters: parameters() {
+	                    value('DATE')})
+	                action('DISPLAY')
+	                attach('http://example.com/attachment', parameters: parameters() {
+	                    value('URI')})
+	            }
+	        },
+		
+			new DateList(Value.DATE)
+		]
+	}
 }

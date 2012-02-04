@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.component
 
+import groovy.util.FactoryBuilderSupport;
 import net.fortuna.ical4j.model.PropertyList;
 
 /**
@@ -54,4 +55,13 @@ public class VTimeZoneFactory extends AbstractComponentFactory{
      protected Object newInstance(PropertyList properties) {
          return new VTimeZone(properties)
      }
+    
+    public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+		if (child instanceof Observance) {
+			parent.observances.add child
+		}
+		else {
+			super.setChild(build, parent, child)
+		}
+    }
 }
