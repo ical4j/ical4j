@@ -15,26 +15,6 @@ Etc/Zulu=Etc/UTC
 
 ## Non-Oslon aliases:
 #
-America/Shiprock=America/Denver
-Antarctica/South_Pole=Antarctica/McMurdo
-Arctic/Longyearbyen=Europe/Oslo
-Asia/Istanbul=Europe/Istanbul
-
-Europe/Bratislava=Europe/Prague
-Europe/Guernsey=Europe/London
-Europe/Isle_of_Man=Europe/London
-Europe/Jersey=Europe/London
-Europe/Ljubljana=Europe/Belgrade
-Europe/Mariehamn=Europe/Helsinki
-
-Europe/Nicosia=Asia/Nicosia
-Europe/Podgorica=Europe/Belgrade
-Europe/San_Marino=Europe/Rome
-Europe/Sarajevo=Europe/Belgrade
-Europe/Skopje=Europe/Belgrade
-Europe/Vatican=Europe/Rome
-
-Europe/Zagreb=Europe/Belgrade
 US/Pacific-New=America/Los_Angeles
 
 ## Update Olson backward compatibility here:
