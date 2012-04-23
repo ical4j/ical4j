@@ -33,14 +33,15 @@ package net.fortuna.ical4j.model.component
 
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Property
+
 /**
  * @author fortuna
  *
  */
-public class XComponentFactory extends AbstractFactory {
+class XComponentFactory extends AbstractFactory {
 
 
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          XComponent component
          if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XComponent.class)) {
              component = (XComponent) value
@@ -63,9 +64,10 @@ public class XComponentFactory extends AbstractFactory {
          return new XComponent(name, properties)
      }
      
-     public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
          if (child instanceof Property) {
              parent.properties.add(child)
          }
      }
 }
+

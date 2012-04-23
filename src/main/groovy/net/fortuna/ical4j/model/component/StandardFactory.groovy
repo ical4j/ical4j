@@ -37,10 +37,10 @@ import net.fortuna.ical4j.model.PropertyList;
  * @author fortuna
  *
  */
-public class StandardFactory extends AbstractComponentFactory{
+class StandardFactory extends AbstractComponentFactory{
 
 
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          Standard standard
          if (FactoryBuilderSupport.checkValueIsType(value, name, Standard.class)) {
              standard = (Standard) value
@@ -55,3 +55,4 @@ public class StandardFactory extends AbstractComponentFactory{
          return new Standard(properties)
      }
 }
+

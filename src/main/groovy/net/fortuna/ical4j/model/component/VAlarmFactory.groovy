@@ -37,10 +37,10 @@ import net.fortuna.ical4j.model.PropertyList;
  * @author fortuna
  *
  */
-public class VAlarmFactory extends AbstractComponentFactory{
+class VAlarmFactory extends AbstractComponentFactory{
 
 
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VAlarm alarm
          if (FactoryBuilderSupport.checkValueIsType(value, name, VAlarm.class)) {
              alarm = (VAlarm) value
@@ -55,3 +55,4 @@ public class VAlarmFactory extends AbstractComponentFactory{
          return new VAlarm(properties)
      }
 }
+

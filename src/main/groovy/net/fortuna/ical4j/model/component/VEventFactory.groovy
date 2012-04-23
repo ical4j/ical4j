@@ -38,10 +38,10 @@ import net.fortuna.ical4j.model.PropertyList
  * @author fortuna
  *
  */
-public class VEventFactory extends AbstractComponentFactory{
+class VEventFactory extends AbstractComponentFactory{
 
 
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VEvent event
          if (FactoryBuilderSupport.checkValueIsType(value, name, VEvent.class)) {
              event = (VEvent) value
@@ -56,7 +56,7 @@ public class VEventFactory extends AbstractComponentFactory{
          return new VEvent(properties)
      }
     
-    public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
 		if (child instanceof VAlarm) {
 			parent.alarms.add child
 		}
@@ -65,3 +65,4 @@ public class VEventFactory extends AbstractComponentFactory{
 		}
     }
 }
+

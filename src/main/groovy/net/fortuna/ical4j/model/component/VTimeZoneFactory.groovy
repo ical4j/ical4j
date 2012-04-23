@@ -38,10 +38,10 @@ import net.fortuna.ical4j.model.PropertyList;
  * @author fortuna
  *
  */
-public class VTimeZoneFactory extends AbstractComponentFactory{
+class VTimeZoneFactory extends AbstractComponentFactory{
 
 
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VTimeZone timeZone
          if (FactoryBuilderSupport.checkValueIsType(value, name, VTimeZone.class)) {
              timeZone = (VTimeZone) value
@@ -56,7 +56,7 @@ public class VTimeZoneFactory extends AbstractComponentFactory{
          return new VTimeZone(properties)
      }
     
-    public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
 		if (child instanceof Observance) {
 			parent.observances.add child
 		}
@@ -65,3 +65,4 @@ public class VTimeZoneFactory extends AbstractComponentFactory{
 		}
     }
 }
+

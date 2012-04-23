@@ -31,8 +31,10 @@
  */
 package net.fortuna.ical4j.model.component
 
-import net.fortuna.ical4j.model.PropertyListimport net.fortuna.ical4j.model.Property
-/**
+import net.fortuna.ical4j.model.PropertyList
+import net.fortuna.ical4j.model.Property
+
+/**
  * $Id$
  *
  * Created on: 03/08/2009
@@ -40,9 +42,9 @@ import net.fortuna.ical4j.model.PropertyListimport net.fortuna.ical4j.model.Pro
  * @author fortuna
  *
  */
-public abstract class AbstractComponentFactory extends AbstractFactory {
+abstract class AbstractComponentFactory extends AbstractFactory {
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         PropertyList properties = attributes.remove('properties')
         if (properties == null) {
             properties = new PropertyList()
@@ -52,9 +54,10 @@ public abstract class AbstractComponentFactory extends AbstractFactory {
 
     protected abstract Object newInstance(PropertyList properties);
     
-    public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof Property) {
             parent.properties.add(child)
         }
     }
 }
+
