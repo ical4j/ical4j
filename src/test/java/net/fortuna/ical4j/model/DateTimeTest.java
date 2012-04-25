@@ -38,11 +38,10 @@ import java.util.Calendar;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.TimeZones;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

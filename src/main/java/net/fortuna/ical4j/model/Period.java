@@ -34,8 +34,8 @@ package net.fortuna.ical4j.model;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * $Id$ [Apr 14, 2004]

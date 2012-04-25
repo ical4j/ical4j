@@ -37,7 +37,7 @@ import java.text.NumberFormat;
 
 import net.fortuna.ical4j.util.Dates;
 
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
