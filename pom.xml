@@ -8,7 +8,6 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mnode.ical4j</groupId>
 	<artifactId>ical4j</artifactId>
-	<packaging>bundle</packaging>
 	<name>iCal4j</name>
 	<version>2.0-beta1-SNAPSHOT</version>
 	<description>
@@ -101,14 +100,31 @@
                 <artifactId>maven-license-plugin</artifactId>
             </plugin>
             
+            <plugin>
+              <artifactId>maven-jar-plugin</artifactId>
+              <configuration>
+                <archive>  
+                  <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                </archive> 
+              </configuration>
+            </plugin>  
+
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
-				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>bundle-manifest</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>manifest</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<instructions>
 						<Export-Package>net.fortuna.ical4j.*</Export-Package>
-						<Import-Package>net.fortuna.ical4j.*,org.apache.commons.lang.*,org.apache.commons.logging,*;resolution:=optional</Import-Package>
+						<Import-Package>net.fortuna.ical4j.*,org.apache.commons.lang3.*,org.apache.commons.logging,*;resolution:=optional</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -132,6 +148,41 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.felix
+										</groupId>
+										<artifactId>
+											maven-bundle-plugin
+										</artifactId>
+										<versionRange>
+											[2.3.6,)
+										</versionRange>
+										<goals>
+											<goal>manifest</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<dependencies>
