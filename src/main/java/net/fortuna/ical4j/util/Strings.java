@@ -110,6 +110,17 @@ public final class Strings {
      */
     public static final Pattern PARAM_QUOTE_PATTERN = Pattern.compile("[:;,]|[^\\p{ASCII}]");
     
+    private static final Pattern ESCAPE_PUNCTUATION_PATTERN = Pattern.compile("([,;])");
+    private static final Pattern UNESCAPE_PUNCTUATION_PATTERN = Pattern.compile("\\\\([,;\"])");
+    
+    private static final Pattern ESCAPE_NEWLINE_PATTERN = Pattern.compile("\r?\n");
+    private static final Pattern UNESCAPE_NEWLINE_PATTERN = Pattern.compile("(?<!\\\\)\\\\n");
+    
+    private static final Pattern ESCAPE_BACKSLASH_PATTERN = Pattern.compile("\\\\");
+    private static final Pattern UNESCAPE_BACKSLASH_PATTERN = Pattern.compile("\\\\\\\\");
+    
+    
+    
     /**
      * A string used to denote the start (and end) of iCalendar content lines.
      */
@@ -172,42 +183,42 @@ public final class Strings {
 
     private static String escapePunctuation(String value) {
         if (value != null) {
-            return value.replaceAll("([,;])", "\\\\$1");
+            return ESCAPE_PUNCTUATION_PATTERN.matcher(value).replaceAll("\\\\$1");
         }
         return value;
     }
 
     private static String unescapePunctuation(String value) {
         if (value != null) {
-            return value.replaceAll("\\\\([,;\"])", "$1");
+            return UNESCAPE_PUNCTUATION_PATTERN.matcher(value).replaceAll("$1");
         }
         return value;
     }
 
     public static String escapeNewline(String value) {
         if (value != null) {
-            return value.replaceAll("\r?\n", "\\\\n");
+            return ESCAPE_NEWLINE_PATTERN.matcher(value).replaceAll("\\\\n");
         }
         return value;
     }
 
     private static String unescapeNewline(String value) {
         if (value != null) {
-            return value.replaceAll("(?<!\\\\)\\\\n", "\n");
+            return UNESCAPE_NEWLINE_PATTERN.matcher(value).replaceAll("\n");
         }
         return value;
     }
 
     private static String escapeBackslash(String value) {
         if (value != null) {
-            return value.replaceAll("\\\\", "\\\\\\\\");
+            return ESCAPE_BACKSLASH_PATTERN.matcher(value).replaceAll("\\\\\\\\");
         }
         return value;
     }
 
     private static String unescapeBackslash(String value) {
         if (value != null) {
-            return value.replaceAll("\\\\\\\\", "\\\\");
+            return UNESCAPE_BACKSLASH_PATTERN.matcher(value).replaceAll("\\\\");
         }
         return value;
     }

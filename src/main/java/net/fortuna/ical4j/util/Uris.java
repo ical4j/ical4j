@@ -33,6 +33,7 @@ package net.fortuna.ical4j.util;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.regex.Pattern;
 
 /**
  * $Id$
@@ -44,9 +45,8 @@ import java.net.URISyntaxException;
  */
 public final class Uris {
 
-    // private static final String ENCODING_CHARSET = "UTF-8";
-
-    // private static Log log = LogFactory.getLog(Uris.class);
+    private static final Pattern CID_PATTERN = Pattern.compile("(?i)^cid:.*");
+    private static final Pattern NOTES_CID_REPLACEMENT_PATTERN = Pattern.compile("[<>]");
 
     /**
      * Constructor made private to enforce static nature.
@@ -75,9 +75,9 @@ public final class Uris {
          * "mid" URL is converted to a Message-ID or Message-ID/Content-ID pair in a similar fashion.
          */
         if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY)
-        		&& s.matches("(?i)^cid:.*")) {
+        		&& CID_PATTERN.matcher(s).matches()) {
         	
-            return s.replaceAll("[<>]", "");
+            return NOTES_CID_REPLACEMENT_PATTERN.matcher(s).replaceAll("");
         }
         return s;
     }
