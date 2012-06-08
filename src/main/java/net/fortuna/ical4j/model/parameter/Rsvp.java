@@ -86,6 +86,22 @@ public class Rsvp extends Parameter {
      * {@inheritDoc}
      */
     public final String getValue() {
-        return getRsvp().toString().toUpperCase();
+        if (rsvp.booleanValue()) {
+            return VALUE_TRUE;
+        } else {
+            return VALUE_FALSE;
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public final Parameter copy() {
+        if (rsvp.booleanValue()) {
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
 }
