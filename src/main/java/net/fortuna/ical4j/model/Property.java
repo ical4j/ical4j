@@ -513,7 +513,7 @@ public abstract class Property extends Content {
     /**
      * {@inheritDoc}
      */
-    public final int hashCode() {
+    public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
                 getValue()).append(getParameters()).toHashCode();
