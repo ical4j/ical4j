@@ -164,6 +164,13 @@ public abstract class DateProperty extends Property {
     public final TimeZone getTimeZone() {
         return timeZone;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        return getDate().hashCode();
+    }
 
     /**
      * Updates the timezone associated with the property's value. If the specified timezone is equivalent to UTC any
