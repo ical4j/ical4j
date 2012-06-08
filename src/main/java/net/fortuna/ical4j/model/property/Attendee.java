@@ -31,8 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.text.ParseException;
 
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
@@ -171,5 +173,13 @@ public class Attendee extends Property {
      */
     public final void setCalAddress(final URI calAddress) {
         this.calAddress = calAddress;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public final Property copy() throws IOException, URISyntaxException, ParseException {
+        // URI are immutable
+        return new Attendee(new ParameterList(getParameters(), false), calAddress);  
     }
 }
