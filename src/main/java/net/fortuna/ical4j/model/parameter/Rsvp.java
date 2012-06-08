@@ -93,6 +93,9 @@ public class Rsvp extends Parameter {
         }
     }
     
+    /**
+     * {@inheritDoc}
+     */
     public final Parameter copy() {
         if (rsvp.booleanValue()) {
             return TRUE;
