@@ -23,7 +23,7 @@
 	<licenses>
 		<license>
             <name>${pom.name} - License</name>
-			<url>${scm.url}/raw-file/tip/LICENSE</url>
+			<url>${project.scm.url}/raw-file/tip/LICENSE</url>
 		</license>
 	</licenses>
 
