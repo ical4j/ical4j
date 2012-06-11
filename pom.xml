@@ -22,7 +22,7 @@
 	<inceptionYear>2004</inceptionYear>
 	<licenses>
 		<license>
-            <name>${pom.name} - License</name>
+            <name>${project.name} - License</name>
 			<url>${project.scm.url}/raw-file/tip/LICENSE</url>
 		</license>
 	</licenses>
