@@ -482,7 +482,7 @@ public class DateTime extends Date {
 	 * {@inheritDoc}
 	 */
 	public int hashCode() {
-		return new HashCodeBuilder().append(time).append(timezone).toHashCode();
+		return super.hashCode();
 	}
 
 	private static class DateFormatCache {

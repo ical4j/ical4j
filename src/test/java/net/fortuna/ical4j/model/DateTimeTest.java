@@ -136,8 +136,26 @@ public class DateTimeTest extends TestCase {
         calendar.set(Calendar.MILLISECOND, 1);
         DateTime date2 = new DateTime(calendar.getTime());
     
+        assertEquals(date1.hashCode(), date2.hashCode());
         assertEquals(date1.toString(), date2.toString());
         assertEquals(date1, date2);
+    }
+    
+    /**
+     * Test that equality of two DateTime instances created using different constructors
+     *  implies equality of hashCode.
+     * @throws ParseException
+     */
+    public void testDateTimeHashCode() throws ParseException {
+        TimeZone tz1 = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone("Europe/Paris");
+        TimeZone tz2 = (TimeZone)tz1.clone();
+        DateTime date1 = new DateTime("20050101T093000", tz1);
+        DateTime date2 = new DateTime("20050101T093000", tz2);
+        // verify that if equals() == true, hashCode must match also
+        // was not the case previously as hashCode() was taking the TimeZone object
+        // into consideration when equals() was not.
+        assertEquals(date1, date2);
+        assertEquals(date1.hashCode(), date2.hashCode());
     }
 
     /**
@@ -229,6 +247,7 @@ public class DateTimeTest extends TestCase {
         // other tests..
         suite.addTest(new DateTimeTest("testDateTimeString"));
         suite.addTest(new DateTimeTest("testDateTimeEquals"));
+        suite.addTest(new DateTimeTest("testDateTimeHashCode"));
         suite.addTest(new DateTimeTest("testUtc"));
         
         return suite;
