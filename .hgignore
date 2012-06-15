@@ -9,3 +9,5 @@ syntax: regexp
 ^\.settings$
 syntax: regexp
 ^\.pmd$
+syntax: regexp
+^\.checkstyle$
