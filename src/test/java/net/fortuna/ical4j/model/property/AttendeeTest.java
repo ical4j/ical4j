@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import junit.framework.TestCase;
@@ -88,7 +89,7 @@ public class AttendeeTest extends TestCase {
         
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
         Attendee attendee = new Attendee("MAILTO:CET Meeting Room@university.edu");
-        assertNull(attendee.getCalAddress());
+        assertEquals(new URI("MAILTO:CET%20Meeting%20Room@university.edu"), attendee.getCalAddress());
     }
 
     public void testRelaxedParsing() throws IOException, ParserException {
@@ -104,6 +105,6 @@ public class AttendeeTest extends TestCase {
         Calendar calendar = Calendars.load("etc/samples/invalid/groupwise.ics");
         
         Attendee attendee = (Attendee) calendar.getComponent(Component.VEVENT).getProperty(Property.ATTENDEE);
-        assertNull(attendee.getCalAddress());
+        assertNotNull(attendee.getCalAddress());
     }
 }

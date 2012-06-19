@@ -31,12 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.Uris;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,8 +86,8 @@ public class OrganizerTest extends TestCase {
                 CompatibilityHints.KEY_RELAXED_PARSING, true);
         
         Organizer organizer = new Organizer(value);
-        assertNull(organizer.getCalAddress());
-        assertEquals(Property.ORGANIZER + ":" + Strings.LINE_SEPARATOR,
+        assertEquals(new URI(Uris.INVALID_SCHEME, value, null), organizer.getCalAddress());
+        assertEquals(Property.ORGANIZER + ":" + Uris.INVALID_SCHEME + ":" + value + Strings.LINE_SEPARATOR,
                 organizer.toString());
     }
 }

@@ -45,6 +45,11 @@ import java.util.regex.Pattern;
  */
 public final class Uris {
 
+    /**
+     * URI Scheme used when relaxed parsing is enabled and the given input stream lead to an invalid URI.
+     */
+    public static final String INVALID_SCHEME = "net.fortunal.ical4j.invalid";
+    
     private static final Pattern CID_PATTERN = Pattern.compile("(?i)^cid:.*");
     private static final Pattern NOTES_CID_REPLACEMENT_PATTERN = Pattern.compile("[<>]");
 
@@ -100,8 +105,15 @@ public final class Uris {
      * Attempts to create a URI instance and will optionally swallow any resulting URISyntaxException depending on
      * configured {@link CompatibilityHints}. Will also automatically attempt encoding of the string representation for
      * greater compatibility.
+     * <p>When relaxed parsing is enabled and if the string representation is not valid, a second URI creation attempt is made
+     *  by extracting the scheme from the scheme specific part and URI encoding that later part. For example,
+     *  "mailto: joe smith@example.com" becomes "mailto:joe%20smith@example.com".<p>
+     * <p>If the second attempts also leads to a {@code URISyntaxException}, an opaque URI is constructed with a scheme
+     *  of {@code Uris.INVALID_SCHEME} and a value corresponding to the initial representation.</p>
+     * 
      * @param s a string representation of a URI.
-     * @return a URI instance, or null if a valid URI string is not specified and relaxed parsing is enabled.
+     * @return a URI instance, which may not correspond to the URI string if a valid
+     *  URI string is not specified and relaxed parsing is enabled.
      * @throws URISyntaxException if a valid URI string is not specified and relaxed parsing is disabled
      */
     public static URI create(final String s) throws URISyntaxException {
@@ -111,8 +123,20 @@ public final class Uris {
         catch (URISyntaxException use) {
             if (CompatibilityHints
                     .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
-
-                return null;
+                String encoded = encode(s);
+                int index = encoded.indexOf(':');
+                if (index != -1 && index < encoded.length() -1) {
+                    try {
+                        return new URI(encoded.substring(0, index), encoded.substring(index + 1), null);
+                    } catch (URISyntaxException use2) {
+                    }
+                }
+                try {
+                    return new URI(INVALID_SCHEME, s, null);
+                } catch (URISyntaxException use2) {
+                    // should not happen as we are building an opaque URI
+                    throw new IllegalArgumentException("Could not build URI from " + s);
+                }
             }
             throw use;
         }
