@@ -266,9 +266,6 @@
         </dependency>
 	</dependencies>
 
-	<repositories>
-	</repositories>
-
 	<reporting>
 		<plugins>
             <plugin>
