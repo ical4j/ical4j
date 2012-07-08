@@ -42,7 +42,6 @@ import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * $Id$
