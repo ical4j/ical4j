@@ -41,7 +41,7 @@ class StatusFactorySpec extends Specification {
 	
 	def 'verify constants are preferred over new instances'() {
 		expect: 'constant property'
-		assert builder.status(value) == constant
+		assert builder.status(value).is(constant)
 		
 		where:
 		value							| constant
