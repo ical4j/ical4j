@@ -33,74 +33,117 @@ package net.fortuna.ical4j.model
 
 import java.text.ParseException;
 
+import spock.lang.Ignore;
 import spock.lang.Shared;
 import spock.lang.Specification
 
 class DateTimeSpec extends Specification {
 
-	@Shared def tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
-	
-	def 'test date time initialisation with a standard timezone'() {
-		setup:
-		def originalTimezone = TimeZone.default
-		TimeZone.default = TimeZone.getTimeZone('Europe/London')
-		
-		def timezone = tzRegistry.getTimeZone('Europe/London')
-		
-		expect:
-		assert new DateTime(dateTimeString, timezone) as String == dateTimeString
-		
-		cleanup:
-		TimeZone.default = originalTimezone
-		
-		where:
-		dateTimeString << ['20110327T000000']
-	}
-	
-	def 'test date time initialisation with a custom timezone'() {
-		setup:
-		def originalTimezone = TimeZone.default
-		TimeZone.default = TimeZone.getTimeZone('Europe/London')
-		
-		def vTimeZone = new ContentBuilder().vtimezone {
-			tzid('Europe/London')
-			standard {
-				tzname('GMT')
-				dtstart('19710101T020000')
-				tzoffsetfrom('+0100')
-				tzoffsetto('+0000')
-				rrule('FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU')
-			}
-			daylight {
-				tzname('BST')
-				dtstart('19710101T010000')
-				tzoffsetfrom('+0000')
-				tzoffsetto('+0100')
-				rrule('FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU')
-			}
-		}
-		println vTimeZone
-		def customTimezone = new TimeZone(vTimeZone)
-		
-		expect:
-		assert new DateTime(dateTimeString, customTimezone) as String == dateTimeString
-		
-		cleanup:
-		TimeZone.default = originalTimezone
-		
-		where:
-		dateTimeString << ['20110327T000000']
-	}
-
-	def 'verify parse failure for invalid dates'() {
-		when:
-		new DateTime(dateTimeString, timezone)
-		
-		then:
-		thrown(ParseException)
-		
-		where:
-		dateTimeString		| timezone
-		'20110327T010000'	| tzRegistry.getTimeZone('Europe/London')
-	}
+   @Shared TimeZoneRegistry tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
+   
+   def 'test date time initialisation with a standard timezone'() {
+	   setup:
+	   def originalTimezone = TimeZone.default
+	   TimeZone.default = TimeZone.getTimeZone('Europe/London')
+	   
+	   def timezone = tzRegistry.getTimeZone('Europe/London')
+	   
+	   expect:
+	   assert new DateTime(dateTimeString, timezone) as String == dateTimeString
+	   
+	   cleanup:
+	   TimeZone.default = originalTimezone
+	   
+	   where:
+	   dateTimeString << ['20110327T000000']
+   }
+   
+   @Ignore
+   def 'test date time initialisation with a custom timezone'() {
+	   setup:
+	   def originalTimezone = TimeZone.default
+	   TimeZone.default = TimeZone.getTimeZone('Europe/London')
+	   
+	   def vTimeZone = new ContentBuilder().vtimezone {
+		   tzid('Europe/London')
+		   standard {
+			   tzname('GMT')
+			   dtstart('19710101T020000')
+			   tzoffsetfrom('+0100')
+			   tzoffsetto('+0000')
+			   rrule('FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU')
+		   }
+		   daylight {
+			   tzname('BST')
+			   dtstart('19710101T010000')
+			   tzoffsetfrom('+0000')
+			   tzoffsetto('+0100')
+			   rrule('FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU')
+		   }
+	   }
+	   println vTimeZone
+	   def customTimezone = new TimeZone(vTimeZone)
+	   
+	   expect:
+	   assert new DateTime(dateTimeString, customTimezone) as String == dateTimeString
+	   
+	   cleanup:
+	   TimeZone.default = originalTimezone
+	   
+	   where:
+	   dateTimeString << ['20110327T000000']
+   }
+   
+	  def 'test date time initialisation with a registered custom timezone'() {
+		  setup:
+		  def originalTimezone = TimeZone.default
+		  TimeZone.default = TimeZone.getTimeZone('Europe/London')
+		  
+		  def vTimeZone = new ContentBuilder().vtimezone {
+			  tzid('Europe/London')
+			  standard {
+				  tzname('GMT')
+				  dtstart('19710101T020000')
+				  tzoffsetfrom('+0100')
+				  tzoffsetto('+0000')
+				  rrule('FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU')
+			  }
+			  daylight {
+				  tzname('BST')
+				  dtstart('19710101T010000')
+				  tzoffsetfrom('+0000')
+				  tzoffsetto('+0100')
+				  rrule('FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU')
+			  }
+		  }
+		  println vTimeZone
+		  def customTimezone = new TimeZone(vTimeZone)
+		  tzRegistry.register(customTimezone)
+		  
+		  when:
+		  new DateTime(dateTimeString, customTimezone)
+		  
+		  then:
+		  thrown(ParseException)
+   
+		  cleanup:
+		  TimeZone.default = originalTimezone
+		  // remove custom timezone..
+		  tzRegistry.clear()
+		  
+		  where:
+		  dateTimeString << ['20110327T000000']
+	  }
+   
+   def 'verify parse failure for invalid dates'() {
+	   when:
+	   new DateTime(dateTimeString, timezone)
+	   
+	   then:
+	   thrown(ParseException)
+	   
+	   where:
+	   dateTimeString		| timezone
+	   '20110327T010000'	| tzRegistry.getTimeZone('Europe/London')
+   }
 }
