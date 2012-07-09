@@ -35,13 +35,13 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class XParameterFactory extends AbstractParameterFactory {
+class XParameterFactory extends AbstractParameterFactory {
 
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         XParameter parameter
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XParameter.class)) {
-            parameter = (XParameter) value
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XParameter)) {
+            parameter = value
         }
         else {
             def paramName = attributes.remove('name')
@@ -49,8 +49,9 @@ public class XParameterFactory extends AbstractParameterFactory {
                 paramName = value
             }
             def paramValue = attributes.remove('value')
-            parameter = new XParameter(paramName, paramValue)
+            parameter = [paramName, paramValue]
         }
         return parameter
     }
 }
+

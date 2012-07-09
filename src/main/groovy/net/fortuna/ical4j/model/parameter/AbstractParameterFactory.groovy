@@ -31,8 +31,6 @@
  */
 package net.fortuna.ical4j.model.parameter
 
-
-
 /**
  * $Id$
  *
@@ -41,12 +39,13 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public abstract class AbstractParameterFactory extends AbstractFactory{
+abstract class AbstractParameterFactory extends AbstractFactory {
 
     /**
      * {@inheritDoc}
      */
-    public boolean isLeaf() {
+    boolean isLeaf() {
         return true;
     }
 }
+

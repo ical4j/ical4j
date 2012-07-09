@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration  -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user             -->
+<!--                                                                -->
+<!-- For professional support please see                            -->
+<!--    http://www.qos.ch/shop/products/professionalSupport         -->
+<!--                                                                -->
+<configuration>
+  <!-- Errors were reported during translation. -->
+  <!-- No root logger configuration was found -->
+  <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>[%d] %-5p [%t] %c{1} - %m%n</pattern>
+    </encoder>
+  </appender>
+  <logger name="net.fortuna.ical4j.model.component.Observance" additivity="false" level="debug">
+    <appender-ref ref="stdout"/>
+  </logger>
+  <logger name="net.fortuna.ical4j.model.TimeZoneTest" additivity="false" level="info">
+    <appender-ref ref="stdout"/>
+  </logger>
+  <logger name="net.fortuna.ical4j.model" additivity="false" level="info">
+    <appender-ref ref="stdout"/>
+  </logger>
+  <logger name="net.fortuna.ical4j" level="info">
+    <appender-ref ref="stdout"/>
+  </logger>
+  <logger name="net.fortuna.ical4j.filter" additivity="false" level="info">
+    <appender-ref ref="stdout"/>
+  </logger>
+  <logger name="net.fortuna.ical4j.model.property.DateProperty" additivity="false" level="debug">
+    <appender-ref ref="stdout"/>
+  </logger>
+  <logger name="net.fortuna.ical4j.model.UtcOffsetTest" additivity="false" level="debug">
+    <appender-ref ref="stdout"/>
+  </logger>
+</configuration>
+
