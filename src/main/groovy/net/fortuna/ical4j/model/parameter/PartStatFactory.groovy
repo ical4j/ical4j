@@ -35,40 +35,42 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class PartStatFactory extends AbstractParameterFactory {
+class PartStatFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         PartStat partStat
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, PartStat.class)) {
-            partStat = (PartStat) value
-        }
-        else if (PartStat.ACCEPTED.getValue().equals(value)) {
-            partStat = PartStat.ACCEPTED
-        }
-        else if (PartStat.COMPLETED.getValue().equals(value)) {
-            partStat = PartStat.COMPLETED
-        }
-        else if (PartStat.DECLINED.getValue().equals(value)) {
-            partStat = PartStat.DECLINED
-        }
-        else if (PartStat.DECLINED.getValue().equals(value)) {
-            partStat = PartStat.DECLINED
-        }
-        else if (PartStat.DELEGATED.getValue().equals(value)) {
-            partStat = PartStat.DELEGATED
-        }
-        else if (PartStat.IN_PROCESS.getValue().equals(value)) {
-            partStat = PartStat.IN_PROCESS
-        }
-        else if (PartStat.NEEDS_ACTION.getValue().equals(value)) {
-            partStat = PartStat.NEEDS_ACTION
-        }
-        else if (PartStat.TENTATIVE.getValue().equals(value)) {
-            partStat = PartStat.TENTATIVE
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, PartStat)) {
+            partStat = value
         }
         else {
-            partStat = new PartStat(value)
+			switch (value) {
+				case PartStat.ACCEPTED.value:
+					partStat = PartStat.ACCEPTED
+					break
+				case PartStat.COMPLETED.value:
+		            partStat = PartStat.COMPLETED
+					break
+				case PartStat.DECLINED.value:
+		            partStat = PartStat.DECLINED
+					break
+				case PartStat.DECLINED.value:
+		            partStat = PartStat.DECLINED
+					break
+				case PartStat.DELEGATED.value:
+		            partStat = PartStat.DELEGATED
+					break
+				case PartStat.IN_PROCESS.value:
+		            partStat = PartStat.IN_PROCESS
+					break
+				case PartStat.NEEDS_ACTION.value:
+		            partStat = PartStat.NEEDS_ACTION
+					break
+				case PartStat.TENTATIVE.value:
+		            partStat = PartStat.TENTATIVE
+					break
+				default:
+		            partStat = [value]
+	        }
         }
         return partStat
     }

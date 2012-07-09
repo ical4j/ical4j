@@ -35,22 +35,24 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class RelatedFactory extends AbstractParameterFactory {
+class RelatedFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Related related
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Related.class)) {
-            related = (Related) value
-        }
-        else if (Related.END.getValue().equals(value)) {
-            related = Related.END
-        }
-        else if (Related.START.getValue().equals(value)) {
-            related = Related.START
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Related)) {
+            related = value
         }
         else {
-            related = new Related(value)
+			switch(value) {
+				case Related.END.value:
+					related = Related.END
+					break
+				case Related.START.value:
+		            related = Related.START
+					break
+				default:
+		            related = new Related(value)
+	        }
         }
         return related
     }

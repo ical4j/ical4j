@@ -35,31 +35,33 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class EncodingFactory extends AbstractParameterFactory {
+class EncodingFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Encoding encoding
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Encoding.class)) {
-            encoding = (Encoding) value
-        }
-        else if (Encoding.BASE64.getValue().equals(value)) {
-            encoding = Encoding.BASE64
-        }
-        else if (Encoding.BINARY.getValue().equals(value)) {
-            encoding = Encoding.BINARY
-        }
-        else if (Encoding.EIGHT_BIT.getValue().equals(value)) {
-            encoding = Encoding.EIGHT_BIT
-        }
-        else if (Encoding.QUOTED_PRINTABLE.getValue().equals(value)) {
-            encoding = Encoding.QUOTED_PRINTABLE
-        }
-        else if (Encoding.SEVEN_BIT.getValue().equals(value)) {
-            encoding = Encoding.SEVEN_BIT
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Encoding)) {
+            encoding = value
         }
         else {
-            encoding = new Encoding(value)
+			switch(value) {
+				case Encoding.BASE64.value:
+					encoding = Encoding.BASE64
+					break
+				case Encoding.BINARY.value:
+		            encoding = Encoding.BINARY
+					break
+				case Encoding.EIGHT_BIT.value:
+		            encoding = Encoding.EIGHT_BIT
+					break
+				case Encoding.QUOTED_PRINTABLE.value:
+		            encoding = Encoding.QUOTED_PRINTABLE
+					break
+				case Encoding.SEVEN_BIT.value:
+		            encoding = Encoding.SEVEN_BIT
+					break
+				default:
+					encoding = [value]
+	        }
         }
         return encoding
     }

@@ -35,28 +35,30 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class FbTypeFactory extends AbstractParameterFactory {
+class FbTypeFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         FbType fbType
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, FbType.class)) {
-            fbType = (FbType) value
-        }
-        else if (FbType.BUSY.getValue().equals(value)) {
-            fbType = FbType.BUSY
-        }
-        else if (FbType.BUSY_TENTATIVE.getValue().equals(value)) {
-            fbType = FbType.BUSY_TENTATIVE
-        }
-        else if (FbType.BUSY_UNAVAILABLE.getValue().equals(value)) {
-            fbType = FbType.BUSY_UNAVAILABLE
-        }
-        else if (FbType.FREE.getValue().equals(value)) {
-            fbType = FbType.FREE
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, FbType)) {
+            fbType = value
         }
         else {
-            fbType = new FbType(value)
+			switch(value) {
+				case FbType.BUSY.value:
+		            fbType = FbType.BUSY
+					break
+				case FbType.BUSY_TENTATIVE.value:
+		            fbType = FbType.BUSY_TENTATIVE
+					break
+				case FbType.BUSY_UNAVAILABLE.value:
+		            fbType = FbType.BUSY_UNAVAILABLE
+					break
+				case FbType.FREE.value:
+		            fbType = FbType.FREE
+					break
+				default:
+		            fbType = [value]
+	        }
         }
         return fbType
     }

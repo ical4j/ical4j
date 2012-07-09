@@ -35,16 +35,15 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class DelegatedToFactory extends AbstractParameterFactory {
+class DelegatedToFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         DelegatedTo delegatedTo
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, DelegatedTo.class)) {
-            delegatedTo = (DelegatedTo) value
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, DelegatedTo)) {
+            delegatedTo = value
         }
         else {
-            delegatedTo = new DelegatedTo(value)
+            delegatedTo = [value]
         }
         return delegatedTo
     }

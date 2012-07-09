@@ -35,22 +35,24 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class RsvpFactory extends AbstractParameterFactory {
+class RsvpFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Rsvp rsvp
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Rsvp.class)) {
-            rsvp = (Rsvp) value
-        }
-        else if (Rsvp.FALSE.getValue().equals(value)) {
-            rsvp = Rsvp.FALSE
-        }
-        else if (Rsvp.TRUE.getValue().equals(value)) {
-            rsvp = Rsvp.TRUE
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Rsvp)) {
+            rsvp = value
         }
         else {
-            rsvp = new Rsvp(value)
+			switch(value) {
+				case Rsvp.FALSE.value:
+					rsvp = Rsvp.FALSE
+					break
+				case Rsvp.TRUE.value:
+		            rsvp = Rsvp.TRUE
+					break
+				default:
+		            rsvp = [value]
+	        }
         }
         return rsvp
     }

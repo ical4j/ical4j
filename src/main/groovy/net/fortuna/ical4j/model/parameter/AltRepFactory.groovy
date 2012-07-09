@@ -35,16 +35,15 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class AltRepFactory extends AbstractParameterFactory {
+class AltRepFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         AltRep altRep
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, AltRep.class)) {
-            altRep = (AltRep) value
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, AltRep)) {
+            altRep = value
         }
         else {
-            altRep = new AltRep(value)
+            altRep = [value]
         }
         return altRep
     }

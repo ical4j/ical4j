@@ -35,22 +35,24 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class RangeFactory extends AbstractParameterFactory {
+class RangeFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Range range
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Range.class)) {
-            range = (Range) value
-        }
-        else if (Range.THISANDFUTURE.getValue().equals(value)) {
-            range = Range.THISANDFUTURE
-        }
-        else if (Range.THISANDPRIOR.getValue().equals(value)) {
-            range = Range.THISANDPRIOR
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Range)) {
+            range = value
         }
         else {
-            range = new Range(value)
+			switch(value) {
+				case Range.THISANDFUTURE.value:
+					range = Range.THISANDFUTURE
+					break
+				case Range.THISANDPRIOR.value:
+		            range = Range.THISANDPRIOR
+					break
+				default:
+		            range = new Range(value)
+	        }
         }
         return range
     }

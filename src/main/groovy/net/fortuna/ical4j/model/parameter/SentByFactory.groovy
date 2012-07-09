@@ -35,16 +35,15 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class SentByFactory extends AbstractParameterFactory {
+class SentByFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         SentBy sentBy
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, SentBy.class)) {
-            sentBy = (SentBy) value
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, SentBy)) {
+            sentBy = value
         }
         else {
-            sentBy = new SentBy(value)
+            sentBy = [value]
         }
         return sentBy
     }

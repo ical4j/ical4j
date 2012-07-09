@@ -35,16 +35,15 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class TzIdFactory extends AbstractParameterFactory {
+class TzIdFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         TzId tzId
-        if (FactoryBuilderSupport.checkValueIsTzIdNotString(value, name, TzId.class)) {
-            tzId = (TzId) value
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, TzId)) {
+            tzId = value
         }
         else {
-            tzId = new TzId(value)
+            tzId = [value]
         }
         return tzId
     }

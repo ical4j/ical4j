@@ -35,28 +35,30 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class RoleFactory extends AbstractParameterFactory {
+class RoleFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Role role
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Role.class)) {
-            role = (Role) value
-        }
-        else if (Role.CHAIR.getValue().equals(value)) {
-            role = Role.CHAIR
-        }
-        else if (Role.NON_PARTICIPANT.getValue().equals(value)) {
-            role = Role.NON_PARTICIPANT
-        }
-        else if (Role.OPT_PARTICIPANT.getValue().equals(value)) {
-            role = Role.OPT_PARTICIPANT
-        }
-        else if (Role.REQ_PARTICIPANT.getValue().equals(value)) {
-            role = Role.REQ_PARTICIPANT
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Role)) {
+            role = value
         }
         else {
-            role = new Role(value)
+			switch(value) {
+				case Role.CHAIR.value:
+					role = Role.CHAIR
+					break
+				case Role.NON_PARTICIPANT.value:
+		            role = Role.NON_PARTICIPANT
+					break
+				case Role.OPT_PARTICIPANT.value:
+		            role = Role.OPT_PARTICIPANT
+					break
+				case Role.REQ_PARTICIPANT.value:
+		            role = Role.REQ_PARTICIPANT
+					break
+				default:
+		            role = [value]
+	        }
         }
         return role
     }

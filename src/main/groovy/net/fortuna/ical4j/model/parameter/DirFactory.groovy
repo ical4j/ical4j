@@ -35,16 +35,15 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class DirFactory extends AbstractParameterFactory {
+class DirFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Dir dir
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Dir.class)) {
-            dir = (Dir) value
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Dir)) {
+            dir = value
         }
         else {
-            dir = new Dir(value)
+            dir = [value]
         }
         return dir
     }

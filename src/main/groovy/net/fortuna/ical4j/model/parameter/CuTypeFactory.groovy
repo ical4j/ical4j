@@ -35,28 +35,30 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class CuTypeFactory extends AbstractParameterFactory {
+class CuTypeFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         CuType cuType
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, CuType.class)) {
-            cuType = (CuType) value
-        }
-        else if (CuType.GROUP.getValue().equals(value)) {
-            cuType = CuType.GROUP
-        }
-        else if (CuType.INDIVIDUAL.getValue().equals(value)) {
-            cuType = CuType.INDIVIDUAL
-        }
-        else if (CuType.RESOURCE.getValue().equals(value)) {
-            cuType = CuType.RESOURCE
-        }
-        else if (CuType.ROOM.getValue().equals(value)) {
-            cuType = CuType.ROOM
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, CuType)) {
+            cuType = value
         }
         else {
-            cuType = new CuType(value)
+			switch(value) {
+				case CuType.GROUP.value:
+					cuType = CuType.GROUP
+					break
+				case CuType.INDIVIDUAL.value:
+					cuType = CuType.INDIVIDUAL
+					break
+				case CuType.RESOURCE.value:
+					cuType = CuType.RESOURCE
+					break
+				case CuType.ROOM.value:
+					cuType = CuType.ROOM
+					break
+				default:
+					cuType = new CuType(value)
+			}
         }
         return cuType
     }

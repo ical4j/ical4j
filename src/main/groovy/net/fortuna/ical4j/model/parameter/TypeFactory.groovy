@@ -35,16 +35,15 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class TypeFactory extends AbstractParameterFactory {
+class TypeFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Type type
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Type.class)) {
-            type = (Type) value
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Type)) {
+            type = value
         }
         else {
-            type = new Type(value)
+            type = [value]
         }
         return type
     }

@@ -35,25 +35,27 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class RelTypeFactory extends AbstractParameterFactory {
+class RelTypeFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         RelType relType
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, RelType.class)) {
-            relType = (RelType) value
-        }
-        else if (RelType.CHILD.getValue().equals(value)) {
-            relType = RelType.CHILD
-        }
-        else if (RelType.PARENT.getValue().equals(value)) {
-            relType = RelType.PARENT
-        }
-        else if (RelType.SIBLING.getValue().equals(value)) {
-            relType = RelType.SIBLING
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, RelType)) {
+            relType = value
         }
         else {
-            relType = new RelType(value)
+			switch(value) {
+				case RelType.CHILD.value:
+					relType = RelType.CHILD
+					break
+				case RelType.PARENT.value:
+		            relType = RelType.PARENT
+					break
+				case RelType.SIBLING.value:
+		            relType = RelType.SIBLING
+					break
+				default:
+		            relType = [value]
+	        }
         }
         return relType
     }

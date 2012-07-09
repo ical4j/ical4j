@@ -37,7 +37,6 @@ package net.fortuna.ical4j.model.parameter
  */
 class XParameterFactory extends AbstractParameterFactory {
 
-
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         XParameter parameter
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XParameter)) {

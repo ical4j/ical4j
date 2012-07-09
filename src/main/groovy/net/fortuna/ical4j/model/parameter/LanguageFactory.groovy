@@ -35,16 +35,15 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class LanguageFactory extends AbstractParameterFactory {
+class LanguageFactory extends AbstractParameterFactory {
 
-
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Language language
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Language.class)) {
-            language = (Language) value
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Language)) {
+            language = value
         }
         else {
-            language = new Language(value)
+            language = [value]
         }
         return language
     }
