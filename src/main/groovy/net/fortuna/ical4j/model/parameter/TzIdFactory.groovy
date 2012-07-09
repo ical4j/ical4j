@@ -40,7 +40,7 @@ public class TzIdFactory extends AbstractParameterFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         TzId tzId
-        if (FactoryBuilderSupport.checkValueIsTzIdNotString(value, name, TzId.class)) {
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, TzId.class)) {
             tzId = (TzId) value
         }
         else {
