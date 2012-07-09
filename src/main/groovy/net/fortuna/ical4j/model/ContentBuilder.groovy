@@ -31,8 +31,12 @@
  */
 package net.fortuna.ical4j.model
 
-import groovy.util.FactoryBuilderSupportimport net.fortuna.ical4j.model.component.*
-import net.fortuna.ical4j.model.property.*import net.fortuna.ical4j.model.parameter.*import net.fortuna.ical4j.model.property.BusyTypeFactory/**
+import groovy.util.FactoryBuilderSupport
+import net.fortuna.ical4j.model.component.*
+import net.fortuna.ical4j.model.property.*
+import net.fortuna.ical4j.model.parameter.*
+
+/**
  * $Id$
  *
  * Created on: 03/08/2009
@@ -40,9 +44,9 @@ import net.fortuna.ical4j.model.property.*import net.fortuna.ical4j.model.param
  * @author fortuna
  *
  */
-public class ContentBuilder extends FactoryBuilderSupport {
+class ContentBuilder extends FactoryBuilderSupport {
 
-    public ContentBuilder(boolean init = true) {
+    ContentBuilder(boolean init = true) {
         super(init)
     }
     
@@ -154,3 +158,4 @@ public class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('xparameter', new XParameterFactory())
     }
 }
+
