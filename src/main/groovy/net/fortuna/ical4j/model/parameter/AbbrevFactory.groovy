@@ -35,17 +35,18 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-public class AbbrevFactory extends AbstractParameterFactory {
+class AbbrevFactory extends AbstractParameterFactory {
 
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Abbrev abbrev
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Abbrev.class)) {
-            abbrev = (Abbrev) value
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Abbrev)) {
+            abbrev = value
         }
         else {
-            abbrev = new Abbrev(value)
+            abbrev = [value]
         }
         return abbrev
     }
 }
+
