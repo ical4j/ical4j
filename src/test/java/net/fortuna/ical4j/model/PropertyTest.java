@@ -109,7 +109,8 @@ public class PropertyTest extends AbstractPropertyTest {
     public void testEquals() {
         assertTrue(property.equals(property));
 
-        Property notEqual = new Property("notEqual", null) {
+        @SuppressWarnings("serial")
+		Property notEqual = new Property("notEqual", null) {
             public String getValue() {
                 return "";
             }
@@ -173,7 +174,8 @@ public class PropertyTest extends AbstractPropertyTest {
      * @throws URISyntaxException
      * @throws ParseException
      */
-    public void testImmutable() throws IOException, URISyntaxException, ParseException {
+    @SuppressWarnings("serial")
+	public void testImmutable() throws IOException, URISyntaxException, ParseException {
         try {
             property.setValue("");
             fail("UnsupportedOperationException should be thrown");
@@ -199,7 +201,8 @@ public class PropertyTest extends AbstractPropertyTest {
     public static TestSuite suite() throws Exception {
         TestSuite suite = new TestSuite();
 
-        Property property = new Property("name", null) {
+        @SuppressWarnings("serial")
+		Property property = new Property("name", null) {
             public String getValue() {
                 return "value";
             }
@@ -212,7 +215,8 @@ public class PropertyTest extends AbstractPropertyTest {
             }
         };
 
-        Property invalidProperty = new Property("name", null) {
+        @SuppressWarnings("serial")
+		Property invalidProperty = new Property("name", null) {
             public String getValue() {
                 return "value";
             }

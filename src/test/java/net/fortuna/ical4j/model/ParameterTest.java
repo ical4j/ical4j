@@ -86,6 +86,7 @@ public class ParameterTest extends TestCase {
 	public static TestSuite suite() throws Exception {
 		TestSuite suite = new TestSuite();
 		
+		@SuppressWarnings("serial")
 		Parameter p = new Parameter("name", null) {
 			public String getValue() {
 				return "value";

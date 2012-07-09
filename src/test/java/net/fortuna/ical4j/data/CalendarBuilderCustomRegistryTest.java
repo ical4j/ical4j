@@ -69,7 +69,8 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
              + "END:VCALENDAR";
 
 
-    private static class ScheduleStatus extends Parameter {
+    @SuppressWarnings("serial")
+	private static class ScheduleStatus extends Parameter {
 
         private String value;
 
