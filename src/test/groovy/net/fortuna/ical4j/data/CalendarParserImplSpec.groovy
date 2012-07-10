@@ -31,9 +31,12 @@
  */
 package net.fortuna.ical4j.data
 
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.util.Calendars;
-import spock.lang.Specification;
+import static net.fortuna.ical4j.util.CompatibilityHints.*
+
+import net.fortuna.ical4j.model.Calendar
+import net.fortuna.ical4j.util.Calendars
+import net.fortuna.ical4j.util.CompatibilityHints
+import spock.lang.Specification
 
 class CalendarParserImplSpec extends Specification {
 	
@@ -64,5 +67,25 @@ class CalendarParserImplSpec extends Specification {
 		contentLines																																			| expectedProperty
 //		'PRODID;X-NO-QUOTES=a\nb;X-QUOTES="a\nb":sample'																										| 'PRODID;X-NO-QUOTES=a\\nb;X-QUOTES="a\\nb":sample\r\n'
 		'X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-ABUID="ab://Home";X-TITLE=1 Infinite Loop\nCupertino CA 95014\nUnited States:geo:37.331684,-122.030758'	| 'X-APPLE-STRUCTURED-LOCATION;VALUE=URI;X-APPLE-ABUID="ab://Home";X-TITLE=1 Infinite Loop\\nCupertino CA 95014\\nUnited States:geo:37.331684,-122.030758\r\n'
+	}
+	
+	def 'verify parsing of calendar file'() {
+		setup:
+		compatibilityHints.each {
+			CompatibilityHints.setHintEnabled(it, true)
+		}
+		
+		expect:
+		Calendar calendar = Calendars.load(filename)
+		
+		cleanup:
+		compatibilityHints.each {
+			CompatibilityHints.clearHintEnabled(it)
+		}
+
+		where:
+		filename							| compatibilityHints
+		'etc/samples/valid/bhav23-1.ics'	| []
+		'etc/samples/valid/bhav23-2.ics'	| [KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]
 	}
 }

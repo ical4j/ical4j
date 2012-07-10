@@ -1,0 +1,55 @@
+BEGIN:VCALENDAR
+PRODID:-//Trumba Corporation//Trumba Calendar Services 0.11.9005//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+X-WR-CALNAME:Harvard Medical School
+X-WR-TIMEZONE:America/New_York
+METHOD:PUBLISH
+
+BEGIN:VEVENT
+SUMMARY:See the IRBâ€™s QI Checklist: Clinical QI or QI Research? When to
+ Get IRB Review
+LOCATION:Simches 3.110\, 185 Cambridge Street\, Floor 3\, MGH
+DTSTART:20120709T160000Z
+DTEND:20120709T170000Z
+X-MICROSOFT-CDO-ALLDAYEVENT:FALSE
+URL:https://hub.partners.org/catalog/one-section?section_id=6181737
+X-TRUMBA-CUSTOMFIELD;NAME="Event Type";ID=21;TYPE=number:Harvard Medical
+  School
+X-TRUMBA-CUSTOMFIELD;NAME="Topics";ID=22995;TYPE=CustomAsset:Administrat
+ ive\,Anesthesia\,Biochemistry\,Biomedical Science\,Biostatistics\,Cardio
+ logy\,Community\,Dermatology\,Education\,Endocrine\,Epidemiology\,Geneti
+ cs\,Immunology\,Medicine\,Molecular Biology\,Molecular Genetics\,Neurolo
+ gy\,Nuclear Medicine\,Obstetrics\, Gynecology and Reproductive Biology\,
+ Oncology\,Opthalmology\,Oral Health\,Orthopedic Surgery\,Otology-Laryngo
+ logy\,Pediatrics\,Physical Medicine & Rehabilitation\,Population Medicin
+ e\,Psychiatry\,Public Health\,Radiation Oncology\,Radiology\,Surgery\,Va
+ scular Biology\,Virology\,Wellness/Worklife
+X-TRUMBA-CUSTOMFIELD;NAME="Event Types";ID=25242;TYPE=CustomAsset:Semina
+ r
+X-TRUMBA-CUSTOMFIELD;NAME="Department/Office";ID=25489;TYPE=CustomAsset:
+ Continuing Education
+X-TRUMBA-CUSTOMFIELD;NAME="Location";ID=22993;TYPE=CustomAsset:Mass. Gen
+ eral Hospital
+X-TRUMBA-CUSTOMFIELD;NAME="RSVP Required";ID=25241;TYPE=CustomAsset:Yes
+DTSTAMP:20120606T163256Z
+DESCRIPTION:See the IRBâ€™s QI Checklist: Clinical QI or QI Research? When
+  to Get IRB Review\n\nMonday\, July 9th \n12:00pm â€“ 1:00pm\nSimches
+3.11
+ 0\n\nSponsored by the MGH Clinical Research Program and the Partners Hum
+ an Research Committee\n\nElizabeth Hohmann\, MD\, Physician Director\, P
+ artners IRBs\nMelissa Abraham\, PhD\, Chair\, Partners Human Research Co
+ mmittee\n\nThe Partners Human Research Committee has released a new guid
+ ance checklist to help investigators determine when their QI activity is
+  human subjects research requiring IRB review. We will discuss this chec
+ klist and some examples and have ample time for questions and comments.
+  Bring your questions.  \n\nPlease feel free to bring your lunch. \n\nTh
+ is course is geared towards investigators\, research nurses\, study coor
+ dinators and all other study staff\, especially those interested in qual
+ ity initiatives at the hospitals\, including quality in care and in medi
+ cal education.  \n\nRegistration is required. Contact Lauren Michaels wi
+ th further questions about this session.
+CATEGORIES:Harvard Medical School
+UID:http://uid.trumba.com/event/100278721
+END:VEVENT
+END:VCALENDAR
