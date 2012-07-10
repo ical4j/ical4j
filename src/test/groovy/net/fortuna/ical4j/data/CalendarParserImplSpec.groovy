@@ -86,6 +86,6 @@ class CalendarParserImplSpec extends Specification {
 		where:
 		filename							| compatibilityHints
 		'etc/samples/valid/bhav23-1.ics'	| []
-		'etc/samples/valid/bhav23-2.ics'	| [KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]
+		'etc/samples/invalid/bhav23-2.ics'	| [KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]
 	}
 }

@@ -1,4 +1,7 @@
 BEGIN:VCALENDAR
+PRODID:-//Trumba Corporation//Trumba Calendar Services 0.11.9005//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
 BEGIN:VEVENT
 LOCATION:Melbourne
 SUMMARY:Australian Grand Prix
