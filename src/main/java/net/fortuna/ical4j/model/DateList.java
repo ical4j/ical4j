@@ -294,95 +294,95 @@ public class DateList implements List<Date>, Serializable {
         return timeZone;
     }
 
-	public void add(int arg0, Date arg1) {
+	public final void add(int arg0, Date arg1) {
 		dates.add(arg0, arg1);
 	}
 
-	public boolean addAll(Collection<? extends Date> arg0) {
+	public final boolean addAll(Collection<? extends Date> arg0) {
 		return dates.addAll(arg0);
 	}
 
-	public boolean addAll(int arg0, Collection<? extends Date> arg1) {
+	public final boolean addAll(int arg0, Collection<? extends Date> arg1) {
 		return dates.addAll(arg0, arg1);
 	}
 
-	public void clear() {
+	public final void clear() {
 		dates.clear();
 	}
 
-	public boolean contains(Object o) {
+	public final boolean contains(Object o) {
 		return dates.contains(o);
 	}
 
-	public boolean containsAll(Collection<?> arg0) {
+	public final boolean containsAll(Collection<?> arg0) {
 		return dates.containsAll(arg0);
 	}
 
-	public Date get(int index) {
+	public final Date get(int index) {
 		return dates.get(index);
 	}
 
-	public int indexOf(Object o) {
+	public final int indexOf(Object o) {
 		return dates.indexOf(o);
 	}
 
-	public boolean isEmpty() {
+	public final boolean isEmpty() {
 		return dates.isEmpty();
 	}
 
-	public Iterator<Date> iterator() {
+	public final Iterator<Date> iterator() {
 		return dates.iterator();
 	}
 
-	public int lastIndexOf(Object o) {
+	public final int lastIndexOf(Object o) {
 		return dates.lastIndexOf(o);
 	}
 
-	public ListIterator<Date> listIterator() {
+	public final ListIterator<Date> listIterator() {
 		return dates.listIterator();
 	}
 
-	public ListIterator<Date> listIterator(int index) {
+	public final ListIterator<Date> listIterator(int index) {
 		return dates.listIterator(index);
 	}
 
-	public Date remove(int index) {
+	public final Date remove(int index) {
 		return dates.remove(index);
 	}
 
-	public boolean remove(Object o) {
+	public final boolean remove(Object o) {
 		return dates.remove(o);
 	}
 
-	public boolean removeAll(Collection<?> arg0) {
+	public final boolean removeAll(Collection<?> arg0) {
 		return dates.removeAll(arg0);
 	}
 
-	public boolean retainAll(Collection<?> arg0) {
+	public final boolean retainAll(Collection<?> arg0) {
 		return dates.retainAll(arg0);
 	}
 
-	public Date set(int arg0, Date arg1) {
+	public final Date set(int arg0, Date arg1) {
 		return dates.set(arg0, arg1);
 	}
 
-	public int size() {
+	public final int size() {
 		return dates.size();
 	}
 
-	public List<Date> subList(int fromIndex, int toIndex) {
+	public final List<Date> subList(int fromIndex, int toIndex) {
 		return dates.subList(fromIndex, toIndex);
 	}
 
-	public Object[] toArray() {
+	public final Object[] toArray() {
 		return dates.toArray();
 	}
 
-	public <T> T[] toArray(T[] arg0) {
+	public final <T> T[] toArray(T[] arg0) {
 		return dates.toArray(arg0);
 	}
 	
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (!getClass().isAssignableFrom(obj.getClass())) {
 			return false;
 		}
@@ -394,7 +394,7 @@ public class DateList implements List<Date>, Serializable {
 			.isEquals();
 	}
 	
-	public int hashCode() {
+	public final int hashCode() {
 		return new HashCodeBuilder().append(dates)
 			.append(type)
 			.append(timeZone)
@@ -402,3 +402,4 @@ public class DateList implements List<Date>, Serializable {
 			.toHashCode();
 	}
 }
+
