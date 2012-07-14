@@ -282,7 +282,7 @@ public class PeriodList implements Set, Serializable {
         return result;
     }
 
-    public boolean isUnmodifiable() {
+    public final boolean isUnmodifiable() {
         return unmodifiable;
     }
 
@@ -332,7 +332,7 @@ public class PeriodList implements Set, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean addAll(Collection arg0) {
+	public final boolean addAll(Collection arg0) {
 		for (Iterator i = arg0.iterator(); i.hasNext();) {
 			add(i.next());
 		}
@@ -342,81 +342,81 @@ public class PeriodList implements Set, Serializable {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void clear() {
+	public final void clear() {
 		periods.clear();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean contains(Object o) {
+	public final boolean contains(Object o) {
 		return periods.contains(o);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean containsAll(Collection arg0) {
+	public final boolean containsAll(Collection arg0) {
 		return periods.containsAll(arg0);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isEmpty() {
+	public final boolean isEmpty() {
 		return periods.isEmpty();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Iterator iterator() {
+	public final Iterator iterator() {
 		return periods.iterator();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean remove(Object o) {
+	public final boolean remove(Object o) {
 		return periods.remove(o);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean removeAll(Collection arg0) {
+	public final boolean removeAll(Collection arg0) {
 		return periods.removeAll(arg0);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean retainAll(Collection arg0) {
+	public final boolean retainAll(Collection arg0) {
 		return periods.retainAll(arg0);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public int size() {
+	public final int size() {
 		return periods.size();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object[] toArray() {
+	public final Object[] toArray() {
 		return periods.toArray();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object[] toArray(Object[] arg0) {
+	public final Object[] toArray(Object[] arg0) {
 		return periods.toArray(arg0);
 	}
 	
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (!getClass().isAssignableFrom(obj.getClass())) {
 			return false;
 		}
@@ -427,7 +427,7 @@ public class PeriodList implements Set, Serializable {
 			.isEquals();
 	}
 	
-	public int hashCode() {
+	public final int hashCode() {
 		return new HashCodeBuilder().append(periods)
 			.append(timezone)
 			.append(utc)
