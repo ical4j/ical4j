@@ -84,15 +84,6 @@ public class DateList implements List, Serializable {
     }
 
     /**
-     * Creates a new instance with the specified initial capacity.
-     * @param initialCapacity the initial capacity of the list
-     * @deprecated
-     */
-    public DateList(final int initialCapacity) {
-    	this();
-    }
-
-    /**
      * @param aType the type of dates contained by the instance
      */
     public DateList(final Value aType) {
@@ -107,10 +98,10 @@ public class DateList implements List, Serializable {
      * @param timezone the timezone to apply to dates contained by the instance
      */
     public DateList(final Value aType, final TimeZone timezone) {
-        if (aType != null) {
-            this.type = aType;
-        } else {
+        if (aType == null) {
             this.type = Value.DATE_TIME;
+        } else {
+            this.type = aType;
         }
         this.timeZone = timezone;
         dates = new ArrayList();
@@ -308,95 +299,95 @@ public class DateList implements List, Serializable {
         return timeZone;
     }
 
-	public void add(int arg0, Object arg1) {
+	public final void add(int arg0, Object arg1) {
 		dates.add(arg0, arg1);
 	}
 
-	public boolean addAll(Collection arg0) {
+	public final boolean addAll(Collection arg0) {
 		return dates.addAll(arg0);
 	}
 
-	public boolean addAll(int arg0, Collection arg1) {
+	public final boolean addAll(int arg0, Collection arg1) {
 		return dates.addAll(arg0, arg1);
 	}
 
-	public void clear() {
+	public final void clear() {
 		dates.clear();
 	}
 
-	public boolean contains(Object o) {
+	public final boolean contains(Object o) {
 		return dates.contains(o);
 	}
 
-	public boolean containsAll(Collection arg0) {
+	public final boolean containsAll(Collection arg0) {
 		return dates.containsAll(arg0);
 	}
 
-	public Object get(int index) {
+	public final Object get(int index) {
 		return dates.get(index);
 	}
 
-	public int indexOf(Object o) {
+	public final int indexOf(Object o) {
 		return dates.indexOf(o);
 	}
 
-	public boolean isEmpty() {
+	public final boolean isEmpty() {
 		return dates.isEmpty();
 	}
 
-	public Iterator iterator() {
+	public final Iterator iterator() {
 		return dates.iterator();
 	}
 
-	public int lastIndexOf(Object o) {
+	public final int lastIndexOf(Object o) {
 		return dates.lastIndexOf(o);
 	}
 
-	public ListIterator listIterator() {
+	public final ListIterator listIterator() {
 		return dates.listIterator();
 	}
 
-	public ListIterator listIterator(int index) {
+	public final ListIterator listIterator(int index) {
 		return dates.listIterator(index);
 	}
 
-	public Object remove(int index) {
+	public final Object remove(int index) {
 		return dates.remove(index);
 	}
 
-	public boolean remove(Object o) {
+	public final boolean remove(Object o) {
 		return dates.remove(o);
 	}
 
-	public boolean removeAll(Collection arg0) {
+	public final boolean removeAll(Collection arg0) {
 		return dates.removeAll(arg0);
 	}
 
-	public boolean retainAll(Collection arg0) {
+	public final boolean retainAll(Collection arg0) {
 		return dates.retainAll(arg0);
 	}
 
-	public Object set(int arg0, Object arg1) {
+	public final Object set(int arg0, Object arg1) {
 		return dates.set(arg0, arg1);
 	}
 
-	public int size() {
+	public final int size() {
 		return dates.size();
 	}
 
-	public List subList(int fromIndex, int toIndex) {
+	public final List subList(int fromIndex, int toIndex) {
 		return dates.subList(fromIndex, toIndex);
 	}
 
-	public Object[] toArray() {
+	public final Object[] toArray() {
 		return dates.toArray();
 	}
 
-	public Object[] toArray(Object[] arg0) {
+	public final Object[] toArray(Object[] arg0) {
 		return dates.toArray(arg0);
 	}
 	
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (!getClass().isAssignableFrom(obj.getClass())) {
 			return false;
 		}
@@ -408,7 +399,7 @@ public class DateList implements List, Serializable {
 			.isEquals();
 	}
 	
-	public int hashCode() {
+	public final int hashCode() {
 		return new HashCodeBuilder().append(dates)
 			.append(type)
 			.append(timeZone)
