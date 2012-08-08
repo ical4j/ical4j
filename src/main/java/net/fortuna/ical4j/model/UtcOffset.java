@@ -94,9 +94,19 @@ public class UtcOffset implements Serializable {
         offset += Integer.parseInt(value.substring(HOUR_START_INDEX,
                 HOUR_END_INDEX))
                 * Dates.MILLIS_PER_HOUR;
-        offset += Integer.parseInt(value.substring(MINUTE_START_INDEX,
-                MINUTE_END_INDEX))
-                * Dates.MILLIS_PER_MINUTE;
+
+//cludge to handle Utcffset of vcard 3
+        if ( value.contains(":")){
+        	offset += Integer.parseInt(value.substring(MINUTE_START_INDEX +1, MINUTE_END_INDEX +1))
+                    * Dates.MILLIS_PER_MINUTE;
+        } else {
+        	offset += Integer.parseInt(value.substring(MINUTE_START_INDEX, MINUTE_END_INDEX))
+                                     * Dates.MILLIS_PER_MINUTE;
+        }
+
+//        offset += Integer.parseInt(value.substring(MINUTE_START_INDEX,
+//                MINUTE_END_INDEX))
+//                * Dates.MILLIS_PER_MINUTE;
         if (value.length() == SECOND_END_INDEX) {
             offset += Integer.parseInt(value.substring(SECOND_START_INDEX,
                     SECOND_END_INDEX))
