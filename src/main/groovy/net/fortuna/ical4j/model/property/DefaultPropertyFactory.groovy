@@ -31,38 +31,33 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.model.Property
 
 /**
- * $Id$
- *
- * Created on: 02/08/2009
- *
  * @author fortuna
  *
  */
-public class TzNameFactory extends AbstractPropertyFactory{
+class DefaultPropertyFactory extends AbstractPropertyFactory {
 
+	Class<? extends Property> klass
+	
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        TzName instance
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, TzName.class)) {
-            instance = (TzName) value
+        def property
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, klass)) {
+            property = value
         }
-        else {
-            String instanceValue = attributes.remove('value')
-            if (instanceValue != null) {
-                attributes.put('value', instanceValue)
-                instance = super.newInstance(builder, name, value, attributes)
-            }
-            else {
-                instance = super.newInstance(builder, name, value, attributes)
-            }
+        else if (attributes['value']) {
+			property = super.newInstance(builder, name, attributes.remove('value'), attributes);
+		}
+		else {
+			property = super.newInstance(builder, name, value, attributes);
         }
-        return instance
+        return property
     }
     
     protected Object newInstance(ParameterList parameters, String value) {
-        return new TzName(parameters, value)
+		def constructor = klass.getConstructor(ParameterList, String)
+        constructor.newInstance(parameters, value)
     }
 }
