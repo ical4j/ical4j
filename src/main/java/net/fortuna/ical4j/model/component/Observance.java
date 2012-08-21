@@ -69,7 +69,7 @@ import org.apache.commons.logging.LogFactory;
  * and Daylight instances are valid.
  * @author Ben Fortuna
  */
-public abstract class Observance extends Component implements Comparable {
+public abstract class Observance extends Component {
 
     /**
      * 
@@ -300,26 +300,6 @@ public abstract class Observance extends Component implements Comparable {
      */
     public final TzOffsetTo getOffsetTo() {
         return (TzOffsetTo) getProperty(Property.TZOFFSETTO);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final int compareTo(final Object arg0) {
-        return compareTo((Observance) arg0);
-    }
-
-    /**
-     * @param arg0 another observance instance
-     * @return a positve value if this observance starts earlier than the other,
-     * a negative value if it occurs later than the other, or zero if they start
-     * at the same time
-     */
-    public final int compareTo(final Observance arg0) {
-        // TODO: sort by RDATE??
-        final DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
-        final DtStart dtStart0 = (DtStart) arg0.getProperty(Property.DTSTART);
-        return dtStart.getDate().compareTo(dtStart0.getDate());
     }
     
 //    private Date calculateOnset(DateProperty dateProperty) {

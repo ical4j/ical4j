@@ -55,6 +55,8 @@ import org.apache.commons.logging.LogFactory;
  */
 public class TimeZoneTest extends TestCase {
 
+    private static final long GMT_PLUS_4 = 4 * 60 * 60 * 1000;
+    
     private static final long GMT_PLUS_10 = 10 * 60 * 60 * 1000;
 
     private static final long GMT_MINUS_10 = -10 * 60 * 60 * 1000;
@@ -388,6 +390,10 @@ public class TimeZoneTest extends TestCase {
         
         suite.addTest(new TimeZoneTest("testGetRawOffset", "Australia/Melbourne", GMT_PLUS_10));
         suite.addTest(new TimeZoneTest("testGetRawOffset", "Pacific/Honolulu", GMT_MINUS_10));
+        
+        suite.addTest(new TimeZoneTest("testGetRawOffset", "Europe/Samara", GMT_PLUS_4));
+        suite.addTest(new TimeZoneTest("testInDaylightTime", "Europe/Samara", false));
+        suite.addTest(new TimeZoneTest("testGetOffset", "Europe/Samara", GMT_PLUS_4));
         
         suite.addTest(new TimeZoneTest("testHasSameRules", "Australia/Melbourne"));
         
