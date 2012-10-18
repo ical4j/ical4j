@@ -148,12 +148,20 @@ class DateTimeSpec extends Specification {
    }
    
    def 'test conversion of UTC date-time to local time'() {
-	   setup:
+	   setup: 'Override default timezone for test consistency'
+	   def originalTimezone = TimeZone.default
+	   TimeZone.default = TimeZone.getTimeZone('Australia/Melbourne')
+	   
+	   and:
 	   DateTime dateTime = ['20110327T010000Z']
 	   def cal = java.util.Calendar.instance
 	   cal.time = dateTime
 	   
 	   expect:
 	   assert !dateTime.is(cal.time)
+	   assert cal.time.format("yyyyMMdd'T'hhmmss") == '20110327T120000'
+	   
+	   cleanup:
+	   TimeZone.default = originalTimezone
    }
 }
