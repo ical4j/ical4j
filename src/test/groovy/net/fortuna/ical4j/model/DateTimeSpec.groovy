@@ -146,4 +146,14 @@ class DateTimeSpec extends Specification {
 	   dateTimeString		| timezone
 	   '20110327T010000'	| tzRegistry.getTimeZone('Europe/London')
    }
+   
+   def 'test conversion of UTC date-time to local time'() {
+	   setup:
+	   DateTime dateTime = ['20110327T010000Z']
+	   def cal = java.util.Calendar.instance
+	   cal.time = dateTime
+	   
+	   expect:
+	   assert !dateTime.is(cal.time)
+   }
 }
