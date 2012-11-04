@@ -195,6 +195,7 @@ public class DateTime extends Date {
 	private static final DateFormatCache RELAXED_FORMAT;
 	static {
 		final DateFormat format = new SimpleDateFormat(RELAXED_PATTERN);
+		format.setLenient(false);
 		RELAXED_FORMAT = new DateFormatCache(format);
 	}
 
