@@ -174,4 +174,22 @@ public class TimeZone extends java.util.TimeZone {
         }
         return 0;
     }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TimeZone timeZone = (TimeZone) o;
+
+        if (rawOffset != timeZone.rawOffset) return false;
+        if (vTimeZone != null ? !vTimeZone.equals(timeZone.vTimeZone) : timeZone.vTimeZone != null) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result = vTimeZone != null ? vTimeZone.hashCode() : 0;
+        result = 31 * result + rawOffset;
+        return result;
+    }
 }
