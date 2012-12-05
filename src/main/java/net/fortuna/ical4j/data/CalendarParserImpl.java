@@ -177,7 +177,7 @@ public class CalendarParserImpl implements CalendarParser {
                 else {
                     propertyParser.parse(tokeniser, in, handler);
                 }
-                absorbWhitespace(tokeniser);
+                absorbWhitespace(tokeniser, in);
                 // assertToken(tokeniser, StreamTokenizer.TT_WORD);
             }
         }
@@ -228,10 +228,9 @@ public class CalendarParserImpl implements CalendarParser {
             // text       = *(TSAFE-CHAR / ":" / DQUOTE / ESCAPED-CHAR)
             //
             tokeniser.ordinaryChar('"');
-            int nextToken = tokeniser.nextToken();
+            int nextToken = nextToken(tokeniser, in);
 
-            while (nextToken != StreamTokenizer.TT_EOL
-                    && nextToken != StreamTokenizer.TT_EOF) {
+            while (nextToken != StreamTokenizer.TT_EOL) {
 
                 if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
                     value.append(tokeniser.sval);
@@ -240,17 +239,12 @@ public class CalendarParserImpl implements CalendarParser {
                     value.append((char) tokeniser.ttype);
                 }
 
-                nextToken = tokeniser.nextToken();
+                nextToken = nextToken(tokeniser, in);
             }
             
             // reset DQUOTE to be quote char
             tokeniser.quoteChar('"');
             
-            if (nextToken == StreamTokenizer.TT_EOF) {
-                throw new ParserException("Unexpected end of file",
-                        getLineNumber(tokeniser, in));
-            }
-
             try {
                 handler.propertyValue(value.toString());
             }
@@ -279,7 +273,7 @@ public class CalendarParserImpl implements CalendarParser {
                 final ContentHandler handler) throws IOException, ParserException,
                 URISyntaxException {
 
-            while (tokeniser.nextToken() == ';') {
+            while (nextToken(tokeniser, in) == ';') {
                 paramParser.parse(tokeniser, in, handler);
             }
         }
@@ -312,7 +306,7 @@ public class CalendarParserImpl implements CalendarParser {
             final StringBuffer paramValue = new StringBuffer();
 
             // preserve quote chars..
-            if (tokeniser.nextToken() == '"') {
+            if (nextToken(tokeniser, in) == '"') {
                 paramValue.append('"');
                 paramValue.append(tokeniser.sval);
                 paramValue.append('"');
@@ -320,7 +314,7 @@ public class CalendarParserImpl implements CalendarParser {
             else if (tokeniser.sval != null) {
                 paramValue.append(tokeniser.sval);
                 // check for additional words to account for equals (=) in param-value
-                int nextToken = tokeniser.nextToken();
+                int nextToken = nextToken(tokeniser, in);
 
                 while (nextToken != ';' && nextToken != ':' && nextToken != ',') {
 
@@ -331,7 +325,7 @@ public class CalendarParserImpl implements CalendarParser {
                     	paramValue.append((char) tokeniser.ttype);
                     }
 
-                    nextToken = tokeniser.nextToken();
+                    nextToken = nextToken(tokeniser, in);
                 }
                 tokeniser.pushBack();
             } else if(tokeniser.sval == null) { 
@@ -363,7 +357,7 @@ public class CalendarParserImpl implements CalendarParser {
 
             while (Component.BEGIN.equals(tokeniser.sval)) {
                 componentParser.parse(tokeniser, in, handler);
-                absorbWhitespace(tokeniser);
+                absorbWhitespace(tokeniser, in);
                 // assertToken(tokeniser, StreamTokenizer.TT_WORD);
             }
         }
@@ -429,7 +423,7 @@ public class CalendarParserImpl implements CalendarParser {
     private void assertToken(final StreamTokenizer tokeniser, Reader in, final int token)
             throws IOException, ParserException {
 
-        if (tokeniser.nextToken() != token) {
+        if (nextToken(tokeniser, in) != token) {
             throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Object[] {
                     new Integer(token), new Integer(tokeniser.ttype),
             }), getLineNumber(tokeniser, in));
@@ -489,9 +483,9 @@ public class CalendarParserImpl implements CalendarParser {
      * @param tokeniser
      * @throws IOException
      */
-    private void absorbWhitespace(final StreamTokenizer tokeniser) throws IOException {
+    private void absorbWhitespace(final StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
         // HACK: absorb extraneous whitespace between components (KOrganizer)..
-        while (tokeniser.nextToken() == StreamTokenizer.TT_EOL) {
+        while (nextToken(tokeniser, in) == StreamTokenizer.TT_EOL) {
             if (log.isTraceEnabled()) {
                 log.trace("Absorbing extra whitespace..");
             }
@@ -517,5 +511,21 @@ public class CalendarParserImpl implements CalendarParser {
             line += unfolded;
         }
         return line;
+    }
+
+    /**
+     * Reads the next token from the tokeniser.
+     * This method throws a ParseException when reading EOF.
+     * @param tokeniser
+     * @param in
+     * @return
+     * @throws ParseException When reading EOF.
+     */
+    private int nextToken(StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
+        int token = tokeniser.nextToken();
+        if (token == StreamTokenizer.TT_EOF) {
+            throw new ParserException("Unexpected end of file", getLineNumber(tokeniser, in));
+        }
+        return token;
     }
 }
