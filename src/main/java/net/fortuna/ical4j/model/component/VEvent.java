@@ -1450,9 +1450,19 @@ public class VEvent extends CalendarComponent {
     public final DtEnd getEndDate(final boolean deriveFromDuration) {
         DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
         // No DTEND? No problem, we'll use the DURATION.
-        if (dtEnd == null && deriveFromDuration && getDuration() != null) {
+        if (dtEnd == null && deriveFromDuration) {
             final DtStart dtStart = getStartDate();
-            final Duration vEventDuration = getDuration();
+            final Duration vEventDuration;
+            if (getDuration() != null) {
+                vEventDuration = getDuration();
+            } else if (dtStart.getDate() instanceof DateTime) {
+                // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
+                vEventDuration = new Duration(new Dur(0, 0, 0, 0));
+            } else {
+                // If "DTSTART" is a DATE, then the event's duration is one day (see: RFC 5545, 3.6.1 Event Component)
+                vEventDuration = new Duration(new Dur(1, 0, 0, 0));
+            }
+
             dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration()
                     .getTime(dtStart.getDate()), (Value) dtStart
                     .getParameter(Parameter.VALUE)));

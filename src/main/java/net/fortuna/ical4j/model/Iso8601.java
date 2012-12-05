@@ -112,21 +112,22 @@ public abstract class Iso8601 extends Date {
     public String toString() {
         // if time is floating avoid daylight saving rules when generating
         // string representation of date..
-        if (!(format.getTimeZone() instanceof TimeZone)) {
+        final java.util.TimeZone timeZone = format.getTimeZone();
+        if (!(timeZone instanceof TimeZone)) {
             if (gmtFormat == null) {
                 gmtFormat = (DateFormat) format.clone();
                 gmtFormat.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
             }
-            if (format.getTimeZone().inDaylightTime(this)
-                    && format.getTimeZone().inDaylightTime(new Date(getTime() - 1))) {
-                
+            if (timeZone.inDaylightTime(this)
+                    && timeZone.inDaylightTime(new Date(getTime() - 1))) {
+
                 return gmtFormat.format(new Date(getTime()
-                        + format.getTimeZone().getRawOffset()
-                        + format.getTimeZone().getDSTSavings()));
+                        + timeZone.getRawOffset()
+                        + timeZone.getDSTSavings()));
 //                return format.format(new Date(getTime() - format.getTimeZone().getDSTSavings()));
             }
 //            return gmtFormat.format(new Date(getTime() + format.getTimeZone().getOffset(getTime())));
-            return gmtFormat.format(new Date(getTime() + format.getTimeZone().getRawOffset()));
+            return gmtFormat.format(new Date(getTime() + timeZone.getRawOffset()));
         }
         return format.format(this);
     }
