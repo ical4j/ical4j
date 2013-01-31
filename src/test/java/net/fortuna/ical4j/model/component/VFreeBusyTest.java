@@ -45,10 +45,12 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.FbType;
@@ -392,7 +394,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
     public static TestSuite suite() throws ParseException, URISyntaxException,
      IOException {
         TestSuite suite = new TestSuite();
-        
+
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList"));
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList2"));
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList3"));
@@ -499,6 +501,25 @@ public class VFreeBusyTest extends CalendarComponentTest {
         periods = new PeriodList();
         periods.add(new Period(start, new Dur(0, 0, 30, 0)));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
+        
+        //some components are not in range
+        components = new ComponentList();
+        TimeZone tz = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(
+                "America/Los_Angeles");
+        Parameter tzP = new TzId(tz.getVTimeZone().getProperty(Property.TZID).getValue());
+        ParameterList pl = new ParameterList();
+        pl.add(tzP);
+        DtStart dts = new DtStart(pl, (Date)new DateTime("20130124T0200000", tz));
+        dts.getParameters().add(tzP);
+        VEvent e = new VEvent();
+        e.getProperties().add(dts);
+        e.getProperties().add(new Duration(new Dur("PT1H")));
+        e.getProperties().add(new RRule("FREQ=DAILY"));
+        components.add(e);
+        period = new Period(new DateTime("20130124T1100000Z"), new DateTime("20130125T1100000Z"));
+        request = new VFreeBusy(period.getStart(), period.getEnd());
+        suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
+        
         return suite;
     }
 }

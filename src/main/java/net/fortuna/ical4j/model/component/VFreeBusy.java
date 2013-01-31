@@ -398,7 +398,7 @@ public class VFreeBusy extends CalendarComponent {
                 final Period period = (Period) i.next();
                 // check if period outside bounds..
                 if (!range.intersects(period)) {
-                    periods.remove(period);
+                    i.remove();
                 }
             }
             return new FreeBusy(periods);
