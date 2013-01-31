@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.component;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.fortuna.ical4j.model.Component;
@@ -393,10 +394,10 @@ public class VFreeBusy extends CalendarComponent {
             final DateRange range = new DateRange(start, end);
             // periods must be in UTC time for freebusy..
             periods.setUtc(true);
-            for (final Period period : periods) {
+            for (final Iterator<Period> i = periods.iterator(); i.hasNext();) {
                 // check if period outside bounds..
-                if (!range.intersects(period)) {
-                    periods.remove(period);
+                if (!range.intersects(i.next())) {
+                    i.remove();
                 }
             }
             return new FreeBusy(periods);
