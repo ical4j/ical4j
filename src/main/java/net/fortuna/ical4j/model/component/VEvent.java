@@ -1456,7 +1456,7 @@ public class VEvent extends CalendarComponent {
     public final DtEnd getEndDate(final boolean deriveFromDuration) {
         DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
         // No DTEND? No problem, we'll use the DURATION.
-        if (dtEnd == null && deriveFromDuration) {
+        if (dtEnd == null && deriveFromDuration && getStartDate() != null) {
             final DtStart dtStart = getStartDate();
             final Duration vEventDuration;
             if (getDuration() != null) {
