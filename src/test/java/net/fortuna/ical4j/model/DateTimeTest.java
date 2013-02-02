@@ -62,6 +62,8 @@ public class DateTimeTest extends TestCase {
     private DateTime dateTime;
     
     private String expectedToString;
+    
+    private String badlyFormated;
 
     // static {
         // TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
@@ -80,6 +82,12 @@ public class DateTimeTest extends TestCase {
     public DateTimeTest(DateTime dateTime, String expectedToString) {
         super("testToString");
         this.dateTime = dateTime;
+        this.expectedToString = expectedToString;
+    }
+    
+    public DateTimeTest(String badlyFormated, String expectedToString) {
+        super("testRelaxed");
+        this.badlyFormated = badlyFormated;
         this.expectedToString = expectedToString;
     }
 
@@ -119,6 +127,24 @@ public class DateTimeTest extends TestCase {
         }
         catch (ParseException pe) {
             log.info("Exception occurred: " + pe.getMessage());
+        }
+    }
+    
+    public void testRelaxed() throws Exception {
+        
+        try {
+            new DateTime(badlyFormated);
+            fail("expected ParseException");
+        } catch (ParseException pe) {
+        }
+        try { 
+            CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
+            DateTime dt = new DateTime(badlyFormated);
+            assertEquals(this.expectedToString, dt.toString());
+        } catch (ParseException pe) {
+            fail("exception not expected with relaxed parsing is used");
+        } finally {
+            CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         }
     }
     
@@ -248,6 +274,8 @@ public class DateTimeTest extends TestCase {
         suite.addTest(new DateTimeTest("testDateTimeEquals"));
         suite.addTest(new DateTimeTest("testDateTimeHashCode"));
         suite.addTest(new DateTimeTest("testUtc"));
+        
+        suite.addTest(new DateTimeTest("00001231T000000Z", "00011231T000000"));
         
         return suite;
     }
