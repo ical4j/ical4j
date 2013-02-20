@@ -96,7 +96,12 @@ public class TimeZone extends java.util.TimeZone {
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
         if (observance != null) {
             final TzOffsetTo offset = (TzOffsetTo) observance.getProperty(Property.TZOFFSETTO);
-            return (int) offset.getOffset().getOffset();
+            if (offset.getOffset().getOffset() < getRawOffset()) {
+            	return getRawOffset();
+            }
+            else {
+            	return (int) offset.getOffset().getOffset();
+            }
         }
         return 0;
     }

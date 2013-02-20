@@ -44,9 +44,9 @@ class DateTimeSpec extends Specification {
    def 'test date time initialisation with a standard timezone'() {
 	   setup:
 	   def originalTimezone = TimeZone.default
-	   TimeZone.default = TimeZone.getTimeZone('Europe/London')
+	   TimeZone.default = TimeZone.getTimeZone(timezoneId)
 	   
-	   def timezone = tzRegistry.getTimeZone('Europe/London')
+	   def timezone = tzRegistry.getTimeZone(timezoneId)
 	   
 	   expect:
 	   assert new DateTime(dateTimeString, timezone) as String == dateTimeString
@@ -55,7 +55,9 @@ class DateTimeSpec extends Specification {
 	   TimeZone.default = originalTimezone
 	   
 	   where:
-	   dateTimeString << ['20110327T000000']
+	   dateTimeString	| timezoneId
+	   '20110327T000000'| 'Europe/London'
+	   '20110326T090000'| 'Europe/Minsk'
    }
    
    @Ignore
@@ -145,5 +147,23 @@ class DateTimeSpec extends Specification {
 	   where:
 	   dateTimeString		| timezone
 	   '20110327T010000'	| tzRegistry.getTimeZone('Europe/London')
+   }
+   
+   def 'test conversion of UTC date-time to local time'() {
+	   setup: 'Override default timezone for test consistency'
+	   def originalTimezone = TimeZone.default
+	   TimeZone.default = TimeZone.getTimeZone('Australia/Melbourne')
+	   
+	   and:
+	   DateTime dateTime = ['20110327T010000Z']
+	   def cal = java.util.Calendar.instance
+	   cal.time = dateTime
+	   
+	   expect:
+	   assert !dateTime.is(cal.time)
+	   assert cal.time.format("yyyyMMdd'T'hhmmss") == '20110327T120000'
+	   
+	   cleanup:
+	   TimeZone.default = originalTimezone
    }
 }
