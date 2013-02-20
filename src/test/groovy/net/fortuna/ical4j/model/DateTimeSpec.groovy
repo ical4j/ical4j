@@ -44,9 +44,9 @@ class DateTimeSpec extends Specification {
    def 'test date time initialisation with a standard timezone'() {
 	   setup:
 	   def originalTimezone = TimeZone.default
-	   TimeZone.default = TimeZone.getTimeZone('Europe/London')
+	   TimeZone.default = TimeZone.getTimeZone(timezoneId)
 	   
-	   def timezone = tzRegistry.getTimeZone('Europe/London')
+	   def timezone = tzRegistry.getTimeZone(timezoneId)
 	   
 	   expect:
 	   assert new DateTime(dateTimeString, timezone) as String == dateTimeString
@@ -55,7 +55,9 @@ class DateTimeSpec extends Specification {
 	   TimeZone.default = originalTimezone
 	   
 	   where:
-	   dateTimeString << ['20110327T000000']
+	   dateTimeString	| timezoneId
+	   '20110327T000000'| 'Europe/London'
+	   '20110326T090000'| 'Europe/Minsk'
    }
    
    @Ignore

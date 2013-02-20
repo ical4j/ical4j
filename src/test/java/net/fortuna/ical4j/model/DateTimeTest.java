@@ -269,8 +269,8 @@ public class DateTimeTest extends TestCase {
 
         suite.addTest(new DateTimeTest(new DateTime("20071104T000000",
                 registry.getTimeZone("America/Los_Angeles")), "20071104T000000"));
-        //suite.addTest(new DateTimeTest(new DateTime("20110326T090000",
-        //        registry.getTimeZone("Europe/Minsk")), "20110326T090000"));
+        suite.addTest(new DateTimeTest(new DateTime("20110326T090000",
+                registry.getTimeZone("Europe/Minsk")), "20110326T090000"));
         
         // other tests..
         suite.addTest(new DateTimeTest("testDateTimeString"));
