@@ -56,17 +56,15 @@ class ModelSerializationSpec extends Specification {
 		modelObject << [
 			new Calendar(),
 		
-        	new ContentBuilder().calendar() {
-	            prodid('-//Ben Fortuna//iCal4j 1.0//EN')
-	            version('2.0')
-	            vevent() {
-	                uid('1')
+        	new ContentBuilder().calendar {
+	            prodid '-//Ben Fortuna//iCal4j 1.0//EN'
+	            version '2.0'
+	            vevent {
+	                uid '1'
 	                dtstamp()
-	                dtstart('20090810', parameters: parameters() {
-	                    value('DATE')})
-	                action('DISPLAY')
-	                attach('http://example.com/attachment', parameters: parameters() {
-	                    value('URI')})
+	                dtstart('20090810', parameters: parameters { value 'DATE' })
+	                action 'DISPLAY'
+	                attach('http://example.com/attachment', parameters: parameters() { value 'URI' })
 	            }
 	        },
 		

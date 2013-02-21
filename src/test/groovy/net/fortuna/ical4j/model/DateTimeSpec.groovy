@@ -67,20 +67,20 @@ class DateTimeSpec extends Specification {
 	   TimeZone.default = TimeZone.getTimeZone('Europe/London')
 	   
 	   def vTimeZone = new ContentBuilder().vtimezone {
-		   tzid('Europe/London')
+		   tzid 'Europe/London'
 		   standard {
-			   tzname('GMT')
-			   dtstart('19710101T020000')
-			   tzoffsetfrom('+0100')
-			   tzoffsetto('+0000')
-			   rrule('FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU')
+			   tzname 'GMT'
+			   dtstart '19710101T020000'
+			   tzoffsetfrom '+0100'
+			   tzoffsetto '+0000'
+			   rrule 'FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU'
 		   }
 		   daylight {
-			   tzname('BST')
-			   dtstart('19710101T010000')
-			   tzoffsetfrom('+0000')
-			   tzoffsetto('+0100')
-			   rrule('FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU')
+			   tzname 'BST'
+			   dtstart '19710101T010000'
+			   tzoffsetfrom '+0000'
+			   tzoffsetto '+0100'
+			   rrule 'FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU'
 		   }
 	   }
 	   println vTimeZone
@@ -102,20 +102,20 @@ class DateTimeSpec extends Specification {
 		  TimeZone.default = TimeZone.getTimeZone('Europe/London')
 		  
 		  def vTimeZone = new ContentBuilder().vtimezone {
-			  tzid('Europe/London')
+			  tzid 'Europe/London'
 			  standard {
-				  tzname('GMT')
-				  dtstart('19710101T020000')
-				  tzoffsetfrom('+0100')
-				  tzoffsetto('+0000')
-				  rrule('FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU')
+				  tzname 'GMT'
+				  dtstart '19710101T020000'
+				  tzoffsetfrom '+0100'
+				  tzoffsetto '+0000'
+				  rrule 'FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU'
 			  }
 			  daylight {
-				  tzname('BST')
-				  dtstart('19710101T010000')
-				  tzoffsetfrom('+0000')
-				  tzoffsetto('+0100')
-				  rrule('FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU')
+				  tzname 'BST'
+				  dtstart '19710101T010000'
+				  tzoffsetfrom '+0000'
+				  tzoffsetto '+0100'
+				  rrule 'FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU'
 			  }
 		  }
 		  println vTimeZone
