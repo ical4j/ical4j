@@ -114,4 +114,14 @@ class DurSpec extends Specification {
 		'1D'		| '20110312'		| '20110313'
 		'1D'		| '20110313'		| '20110314'
 	}
+	
+	def 'extension module test: plus'() {
+		expect:
+		new Dur('1D') + new Dur('1D') == new Dur('2D')
+	}
+	
+	def 'extension module test: negative'() {
+		expect:
+		- new Dur('1D') == new Dur('-1D')
+	}
 }
