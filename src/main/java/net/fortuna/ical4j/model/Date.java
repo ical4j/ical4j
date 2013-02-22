@@ -31,9 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
@@ -87,13 +90,15 @@ public class Date extends Iso8601 {
 
     private static final long serialVersionUID = 7136072363141363141L;
 
-    private static final String PATTERN = "yyyyMMdd";
+    private static final String DEFAULT_PATTERN = "yyyyMMdd";
+    
+    private static final String VCARD_PATTERN = "yyyy'-'MM'-'dd";
 
     /**
      * Default constructor.
      */
     public Date() {
-        super(PATTERN, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
+        super(DEFAULT_PATTERN, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
     }
     
     /**
@@ -105,14 +110,14 @@ public class Date extends Iso8601 {
      * @see Dates#PRECISION_SECOND
      */
     protected Date(final int precision, TimeZone tz) {
-        super(PATTERN, precision, tz);
+        super(DEFAULT_PATTERN, precision, tz);
     }
 
     /**
      * @param time a date value in milliseconds
      */
     public Date(final long time) {
-        super(time, PATTERN, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
+        super(time, DEFAULT_PATTERN, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
     }
     
     /**
@@ -125,7 +130,7 @@ public class Date extends Iso8601 {
      * @see Dates#PRECISION_SECOND
      */
     protected Date(final long time, final int precision, TimeZone tz) {
-        super(time, PATTERN, precision, tz);
+        super(time, DEFAULT_PATTERN, precision, tz);
     }
 
     /**
@@ -143,7 +148,18 @@ public class Date extends Iso8601 {
      */
     public Date(final String value) throws ParseException {
         this();
-        setTime(getFormat().parse(value).getTime());
+        try {
+        	setTime(getFormat().parse(value).getTime());
+        } catch (ParseException pe) {
+        	if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_VCARD_COMPATIBILITY)) {
+                final DateFormat parseFormat = new SimpleDateFormat(VCARD_PATTERN);
+                parseFormat.setTimeZone(TimeZones.getDateTimeZone());
+                setTime(parseFormat.parse(value).getTime());
+        	}
+        	else {
+        		throw pe;
+        	}
+        }
     }
     
     /**
@@ -152,7 +168,9 @@ public class Date extends Iso8601 {
      * @throws ParseException where the specified string is not a valid date
      */
     public Date(String value, String pattern) throws ParseException {
-        super(pattern, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
-        setTime(getFormat().parse(value).getTime());
+        super(DEFAULT_PATTERN, Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
+        final DateFormat parseFormat = new SimpleDateFormat(pattern);
+        parseFormat.setTimeZone(TimeZones.getDateTimeZone());
+        setTime(parseFormat.parse(value).getTime());
     }
 }

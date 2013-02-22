@@ -75,6 +75,11 @@ public final class CompatibilityHints {
      * compatibility is enabled by setting this system property to "true".
      */
     public static final String KEY_NOTES_COMPATIBILITY = "ical4j.compatibility.notes";
+    
+    /**
+     * Support for vCard features that are not necessarily compatible with the iCalendar standard.
+     */
+    public static final String KEY_VCARD_COMPATIBILITY = "ical4j.compatibility.vcard";
 
     private static final Map<String, Boolean> HINTS = new ConcurrentHashMap<String, Boolean>();
     // preload known hints from the configurator
