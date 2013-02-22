@@ -161,6 +161,8 @@ public class DateTime extends Date {
 	private static final String DEFAULT_PATTERN = "yyyyMMdd'T'HHmmss";
 
 	private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss'Z'";
+	
+	private static final String VCARD_PATTERN = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
 
 	private static final String RELAXED_PATTERN = "yyyyMMdd";
 
@@ -197,6 +199,12 @@ public class DateTime extends Date {
 		final DateFormat format = new SimpleDateFormat(RELAXED_PATTERN);
 		format.setLenient(true);
 		RELAXED_FORMAT = new DateFormatCache(format);
+	}
+
+	private static final DateFormatCache VCARD_FORMAT;
+	static {
+		final DateFormat format = new SimpleDateFormat(VCARD_PATTERN);
+        VCARD_FORMAT = new DateFormatCache(format);
 	}
 
 	private Time time;
@@ -305,10 +313,17 @@ public class DateTime extends Date {
                 setTimeZone(timezone);
             }
         } catch (ParseException pe) {
-            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_VCARD_COMPATIBILITY)) {
 
-                setTime(value, (DateFormat) RELAXED_FORMAT.get(), timezone);
-                setTimeZone(timezone);
+            	try {
+	                setTime(value, (DateFormat) VCARD_FORMAT.get(), timezone);
+	                setTimeZone(timezone);
+            	} catch (ParseException pe2) {
+                    if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+    	                setTime(value, (DateFormat) RELAXED_FORMAT.get(), timezone);
+    	                setTimeZone(timezone);
+                    }            		
+            	}
             } else {
                 throw pe;
             }
