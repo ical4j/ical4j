@@ -312,14 +312,14 @@ public class DateTime extends Date {
                 setTimeZone(timezone);
             }
         } catch (ParseException pe) {
-            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_VCARD_COMPATIBILITY)) {
 
             	try {
-	                setTime(value, (DateFormat) RELAXED_FORMAT.get(), timezone);
+	                setTime(value, (DateFormat) VCARD_FORMAT.get(), timezone);
 	                setTimeZone(timezone);
             	} catch (ParseException pe2) {
-                    if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_VCARD_COMPATIBILITY)) {
-    	                setTime(value, (DateFormat) VCARD_FORMAT.get(), timezone);
+                    if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+    	                setTime(value, (DateFormat) RELAXED_FORMAT.get(), timezone);
     	                setTimeZone(timezone);
                     }            		
             	}
