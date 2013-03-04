@@ -323,6 +323,9 @@ public class DateTime extends Date {
     	                setTimeZone(timezone);
                     }            		
             	}
+            } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                setTime(value, (DateFormat) RELAXED_FORMAT.get(), timezone);
+                setTimeZone(timezone);
             } else {
                 throw pe;
             }
