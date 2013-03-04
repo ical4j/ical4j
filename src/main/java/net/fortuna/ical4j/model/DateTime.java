@@ -42,7 +42,6 @@ import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 
 /**
  * $Id$
@@ -324,6 +323,9 @@ public class DateTime extends Date {
     	                setTimeZone(timezone);
                     }            		
             	}
+            } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                setTime(value, (DateFormat) RELAXED_FORMAT.get(), timezone);
+                setTimeZone(timezone);
             } else {
                 throw pe;
             }
