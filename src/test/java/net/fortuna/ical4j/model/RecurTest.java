@@ -826,6 +826,12 @@ public class RecurTest extends TestCase {
         recur = new Recur("FREQ=YEARLY;COUNT=4;INTERVAL=2;BYMONTH=1,2,3;BYMONTHDAY=-1");
         suite.addTest(new RecurTest(recur, seed, periodStart, new DateTime("20100131T070000")));
         
+        // rrule never matching any candidate  - should reach limit
+        recur = new Recur("FREQ=YEARLY;BYWEEKNO=1,2,3,4");
+        suite.addTest(new RecurTest(recur, new DateTime("20130101T120000Z"),
+                new DateTime("20130101T120000Z"), new DateTime("20140101T120000Z"), Value.DATE_TIME, 4));
+
+        
         return suite;
     }
 }
