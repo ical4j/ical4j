@@ -286,7 +286,6 @@ public class VTimeZone extends CalendarComponent {
                 PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM, observance.getProperties());
                 PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO, observance.getProperties());
                 
-                PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, observance.getProperties());
                 PropertyValidator.getInstance().assertOneOrLess(Property.TZNAME, observance.getProperties());
             }
         }

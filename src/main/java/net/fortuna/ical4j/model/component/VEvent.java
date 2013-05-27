@@ -547,7 +547,6 @@ public class VEvent extends CalendarComponent {
             
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
@@ -641,7 +640,6 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
             PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
             
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
@@ -745,7 +743,6 @@ public class VEvent extends CalendarComponent {
             
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
@@ -830,7 +827,6 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
             PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
             
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
             
@@ -938,7 +934,6 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
@@ -1030,7 +1025,6 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
             PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
             
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
             
             PropertyValidator.getInstance().assertNone(Property.ATTACH, getProperties());
@@ -1136,7 +1130,6 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
@@ -1229,7 +1222,6 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTEND, getProperties());
