@@ -423,7 +423,6 @@ public class VToDo extends CalendarComponent {
             
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
@@ -517,7 +516,6 @@ public class VToDo extends CalendarComponent {
             
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
@@ -610,7 +608,6 @@ public class VToDo extends CalendarComponent {
             
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
@@ -700,7 +697,6 @@ public class VToDo extends CalendarComponent {
             
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
@@ -797,7 +793,6 @@ public class VToDo extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DUE, getProperties());
@@ -886,7 +881,6 @@ public class VToDo extends CalendarComponent {
             PropertyValidator.getInstance().assertNone(Property.ATTACH, getProperties());
             PropertyValidator.getInstance().assertNone(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertNone(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertNone(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertNone(Property.CONTACT, getProperties());
             PropertyValidator.getInstance().assertNone(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertNone(Property.DESCRIPTION, getProperties());
@@ -981,7 +975,6 @@ public class VToDo extends CalendarComponent {
 
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
@@ -1079,7 +1072,6 @@ public class VToDo extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DUE, getProperties());

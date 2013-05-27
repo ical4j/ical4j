@@ -628,7 +628,6 @@ public class VFreeBusy extends CalendarComponent {
             PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
             PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
             
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
             
             PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
@@ -687,7 +686,6 @@ public class VFreeBusy extends CalendarComponent {
             PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
             PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
             
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
             
             PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
@@ -740,8 +738,6 @@ public class VFreeBusy extends CalendarComponent {
             PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
             PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
             PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
-            
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             
             PropertyValidator.getInstance().assertNone(Property.FREEBUSY, getProperties());
             PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());

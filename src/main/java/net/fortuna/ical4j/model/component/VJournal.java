@@ -289,7 +289,6 @@ public class VJournal extends CalendarComponent {
             
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
@@ -360,7 +359,6 @@ public class VJournal extends CalendarComponent {
             
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
@@ -435,7 +433,6 @@ public class VJournal extends CalendarComponent {
             
             PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.COMMENT, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
             PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
