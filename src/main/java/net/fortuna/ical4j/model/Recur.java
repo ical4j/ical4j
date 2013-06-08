@@ -171,6 +171,8 @@ public class Recur implements Serializable {
     private NumberList setPosList;
 
     private String weekStartDay;
+    
+    private int calendarWeekStartDay;
 
     private Map<String, String> experimentalValues = new HashMap<String, String>();
 
@@ -181,6 +183,8 @@ public class Recur implements Serializable {
      * Default constructor.
      */
     public Recur() {
+        // default week start is Monday per RFC5545
+        calendarWeekStartDay = Calendar.MONDAY;
     }
     
     /**
@@ -189,6 +193,8 @@ public class Recur implements Serializable {
      * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
      */
     public Recur(final String aValue) throws ParseException {
+        // default week start is Monday per RFC5545
+        calendarWeekStartDay = Calendar.MONDAY;
         final StringTokenizer t = new StringTokenizer(aValue, ";=");
         while (t.hasMoreTokens()) {
             final String token = t.nextToken();
@@ -241,6 +247,7 @@ public class Recur implements Serializable {
             }
             else if (WKST.equals(token)) {
                 weekStartDay = nextToken(t, token);
+                calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
             }
             // assume experimental value..
             else {
@@ -264,6 +271,8 @@ public class Recur implements Serializable {
      * @param until maximum recurrence date
      */
     public Recur(final String frequency, final Date until) {
+       // default week start is Monday per RFC5545
+        calendarWeekStartDay = Calendar.MONDAY;
         this.frequency = frequency;
         this.until = until;
         validateFrequency();
@@ -274,6 +283,8 @@ public class Recur implements Serializable {
      * @param count maximum recurrence count
      */
     public Recur(final String frequency, final int count) {
+       // default week start is Monday per RFC5545
+        calendarWeekStartDay = Calendar.MONDAY;
         this.frequency = frequency;
         this.count = count;
         validateFrequency();
@@ -416,6 +427,9 @@ public class Recur implements Serializable {
      */
     public final void setWeekStartDay(final String weekStartDay) {
         this.weekStartDay = weekStartDay;
+        if (weekStartDay != null) {
+            calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
+        }
     }
 
     /**
@@ -1192,12 +1206,6 @@ public class Recur implements Serializable {
         Calendar cal = Dates.getCalendarInstance(date);
         // A week should have at least 4 days to be considered as such per RFC5545
         cal.setMinimalDaysInFirstWeek(4);
-        
-        // default week start is Monday per RFC5545
-        int calendarWeekStartDay = Calendar.MONDAY;
-        if (weekStartDay != null) {
-        	calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
-        }
         cal.setFirstDayOfWeek(calendarWeekStartDay);
         cal.setLenient(lenient);     
         cal.setTime(date);
@@ -1221,7 +1229,7 @@ public class Recur implements Serializable {
      * @param origList
      * @return a new empty list.
      */
-    private static final DateList getDateListInstance(final DateList origList) {
+    private static DateList getDateListInstance(final DateList origList) {
         final DateList list = new DateList(origList.getType());
         if (origList.isUtc()) {
             list.setUtc(true);
