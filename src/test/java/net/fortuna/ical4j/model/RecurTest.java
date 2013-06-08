@@ -217,8 +217,8 @@ public class RecurTest extends TestCase {
         else {
             dates = recur.getDates(periodStart, periodEnd, value);
         }
-//        assertEquals(expectedCount, dates.size());
-        assertTrue("Date list exceeds expected count", dates.size() <= expectedCount);
+        assertEquals(expectedCount, dates.size());
+        // assertTrue("Date list exceeds expected count", dates.size() <= expectedCount);
     }
     
     /**
@@ -573,7 +573,7 @@ public class RecurTest extends TestCase {
         DateList dates = recur.getDates(start, end, Value.DATE);
         log.debug(dates);
         
-        suite.addTest(new RecurTest(recur, start, end, Value.DATE, 10));
+        suite.addTest(new RecurTest(recur, start, end, Value.DATE, 5));
         
         // testGetNextDate..
         recur = new Recur(Recur.DAILY, 3);
@@ -829,9 +829,14 @@ public class RecurTest extends TestCase {
         // rather uncommon rule
         recur = new Recur("FREQ=YEARLY;BYWEEKNO=1,2,3,4");
         suite.addTest(new RecurTest(recur, new DateTime("20130101T120000Z"),
-                new DateTime("20130101T120000Z"), new DateTime("20140101T120000Z"), Value.DATE_TIME, 4));
-
+                new DateTime("20130101T120000Z"), new DateTime("20130123T120000Z"), Value.DATE_TIME, 4));
+        suite.addTest(new RecurTest(recur, new DateTime("20130101T120000Z"),
+                new DateTime("20160101T120000Z"), new DateTime("20160123T120000Z"), Value.DATE_TIME, 3));
         
+        recur = new Recur("FREQ=DAILY;COUNT=3;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
+        suite.addTest(new RecurTest(recur, new DateTime("20131215T000000Z"),
+                new DateTime("20131215T000000Z"), new DateTime("20180101T120000Z"), Value.DATE_TIME, 3));
+      
         return suite;
     }
 }
