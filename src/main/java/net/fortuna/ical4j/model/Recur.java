@@ -421,6 +421,7 @@ public class Recur implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         final StringBuffer b = new StringBuffer();
         b.append(FREQ);
@@ -578,8 +579,7 @@ public class Recur implements Serializable {
                 dates.setTimeZone(((DateTime) seed).getTimeZone());
             }
         }
-        final Calendar cal = Dates.getCalendarInstance(seed);
-        cal.setTime(seed);
+        final Calendar cal = getCalendarInstance(seed, true);
 
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
@@ -670,8 +670,7 @@ public class Recur implements Serializable {
      */
     public final Date getNextDate(final Date seed, final Date startDate) {
 
-        final Calendar cal = Dates.getCalendarInstance(seed);
-        cal.setTime(seed);
+        final Calendar cal = getCalendarInstance(seed, true);
 
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
@@ -855,8 +854,7 @@ public class Recur implements Serializable {
         }
         final DateList monthlyDates = getDateListInstance(dates);
         for (final Date date : dates) {
-            final Calendar cal = Dates.getCalendarInstance(date);
-            cal.setTime(date);
+            final Calendar cal = getCalendarInstance(date, true);
             for (final Integer month : getMonthList()) {
                 // Java months are zero-based..
 //                cal.set(Calendar.MONTH, month.intValue() - 1);
@@ -879,8 +877,7 @@ public class Recur implements Serializable {
         }
         final DateList weekNoDates = getDateListInstance(dates);
         for (final Date date : dates) {
-            final Calendar cal = Dates.getCalendarInstance(date);
-            cal.setTime(date);
+            final Calendar cal = getCalendarInstance(date, true);
             for (final Integer weekNo : getWeekNoList()) {
                 cal.set(Calendar.WEEK_OF_YEAR, Dates.getAbsWeekNo(cal.getTime(), weekNo.intValue()));
                 weekNoDates.add(Dates.getInstance(cal.getTime(), weekNoDates.getType()));
@@ -901,8 +898,7 @@ public class Recur implements Serializable {
         }
         final DateList yearDayDates = getDateListInstance(dates);
         for (final Date date : dates) {
-            final Calendar cal = Dates.getCalendarInstance(date);
-            cal.setTime(date);
+            final Calendar cal = getCalendarInstance(date, true);
             for (final Integer yearDay: getYearDayList()) {
                 cal.set(Calendar.DAY_OF_YEAR, Dates.getAbsYearDay(cal.getTime(), yearDay.intValue()));
                 yearDayDates.add(Dates.getInstance(cal.getTime(), yearDayDates.getType()));
@@ -923,9 +919,7 @@ public class Recur implements Serializable {
         }
         final DateList monthDayDates = getDateListInstance(dates);
         for (final Date date : dates) {
-            final Calendar cal = Dates.getCalendarInstance(date);
-            cal.setLenient(false);
-            cal.setTime(date);
+            final Calendar cal = getCalendarInstance(date, false);
             for (final Integer monthDay : getMonthDayList()) {
                 try {
                     cal.set(Calendar.DAY_OF_MONTH, Dates.getAbsMonthDay(cal.getTime(), monthDay.intValue()));
@@ -958,8 +952,7 @@ public class Recur implements Serializable {
                 // if BYYEARDAY or BYMONTHDAY is specified filter existing
                 // list..
                 if (!getYearDayList().isEmpty() || !getMonthDayList().isEmpty()) {
-                    final Calendar cal = Dates.getCalendarInstance(date);
-                    cal.setTime(date);
+                    final Calendar cal = getCalendarInstance(date, true);
                     if (weekDay.equals(WeekDay.getWeekDay(cal))) {
                         weekDayDates.add(date);
                     }
@@ -980,15 +973,7 @@ public class Recur implements Serializable {
      * @return
      */
     private List<Date> getAbsWeekDays(final Date date, final Value type, final WeekDay weekDay) {
-        final Calendar cal = Dates.getCalendarInstance(date);
-        // default week start is Monday per RFC5545
-        int calendarWeekStartDay = Calendar.MONDAY;
-        if (weekStartDay != null) {
-        	calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
-        }
-        cal.setFirstDayOfWeek(calendarWeekStartDay);
-        cal.setTime(date);
-        
+        final Calendar cal = getCalendarInstance(date, true);        
         final DateList days = new DateList(type);
         if (date instanceof DateTime) {
             if (((DateTime) date).isUtc()) {
@@ -1083,8 +1068,7 @@ public class Recur implements Serializable {
         }
         final DateList hourlyDates = getDateListInstance(dates);
         for (final Date date : dates) {
-            final Calendar cal = Dates.getCalendarInstance(date);
-            cal.setTime(date);
+            final Calendar cal = getCalendarInstance(date, true);
             for (final Integer hour : getHourList()) {
                 cal.set(Calendar.HOUR_OF_DAY, hour.intValue());
                 hourlyDates.add(Dates.getInstance(cal.getTime(), hourlyDates.getType()));
@@ -1105,8 +1089,7 @@ public class Recur implements Serializable {
         }
         final DateList minutelyDates = getDateListInstance(dates);
         for (final Date date : dates) {
-            final Calendar cal = Dates.getCalendarInstance(date);
-            cal.setTime(date);
+            final Calendar cal = getCalendarInstance(date, true);
             for (final Integer minute : getMinuteList()) {
                 cal.set(Calendar.MINUTE, minute.intValue());
                 minutelyDates.add(Dates.getInstance(cal.getTime(), minutelyDates.getType()));
@@ -1127,8 +1110,7 @@ public class Recur implements Serializable {
         }
         final DateList secondlyDates = getDateListInstance(dates);
         for (final Date date : dates) {
-            final Calendar cal = Dates.getCalendarInstance(date);
-            cal.setTime(date);
+            final Calendar cal = getCalendarInstance(date, true);
             for (final Integer second : getSecondList()) {
                 cal.set(Calendar.SECOND, second.intValue());
                 secondlyDates.add(Dates.getInstance(cal.getTime(), secondlyDates.getType()));
@@ -1198,6 +1180,29 @@ public class Recur implements Serializable {
     public final void setUntil(final Date until) {
         this.until = until;
         this.count = -1;
+    }
+    
+    /**
+     * Construct a Calendar object and sets the time.
+     * @param date
+     * @param lenient 
+     * @return 
+     */
+    private Calendar getCalendarInstance(final Date date, final boolean lenient) {
+        Calendar cal = Dates.getCalendarInstance(date);
+        // A week should have at least 4 days to be considered as such per RFC5545
+        cal.setMinimalDaysInFirstWeek(4);
+        
+        // default week start is Monday per RFC5545
+        int calendarWeekStartDay = Calendar.MONDAY;
+        if (weekStartDay != null) {
+        	calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
+        }
+        cal.setFirstDayOfWeek(calendarWeekStartDay);
+        cal.setLenient(lenient);     
+        cal.setTime(date);
+        
+        return cal;
     }
     
     /**
