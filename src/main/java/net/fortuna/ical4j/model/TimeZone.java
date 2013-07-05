@@ -149,25 +149,33 @@ public class TimeZone extends java.util.TimeZone {
     }
 
     private static final int getRawOffset(VTimeZone vt) {
-        // per spec, rawoffset is the raw offset at the current date
-        final DateTime now = new DateTime();
         
         ComponentList<Observance> seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
         // if no standard time use daylight time..
-        if (seasonalTimes.size() == 0) {
+        if (seasonalTimes.isEmpty()) {
             seasonalTimes = vt.getObservances().getComponents(Observance.DAYLIGHT);
+            if (seasonalTimes.isEmpty()) {
+                return 0;
+            }
         }
         Observance latestSeasonalTime = null;
-        Date latestOnset = null;
-        for (Observance seasonalTime : seasonalTimes) {
-            Date onset = seasonalTime.getLatestOnset(now);
-            if (onset == null) {
-                continue;
+        if (seasonalTimes.size() > 1) {
+            // per java spec and when dealing with historical time,
+            // rawoffset is the raw offset at the current date
+            final DateTime now = new DateTime();
+            Date latestOnset = null;
+            for (Observance seasonalTime : seasonalTimes) {
+                Date onset = seasonalTime.getLatestOnset(now);
+                if (onset == null) {
+                    continue;
+                }
+                if (latestOnset == null || onset.after(latestOnset)) {
+                    latestOnset = onset;
+                    latestSeasonalTime = seasonalTime;
+                }
             }
-            if (latestOnset == null || onset.after(latestOnset)) {
-                latestOnset = onset;
-                latestSeasonalTime = seasonalTime;
-            }
+        } else {
+            latestSeasonalTime = (Observance)seasonalTimes.get(0);
         }
         if (latestSeasonalTime != null) {
             final TzOffsetTo offsetTo = (TzOffsetTo) latestSeasonalTime.getProperty(Property.TZOFFSETTO);
