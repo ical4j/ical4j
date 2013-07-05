@@ -83,6 +83,9 @@ public class TimeZoneTest extends TestCase {
     
     private Date date;
     
+    private String zuluDateTimeStr;
+    private String expectedLocalDateTimeStr;
+    
     private long expectedOffset;
     
     private boolean expectedInDaylight;
@@ -161,6 +164,22 @@ public class TimeZoneTest extends TestCase {
         this(testMethod, timezoneId);
         this.date = date;
         this.expectedInDaylight = expectedInDaylight;
+    }
+    
+    /**
+     * @param testMethod
+     * @param vtimezoneDef
+     * @param String zuluStr
+     * @param String expectedLocalStr
+     */
+    public TimeZoneTest(String testMethod, String vtimezoneDef, String zuluDateTimeStr,
+            String expectedLocalDateTimeStr) throws Exception {
+        super(testMethod);
+        net.fortuna.ical4j.model.Calendar cal = new CalendarBuilder().build(new StringReader(vtimezoneDef));
+        VTimeZone vtz = (VTimeZone)cal.getComponent(VTimeZone.VTIMEZONE);
+        this.timezone = new TimeZone(vtz);
+        this.zuluDateTimeStr = zuluDateTimeStr;
+        this.expectedLocalDateTimeStr = expectedLocalDateTimeStr;
     }
 
     /*
@@ -319,68 +338,19 @@ public class TimeZoneTest extends TestCase {
         }
         return super.getName();
     }
-
-    public void testMinsk() throws Exception {
-        String fixedDefinition =
-        "BEGIN:VCALENDAR\r\n"
-        + "BEGIN:VTIMEZONE\r\n"
-        + "TZID:Europe/Minsk\r\n"
-        + "X-S1CS-TZID-ALIAS:E. Europe Standard Time\r\n"
-        + "BEGIN:STANDARD\r\n"
-        + "TZOFFSETFROM:+0200\r\n"
-        + "TZOFFSETTO:+0300\r\n"
-        + "TZNAME:FET\r\n"
-        + "DTSTART:20110327T020000\r\n"
-        + "RDATE:20110327T020000\r\n"
-        + "END:STANDARD\r\n"
-        + "BEGIN:DAYLIGHT\r\n"
-        + "TZOFFSETFROM:+0200\r\n"
-        + "TZOFFSETTO:+0300\r\n"
-        + "TZNAME:EEST\r\n"
-        + "DTSTART:19920329T000000\r\n"
-        + "RDATE:20020331T020000\r\n"
-        + "RDATE:20030330T020000\r\n"
-        + "RDATE:20040328T020000\r\n"
-        + "RDATE:20050327T020000\r\n"
-        + "RDATE:20060326T020000\r\n"
-        + "RDATE:20070325T020000\r\n"
-        + "RDATE:20080330T020000\r\n"
-        + "RDATE:20090329T020000\r\n"
-        + "RDATE:20100328T020000\r\n"
-        + "END:DAYLIGHT\r\n"
-        + "BEGIN:STANDARD\r\n"
-        + "TZOFFSETFROM:+0300\r\n"
-        + "TZOFFSETTO:+0200\r\n"
-        + "TZNAME:EET\r\n"
-        + "DTSTART:19910929T030000\r\n"
-        + "RDATE:20021027T030000\r\n"
-        + "RDATE:20031026T030000\r\n"
-        + "RDATE:20041031T030000\r\n"
-        + "RDATE:20051030T030000\r\n"
-        + "RDATE:20061029T030000\r\n"
-        + "RDATE:20071028T030000\r\n"
-        + "RDATE:20081026T030000\r\n"
-        + "RDATE:20091025T030000\r\n"
-        + "RDATE:20101031T030000\r\n"
-        + "END:STANDARD\r\n"
-        + "END:VTIMEZONE\r\n"
-        + "END:VCALENDAR\r\n";
-
-        net.fortuna.ical4j.model.Calendar cal = new CalendarBuilder().build(new StringReader(fixedDefinition));
-        VTimeZone vtz = (VTimeZone)cal.getComponent(VTimeZone.VTIMEZONE);
-        TimeZone tzz = new TimeZone(vtz);
-        DateTime d = new DateTime("20100428T140000Z");
-        d.setTimeZone(tzz);
-        assertEquals("20100428T170000", d.toString());
+    
+    public void testZuluToLocal() throws Exception {
+        DateTime d = new DateTime(zuluDateTimeStr);
+        d.setTimeZone(timezone);
+        assertEquals(expectedLocalDateTimeStr, d.toString());
     }
     
     /**
      * @return
      */
-    public static TestSuite suite() {
+    public static TestSuite suite() throws Exception {
         TestSuite suite = new TestSuite();
 
-        suite.addTest(new TimeZoneTest("testMinsk", "Europe/Minsk"));
         suite.addTest(new TimeZoneTest("testGetId", "Australia/Melbourne"));
         suite.addTest(new TimeZoneTest("testGetId", "US/Mountain", "America/Denver"));
         suite.addTest(new TimeZoneTest("testGetId", "Asia/Calcutta", "Asia/Kolkata"));
@@ -425,6 +395,71 @@ public class TimeZoneTest extends TestCase {
         suite.addTest(new TimeZoneTest("testInDaylightTime", "America/Bahia", cal.getTime(), false));
         cal.set(2002, 11, 04, 4, 0, 0);
         suite.addTest(new TimeZoneTest("testInDaylightTime", "America/Bahia", cal.getTime(), true));
+        
+        String minskDefinition =
+        "BEGIN:VCALENDAR\r\n"
+        + "BEGIN:VTIMEZONE\r\n"
+        + "TZID:Europe/Minsk\r\n"
+        + "X-S1CS-TZID-ALIAS:E. Europe Standard Time\r\n"
+        + "BEGIN:STANDARD\r\n"
+        + "TZOFFSETFROM:+0200\r\n"
+        + "TZOFFSETTO:+0300\r\n"
+        + "TZNAME:FET\r\n"
+        + "DTSTART:20110327T020000\r\n"
+        + "RDATE:20110327T020000\r\n"
+        + "END:STANDARD\r\n"
+        + "BEGIN:DAYLIGHT\r\n"
+        + "TZOFFSETFROM:+0200\r\n"
+        + "TZOFFSETTO:+0300\r\n"
+        + "TZNAME:EEST\r\n"
+        + "DTSTART:19920329T000000\r\n"
+        + "RDATE:20020331T020000\r\n"
+        + "RDATE:20030330T020000\r\n"
+        + "RDATE:20040328T020000\r\n"
+        + "RDATE:20050327T020000\r\n"
+        + "RDATE:20060326T020000\r\n"
+        + "RDATE:20070325T020000\r\n"
+        + "RDATE:20080330T020000\r\n"
+        + "RDATE:20090329T020000\r\n"
+        + "RDATE:20100328T020000\r\n"
+        + "END:DAYLIGHT\r\n"
+        + "BEGIN:STANDARD\r\n"
+        + "TZOFFSETFROM:+0300\r\n"
+        + "TZOFFSETTO:+0200\r\n"
+        + "TZNAME:EET\r\n"
+        + "DTSTART:19910929T030000\r\n"
+        + "RDATE:20021027T030000\r\n"
+        + "RDATE:20031026T030000\r\n"
+        + "RDATE:20041031T030000\r\n"
+        + "RDATE:20051030T030000\r\n"
+        + "RDATE:20061029T030000\r\n"
+        + "RDATE:20071028T030000\r\n"
+        + "RDATE:20081026T030000\r\n"
+        + "RDATE:20091025T030000\r\n"
+        + "RDATE:20101031T030000\r\n"
+        + "END:STANDARD\r\n"
+        + "END:VTIMEZONE\r\n"
+        + "END:VCALENDAR\r\n";
+        suite.addTest(new TimeZoneTest("testZuluToLocal", minskDefinition, "20100428T140000Z", "20100428T170000"));
+        
+        String weirdo = "BEGIN:VCALENDAR\n"
+                + "BEGIN:VTIMEZONE\n"
+                + "TZID:GMT +0100 (Standard) / GMT +0200 (Daylight)\n"
+                + "BEGIN:DAYLIGHT\n"
+                + "TZOFFSETTO:+020000\n"
+                + "TZOFFSETFROM:+010000\n"
+                + "DTSTART:20130331T030000\n"
+                + "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU\n"
+                + "END:DAYLIGHT\n"
+                + "BEGIN:STANDARD\n"
+                + "TZOFFSETTO:+010000\n"
+                + "TZOFFSETFROM:+020000\n"
+                + "DTSTART:20131027T020000\n"
+                + "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\n"
+                + "END:STANDARD\n"
+                + "END:VTIMEZONE\n"
+                + "END:VCALENDAR\n";
+        suite.addTest(new TimeZoneTest("testZuluToLocal", weirdo, "20130618T150000Z", "20130618T170000"));
         return suite;
     }
 }
