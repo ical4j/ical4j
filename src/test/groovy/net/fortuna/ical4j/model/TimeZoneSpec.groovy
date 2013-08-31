@@ -55,4 +55,14 @@ class TimeZoneSpec extends Specification {
 		Calendar calendar = Calendars.wrap(tzRegistry.getTimeZone('Europe/Prague').vTimeZone)
 		println calendar.toString()
 	}
+	
+	def 'verify custom tz aliases work'() {
+		expect:
+		tzRegistry.getTimeZone(alias) == tzRegistry.getTimeZone(actual)
+		
+		where:
+		alias	| actual
+		'CET'	| 'Europe/Berlin'
+		'CEST'	| 'Europe/Berlin'
+	}
 }

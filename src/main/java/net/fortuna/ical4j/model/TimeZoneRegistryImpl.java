@@ -79,6 +79,13 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             LogFactory.getLog(TimeZoneRegistryImpl.class).warn(
                     "Error loading timezone aliases: " + ioe.getMessage());
         }
+        try {
+        	ALIASES.load(ResourceLoader.getResourceAsStream("tz.alias"));
+        }
+        catch (Exception e) {
+        	LogFactory.getLog(TimeZoneRegistryImpl.class).debug(
+        			"Error loading custom timezone aliases: " + e.getMessage());
+        }
     }
 
     private Map timezones;
