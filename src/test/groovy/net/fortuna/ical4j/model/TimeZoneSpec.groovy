@@ -31,14 +31,15 @@
  */
 package net.fortuna.ical4j.model
 
+import net.fortuna.ical4j.util.Calendars;
+import spock.lang.Shared;
 import spock.lang.Specification;
 
 class TimeZoneSpec extends Specification {
 
+	@Shared TimeZoneRegistry tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
+	
 	def 'verify date in daylight time for different timezones'() {
-		setup: 'initialise timezone registry'
-		def tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
-		
 		expect: 'specified date is in daylight time'
 		def tz = tzRegistry.getTimeZone(timezone)
 		tz.inDaylightTime(new DateTime(date)) == inDaylightTime
@@ -47,5 +48,21 @@ class TimeZoneSpec extends Specification {
 		date				| timezone					| inDaylightTime
 		'20110328T110000'	| 'America/Los_Angeles'		| true
 		'20110328T110000'	| 'Australia/Melbourne'		| true
+	}
+	
+	def 'verify string representation'() {
+		expect:
+		Calendar calendar = Calendars.wrap(tzRegistry.getTimeZone('Europe/Prague').vTimeZone)
+		println calendar.toString()
+	}
+	
+	def 'verify custom tz aliases work'() {
+		expect:
+		tzRegistry.getTimeZone(alias) == tzRegistry.getTimeZone(actual)
+		
+		where:
+		alias	| actual
+		'CET'	| 'Europe/Berlin'
+		'CEST'	| 'Europe/Berlin'
 	}
 }
