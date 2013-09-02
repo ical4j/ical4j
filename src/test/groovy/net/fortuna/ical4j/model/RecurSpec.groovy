@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import spock.lang.IgnoreRest;
 import spock.lang.Specification;
@@ -44,6 +45,7 @@ class RecurSpec extends Specification {
 	
 	def cleanupSpec() {
 		System.clearProperty 'net.fortuna.ical4j.timezone.date.floating'
+		CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)
 	}
 	
 	def 'verify recurrence rules for date-time'() {
@@ -159,5 +161,24 @@ class RecurSpec extends Specification {
 		expect:
 		new Recur(frequency: Recur.WEEKLY) as String == 'FREQ=WEEKLY'
 		new Recur(frequency: Recur.MONTHLY, interval: 3) as String == 'FREQ=MONTHLY;INTERVAL=3'
+	}
+	
+	def 'verify behaviour when parsing unexpected rule parts'() {
+		when:
+		new Recur('X-BYMILLISECOND=300')
+		
+		then:
+		thrown(IllegalArgumentException)
+	}
+	
+	def 'verify relaxed behaviour when parsing unexpected rule parts'() {
+		setup:
+		CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
+		
+		when:
+		Recur recur = ['FREQ=WEEKLY;X-BYMILLISECOND=300']
+		
+		then:
+		recur.experimentalValues['X-BYMILLISECOND'] == '300'
 	}
 }
