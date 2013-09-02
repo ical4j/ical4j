@@ -44,6 +44,7 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.Dates;
 
@@ -249,9 +250,15 @@ public class Recur implements Serializable {
                 weekStartDay = nextToken(t, token);
                 calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
             }
-            // assume experimental value..
             else {
-                experimentalValues.put(token, nextToken(t, token));
+            	if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+	            	// assume experimental value..
+	                experimentalValues.put(token, nextToken(t, token));
+            	}
+            	else {
+            		throw new IllegalArgumentException("Invalid recurrence rule part: " + 
+            				token + "=" + nextToken(t, token));
+            	}
             }
         }
         validateFrequency();
