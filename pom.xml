@@ -141,6 +141,7 @@
 			<plugin>
 				<groupId>org.apache.felix</groupId>
 				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.4.0</version>
                 <executions>
                     <execution>
                         <id>bundle-manifest</id>
@@ -152,8 +153,8 @@
                 </executions>
 				<configuration>
 					<instructions>
-						<Export-Package>net.fortuna.ical4j.*</Export-Package>
-						<Import-Package>net.fortuna.ical4j.*,org.apache.commons.lang.*,org.apache.commons.logging,*;resolution:=optional</Import-Package>
+						<Export-Package>net.fortuna.ical4j*</Export-Package>
+						<Import-Package>net.fortuna.ical4j.factory;resolution:=optional,net.fortuna.ical4j.timezone;resolution:=optional,*</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>
@@ -274,6 +275,7 @@
 			<groupId>backport-util-concurrent</groupId>
 			<artifactId>backport-util-concurrent</artifactId>
 			<version>3.1</version>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
