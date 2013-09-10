@@ -154,7 +154,7 @@
 				<configuration>
 					<instructions>
 						<Export-Package>net.fortuna.ical4j*</Export-Package>
-						<Import-Package>net.fortuna.ical4j.factory;resolution:=optional,net.fortuna.ical4j.timezone;resolution:=optional,*</Import-Package>
+						<Import-Package>net.fortuna.ical4j;resolution:=optional,net.fortuna.ical4j.factory;resolution:=optional,net.fortuna.ical4j.timezone;resolution:=optional,*</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>
