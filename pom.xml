@@ -21,13 +21,13 @@
 
 	<issueManagement>
 		<system>SourceForge.net</system>
-		<url>https://sourceforge.net/p/ical4j/bugs/</url>
+		<url>https://sourceforge.net/tracker/?group_id=107024</url>
 	</issueManagement>
 	<inceptionYear>2004</inceptionYear>
 	<licenses>
 		<license>
             <name>${project.name} - License</name>
-			<url>${project.scm.url}/raw-file/tip/LICENSE</url>
+			<url>${project.scm.url}/LICENSE?format=raw</url>
 		</license>
 	</licenses>
 
