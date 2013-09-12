@@ -37,7 +37,6 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -148,14 +147,14 @@ public class ComponentList extends ArrayList implements Serializable {
 
     /**
      * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
+     * @see java.util.List#isEmpty()
      */
     // public final boolean isEmpty() {
     // return components.isEmpty();
     // }
     /**
      * @return an iterator
-     * @see List#iterator()
+     * @see java.util.List#iterator()
      */
     // public final Iterator iterator() {
     // return components.iterator();
@@ -164,7 +163,7 @@ public class ComponentList extends ArrayList implements Serializable {
      * Remove a component from the list.
      * @param component the component to remove
      * @return true if the list contained the specified component
-     * @see List#remove(java.lang.Object)
+     * @see java.util.List#remove(java.lang.Object)
      */
     public final boolean remove(final Component component) {
         return remove((Object) component);
@@ -172,7 +171,7 @@ public class ComponentList extends ArrayList implements Serializable {
 
     /**
      * @return the number of components in the list
-     * @see List#size()
+     * @see java.util.List#size()
      */
     // public final int size() {
     // return components.size();
