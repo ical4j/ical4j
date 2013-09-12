@@ -134,7 +134,7 @@ public class PropertyList extends ArrayList implements Serializable {
      * <code>net.fortuna.ical4j.model.Property</code>.
      * @param property a property to add
      * @return true if the property is added, otherwise false
-     * @see java.util.List#add(E)
+     * @see java.util.List#add(Object)
      */
     public final boolean add(final Object property) {
         if (!(property instanceof Property)) {

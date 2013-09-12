@@ -146,7 +146,7 @@ public class PeriodList implements Set, Serializable {
      * where argument is not a <code>net.fortuna.ical4j.model.Period</code>.
      * @param period a period to add to the list
      * @return true if the period was added, otherwise false
-     * @see java.util.List#add(E)
+     * @see java.util.List#add(Object)
      */
     public final boolean add(final Object period) {
         if (!(period instanceof Period)) {

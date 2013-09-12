@@ -121,7 +121,7 @@ public class NumberList extends ArrayList implements Serializable {
      * where argument is not a <code>java.lang.Integer</code>.
      * @param arg0 an object to add
      * @return true if the object was added, otherwise false
-     * @see List#add(E)
+     * @see java.util.List#add(Object)
      */
     public final boolean add(final Object arg0) {
         if (!(arg0 instanceof Integer)) {

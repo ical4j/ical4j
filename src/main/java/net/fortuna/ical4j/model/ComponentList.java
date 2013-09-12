@@ -37,6 +37,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -124,7 +125,7 @@ public class ComponentList extends ArrayList implements Serializable {
      * Add a component to the list.
      * @param component the component to add
      * @return true
-     * @see List#add(java.lang.Object)
+     * @see java.util.List#add(Object)
      */
     public final boolean add(final Component component) {
         return add((Object) component);
@@ -135,7 +136,7 @@ public class ComponentList extends ArrayList implements Serializable {
      * <code>net.fortuna.ical4j.model.Component</code>.
      * @param component a component to add
      * @return true if the object was added, otherwise false
-     * @see List#add(E)
+     * @see java.util.List#add(Object)
      */
     public final boolean add(final Object component) {
         if (!(component instanceof Component)) {

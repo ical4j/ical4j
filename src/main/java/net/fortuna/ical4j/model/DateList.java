@@ -195,7 +195,7 @@ public class DateList implements List, Serializable {
      * timezone of this list.
      * @param date the date to add
      * @return true
-     * @see List#add(java.lang.Object)
+     * @see java.util.List#add(Object)
      */
     public final boolean add(final Date date) {
         if (date instanceof DateTime) {
@@ -219,7 +219,7 @@ public class DateList implements List, Serializable {
      * Where argument is not a <code>net.fortuna.ical4j.model.Date</code>.
      * @param date the date to add
      * @return true if the object was added, otherwise false
-     * @see List#add(E)
+     * @see java.util.List#add(Object)
      */
     public final boolean add(final Object date) {
         if (!(date instanceof Date)) {

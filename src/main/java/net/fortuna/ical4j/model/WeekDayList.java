@@ -95,7 +95,7 @@ public class WeekDayList extends ArrayList implements Serializable {
      * where argument is not a <code>net.fortuna.ical4j.model.WeekDay</code>.
      * @param weekday a week day to add
      * @return true if the week day is added, otherwise false
-     * @see List#add(E)
+     * @see java.util.List#add(Object)
      */
     public final boolean add(final Object weekday) {
         if (!(weekday instanceof WeekDay)) {

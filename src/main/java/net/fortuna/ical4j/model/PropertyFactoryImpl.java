@@ -365,9 +365,6 @@ public class PropertyFactoryImpl extends AbstractContentFactory implements Prope
         }
     }
 
-    /**
-     * @return
-     */
     private static class DtStartFactory implements PropertyFactory {
         private static final long serialVersionUID = 1L;
 
