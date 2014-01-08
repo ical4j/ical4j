@@ -62,7 +62,7 @@ public class ParserException extends Exception {
      * @param lineNo line number where parsing error ocurred
      */
     public ParserException(final String message, final int lineNo) {
-        super(MessageFormat.format(ERROR_MESSAGE_PATTERN, new Object[] { new Integer(lineNo)}) + message);
+        super(MessageFormat.format(ERROR_MESSAGE_PATTERN, new Integer(lineNo)) + message);
         this.lineNo = lineNo;
     }
 
@@ -75,7 +75,7 @@ public class ParserException extends Exception {
     public ParserException(final String message, final int lineNo,
             final Throwable cause) {
 
-        super(MessageFormat.format(ERROR_MESSAGE_PATTERN, new Object[] { new Integer(lineNo)}) + message, cause);
+        super(MessageFormat.format(ERROR_MESSAGE_PATTERN, new Integer(lineNo)) + message, cause);
         this.lineNo = lineNo;
     }
 

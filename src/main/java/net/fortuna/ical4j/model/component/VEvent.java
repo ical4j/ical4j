@@ -441,7 +441,7 @@ public class VEvent extends CalendarComponent {
      * {@inheritDoc}
      */
     protected Validator getValidator(Method method) {
-        return (Validator) methodValidators.get(method);
+        return methodValidators.get(method);
     }
     
     /**

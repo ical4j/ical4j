@@ -185,42 +185,42 @@ public final class Strings {
         if (value != null) {
             return ESCAPE_PUNCTUATION_PATTERN.matcher(value).replaceAll("\\\\$1");
         }
-        return value;
+        return null;
     }
 
     private static String unescapePunctuation(String value) {
         if (value != null) {
             return UNESCAPE_PUNCTUATION_PATTERN.matcher(value).replaceAll("$1");
         }
-        return value;
+        return null;
     }
 
     public static String escapeNewline(String value) {
         if (value != null) {
             return ESCAPE_NEWLINE_PATTERN.matcher(value).replaceAll("\\\\n");
         }
-        return value;
+        return null;
     }
 
     private static String unescapeNewline(String value) {
         if (value != null) {
             return UNESCAPE_NEWLINE_PATTERN.matcher(value).replaceAll("\n");
         }
-        return value;
+        return null;
     }
 
     private static String escapeBackslash(String value) {
         if (value != null) {
             return ESCAPE_BACKSLASH_PATTERN.matcher(value).replaceAll("\\\\\\\\");
         }
-        return value;
+        return null;
     }
 
     private static String unescapeBackslash(String value) {
         if (value != null) {
             return UNESCAPE_BACKSLASH_PATTERN.matcher(value).replaceAll("\\\\");
         }
-        return value;
+        return null;
     }
     
     /**

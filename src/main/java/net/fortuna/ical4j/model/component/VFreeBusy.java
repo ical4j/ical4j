@@ -31,34 +31,15 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.FbType;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.PropertyValidator;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.DateRange;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.PeriodList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.Validator;
-import net.fortuna.ical4j.model.parameter.FbType;
-import net.fortuna.ical4j.model.property.Contact;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.FreeBusy;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Organizer;
-import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.model.property.Url;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -573,7 +554,7 @@ public class VFreeBusy extends CalendarComponent {
      * {@inheritDoc}
      */
     protected Validator getValidator(Method method) {
-        return (Validator) methodValidators.get(method);
+        return methodValidators.get(method);
     }
 
     /**

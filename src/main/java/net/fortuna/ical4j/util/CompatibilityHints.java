@@ -122,7 +122,7 @@ public final class CompatibilityHints {
      */
     public static boolean isHintEnabled(final String key) {
         if (HINTS.get(key) != null) {
-            return ((Boolean) HINTS.get(key)).booleanValue();
+            return HINTS.get(key).booleanValue();
         }
         return "true".equals(Configurator.getProperty(key));
     }

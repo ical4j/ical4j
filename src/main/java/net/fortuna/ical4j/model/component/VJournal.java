@@ -31,30 +31,13 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.Validator;
-import net.fortuna.ical4j.model.property.Clazz;
-import net.fortuna.ical4j.model.property.Created;
-import net.fortuna.ical4j.model.property.Description;
-import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.LastModified;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Organizer;
-import net.fortuna.ical4j.model.property.RecurrenceId;
-import net.fortuna.ical4j.model.property.Sequence;
-import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.model.property.Summary;
-import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.model.property.Url;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.PropertyValidator;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -228,7 +211,7 @@ public class VJournal extends CalendarComponent {
      * {@inheritDoc}
      */
     protected Validator getValidator(Method method) {
-        return (Validator) methodValidators.get(method);
+        return methodValidators.get(method);
     }
 
     /**

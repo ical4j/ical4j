@@ -31,15 +31,15 @@
  */
 package net.fortuna.ical4j.util;
 
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.parameter.Value;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
-
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.parameter.Value;
 
 /**
  * $Id$
@@ -146,7 +146,7 @@ public final class Dates {
             weeks.add(new Integer(cal.get(Calendar.WEEK_OF_YEAR)));
             cal.add(Calendar.WEEK_OF_YEAR, 1);
         }
-        return ((Integer) weeks.get(weeks.size() + weekNo)).intValue();
+        return weeks.get(weeks.size() + weekNo).intValue();
     }
 
     /**
@@ -176,7 +176,7 @@ public final class Dates {
             days.add(new Integer(cal.get(Calendar.DAY_OF_YEAR)));
             cal.add(Calendar.DAY_OF_YEAR, 1);
         }
-        return ((Integer) days.get(days.size() + yearDay)).intValue();
+        return days.get(days.size() + yearDay).intValue();
     }
 
     /**
@@ -206,7 +206,7 @@ public final class Dates {
             days.add(new Integer(cal.get(Calendar.DAY_OF_MONTH)));
             cal.add(Calendar.DAY_OF_MONTH, 1);
         }
-        return ((Integer) days.get(days.size() + monthDay)).intValue();
+        return days.get(days.size() + monthDay).intValue();
     }
     
     /**

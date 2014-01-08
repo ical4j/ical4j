@@ -31,11 +31,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 
 /**
  * $Id$
@@ -87,7 +83,7 @@ public abstract class UtcProperty extends DateProperty {
             setDate(utcDateTime);
         }
         else {
-            setDate(dateTime);
+            setDate(null);
         }
     }
 

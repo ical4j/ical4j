@@ -221,12 +221,12 @@ public class VToDo extends CalendarComponent {
         // validate that getAlarms() only contains VAlarm components
         final Iterator<VAlarm> iterator = getAlarms().iterator();
         while (iterator.hasNext()) {
-            final Component component = (Component) iterator.next();
+            final Component component = iterator.next();
             if (!(component instanceof VAlarm)) {
                 throw new ValidationException("Component ["
                         + component.getName() + "] may not occur in VTODO");
             }
-            ((VAlarm) component).validate(recurse);
+            component.validate(recurse);
         }
 
         if (!CompatibilityHints
@@ -323,7 +323,7 @@ public class VToDo extends CalendarComponent {
      * {@inheritDoc}
      */
     protected Validator getValidator(Method method) {
-        return (Validator) methodValidators.get(method);
+        return methodValidators.get(method);
     }
 
     /**

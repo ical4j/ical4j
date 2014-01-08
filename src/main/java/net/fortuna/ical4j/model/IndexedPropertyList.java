@@ -59,7 +59,7 @@ public class IndexedPropertyList {
         final Map<String, PropertyList> indexedProperties = new HashMap<String, PropertyList>();
         for (final Property property : list) {
             for (final Iterator<Parameter> j = property.getParameters(parameterName).iterator(); j.hasNext();) {
-                final Parameter parameter = (Parameter) j.next();
+                final Parameter parameter = j.next();
                 PropertyList properties = indexedProperties.get(parameter.getValue());
                 if (properties == null) {
                     properties = new PropertyList();

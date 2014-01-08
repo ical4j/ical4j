@@ -31,24 +31,12 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.PropertyValidator;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.Validator;
-import net.fortuna.ical4j.model.property.Action;
-import net.fortuna.ical4j.model.property.Attach;
-import net.fortuna.ical4j.model.property.Description;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Repeat;
-import net.fortuna.ical4j.model.property.Summary;
-import net.fortuna.ical4j.model.property.Trigger;
-import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -278,7 +266,7 @@ public class VAlarm extends CalendarComponent {
          * ; the following is optional, ; and MAY occur more than once x-prop
          */
         
-        final Validator actionValidator = (Validator) actionValidators.get(getAction());
+        final Validator actionValidator = actionValidators.get(getAction());
         if (actionValidator != null) {
             actionValidator.validate();
         }

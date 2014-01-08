@@ -86,7 +86,7 @@ public class ParameterList implements Serializable {
     	
         final List<Parameter> parameterList = new CopyOnWriteArrayList<Parameter>();
         for (final Iterator<Parameter> i = list.iterator(); i.hasNext();) {
-            final Parameter parameter = (Parameter) i.next();
+            final Parameter parameter = i.next();
             parameterList.add(parameter.copy());
         }
         if (unmodifiable) {
@@ -160,7 +160,7 @@ public class ParameterList implements Serializable {
      */
     public final boolean replace(final Parameter parameter) {
         for (final Iterator<Parameter> i = getParameters(parameter.getName()).iterator(); i.hasNext();) {
-            remove((Parameter) i.next());
+            remove(i.next());
         }
         return add(parameter);
     }

@@ -200,7 +200,7 @@ public class CalendarParserImpl implements CalendarParser {
 
             // debugging..
             if (log.isDebugEnabled()) {
-                log.debug(MessageFormat.format(PARSE_DEBUG_MESSAGE, new Object[] {name}));
+                log.debug(MessageFormat.format(PARSE_DEBUG_MESSAGE, name));
             }
 
             handler.startProperty(name);
@@ -419,9 +419,7 @@ public class CalendarParserImpl implements CalendarParser {
             throws IOException, ParserException {
 
         if (nextToken(tokeniser, in) != token) {
-            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Object[] {
-                    new Integer(token), new Integer(tokeniser.ttype),
-            }), getLineNumber(tokeniser, in));
+            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Integer(token), new Integer(tokeniser.ttype)), getLineNumber(tokeniser, in));
         }
 
         if (log.isDebugEnabled()) {
@@ -457,15 +455,11 @@ public class CalendarParserImpl implements CalendarParser {
 
         if (ignoreCase) {
             if (!token.equalsIgnoreCase(tokeniser.sval)) {
-                throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Object[] {
-                        token, tokeniser.sval,
-                }), getLineNumber(tokeniser, in));
+                throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, tokeniser.sval), getLineNumber(tokeniser, in));
             }
         }
         else if (!token.equals(tokeniser.sval)) {
-            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Object[] {
-                    token, tokeniser.sval,
-            }), getLineNumber(tokeniser, in));
+            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, tokeniser.sval), getLineNumber(tokeniser, in));
         }
 
         if (log.isDebugEnabled()) {

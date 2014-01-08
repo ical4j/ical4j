@@ -150,7 +150,7 @@ public final class Calendars {
             
             final Uid uid = (Uid) c.getProperty(Property.UID);
             
-            Calendar uidCal = (Calendar) calendars.get(uid);
+            Calendar uidCal = calendars.get(uid);
             if (uidCal == null) {
                 uidCal = new Calendar(calendar.getProperties(), new ComponentList<CalendarComponent>());
                 // remove METHOD property for split calendars..
@@ -163,7 +163,7 @@ public final class Calendars {
             for (final Property p : c.getProperties()) {
                 final TzId tzid = (TzId) p.getParameter(Parameter.TZID);
                 if (tzid != null) {
-                    final VTimeZone timezone = (VTimeZone) timezones.getComponent(tzid.getValue());
+                    final VTimeZone timezone = timezones.getComponent(tzid.getValue());
                     if (!uidCal.getComponents().contains(timezone)) {
                         uidCal.getComponents().add(timezone);
                     }
@@ -171,7 +171,7 @@ public final class Calendars {
             }
             uidCal.getComponents().add(c);
         }
-        return (Calendar[]) calendars.values().toArray(new Calendar[calendars.values().size()]);
+        return calendars.values().toArray(new Calendar[calendars.values().size()]);
     }
     
     /**

@@ -295,17 +295,17 @@ public class DateTime extends Date {
 
         try {
             if (value.endsWith("Z")) {
-                setTime(value, (DateFormat) UTC_FORMAT.get(), null);
+                setTime(value, UTC_FORMAT.get(), null);
                 setUtc(true);
             } else {
                 if (timezone != null) {
-                    setTime(value, (DateFormat) DEFAULT_FORMAT.get(), timezone);
+                    setTime(value, DEFAULT_FORMAT.get(), timezone);
                 } else {
                     // Use lenient parsing for floating times. This is to
                     // overcome
                     // the problem of parsing VTimeZone dates that specify dates
                     // that the strict parser does not accept.
-                    setTime(value, (DateFormat) LENIENT_DEFAULT_FORMAT.get(),
+                    setTime(value, LENIENT_DEFAULT_FORMAT.get(),
                             getFormat().getTimeZone());
                 }
                 setTimeZone(timezone);
@@ -314,16 +314,16 @@ public class DateTime extends Date {
             if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_VCARD_COMPATIBILITY)) {
 
             	try {
-	                setTime(value, (DateFormat) VCARD_FORMAT.get(), timezone);
+	                setTime(value, VCARD_FORMAT.get(), timezone);
 	                setTimeZone(timezone);
             	} catch (ParseException pe2) {
                     if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
-    	                setTime(value, (DateFormat) RELAXED_FORMAT.get(), timezone);
+    	                setTime(value, RELAXED_FORMAT.get(), timezone);
     	                setTimeZone(timezone);
                     }            		
             	}
             } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
-                setTime(value, (DateFormat) RELAXED_FORMAT.get(), timezone);
+                setTime(value, RELAXED_FORMAT.get(), timezone);
                 setTimeZone(timezone);
             } else {
                 throw pe;
@@ -371,7 +371,7 @@ public class DateTime extends Date {
 				.getInstance(pattern);
 		if (utc) {
 			setTime(value, format,
-					((DateFormat) UTC_FORMAT.get()).getTimeZone());
+					UTC_FORMAT.get().getTimeZone());
 		} else {
 			setTime(value, format, null);
 		}

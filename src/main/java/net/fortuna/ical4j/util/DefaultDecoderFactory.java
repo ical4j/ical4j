@@ -31,15 +31,14 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.io.UnsupportedEncodingException;
-import java.text.MessageFormat;
-
 import net.fortuna.ical4j.model.parameter.Encoding;
-
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.StringDecoder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.net.QuotedPrintableCodec;
+
+import java.io.UnsupportedEncodingException;
+import java.text.MessageFormat;
 
 /**
  * Default decoder factory implementation.
@@ -67,7 +66,7 @@ public class DefaultDecoderFactory extends DecoderFactory {
             return new Base64();
         }
         throw new UnsupportedEncodingException(MessageFormat.format(UNSUPPORTED_ENCODING_MESSAGE,
-                new Object[] {encoding}));
+                encoding));
     }
 
     /**
@@ -80,6 +79,6 @@ public class DefaultDecoderFactory extends DecoderFactory {
             return new QuotedPrintableCodec();
         }
         throw new UnsupportedEncodingException(MessageFormat.format(UNSUPPORTED_ENCODING_MESSAGE,
-                new Object[] {encoding}));
+                encoding));
     }
 }

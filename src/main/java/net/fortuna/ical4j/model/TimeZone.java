@@ -31,15 +31,14 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-
 import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * $Id$
@@ -175,7 +174,7 @@ public class TimeZone extends java.util.TimeZone {
                 }
             }
         } else {
-            latestSeasonalTime = (Observance)seasonalTimes.get(0);
+            latestSeasonalTime = seasonalTimes.get(0);
         }
         if (latestSeasonalTime != null) {
             final TzOffsetTo offsetTo = (TzOffsetTo) latestSeasonalTime.getProperty(Property.TZOFFSETTO);
