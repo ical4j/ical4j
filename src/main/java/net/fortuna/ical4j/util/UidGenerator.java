@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.net.SocketException;
-
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.property.Uid;
+
+import java.net.SocketException;
 
 /**
  * $Id$
@@ -73,7 +73,7 @@ public class UidGenerator {
      * @return a unique component identifier
      */
     public Uid generateUid() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         b.append(uniqueTimestamp());
         b.append('-');
         b.append(pid);

@@ -31,25 +31,18 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
-
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.Dates;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.*;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -444,7 +437,7 @@ public class Recur implements Serializable {
      */
     @Override
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         b.append(FREQ);
         b.append('=');
         b.append(frequency);

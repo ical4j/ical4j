@@ -31,12 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Numbers;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-
-import net.fortuna.ical4j.util.Numbers;
 
 /**
  * $Id$ [29-May-2004]
@@ -93,7 +93,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
         final StringTokenizer t = new StringTokenizer(aString, ",");
         while (t.hasMoreTokens()) {
         	final int value = Numbers.parseInt(t.nextToken());
-            add(new Integer(value));
+            add(value);
         }
     }
 
@@ -102,7 +102,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * @return true if the number was added, otherwise false
      */
     public final boolean add(final Integer aNumber) {
-        int abs = aNumber.intValue();
+        int abs = aNumber;
         if ((abs >> 31 | -abs >>> 31) < 0) {
             if (!allowsNegativeValues) {
                 throw new IllegalArgumentException("Negative value not allowed: " + aNumber);
@@ -120,7 +120,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         for (final Iterator<Integer> i = iterator(); i.hasNext();) {
             b.append(i.next());
             if (i.hasNext()) {

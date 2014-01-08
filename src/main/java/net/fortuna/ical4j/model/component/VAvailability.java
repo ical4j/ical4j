@@ -31,12 +31,7 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.Validator;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
@@ -142,7 +137,7 @@ public class VAvailability extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         b.append(BEGIN);
         b.append(':');
         b.append(getName());

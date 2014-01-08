@@ -31,12 +31,11 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.net.URISyntaxException;
-
 import net.fortuna.ical4j.util.Strings;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.net.URISyntaxException;
 
 /**
  * Defines an iCalendar parameter. Subclasses of this class provide additional validation and typed values for specific
@@ -201,7 +200,7 @@ public abstract class Parameter extends Content {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         b.append(getName());
         b.append('=');
         if (isQuotable()) {

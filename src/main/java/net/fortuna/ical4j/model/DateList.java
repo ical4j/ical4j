@@ -31,20 +31,14 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.Serializable;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.StringTokenizer;
-
+import com.sun.istack.internal.NotNull;
 import net.fortuna.ical4j.model.parameter.Value;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.io.Serializable;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -81,15 +75,6 @@ public class DateList implements List<Date>, Serializable {
         else {
             dates = new ArrayList<Date>();
         }
-    }
-
-    /**
-     * Creates a new instance with the specified initial capacity.
-     * @param initialCapacity the initial capacity of the list
-     * @deprecated
-     */
-    public DateList(final int initialCapacity) {
-    	this();
     }
 
     /**
@@ -183,7 +168,7 @@ public class DateList implements List<Date>, Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         for (final Iterator<Date> i = iterator(); i.hasNext();) {
             /*
              * if (type != null && Value.DATE.equals(type)) {
@@ -263,8 +248,8 @@ public class DateList implements List<Date>, Serializable {
      */
     public final void setUtc(final boolean utc) {
         if (!Value.DATE.equals(type)) {
-            for (final Iterator<Date> i = iterator(); i.hasNext();) {
-                ((DateTime) i.next()).setUtc(utc);
+            for (Date date: this) {
+                ((DateTime) date).setUtc(utc);
             }
         }
         this.timeZone = null;
@@ -279,8 +264,8 @@ public class DateList implements List<Date>, Serializable {
      */
     public final void setTimeZone(final TimeZone timeZone) {
         if (!Value.DATE.equals(type)) {
-            for (final Iterator<Date> i = iterator(); i.hasNext();) {
-                ((DateTime) i.next()).setTimeZone(timeZone);
+            for (Date date: this) {
+                ((DateTime) date).setTimeZone(timeZone);
             }
         }
         this.timeZone = timeZone;
@@ -298,11 +283,11 @@ public class DateList implements List<Date>, Serializable {
 		dates.add(arg0, arg1);
 	}
 
-	public final boolean addAll(Collection<? extends Date> arg0) {
+	public final boolean addAll(@NotNull Collection<? extends Date> arg0) {
 		return dates.addAll(arg0);
 	}
 
-	public final boolean addAll(int arg0, Collection<? extends Date> arg1) {
+	public final boolean addAll(int arg0, @NotNull Collection<? extends Date> arg1) {
 		return dates.addAll(arg0, arg1);
 	}
 
@@ -314,7 +299,7 @@ public class DateList implements List<Date>, Serializable {
 		return dates.contains(o);
 	}
 
-	public final boolean containsAll(Collection<?> arg0) {
+	public final boolean containsAll(@NotNull Collection<?> arg0) {
 		return dates.containsAll(arg0);
 	}
 

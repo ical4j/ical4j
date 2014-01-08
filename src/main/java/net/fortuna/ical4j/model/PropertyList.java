@@ -80,7 +80,7 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         for (final Iterator<Property> i = iterator(); i.hasNext();) {
             buffer.append(i.next().toString());
         }

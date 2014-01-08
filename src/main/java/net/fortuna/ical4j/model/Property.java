@@ -31,16 +31,15 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
@@ -408,7 +407,7 @@ public abstract class Property extends Content {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append(getName());
         if (getParameters() != null) {
             buffer.append(getParameters());

@@ -31,15 +31,14 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Dates;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.StringTokenizer;
-
-import net.fortuna.ical4j.util.Dates;
-
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * $Id$
@@ -372,7 +371,7 @@ public class Dur implements Comparable<Dur>, Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         if (negative) {
             b.append('-');
         }

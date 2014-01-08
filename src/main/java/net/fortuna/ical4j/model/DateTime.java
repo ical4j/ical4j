@@ -31,17 +31,16 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.Dates;
+import net.fortuna.ical4j.util.TimeZones;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.Dates;
-import net.fortuna.ical4j.util.TimeZones;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
 /**
  * $Id$
@@ -477,7 +476,7 @@ public class DateTime extends Date {
 	 * {@inheritDoc}
 	 */
 	public final String toString() {
-		final StringBuffer b = new StringBuffer(super.toString());
+		final StringBuilder b = new StringBuilder(super.toString());
 		b.append('T');
 		b.append(time.toString());
 		return b.toString();

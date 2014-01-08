@@ -31,6 +31,10 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.Uris;
+
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,10 +42,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.util.Uris;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -91,7 +91,7 @@ public class AddressList implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         for (final Iterator<URI> i = addresses.iterator(); i.hasNext();) {
             b.append(Strings.quote(Uris.decode(Strings.valueOf(i.next()))));
             if (i.hasNext()) {

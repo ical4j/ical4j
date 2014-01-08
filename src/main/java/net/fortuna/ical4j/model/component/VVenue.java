@@ -112,7 +112,7 @@ public class VVenue extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         b.append(BEGIN);
         b.append(':');
         b.append(getName());

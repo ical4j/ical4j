@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.ParseException;
-import java.util.Date;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.text.ParseException;
+import java.util.Date;
 
 /**
  * $Id$ [Apr 14, 2004]
@@ -298,7 +298,7 @@ public class Period extends DateRange implements Comparable<Period> {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         b.append(getStart());
         b.append('/');
         if (duration == null) {

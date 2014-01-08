@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Strings;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -38,8 +40,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.fortuna.ical4j.util.Strings;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -71,7 +71,7 @@ public class TextList implements Serializable {
         final Pattern pattern = Pattern.compile("([^\\\\](?:\\\\{2})),|([^\\\\]),");
         
         final Matcher matcher = pattern.matcher(aValue);
-        String[] textValues = null;
+        String[] textValues;
 
         if (matcher.find()) {
         	// HACK: add a marker (&quot;) for easy string splitting..
@@ -82,8 +82,8 @@ public class TextList implements Serializable {
             textValues = aValue.split("(?<!\\\\),");
         }
 
-        for (int i = 0; i < textValues.length; i++) {
-            texts.add(Strings.unescape(textValues[i]));
+        for (String textValue: textValues) {
+            texts.add(Strings.unescape(textValue));
         }
     }
 
@@ -98,9 +98,9 @@ public class TextList implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         for (final Iterator<String> i = texts.iterator(); i.hasNext();) {
-            b.append(Strings.escape((String) i.next()));
+            b.append(Strings.escape(i.next()));
             if (i.hasNext()) {
                 b.append(',');
             }

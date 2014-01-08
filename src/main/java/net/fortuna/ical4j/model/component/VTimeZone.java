@@ -31,26 +31,19 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.Validator;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -174,7 +167,7 @@ public class VTimeZone extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         b.append(BEGIN);
         b.append(':');
         b.append(getName());

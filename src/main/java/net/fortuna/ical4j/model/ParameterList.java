@@ -31,15 +31,15 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -101,7 +101,7 @@ public class ParameterList implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         for (final Parameter parameter : parameters) {
             buffer.append(';');
             buffer.append(parameter.toString());

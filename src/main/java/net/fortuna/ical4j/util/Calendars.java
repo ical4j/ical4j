@@ -31,27 +31,21 @@
  */
 package net.fortuna.ical4j.util;
 
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Uid;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.ConstraintViolationException;
-import net.fortuna.ical4j.model.IndexedComponentList;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Uid;
 
 /**
  * $Id$
@@ -209,7 +203,7 @@ public final class Calendars {
      * @return a content type string
      */
     public static String getContentType(Calendar calendar, Charset charset) {
-        final StringBuffer b = new StringBuffer("text/calendar");
+        final StringBuilder b = new StringBuilder("text/calendar");
         
         final Method method = (Method) calendar.getProperty(Property.METHOD);
         if (method != null) {

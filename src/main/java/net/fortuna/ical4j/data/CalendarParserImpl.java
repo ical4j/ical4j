@@ -31,20 +31,15 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StreamTokenizer;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.*;
 import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.text.ParseException;
-
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <pre>
@@ -219,7 +214,7 @@ public class CalendarParserImpl implements CalendarParser {
             // assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
             // String value = tokeniser.sval;
-            final StringBuffer value = new StringBuffer();
+            final StringBuilder value = new StringBuilder();
 
             // assertToken(tokeniser,StreamTokenizer.TT_EOL);
 
@@ -303,7 +298,7 @@ public class CalendarParserImpl implements CalendarParser {
 
             assertToken(tokeniser, in, '=');
 
-            final StringBuffer paramValue = new StringBuffer();
+            final StringBuilder paramValue = new StringBuilder();
 
             // preserve quote chars..
             if (nextToken(tokeniser, in) == '"') {

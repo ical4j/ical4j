@@ -31,14 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.util.StringTokenizer;
-
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.ParameterValidator;
+
+import java.util.StringTokenizer;
 
 /**
  * $Id$
@@ -181,7 +177,7 @@ public class RequestStatus extends Property {
      * {@inheritDoc}
      */
     public final String getValue() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
 
         if ((getStatusCode() != null)) {
             b.append(getStatusCode());

@@ -31,24 +31,17 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.Strings;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Iterator;
-
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.ExDate;
-import net.fortuna.ical4j.model.property.ExRule;
-import net.fortuna.ical4j.model.property.RDate;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.util.Strings;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -147,7 +140,7 @@ public abstract class Component implements Serializable {
      * {@inheritDoc}
      */
     public String toString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append(BEGIN);
         buffer.append(':');
         buffer.append(getName());

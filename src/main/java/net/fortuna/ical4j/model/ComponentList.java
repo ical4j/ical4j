@@ -82,7 +82,7 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         for (final T c : this) {
             buffer.append(c.toString());
         }

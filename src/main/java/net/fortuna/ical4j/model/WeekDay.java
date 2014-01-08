@@ -31,13 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.Serializable;
-import java.util.Calendar;
-
 import net.fortuna.ical4j.util.Numbers;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.io.Serializable;
+import java.util.Calendar;
 
 /**
  * $Id$
@@ -155,7 +154,7 @@ public class WeekDay implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         if (getOffset() != 0) {
             b.append(getOffset());
         }

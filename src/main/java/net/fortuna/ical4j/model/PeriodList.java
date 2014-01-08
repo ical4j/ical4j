@@ -31,17 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.Serializable;
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.StringTokenizer;
-import java.util.TreeSet;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import java.io.Serializable;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -113,7 +108,7 @@ public class PeriodList implements Set<Period>, Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         for (final Iterator<Period> i = iterator(); i.hasNext();) {
             b.append(i.next().toString());
             if (i.hasNext()) {

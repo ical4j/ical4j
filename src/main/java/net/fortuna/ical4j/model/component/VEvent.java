@@ -31,53 +31,18 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.*;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.PeriodList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.Validator;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.Clazz;
-import net.fortuna.ical4j.model.property.Created;
-import net.fortuna.ical4j.model.property.Description;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.Geo;
-import net.fortuna.ical4j.model.property.LastModified;
-import net.fortuna.ical4j.model.property.Location;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Organizer;
-import net.fortuna.ical4j.model.property.Priority;
-import net.fortuna.ical4j.model.property.RecurrenceId;
-import net.fortuna.ical4j.model.property.Sequence;
-import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.model.property.Summary;
-import net.fortuna.ical4j.model.property.Transp;
-import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.model.property.Url;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.ComponentValidator;
-import net.fortuna.ical4j.util.Dates;
-import net.fortuna.ical4j.util.PropertyValidator;
-import net.fortuna.ical4j.util.Strings;
-
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -314,7 +279,7 @@ public class VEvent extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         b.append(BEGIN);
         b.append(':');
         b.append(getName());

@@ -76,7 +76,7 @@ public class LocationTypeList implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         for (final Iterator<String> i = locationTypes.iterator(); i.hasNext();) {
             b.append(i.next());
             if (i.hasNext()) {

@@ -31,15 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Dates;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-
-import net.fortuna.ical4j.util.Dates;
-
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$
@@ -128,7 +125,7 @@ public class UtcOffset implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuffer b = new StringBuffer();
+        final StringBuilder b = new StringBuilder();
         long remainder = Math.abs(offset);
 
         if (offset < 0) {
