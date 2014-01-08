@@ -31,37 +31,19 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.model.ContentBuilder
+import spock.lang.Specification
 
-/**
- * $Id$
- *
- * Created on: 02/08/2009
- *
- * @author fortuna
- *
- */
-public class RequestStatusFactory extends AbstractPropertyFactory{
+class RequestStatusFactorySpec extends Specification {
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        RequestStatus instance
-        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, RequestStatus.class)) {
-            instance = (RequestStatus) value
-        }
-        else {
-            String instanceValue = attributes.remove('value')
-            if (instanceValue != null) {
-                attributes.put('value', instanceValue)
-                instance = super.newInstance(builder, name, value, attributes)
-            }
-            else {
-                instance = super.newInstance(builder, name, value, attributes)
-            }
-        }
-        return instance
-    }
-    
-    protected Object newInstance(ParameterList parameters, String value) {
-        return new RequestStatus(parameters, value)
-    }
+	ContentBuilder builder = []
+	
+	def 'verify new instances created'() {
+		expect: 'new property instance'
+		assert builder.requeststatus(value) as String == expectedString
+		
+		where:
+		value					    | expectedString
+		RequestStatus.CLIENT_ERROR	| 'REQUEST-STATUS:3\r\n'
+	}
 }
