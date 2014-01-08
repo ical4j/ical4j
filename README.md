@@ -20,15 +20,12 @@
  System Requirements
 =====================
 
- - Java 1.4.2 or later
+ - Java 5 or later
  
- - commons-codec 1.3
- 
- - commons-lang 2.1
- 
- - commons-logging 1.1
- 
- - junit 3.8.2 (for unit testing only)
+ - commons-codec
+ - commons-lang3
+ - slf4j/jcl-over-slf4j
+ - junit (for unit testing only)
  
 
 =======================
@@ -39,9 +36,9 @@
  profiles http://wiki.modularity.net.au/ical4j/index.php?title=Maven2. Then 
  open a command prompt to the location of the iCal4j source and execute the following:
  
-  [iCal4j-1.0-beta1-src] >mvn clean install
+  [iCal4j-2.0-beta1-src] >mvn clean install
   or
-  [iCal4j-1.0-beta1-src] >mvn clean install -P modularity-snapshots
+  [iCal4j-2.0-beta1-src] >mvn clean install -P modularity-snapshots
  
  This will build and install iCal4j in your local repository. Build artifacts
  are generated in the 'target' directory.
@@ -54,7 +51,7 @@
  If you have downloaded the source distribution, you should be able to package a JAR
  file simply by running ant in the root directory. e.g:
  
-   C:\Libs\iCal4j-1.0-beta1-src\>ant
+   C:\Libs\iCal4j-2.0-beta1-src\>ant
  
  If for some reason you would like to override the default build classpath, I would
  suggest creating a "build.properties" file (see the provided sample) in the root directory
@@ -186,7 +183,7 @@
 If you intend to use and distribute iCal4j in your own project please
 follow these very simple guidelines:
  
- - Make a copy of the LICENSE, rename it to LICENSE.iCal4j, and save
+ - Make a copy of the LICENSE, rename it to LICENSE.ical4j, and save
  it to the directory where you are re-distributing the iCal4j JAR.
  
  - I don't recommend extracting the iCal4j classes from its JAR and package
