@@ -159,7 +159,7 @@ public class PeriodList implements Set<Period>, Serializable {
      */
     public final PeriodList normalise() {
         Period prevPeriod = null;
-        Period period = null;
+        Period period;
         final PeriodList newList = new PeriodList(isUtc());
         if (timezone != null) {
             newList.setTimeZone(timezone);

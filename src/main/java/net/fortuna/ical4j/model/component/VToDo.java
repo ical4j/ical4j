@@ -219,10 +219,6 @@ public class VToDo extends CalendarComponent {
 
         // validate that getAlarms() only contains VAlarm components
         for (VAlarm component : getAlarms()) {
-            if (!(component instanceof VAlarm)) {
-                throw new ValidationException("Component ["
-                        + component.getName() + "] may not occur in VTODO");
-            }
             component.validate(recurse);
         }
 

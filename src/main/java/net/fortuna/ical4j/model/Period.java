@@ -108,7 +108,7 @@ public class Period extends DateRange implements Comparable<Period> {
     }
     
     private static DateTime parseEndDate(String value, boolean resolve) throws ParseException {
-        DateTime end = null;
+        DateTime end;
         try {
             end = new DateTime(value.substring(value.indexOf('/') + 1));
         }
@@ -194,8 +194,8 @@ public class Period extends DateRange implements Comparable<Period> {
      * @return a period
      */
     public final Period add(final Period period) {
-        DateTime newPeriodStart = null;
-        DateTime newPeriodEnd = null;
+        DateTime newPeriodStart;
+        DateTime newPeriodEnd;
 
         if (period == null) {
             newPeriodStart = getStart();

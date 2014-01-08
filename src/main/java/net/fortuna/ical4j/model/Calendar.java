@@ -314,11 +314,11 @@ public class Calendar implements Serializable {
 //                    ComponentValidator.assertNone(Component.VEVENT, getComponents());
                     ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
                 }
-                else if (getComponent(Component.VJOURNAL) != null) {
+//                else if (getComponent(Component.VJOURNAL) != null) {
 //                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
 //                    ComponentValidator.assertNone(Component.VEVENT, getComponents());
 //                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
+//                }
             }
             else if (Method.REQUEST.equals(getProperty(Property.METHOD))) {
                 if (getComponent(Component.VEVENT) != null) {

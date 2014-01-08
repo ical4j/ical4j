@@ -109,12 +109,12 @@ public class DateRange implements Serializable {
      * @see Period#INCLUSIVE_END
      */
     public final boolean includes(final Date date, final int inclusiveMask) {
-        boolean includes = true;
+        boolean includes;
         if ((inclusiveMask & INCLUSIVE_START) > 0) {
-            includes = includes && !rangeStart.after(date);
+            includes = !rangeStart.after(date);
         }
         else {
-            includes = includes && rangeStart.before(date);
+            includes = rangeStart.before(date);
         }
         if ((inclusiveMask & INCLUSIVE_END) > 0) {
             includes = includes && !rangeEnd.before(date);

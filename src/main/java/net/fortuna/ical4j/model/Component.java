@@ -347,7 +347,7 @@ public abstract class Component implements Serializable {
         }
     
         // add initial instance if intersection with the specified period..
-        Period startPeriod = null;
+        Period startPeriod;
         if (end != null) {
             startPeriod = new Period(new DateTime(start.getDate()),
                     new DateTime(end.getDate()));

@@ -31,35 +31,10 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.net.URISyntaxException;
-
-import net.fortuna.ical4j.model.parameter.Abbrev;
-import net.fortuna.ical4j.model.parameter.AltRep;
-import net.fortuna.ical4j.model.parameter.Cn;
-import net.fortuna.ical4j.model.parameter.CuType;
-import net.fortuna.ical4j.model.parameter.DelegatedFrom;
-import net.fortuna.ical4j.model.parameter.DelegatedTo;
-import net.fortuna.ical4j.model.parameter.Dir;
-import net.fortuna.ical4j.model.parameter.Encoding;
-import net.fortuna.ical4j.model.parameter.FbType;
-import net.fortuna.ical4j.model.parameter.FmtType;
-import net.fortuna.ical4j.model.parameter.Language;
-import net.fortuna.ical4j.model.parameter.Member;
-import net.fortuna.ical4j.model.parameter.PartStat;
-import net.fortuna.ical4j.model.parameter.Range;
-import net.fortuna.ical4j.model.parameter.RelType;
-import net.fortuna.ical4j.model.parameter.Related;
-import net.fortuna.ical4j.model.parameter.Role;
-import net.fortuna.ical4j.model.parameter.Rsvp;
-import net.fortuna.ical4j.model.parameter.ScheduleAgent;
-import net.fortuna.ical4j.model.parameter.ScheduleStatus;
-import net.fortuna.ical4j.model.parameter.SentBy;
-import net.fortuna.ical4j.model.parameter.Type;
-import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.parameter.Vvenue;
-import net.fortuna.ical4j.model.parameter.XParameter;
+import net.fortuna.ical4j.model.parameter.*;
 import net.fortuna.ical4j.util.Strings;
+
+import java.net.URISyntaxException;
 
 /**
  * A factory for creating iCalendar parameters.
@@ -122,7 +97,7 @@ public class ParameterFactoryImpl extends AbstractContentFactory implements Para
     public Parameter createParameter(final String name, final String value)
             throws URISyntaxException {
         final ParameterFactory factory = (ParameterFactory) getFactory(name);
-        Parameter parameter = null;
+        Parameter parameter;
         if (factory != null) {
             parameter = factory.createParameter(name, value);
         }

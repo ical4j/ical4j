@@ -286,7 +286,6 @@ public class HCalendarParser implements CalendarParser {
             handler.propertyValue(Version.VERSION_2_0.getValue());
         } catch (Exception e) {
         }
-        ;
         handler.endProperty(Property.VERSION);
 
         Element method = findElement(XPATH_METHOD, d);
@@ -349,7 +348,7 @@ public class HCalendarParser implements CalendarParser {
         String className = className(propName);
         String elementName = element.getLocalName().toLowerCase();
 
-        String value = null;
+        String value;
         if (elementName.equals("abbr")) {
             // "If an <abbr> element is used for a property, then the 'title'
             // attribute of the <abbr> element is the value of the property,
@@ -505,7 +504,7 @@ public class HCalendarParser implements CalendarParser {
         // the date-time value can represent its time zone in a few different
         // ways. we have to normalize those to match our pattern.
 
-        String normalized = null;
+        String normalized;
 
         if (LOG.isDebugEnabled())
             LOG.debug("normalizing date-time " + original);

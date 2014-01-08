@@ -31,8 +31,8 @@
  */
 package net.fortuna.ical4j.model.component
 
-import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Property
+import net.fortuna.ical4j.model.PropertyList
 
 /**
  * @author fortuna
@@ -60,7 +60,7 @@ class XComponentFactory extends AbstractFactory {
          return component
      }
      
-     protected Object newInstance(String name, PropertyList properties) {
+     protected static Object newInstance(String name, PropertyList properties) {
          return new XComponent(name, properties)
      }
      

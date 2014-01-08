@@ -31,6 +31,9 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
@@ -38,9 +41,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$ [06-Apr-2004]
@@ -75,7 +75,7 @@ public final class CalendarDateFormatFactory {
      * @return an optimized DateFormat instance if possible, otherwise a normal SimpleDateFormat instance
      */
     public static java.text.DateFormat getInstance(String pattern) {
-        java.text.DateFormat instance = null;
+        java.text.DateFormat instance;
         
         // if (true) {
         // return new SimpleDateFormat(pattern);
@@ -177,11 +177,7 @@ public final class CalendarDateFormatFactory {
             if (!pattern.equals(that.pattern)) {
                 return false;
             }
-            if (!timeZone.equals(that.timeZone)) {
-                return false;
-            }
-
-            return true;
+            return timeZone.equals(that.timeZone);
         }
 
         public int hashCode() {

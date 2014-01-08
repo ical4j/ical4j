@@ -31,19 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.component.Available;
-import net.fortuna.ical4j.model.component.Daylight;
-import net.fortuna.ical4j.model.component.Observance;
-import net.fortuna.ical4j.model.component.Standard;
-import net.fortuna.ical4j.model.component.VAlarm;
-import net.fortuna.ical4j.model.component.VAvailability;
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VFreeBusy;
-import net.fortuna.ical4j.model.component.VJournal;
-import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.component.VToDo;
-import net.fortuna.ical4j.model.component.VVenue;
-import net.fortuna.ical4j.model.component.XComponent;
+import net.fortuna.ical4j.model.component.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
@@ -87,7 +75,7 @@ public final class ComponentFactory {
      */
     @SuppressWarnings("unchecked")
 	public <T extends Component> T createComponent(final String name, final PropertyList properties) {
-        Component component = null;
+        Component component;
         if (Component.VALARM.equals(name)) {
             component = new VAlarm(properties);
         }
@@ -146,7 +134,7 @@ public final class ComponentFactory {
             final ComponentList<? extends Component> components) {
         
         if (components != null) {
-            Component component = null;
+            Component component;
             if (Component.VTIMEZONE.equals(name)) {
                 component = new VTimeZone(properties, (ComponentList<Observance>) components);
             }

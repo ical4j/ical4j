@@ -230,7 +230,7 @@ public final class Dates {
      * @return a <code>java.util.Calendar</code>
      */
     public static Calendar getCalendarInstance(final Date date) {
-        Calendar instance = null;
+        Calendar instance;
         if (date instanceof DateTime) {
             final DateTime dateTime = (DateTime) date;
             if (dateTime.getTimeZone() != null) {

@@ -235,7 +235,7 @@ public abstract class Observance extends Component {
 
         // cache onsets..
         Collections.sort(cacheableOnsets);
-        DateTime cacheableOnset = null;
+        DateTime cacheableOnset;
         this.onsetsMillisec = new long[cacheableOnsets.size()];
         this.onsetsDates = new DateTime[onsetsMillisec.length];
 

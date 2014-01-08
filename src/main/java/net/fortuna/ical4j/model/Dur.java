@@ -111,7 +111,7 @@ public class Dur implements Comparable<Dur>, Serializable {
         seconds = 0;
 
         String token = null;
-        String prevToken = null;
+        String prevToken;
 
         final StringTokenizer t = new StringTokenizer(value, "+-PWDTHMS", true);
         while (t.hasMoreTokens()) {
@@ -194,8 +194,8 @@ public class Dur implements Comparable<Dur>, Serializable {
      */
     public Dur(final Date date1, final Date date2) {
         
-        Date start = null;
-        Date end = null;
+        Date start;
+        Date end;
         
         // Negative range? (start occurs after end)
         negative = date1.compareTo(date2) > 0;
@@ -324,7 +324,7 @@ public class Dur implements Comparable<Dur>, Serializable {
                     "Cannot add a negative and a positive duration");
         }
         
-        Dur sum = null;
+        Dur sum;
         if (weeks > 0 && duration.weeks > 0) {
             sum = new Dur(weeks + duration.weeks);
         }

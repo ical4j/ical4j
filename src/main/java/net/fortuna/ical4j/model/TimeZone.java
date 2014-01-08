@@ -147,7 +147,7 @@ public class TimeZone extends java.util.TimeZone {
         return vTimeZone;
     }
 
-    private static final int getRawOffset(VTimeZone vt) {
+    private static int getRawOffset(VTimeZone vt) {
         
         ComponentList<Observance> seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
         // if no standard time use daylight time..
@@ -192,9 +192,8 @@ public class TimeZone extends java.util.TimeZone {
         TimeZone timeZone = (TimeZone) o;
 
         if (rawOffset != timeZone.rawOffset) return false;
-        if (vTimeZone != null ? !vTimeZone.equals(timeZone.vTimeZone) : timeZone.vTimeZone != null) return false;
 
-        return true;
+        return !(vTimeZone != null ? !vTimeZone.equals(timeZone.vTimeZone) : timeZone.vTimeZone != null);
     }
 
     public int hashCode() {
