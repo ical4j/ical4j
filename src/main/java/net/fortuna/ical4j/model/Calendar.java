@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Iterator;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -284,9 +283,7 @@ public class Calendar implements Serializable {
         }
 
         // validate properties..
-        for (final Iterator<Property> i = getProperties().iterator(); i.hasNext();) {
-            final Property property = i.next();
-
+        for (final Property property : getProperties()) {
             if (!(property instanceof XProperty)
                     && !property.isCalendarProperty()) {
                 throw new ValidationException("Invalid property: "
@@ -470,8 +467,7 @@ public class Calendar implements Serializable {
      * @throws ValidationException where any of the calendar properties is not in a valid state
      */
     private void validateProperties() throws ValidationException {
-        for (final Iterator<Property> i = getProperties().iterator(); i.hasNext();) {
-            final Property property = i.next();
+        for (final Property property : getProperties()) {
             property.validate();
         }
     }

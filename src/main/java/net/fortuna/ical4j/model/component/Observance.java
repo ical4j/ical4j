@@ -31,33 +31,21 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.Dates;
+import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.util.TimeZones;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Iterator;
-
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.RDate;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.TzOffsetFrom;
-import net.fortuna.ical4j.model.property.TzOffsetTo;
-import net.fortuna.ical4j.util.Dates;
-import net.fortuna.ical4j.util.PropertyValidator;
-import net.fortuna.ical4j.util.TimeZones;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -201,8 +189,8 @@ public abstract class Observance extends Component {
 
         // check rdates for latest applicable onset..
         final PropertyList rdates = getProperties(Property.RDATE);
-        for (final Iterator<Property> i = rdates.iterator(); i.hasNext();) {
-            final RDate rdate = (RDate) i.next();
+        for (Property rdate1 : rdates) {
+            final RDate rdate = (RDate) rdate1;
             for (final Date rdateDate : rdate.getDates()) {
                 try {
                     final DateTime rdateOnset = applyOffsetFrom(calculateOnset(rdateDate));
@@ -223,8 +211,8 @@ public abstract class Observance extends Component {
 
         // check recurrence rules for latest applicable onset..
         final PropertyList rrules = getProperties(Property.RRULE);
-        for (final Iterator<Property> i = rrules.iterator(); i.hasNext();) {
-            final RRule rrule = (RRule) i.next();
+        for (Property rrule1 : rrules) {
+            final RRule rrule = (RRule) rrule1;
             // include future onsets to determine onset period..
             final Calendar cal = Dates.getCalendarInstance(date);
             cal.setTime(date);

@@ -44,7 +44,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -219,9 +218,7 @@ public class VToDo extends CalendarComponent {
             throws ValidationException {
 
         // validate that getAlarms() only contains VAlarm components
-        final Iterator<VAlarm> iterator = getAlarms().iterator();
-        while (iterator.hasNext()) {
-            final Component component = iterator.next();
+        for (VAlarm component : getAlarms()) {
             if (!(component instanceof VAlarm)) {
                 throw new ValidationException("Component ["
                         + component.getName() + "] may not occur in VTODO");

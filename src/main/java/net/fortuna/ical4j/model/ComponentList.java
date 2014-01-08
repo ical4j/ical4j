@@ -36,7 +36,6 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -111,8 +110,7 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
     @SuppressWarnings("unchecked")
 	public final <C extends T> ComponentList<C> getComponents(final String name) {
         final ComponentList<C> components = new ComponentList<C>();
-        for (final Iterator<T> i = iterator(); i.hasNext();) {
-            final T c = i.next();
+        for (final T c : this) {
             if (c.getName().equals(name)) {
                 components.add((C) c);
             }

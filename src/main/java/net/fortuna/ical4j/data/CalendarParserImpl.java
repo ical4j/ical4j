@@ -419,7 +419,7 @@ public class CalendarParserImpl implements CalendarParser {
             throws IOException, ParserException {
 
         if (nextToken(tokeniser, in) != token) {
-            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, new Integer(token), new Integer(tokeniser.ttype)), getLineNumber(tokeniser, in));
+            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, tokeniser.ttype), getLineNumber(tokeniser, in));
         }
 
         if (log.isDebugEnabled()) {

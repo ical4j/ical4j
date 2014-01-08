@@ -53,9 +53,6 @@ class PartStatFactory extends AbstractParameterFactory {
 				case PartStat.DECLINED.value:
 		            partStat = PartStat.DECLINED
 					break
-				case PartStat.DECLINED.value:
-		            partStat = PartStat.DECLINED
-					break
 				case PartStat.DELEGATED.value:
 		            partStat = PartStat.DELEGATED
 					break

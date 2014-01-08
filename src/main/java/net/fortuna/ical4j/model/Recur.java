@@ -197,7 +197,7 @@ public class Recur implements Serializable {
             }
             else if (UNTIL.equals(token)) {
                 final String untilString = nextToken(t, token);
-                if (untilString != null && untilString.indexOf("T") >= 0) {
+                if (untilString != null && untilString.contains("T")) {
                     until = new DateTime(untilString);
                     // UNTIL must be specified in UTC time..
                     ((DateTime) until).setUtc(true);
@@ -642,8 +642,8 @@ public class Recur implements Serializable {
                 noCandidateIncrementCount = 0;
                 // sort candidates for identifying when UNTIL date is exceeded..
                 Collections.sort(candidates);
-                for (final Iterator<Date> i = candidates.iterator(); i.hasNext();) {
-                    candidate = i.next();
+                for (Date candidate1 : candidates) {
+                    candidate = candidate1;
                     // don't count candidates that occur before the seed date..
                     if (!candidate.before(seed)) {
                         // candidates exclusive of periodEnd..
@@ -727,8 +727,8 @@ public class Recur implements Serializable {
                 // sort candidates for identifying when UNTIL date is exceeded..
                 Collections.sort(candidates);
 
-                for (final Iterator<Date> i = candidates.iterator(); i.hasNext();) {
-                    candidate = i.next();
+                for (Date candidate1 : candidates) {
+                    candidate = candidate1;
                     // don't count candidates that occur before the seed date..
                     if (!candidate.before(seed)) {
                         // Candidate must be after startDate because
@@ -845,7 +845,7 @@ public class Recur implements Serializable {
         final DateList setPosDates = getDateListInstance(dates);
         final int size = dates.size();
         for (final Integer setPos : getSetPosList()) {
-            final int pos = setPos.intValue();
+            final int pos = setPos;
             if (pos > 0 && pos <= size) {
                 setPosDates.add(dates.get(pos - 1));
             }
@@ -872,7 +872,7 @@ public class Recur implements Serializable {
             for (final Integer month : getMonthList()) {
                 // Java months are zero-based..
 //                cal.set(Calendar.MONTH, month.intValue() - 1);
-                cal.roll(Calendar.MONTH, (month.intValue() - 1) - cal.get(Calendar.MONTH));
+                cal.roll(Calendar.MONTH, (month - 1) - cal.get(Calendar.MONTH));
                 monthlyDates.add(Dates.getInstance(cal.getTime(), monthlyDates.getType()));
             }
         }
@@ -893,7 +893,7 @@ public class Recur implements Serializable {
         for (final Date date : dates) {
             final Calendar cal = getCalendarInstance(date, true);
             for (final Integer weekNo : getWeekNoList()) {
-                cal.set(Calendar.WEEK_OF_YEAR, Dates.getAbsWeekNo(cal.getTime(), weekNo.intValue()));
+                cal.set(Calendar.WEEK_OF_YEAR, Dates.getAbsWeekNo(cal.getTime(), weekNo));
                 weekNoDates.add(Dates.getInstance(cal.getTime(), weekNoDates.getType()));
             }
         }
@@ -914,7 +914,7 @@ public class Recur implements Serializable {
         for (final Date date : dates) {
             final Calendar cal = getCalendarInstance(date, true);
             for (final Integer yearDay: getYearDayList()) {
-                cal.set(Calendar.DAY_OF_YEAR, Dates.getAbsYearDay(cal.getTime(), yearDay.intValue()));
+                cal.set(Calendar.DAY_OF_YEAR, Dates.getAbsYearDay(cal.getTime(), yearDay));
                 yearDayDates.add(Dates.getInstance(cal.getTime(), yearDayDates.getType()));
             }
         }
@@ -936,13 +936,13 @@ public class Recur implements Serializable {
             final Calendar cal = getCalendarInstance(date, false);
             for (final Integer monthDay : getMonthDayList()) {
                 try {
-                    cal.set(Calendar.DAY_OF_MONTH, Dates.getAbsMonthDay(cal.getTime(), monthDay.intValue()));
+                    cal.set(Calendar.DAY_OF_MONTH, Dates.getAbsMonthDay(cal.getTime(), monthDay));
                     monthDayDates.add(Dates.getInstance(cal.getTime(), monthDayDates.getType()));
                 }
                 catch (IllegalArgumentException iae) {
                     if (log.isTraceEnabled()) {
                         log.trace("Invalid day of month: " + Dates.getAbsMonthDay(cal
-                                .getTime(), monthDay.intValue()));
+                                .getTime(), monthDay));
                     }
                 }
             }
@@ -1084,7 +1084,7 @@ public class Recur implements Serializable {
         for (final Date date : dates) {
             final Calendar cal = getCalendarInstance(date, true);
             for (final Integer hour : getHourList()) {
-                cal.set(Calendar.HOUR_OF_DAY, hour.intValue());
+                cal.set(Calendar.HOUR_OF_DAY, hour);
                 hourlyDates.add(Dates.getInstance(cal.getTime(), hourlyDates.getType()));
             }
         }
@@ -1105,7 +1105,7 @@ public class Recur implements Serializable {
         for (final Date date : dates) {
             final Calendar cal = getCalendarInstance(date, true);
             for (final Integer minute : getMinuteList()) {
-                cal.set(Calendar.MINUTE, minute.intValue());
+                cal.set(Calendar.MINUTE, minute);
                 minutelyDates.add(Dates.getInstance(cal.getTime(), minutelyDates.getType()));
             }
         }
@@ -1126,7 +1126,7 @@ public class Recur implements Serializable {
         for (final Date date : dates) {
             final Calendar cal = getCalendarInstance(date, true);
             for (final Integer second : getSecondList()) {
-                cal.set(Calendar.SECOND, second.intValue());
+                cal.set(Calendar.SECOND, second);
                 secondlyDates.add(Dates.getInstance(cal.getTime(), secondlyDates.getType()));
             }
         }

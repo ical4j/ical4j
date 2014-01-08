@@ -31,22 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -217,10 +210,7 @@ public abstract class DateProperty extends Property {
      * @return true if the property is in UTC time, otherwise false
      */
     public final boolean isUtc() {
-        if (getDate() instanceof DateTime) {
-            return ((DateTime) getDate()).isUtc();
-        }
-        return false;
+        return getDate() instanceof DateTime && ((DateTime) getDate()).isUtc();
     }
 
     /**

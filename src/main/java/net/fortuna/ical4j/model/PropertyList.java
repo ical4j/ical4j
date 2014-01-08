@@ -36,7 +36,6 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -81,8 +80,8 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      */
     public final String toString() {
         final StringBuilder buffer = new StringBuilder();
-        for (final Iterator<Property> i = iterator(); i.hasNext();) {
-            buffer.append(i.next().toString());
+        for (Property property : this) {
+            buffer.append(property.toString());
         }
         return buffer.toString();
     }
@@ -93,8 +92,7 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @return a property or null if no matching property found
      */
     public final Property getProperty(final String aName) {
-        for (final Iterator<Property> i = iterator(); i.hasNext();) {
-            final Property p = i.next();
+        for (final Property p : this) {
             if (p.getName().equalsIgnoreCase(aName)) {
                 return p;
             }
@@ -109,8 +107,7 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      */
     public final PropertyList getProperties(final String name) {
         final PropertyList list = new PropertyList();
-        for (final Iterator<Property> i = iterator(); i.hasNext();) {
-            final Property p = i.next();
+        for (final Property p : this) {
             if (p.getName().equalsIgnoreCase(name)) {
                 list.add(p);
             }

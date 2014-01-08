@@ -31,15 +31,14 @@
  */
 package net.fortuna.ical4j.data;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.Arrays;
-
-import net.fortuna.ical4j.util.CompatibilityHints;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <pre>
@@ -152,8 +151,8 @@ public class UnfoldingReader extends PushbackReader {
     public final int read() throws IOException {
         final int c = super.read();
         boolean doUnfold = false;
-        for (int i = 0; i < patterns.length; i++) {
-            if (c == patterns[i][0]) {
+        for (char[] pattern : patterns) {
+            if (c == pattern[0]) {
                 doUnfold = true;
                 break;
             }
@@ -176,14 +175,13 @@ public class UnfoldingReader extends PushbackReader {
     public int read(final char[] cbuf, final int off, final int len) throws IOException {
         final int read = super.read(cbuf, off, len);
         boolean doUnfold = false;
-        for (int i = 0; i < patterns.length; i++) {
-            if (read > 0 && cbuf[0] == patterns[i][0]) {
+        for (char[] pattern : patterns) {
+            if (read > 0 && cbuf[0] == pattern[0]) {
                 doUnfold = true;
                 break;
-            }
-            else {
+            } else {
                 for (int j = 0; j < read; j++) {
-                    if (cbuf[j] == patterns[i][0]) {
+                    if (cbuf[j] == pattern[0]) {
                         unread(cbuf, j, read - j);
                         return j;
                     }

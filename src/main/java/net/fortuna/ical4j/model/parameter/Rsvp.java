@@ -86,7 +86,7 @@ public class Rsvp extends Parameter {
      * {@inheritDoc}
      */
     public final String getValue() {
-        if (rsvp.booleanValue()) {
+        if (rsvp) {
             return VALUE_TRUE;
         } else {
             return VALUE_FALSE;
@@ -98,7 +98,7 @@ public class Rsvp extends Parameter {
      */
     @Override
     public final Parameter copy() {
-        if (rsvp.booleanValue()) {
+        if (rsvp) {
             return TRUE;
         } else {
             return FALSE;

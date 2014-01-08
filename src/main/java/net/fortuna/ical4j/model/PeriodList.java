@@ -165,13 +165,12 @@ public class PeriodList implements Set<Period>, Serializable {
             newList.setTimeZone(timezone);
         }
         boolean normalised = false;
-        for (final Iterator<Period> i = iterator(); i.hasNext();) {
-            period = i.next();
+        for (Period period1 : this) {
+            period = period1;
             if (period.isEmpty()) {
                 period = prevPeriod;
                 normalised = true;
-            }
-            else if (prevPeriod != null) {
+            } else if (prevPeriod != null) {
                 // ignore periods contained by other periods..
                 if (prevPeriod.contains(period)) {
                     period = prevPeriod;
@@ -186,8 +185,7 @@ public class PeriodList implements Set<Period>, Serializable {
                 else if (prevPeriod.adjacent(period)) {
                     period = prevPeriod.add(period);
                     normalised = true;
-                }
-                else {
+                } else {
                     // if current period is recognised as distinct
                     // from previous period, add the previous period
                     // to the list..
@@ -277,8 +275,7 @@ public class PeriodList implements Set<Period>, Serializable {
      * @param utc The utc to set.
      */
     public final void setUtc(final boolean utc) {
-        for (final Iterator<Period> i = iterator(); i.hasNext();) {
-            final Period period = i.next();
+        for (final Period period : this) {
             period.setUtc(utc);
         }
         this.timezone = null;
@@ -292,8 +289,7 @@ public class PeriodList implements Set<Period>, Serializable {
      * @param timeZone the timezone for the period list
      */
     public final void setTimeZone(final TimeZone timeZone) {
-        for (final Iterator<Period> i = iterator(); i.hasNext();) {
-            final Period period = i.next();
+        for (final Period period : this) {
             period.setTimeZone(timeZone);
         }
         this.timezone = timeZone;

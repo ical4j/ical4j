@@ -104,7 +104,7 @@ public final class CompatibilityHints {
      *            indicates whether to enable or disable the compatibility hint
      */
     public static void setHintEnabled(final String key, final boolean enabled) {
-        HINTS.put(key, Boolean.valueOf(enabled));
+        HINTS.put(key, enabled);
     }
 
     /**
@@ -122,7 +122,7 @@ public final class CompatibilityHints {
      */
     public static boolean isHintEnabled(final String key) {
         if (HINTS.get(key) != null) {
-            return HINTS.get(key).booleanValue();
+            return HINTS.get(key);
         }
         return "true".equals(Configurator.getProperty(key));
     }

@@ -515,7 +515,7 @@ public class HCalendarParser implements CalendarParser {
             normalized = original.replaceAll("Z", "GMT-00:00");
         }
         // 2002-10-10T00:00:00+05:00
-        else if (original.indexOf("GMT") == -1
+        else if (!original.contains("GMT")
                 && (original.charAt(original.length() - 6) == '+' || original.charAt(original.length() - 6) == '-')) {
             String tzId = "GMT" + original.substring(original.length() - 6);
             normalized = original.substring(0, original.length() - 6) + tzId;
