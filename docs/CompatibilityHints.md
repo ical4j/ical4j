@@ -1,7 +1,7 @@
 Compatibility Hints
 ===================
 
-Hint: ical4j.compatibility.outlook={true|false}
+Hint: `ical4j.compatibility.outlook={true|false}`
 
 Behaviour:
 
