@@ -31,22 +31,19 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.TimeZone;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.TimeZones;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.*;
+import java.util.TimeZone;
 
 /**
  * Created on 14/02/2005
@@ -247,8 +244,8 @@ public class RecurTest extends TestCase {
             cal = Calendar.getInstance();
         }
          
-        for (Iterator i = dates.iterator(); i.hasNext();) {
-            Date recurrence = (Date) i.next();
+        for (Iterator<Date> i = dates.iterator(); i.hasNext();) {
+            Date recurrence = i.next();
             cal.setTime(recurrence);
             assertEquals(expectedCalendarValue, cal.get(calendarField));
         }

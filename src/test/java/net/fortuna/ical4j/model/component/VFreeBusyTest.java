@@ -31,43 +31,20 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.FbType;
+import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-
-import junit.framework.TestSuite;
-
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.PeriodList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
-import net.fortuna.ical4j.model.parameter.FbType;
-import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.property.Attendee;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.FreeBusy;
-import net.fortuna.ical4j.model.property.Organizer;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.Sequence;
-import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.util.CompatibilityHints;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Created on 10/02/2005
@@ -503,7 +480,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
         
         //some components are not in range
-        components = new ComponentList();
+        components = new ComponentList<CalendarComponent>();
         TimeZone tz = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(
                 "America/Los_Angeles");
         Parameter tzP = new TzId(tz.getVTimeZone().getProperty(Property.TZID).getValue());

@@ -31,6 +31,20 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.Calendars;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.TimeZones;
+import net.fortuna.ical4j.util.UidGenerator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,41 +52,6 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Iterator;
-
-import junit.framework.TestSuite;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.PeriodList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.WeekDay;
-import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.ExDate;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.Summary;
-import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.util.Calendars;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.TimeZones;
-import net.fortuna.ical4j.util.UidGenerator;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id: VEventTest.java [28/09/2004]
@@ -425,8 +404,8 @@ public class VEventTest extends CalendarComponentTest {
         endCal.setTime(start);
         endCal.add(Calendar.WEEK_OF_YEAR, 4);
 //        Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
-        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
+        for (Iterator<CalendarComponent> i = calendar.getComponents().iterator(); i.hasNext();) {
+            Component c = i.next();
             
             if (c instanceof VEvent) {
                 PeriodList consumed = ((VEvent) c).getConsumedTime(start, new Date(endCal.getTime().getTime()));

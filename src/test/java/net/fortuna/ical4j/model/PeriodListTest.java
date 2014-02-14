@@ -31,15 +31,14 @@
  */
 package net.fortuna.ical4j.model;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
-
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Created on 13/02/2005
@@ -489,8 +488,8 @@ public class PeriodListTest extends TestCase {
         
         log.info("Timezone test - period list: [" + list + "]");
         
-        for (Iterator i = list.iterator(); i.hasNext();) {
-            Period p = (Period) i.next();
+        for (Iterator<Period> i = list.iterator(); i.hasNext();) {
+            Period p = i.next();
             assertTrue(p.getStart().isUtc());
             assertTrue(p.getEnd().isUtc());
         }

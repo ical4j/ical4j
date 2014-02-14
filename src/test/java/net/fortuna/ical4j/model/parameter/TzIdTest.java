@@ -31,18 +31,15 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Iterator;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.CalendarComponent;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * $Id$
@@ -68,10 +65,10 @@ public class TzIdTest extends TestCase {
         
         TimeZoneRegistry registry = builder.getRegistry();
         
-        for (Iterator i = calendar.getComponents().iterator(); i.hasNext();) {
-            Component c = (Component) i.next();
-            for (Iterator j = c.getProperties().iterator(); j.hasNext();) {
-                Property p = (Property) j.next();
+        for (Iterator<CalendarComponent> i = calendar.getComponents().iterator(); i.hasNext();) {
+            Component c = i.next();
+            for (Iterator<Property> j = c.getProperties().iterator(); j.hasNext();) {
+                Property p = j.next();
                 TzId tzId = (TzId) p.getParameter(Parameter.TZID);
                 if (tzId != null) {
                     assertNotNull(registry.getTimeZone(tzId.getValue()));
