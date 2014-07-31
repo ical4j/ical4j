@@ -36,29 +36,30 @@ import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
-import net.fortuna.ical4j.util.TimeZones;
 
 import java.util.Calendar;
 import java.util.Date;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 13/09/2005
- *
+ * <p/>
  * A Java timezone implementation based on an underlying VTimeZone
  * definition.
+ *
  * @author Ben Fortuna
  */
 public class TimeZone extends java.util.TimeZone {
-    
+
     private static final long serialVersionUID = -5620979316746547234L;
-    
+
     private final VTimeZone vTimeZone;
     private final int rawOffset;
-    
+
     /**
      * Constructs a new instance based on the specified VTimeZone.
+     *
      * @param vTimeZone a VTIMEZONE object instance
      */
     public TimeZone(final VTimeZone vTimeZone) {
@@ -71,16 +72,27 @@ public class TimeZone extends java.util.TimeZone {
     /**
      * {@inheritDoc}
      */
-    public final int getOffset(final int era, final int year, final int month, final int day,
-            final int dayOfWeek, final int milliseconds) {
-        
-        final Calendar cal = Calendar.getInstance(TimeZones.getUtcTimeZone());
+    public final int getOffset(final int era, final int year, final int month, final int dayOfMonth,
+                               final int dayOfWeek, final int milliseconds) {
+
+        // calculate time of day
+        int ms = milliseconds;
+        final int hour = ms / 3600000;
+        ms -= hour * 3600000;
+        final int minute = ms / 60000;
+        ms -= minute * 60000;
+        final int second = ms / 1000;
+        ms -= second * 1000;
+
+        final Calendar cal = Calendar.getInstance();
+        cal.clear();    // don't retain current date/time, it may disturb the calculation
+
+        // set date and time
         cal.set(Calendar.ERA, era);
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DAY_OF_MONTH, day);
         cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-        cal.set(Calendar.MILLISECOND, milliseconds);
+        cal.set(year, month, dayOfMonth, hour, minute, second);
+        cal.set(Calendar.MILLISECOND, ms);
+
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));
         if (observance != null) {
             final TzOffsetTo offset = (TzOffsetTo) observance.getProperty(Property.TZOFFSETTO);
@@ -97,10 +109,9 @@ public class TimeZone extends java.util.TimeZone {
         if (observance != null) {
             final TzOffsetTo offset = (TzOffsetTo) observance.getProperty(Property.TZOFFSETTO);
             if (offset.getOffset().getOffset() < getRawOffset()) {
-            	return getRawOffset();
-            }
-            else {
-            	return (int) offset.getOffset().getOffset();
+                return getRawOffset();
+            } else {
+                return (int) offset.getOffset().getOffset();
             }
         }
         return 0;
@@ -118,6 +129,7 @@ public class TimeZone extends java.util.TimeZone {
      * this timezone. This is done by finding the latest supporting
      * observance for the specified date and identifying whether it is
      * daylight time.
+     *
      * @param date a date instance
      * @return true if the specified date is in daylight time, otherwise false
      */
@@ -137,7 +149,7 @@ public class TimeZone extends java.util.TimeZone {
      * {@inheritDoc}
      */
     public final boolean useDaylightTime() {
-		final ComponentList<Observance> daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
+        final ComponentList<Observance> daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
         return (!daylights.isEmpty());
     }
 
@@ -149,7 +161,7 @@ public class TimeZone extends java.util.TimeZone {
     }
 
     private static int getRawOffset(VTimeZone vt) {
-        
+
         ComponentList<Observance> seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
         // if no standard time use daylight time..
         if (seasonalTimes.isEmpty()) {
