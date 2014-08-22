@@ -31,28 +31,19 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringWriter;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
-
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Ignore;
+
+import java.io.*;
 
 /**
  * $Id: CalendarOutputterTest.java [Apr 6, 2004]
@@ -61,6 +52,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author benf
  */
+@Ignore
 public class CalendarOutputterTest extends TestCase {
 
     private static Log log = LogFactory.getLog(CalendarOutputterTest.class);
