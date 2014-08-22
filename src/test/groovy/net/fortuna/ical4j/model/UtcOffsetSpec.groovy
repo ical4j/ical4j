@@ -31,11 +31,13 @@
  */
 package net.fortuna.ical4j.model
 
-import spock.lang.Specification;
+import spock.lang.Specification
+import spock.lang.Unroll;
 
 class UtcOffsetSpec extends Specification {
 
-	def 'verify parsing of different offset values'() {
+    @Unroll
+	def 'verify parsing of offset: #value'() {
 		expect: 'offset value is as expected'
 		new UtcOffset(value).offset == expectedOffset
 		

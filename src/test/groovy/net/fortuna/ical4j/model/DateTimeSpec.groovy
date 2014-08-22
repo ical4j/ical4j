@@ -31,17 +31,19 @@
  */
 package net.fortuna.ical4j.model
 
-import java.text.ParseException;
-
-import spock.lang.Ignore;
-import spock.lang.Shared;
+import spock.lang.Ignore
+import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Unroll
+
+import java.text.ParseException
 
 class DateTimeSpec extends Specification {
 
    @Shared TimeZoneRegistry tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
-   
-   def 'test date time initialisation with a standard timezone'() {
+
+   @Unroll
+   def 'test date time initialisation with a standard timezone: #timezoneId'() {
 	   setup:
 	   def originalTimezone = TimeZone.default
 	   TimeZone.default = TimeZone.getTimeZone(timezoneId)
@@ -136,8 +138,9 @@ class DateTimeSpec extends Specification {
 		  where:
 		  dateTimeString << ['20110327T000000']
 	  }
-   
-   def 'verify parse failure for invalid dates'() {
+
+   @Unroll
+   def 'verify parse failure for invalid dates: #dateTimeString'() {
 	   when:
 	   new DateTime(dateTimeString, timezone)
 	   

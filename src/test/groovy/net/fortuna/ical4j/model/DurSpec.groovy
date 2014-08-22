@@ -31,11 +31,13 @@
  */
 package net.fortuna.ical4j.model
 
-import spock.lang.Specification;
+import spock.lang.Specification
+import spock.lang.Unroll;
 
 class DurSpec extends Specification {
 
-	def 'validate string representation'() {
+    @Unroll
+	def 'validate string representation: #dur'() {
 		expect: 'derived string representation equals expected'
 		dur.toString() == expectedString
 		
@@ -45,8 +47,9 @@ class DurSpec extends Specification {
 		new Dur('-P2D')			| '-P2D'
 		new Dur(-2, 0, 0, 0)	| '-P2D'
 	}
-	
-	def 'verify duration plus time operations'() {
+
+    @Unroll
+	def 'verify duration plus time operations: #duration'() {
 		expect: 'derived end time value equals expected'
 		new Dur(duration).getTime(new DateTime(start)) == new DateTime(expectedEnd)
 		
@@ -54,8 +57,9 @@ class DurSpec extends Specification {
 		duration	| start				| expectedEnd
 		'1D'		| '20110326T110000'	| '20110327T110000'
 	}
-	
-	def 'verify duration plus time operations in different timezones'() {
+
+    @Unroll
+	def 'verify duration plus time operations in different timezones: #duration'() {
 		setup: 'initialise timezone registry'
 		def tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
 		
@@ -68,7 +72,8 @@ class DurSpec extends Specification {
 		'1D'		| 'America/Los_Angeles'		| '20110326T110000'	| '20110327T110000'
 	}
 
-	def 'verify duration plus time operations in different timezones with overriden platform default'() {
+    @Unroll
+	def 'verify duration plus time operations in different timezones with overridden platform default: #duration'() {
 		setup: 'override platform default timezone'
 		def originalPlatformTz = TimeZone.default
 		TimeZone.default = TimeZone.getTimeZone('Europe/Paris')
@@ -87,8 +92,9 @@ class DurSpec extends Specification {
 		duration	| timezone					| start				| expectedEnd
 		'1D'		| 'America/Los_Angeles'		| '20110326T110000'	| '20110327T110000'
 	}
-	
-	def 'verify duration plus date operations'() {
+
+    @Unroll
+	def 'verify duration plus date operations: #duration'() {
 		expect: 'derived end date value equals expected'
 		new Dur(duration).getTime(new Date(start)) == new Date(expectedEnd)
 		
@@ -98,7 +104,8 @@ class DurSpec extends Specification {
 		'1D'		| '20110313'		| '20110314'
 	}
 
-	def 'verify duration plus date operations with overriden platform default timezone'() {
+    @Unroll
+	def 'verify duration plus date operations with overriden platform default timezone: #duration'() {
 		setup: 'override platform default timezone'
 		def originalPlatformTz = TimeZone.default
 		TimeZone.default = TimeZone.getTimeZone('America/New_York')
