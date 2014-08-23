@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
+import net.fortuna.ical4j.util.TimeZones;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -73,11 +74,11 @@ public class TimeZone extends java.util.TimeZone {
     public final int getOffset(final int era, final int year, final int month, final int day,
             final int dayOfWeek, final int milliseconds) {
         
-        final Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance(TimeZones.getUtcTimeZone());
         cal.set(Calendar.ERA, era);
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DAY_OF_YEAR, day);
+        cal.set(Calendar.DAY_OF_MONTH, day);
         cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
         cal.set(Calendar.MILLISECOND, milliseconds);
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));

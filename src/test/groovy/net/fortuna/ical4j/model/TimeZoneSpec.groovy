@@ -31,15 +31,19 @@
  */
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.util.Calendars;
-import spock.lang.Shared;
-import spock.lang.Specification;
+import groovy.util.logging.Slf4j
+import net.fortuna.ical4j.util.Calendars
+import spock.lang.Shared
+import spock.lang.Specification
+import spock.lang.Unroll
 
+@Slf4j
 class TimeZoneSpec extends Specification {
 
 	@Shared TimeZoneRegistry tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
-	
-	def 'verify date in daylight time for different timezones'() {
+
+    @Unroll
+	def 'verify date in daylight time for timezone: #date #timezone'() {
 		expect: 'specified date is in daylight time'
 		def tz = tzRegistry.getTimeZone(timezone)
 		tz.inDaylightTime(new DateTime(date)) == inDaylightTime
@@ -48,6 +52,7 @@ class TimeZoneSpec extends Specification {
 		date				| timezone					| inDaylightTime
 		'20110328T110000'	| 'America/Los_Angeles'		| true
 		'20110328T110000'	| 'Australia/Melbourne'		| true
+		'20110231T110000'	| 'Europe/London'		    | false
 	}
 	
 	def 'verify string representation'() {
@@ -65,4 +70,39 @@ class TimeZoneSpec extends Specification {
 		'CET'	| 'Europe/Berlin'
 		'CEST'	| 'Europe/Berlin'
 	}
+
+    @Unroll
+    def 'test timezone getoffset issue: #tzid'() {
+        setup: 'create date with ical4j timezone'
+//        final DateFormat format1 = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+        TimeZone tz1 = tzRegistry.getTimeZone(tzid);
+//        format1.setTimeZone(tz1);
+//        java.util.Date date1 = format1.parse("20140302T080000");
+//        java.util.Calendar c1 = java.util.Calendar.getInstance(TimeZones.getUtcTimeZone());
+//        c1.setTime(date1);
+
+        and: 'create date with java timezeone'
+//        final DateFormat format2 = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+        java.util.TimeZone tz2 = java.util.TimeZone.getTimeZone(tzid);
+//        format2.setTimeZone(tz2);
+//        java.util.Date date2 = format2.parse("20140302T080000");
+//        java.util.Calendar c2 = java.util.Calendar.getInstance(TimeZones.getUtcTimeZone());
+//        c2.setTime(date2);
+
+        expect:
+//        date1 == date2
+//        c1 == c2
+        tz1.getOffset(era, year, month, day, dayOfWeek, millis) == tz2.getOffset(era, year, month, day, dayOfWeek, millis)
+//        c1.get(java.util.Calendar.ZONE_OFFSET) == c2.get(java.util.Calendar.ZONE_OFFSET)
+//        c1.get(java.util.Calendar.DST_OFFSET) == c2.get(java.util.Calendar.DST_OFFSET)
+//        c1.get(java.util.Calendar.HOUR_OF_DAY) == c2.get(java.util.Calendar.HOUR_OF_DAY)
+//        c1.getTimeInMillis() == c2.getTimeInMillis()
+
+        where:
+//        era | year  | month | day   | dayOfWeek                 | millis
+//        1   | 2014  | 2     | 13    | java.util.Calendar.SUNDAY | 36000000
+        [tzid, era, year, month, day, dayOfWeek, millis] << [
+                ['Australia/Melbourne','America/Los_Angeles','Europe/London','Europe/Vienna'],
+                1, 2014, [0, 6, 11], 31..30, java.util.Calendar.SUNDAY, 36000000].combinations()
+    }
 }
