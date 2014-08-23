@@ -1,6 +1,53 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            url 'http://maven.tmatesoft.com/content/repositories/releases/'
+        }
+    }
+
+    dependencies {
+//        classpath 'org.ajoberstar:gradle-git:0.8.0'
+//        classpath 'me.trnl:github-release-gradle-plugin:0.1'
+        classpath 'au.com.ish.gradle:release:2.2.2'
+    }
+}
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'osgi'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'release'
+//apply plugin: 'github-pages'
+//apply plugin: 'github'
+
+/*
+githubPages {
+//    repoUri = 'https://github.com/ical4j/ical4j.github.io.git'
+    repoUri = 'git@github.com:ical4j/ical4j.github.io.git'
+    pages {
+        from javadoc.outputs.files
+    }
+}
+*/
+/*
+github {
+    /* Wiki repo will be calculated from this. *
+    repo = 'git@github.com:ical4j/ical4j.git'
+
+    wiki {
+        /*
+        This is the same as used in Gradle Copy Task.
+        Please refer to Gradle documentation for information.
+        *
+        from javadoc.outputs.files {
+            into 'ical4j/javadoc'
+        }
+        into { "javadoc/$project.release.version" }
+    }
+}
+*/
 
 repositories {
     mavenCentral()
@@ -16,4 +63,87 @@ dependencies {
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0',
             'commons-io:commons-io:2.4',
             'org.ccil.cowan.tagsoup:tagsoup:1.2.1'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+release {
+    failOnSnapshotDependencies = true
+    // allow modifications due to bug in the release plugin..
+    allowLocalModifications = true
+    releaseDryRun = true
+    scm = 'git'
+}
+
+group = 'org.mnode.ical4j'
+version = release.projectVersion
+description = '''
+A Java library for reading and writing iCalendar (*.ics) files
+'''
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
+            }
+
+            pom.project {
+                name 'iCal4j'
+                packaging 'jar'
+                description project.description
+                url 'http://ical4j.sourceforge.net'
+
+                scm {
+                    url 'https://github.com/ical4j/ical4j'
+                    connection 'scm:git@github.com:ical4j/ical4j.git'
+                    developerConnection 'scm:git@github.com:ical4j/ical4j.git'
+                }
+
+                licenses {
+                    license {
+                        name 'iCal4j - License'
+                        url 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'fortuna'
+                        name 'Ben Fortuna'
+                    }
+                }
+            }
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
 }
