@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import com.sun.istack.internal.NotNull;
 import net.fortuna.ical4j.model.parameter.Value;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -283,11 +282,11 @@ public class DateList implements List<Date>, Serializable {
 		dates.add(arg0, arg1);
 	}
 
-	public final boolean addAll(@NotNull Collection<? extends Date> arg0) {
+	public final boolean addAll(Collection<? extends Date> arg0) {
 		return dates.addAll(arg0);
 	}
 
-	public final boolean addAll(int arg0, @NotNull Collection<? extends Date> arg1) {
+	public final boolean addAll(int arg0, Collection<? extends Date> arg1) {
 		return dates.addAll(arg0, arg1);
 	}
 
@@ -299,7 +298,7 @@ public class DateList implements List<Date>, Serializable {
 		return dates.contains(o);
 	}
 
-	public final boolean containsAll(@NotNull Collection<?> arg0) {
+	public final boolean containsAll(Collection<?> arg0) {
 		return dates.containsAll(arg0);
 	}
 
