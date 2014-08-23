@@ -31,19 +31,18 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.TimeZones;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 /**
  * $Id$
@@ -245,16 +244,16 @@ public class DateTimeTest extends TestCase {
         cal.set(Calendar.SECOND, 34);
         suite.addTest(new DateTimeTest(new DateTime(cal.getTime()), "19840417T031534"));
 
+        TimeZone tz = registry.getTimeZone("Australia/Melbourne");
         // test DateTime(String)..
-        suite.addTest(new DateTimeTest(new DateTime("20000827T020000"), "20000827T020000"));
-        suite.addTest(new DateTimeTest(new DateTime("20070101T080000"), "20070101T080000"));
-        suite.addTest(new DateTimeTest(new DateTime("20050630T093000"), "20050630T093000"));
+        suite.addTest(new DateTimeTest(new DateTime("20000827T030000", tz), "20000827T030000"));
+        suite.addTest(new DateTimeTest(new DateTime("20070101T080000", tz), "20070101T080000"));
+        suite.addTest(new DateTimeTest(new DateTime("20050630T093000", tz), "20050630T093000"));
         suite.addTest(new DateTimeTest(new DateTime("20050630T093000Z"), "20050630T093000Z"));
-        suite.addTest(new DateTimeTest(new DateTime("19390901T000000"), "19390901T000000"));
+        suite.addTest(new DateTimeTest(new DateTime("19390901T000000",tz), "19390901T000000"));
         
-        suite.addTest(new DateTimeTest(new DateTime("20000402T020000",
-                registry.getTimeZone("Australia/Melbourne")), "20000402T020000"));
-        suite.addTest(new DateTimeTest(new DateTime("20000402T020000"), "20000402T020000"));
+        suite.addTest(new DateTimeTest(new DateTime("20000402T020000",tz), "20000402T020000"));
+        suite.addTest(new DateTimeTest(new DateTime("20000402T020000",tz), "20000402T020000"));
         
         DateFormat df = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
 //        Calendar cal = Calendar.getInstance(); //java.util.TimeZone.getTimeZone("America/Los_Angeles"));
