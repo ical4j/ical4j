@@ -31,16 +31,17 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * $Id$
@@ -54,6 +55,8 @@ import org.apache.commons.logging.LogFactory;
 public class PeriodTest extends TestCase {
     
     private static final Log LOG = LogFactory.getLog(PeriodTest.class);
+
+    private static final java.util.TimeZone ORIGINAL_DEFAULT = java.util.TimeZone.getDefault();
 
     private Period period;
     
@@ -121,6 +124,17 @@ public class PeriodTest extends TestCase {
     {
         super(name);
     }
+
+    @BeforeClass
+    public static void setupClass() {
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
+    }
+
+    @AfterClass
+    public static void teardownClass() {
+        java.util.TimeZone.setDefault(ORIGINAL_DEFAULT);
+    }
+
 
     /**
      * 
