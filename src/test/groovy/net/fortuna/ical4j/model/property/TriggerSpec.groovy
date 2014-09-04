@@ -31,9 +31,9 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import spock.lang.Specification;
+import net.fortuna.ical4j.model.DateTime
+import net.fortuna.ical4j.model.Dur
+import spock.lang.Specification
 
 class TriggerSpec extends Specification {
 
@@ -64,11 +64,18 @@ class TriggerSpec extends Specification {
 	}
 	
 	def 'verify original date-time is not modified'() {
-		setup:
+		given: 'a date in a non-UTC timezone'
+        def originalTzDefault = TimeZone.default
+        TimeZone.default = TimeZone.getTimeZone('Australia/Melbourne')
 		DateTime dateTime = []
 		
-		expect:
+		when: 'the date is used to construct a trigger'
 		Trigger trigger = [dateTime]
+
+        then: "the original date's timezone is not modified"
 		assert !dateTime.utc
-	}
+
+        cleanup:
+        TimeZone.default = originalTzDefault
+    }
 }

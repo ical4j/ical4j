@@ -399,7 +399,11 @@ public class PeriodTest extends TestCase {
      * Testing of timezone functionality.
      */
     public void testTimezone() {
-        java.util.Calendar cal = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
+        // change default tz to non-UTC timezone.
+        java.util.TimeZone originalTzDefault = java.util.TimeZone.getDefault();
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
+
+        java.util.Calendar cal = java.util.Calendar.getInstance();
         DateTime start = new DateTime(cal.getTime());
         cal.add(Calendar.DAY_OF_YEAR, 1);
 //        cal.setTimeZone(TimeZone.getTimeZone(TimeZones.UTC_ID));
@@ -439,6 +443,8 @@ public class PeriodTest extends TestCase {
         assertFalse(p.getEnd().isUtc());
         assertEquals(timezone, p.getStart().getTimeZone());
         assertEquals(timezone, p.getEnd().getTimeZone());
+
+        java.util.TimeZone.setDefault(originalTzDefault);
     }
     
     /**

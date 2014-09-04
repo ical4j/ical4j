@@ -152,6 +152,10 @@ public class DateTimeTest extends TestCase {
      * @throws ParseException
      */
     public void testDateTimeEquals() throws ParseException {
+        // change default tz to non-UTC timezone.
+        java.util.TimeZone originalTzDefault = java.util.TimeZone.getDefault();
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
+
         DateTime date1 = new DateTime("20050101T093000");
     
         Calendar calendar = Calendar.getInstance(); //TimeZone.getTimeZone("Etc/UTC"));
@@ -163,6 +167,8 @@ public class DateTimeTest extends TestCase {
         assertEquals(date1.hashCode(), date2.hashCode());
         assertEquals(date1.toString(), date2.toString());
         assertEquals(date1, date2);
+
+        java.util.TimeZone.setDefault(originalTzDefault);
     }
     
     /**
@@ -233,6 +239,10 @@ public class DateTimeTest extends TestCase {
 //      assertEquals("19700101T000000", dt.toString());
         suite.addTest(new DateTimeTest(dt, "19700101T000000Z"));
 
+        // change default tz to non-UTC timezone.
+        java.util.TimeZone originalTzDefault = java.util.TimeZone.getDefault();
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
+
         // test DateTime(Date)..
         Calendar cal = Calendar.getInstance(); //TimeZone.getTimeZone("GMT"));
         cal.set(Calendar.YEAR, 1984);
@@ -243,6 +253,7 @@ public class DateTimeTest extends TestCase {
         cal.set(Calendar.MINUTE, 15);
         cal.set(Calendar.SECOND, 34);
         suite.addTest(new DateTimeTest(new DateTime(cal.getTime()), "19840417T031534"));
+        java.util.TimeZone.setDefault(originalTzDefault);
 
         TimeZone tz = registry.getTimeZone("Australia/Melbourne");
         // test DateTime(String)..
