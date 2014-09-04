@@ -22,6 +22,9 @@ apply plugin: 'release'
 //apply plugin: 'github-pages'
 //apply plugin: 'github'
 
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
 /*
 githubPages {
 //    repoUri = 'https://github.com/ical4j/ical4j.github.io.git'
@@ -90,7 +93,7 @@ release {
     failOnSnapshotDependencies = true
     // allow modifications due to bug in the release plugin..
     allowLocalModifications = true
-    releaseDryRun = true
+    releaseDryRun = releaseDryRun
     scm = 'git'
 }
 
