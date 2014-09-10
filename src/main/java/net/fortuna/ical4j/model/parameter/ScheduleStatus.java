@@ -31,12 +31,17 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URISyntaxException;
+
 /**
  * Defines the scheduling status for CalDAV scheduling.
+ *
  * @author Mike Douglass
  */
 public class ScheduleStatus extends Parameter {
@@ -59,4 +64,17 @@ public class ScheduleStatus extends Parameter {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(SCHEDULE_STATUS);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            return new ScheduleStatus(value);
+        }
+    }
+
 }

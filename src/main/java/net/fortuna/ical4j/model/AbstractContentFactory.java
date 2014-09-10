@@ -31,47 +31,53 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.fortuna.ical4j.util.CompatibilityHints;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.ServiceLoader;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 28/01/2007
- *
+ * <p/>
  * Abstract implementation of a content factory.
+ *
  * @author Ben Fortuna
  */
-public abstract class AbstractContentFactory {
+public abstract class AbstractContentFactory<T extends Content.Factory> {
 
     /**
      * Map of delegate factories.
      */
-    private final Map<String, Object> defaultFactories;
+    private final Map<String, T> defaultFactories;
 
-    private final Map<String, Object> extendedFactories;
+    private final Map<String, T> extendedFactories;
+
+    private final ServiceLoader<T> factoryLoader;
 
     /**
      * Default constructor.
      */
-    public AbstractContentFactory() {
-        defaultFactories = new HashMap<String, Object>();
-        extendedFactories = new HashMap<String, Object>();
+    public AbstractContentFactory(ServiceLoader<T> factoryLoader) {
+        defaultFactories = new HashMap<String, T>();
+        extendedFactories = new HashMap<String, T>();
+        this.factoryLoader = factoryLoader;
     }
 
     /**
      * Register a standard content factory.
      */
-    protected final void registerDefaultFactory(String key, Object factory) {
+    protected final void registerDefaultFactory(String key, T factory) {
         defaultFactories.put(key, factory);
     }
 
     /**
      * Register a non-standard content factory.
      */
-    protected final void registerExtendedFactory(String key, Object factory) {
+    protected final void registerExtendedFactory(String key, T factory) {
         extendedFactories.put(key, factory);
     }
 
@@ -80,14 +86,26 @@ public abstract class AbstractContentFactory {
      * @return a factory associated with the specified key, giving preference to
      * standard factories
      */
-    protected final Object getFactory(String key) {
-        Object factory = defaultFactories.get(key);
+    protected final T getFactory(String key) {
+        T factory = null;
+        Iterator<T> it = factoryLoader.iterator();
+        while (it.hasNext()) {
+            factory = it.next();
+            if (factory.supports(key)) {
+                break;
+            } else {
+                factory = null;
+            }
+        }
+        if (factory == null) {
+            factory = defaultFactories.get(key);
+        }
         if (factory == null) {
             factory = extendedFactories.get(key);
         }
         return factory;
     }
-    
+
     /**
      * @return true if non-standard names are allowed, otherwise false
      */

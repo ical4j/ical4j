@@ -31,16 +31,20 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URISyntaxException;
+
 /**
  * $Id$ [18-Apr-2004]
- *
+ * <p/>
  * Defines an Inline Encoding parameter. Constants are provided for all encodings specified in <a
  * href="http://www.ietf.org/rfc/rfc2045.txt">RFC2045</a>.
- *
+ * <p/>
  * <pre>
  *  4.2.7 Inline Encoding
  *
@@ -138,4 +142,23 @@ public class Encoding extends Parameter {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(ENCODING);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            Encoding parameter = new Encoding(value);
+            if (Encoding.EIGHT_BIT.equals(parameter)) {
+                parameter = Encoding.EIGHT_BIT;
+            } else if (Encoding.BASE64.equals(parameter)) {
+                parameter = Encoding.BASE64;
+            }
+            return parameter;
+        }
+    }
+
 }

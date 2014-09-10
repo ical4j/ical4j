@@ -31,14 +31,19 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URISyntaxException;
+
 /**
  * $Id$ [18-Apr-2004]
- *
+ * <p/>
  * Defines a Relationship Type parameter.
+ *
  * @author benfortuna
  */
 public class RelType extends Parameter {
@@ -82,4 +87,26 @@ public class RelType extends Parameter {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(RELTYPE);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            RelType parameter = new RelType(value);
+            if (RelType.PARENT.equals(parameter)) {
+                parameter = RelType.PARENT;
+            } else if (RelType.CHILD.equals(parameter)) {
+                parameter = RelType.CHILD;
+            }
+            if (RelType.SIBLING.equals(parameter)) {
+                parameter = RelType.SIBLING;
+            }
+            return parameter;
+        }
+    }
+
 }

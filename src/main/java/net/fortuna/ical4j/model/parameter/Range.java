@@ -31,15 +31,20 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URISyntaxException;
+
 /**
  * $Id$ [18-Apr-2004]
- *
+ * <p/>
  * Defines a Recurrence Identifier Range parameter.
+ *
  * @author benfortuna
  */
 public class Range extends Parameter {
@@ -71,7 +76,7 @@ public class Range extends Parameter {
 
         // allow arbitrary ranges for Lotus Notes..
         // eg. X-LOTUS-RECURID;RANGE=ALL:20101006T203000Z
-        
+
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY)) {
             // value must be one of finite list..
             if (!VALUE_THISANDPRIOR.equals(value)
@@ -87,4 +92,23 @@ public class Range extends Parameter {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(RANGE);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            Range parameter = new Range(value);
+            if (Range.THISANDFUTURE.equals(parameter)) {
+                parameter = Range.THISANDFUTURE;
+            } else if (Range.THISANDPRIOR.equals(parameter)) {
+                parameter = Range.THISANDPRIOR;
+            }
+            return parameter;
+        }
+    }
+
 }

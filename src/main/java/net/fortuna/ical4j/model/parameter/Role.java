@@ -31,14 +31,19 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URISyntaxException;
+
 /**
  * $Id$ [18-Apr-2004]
- *
+ * <p/>
  * Defines a Participation Role parameter.
+ *
  * @author benfortuna
  */
 public class Role extends Parameter {
@@ -89,4 +94,27 @@ public class Role extends Parameter {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(ROLE);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            Role parameter = new Role(value);
+            if (Role.CHAIR.equals(parameter)) {
+                parameter = Role.CHAIR;
+            } else if (Role.REQ_PARTICIPANT.equals(parameter)) {
+                parameter = Role.REQ_PARTICIPANT;
+            } else if (Role.OPT_PARTICIPANT.equals(parameter)) {
+                parameter = Role.OPT_PARTICIPANT;
+            } else if (Role.NON_PARTICIPANT.equals(parameter)) {
+                parameter = Role.NON_PARTICIPANT;
+            }
+            return parameter;
+        }
+    }
+
 }

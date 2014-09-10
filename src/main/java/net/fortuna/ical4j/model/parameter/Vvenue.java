@@ -31,22 +31,27 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URISyntaxException;
+
 /**
  * $Id$ [18-Apr-2004]
- *
+ * <p/>
  * Defines a Vvenue parameter.
+ *
  * @author benfortuna
  * @author Mike Douglass
  */
 public class Vvenue extends Parameter {
 
-	private static final long serialVersionUID = -8381878834513491869L;
-	
-	private String value;
+    private static final long serialVersionUID = -8381878834513491869L;
+
+    private String value;
 
     /**
      * @param aValue a string abbreviation
@@ -62,4 +67,18 @@ public class Vvenue extends Parameter {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(VVENUE);
+        }
+
+        public Parameter createParameter(final String value)
+                throws URISyntaxException {
+            return new Vvenue(value);
+        }
+    }
+
 }

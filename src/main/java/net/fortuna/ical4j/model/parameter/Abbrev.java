@@ -31,15 +31,19 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URISyntaxException;
+
 /**
  * $Id$ [18-Apr-2004]
- * 
+ * <p/>
  * Defines an Abbreviation parameter.
- * 
+ *
  * @author benfortuna
  * @author Mike Douglass
  */
@@ -50,8 +54,7 @@ public class Abbrev extends Parameter {
     private String value;
 
     /**
-     * @param aValue
-     *            a string abbreviation
+     * @param aValue a string abbreviation
      */
     public Abbrev(final String aValue) {
         super(ABBREV, ParameterFactoryImpl.getInstance());
@@ -63,5 +66,17 @@ public class Abbrev extends Parameter {
      */
     public final String getValue() {
         return value;
+    }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(ABBREV);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            return new Abbrev(value);
+        }
     }
 }

@@ -41,26 +41,27 @@ import java.net.URISyntaxException;
 
 /**
  * Implementors provide parameter creation services.
- * 
+ * <p/>
  * Note that implementations must be {@link Serializable} to support referencing
  * from {@link Parameter} instances.
- * 
- * @author Ben Fortuna
- * 
- * $Id$ [05-Apr-2004]
- * 
- * Created on 14/06/2005
  *
+ * @author Ben Fortuna
+ *         <p/>
+ *         $Id$ [05-Apr-2004]
+ *         <p/>
+ *         Created on 14/06/2005
  */
-public interface ParameterFactory extends Serializable {
+public interface ParameterFactory<T extends Parameter> extends Serializable {
 
     /**
      * Returns a parameter instance of the appropriate type with the specified value.
-     * @param name a parameter names that identifies the parameter type
+     *
      * @param value a value to assign to the returned parameter
      * @return a parameter instance, or null if this factory is unable to create an
      * appropriate parameter
      * @throws URISyntaxException where an invalid URI is encountered
      */
-    Parameter createParameter(String name, String value) throws URISyntaxException;
+    T createParameter(String value) throws URISyntaxException;
+
+    boolean supports(String name);
 }

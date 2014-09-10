@@ -31,13 +31,18 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
+
+import java.net.URISyntaxException;
 
 /**
  * $Id$ [18-Apr-2004]
- *
+ * <p/>
  * Defines an RSVP parameter.
+ *
  * @author benfortuna
  */
 public class Rsvp extends Parameter {
@@ -92,7 +97,7 @@ public class Rsvp extends Parameter {
             return VALUE_FALSE;
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -104,4 +109,23 @@ public class Rsvp extends Parameter {
             return FALSE;
         }
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(RSVP);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            Rsvp parameter = new Rsvp(value);
+            if (Rsvp.TRUE.equals(parameter)) {
+                parameter = Rsvp.TRUE;
+            } else if (Rsvp.FALSE.equals(parameter)) {
+                parameter = Rsvp.FALSE;
+            }
+            return parameter;
+        }
+    }
+
 }

@@ -31,18 +31,21 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 /**
  * $Id$ [18-Apr-2004]
- *
+ * <p/>
  * Defines a Directory Entry Reference parameter.
+ *
  * @author benfortuna
  */
 public class Dir extends Parameter {
@@ -80,4 +83,17 @@ public class Dir extends Parameter {
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getUri()));
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(DIR);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            return new Dir(value);
+        }
+    }
+
 }

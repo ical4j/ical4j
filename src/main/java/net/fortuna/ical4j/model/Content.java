@@ -32,21 +32,23 @@
 package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created: 12/10/2004
- *
+ * <p/>
  * Base class for calendar content in the form of
  * properties and parameters.
- * 
+ *
  * @author Ben Fortuna
  */
 public abstract class Content implements Serializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -2892694760294583989L;
 
@@ -59,4 +61,17 @@ public abstract class Content implements Serializable {
      * @return the content value
      */
     public abstract String getValue();
+
+    public static abstract class Factory {
+
+        private final List<String> supportedNames;
+
+        public Factory(String... supportedNames) {
+            this.supportedNames = Arrays.asList(supportedNames);
+        }
+
+        public final boolean supports(String name) {
+            return supportedNames.contains(name);
+        }
+    }
 }

@@ -31,17 +31,16 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import java.net.URISyntaxException;
-
-import net.fortuna.ical4j.model.AddressList;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
+
+import java.net.URISyntaxException;
 
 /**
  * $Id$ [18-Apr-2004]
- *
+ * <p/>
  * Defines a Delegators parameter.
+ *
  * @author benfortuna
  */
 public class DelegatedFrom extends Parameter {
@@ -79,7 +78,7 @@ public class DelegatedFrom extends Parameter {
     public final String getValue() {
         return getDelegators().toString();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -87,4 +86,17 @@ public class DelegatedFrom extends Parameter {
         // override default behaviour as quoting is handled by the implementation..
         return false;
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(DELEGATED_FROM);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            return new DelegatedFrom(value);
+        }
+    }
+
 }

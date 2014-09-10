@@ -31,14 +31,19 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URISyntaxException;
+
 /**
  * $Id$ [18-Apr-2004]
- *
+ * <p/>
  * Defines a Free/Busy Time Type parameter.
+ *
  * @author benfortuna
  */
 public class FbType extends Parameter {
@@ -91,4 +96,27 @@ public class FbType extends Parameter {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(FBTYPE);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            FbType parameter = new FbType(value);
+            if (FbType.FREE.equals(parameter)) {
+                parameter = FbType.FREE;
+            } else if (FbType.BUSY.equals(parameter)) {
+                parameter = FbType.BUSY;
+            } else if (FbType.BUSY_TENTATIVE.equals(parameter)) {
+                parameter = FbType.BUSY_TENTATIVE;
+            } else if (FbType.BUSY_UNAVAILABLE.equals(parameter)) {
+                parameter = FbType.BUSY_UNAVAILABLE;
+            }
+            return parameter;
+        }
+    }
+
 }

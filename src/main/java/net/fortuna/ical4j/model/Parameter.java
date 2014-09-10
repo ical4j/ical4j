@@ -40,14 +40,14 @@ import java.net.URISyntaxException;
 /**
  * Defines an iCalendar parameter. Subclasses of this class provide additional validation and typed values for specific
  * iCalendar parameters.
- * 
+ * <p/>
  * Note that subclasses must provide a reference to the factory used to create the
  * parameter to support parameter cloning (copy). If no factory is specified an
  * {@link UnsupportedOperationException} will be thrown by the {@link #copy()} method.
- * 
+ *
  * @author Ben Fortuna
- * 
- * $Id$ [Apr 5, 2004]
+ *         <p/>
+ *         $Id$ [Apr 5, 2004]
  */
 public abstract class Parameter extends Content {
 
@@ -185,17 +185,17 @@ public abstract class Parameter extends Content {
 
     private String name;
 
-    private final ParameterFactory factory;
+    private final ParameterFactoryImpl factory;
 
     /**
-     * @param aName the parameter identifier
+     * @param aName   the parameter identifier
      * @param factory the factory used to create the parameter
      */
-    public Parameter(final String aName, ParameterFactory factory) {
+    public Parameter(final String aName, ParameterFactoryImpl factory) {
         this.name = aName;
         this.factory = factory;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -205,8 +205,7 @@ public abstract class Parameter extends Content {
         b.append('=');
         if (isQuotable()) {
             b.append(Strings.quote(Strings.valueOf(getValue())));
-        }
-        else {
+        } else {
             b.append(Strings.valueOf(getValue()));
         }
         return b.toString();
@@ -214,6 +213,7 @@ public abstract class Parameter extends Content {
 
     /**
      * Indicates whether the current parameter value should be quoted.
+     *
      * @return true if the value should be quoted, otherwise false
      */
     protected boolean isQuotable() {
@@ -235,7 +235,7 @@ public abstract class Parameter extends Content {
         if (arg0 instanceof Parameter) {
             final Parameter p = (Parameter) arg0;
             return new EqualsBuilder().append(getName(), p.getName())
-                .append(getValue(), p.getValue()).isEquals();
+                    .append(getValue(), p.getValue()).isEquals();
         }
         return super.equals(arg0);
     }
@@ -251,6 +251,7 @@ public abstract class Parameter extends Content {
 
     /**
      * Deep copy of parameter.
+     *
      * @return new parameter
      * @throws URISyntaxException where an invalid URI is encountered
      */

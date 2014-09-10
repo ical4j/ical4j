@@ -31,14 +31,19 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URISyntaxException;
+
 /**
  * $Id$ [18-Apr-2004]
- *
+ * <p/>
  * Defines a Participation Status parameter.
+ *
  * @author benfortuna
  */
 public class PartStat extends Parameter {
@@ -110,4 +115,33 @@ public class PartStat extends Parameter {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(PARTSTAT);
+        }
+
+        public Parameter createParameter(final String value) throws URISyntaxException {
+            PartStat parameter = new PartStat(value);
+            if (PartStat.NEEDS_ACTION.equals(parameter)) {
+                parameter = PartStat.NEEDS_ACTION;
+            } else if (PartStat.ACCEPTED.equals(parameter)) {
+                parameter = PartStat.ACCEPTED;
+            } else if (PartStat.DECLINED.equals(parameter)) {
+                parameter = PartStat.DECLINED;
+            } else if (PartStat.TENTATIVE.equals(parameter)) {
+                parameter = PartStat.TENTATIVE;
+            } else if (PartStat.DELEGATED.equals(parameter)) {
+                parameter = PartStat.DELEGATED;
+            } else if (PartStat.COMPLETED.equals(parameter)) {
+                parameter = PartStat.COMPLETED;
+            } else if (PartStat.IN_PROCESS.equals(parameter)) {
+                parameter = PartStat.IN_PROCESS;
+            }
+            return parameter;
+        }
+    }
+
 }
