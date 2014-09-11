@@ -38,17 +38,17 @@ import java.util.ServiceLoader;
 
 /**
  * A factory for creating iCalendar parameters.
- * 
+ * <p/>
  * $Id $
- *
+ * <p/>
  * [05-Apr-2004]
  *
  * @author Ben Fortuna
  */
-public class ParameterFactoryImpl extends AbstractContentFactory {
+public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactory> {
 
     private static final long serialVersionUID = -4034423507432249165L;
-    
+
     private static ParameterFactoryImpl instance = new ParameterFactoryImpl();
 
     protected ParameterFactoryImpl() {
@@ -62,13 +62,19 @@ public class ParameterFactoryImpl extends AbstractContentFactory {
         return instance;
     }
 
+    @Override
+    protected boolean factorySupports(ParameterFactory factory, String key) {
+        return factory.supports(key);
+    }
+
     /**
      * Creates a parameter.
-     * @param name name of the parameter
+     *
+     * @param name  name of the parameter
      * @param value a parameter value
      * @return a component
      * @throws URISyntaxException thrown when the specified string is not a valid representation of a URI for selected
-     * parameters
+     *                            parameters
      */
     public Parameter createParameter(final String name, final String value)
             throws URISyntaxException {
@@ -76,14 +82,11 @@ public class ParameterFactoryImpl extends AbstractContentFactory {
         Parameter parameter;
         if (factory != null) {
             parameter = factory.createParameter(value);
-        }
-        else if (isExperimentalName(name)) {
+        } else if (isExperimentalName(name)) {
             parameter = new XParameter(name, value);
-        }
-        else if (allowIllegalNames()) {
+        } else if (allowIllegalNames()) {
             parameter = new XParameter(name, value);
-        }
-        else {
+        } else {
             throw new IllegalArgumentException(String.format("Unsupported parameter name: %s", name));
         }
         return parameter;

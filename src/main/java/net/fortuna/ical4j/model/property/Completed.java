@@ -31,44 +31,44 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
+import net.fortuna.ical4j.model.*;
 
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a COMPLETED iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.2.1 Date/Time Completed
- *     
+ *
  *        Property Name: COMPLETED
- *     
+ *
  *        Purpose: This property defines the date and time that a to-do was
  *        actually completed.
- *     
+ *
  *        Value Type: DATE-TIME
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: The property can be specified in a &quot;VTODO&quot; calendar
  *        component.
- *     
+ *
  *        Description: The date and time MUST be in a UTC format.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          completed  = &quot;COMPLETED&quot; compparam &quot;:&quot; date-time CRLF
- *     
+ *
  *          compparam  = *(&quot;;&quot; xparam)
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Completed extends UtcProperty {
@@ -92,7 +92,7 @@ public class Completed extends UtcProperty {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException when the specified string is not a valid date-time represenation
      */
@@ -122,4 +122,22 @@ public class Completed extends UtcProperty {
         aDate.setUtc(true);
         setDate(aDate);
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(COMPLETED);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Completed(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Completed();
+        }
+    }
+
 }

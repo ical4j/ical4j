@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,7 +48,7 @@ import java.util.ServiceLoader;
  *
  * @author Ben Fortuna
  */
-public abstract class AbstractContentFactory<T extends Content.Factory> {
+public abstract class AbstractContentFactory<T> implements Serializable {
 
     /**
      * Map of delegate factories.
@@ -56,7 +57,7 @@ public abstract class AbstractContentFactory<T extends Content.Factory> {
 
     private final Map<String, T> extendedFactories;
 
-    private final ServiceLoader<T> factoryLoader;
+    private final transient ServiceLoader<T> factoryLoader;
 
     /**
      * Default constructor.
@@ -81,6 +82,8 @@ public abstract class AbstractContentFactory<T extends Content.Factory> {
         extendedFactories.put(key, factory);
     }
 
+    protected abstract boolean factorySupports(T factory, String key);
+
     /**
      * @param key a factory key
      * @return a factory associated with the specified key, giving preference to
@@ -91,7 +94,7 @@ public abstract class AbstractContentFactory<T extends Content.Factory> {
         Iterator<T> it = factoryLoader.iterator();
         while (it.hasNext()) {
             factory = it.next();
-            if (factory.supports(key)) {
+            if (factorySupports(factory, key)) {
                 break;
             } else {
                 factory = null;

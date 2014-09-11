@@ -31,32 +31,28 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
 /**
  * $Id$
- *
+ * <p/>
  * Created on 11/08/2005
- *
+ * <p/>
  * Base class for properties with a list of dates as a value.
+ *
  * @author Ben Fortuna
  */
 public abstract class DateListProperty extends Property {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 5233773091972759919L;
 
@@ -67,33 +63,33 @@ public abstract class DateListProperty extends Property {
     /**
      * @param name the property name
      */
-    public DateListProperty(final String name, PropertyFactory factory) {
+    public DateListProperty(final String name, PropertyFactoryImpl factory) {
         this(name, new DateList(Value.DATE_TIME), factory);
     }
 
     /**
-     * @param name the property name
+     * @param name       the property name
      * @param parameters property parameters
      */
-    public DateListProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
+    public DateListProperty(final String name, final ParameterList parameters, PropertyFactoryImpl factory) {
         super(name, parameters, factory);
     }
 
     /**
-     * @param name the property name
+     * @param name  the property name
      * @param dates a list of initial dates for the property
      */
-    public DateListProperty(final String name, final DateList dates, PropertyFactory factory) {
+    public DateListProperty(final String name, final DateList dates, PropertyFactoryImpl factory) {
         this(name, new ParameterList(), dates, factory);
     }
 
     /**
-     * @param name the property name
+     * @param name       the property name
      * @param parameters property parameters
-     * @param dates a list of initial dates for the property
+     * @param dates      a list of initial dates for the property
      */
     public DateListProperty(final String name, final ParameterList parameters, final DateList dates,
-            PropertyFactory factory) {
+                            PropertyFactoryImpl factory) {
         super(name, parameters, factory);
         this.dates = dates;
         if (dates != null && !Value.DATE_TIME.equals(dates.getType())) {
@@ -125,6 +121,7 @@ public abstract class DateListProperty extends Property {
 
     /**
      * Sets the timezone associated with this property.
+     *
      * @param timezone a timezone to associate with this property
      */
     public void setTimeZone(final TimeZone timezone) {
@@ -142,8 +139,7 @@ public abstract class DateListProperty extends Property {
             getParameters().remove(getParameter(Parameter.TZID));
             final TzId tzId = new TzId(timezone.getID());
             getParameters().replace(tzId);
-        }
-        else {
+        } else {
             // use setUtc() to reset timezone..
             setUtc(false);
         }
@@ -160,6 +156,7 @@ public abstract class DateListProperty extends Property {
      * Resets the timezone associated with the property. If utc is true, any TZID parameters are removed and the Java
      * timezone is updated to UTC time. If utc is false, TZID parameters are removed and the Java timezone is set to the
      * default timezone (i.e. represents a "floating" local time)
+     *
      * @param utc the UTC value
      */
     public final void setUtc(final boolean utc) {
@@ -176,9 +173,9 @@ public abstract class DateListProperty extends Property {
      */
     public final Property copy() throws IOException, URISyntaxException, ParseException {
         final Property copy = super.copy();
-        
-       ((DateListProperty) copy).timeZone = timeZone;
-       ((DateListProperty) copy).setValue(getValue());
+
+        ((DateListProperty) copy).timeZone = timeZone;
+        ((DateListProperty) copy).setValue(getValue());
 
         return copy;
     }

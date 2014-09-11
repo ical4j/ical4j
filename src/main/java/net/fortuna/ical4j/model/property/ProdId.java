@@ -31,18 +31,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Escapable;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a PRODID iCalendar property.
+ *
  * @author benf
  */
 public class ProdId extends Property implements Escapable {
@@ -67,7 +68,7 @@ public class ProdId extends Property implements Escapable {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public ProdId(final ParameterList aList, final String aValue) {
@@ -95,4 +96,22 @@ public class ProdId extends Property implements Escapable {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(PRODID);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new ProdId(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new ProdId();
+        }
+    }
+
 }

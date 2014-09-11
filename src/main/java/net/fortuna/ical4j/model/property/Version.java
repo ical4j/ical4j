@@ -31,20 +31,22 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a VERSION iCalendar property. When creating a new calendar you should always add a version property with
  * value "2.0". There is actually a constant defined in the Version class for this. e.g:
  * <code>    Calendar calendar = new Calendar();</code>
  * <code>    calendar.getProperties().add(Version.VERSION_2_0);</code>
+ *
  * @author Ben Fortuna
  */
 public class Version extends Property {
@@ -95,7 +97,7 @@ public class Version extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Version(final ParameterList aList, final String aValue) {
@@ -103,8 +105,7 @@ public class Version extends Property {
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
             this.maxVersion = aValue.substring(aValue.indexOf(';'));
-        }
-        else {
+        } else {
             this.maxVersion = aValue;
         }
     }
@@ -120,12 +121,12 @@ public class Version extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList     a list of parameters for this component
      * @param aVersion1 a string representation of the minimum version
      * @param aVersion2 a string representation of the maximum version
      */
     public Version(final ParameterList aList, final String aVersion1,
-            final String aVersion2) {
+                   final String aVersion2) {
         super(VERSION, aList, PropertyFactoryImpl.getInstance());
         minVersion = aVersion1;
         maxVersion = aVersion2;
@@ -152,8 +153,7 @@ public class Version extends Property {
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
             this.maxVersion = aValue.substring(aValue.indexOf(';'));
-        }
-        else {
+        } else {
             this.maxVersion = aValue;
         }
     }
@@ -195,4 +195,22 @@ public class Version extends Property {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(VERSION);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Version(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Version();
+        }
+    }
+
 }

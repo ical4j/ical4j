@@ -31,35 +31,35 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Escapable;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a UID iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.4.7 Unique Identifier
- *     
+ *
  *        Property Name: UID
- *     
+ *
  *        Purpose: This property defines the persistent, globally unique
  *        identifier for the calendar component.
- *     
+ *
  *        Value Type: TEXT
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: The property MUST be specified in the &quot;VEVENT&quot;, &quot;VTODO&quot;,
  *        &quot;VJOURNAL&quot; or &quot;VFREEBUSY&quot; calendar components.
- *     
+ *
  *        Description: The UID itself MUST be a globally unique identifier. The
  *        generator of the identifier MUST guarantee that the identifier is
  *        unique. There are several algorithms that can be used to accomplish
@@ -79,16 +79,16 @@ import net.fortuna.ical4j.model.ValidationException;
  *        the host itself or otherwise) such that the generator of the message
  *        identifier can guarantee the uniqueness of the left hand side within
  *        the scope of that domain.
- *     
+ *
  *        This is the method for correlating scheduling messages with the
  *        referenced &quot;VEVENT&quot;, &quot;VTODO&quot;, or &quot;VJOURNAL&quot; calendar component.
- *     
+ *
  *        The full range of calendar components specified by a recurrence set
  *        is referenced by referring to just the &quot;UID&quot; property value
  *        corresponding to the calendar component. The &quot;RECURRENCE-ID&quot; property
  *        allows the reference to an individual instance within the recurrence
  *        set.
- *     
+ *
  *        This property is an important method for group scheduling
  *        applications to match requests with later replies, modifications or
  *        deletion requests. Calendaring and scheduling applications MUST
@@ -96,21 +96,21 @@ import net.fortuna.ical4j.model.ValidationException;
  *        components to assure interoperability with other group scheduling
  *        applications. This identifier is created by the calendar system that
  *        generates an iCalendar object.
- *     
+ *
  *        Implementations MUST be able to receive and persist values of at
  *        least 255 characters for this property.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          uid        = &quot;UID&quot; uidparam &quot;:&quot; text CRLF
- *     
+ *
  *          uidparam   = *(&quot;;&quot; xparam)
- *     
+ *
  *        Example: The following is an example of this property:
- *     
+ *
  *          UID:19960401T080045Z-4000F192713-0052@host1.com
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Uid extends Property implements Escapable {
@@ -135,7 +135,7 @@ public class Uid extends Property implements Escapable {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Uid(final ParameterList aList, final String aValue) {
@@ -163,4 +163,22 @@ public class Uid extends Property implements Escapable {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(UID);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Uid(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Uid();
+        }
+    }
+
 }

@@ -31,34 +31,33 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.util.Date;
+import net.fortuna.ical4j.model.*;
 
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.util.Date;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a DURATION iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.3.6   Duration
- *     
+ *
  *        Value Name: DURATION
- *     
+ *
  *        Purpose: This value type is used to identify properties that contain
  *        a duration of time.
- *     
+ *
  *        Formal Definition: The value type is defined by the following
  *        notation:
- *     
+ *
  *          dur-value  = ([&quot;+&quot;] / &quot;-&quot;) &quot;P&quot; (dur-date / dur-time / dur-week)
- *     
+ *
  *          dur-date   = dur-day [dur-time]
  *          dur-time   = &quot;T&quot; (dur-hour / dur-minute / dur-second)
  *          dur-week   = 1*DIGIT &quot;W&quot;
@@ -66,25 +65,25 @@ import net.fortuna.ical4j.model.ValidationException;
  *          dur-minute = 1*DIGIT &quot;M&quot; [dur-second]
  *          dur-second = 1*DIGIT &quot;S&quot;
  *          dur-day    = 1*DIGIT &quot;D&quot;
- *     
+ *
  *        Description: If the property permits, multiple &quot;duration&quot; values are
  *        specified by a COMMA character (US-ASCII decimal 44) separated list
  *        of values. The format is expressed as the [ISO 8601] basic format for
  *        the duration of time. The format can represent durations in terms of
  *        weeks, days, hours, minutes, and seconds.
- *     
+ *
  *        No additional content value encoding (i.e., BACKSLASH character
  *        encoding) are defined for this value type.
- *     
+ *
  *        Example: A duration of 15 days, 5 hours and 20 seconds would be:
- *     
+ *
  *          P15DT5H0M20S
- *     
+ *
  *        A duration of 7 weeks would be:
- *     
+ *
  *          P7W
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Duration extends Property {
@@ -101,7 +100,7 @@ public class Duration extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Duration(final ParameterList aList, final String aValue) {
@@ -118,7 +117,7 @@ public class Duration extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList    a list of parameters for this component
      * @param duration a duration value
      */
     public Duration(final ParameterList aList, final Dur duration) {
@@ -128,8 +127,9 @@ public class Duration extends Property {
 
     /**
      * Constructs a new duration representing the time between the specified start date and end date.
+     *
      * @param start the starting time for the duration
-     * @param end the end time for the duration
+     * @param end   the end time for the duration
      */
     public Duration(final Date start, final Date end) {
         super(DURATION, PropertyFactoryImpl.getInstance());
@@ -172,4 +172,22 @@ public class Duration extends Property {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(DURATION);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Duration(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Duration();
+        }
+    }
+
 }

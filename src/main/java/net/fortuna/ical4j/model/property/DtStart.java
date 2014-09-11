@@ -31,79 +31,77 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
+import net.fortuna.ical4j.model.*;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.ValidationException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a DTSTART iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.2.4 Date/Time Start
- *     
+ *
  *        Property Name: DTSTART
- *     
+ *
  *        Purpose: This property specifies when the calendar component begins.
- *     
+ *
  *        Value Type: The default value type is DATE-TIME. The time value MUST
  *        be one of the forms defined for the DATE-TIME value type. The value
  *        type can be set to a DATE value type.
- *     
+ *
  *        Property Parameters: Non-standard, value data type, time zone
  *        identifier property parameters can be specified on this property.
- *     
+ *
  *        Conformance: This property can be specified in the &quot;VEVENT&quot;, &quot;VTODO&quot;,
  *        &quot;VFREEBUSY&quot;, or &quot;VTIMEZONE&quot; calendar components.
- *     
+ *
  *        Description: Within the &quot;VEVENT&quot; calendar component, this property
  *        defines the start date and time for the event. The property is
  *        REQUIRED in &quot;VEVENT&quot; calendar components. Events can have a start
  *        date/time but no end date/time. In that case, the event does not take
  *        up any time.
- *     
+ *
  *        Within the &quot;VFREEBUSY&quot; calendar component, this property defines the
  *        start date and time for the free or busy time information. The time
  *        MUST be specified in UTC time.
- *     
+ *
  *        Within the &quot;VTIMEZONE&quot; calendar component, this property defines the
  *        effective start date and time for a time zone specification. This
  *        property is REQUIRED within each STANDARD and DAYLIGHT part included
  *        in &quot;VTIMEZONE&quot; calendar components and MUST be specified as a local
  *        DATE-TIME without the &quot;TZID&quot; property parameter.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          dtstart    = &quot;DTSTART&quot; dtstparam &quot;:&quot; dtstval CRLF
- *     
+ *
  *          dtstparam  = *(
- *     
+ *
  *                     ; the following are optional,
  *                     ; but MUST NOT occur more than once
- *     
+ *
  *                     (&quot;;&quot; &quot;VALUE&quot; &quot;=&quot; (&quot;DATE-TIME&quot; / &quot;DATE&quot;)) /
  *                     (&quot;;&quot; tzidparam) /
- *     
+ *
  *                     ; the following is optional,
  *                     ; and MAY occur more than once
- *     
+ *
  *                       *(&quot;;&quot; xparam)
- *     
+ *
  *                     )
- *     
- *     
- *     
+ *
+ *
+ *
  *          dtstval    = date-time / date
  *          ;Value MUST match value type
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class DtStart extends DateProperty {
@@ -119,6 +117,7 @@ public class DtStart extends DateProperty {
 
     /**
      * Creates a new DTSTART property initialised with the specified timezone.
+     *
      * @param timezone initial timezone
      */
     public DtStart(TimeZone timezone) {
@@ -136,10 +135,11 @@ public class DtStart extends DateProperty {
 
     /**
      * Creates a new DTSTART property initialised with the specified timezone and value.
-     * @param value a string representation of a DTSTART value
+     *
+     * @param value    a string representation of a DTSTART value
      * @param timezone initial timezone
      * @throws ParseException where the specified value is not a valid string
-     * representation
+     *                        representation
      */
     public DtStart(String value, TimeZone timezone) throws ParseException {
         super(DTSTART, timezone, PropertyFactoryImpl.getInstance());
@@ -147,7 +147,7 @@ public class DtStart extends DateProperty {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
@@ -159,6 +159,7 @@ public class DtStart extends DateProperty {
 
     /**
      * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+     *
      * @param aDate a date
      */
     public DtStart(final Date aDate) {
@@ -168,8 +169,9 @@ public class DtStart extends DateProperty {
 
     /**
      * Constructs a new DtStart with the specified time.
+     *
      * @param time the time of the DtStart
-     * @param utc specifies whether time is UTC
+     * @param utc  specifies whether time is UTC
      */
     public DtStart(final Date time, final boolean utc) {
         super(DTSTART, PropertyFactoryImpl.getInstance());
@@ -179,6 +181,7 @@ public class DtStart extends DateProperty {
 
     /**
      * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+     *
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
@@ -202,4 +205,22 @@ public class DtStart extends DateProperty {
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(DTSTART);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new DtStart(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new DtStart();
+        }
+    }
+
 }

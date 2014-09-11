@@ -31,35 +31,35 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Escapable;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a TZID iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.3.1 Time Zone Identifier
- *     
+ *
  *        Property Name: TZID
- *     
+ *
  *        Purpose: This property specifies the text value that uniquely
  *        identifies the &quot;VTIMEZONE&quot; calendar component.
- *     
+ *
  *        Value Type: TEXT
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: This property MUST be specified in a &quot;VTIMEZONE&quot;
  *        calendar component.
- *     
+ *
  *        Description: This is the label by which a time zone calendar
  *        component is referenced by any iCalendar properties whose data type
  *        is either DATE-TIME or TIME and not intended to specify a UTC or a
@@ -67,37 +67,37 @@ import net.fortuna.ical4j.model.ValidationException;
  *        decimal 47) as a prefix, indicates that this TZID represents an
  *        unique ID in a globally defined time zone registry (when such
  *        registry is defined).
- *     
+ *
  *             Note: This document does not define a naming convention for time
  *             zone identifiers. Implementers may want to use the naming
  *             conventions defined in existing time zone specifications such as
  *             the public-domain Olson database [TZ]. The specification of
  *             globally unique time zone identifiers is not addressed by this
  *             document and is left for future study.
- *     
+ *
  *        Format Definition: This property is defined by the following
  *        notation:
- *     
+ *
  *          tzid       = &quot;TZID&quot; tzidpropparam &quot;:&quot; [tzidprefix] text CRLF
- *     
+ *
  *          tzidpropparam      = *(&quot;;&quot; xparam)
- *     
+ *
  *          ;tzidprefix        = &quot;/&quot;
  *          ; Defined previously. Just listed here for reader convenience.
- *     
+ *
  *        Example: The following are examples of non-globally unique time zone
  *        identifiers:
- *     
+ *
  *          TZID:US-Eastern
- *     
+ *
  *          TZID:California-Los_Angeles
- *     
+ *
  *        The following is an example of a fictitious globally unique time zone
  *        identifier:
- *     
+ *
  *          TZID:/US-New_York-New_York
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class TzId extends Property implements Escapable {
@@ -127,7 +127,7 @@ public class TzId extends Property implements Escapable {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public TzId(final ParameterList aList, final String aValue) {
@@ -155,4 +155,22 @@ public class TzId extends Property implements Escapable {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(TZID);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new TzId(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new TzId();
+        }
+    }
+
 }

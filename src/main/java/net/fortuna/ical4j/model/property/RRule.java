@@ -31,20 +31,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
+import net.fortuna.ical4j.model.*;
 
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.ValidationException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines an RRULE iCalendar component property.
+ *
  * @author benf
  */
 public class RRule extends Property {
@@ -69,9 +68,9 @@ public class RRule extends Property {
         super(RRULE, PropertyFactoryImpl.getInstance());
         setValue(value);
     }
-    
+
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException thrown when the specified string is not a valid representaton of a recurrence
      * @see Recur#Recur(String)
@@ -91,7 +90,7 @@ public class RRule extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aRecur a recurrence value
      */
     public RRule(final ParameterList aList, final Recur aRecur) {
@@ -126,4 +125,22 @@ public class RRule extends Property {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(RRULE);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new RRule(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new RRule();
+        }
+    }
+
 }

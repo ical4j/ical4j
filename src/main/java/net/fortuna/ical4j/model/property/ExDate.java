@@ -31,22 +31,21 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.ParameterValidator;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a EXDATE iCalendar component property.
+ *
  * @author benf
  */
 public class ExDate extends DateListProperty {
@@ -61,7 +60,7 @@ public class ExDate extends DateListProperty {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
@@ -113,4 +112,22 @@ public class ExDate extends DateListProperty {
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(EXDATE);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new ExDate(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new ExDate();
+        }
+    }
+
 }

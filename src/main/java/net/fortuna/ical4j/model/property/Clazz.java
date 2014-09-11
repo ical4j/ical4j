@@ -31,34 +31,35 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a CLASS iCalendar property.
- * 
+ * <p/>
  * <pre>
  *     4.8.1.3 Classification
- *     
+ *
  *        Property Name: CLASS
- *     
+ *
  *        Purpose: This property defines the access classification for a
  *        calendar component.
- *     
+ *
  *        Value Type: TEXT
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: The property can be specified once in a &quot;VEVENT&quot;,
  *        &quot;VTODO&quot; or &quot;VJOURNAL&quot; calendar components.
- *     
+ *
  *        Description: An access classification is only one component of the
  *        general security system within a calendar application. It provides a
  *        method of capturing the scope of the access the calendar owner
@@ -73,22 +74,22 @@ import net.fortuna.ical4j.model.ValidationException;
  *        as an enforcement statement for a system receiving an iCalendar
  *        object. Rather, they provide a method for capturing the intention of
  *        the calendar owner for the access to the calendar component.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          class      = &quot;CLASS&quot; classparam &quot;:&quot; classvalue CRLF
- *     
+ *
  *          classparam = *(&quot;;&quot; xparam)
- *     
+ *
  *          classvalue = &quot;PUBLIC&quot; / &quot;PRIVATE&quot; / &quot;CONFIDENTIAL&quot; / iana-token
  *                     / x-name
  *          ;Default is PUBLIC
- *     
+ *
  *        Example: The following is an example of this property:
- *     
+ *
  *          CLASS:PUBLIC
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Clazz extends Property {
@@ -151,7 +152,7 @@ public class Clazz extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Clazz(final ParameterList aList, final String aValue) {
@@ -179,4 +180,22 @@ public class Clazz extends Property {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(CLASS);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Clazz(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Clazz();
+        }
+    }
+
 }

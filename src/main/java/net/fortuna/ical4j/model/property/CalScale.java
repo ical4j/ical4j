@@ -31,18 +31,20 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a CALSCALE iCalendar property.
+ *
  * @author benf
  */
 public class CalScale extends Property {
@@ -95,7 +97,7 @@ public class CalScale extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public CalScale(final ParameterList aList, final String aValue) {
@@ -121,15 +123,32 @@ public class CalScale extends Property {
      * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
-    	if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             if (!GREGORIAN.getValue().equalsIgnoreCase(value)) {
                 throw new ValidationException("Invalid value [" + value + "]");
             }
-    	}
-    	else {
+        } else {
             if (!GREGORIAN.getValue().equals(value)) {
                 throw new ValidationException("Invalid value [" + value + "]");
             }
-    	}
+        }
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(CALSCALE);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new CalScale(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new CalScale();
+        }
+    }
+
 }

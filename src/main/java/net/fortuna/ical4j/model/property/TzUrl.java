@@ -31,58 +31,57 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a TZURL iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.3.5 Time Zone URL
- *     
+ *
  *        Property Name: TZURL
- *     
+ *
  *        Purpose: The TZURL provides a means for a VTIMEZONE component to
  *        point to a network location that can be used to retrieve an up-to-
  *        date version of itself.
- *     
+ *
  *        Value Type: URI
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: This property can be specified in a &quot;VTIMEZONE&quot; calendar
  *        component.
- *     
+ *
  *        Description: The TZURL provides a means for a VTIMEZONE component to
  *        point to a network location that can be used to retrieve an up-to-
  *        date version of itself. This provides a hook to handle changes
  *        government bodies impose upon time zone definitions. Retrieval of
  *        this resource results in an iCalendar object containing a single
  *        VTIMEZONE component and a METHOD property set to PUBLISH.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          tzurl      = &quot;TZURL&quot; tzurlparam &quot;:&quot; uri CRLF
- *     
+ *
  *          tzurlparam = *(&quot;;&quot; xparam)
- *     
+ *
  *        Example: The following is an example of this property:
- *     
+ *
  *          TZURL:http://timezones.r.us.net/tz/US-California-Los_Angeles
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class TzUrl extends Property {
@@ -99,7 +98,7 @@ public class TzUrl extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
@@ -119,7 +118,7 @@ public class TzUrl extends Property {
 
     /**
      * @param aList a list of parameters for this component
-     * @param aUri a URI
+     * @param aUri  a URI
      */
     public TzUrl(final ParameterList aList, final URI aUri) {
         super(TZURL, aList, PropertyFactoryImpl.getInstance());
@@ -160,4 +159,22 @@ public class TzUrl extends Property {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(TZURL);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new TzUrl(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new TzUrl();
+        }
+    }
+
 }

@@ -32,18 +32,13 @@
 package net.fortuna.ical4j.data;
 
 
-import java.io.StringReader;
-import java.net.URISyntaxException;
 import junit.framework.TestCase;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryRegistry;
-import net.fortuna.ical4j.model.PropertyFactoryRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Strings;
+
+import java.io.StringReader;
+import java.net.URISyntaxException;
 
 /**
  * $Id: CalendarBuilderCustomRegistryTest.java [Nov 16, 2009]
@@ -74,7 +69,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
         private String value;
 
-        public ScheduleStatus(String aValue, ParameterFactory factory) {
+        public ScheduleStatus(String aValue, ParameterFactoryImpl factory) {
             super(SCHEDULE_STATUS, factory);
             value = Strings.unquote(aValue);
         }
@@ -101,14 +96,18 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
         }
 
         // try to build with a custom parameter factory
-        ParameterFactoryRegistry paramFactory = new ParameterFactoryRegistry();
+        final ParameterFactoryRegistry paramFactory = new ParameterFactoryRegistry();
         paramFactory.register(SCHEDULE_STATUS,
             new ParameterFactory() {
                 static final long serialVersionUID = 8871483730211383100L;
 
-                public Parameter createParameter(final String name,
-                            final String value) throws URISyntaxException {
-                        return new ScheduleStatus(value, this);
+                @Override
+                public boolean supports(String name) {
+                    return SCHEDULE_STATUS.equals(name);
+                }
+
+                public Parameter createParameter(final String value) throws URISyntaxException {
+                    return new ScheduleStatus(value, ParameterFactoryImpl.getInstance());
                     }
             });
         builder = new CalendarBuilder(

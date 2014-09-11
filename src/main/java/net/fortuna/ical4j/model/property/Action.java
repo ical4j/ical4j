@@ -31,17 +31,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines an ACTION iCalendar component property.
+ *
  * @author benf
  */
 public class Action extends Property {
@@ -109,7 +111,7 @@ public class Action extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Action(final ParameterList aList, final String aValue) {
@@ -137,4 +139,22 @@ public class Action extends Property {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(ACTION);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Action(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Action();
+        }
+    }
+
 }

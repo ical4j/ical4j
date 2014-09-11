@@ -31,34 +31,35 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a PRIORITY iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.1.9 Priority
- *     
+ *
  *        Property Name: PRIORITY
- *     
+ *
  *        Purpose: The property defines the relative priority for a calendar
  *        component.
- *     
+ *
  *        Value Type: INTEGER
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: The property can be specified in a &quot;VEVENT&quot; or &quot;VTODO&quot;
  *        calendar component.
- *     
+ *
  *        Description: The priority is specified as an integer in the range
  *        zero to nine. A value of zero (US-ASCII decimal 48) specifies an
  *        undefined priority. A value of one (US-ASCII decimal 49) is the
@@ -66,14 +67,14 @@ import net.fortuna.ical4j.model.ValidationException;
  *        highest priority. Subsequent numbers specify a decreasing ordinal
  *        priority. A value of nine (US-ASCII decimal 58) is the lowest
  *        priority.
- *     
+ *
  *        A CUA with a three-level priority scheme of &quot;HIGH&quot;, &quot;MEDIUM&quot; and
  *        &quot;LOW&quot; is mapped into this property such that a property value in the
  *        range of one (US-ASCII decimal 49) to four (US-ASCII decimal 52)
  *        specifies &quot;HIGH&quot; priority. A value of five (US-ASCII decimal 53) is
  *        the normal or &quot;MEDIUM&quot; priority. A value in the range of six (US-
  *        ASCII decimal 54) to nine (US-ASCII decimal 58) is &quot;LOW&quot; priority.
- *     
+ *
  *        A CUA with a priority schema of &quot;A1&quot;, &quot;A2&quot;, &quot;A3&quot;,
  *         &quot;B1&quot;, &quot;B2&quot;, ...,
  *        &quot;C3&quot; is mapped into this property such that a property value of one
@@ -81,43 +82,43 @@ import net.fortuna.ical4j.model.ValidationException;
  *        ASCII decimal 50) specifies &quot;A2&quot;, a property value of three (US-ASCII
  *        decimal 51) specifies &quot;A3&quot;, and so forth up to a property value of 9
  *        (US-ASCII decimal 58) specifies &quot;C3&quot;.
- *     
+ *
  *        Other integer values are reserved for future use.
- *     
+ *
  *        Within a &quot;VEVENT&quot; calendar component, this property specifies a
  *        priority for the event. This property may be useful when more than
  *        one event is scheduled for a given time period.
- *     
+ *
  *        Within a &quot;VTODO&quot; calendar component, this property specified a
  *        priority for the to-do. This property is useful in prioritizing
  *        multiple action items for a given time period.
- *     
+ *
  *        Format Definition: The property is specified by the following
  *        notation:
- *     
+ *
  *          priority   = &quot;PRIORITY&quot; prioparam &quot;:&quot; privalue CRLF
  *          ;Default is zero
- *     
+ *
  *          prioparam  = *(&quot;;&quot; xparam)
- *     
+ *
  *          privalue   = integer       ;Must be in the range [0..9]
  *             ; All other values are reserved for future use
- *     
+ *
  *        The following is an example of a property with the highest priority:
- *     
+ *
  *          PRIORITY:1
- *     
+ *
  *        The following is an example of a property with a next highest
  *        priority:
- *     
+ *
  *          PRIORITY:2
- *     
+ *
  *        Example: The following is an example of a property with no priority.
  *        This is equivalent to not specifying the &quot;PRIORITY&quot; property:
- *     
+ *
  *          PRIORITY:0
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Priority extends Property {
@@ -177,7 +178,7 @@ public class Priority extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Priority(final ParameterList aList, final String aValue) {
@@ -194,7 +195,7 @@ public class Priority extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aLevel an int representation of a priority level
      */
     public Priority(final ParameterList aList, final int aLevel) {
@@ -236,4 +237,22 @@ public class Priority extends Property {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(PRIORITY);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Priority(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Priority();
+        }
+    }
+
 }

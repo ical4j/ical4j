@@ -31,49 +31,49 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
+import net.fortuna.ical4j.model.*;
 
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a LAST-MODIFIED iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.7.3 Last Modified
- *     
+ *
  *        Property Name: LAST-MODIFIED
- *     
+ *
  *        Purpose: The property specifies the date and time that the
  *        information associated with the calendar component was last revised
  *        in the calendar store.
- *     
+ *
  *             Note: This is analogous to the modification date and time for a
  *             file in the file system.
- *     
+ *
  *        Value Type: DATE-TIME
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: This property can be specified in the &quot;EVENT&quot;, &quot;VTODO&quot;,
  *        &quot;VJOURNAL&quot; or &quot;VTIMEZONE&quot; calendar components.
- *     
+ *
  *        Description: The property value MUST be specified in the UTC time
  *        format.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          last-mod   = &quot;LAST-MODIFIED&quot; lstparam &quot;:&quot; date-time CRLF
- *     
+ *
  *          lstparam   = *(&quot;;&quot; xparam)
  * </pre>
- * 
+ *
  * @author benf
  */
 public class LastModified extends UtcProperty {
@@ -92,11 +92,11 @@ public class LastModified extends UtcProperty {
      * @throws ParseException where the specified string is not a valid date-time
      */
     public LastModified(final String aValue) throws ParseException {
-    	this(new ParameterList(), aValue);
+        this(new ParameterList(), aValue);
     }
-    
+
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
@@ -126,4 +126,22 @@ public class LastModified extends UtcProperty {
         aDate.setUtc(true);
         setDate(aDate);
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(LAST_MODIFIED);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new LastModified(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new LastModified();
+        }
+    }
+
 }

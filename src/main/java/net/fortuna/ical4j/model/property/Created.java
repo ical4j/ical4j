@@ -31,48 +31,48 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
+import net.fortuna.ical4j.model.*;
 
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a CREATED iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.7.1 Date/Time Created
- *     
+ *
  *        Property Name: CREATED
- *     
+ *
  *        Purpose: This property specifies the date and time that the calendar
  *        information was created by the calendar user agent in the calendar
  *        store.
- *     
+ *
  *             Note: This is analogous to the creation date and time for a file
  *             in the file system.
- *     
+ *
  *        Value Type: DATE-TIME
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: The property can be specified once in &quot;VEVENT&quot;, &quot;VTODO&quot;
  *        or &quot;VJOURNAL&quot; calendar components.
- *     
+ *
  *        Description: The date and time is a UTC value.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          created    = &quot;CREATED&quot; creaparam &quot;:&quot; date-time CRLF
- *     
+ *
  *          creaparam  = *(&quot;;&quot; xparam)
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Created extends UtcProperty {
@@ -96,7 +96,7 @@ public class Created extends UtcProperty {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
@@ -126,4 +126,22 @@ public class Created extends UtcProperty {
         aDate.setUtc(true);
         setDate(aDate);
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(CREATED);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Created(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Created();
+        }
+    }
+
 }

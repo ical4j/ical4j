@@ -34,14 +34,18 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.ParameterValidator;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.StringTokenizer;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a REQUEST-STATUS iCalendar component property.
+ *
  * @author benf
  */
 public class RequestStatus extends Property {
@@ -82,7 +86,7 @@ public class RequestStatus extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public RequestStatus(final ParameterList aList, final String aValue) {
@@ -91,12 +95,12 @@ public class RequestStatus extends Property {
     }
 
     /**
-     * @param aStatusCode a string representation of a status code
+     * @param aStatusCode  a string representation of a status code
      * @param aDescription a description
-     * @param data a string representation of extension data
+     * @param data         a string representation of extension data
      */
     public RequestStatus(final String aStatusCode, final String aDescription,
-            final String data) {
+                         final String data) {
         super(REQUEST_STATUS, PropertyFactoryImpl.getInstance());
         statusCode = aStatusCode;
         description = aDescription;
@@ -104,13 +108,13 @@ public class RequestStatus extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
-     * @param aStatusCode a string representation of a status code
+     * @param aList        a list of parameters for this component
+     * @param aStatusCode  a string representation of a status code
      * @param aDescription a description
-     * @param data a string representation of extension data
+     * @param data         a string representation of extension data
      */
     public RequestStatus(final ParameterList aList, final String aStatusCode,
-            final String aDescription, final String data) {
+                         final String aDescription, final String data) {
         super(REQUEST_STATUS, aList, PropertyFactoryImpl.getInstance());
         statusCode = aStatusCode;
         description = aDescription;
@@ -216,4 +220,22 @@ public class RequestStatus extends Property {
     public final void setStatusCode(final String statusCode) {
         this.statusCode = statusCode;
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(REQUEST_STATUS);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new RequestStatus(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new RequestStatus();
+        }
+    }
+
 }

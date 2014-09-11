@@ -31,20 +31,20 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Escapable;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.ParameterValidator;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a DESCRIPTION iCalendar component property.
+ *
  * @author benf
  */
 public class Description extends Property implements Escapable {
@@ -69,7 +69,7 @@ public class Description extends Property implements Escapable {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Description(final ParameterList aList, final String aValue) {
@@ -108,4 +108,22 @@ public class Description extends Property implements Escapable {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(DESCRIPTION);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Description(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Description();
+        }
+    }
+
 }

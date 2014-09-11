@@ -31,34 +31,35 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a TRANSP iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.2.7 Time Transparency
- *     
+ *
  *        Property Name: TRANSP
- *     
+ *
  *        Purpose: This property defines whether an event is transparent or not
  *        to busy time searches.
- *     
+ *
  *        Value Type: TEXT
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: This property can be specified once in a &quot;VEVENT&quot;
  *        calendar component.
- *     
+ *
  *        Description: Time Transparency is the characteristic of an event that
  *        determines whether it appears to consume time on a calendar. Events
  *        that consume actual time for the individual or resource associated
@@ -66,29 +67,29 @@ import net.fortuna.ical4j.model.ValidationException;
  *        detected by free-busy time searches. Other events, which do not take
  *        up the individual's (or resource's) time SHOULD be recorded as
  *        TRANSPARENT, making them invisible to free-busy time searches.
- *     
+ *
  *        Format Definition: The property is specified by the following
  *        notation:
- *     
+ *
  *          transp     = &quot;TRANSP&quot; tranparam &quot;:&quot; transvalue CRLF
- *     
+ *
  *          tranparam  = *(&quot;;&quot; xparam)
- *     
+ *
  *          transvalue = &quot;OPAQUE&quot;      ;Blocks or opaque on busy time searches.
  *                     / &quot;TRANSPARENT&quot; ;Transparent on busy time searches.
  *             ;Default value is OPAQUE
- *     
+ *
  *        Example: The following is an example of this property for an event
  *        that is transparent or does not block on free/busy time searches:
- *     
+ *
  *          TRANSP:TRANSPARENT
- *     
+ *
  *        The following is an example of this property for an event that is
  *        opaque or blocks on free/busy time searches:
- *     
+ *
  *          TRANSP:OPAQUE
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Transp extends Property {
@@ -140,7 +141,7 @@ public class Transp extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Transp(final ParameterList aList, final String aValue) {
@@ -168,4 +169,22 @@ public class Transp extends Property {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(TRANSP);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Transp(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Transp();
+        }
+    }
+
 }

@@ -31,37 +31,36 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Escapable;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.ParameterValidator;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a LOCATION iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.1.7 Location
- *     
+ *
  *        Property Name: LOCATION
- *     
+ *
  *        Purpose: The property defines the intended venue for the activity
  *        defined by a calendar component.
- *     
+ *
  *        Value Type: TEXT
- *     
+ *
  *        Property Parameters: Non-standard, alternate text representation and
  *        language property parameters can be specified on this property.
- *     
+ *
  *        Conformance: This property can be specified in &quot;VEVENT&quot; or &quot;VTODO&quot;
  *        calendar component.
- *     
+ *
  *        Description: Specific venues such as conference or meeting rooms may
  *        be explicitly specified using this property. An alternate
  *        representation may be specified that is a URI that points to
@@ -70,33 +69,33 @@ import net.fortuna.ical4j.util.ParameterValidator;
  *        either an LDAP URI pointing to an LDAP server entry or a CID URI
  *        pointing to a MIME body part containing a vCard [RFC 2426] for the
  *        location.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          location   = &quot;LOCATION locparam &quot;:&quot; text CRLF
- *     
+ *
  *          locparam   = *(
- *     
+ *
  *                     ; the following are optional,
  *                     ; but MUST NOT occur more than once
- *     
+ *
  *                     (&quot;;&quot; altrepparam) / (&quot;;&quot; languageparam) /
- *     
+ *
  *                     ; the following is optional,
  *                     ; and MAY occur more than once
- *     
+ *
  *                     (&quot;;&quot; xparam)
- *     
+ *
  *                     )
- *     
+ *
  *        Example: The following are some examples of this property:
- *     
+ *
  *          LOCATION:Conference Room - F123, Bldg. 002
- *     
+ *
  *          LOCATION;ALTREP=&quot;http://xyzcorp.com/conf-rooms/f123.vcf&quot;:
  *           Conference Room - F123, Bldg. 002
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Location extends Property implements Escapable {
@@ -121,7 +120,7 @@ public class Location extends Property implements Escapable {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Location(final ParameterList aList, final String aValue) {
@@ -162,4 +161,22 @@ public class Location extends Property implements Escapable {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(LOCATION);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Location(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Location();
+        }
+    }
+
 }

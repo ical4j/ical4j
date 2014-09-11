@@ -22,3 +22,4 @@ net.fortuna.ical4j.model.parameter.Vvenue$Factory
 net.fortuna.ical4j.model.parameter.Type$Factory
 net.fortuna.ical4j.model.parameter.TzId$Factory
 net.fortuna.ical4j.model.parameter.Value$Factory
+net.fortuna.ical4j.model.parameter.Vvenue$Factory

@@ -31,81 +31,79 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
+import net.fortuna.ical4j.model.*;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.ValidationException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a DTEND iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.2.2 Date/Time End
- *     
+ *
  *        Property Name: DTEND
- *     
+ *
  *        Purpose: This property specifies the date and time that a calendar
  *        component ends.
- *     
+ *
  *        Value Type: The default value type is DATE-TIME. The value type can
  *        be set to a DATE value type.
- *     
+ *
  *        Property Parameters: Non-standard, value data type, time zone
  *        identifier property parameters can be specified on this property.
- *     
+ *
  *        Conformance: This property can be specified in &quot;VEVENT&quot; or
  *        &quot;VFREEBUSY&quot; calendar components.
- *     
+ *
  *        Description: Within the &quot;VEVENT&quot; calendar component, this property
  *        defines the date and time by which the event ends. The value MUST be
  *        later in time than the value of the &quot;DTSTART&quot; property.
- *     
+ *
  *        Within the &quot;VFREEBUSY&quot; calendar component, this property defines the
  *        end date and time for the free or busy time information. The time
  *        MUST be specified in the UTC time format. The value MUST be later in
  *        time than the value of the &quot;DTSTART&quot; property.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          dtend      = &quot;DTEND&quot; dtendparam&quot;:&quot; dtendval CRLF
- *     
+ *
  *          dtendparam = *(
- *     
+ *
  *                     ; the following are optional,
  *                     ; but MUST NOT occur more than once
- *     
+ *
  *                     (&quot;;&quot; &quot;VALUE&quot; &quot;=&quot; (&quot;DATE-TIME&quot; / &quot;DATE&quot;)) /
  *                     (&quot;;&quot; tzidparam) /
- *     
+ *
  *                     ; the following is optional,
  *                     ; and MAY occur more than once
- *     
+ *
  *                     (&quot;;&quot; xparam)
- *     
+ *
  *                     )
- *     
- *     
- *     
+ *
+ *
+ *
  *          dtendval   = date-time / date
  *          ;Value MUST match value type
  * </pre>
- * 
+ * <p/>
  * Examples:
- * 
+ * <p/>
  * <pre>
  *      // construct an end date from a start date and a duration..
  *      DtStart start = ...
  *      Dur oneWeek = new Dur(&quot;1W&quot;);
  *      DtEnd end = new DtEnd(oneWeek.getTime(start.getDate());
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class DtEnd extends DateProperty {
@@ -121,6 +119,7 @@ public class DtEnd extends DateProperty {
 
     /**
      * Creates a new DTEND property initialised with the specified timezone.
+     *
      * @param timezone initial timezone
      */
     public DtEnd(TimeZone timezone) {
@@ -129,6 +128,7 @@ public class DtEnd extends DateProperty {
 
     /**
      * Creates a new instance initialised with the parsed value.
+     *
      * @param value the DTEND value string to parse
      * @throws ParseException where the specified string is not a valid DTEND value representation
      */
@@ -139,10 +139,11 @@ public class DtEnd extends DateProperty {
 
     /**
      * Creates a new DTEND property initialised with the specified timezone and value.
-     * @param value a string representation of a DTEND value
+     *
+     * @param value    a string representation of a DTEND value
      * @param timezone initial timezone
      * @throws ParseException where the specified value is not a valid string
-     * representation
+     *                        representation
      */
     public DtEnd(String value, TimeZone timezone) throws ParseException {
         super(DTEND, timezone, PropertyFactoryImpl.getInstance());
@@ -150,7 +151,7 @@ public class DtEnd extends DateProperty {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException when the specified string is not a valid date/date-time representation
      */
@@ -162,6 +163,7 @@ public class DtEnd extends DateProperty {
 
     /**
      * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+     *
      * @param aDate a date
      */
     public DtEnd(final Date aDate) {
@@ -171,8 +173,9 @@ public class DtEnd extends DateProperty {
 
     /**
      * Constructs a new DtEnd with the specified time.
+     *
      * @param time the time of the DtEnd
-     * @param utc specifies whether time is UTC
+     * @param utc  specifies whether time is UTC
      */
     public DtEnd(final Date time, final boolean utc) {
         super(DTEND, PropertyFactoryImpl.getInstance());
@@ -182,6 +185,7 @@ public class DtEnd extends DateProperty {
 
     /**
      * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+     *
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
@@ -205,4 +209,22 @@ public class DtEnd extends DateProperty {
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(DTEND);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new DtEnd(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new DtEnd();
+        }
+    }
+
 }

@@ -31,39 +31,38 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a URL iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.4.6 Uniform Resource Locator
- *     
+ *
  *        Property Name: URL
- *     
+ *
  *        Purpose: This property defines a Uniform Resource Locator (URL)
  *        associated with the iCalendar object.
- *     
+ *
  *        Value Type: URI
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: This property can be specified once in the &quot;VEVENT&quot;,
  *        &quot;VTODO&quot;, &quot;VJOURNAL&quot; or &quot;VFREEBUSY&quot; calendar components.
- *     
+ *
  *        Description: This property may be used in a calendar component to
  *        convey a location where a more dynamic rendition of the calendar
  *        information associated with the calendar component can be found. This
@@ -71,18 +70,18 @@ import net.fortuna.ical4j.util.Uris;
  *        format of the resource pointed to by the property value. If the URL
  *        property and Content-Location MIME header are both specified, they
  *        MUST point to the same resource.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          url        = &quot;URL&quot; urlparam &quot;:&quot; uri CRLF
- *     
+ *
  *          urlparam   = *(&quot;;&quot; xparam)
- *     
+ *
  *        Example: The following is an example of this property:
- *     
+ *
  *          URL:http://abc.com/pub/calendars/jsmith/mytime.ics
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Url extends Property {
@@ -99,7 +98,7 @@ public class Url extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
@@ -119,7 +118,7 @@ public class Url extends Property {
 
     /**
      * @param aList a list of parameters for this component
-     * @param aUri a URI
+     * @param aUri  a URI
      */
     public Url(final ParameterList aList, final URI aUri) {
         super(URL, aList, PropertyFactoryImpl.getInstance());
@@ -160,4 +159,22 @@ public class Url extends Property {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(URL);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Url(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Url();
+        }
+    }
+
 }

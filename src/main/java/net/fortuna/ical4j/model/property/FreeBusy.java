@@ -31,79 +31,76 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PeriodList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.ParameterValidator;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 14, 2004]
- *
+ * <p/>
  * Defines a FREEBUSY iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.2.6 Free/Busy Time
- *     
+ *
  *        Property Name: FREEBUSY
- *     
+ *
  *        Purpose: The property defines one or more free or busy time
  *        intervals.
- *     
+ *
  *        Value Type: PERIOD. The date and time values MUST be in an UTC time
  *        format.
- *     
+ *
  *        Property Parameters: Non-standard or free/busy time type property
  *        parameters can be specified on this property.
- *     
+ *
  *        Conformance: The property can be specified in a &quot;VFREEBUSY&quot; calendar
  *        component.
- *     
+ *
  *        Property Parameter: &quot;FBTYPE&quot; and non-standard parameters can be
  *        specified on this property.
- *     
+ *
  *        Description: These time periods can be specified as either a start
  *        and end date-time or a start date-time and duration. The date and
  *        time MUST be a UTC time format.
- *     
+ *
  *        &quot;FREEBUSY&quot; properties within the &quot;VFREEBUSY&quot; calendar component
  *        SHOULD be sorted in ascending order, based on start time and then end
  *        time, with the earliest periods first.
- *     
+ *
  *        The &quot;FREEBUSY&quot; property can specify more than one value, separated by
  *        the COMMA character (US-ASCII decimal 44). In such cases, the
  *        &quot;FREEBUSY&quot; property values SHOULD all be of the same &quot;FBTYPE&quot;
  *        property parameter type (e.g., all values of a particular &quot;FBTYPE&quot;
  *        listed together in a single property).
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          freebusy   = &quot;FREEBUSY&quot; fbparam &quot;:&quot; fbvalue
  *                       CRLF
- *     
+ *
  *          fbparam    = *(
  *                     ; the following is optional,
  *                     ; but MUST NOT occur more than once
- *     
+ *
  *                     (&quot;;&quot; fbtypeparam) /
- *     
+ *
  *                     ; the following is optional,
  *                     ; and MAY occur more than once
- *     
+ *
  *                     (&quot;;&quot; xparam)
- *     
+ *
  *                     )
- *     
+ *
  *          fbvalue    = period *[&quot;,&quot; period]
  *          ;Time value MUST be in the UTC time format.
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class FreeBusy extends Property {
@@ -128,9 +125,9 @@ public class FreeBusy extends Property {
         super(FREEBUSY, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
-    
+
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws ParseException when the specified string is not a valid list of periods
      */
@@ -177,7 +174,7 @@ public class FreeBusy extends Property {
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
-        
+
         if (!periods.isUtc()) {
             throw new ValidationException("Periods must be in UTC format");
         }
@@ -203,4 +200,22 @@ public class FreeBusy extends Property {
     public final String getValue() {
         return getPeriods().toString();
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(FREEBUSY);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new FreeBusy(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new FreeBusy();
+        }
+    }
+
 }

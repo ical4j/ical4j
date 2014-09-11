@@ -43,42 +43,44 @@ import java.text.ParseException;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 9/07/2005
- *
+ * <p/>
  * Base class for properties with a DATE or DATE-TIME value. Note that some sub-classes may only allow either a DATE or
  * a DATE-TIME value, for which additional rules/validation should be specified.
+ *
  * @author Ben Fortuna
  */
 public abstract class DateProperty extends Property {
 
     private static final long serialVersionUID = 3160883132732961321L;
-    
+
     private Date date;
 
     private TimeZone timeZone;
 
     /**
-     * @param name the property name
+     * @param name       the property name
      * @param parameters a list of initial parameters
      */
-    public DateProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
+    public DateProperty(final String name, final ParameterList parameters, PropertyFactoryImpl factory) {
         super(name, parameters, factory);
     }
 
     /**
      * @param name the property name
      */
-    public DateProperty(final String name, PropertyFactory factory) {
+    public DateProperty(final String name, PropertyFactoryImpl factory) {
         super(name, factory);
     }
 
     /**
      * Creates a new instance of the named property with an initial timezone.
-     * @param name property name
+     *
+     * @param name     property name
      * @param timezone initial timezone
      */
-    public DateProperty(final String name, TimeZone timezone, PropertyFactory factory) {
+    public DateProperty(final String name, TimeZone timezone, PropertyFactoryImpl factory) {
         super(name, factory);
         updateTimeZone(timezone);
     }
@@ -93,6 +95,7 @@ public abstract class DateProperty extends Property {
     /**
      * Sets the date value of this property. The timezone and value of this
      * instance will also be updated accordingly.
+     *
      * @param date The date to set.
      */
     public final void setDate(final Date date) {
@@ -102,8 +105,7 @@ public abstract class DateProperty extends Property {
                 getParameters().replace(Value.DATE_TIME);
             }
             updateTimeZone(((DateTime) date).getTimeZone());
-        }
-        else {
+        } else {
             if (date != null) {
                 getParameters().replace(Value.DATE);
             }
@@ -119,10 +121,10 @@ public abstract class DateProperty extends Property {
 
     /**
      * Default setValue() implementation. Allows for either DATE or DATE-TIME values.
-     * 
+     *
      * @param value a string representation of a DATE or DATE-TIME value
      * @throws ParseException where the specified value is not a valid DATE or DATE-TIME
-     * representation
+     *                        representation
      */
     public void setValue(final String value) throws ParseException {
         // value can be either a date-time or a date..
@@ -130,8 +132,7 @@ public abstract class DateProperty extends Property {
             // ensure timezone is null for VALUE=DATE properties..
             updateTimeZone(null);
             this.date = new Date(value);
-        }
-        else {
+        } else {
             this.date = new DateTime(value, timeZone);
         }
     }
@@ -145,19 +146,20 @@ public abstract class DateProperty extends Property {
 
     /**
      * Publically available method to update the current timezone.
+     *
      * @param timezone a timezone instance
      */
     public void setTimeZone(final TimeZone timezone) {
         updateTimeZone(timezone);
     }
-    
+
     /**
      * @return the timezone
      */
     public final TimeZone getTimeZone() {
         return timeZone;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -171,7 +173,8 @@ public abstract class DateProperty extends Property {
      * existing TZID parameters will be removed. Note that this method is only applicable where the current date is an
      * instance of <code>DateTime</code>. For all other cases an <code>UnsupportedOperationException</code> will be
      * thrown.
-     * @param vTimeZone
+     *
+     * @param timezone
      */
     private void updateTimeZone(final TimeZone timezone) {
         this.timeZone = timezone;
@@ -185,8 +188,7 @@ public abstract class DateProperty extends Property {
             }
 
             getParameters().replace(new TzId(timezone.getID()));
-        }
-        else {
+        } else {
             // use setUtc() to reset timezone..
             setUtc(isUtc());
         }
@@ -196,6 +198,7 @@ public abstract class DateProperty extends Property {
      * Resets the VTIMEZONE associated with the property. If utc is true, any TZID parameters are removed and the Java
      * timezone is updated to UTC time. If utc is false, TZID parameters are removed and the Java timezone is set to the
      * default timezone (i.e. represents a "floating" local time)
+     *
      * @param utc a UTC value
      */
     public final void setUtc(final boolean utc) {
@@ -207,6 +210,7 @@ public abstract class DateProperty extends Property {
 
     /**
      * Indicates whether the current date value is specified in UTC time.
+     *
      * @return true if the property is in UTC time, otherwise false
      */
     public final boolean isUtc() {
@@ -224,8 +228,7 @@ public abstract class DateProperty extends Property {
         if (isUtc()) {
             ParameterValidator.getInstance().assertNone(Parameter.TZID,
                     getParameters());
-        }
-        else {
+        } else {
             ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
                     getParameters());
         }
@@ -245,35 +248,33 @@ public abstract class DateProperty extends Property {
             final Parameter tzId = getParameter(Parameter.TZID);
             if (dateTime.getTimeZone() != null
                     && (tzId == null || !tzId.getValue().equals(
-                            dateTime.getTimeZone().getID()))) {
+                    dateTime.getTimeZone().getID()))) {
 
                 throw new ValidationException("TZID parameter [" + tzId
                         + "] does not match the timezone ["
                         + dateTime.getTimeZone().getID() + "]");
             }
-        }
-        else if (getDate() != null) {
+        } else if (getDate() != null) {
 
             if (value == null) {
                 throw new ValidationException("VALUE parameter [" + Value.DATE
                         + "] must be specified for DATE instance");
-            }
-            else if (!Value.DATE.equals(value)) {
+            } else if (!Value.DATE.equals(value)) {
                 throw new ValidationException("VALUE parameter [" + value
                         + "] is invalid for DATE instance");
             }
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public Property copy() throws IOException, URISyntaxException, ParseException {
         final Property copy = super.copy();
-        
-       ((DateProperty) copy).timeZone = timeZone;
-       ((DateProperty) copy).setValue(getValue());
-       
+
+        ((DateProperty) copy).timeZone = timeZone;
+        ((DateProperty) copy).setValue(getValue());
+
         return copy;
     }
 }

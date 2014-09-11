@@ -35,24 +35,25 @@ import net.fortuna.ical4j.model.*;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 8/08/2005
- *
+ * <p/>
  * Superclass for all properties with date-time values that must be specified in UTC time.
+ *
  * @author Ben Fortuna
  */
 public abstract class UtcProperty extends DateProperty {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4850079486497487938L;
 
     /**
-     * @param name a property name
+     * @param name       a property name
      * @param parameters list of parameters
      */
-    public UtcProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
+    public UtcProperty(final String name, final ParameterList parameters, PropertyFactoryImpl factory) {
         super(name, parameters, factory);
         setDate(new DateTime(true));
     }
@@ -60,7 +61,7 @@ public abstract class UtcProperty extends DateProperty {
     /**
      * @param name a property name
      */
-    public UtcProperty(final String name, PropertyFactory factory) {
+    public UtcProperty(final String name, PropertyFactoryImpl factory) {
         super(name, factory);
         setDate(new DateTime(true));
     }
@@ -78,11 +79,10 @@ public abstract class UtcProperty extends DateProperty {
     public void setDateTime(final DateTime dateTime) {
         // time must be in UTC..
         if (dateTime != null) {
-        	final DateTime utcDateTime = new DateTime(dateTime);
+            final DateTime utcDateTime = new DateTime(dateTime);
             utcDateTime.setUtc(true);
             setDate(utcDateTime);
-        }
-        else {
+        } else {
             setDate(null);
         }
     }
@@ -93,7 +93,7 @@ public abstract class UtcProperty extends DateProperty {
     public void setTimeZone(TimeZone timezone) {
         throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -108,7 +108,7 @@ public abstract class UtcProperty extends DateProperty {
         final DateTime dateTime = (DateTime) getDate();
 
         if (dateTime != null && !dateTime.isUtc()) {
-            throw new ValidationException(getName() + 
+            throw new ValidationException(getName() +
                     ": DATE-TIME value must be specified in UTC time");
         }
     }

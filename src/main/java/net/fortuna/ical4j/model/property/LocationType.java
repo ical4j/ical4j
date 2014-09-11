@@ -31,27 +31,27 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.LocationTypeList;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.ParameterValidator;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a LOCATION_TYPE iCalendar component property.
+ *
  * @author benf
  */
 public class LocationType extends Property {
 
-	private static final long serialVersionUID = -3541686430899510312L;
+    private static final long serialVersionUID = -3541686430899510312L;
 
-	private LocationTypeList locationTypes;
+    private LocationTypeList locationTypes;
 
     /**
      * Default constructor.
@@ -70,7 +70,7 @@ public class LocationType extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public LocationType(final ParameterList aList, final String aValue) {
@@ -131,4 +131,22 @@ public class LocationType extends Property {
     public final String getValue() {
         return getLocationTypes().toString();
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(LOCATION_TYPE);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new LocationType(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new LocationType();
+        }
+    }
+
 }

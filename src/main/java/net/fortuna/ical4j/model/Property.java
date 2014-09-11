@@ -44,14 +44,14 @@ import java.text.ParseException;
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
  * iCalendar properties.
- * 
+ * <p/>
  * Note that subclasses must provide a reference to the factory used to create the
  * property to support property cloning (copy). If no factory is specified an
  * {@link UnsupportedOperationException} will be thrown by the {@link #copy()} method.
- * 
+ *
  * @author Ben Fortuna
- * 
- * $Id$ [Apr 5, 2004]
+ *         <p/>
+ *         $Id$ [Apr 5, 2004]
  */
 public abstract class Property extends Content {
 
@@ -355,14 +355,15 @@ public abstract class Property extends Content {
 
     private ParameterList parameters;
 
-    private final PropertyFactory factory;
-    
+    private final PropertyFactoryImpl factory;
+
     /**
      * Constructor.
-     * @param aName property name
+     *
+     * @param aName   property name
      * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, PropertyFactory factory) {
+    protected Property(final String aName, PropertyFactoryImpl factory) {
         this(aName, new ParameterList(), factory);
     }
 
@@ -376,24 +377,25 @@ public abstract class Property extends Content {
 //    }
 
     /**
-     * @param aName a property identifier
-     * @param aList a list of initial parameters
+     * @param aName   a property identifier
+     * @param aList   a list of initial parameters
      * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, final ParameterList aList, PropertyFactory factory) {
+    protected Property(final String aName, final ParameterList aList, PropertyFactoryImpl factory) {
         this.name = aName;
         this.parameters = aList;
         this.factory = factory;
     }
-    
+
     /**
      * Creates a deep copy of the specified property. That is, the name, parameter list, and value are duplicated from
      * the specified property. This constructor should only be called from sub-classes to ensure type integrity is
      * maintained.
+     *
      * @param property a property to copy
      * @throws URISyntaxException where the specified property contains an invalid URI value
-     * @throws ParseException where the specified property has invalid data
-     * @throws IOException where an error occurs reading data from the specified property
+     * @throws ParseException     where the specified property has invalid data
+     * @throws IOException        where an error occurs reading data from the specified property
      * @deprecated Use {@link #copy()} instead
      */
     protected Property(final Property property) throws IOException,
@@ -415,7 +417,7 @@ public abstract class Property extends Content {
         buffer.append(':');
         boolean needsEscape = false;
         if (this instanceof XProperty) {
-            Value valParam = (Value)getParameter(Parameter.VALUE);
+            Value valParam = (Value) getParameter(Parameter.VALUE);
             if (valParam == null || valParam.equals(Value.TEXT)) {
                 needsEscape = true;
             }
@@ -424,8 +426,7 @@ public abstract class Property extends Content {
         }
         if (needsEscape) {
             buffer.append(Strings.escape(Strings.valueOf(getValue())));
-        }
-        else {
+        } else {
             buffer.append(Strings.valueOf(getValue()));
         }
         buffer.append(Strings.LINE_SEPARATOR);
@@ -435,6 +436,7 @@ public abstract class Property extends Content {
 
     /**
      * Indicates whether this property is a calendar property.
+     *
      * @return boolean
      */
     public boolean isCalendarProperty() {
@@ -461,6 +463,7 @@ public abstract class Property extends Content {
 
     /**
      * Convenience method for retrieving a list of named parameters.
+     *
      * @param name name of parameters to retrieve
      * @return a parameter list containing only parameters with the specified name
      */
@@ -470,6 +473,7 @@ public abstract class Property extends Content {
 
     /**
      * Convenience method for retrieving a single parameter.
+     *
      * @param name name of the parameter to retrieve
      * @return the first parameter from the parameter list with the specified name
      */
@@ -479,16 +483,18 @@ public abstract class Property extends Content {
 
     /**
      * Sets the current value of the property.
+     *
      * @param aValue a string representation of the property value
-     * @throws IOException possibly thrown by setting the value of certain properties
+     * @throws IOException        possibly thrown by setting the value of certain properties
      * @throws URISyntaxException possibly thrown by setting the value of certain properties
-     * @throws ParseException possibly thrown by setting the value of certain properties
+     * @throws ParseException     possibly thrown by setting the value of certain properties
      */
     public abstract void setValue(String aValue) throws IOException,
             URISyntaxException, ParseException;
 
     /**
      * Perform validation on a property.
+     *
      * @throws ValidationException where the property is not in a valid state
      */
     public abstract void validate() throws ValidationException;
@@ -516,10 +522,11 @@ public abstract class Property extends Content {
 
     /**
      * Create a (deep) copy of this property.
+     *
      * @return the copy of the property
-     * @throws IOException where an error occurs reading property data
+     * @throws IOException        where an error occurs reading property data
      * @throws URISyntaxException where the property contains an invalid URI value
-     * @throws ParseException where the property contains an invalid date value
+     * @throws ParseException     where the property contains an invalid date value
      */
     public Property copy() throws IOException, URISyntaxException, ParseException {
         if (factory == null) {

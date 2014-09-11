@@ -31,28 +31,28 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Escapable;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.ParameterValidator;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a TEL iCalendar component property.
+ *
  * @author benf
  * @author Mike Douglass
  */
 public class Tel extends Property implements Escapable {
 
-	private static final long serialVersionUID = 3159826142152932485L;
-	
-	private String value;
+    private static final long serialVersionUID = 3159826142152932485L;
+
+    private String value;
 
     /**
      * Default constructor.
@@ -70,7 +70,7 @@ public class Tel extends Property implements Escapable {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Tel(final ParameterList aList, final String aValue) {
@@ -107,4 +107,22 @@ public class Tel extends Property implements Escapable {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(TEL);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Tel(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Tel();
+        }
+    }
+
 }

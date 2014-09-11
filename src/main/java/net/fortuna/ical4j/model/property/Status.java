@@ -31,34 +31,35 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a STATUS iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.1.11 Status
- *     
+ *
  *        Property Name: STATUS
- *     
+ *
  *        Purpose: This property defines the overall status or confirmation for
  *        the calendar component.
- *     
+ *
  *        Value Type: TEXT
- *     
+ *
  *        Property Parameters: Non-standard property parameters can be
  *        specified on this property.
- *     
+ *
  *        Conformance: This property can be specified in &quot;VEVENT&quot;, &quot;VTODO&quot; or
  *        &quot;VJOURNAL&quot; calendar components.
- *     
+ *
  *        Description: In a group scheduled calendar component, the property is
  *        used by the &quot;Organizer&quot; to provide a confirmation of the event to the
  *        &quot;Attendees&quot;. For example in a &quot;VEVENT&quot; calendar component, the
@@ -68,13 +69,13 @@ import net.fortuna.ical4j.model.ValidationException;
  *        process or being worked on, or has been cancelled. In a &quot;VJOURNAL&quot;
  *        calendar component, the &quot;Organizer&quot; can indicate that a journal entry
  *        is draft, final or has been cancelled or removed.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          status     = &quot;STATUS&quot; statparam] &quot;:&quot; statvalue CRLF
- *     
+ *
  *          statparam  = *(&quot;;&quot; xparam)
- *     
+ *
  *          statvalue  = &quot;TENTATIVE&quot;           ;Indicates event is
  *                                             ;tentative.
  *                     / &quot;CONFIRMED&quot;           ;Indicates event is
@@ -82,34 +83,34 @@ import net.fortuna.ical4j.model.ValidationException;
  *                     / &quot;CANCELLED&quot;           ;Indicates event was
  *                                             ;cancelled.
  *             ;Status values for a &quot;VEVENT&quot;
- *     
+ *
  *          statvalue  =/ &quot;NEEDS-ACTION&quot;       ;Indicates to-do needs action.
  *                     / &quot;COMPLETED&quot;           ;Indicates to-do completed.
  *                     / &quot;IN-PROCESS&quot;          ;Indicates to-do in process of
  *                     / &quot;CANCELLED&quot;           ;Indicates to-do was cancelled.
  *             ;Status values for &quot;VTODO&quot;.
- *     
+ *
  *          statvalue  =/ &quot;DRAFT&quot;              ;Indicates journal is draft.
  *                     / &quot;FINAL&quot;               ;Indicates journal is final.
  *                     / &quot;CANCELLED&quot;           ;Indicates journal is removed.
  *             ;Status values for &quot;VJOURNAL&quot;.
- *     
+ *
  *        Example: The following is an example of this property for a &quot;VEVENT&quot;
  *        calendar component:
- *     
+ *
  *          STATUS:TENTATIVE
- *     
+ *
  *        The following is an example of this property for a &quot;VTODO&quot; calendar
  *        component:
- *     
+ *
  *          STATUS:NEEDS-ACTION
- *     
+ *
  *        The following is an example of this property for a &quot;VJOURNAL&quot;
  *        calendar component:
- *     
+ *
  *          STATUS:DRAFT
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Status extends Property {
@@ -212,7 +213,7 @@ public class Status extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Status(final ParameterList aList, final String aValue) {
@@ -240,4 +241,22 @@ public class Status extends Property {
     public final void validate() throws ValidationException {
         // TODO: Auto-generated method stub
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(STATUS);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Status(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Status();
+        }
+    }
+
 }

@@ -31,67 +31,66 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Escapable;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.ParameterValidator;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a SUMMARY iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.1.12 Summary
- *     
+ *
  *        Property Name: SUMMARY
- *     
+ *
  *        Purpose: This property defines a short summary or subject for the
  *        calendar component.
- *     
+ *
  *        Value Type: TEXT
- *     
+ *
  *        Property Parameters: Non-standard, alternate text representation and
  *        language property parameters can be specified on this property.
- *     
+ *
  *        Conformance: The property can be specified in &quot;VEVENT&quot;, &quot;VTODO&quot;,
  *        &quot;VJOURNAL&quot; or &quot;VALARM&quot; calendar components.
- *     
+ *
  *        Description: This property is used in the &quot;VEVENT&quot;, &quot;VTODO&quot; and
  *        &quot;VJOURNAL&quot; calendar components to capture a short, one line summary
  *        about the activity or journal entry.
- *     
+ *
  *        This property is used in the &quot;VALARM&quot; calendar component to capture
  *        the subject of an EMAIL category of alarm.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          summary    = &quot;SUMMARY&quot; summparam &quot;:&quot; text CRLF
- *     
+ *
  *          summparam  = *(
- *     
+ *
  *                     ; the following are optional,
  *                     ; but MUST NOT occur more than once
- *     
+ *
  *                     (&quot;;&quot; altrepparam) / (&quot;;&quot; languageparam) /
- *     
+ *
  *                     ; the following is optional,
  *                     ; and MAY occur more than once
- *     
+ *
  *                     (&quot;;&quot; xparam)
- *     
+ *
  *                     )
- *     
+ *
  *        Example: The following is an example of this property:
- *     
+ *
  *          SUMMARY:Department Party
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Summary extends Property implements Escapable {
@@ -116,7 +115,7 @@ public class Summary extends Property implements Escapable {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Summary(final ParameterList aList, final String aValue) {
@@ -155,4 +154,22 @@ public class Summary extends Property implements Escapable {
     public final String getValue() {
         return value;
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(SUMMARY);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Summary(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Summary();
+        }
+    }
+
 }

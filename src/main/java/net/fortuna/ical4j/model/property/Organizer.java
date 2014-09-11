@@ -31,38 +31,36 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines an ORGANIZER iCalendar component property.
- * 
+ * <p/>
  * <pre>
  *     4.8.4.3 Organizer
- *     
+ *
  *        Property Name: ORGANIZER
- *     
+ *
  *        Purpose: The property defines the organizer for a calendar component.
- *     
+ *
  *        Value Type: CAL-ADDRESS
- *     
+ *
  *        Property Parameters: Non-standard, language, common name, directory
  *        entry reference, sent by property parameters can be specified on this
  *        property.
- *     
+ *
  *        Conformance: This property MUST be specified in an iCalendar object
  *        that specifies a group scheduled calendar entity. This property MUST
  *        be specified in an iCalendar object that specifies the publication of
@@ -70,7 +68,7 @@ import net.fortuna.ical4j.util.Uris;
  *        an iCalendar object that specifies only a time zone definition or
  *        that defines calendar entities that are not group scheduled entities,
  *        but are entities only on a single user's calendar.
- *     
+ *
  *        Description: The property is specified within the &quot;VEVENT&quot;, &quot;VTODO&quot;,
  *        &quot;VJOURNAL calendar components to specify the organizer of a group
  *        scheduled calendar entity. The property is specified within the
@@ -78,7 +76,7 @@ import net.fortuna.ical4j.util.Uris;
  *        requesting the free or busy time. When publishing a &quot;VFREEBUSY&quot;
  *        calendar component, the property is used to specify the calendar that
  *        the published busy time came from.
- *     
+ *
  *        The property has the property parameters CN, for specifying the
  *        common or display name associated with the &quot;Organizer&quot;, DIR, for
  *        specifying a pointer to the directory information associated with the
@@ -87,46 +85,46 @@ import net.fortuna.ical4j.util.Uris;
  *        also be specified on this property. If the LANGUAGE property
  *        parameter is specified, the identified language applies to the CN
  *        parameter value.
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          organizer  = &quot;ORGANIZER&quot; orgparam &quot;:&quot;
  *                       cal-address CRLF
- *     
+ *
  *          orgparam   = *(
- *     
+ *
  *                     ; the following are optional,
  *                     ; but MUST NOT occur more than once
- *     
+ *
  *                     (&quot;;&quot; cnparam) / (&quot;;&quot; dirparam) / (&quot;;&quot; sentbyparam) /
  *                     (&quot;;&quot; languageparam) /
- *     
+ *
  *                     ; the following is optional,
  *                     ; and MAY occur more than once
- *     
+ *
  *                     (&quot;;&quot; xparam)
- *     
+ *
  *                     )
- *     
+ *
  *        Example: The following is an example of this property:
- *     
+ *
  *          ORGANIZER;CN=John Smith:MAILTO:jsmith@host1.com
- *     
+ *
  *        The following is an example of this property with a pointer to the
  *        directory information associated with the organizer:
- *     
+ *
  *          ORGANIZER;CN=JohnSmith;DIR=&quot;ldap://host.com:6666/o=3DDC%20Associ
  *           ates,c=3DUS??(cn=3DJohn%20Smith)&quot;:MAILTO:jsmith@host1.com
- *     
+ *
  *        The following is an example of this property used by another calendar
  *        user who is acting on behalf of the organizer, with responses
  *        intended to be sent back to the organizer, not the other calendar
  *        user:
- *     
+ *
  *          ORGANIZER;SENT-BY=&quot;MAILTO:jane_doe@host.com&quot;:
  *           MAILTO:jsmith@host1.com
  * </pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class Organizer extends Property {
@@ -144,6 +142,7 @@ public class Organizer extends Property {
 
     /**
      * Constructs a new instance with the specified value.
+     *
      * @param value an organizer URI
      * @throws URISyntaxException where the specified value is not a valid URI
      */
@@ -151,9 +150,9 @@ public class Organizer extends Property {
         super(ORGANIZER, PropertyFactoryImpl.getInstance());
         setValue(value);
     }
-    
+
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
@@ -173,7 +172,7 @@ public class Organizer extends Property {
 
     /**
      * @param aList a list of parameters for this component
-     * @param aUri a URI representation of a calendar address
+     * @param aUri  a URI representation of a calendar address
      */
     public Organizer(final ParameterList aList, final URI aUri) {
         super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
@@ -201,7 +200,7 @@ public class Organizer extends Property {
         /* schedulestatus added for CalDAV scheduling
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_STATUS,
-                                                         getParameters());
+                getParameters());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
@@ -235,4 +234,22 @@ public class Organizer extends Property {
     public final void setCalAddress(final URI calAddress) {
         this.calAddress = calAddress;
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(ORGANIZER);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Organizer(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Organizer();
+        }
+    }
+
 }

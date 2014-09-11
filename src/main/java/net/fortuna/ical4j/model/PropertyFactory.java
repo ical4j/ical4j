@@ -38,33 +38,32 @@ import java.text.ParseException;
 
 /**
  * A factory for creating iCalendar properties.
- * 
- * @author Ben Fortuna
- * 
- * Note that implementations must be {@link Serializable} to support referencing
- * from {@link Property} instances.
- * 
- * $Id$
  *
- * Created on 16/06/2005
+ * @author Ben Fortuna
+ *         <p/>
+ *         Note that implementations must be {@link Serializable} to support referencing
+ *         from {@link Property} instances.
+ *         <p/>
+ *         $Id$
+ *         <p/>
+ *         Created on 16/06/2005
  */
-public interface PropertyFactory extends Serializable {
+public interface PropertyFactory<T extends Property> extends Serializable {
 
     /**
-     * @param name a property name
      * @return a new instance of the specified property
      */
-    Property createProperty(String name);
-    
+    T createProperty();
+
     /**
-     * @param name a property name
      * @param parameters a list of property parameters
-     * @param value a property value
+     * @param value      a property value
      * @return a new instance of the specified property
-     * @throws IOException where an unexpected error occurs reading data
+     * @throws IOException        where an unexpected error occurs reading data
      * @throws URISyntaxException where data contains an invalid URI
-     * @throws ParseException where data is unable to be parsed correctly
+     * @throws ParseException     where data is unable to be parsed correctly
      */
-    Property createProperty(String name, ParameterList parameters, String value) throws IOException,
-        URISyntaxException, ParseException;
+    T createProperty(ParameterList parameters, String value) throws IOException, URISyntaxException, ParseException;
+
+    boolean supports(String name);
 }

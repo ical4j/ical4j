@@ -31,26 +31,23 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.Uris;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.util.ParameterValidator;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.util.Uris;
-
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines an ATTENDEE iCalendar component property.
+ *
  * @author benf
  */
 public class Attendee extends Property {
@@ -76,7 +73,7 @@ public class Attendee extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
@@ -96,7 +93,7 @@ public class Attendee extends Property {
 
     /**
      * @param aList a list of parameters for this component
-     * @param aUri a URI
+     * @param aUri  a URI
      */
     public Attendee(final ParameterList aList, final URI aUri) {
         super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
@@ -146,9 +143,9 @@ public class Attendee extends Property {
         /* scheduleagent and schedulestatus added for CalDAV scheduling
          */
         ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_AGENT,
-                                                         getParameters());
+                getParameters());
         ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_STATUS,
-                                                         getParameters());
+                getParameters());
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
@@ -174,12 +171,30 @@ public class Attendee extends Property {
     public final void setCalAddress(final URI calAddress) {
         this.calAddress = calAddress;
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public final Property copy() throws IOException, URISyntaxException, ParseException {
         // URI are immutable
-        return new Attendee(new ParameterList(getParameters(), false), calAddress);  
+        return new Attendee(new ParameterList(getParameters(), false), calAddress);
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(ATTENDEE);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Attendee(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Attendee();
+        }
+    }
+
 }

@@ -31,62 +31,62 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.TextList;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.ParameterValidator;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
- * 
+ * <p/>
  * Created: [Apr 6, 2004]
- *
+ * <p/>
  * Defines a CATEGORIES iCalendar component property.
  * <pre>
  *     4.8.1.2 Categories
- *     
+ *
  *        Property Name: CATEGORIES
- *     
+ *
  *        Purpose: This property defines the categories for a calendar
  *        component.
- *     
+ *
  *        Value Type: TEXT
- *     
+ *
  *        Property Parameters: Non-standard and language property parameters
  *        can be specified on this property.
- *     
+ *
  *        Conformance: The property can be specified within "VEVENT", "VTODO"
  *        or "VJOURNAL" calendar components.
- *     
+ *
  *        Description: This property is used to specify categories or subtypes
  *        of the calendar component. The categories are useful in searching for
  *        a calendar component of a particular type and category. Within the
  *        "VEVENT", "VTODO" or "VJOURNAL" calendar components, more than one
  *        category can be specified as a list of categories separated by the
  *        COMMA character (US-ASCII decimal 44).
- *     
+ *
  *        Format Definition: The property is defined by the following notation:
- *     
+ *
  *          categories = "CATEGORIES" catparam ":" text *("," text)
  *                       CRLF
- *     
+ *
  *          catparam   = *(
- *     
+ *
  *                     ; the following is optional,
  *                     ; but MUST NOT occur more than once
- *     
+ *
  *                     (";" languageparam ) /
- *     
+ *
  *                     ; the following is optional,
  *                     ; and MAY occur more than once
- *     
+ *
  *                     (";" xparam)
- *     
+ *
  *                     )
  * </pre>
+ *
  * @author benf
  */
 public class Categories extends Property {
@@ -112,7 +112,7 @@ public class Categories extends Property {
     }
 
     /**
-     * @param aList a list of parameters for this component
+     * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
     public Categories(final ParameterList aList, final String aValue) {
@@ -173,4 +173,22 @@ public class Categories extends Property {
     public final String getValue() {
         return getCategories().toString();
     }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        public Factory() {
+            super(CATEGORIES);
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new Categories(parameters, value);
+        }
+
+        public Property createProperty() {
+            return new Categories();
+        }
+    }
+
 }
