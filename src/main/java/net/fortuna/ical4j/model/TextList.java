@@ -67,23 +67,12 @@ public class TextList implements Serializable {
     public TextList(final String aValue) {
         texts = new CopyOnWriteArrayList<String>();
 
-        // match commas preceded by even number of backslashes..
-        final Pattern pattern = Pattern.compile("([^\\\\](?:\\\\{2})),|([^\\\\]),");
-        
+        final Pattern pattern = Pattern.compile("(?:\\\\.|[^\\\\,]++)+");
+
         final Matcher matcher = pattern.matcher(aValue);
-        String[] textValues;
 
-        if (matcher.find()) {
-        	// HACK: add a marker (&quot;) for easy string splitting..
-            textValues = matcher.replaceAll("$1$2&quot;").split("&quot;");
-        }
-        else {
-        	// no special cases, split on commas not preceded by backslash..
-            textValues = aValue.split("(?<!\\\\),");
-        }
-
-        for (String textValue: textValues) {
-            texts.add(Strings.unescape(textValue));
+        while (matcher.find()){
+            texts.add(Strings.unescape(matcher.group().replace("\\\\","\\")));
         }
     }
 
