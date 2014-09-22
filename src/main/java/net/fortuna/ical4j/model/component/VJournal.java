@@ -113,8 +113,14 @@ public class VJournal extends CalendarComponent {
      * Default constructor.
      */
     public VJournal() {
+        this(true);
+    }
+
+    public VJournal(boolean initialise) {
         super(VJOURNAL);
-        getProperties().add(new DtStamp());
+        if (initialise) {
+            getProperties().add(new DtStamp());
+        }
     }
 
     /**
@@ -519,5 +525,27 @@ public class VJournal extends CalendarComponent {
      */
     public final Uid getUid() {
         return (Uid) getProperty(Property.UID);
+    }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<VJournal> {
+
+        public Factory() {
+            super(VJOURNAL);
+        }
+
+        @Override
+        public VJournal createComponent() {
+            return new VJournal(false);
+        }
+
+        @Override
+        public VJournal createComponent(PropertyList properties) {
+            return new VJournal(properties);
+        }
+
+        @Override
+        public VJournal createComponent(PropertyList properties, ComponentList subComponents) {
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VJOURNAL));
+        }
     }
 }

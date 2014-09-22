@@ -31,13 +31,16 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import net.fortuna.ical4j.model.ComponentFactory;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.PropertyList;
 
 /**
  * $Id$ [05-Apr-2004]
- *
+ * <p/>
  * Defines an iCalendar daylight savings timezone observance component.
- *
+ * <p/>
  * <pre>
  *
  *       daylightc  = &quot;BEGIN&quot; &quot;:&quot; &quot;DAYLIGHT&quot; CRLF
@@ -76,9 +79,32 @@ public class Daylight extends Observance {
 
     /**
      * Constructor.
+     *
      * @param properties a list of properties
      */
     public Daylight(final PropertyList properties) {
         super(DAYLIGHT, properties);
+    }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<Daylight> {
+
+        public Factory() {
+            super(DAYLIGHT);
+        }
+
+        @Override
+        public Daylight createComponent() {
+            return new Daylight();
+        }
+
+        @Override
+        public Daylight createComponent(PropertyList properties) {
+            return new Daylight(properties);
+        }
+
+        @Override
+        public Daylight createComponent(PropertyList properties, ComponentList subComponents) {
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", DAYLIGHT));
+        }
     }
 }

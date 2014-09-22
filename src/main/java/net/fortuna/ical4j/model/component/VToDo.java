@@ -135,8 +135,14 @@ public class VToDo extends CalendarComponent {
      * Default constructor.
      */
     public VToDo() {
+        this(true);
+    }
+
+    public VToDo(boolean initialise) {
         super(VTODO);
-        getProperties().add(new DtStamp());
+        if (initialise) {
+            getProperties().add(new DtStamp());
+        }
     }
 
     /**
@@ -1228,5 +1234,27 @@ public class VToDo extends CalendarComponent {
         final VToDo copy = (VToDo) super.copy();
         copy.alarms = new ComponentList<VAlarm>(alarms);
         return copy;
+    }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<VToDo> {
+
+        public Factory() {
+            super(VTODO);
+        }
+
+        @Override
+        public VToDo createComponent() {
+            return new VToDo(false);
+        }
+
+        @Override
+        public VToDo createComponent(PropertyList properties) {
+            return new VToDo(properties);
+        }
+
+        @Override
+        public VToDo createComponent(PropertyList properties, ComponentList subComponents) {
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VTODO));
+        }
     }
 }

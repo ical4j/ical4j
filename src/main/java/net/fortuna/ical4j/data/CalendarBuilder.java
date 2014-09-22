@@ -59,10 +59,10 @@ import java.util.List;
  * @author Ben Fortuna
  *         <p/>
  *         <pre>
- *         $Id$
+ *                 $Id$
  *
- *         Created: Apr 5, 2004
- *         </pre>
+ *                 Created: Apr 5, 2004
+ *                 </pre>
  * @version 2.0
  */
 public class CalendarBuilder {
@@ -148,7 +148,7 @@ public class CalendarBuilder {
 
         this.parser = parser;
         this.tzRegistry = tzRegistry;
-        this.contentHandler = new ContentHandlerImpl(ComponentFactory.getInstance(),
+        this.contentHandler = new ContentHandlerImpl(ComponentFactoryImpl.getInstance(),
                 propertyFactoryRegistry, parameterFactoryRegistry);
     }
 
@@ -206,13 +206,13 @@ public class CalendarBuilder {
 
     private class ContentHandlerImpl implements ContentHandler {
 
-        private final ComponentFactory componentFactory;
+        private final ComponentFactoryImpl componentFactory;
 
         private final PropertyFactoryRegistry propertyFactory;
 
         private final ParameterFactoryRegistry parameterFactory;
 
-        public ContentHandlerImpl(ComponentFactory componentFactory, PropertyFactoryRegistry propertyFactory,
+        public ContentHandlerImpl(ComponentFactoryImpl componentFactory, PropertyFactoryRegistry propertyFactory,
                                   ParameterFactoryRegistry parameterFactory) {
 
             this.componentFactory = componentFactory;

@@ -365,4 +365,26 @@ public class VTimeZone extends CalendarComponent {
         copy.observances = new ComponentList<Observance>(observances);
         return copy;
     }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<VTimeZone> {
+
+        public Factory() {
+            super(VTIMEZONE);
+        }
+
+        @Override
+        public VTimeZone createComponent() {
+            return new VTimeZone();
+        }
+
+        @Override
+        public VTimeZone createComponent(PropertyList properties) {
+            return new VTimeZone(properties);
+        }
+
+        @Override
+        public VTimeZone createComponent(PropertyList properties, ComponentList subComponents) {
+            return new VTimeZone(properties, subComponents);
+        }
+    }
 }

@@ -212,8 +212,14 @@ public class VFreeBusy extends CalendarComponent {
      * Default constructor.
      */
     public VFreeBusy() {
+        this(true);
+    }
+
+    public VFreeBusy(boolean initialise) {
         super(VFREEBUSY);
-        getProperties().add(new DtStamp());
+        if (initialise) {
+            getProperties().add(new DtStamp());
+        }
     }
 
     /**
@@ -778,5 +784,28 @@ public class VFreeBusy extends CalendarComponent {
      */
     public final Uid getUid() {
         return (Uid) getProperty(Property.UID);
+    }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<VFreeBusy> {
+
+        public Factory() {
+            super(VFREEBUSY);
+        }
+
+        @Override
+        public VFreeBusy createComponent() {
+            return new VFreeBusy(false);
+        }
+
+        @Override
+        public VFreeBusy createComponent(PropertyList properties) {
+            return new VFreeBusy(properties);
+        }
+
+        @Override
+        public VFreeBusy createComponent(PropertyList properties, ComponentList subComponents) {
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VFREEBUSY));
+        }
+
     }
 }

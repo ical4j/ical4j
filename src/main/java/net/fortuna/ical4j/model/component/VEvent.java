@@ -205,9 +205,15 @@ public class VEvent extends CalendarComponent {
      * Default constructor.
      */
     public VEvent() {
+        this(true);
+    }
+
+    public VEvent(boolean initialise) {
         super(VEVENT);
         this.alarms = new ComponentList<VAlarm>();
-        getProperties().add(new DtStamp());
+        if (initialise) {
+            getProperties().add(new DtStamp());
+        }
     }
 
     /**
@@ -1477,5 +1483,27 @@ public class VEvent extends CalendarComponent {
         final VEvent copy = (VEvent) super.copy();
         copy.alarms = new ComponentList<VAlarm>(alarms);
         return copy;
+    }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {
+
+        public Factory() {
+            super(VEVENT);
+        }
+
+        @Override
+        public VEvent createComponent() {
+            return new VEvent(false);
+        }
+
+        @Override
+        public VEvent createComponent(PropertyList properties) {
+            return new VEvent(properties);
+        }
+
+        @Override
+        public VEvent createComponent(PropertyList properties, ComponentList subComponents) {
+            return new VEvent(properties, subComponents);
+        }
     }
 }

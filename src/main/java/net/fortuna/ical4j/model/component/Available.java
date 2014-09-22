@@ -31,11 +31,7 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -43,9 +39,9 @@ import net.fortuna.ical4j.util.PropertyValidator;
 
 /**
  * $Id$ [05-Apr-2004]
- *
+ * <p/>
  * Defines an iCalendar Available component.
- *
+ * <p/>
  * <pre>
  *
  *       availablec  = &quot;BEGIN&quot; &quot;:&quot; &quot;AVAILABLE&quot; CRLF
@@ -54,34 +50,34 @@ import net.fortuna.ical4j.util.PropertyValidator;
  *
  *                    &quot;END&quot; &quot;:&quot; &quot;AVAILABLE&quot; CRLF
  *
-          availableprop  = *(
-
-                         ; the following are REQUIRED,
-                         ; but MUST NOT occur more than once
-
-                         dtstamp / dtstart / uid /
-
-                         ; either a 'dtend' or a 'duration' is required
-                         ; in a 'availableprop', but 'dtend' and
-                         ; 'duration' MUST NOT occur in the same
-                         ; 'availableprop', and each MUST NOT occur more
-                         ; than once
-
-                         dtend / duration /
-
-                         ; the following are OPTIONAL,
-                         ; but MUST NOT occur more than once
-
-                         created / last-mod / recurid / rrule /
-                         summary /
-
-                         ; the following are OPTIONAL,
-                         ; and MAY occur more than once
-
-                         categories / comment / contact / exdate /
-                         rdate / x-prop
-
-                         )
+ * availableprop  = *(
+ *
+ * ; the following are REQUIRED,
+ * ; but MUST NOT occur more than once
+ *
+ * dtstamp / dtstart / uid /
+ *
+ * ; either a 'dtend' or a 'duration' is required
+ * ; in a 'availableprop', but 'dtend' and
+ * ; 'duration' MUST NOT occur in the same
+ * ; 'availableprop', and each MUST NOT occur more
+ * ; than once
+ *
+ * dtend / duration /
+ *
+ * ; the following are OPTIONAL,
+ * ; but MUST NOT occur more than once
+ *
+ * created / last-mod / recurid / rrule /
+ * summary /
+ *
+ * ; the following are OPTIONAL,
+ * ; and MAY occur more than once
+ *
+ * categories / comment / contact / exdate /
+ * rdate / x-prop
+ *
+ * )
  * </pre>
  *
  * @author Ben Fortuna
@@ -100,6 +96,7 @@ public class Available extends Component {
 
     /**
      * Constructor.
+     *
      * @param properties a list of properties
      */
     public Available(final PropertyList properties) {
@@ -180,6 +177,28 @@ public class Available extends Component {
 
         if (recurse) {
             validateProperties();
+        }
+    }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<Available> {
+
+        public Factory() {
+            super(AVAILABLE);
+        }
+
+        @Override
+        public Available createComponent() {
+            return new Available();
+        }
+
+        @Override
+        public Available createComponent(PropertyList properties) {
+            return new Available(properties);
+        }
+
+        @Override
+        public Available createComponent(PropertyList properties, ComponentList subComponents) {
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", AVAILABLE));
         }
     }
 }

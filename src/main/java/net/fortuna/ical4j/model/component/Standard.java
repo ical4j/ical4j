@@ -31,13 +31,16 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import net.fortuna.ical4j.model.ComponentFactory;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.PropertyList;
 
 /**
  * $Id$ [05-Apr-2004]
- *
+ * <p/>
  * Defines an iCalendar standard timezone observance component.
- *
+ * <p/>
  * <pre>
  *
  *       standardc  = &quot;BEGIN&quot; &quot;:&quot; &quot;STANDARD&quot; CRLF
@@ -76,9 +79,32 @@ public class Standard extends Observance {
 
     /**
      * Constructor.
+     *
      * @param properties a list of properties
      */
     public Standard(final PropertyList properties) {
         super(STANDARD, properties);
+    }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<Standard> {
+
+        public Factory() {
+            super(STANDARD);
+        }
+
+        @Override
+        public Standard createComponent() {
+            return new Standard();
+        }
+
+        @Override
+        public Standard createComponent(PropertyList properties) {
+            return new Standard(properties);
+        }
+
+        @Override
+        public Standard createComponent(PropertyList properties, ComponentList subComponents) {
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", STANDARD));
+        }
     }
 }

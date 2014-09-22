@@ -453,4 +453,26 @@ public class VAlarm extends CalendarComponent {
     public final Summary getSummary() {
         return (Summary) getProperty(Property.SUMMARY);
     }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {
+
+        public Factory() {
+            super(VALARM);
+        }
+
+        @Override
+        public VAlarm createComponent() {
+            return new VAlarm();
+        }
+
+        @Override
+        public VAlarm createComponent(PropertyList properties) {
+            return new VAlarm(properties);
+        }
+
+        @Override
+        public VAlarm createComponent(PropertyList properties, ComponentList subComponents) {
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VALARM));
+        }
+    }
 }

@@ -101,9 +101,15 @@ public class VAvailability extends CalendarComponent {
      * Default constructor.
      */
     public VAvailability() {
+        this(true);
+    }
+
+    public VAvailability(boolean initialise) {
         super(VAVAILABILITY);
         this.available = new ComponentList<Available>();
-        getProperties().add(new DtStamp());
+        if (initialise) {
+            getProperties().add(new DtStamp());
+        }
     }
 
     /**
@@ -248,5 +254,27 @@ public class VAvailability extends CalendarComponent {
     protected Validator getValidator(Method method) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    public static class Factory extends Content.Factory implements ComponentFactory<VAvailability> {
+
+        public Factory() {
+            super(VAVAILABILITY);
+        }
+
+        @Override
+        public VAvailability createComponent() {
+            return new VAvailability(false);
+        }
+
+        @Override
+        public VAvailability createComponent(PropertyList properties) {
+            return new VAvailability(properties);
+        }
+
+        @Override
+        public VAvailability createComponent(PropertyList properties, ComponentList subComponents) {
+            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VAVAILABILITY));
+        }
     }
 }
