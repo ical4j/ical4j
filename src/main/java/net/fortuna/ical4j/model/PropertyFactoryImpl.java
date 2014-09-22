@@ -75,7 +75,7 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
      * {@inheritDoc}
      */
     public Property createProperty(final String name) {
-        final PropertyFactory factory = (PropertyFactory) getFactory(name);
+        final PropertyFactory factory = getFactory(name);
         if (factory != null) {
             return factory.createProperty();
         } else if (isExperimentalName(name)) {
