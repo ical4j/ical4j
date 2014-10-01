@@ -50,11 +50,6 @@ import java.util.ServiceLoader;
  */
 public abstract class AbstractContentFactory<T> implements Serializable {
 
-    /**
-     * Map of delegate factories.
-     */
-    private final Map<String, T> defaultFactories;
-
     private final Map<String, T> extendedFactories;
 
     private final transient ServiceLoader<T> factoryLoader;
@@ -63,21 +58,15 @@ public abstract class AbstractContentFactory<T> implements Serializable {
      * Default constructor.
      */
     public AbstractContentFactory(ServiceLoader<T> factoryLoader) {
-        defaultFactories = new HashMap<String, T>();
         extendedFactories = new HashMap<String, T>();
         this.factoryLoader = factoryLoader;
     }
 
     /**
-     * Register a standard content factory.
-     */
-    protected final void registerDefaultFactory(String key, T factory) {
-        defaultFactories.put(key, factory);
-    }
-
-    /**
      * Register a non-standard content factory.
+     * @deprecated Define extensions in META-INF/services/net.fortuna.ical4j.model.[Type]Factory
      */
+    @Deprecated
     protected final void registerExtendedFactory(String key, T factory) {
         extendedFactories.put(key, factory);
     }
@@ -99,9 +88,6 @@ public abstract class AbstractContentFactory<T> implements Serializable {
             } else {
                 factory = null;
             }
-        }
-        if (factory == null) {
-            factory = defaultFactories.get(key);
         }
         if (factory == null) {
             factory = extendedFactories.get(key);
