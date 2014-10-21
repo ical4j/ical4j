@@ -39,15 +39,15 @@ import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Ignore;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
 /**
  * $Id: CalendarOutputterTest.java [Apr 6, 2004]
- *
+ * <p/>
  * Test case for iCalendarOutputter.
  *
  * @author benf
@@ -55,7 +55,7 @@ import java.io.*;
 @Ignore
 public class CalendarOutputterTest extends TestCase {
 
-    private static Log log = LogFactory.getLog(CalendarOutputterTest.class);
+    private static Logger log = LoggerFactory.getLogger(CalendarOutputterTest.class);
 
     private String filename;
 
@@ -74,7 +74,7 @@ public class CalendarOutputterTest extends TestCase {
     protected final void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
     }
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
@@ -102,7 +102,7 @@ public class CalendarOutputterTest extends TestCase {
             }
 
             assertNotNull(calendar);
-            
+
             outputter.setValidating(false);
             outputter.output(calendar, out);
 
@@ -140,6 +140,7 @@ public class CalendarOutputterTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#getName()
      */
+
     /**
      * Overridden to return the current iCalendar file under test.
      */
@@ -160,7 +161,7 @@ public class CalendarOutputterTest extends TestCase {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarOutputterTest(testFiles[i].getPath()));
         }
-        
+
         // invalid tests..
         testFiles = new File("etc/samples/invalid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {

@@ -31,23 +31,21 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import junit.framework.TestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 17/05/2007
  *
  * @author Ben
- *
  */
 public class UtcOffsetTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(UtcOffsetTest.class);
-    
+    private static Logger LOG = LoggerFactory.getLogger(UtcOffsetTest.class);
+
     /**
      * Unit tests for offset parsing.
      */
@@ -57,30 +55,26 @@ public class UtcOffsetTest extends TestCase {
         new UtcOffset("+100045");
         new UtcOffset("-1000");
         new UtcOffset("-100045");
-        
+
         // invalid
         try {
             new UtcOffset("1000");
-        }
-        catch (IllegalArgumentException iae) {
+        } catch (IllegalArgumentException iae) {
             LOG.debug("Caught exception: " + iae.getMessage());
         }
         try {
             new UtcOffset("100045");
-        }
-        catch (IllegalArgumentException iae) {
+        } catch (IllegalArgumentException iae) {
             LOG.debug("Caught exception: " + iae.getMessage());
         }
         try {
             new UtcOffset("+100");
-        }
-        catch (IllegalArgumentException iae) {
+        } catch (IllegalArgumentException iae) {
             LOG.debug("Caught exception: " + iae.getMessage());
         }
         try {
             new UtcOffset("-10");
-        }
-        catch (IllegalArgumentException iae) {
+        } catch (IllegalArgumentException iae) {
             LOG.debug("Caught exception: " + iae.getMessage());
         }
     }

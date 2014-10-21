@@ -31,10 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
@@ -44,9 +40,12 @@ import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -58,7 +57,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ComponentTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(ComponentTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ComponentTest.class);
 
     protected Component component;
     

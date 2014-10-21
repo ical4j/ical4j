@@ -31,46 +31,46 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 10/11/2006
- *
+ * <p/>
  * Unit tests for {@link Calendars}.
+ *
  * @author Ben Fortuna
  */
 public class CalendarsTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(CalendarsTest.class);
-    
+    private static Logger LOG = LoggerFactory.getLogger(CalendarsTest.class);
+
     private String path;
-    
+
     private Calendar[] calendars;
-    
+
     private Calendar calendar;
-    
+
     private int expectedCount;
-    
+
     private Charset charset;
-    
+
     private String expectedContentType;
-    
+
     /**
      * @param testMethod
      * @param path
@@ -79,7 +79,7 @@ public class CalendarsTest extends TestCase {
         super(testMethod);
         this.path = path;
     }
-    
+
     /**
      * @param testMethod
      */
@@ -87,7 +87,7 @@ public class CalendarsTest extends TestCase {
         super(testMethod);
         this.calendars = calendars;
     }
-    
+
     /**
      * @param testMethod
      */
@@ -96,7 +96,7 @@ public class CalendarsTest extends TestCase {
         this.calendar = calendar;
         this.expectedCount = expectedCount;
     }
-    
+
     /**
      * @param testMethod
      */
@@ -106,18 +106,20 @@ public class CalendarsTest extends TestCase {
         this.charset = charset;
         this.expectedContentType = expectedContentType;
     }
-    
+
     /**
      * Test loading of calendars.
+     *
      * @throws IOException
      * @throws ParserException
      */
     public void testLoad() throws IOException, ParserException {
         assertNotNull(Calendars.load(path));
     }
-    
+
     /**
      * Test loading of calendars.
+     *
      * @throws IOException
      * @throws ParserException
      */
@@ -125,26 +127,25 @@ public class CalendarsTest extends TestCase {
         try {
             Calendars.load(path);
             fail("Should throw FileNotFoundException");
-        }
-        catch (FileNotFoundException fnfe) {
+        } catch (FileNotFoundException fnfe) {
             LOG.info("Caught exception: " + fnfe.getMessage());
         }
     }
-    
+
     /**
      * Test loading of calendars.
+     *
      * @throws IOException
      */
     public void testLoadParserException() throws IOException {
         try {
             Calendars.load(path);
             fail("Should throw ParserException");
-        }
-        catch (ParserException pe) {
+        } catch (ParserException pe) {
             LOG.info("Caught exception: " + pe.getMessage());
         }
     }
-    
+
     /**
      * Test merging of calendars.
      */
@@ -165,7 +166,7 @@ public class CalendarsTest extends TestCase {
             }
         }
     }
-    
+
     /**
      * Test calendar split.
      */
@@ -173,22 +174,22 @@ public class CalendarsTest extends TestCase {
         Calendar[] split = Calendars.split(calendar);
         assertEquals(expectedCount, split.length);
     }
-    
+
     /**
-     * 
+     *
      */
     public void testGetContentType() {
         assertEquals(expectedContentType, Calendars.getContentType(calendar, charset));
     }
-    
+
     /**
      * @return
-     * @throws ParserException 
-     * @throws IOException 
+     * @throws ParserException
+     * @throws IOException
      */
     public static TestSuite suite() throws IOException, ParserException {
         TestSuite suite = new TestSuite();
-        
+
         suite.addTest(new CalendarsTest("testLoad", "etc/samples/valid/Australian32Holidays.ics"));
         suite.addTest(new CalendarsTest("testLoadFileNotFoundException", "etc/samples/valid/doesnt-exist.ics"));
         suite.addTest(new CalendarsTest("testLoadParserException", "etc/samples/invalid/google_aus_holidays.ics"));
@@ -197,16 +198,16 @@ public class CalendarsTest extends TestCase {
         calendars.add(Calendars.load("etc/samples/valid/Australian32Holidays.ics"));
         calendars.add(Calendars.load("etc/samples/valid/OZMovies.ics"));
         suite.addTest(new CalendarsTest("testMerge", (Calendar[]) calendars.toArray(new Calendar[calendars.size()])));
-        
+
         Calendar calendar = Calendars.load("etc/samples/valid/Australian32Holidays.ics");
         suite.addTest(new CalendarsTest("testSplit", calendar, 10));
-        
+
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar"));
-        
+
         calendar = Calendars.load("etc/samples/valid/OZMovies.ics");
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, Charset.forName("US-ASCII"), "text/calendar; method=PUBLISH; charset=US-ASCII"));
-        
+
         return suite;
     }
 }

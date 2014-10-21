@@ -31,8 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.FieldPosition;
 import java.text.NumberFormat;
@@ -44,14 +44,14 @@ import java.util.TimeZone;
 
 /**
  * $Id$ [06-Apr-2004]
- * 
+ * <p/>
  * Creates DateFormat objects optimized for common iCalendar date patterns.
- * 
+ *
  * @author Dave Nault dnault@laszlosystems.com
  * @see #getInstance(String)
  */
 public final class CalendarDateFormatFactory {
-    private static final Log LOG = LogFactory.getLog(CalendarDateFormatFactory.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CalendarDateFormatFactory.class);
 
     private static final String DATETIME_PATTERN = "yyyyMMdd'T'HHmmss";
     private static final String DATETIME_UTC_PATTERN = "yyyyMMdd'T'HHmmss'Z'";
@@ -69,28 +69,24 @@ public final class CalendarDateFormatFactory {
      * Returns DateFormat objects optimized for common iCalendar date patterns. The DateFormats are *not* thread safe.
      * Attempts to get or set the Calendar or NumberFormat of an optimized DateFormat will result in an
      * UnsupportedOperation exception being thrown.
-     * 
-     * @param pattern
-     *            a SimpleDateFormat-compatible pattern
+     *
+     * @param pattern a SimpleDateFormat-compatible pattern
      * @return an optimized DateFormat instance if possible, otherwise a normal SimpleDateFormat instance
      */
     public static java.text.DateFormat getInstance(String pattern) {
         java.text.DateFormat instance;
-        
+
         // if (true) {
         // return new SimpleDateFormat(pattern);
         // }
 
         if (pattern.equals(DATETIME_PATTERN) || pattern.equals(DATETIME_UTC_PATTERN)) {
             instance = new DateTimeFormat(pattern);
-        }
-        else if (pattern.equals(DATE_PATTERN)) {
+        } else if (pattern.equals(DATE_PATTERN)) {
             instance = new DateFormat(pattern);
-        }
-        else if (pattern.equals(TIME_PATTERN) || pattern.equals(TIME_UTC_PATTERN)) {
+        } else if (pattern.equals(TIME_PATTERN) || pattern.equals(TIME_UTC_PATTERN)) {
             instance = new TimeFormat(pattern);
-        }
-        else {
+        } else {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("unexpected date format pattern: " + pattern);
             }
@@ -102,8 +98,8 @@ public final class CalendarDateFormatFactory {
 
     private abstract static class CalendarDateFormat extends java.text.DateFormat {
         /**
-		 * 
-		 */
+         *
+         */
         private static final long serialVersionUID = -4191402739860280205L;
 
         private static final java.util.TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
@@ -192,7 +188,7 @@ public final class CalendarDateFormatFactory {
     /**
      * A custom date-time formatter.
      * Parses and formats these patterns:
-     * 
+     * <p/>
      * <pre>
      * yyyyMMdd'T'HHmmss
      * yyyyMMdd'T'HHmmss'Z'
@@ -201,8 +197,8 @@ public final class CalendarDateFormatFactory {
     private static class DateTimeFormat extends CalendarDateFormat {
 
         /**
-		 * 
-		 */
+         *
+         */
         private static final long serialVersionUID = 3005824302269636122L;
 
         final boolean patternEndsWithZ;
@@ -274,7 +270,7 @@ public final class CalendarDateFormatFactory {
     /**
      * Custom date formatter.
      * Parses and formats this pattern:
-     * 
+     * <p/>
      * <pre>
      * yyyyMMdd
      * </pre>
@@ -282,8 +278,8 @@ public final class CalendarDateFormatFactory {
     private static class DateFormat extends CalendarDateFormat {
 
         /**
-		 * 
-		 */
+         *
+         */
         private static final long serialVersionUID = -7626077667268431779L;
 
         public DateFormat(String pattern) {
@@ -325,7 +321,7 @@ public final class CalendarDateFormatFactory {
     /**
      * Custom time formatter.
      * Parses and formats these patterns:
-     * 
+     * <p/>
      * <pre>
      * HHmmss
      * HHmmss'Z'
@@ -334,8 +330,8 @@ public final class CalendarDateFormatFactory {
     private static class TimeFormat extends CalendarDateFormat {
 
         /**
-		 * 
-		 */
+         *
+         */
         private static final long serialVersionUID = -1367114409994225425L;
 
         final boolean patternEndsWithZ;
@@ -392,7 +388,7 @@ public final class CalendarDateFormatFactory {
     }
 
     private static java.util.Calendar makeCalendar(boolean lenient, java.util.TimeZone timeZone, int year,
-            int zeroBasedMonth, int day, int hour, int minutes, int seconds) {
+                                                   int zeroBasedMonth, int day, int hour, int minutes, int seconds) {
         final java.util.Calendar cal = new GregorianCalendar(timeZone);
         cal.setLenient(lenient);
         cal.set(year, zeroBasedMonth, day, hour, minutes, seconds);

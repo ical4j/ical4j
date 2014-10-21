@@ -31,26 +31,24 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ben
- *
  */
 public class CalendarComponentTest extends ComponentTest {
 
-    private static final Log LOG = LogFactory.getLog(CalendarComponentTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CalendarComponentTest.class);
 
     private CalendarComponent component;
-    
+
     /**
      * @param testMethod
      * @param component
@@ -67,18 +65,18 @@ public class CalendarComponentTest extends ComponentTest {
      * @param expectedPeriods
      */
     public CalendarComponentTest(String testMethod, CalendarComponent component,
-            Period period, PeriodList expectedPeriods) {
+                                 Period period, PeriodList expectedPeriods) {
         super(testMethod, component, period, expectedPeriods);
         this.component = component;
     }
-    
+
     /**
      * Test component iTIP METHOD validation.
      */
     public final void testPublishValidation() throws ValidationException {
         component.validate(Method.PUBLISH);
     }
-    
+
     /**
      * Test component iTIP METHOD validation.
      */
@@ -86,27 +84,26 @@ public class CalendarComponentTest extends ComponentTest {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
         component.validate(Method.PUBLISH);
     }
-    
+
     /**
-     * 
+     *
      */
     public final void testPublishValidationException() {
         try {
             component.validate(Method.PUBLISH);
             fail("ValidationException should be thrown!");
-        }
-        catch (ValidationException ve) {
+        } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
         }
     }
-    
+
     /**
      * Test component iTIP METHOD validation.
      */
     public final void testRequestValidation() throws ValidationException {
         component.validate(Method.PUBLISH);
     }
-    
+
     /**
      * Test component iTIP METHOD validation.
      */
@@ -114,16 +111,15 @@ public class CalendarComponentTest extends ComponentTest {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
         component.validate(Method.PUBLISH);
     }
-    
+
     /**
-     * 
+     *
      */
     public final void testRequestValidationException() {
         try {
             component.validate(Method.PUBLISH);
             fail("ValidationException should be thrown!");
-        }
-        catch (ValidationException ve) {
+        } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
         }
     }
@@ -150,8 +146,7 @@ public class CalendarComponentTest extends ComponentTest {
         try {
             component.validate(Method.REPLY);
             fail("ValidationException should be thrown!");
-        }
-        catch (ValidationException ve) {
+        } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
         }
     }

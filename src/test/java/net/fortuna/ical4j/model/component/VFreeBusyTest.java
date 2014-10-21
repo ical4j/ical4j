@@ -38,8 +38,8 @@ import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -53,22 +53,22 @@ import java.text.ParseException;
  */
 public class VFreeBusyTest extends CalendarComponentTest {
 
-    private static Log log = LogFactory.getLog(VFreeBusyTest.class);
+    private static Logger log = LoggerFactory.getLogger(VFreeBusyTest.class);
 
     private TimeZoneRegistry registry;
 
     private VTimeZone tz;
 
     private TzId tzParam;
-    
+
     private ComponentList<CalendarComponent> components;
-    
+
     private VFreeBusy request;
-    
+
     private FbType expectedFbType;
-    
+
     private int expectedPeriodCount;
-    
+
     private PeriodList expectedPeriods;
 
     /**
@@ -77,7 +77,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
     public VFreeBusyTest(String testMethod) {
         this(testMethod, null);
     }
-    
+
     /**
      * @param testMethod
      * @param component
@@ -97,7 +97,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         this.components = components;
         this.expectedPeriodCount = expectedPeriodCount;
     }
-    
+
     /**
      * @param testMethod
      * @param component
@@ -110,7 +110,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         this.components = components;
         this.expectedFbType = expectedFbType;
     }
-    
+
     /**
      * @param testMethod
      * @param component
@@ -134,7 +134,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         // relax validation to avoid UID requirement..
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        
+
         registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         // create timezone property..
         tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
@@ -142,7 +142,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         tzParam = new TzId(tz.getProperty(Property.TZID)
                 .getValue());
     }
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
@@ -242,7 +242,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         if (log.isDebugEnabled()) {
             log.debug("\n==\n" + event.toString());
         }
-        
+
         DateTime requestStart = new DateTime(eventStart);
         DateTime requestEnd = new DateTime();
 
@@ -292,16 +292,16 @@ public class VFreeBusyTest extends CalendarComponentTest {
         java.util.Calendar start = java.util.Calendar.getInstance();
         java.util.Calendar end = java.util.Calendar.getInstance();
         start.add(java.util.Calendar.DATE, -1);
-        
+
         VEvent dteEnd = new VEvent(new Date(start.getTime().getTime()),
                 new Date(end.getTime().getTime()), "DATE END INCLUDED");
-        
+
         VEvent duration = new VEvent(new Date(start.getTime().getTime()),
                 new Dur(0, 1, 0, 0), "DURATION");
-        
+
         freeBusyTest.getComponents().add(dteEnd);
         freeBusyTest.getComponents().add(duration);
-        
+
         java.util.Calendar dtstart = java.util.Calendar.getInstance();
         java.util.Calendar dtend = java.util.Calendar.getInstance();
         dtstart.add(java.util.Calendar.DATE, -2);
@@ -332,46 +332,45 @@ public class VFreeBusyTest extends CalendarComponentTest {
         log.debug("REPLY BUSY2: \n" + replyBusy2.toString());
         log.debug("REPLY FREE2: \n" + replyFree2.toString());
     }
-    
+
     /**
-     * 
+     *
      */
     public void testFbType() {
         VFreeBusy result = new VFreeBusy(request, components);
         FreeBusy fb = (FreeBusy) result.getProperty(Property.FREEBUSY);
         assertEquals(expectedFbType, fb.getParameter(Parameter.FBTYPE));
     }
-    
+
     /**
-     * 
+     *
      */
     public void testPeriodCount() {
         VFreeBusy result = new VFreeBusy(request, components);
         FreeBusy fb = (FreeBusy) result.getProperty(Property.FREEBUSY);
         if (expectedPeriodCount > 0) {
             assertEquals(expectedPeriodCount, fb.getPeriods().size());
-        }
-        else {
+        } else {
             assertNull(fb);
         }
     }
-    
+
     /**
-     * 
+     *
      */
     public void testFreeBusyPeriods() {
         VFreeBusy result = new VFreeBusy(request, components);
         FreeBusy fb = (FreeBusy) result.getProperty(Property.FREEBUSY);
         assertEquals(expectedPeriods, fb.getPeriods());
     }
-    
+
     /**
      * @return
      */
     public static TestSuite suite() throws ParseException, URISyntaxException,
-     IOException {
+            IOException {
         TestSuite suite = new TestSuite();
-        
+
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList"));
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList2"));
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList3"));
@@ -402,10 +401,10 @@ public class VFreeBusyTest extends CalendarComponentTest {
         replyFb.getProperties().add(new Attendee("mailto:joe@example.com"));
         replyFb.getProperties().add(new Uid("12"));
         suite.addTest(new VFreeBusyTest("testReplyValidation", replyFb));
-        VFreeBusy invalDurFb = (VFreeBusy)replyFb.copy();
+        VFreeBusy invalDurFb = (VFreeBusy) replyFb.copy();
         invalDurFb.getProperties().add(new Duration(new Dur("PT1H")));
         suite.addTest(new VFreeBusyTest("testReplyValidationException", invalDurFb));
-        VFreeBusy invalSeqFb = (VFreeBusy)replyFb.copy();
+        VFreeBusy invalSeqFb = (VFreeBusy) replyFb.copy();
         invalSeqFb.getProperties().add(new Sequence("12"));
         suite.addTest(new VFreeBusyTest("testReplyValidationException", invalSeqFb));
 
@@ -447,16 +446,16 @@ public class VFreeBusyTest extends CalendarComponentTest {
         // FBTYPE is optional - defaults to BUSY..
 //        suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.BUSY));
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
-        
+
         periods = new PeriodList();
         periods.add(new Period(new DateTime("20050104T0800000Z"), new Dur("PT5H")));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
-        
+
         // TODO: further work needed to "splice" events based on the amount
         // of time that intersects a free-busy request..
 //        assertEquals(new DateTime("20050104T1100000Z"), busy1.getStart());
 //        assertEquals("PT30M", busy1.getDuration().toString());
-        
+
         request = new VFreeBusy(period.getStart(), period.getEnd(), new Dur(0));
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
 
@@ -467,10 +466,10 @@ public class VFreeBusyTest extends CalendarComponentTest {
 
         start = new DateTime("20081225T110000");
         end = new DateTime("20081225T113000");
-        
+
         request = new VFreeBusy(start, end);
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
-        
+
         request = new VFreeBusy(start, end, new Dur(0, 0, 15, 0));
         suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.FREE));
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
@@ -478,7 +477,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         periods = new PeriodList();
         periods.add(new Period(start, new Dur(0, 0, 30, 0)));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
-        
+
         //some components are not in range
         components = new ComponentList<CalendarComponent>();
         TimeZone tz = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone(
@@ -486,7 +485,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         Parameter tzP = new TzId(tz.getVTimeZone().getProperty(Property.TZID).getValue());
         ParameterList pl = new ParameterList();
         pl.add(tzP);
-        DtStart dts = new DtStart(pl, (Date)new DateTime("20130124T0200000", tz));
+        DtStart dts = new DtStart(pl, (Date) new DateTime("20130124T0200000", tz));
         dts.getParameters().add(tzP);
         VEvent e = new VEvent();
         e.getProperties().add(dts);
@@ -496,7 +495,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         period = new Period(new DateTime("20130124T1100000Z"), new DateTime("20130125T1100000Z"));
         request = new VFreeBusy(period.getStart(), period.getEnd());
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
-        
+
         return suite;
     }
 }

@@ -31,34 +31,32 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 6/08/2005
  *
  * @author Ben
- *
  */
 public class NumberListTest extends TestCase {
-    
-	private static final Log LOG = LogFactory.getLog(NumberListTest.class);
-	
+
+    private static Logger LOG = LoggerFactory.getLogger(NumberListTest.class);
+
     private NumberList numberList;
-    
+
     private int expectedSize;
-    
+
     private String expectedString;
-    
+
     private Integer validNumber;
-    
+
     private Integer invalidNumber;
-    
+
     /**
      * @param numberList
      * @param expectedSize
@@ -68,7 +66,7 @@ public class NumberListTest extends TestCase {
         this.numberList = numberList;
         this.expectedSize = expectedSize;
     }
-    
+
     /**
      * @param numberList
      * @param expectedString
@@ -78,44 +76,43 @@ public class NumberListTest extends TestCase {
         this.numberList = numberList;
         this.expectedString = expectedString;
     }
-    
+
     /**
      * @param list
      * @param validNumber
      * @param invalidNumber
      */
     public NumberListTest(NumberList list, Integer validNumber, Integer invalidNumber) {
-    	super("testBounds");
-    	this.numberList = list;
-    	this.validNumber = validNumber;
-    	this.invalidNumber = invalidNumber;
+        super("testBounds");
+        this.numberList = list;
+        this.validNumber = validNumber;
+        this.invalidNumber = invalidNumber;
     }
-    
+
     public void testSize() {
         assertEquals(expectedSize, numberList.size());
     }
-    
+
     public void testToString() {
         assertEquals(expectedString, numberList.toString());
     }
-    
+
     public void testBounds() {
-		numberList.add(validNumber);
-    	try {
-    		numberList.add(invalidNumber);
-    	}
-    	catch (IllegalArgumentException e) {
-    		LOG.debug("Caught exception: " + e);
-    	}
+        numberList.add(validNumber);
+        try {
+            numberList.add(invalidNumber);
+        } catch (IllegalArgumentException e) {
+            LOG.debug("Caught exception: " + e);
+        }
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public String getName() {
         return super.getName() + " [" + numberList + "]";
     }
-    
+
     /**
      * @return
      */
@@ -126,14 +123,14 @@ public class NumberListTest extends TestCase {
 
         suite.addTest(new NumberListTest(new NumberList("-9,-2,-3,3,5,6"), 6));
         suite.addTest(new NumberListTest(new NumberList("-9,-2,-3,3,5,6"), "-9,-2,-3,3,5,6"));
-        
+
         suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3"), 7));
         suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3"), "0,2,5,-2,-4,-5,3"));
         suite.addTest(new NumberListTest(new NumberList("0,2,5,-2,-4,-5,+3", 0, 5, true), "0,2,5,-2,-4,-5,3"));
-        
+
         suite.addTest(new NumberListTest(new NumberList(0, 1, false), new Integer(0), new Integer(-1)));
         suite.addTest(new NumberListTest(new NumberList("1", 0, 1, true), new Integer(0), new Integer(2)));
-        
+
         return suite;
     }
 }

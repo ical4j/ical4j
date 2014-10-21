@@ -31,63 +31,63 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.StringReader;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.DtStart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.StringReader;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 14/09/2005
- *
+ * <p/>
  * Unit tests for <code>TimeZone</code>.
+ *
  * @author Ben Fortuna
  */
 public class TimeZoneTest extends TestCase {
 
     private static final long GMT_PLUS_4 = 4 * 60 * 60 * 1000;
-    
+
     private static final long GMT_PLUS_10 = 10 * 60 * 60 * 1000;
 
     private static final long GMT_MINUS_10 = -10 * 60 * 60 * 1000;
 
     private static final long GMT_MINUS_1030 = -630 * 60 * 1000;
-    
+
     private static final long GMT_MINUS_103126 = GMT_MINUS_1030 - (1 * 60 * 1000) - (26 * 1000);
 
-    private static final Log LOG = LogFactory.getLog(TimeZoneTest.class);
+    private static Logger LOG = LoggerFactory.getLogger(TimeZoneTest.class);
 
     private TimeZoneRegistry registry;
-    
+
     private java.util.TimeZone tz;
 
     private TimeZone timezone;
 
     private String expectedTimezoneId;
-    
+
     private boolean expectedUseDaylightTime;
-    
+
     private int expectedDstSavings;
-    
+
     private long expectedRawOffset;
-    
+
     private Date date;
-    
+
     private String zuluDateTimeStr;
     private String expectedLocalDateTimeStr;
-    
+
     private long expectedOffset;
-    
+
     private boolean expectedInDaylight;
 
     /**
@@ -111,7 +111,7 @@ public class TimeZoneTest extends TestCase {
         this(testMethod, timezoneId);
         this.expectedTimezoneId = expectedTimezoneId;
     }
-    
+
     /**
      * @param testMethod
      * @param timezoneId
@@ -121,7 +121,7 @@ public class TimeZoneTest extends TestCase {
         this(testMethod, timezoneId);
         this.expectedUseDaylightTime = expectedUseDaylightTime;
     }
-    
+
     /**
      * @param testMethod
      * @param timezoneId
@@ -131,7 +131,7 @@ public class TimeZoneTest extends TestCase {
         this(testMethod, timezoneId);
         this.expectedDstSavings = expectedDstSavings;
     }
-    
+
     /**
      * @param testMethod
      * @param timezoneId
@@ -141,7 +141,7 @@ public class TimeZoneTest extends TestCase {
         this(testMethod, timezoneId);
         this.expectedRawOffset = expectedRawOffset;
     }
-    
+
     /**
      * @param testMethod
      * @param timezoneId
@@ -165,18 +165,18 @@ public class TimeZoneTest extends TestCase {
         this.date = date;
         this.expectedInDaylight = expectedInDaylight;
     }
-    
+
     /**
      * @param testMethod
      * @param vtimezoneDef
-     * @param String zuluStr
-     * @param String expectedLocalStr
+     * @param String       zuluStr
+     * @param String       expectedLocalStr
      */
     public TimeZoneTest(String testMethod, String vtimezoneDef, String zuluDateTimeStr,
-            String expectedLocalDateTimeStr) throws Exception {
+                        String expectedLocalDateTimeStr) throws Exception {
         super(testMethod);
         net.fortuna.ical4j.model.Calendar cal = new CalendarBuilder().build(new StringReader(vtimezoneDef));
-        VTimeZone vtz = (VTimeZone)cal.getComponent(VTimeZone.VTIMEZONE);
+        VTimeZone vtz = (VTimeZone) cal.getComponent(VTimeZone.VTIMEZONE);
         this.timezone = new TimeZone(vtz);
         this.zuluDateTimeStr = zuluDateTimeStr;
         this.expectedLocalDateTimeStr = expectedLocalDateTimeStr;
@@ -241,8 +241,7 @@ public class TimeZoneTest extends TestCase {
     public void testInDaylightTime() {
         if (date != null) {
             assertEquals(expectedInDaylight, timezone.inDaylightTime(date));
-        }
-        else {
+        } else {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.YEAR, -10);
             /*
@@ -281,8 +280,7 @@ public class TimeZoneTest extends TestCase {
         if (date != null) {
             assertEquals(expectedOffset, timezone.getOffset(date.getTime()));
             assertEquals(tz.getOffset(date.getTime()), timezone.getOffset(date.getTime()));
-        }
-        else {
+        } else {
             int era = GregorianCalendar.AD;
             int year = 2005;
             int month = 9;
@@ -290,9 +288,10 @@ public class TimeZoneTest extends TestCase {
             int dayOfWeek = Calendar.SUNDAY;
             int millisecods = 0;
             assertEquals(tz
-                    .getOffset(era, year, month, day, dayOfWeek, millisecods),
+                            .getOffset(era, year, month, day, dayOfWeek, millisecods),
                     timezone.getOffset(era, year, month, day, dayOfWeek,
-                            millisecods));
+                            millisecods)
+            );
         }
     }
 
@@ -328,7 +327,7 @@ public class TimeZoneTest extends TestCase {
         assertEquals(expectedDstSavings, timezone.getDSTSavings());
         assertEquals(tz.getDSTSavings(), timezone.getDSTSavings());
     }
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#getName()
      */
@@ -338,13 +337,13 @@ public class TimeZoneTest extends TestCase {
         }
         return super.getName();
     }
-    
+
     public void testZuluToLocal() throws Exception {
         DateTime d = new DateTime(zuluDateTimeStr);
         d.setTimeZone(timezone);
         assertEquals(expectedLocalDateTimeStr, d.toString());
     }
-    
+
     /**
      * @return
      */
@@ -354,29 +353,29 @@ public class TimeZoneTest extends TestCase {
         suite.addTest(new TimeZoneTest("testGetId", "Australia/Melbourne"));
         suite.addTest(new TimeZoneTest("testGetId", "US/Mountain", "America/Denver"));
         suite.addTest(new TimeZoneTest("testGetId", "Asia/Calcutta", "Asia/Kolkata"));
-        
+
         suite.addTest(new TimeZoneTest("testGetDisplayName", "Australia/Melbourne"));
         suite.addTest(new TimeZoneTest("testGetDisplayNameShort", "Australia/Melbourne"));
-        
+
         suite.addTest(new TimeZoneTest("testGetRawOffset", "Australia/Melbourne", GMT_PLUS_10));
         suite.addTest(new TimeZoneTest("testGetRawOffset", "Pacific/Honolulu", GMT_MINUS_10));
-        
+
         suite.addTest(new TimeZoneTest("testGetRawOffset", "Europe/Samara", GMT_PLUS_4));
         suite.addTest(new TimeZoneTest("testInDaylightTime", "Europe/Samara", false));
         suite.addTest(new TimeZoneTest("testGetOffset", "Europe/Samara", GMT_PLUS_4));
-        
+
         suite.addTest(new TimeZoneTest("testHasSameRules", "Australia/Melbourne"));
-        
+
         Calendar cal = Calendar.getInstance(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
         cal.set(1999, 2, 28, 2, 1);
         // technically, 2:01am, Sunday 28 March 1999 doesn't exist, so it can't be in daylight time..
         suite.addTest(new TimeZoneTest("testInDaylightTime", "Australia/Melbourne", cal.getTime(), false));
         suite.addTest(new TimeZoneTest("testInDaylightTime", "Australia/Melbourne"));
-        
+
         suite.addTest(new TimeZoneTest("testUseDaylightTime", "Australia/Melbourne", true));
         suite.addTest(new TimeZoneTest("testUseDaylightTime", "Africa/Abidjan", false));
         suite.addTest(new TimeZoneTest("testGetDSTSavings", "Australia/Melbourne", 3600000));
-        
+
         suite.addTest(new TimeZoneTest("testGetOffset", "Australia/Melbourne"));
         //testHonoluluCurrentOffset..
         suite.addTest(new TimeZoneTest("testGetOffset", "Pacific/Honolulu", new Date(), GMT_MINUS_10));
@@ -395,53 +394,53 @@ public class TimeZoneTest extends TestCase {
         suite.addTest(new TimeZoneTest("testInDaylightTime", "America/Bahia", cal.getTime(), false));
         cal.set(2002, 11, 04, 4, 0, 0);
         suite.addTest(new TimeZoneTest("testInDaylightTime", "America/Bahia", cal.getTime(), true));
-        
+
         String minskDefinition =
-        "BEGIN:VCALENDAR\r\n"
-        + "BEGIN:VTIMEZONE\r\n"
-        + "TZID:Europe/Minsk\r\n"
-        + "X-S1CS-TZID-ALIAS:E. Europe Standard Time\r\n"
-        + "BEGIN:STANDARD\r\n"
-        + "TZOFFSETFROM:+0200\r\n"
-        + "TZOFFSETTO:+0300\r\n"
-        + "TZNAME:FET\r\n"
-        + "DTSTART:20110327T020000\r\n"
-        + "RDATE:20110327T020000\r\n"
-        + "END:STANDARD\r\n"
-        + "BEGIN:DAYLIGHT\r\n"
-        + "TZOFFSETFROM:+0200\r\n"
-        + "TZOFFSETTO:+0300\r\n"
-        + "TZNAME:EEST\r\n"
-        + "DTSTART:19920329T000000\r\n"
-        + "RDATE:20020331T020000\r\n"
-        + "RDATE:20030330T020000\r\n"
-        + "RDATE:20040328T020000\r\n"
-        + "RDATE:20050327T020000\r\n"
-        + "RDATE:20060326T020000\r\n"
-        + "RDATE:20070325T020000\r\n"
-        + "RDATE:20080330T020000\r\n"
-        + "RDATE:20090329T020000\r\n"
-        + "RDATE:20100328T020000\r\n"
-        + "END:DAYLIGHT\r\n"
-        + "BEGIN:STANDARD\r\n"
-        + "TZOFFSETFROM:+0300\r\n"
-        + "TZOFFSETTO:+0200\r\n"
-        + "TZNAME:EET\r\n"
-        + "DTSTART:19910929T030000\r\n"
-        + "RDATE:20021027T030000\r\n"
-        + "RDATE:20031026T030000\r\n"
-        + "RDATE:20041031T030000\r\n"
-        + "RDATE:20051030T030000\r\n"
-        + "RDATE:20061029T030000\r\n"
-        + "RDATE:20071028T030000\r\n"
-        + "RDATE:20081026T030000\r\n"
-        + "RDATE:20091025T030000\r\n"
-        + "RDATE:20101031T030000\r\n"
-        + "END:STANDARD\r\n"
-        + "END:VTIMEZONE\r\n"
-        + "END:VCALENDAR\r\n";
+                "BEGIN:VCALENDAR\r\n"
+                        + "BEGIN:VTIMEZONE\r\n"
+                        + "TZID:Europe/Minsk\r\n"
+                        + "X-S1CS-TZID-ALIAS:E. Europe Standard Time\r\n"
+                        + "BEGIN:STANDARD\r\n"
+                        + "TZOFFSETFROM:+0200\r\n"
+                        + "TZOFFSETTO:+0300\r\n"
+                        + "TZNAME:FET\r\n"
+                        + "DTSTART:20110327T020000\r\n"
+                        + "RDATE:20110327T020000\r\n"
+                        + "END:STANDARD\r\n"
+                        + "BEGIN:DAYLIGHT\r\n"
+                        + "TZOFFSETFROM:+0200\r\n"
+                        + "TZOFFSETTO:+0300\r\n"
+                        + "TZNAME:EEST\r\n"
+                        + "DTSTART:19920329T000000\r\n"
+                        + "RDATE:20020331T020000\r\n"
+                        + "RDATE:20030330T020000\r\n"
+                        + "RDATE:20040328T020000\r\n"
+                        + "RDATE:20050327T020000\r\n"
+                        + "RDATE:20060326T020000\r\n"
+                        + "RDATE:20070325T020000\r\n"
+                        + "RDATE:20080330T020000\r\n"
+                        + "RDATE:20090329T020000\r\n"
+                        + "RDATE:20100328T020000\r\n"
+                        + "END:DAYLIGHT\r\n"
+                        + "BEGIN:STANDARD\r\n"
+                        + "TZOFFSETFROM:+0300\r\n"
+                        + "TZOFFSETTO:+0200\r\n"
+                        + "TZNAME:EET\r\n"
+                        + "DTSTART:19910929T030000\r\n"
+                        + "RDATE:20021027T030000\r\n"
+                        + "RDATE:20031026T030000\r\n"
+                        + "RDATE:20041031T030000\r\n"
+                        + "RDATE:20051030T030000\r\n"
+                        + "RDATE:20061029T030000\r\n"
+                        + "RDATE:20071028T030000\r\n"
+                        + "RDATE:20081026T030000\r\n"
+                        + "RDATE:20091025T030000\r\n"
+                        + "RDATE:20101031T030000\r\n"
+                        + "END:STANDARD\r\n"
+                        + "END:VTIMEZONE\r\n"
+                        + "END:VCALENDAR\r\n";
         suite.addTest(new TimeZoneTest("testZuluToLocal", minskDefinition, "20100428T140000Z", "20100428T170000"));
-        
+
         String weirdo = "BEGIN:VCALENDAR\n"
                 + "BEGIN:VTIMEZONE\n"
                 + "TZID:GMT +0100 (Standard) / GMT +0200 (Daylight)\n"
