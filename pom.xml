@@ -9,7 +9,7 @@
 	<groupId>org.mnode.ical4j</groupId>
 	<artifactId>ical4j</artifactId>
 	<name>iCal4j</name>
-	<version>1.0.6</version>
+	<version>1.0.6-SNAPSHOT</version>
 	<description>
 		A Java library for reading and writing iCalendar (*.ics) files
 	</description>
@@ -32,8 +32,8 @@
 	</licenses>
 
 	<scm>
-        <connection>scm:git:https://github.com/ical4j/ical4j.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:ical4j/ical4j.git</developerConnection>
+        <connection>scm:git:git://github.com/ical4j/ical4j.git</connection>
+        <developerConnection>scm:git:git@github.com:ical4j/ical4j.git</developerConnection>
         <url>https://github.com/ical4j/ical4j</url>
 	</scm>
 
