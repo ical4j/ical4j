@@ -32,6 +32,9 @@
 package net.fortuna.ical4j.model;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URLConnection;
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
@@ -64,8 +67,16 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private static final String DEFAULT_RESOURCE_PREFIX = "zoneinfo/";
 
     private static final Pattern TZ_ID_SUFFIX = Pattern.compile("(?<=/)[^/]*/[^/]*$");
-    
+
     private static final String UPDATE_ENABLED = "net.fortuna.ical4j.timezone.update.enabled";
+    private static final String UPDATE_CONNECT_TIMEOUT = "net.fortuna.ical4j.timezone.update.timeout.connect";
+    private static final String UPDATE_READ_TIMEOUT = "net.fortuna.ical4j.timezone.update.timeout.read";
+    private static final String UPDATE_PROXY_ENABLED = "net.fortuna.ical4j.timezone.update.proxy.enabled";
+    private static final String UPDATE_PROXY_TYPE = "net.fortuna.ical4j.timezone.update.proxy.type";
+    private static final String UPDATE_PROXY_HOST = "net.fortuna.ical4j.timezone.update.proxy.host";
+    private static final String UPDATE_PROXY_PORT = "net.fortuna.ical4j.timezone.update.proxy.port";
+
+    private static Proxy proxy = null;
 
     private static final Map<String, TimeZone> DEFAULT_TIMEZONES = new ConcurrentHashMap<String, TimeZone>();
 
@@ -84,6 +95,18 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         catch (Exception e) {
         	LogFactory.getLog(TimeZoneRegistryImpl.class).debug(
         			"Error loading custom timezone aliases: " + e.getMessage());
+        }
+        try {
+            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED))) {
+                final Proxy.Type type = Proxy.Type.valueOf(Configurator.getProperty(UPDATE_PROXY_TYPE));
+                final String proxyHost = Configurator.getProperty(UPDATE_PROXY_HOST);
+                final int proxyPort = Integer.parseInt(Configurator.getProperty(UPDATE_PROXY_PORT));
+                proxy = new Proxy(type, new InetSocketAddress(proxyHost, proxyPort));
+            }
+        }
+        catch (Throwable e) {
+            LogFactory.getLog(TimeZoneRegistryImpl.class).debug(
+                    "Error loading proxy server configuration: " + e.getMessage());
         }
     }
 
@@ -114,7 +137,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     	// for now we only apply updates to included definitions by default..
     	register(timezone, false);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -142,7 +165,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     	if (id == null) {
     		return null;
     	}
-    	
+
         TimeZone timezone = timezones.get(id);
         if (timezone == null) {
             timezone = DEFAULT_TIMEZONES.get(id);
@@ -202,7 +225,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         }
         return null;
     }
-    
+
     /**
      * @param vTimeZone
      * @return
@@ -211,8 +234,28 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         final TzUrl tzUrl = vTimeZone.getTimeZoneUrl();
         if (tzUrl != null) {
             try {
+                final String connectTimeoutProperty = Configurator.getProperty(UPDATE_CONNECT_TIMEOUT);
+                final String readTimeoutProperty = Configurator.getProperty(UPDATE_READ_TIMEOUT);
+
+                final int connectTimeout = connectTimeoutProperty != null ? Integer.parseInt(connectTimeoutProperty) : 0;
+                final int readTimeout = readTimeoutProperty != null ? Integer.parseInt(readTimeoutProperty) : 0;
+
+                URLConnection connection;
+                URL url = tzUrl.getUri().toURL();
+
+                if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED)) && proxy != null) {
+                    connection = url.openConnection(proxy);
+                }
+                else {
+                    connection = url.openConnection();
+                }
+
+                connection.setConnectTimeout(connectTimeout);
+                connection.setReadTimeout(readTimeout);
+
                 final CalendarBuilder builder = new CalendarBuilder();
-                final Calendar calendar = builder.build(tzUrl.getUri().toURL().openStream());
+
+                final Calendar calendar = builder.build(connection.getInputStream());
                 final VTimeZone updatedVTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
                 if (updatedVTimeZone != null) {
                     return updatedVTimeZone;
