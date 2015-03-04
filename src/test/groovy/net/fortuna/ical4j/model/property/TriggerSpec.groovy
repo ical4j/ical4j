@@ -43,7 +43,7 @@ class TriggerSpec extends Specification {
 		
 		where:
 		value							| expectedValue
-		new Dur(0)						| 'PT0S'
+        new Dur(0) | 'P0D'
 		new DateTime('20110131T012647Z')| '20110131T012647Z'
 	}
 
