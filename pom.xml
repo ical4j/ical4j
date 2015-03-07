@@ -3,13 +3,13 @@
 	<parent>
 		<artifactId>mnode-parent</artifactId>
 		<groupId>org.mnode</groupId>
-		<version>1.21</version>
+		<version>1.22</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.mnode.ical4j</groupId>
 	<artifactId>ical4j</artifactId>
 	<name>iCal4j</name>
-	<version>1.0.6-SNAPSHOT</version>
+	<version>1.0.7-SNAPSHOT</version>
 	<description>
 		A Java library for reading and writing iCalendar (*.ics) files
 	</description>
@@ -27,14 +27,14 @@
 	<licenses>
 		<license>
             <name>${project.name} - License</name>
-			<url>${project.scm.url}/LICENSE?format=raw</url>
+			<url>${project.scm.url}/raw-file/tip/LICENSE</url>
 		</license>
 	</licenses>
 
 	<scm>
-		<connection>scm:hg:http://hg.code.sf.net/p/ical4j/ical4j</connection>
-		<developerConnection>scm:hg:ssh://fortuna@hg.code.sf.net/p/ical4j/ical4j</developerConnection>
-		<url>https://sourceforge.net/p/ical4j/ical4j/ci/default/tree/</url>
+        <connection>scm:git:git://github.com/ical4j/ical4j.git</connection>
+        <developerConnection>scm:git:git@github.com:ical4j/ical4j.git</developerConnection>
+        <url>https://github.com/ical4j/ical4j</url>
 	</scm>
 
 	<contributors>

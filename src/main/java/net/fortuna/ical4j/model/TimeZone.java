@@ -72,16 +72,27 @@ public class TimeZone extends java.util.TimeZone {
     /**
      * {@inheritDoc}
      */
-    public final int getOffset(final int era, final int year, final int month, final int day,
+    public final int getOffset(final int era, final int year, final int month, final int dayOfMonth,
             final int dayOfWeek, final int milliseconds) {
-        
+
+        // calculate time of day
+        int ms = milliseconds;
+        final int hour = ms / 3600000;
+        ms -= hour*3600000;
+        final int minute = ms / 60000;
+        ms -= minute*60000;
+        final int second = ms / 1000;
+        ms -= second*1000;
+
         final Calendar cal = Calendar.getInstance();
+        cal.clear();	// don't retain current date/time, it may disturb the calculation		
+        
+    	// set date and time
         cal.set(Calendar.ERA, era);
-        cal.set(Calendar.YEAR, year);
-        cal.set(Calendar.MONTH, month);
-        cal.set(Calendar.DAY_OF_YEAR, day);
         cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-        cal.set(Calendar.MILLISECOND, milliseconds);
+        cal.set(year, month, dayOfMonth, hour, minute, second);
+        cal.set(Calendar.MILLISECOND, ms);
+        
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));
         if (observance != null) {
             final TzOffsetTo offset = (TzOffsetTo) observance.getProperty(Property.TZOFFSETTO);
