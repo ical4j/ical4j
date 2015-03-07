@@ -32,7 +32,11 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.property.Version
-import net.fortuna.ical4j.model.component.VFreeBusyimport net.fortuna.ical4j.util.UidGeneratorimport net.fortuna.ical4j.util.SimpleHostInfo/**
+import net.fortuna.ical4j.model.component.VFreeBusy
+import net.fortuna.ical4j.util.UidGenerator
+import net.fortuna.ical4j.util.SimpleHostInfo
+
+/**
  * $Id$
  *
  * Created on: 03/08/2009
@@ -45,16 +49,14 @@ public class ContentBuilderTest extends GroovyTestCase {
     void testBuildCalendar() {
         def builder = new ContentBuilder()
         def calendar = builder.calendar() {
-            prodid('-//Ben Fortuna//iCal4j 1.0//EN')
-            version('2.0')
-            vevent() {
-                uid('1')
+            prodid '-//Ben Fortuna//iCal4j 1.0//EN'
+            version '2.0'
+            vevent {
+                uid '1'
                 dtstamp()
-                dtstart('20090810', parameters: parameters() {
-                    value('DATE')})
-                action('DISPLAY')
-                attach('http://example.com/attachment', parameters: parameters() {
-                    value('URI')})
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
             }
         }
         calendar.validate()
@@ -119,7 +121,7 @@ public class ContentBuilderTest extends GroovyTestCase {
         assert version == Version.VERSION_2_0
         
         version = new ContentBuilder().version('2.0')
-        assert version == Version.VERSION_2_0
+        assert version.is(Version.VERSION_2_0)
     }
     
     void testBuildAbbrev() {
