@@ -111,9 +111,9 @@ A Java library for reading and writing iCalendar (*.ics) files
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
 
-    // default sonatype credentials
-//    sonatypeUsername = ''
-//    sonatypePassword = ''
+    // sonatype credentials
+    sonatypeUsername = project.hasProperty('sonatypeUsername') ? project.getProperty('sonatypeUsername') : ''
+    sonatypePassword = project.hasProperty('sonatypePassword') ? project.getProperty('sonatypePassword') : ''
 }
 
 uploadArchives {
