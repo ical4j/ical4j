@@ -112,8 +112,8 @@ ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
 
     // default sonatype credentials
-    sonatypeUsername = ''
-    sonatypePassword = ''
+//    sonatypeUsername = ''
+//    sonatypePassword = ''
 }
 
 uploadArchives {
