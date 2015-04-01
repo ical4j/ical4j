@@ -129,7 +129,7 @@ uploadArchives {
             }
 
             pom.project {
-                name 'iCal4j'
+                name project.name
                 packaging 'jar'
                 description project.description
                 url 'http://ical4j.sourceforge.net'
