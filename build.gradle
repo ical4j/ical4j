@@ -61,7 +61,7 @@ ext {
 }
 
 dependencies {
-    compile "org.slf4j:jcl-over-slf4j:$slf4jVersion",
+    compile "org.slf4j:slf4j-api:$slf4jVersion",
             'commons-codec:commons-codec:1.9',
             'org.apache.commons:commons-lang3:3.3.2',
             'org.codehaus.groovy:groovy-all:2.3.2',
