@@ -1,3 +1,5 @@
+![Build status image](https://travis-ci.org/ical4j/ical4j.svg?branch=ical4j-1.x-maintenance)
+
 ========================
  iCal4j - Release Notes
 ========================
