@@ -4,4 +4,6 @@ jdk:
   - oraclejdk7
   - openjdk7
   - openjdk6
-  
+before_script:
+      - echo 'Australia/Melbourne' | sudo tee /etc/timezone
+      - sudo dpkg-reconfigure --frontend noninteractive tzdata
