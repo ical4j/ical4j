@@ -4,7 +4,7 @@ jdk:
   - oraclejdk7
   - openjdk7
   - openjdk6
-script: "./gradlew check -PreleaseVersion=2.0"
+before_script: "./gradlew assemble -PreleaseVersion=2.0"
 deploy:
   provider: releases
   api_key:
@@ -16,3 +16,4 @@ deploy:
   on:
     tags: true
 before_deploy: "./gradlew assembleDist"
+sudo: false
