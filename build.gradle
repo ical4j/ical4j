@@ -74,7 +74,9 @@ dependencies {
 }
 
 javadoc {
-    options.addStringOption('Xdoclint:none', '-quiet')
+    if (JavaVersion.current().isJava8Compatible()) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
