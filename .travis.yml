@@ -4,4 +4,15 @@ jdk:
   - oraclejdk7
   - openjdk7
   - openjdk6
-  
+script: "./gradlew check -PreleaseVersion=2.0"
+deploy:
+  provider: releases
+  api_key:
+    secure: DpTp3xxZrKP21I13G8dYY5EBra5tcf9TsF1y9oLRdOSoVvUe0XaOQ+9WPG2RgnuH1DPVj1n2Rr6emAZ84lSzz4H7T8gPYP4pLjmJBGyriGC7N3MTG2FCBn5l6DgTKNLxtfpek/b7nClif6vVTEse/T8/9an/Yszp9bbIZNNwStE=
+  file:
+    - build/distributions/ical4j-2.0.zip
+    - build/distributions/ical4j-2.0.tar.gz
+  skip_cleanup: true
+  on:
+    tags: true
+before_deploy: "./gradlew assembleDist"
