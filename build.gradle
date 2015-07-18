@@ -98,12 +98,12 @@ release {
     failOnSnapshotDependencies = true
     // allow modifications due to bug in the release plugin..
     allowLocalModifications = true
-    releaseDryRun = releaseDryRun
+//    releaseDryRun = releaseDryRun
     scm = 'git'
 }
 
 group = 'org.mnode.ical4j'
-version = release.projectVersion
+version = System.getenv('RELEASE_VERSION') ?: release.projectVersion
 description = '''
 A Java library for reading and writing iCalendar (*.ics) files
 '''
