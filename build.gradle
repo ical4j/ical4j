@@ -73,6 +73,12 @@ dependencies {
             "org.slf4j:slf4j-log4j12:$slf4jVersion"
 }
 
+javadoc {
+    if (JavaVersion.current().isJava8Compatible()) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+    }
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from 'build/docs/javadoc'
@@ -98,12 +104,12 @@ release {
     failOnSnapshotDependencies = true
     // allow modifications due to bug in the release plugin..
     allowLocalModifications = true
-    releaseDryRun = releaseDryRun
+//    releaseDryRun = releaseDryRun
     scm = 'git'
 }
 
 group = 'org.mnode.ical4j'
-version = release.projectVersion
+version = System.getenv('RELEASE_VERSION') ?: release.projectVersion
 description = '''
 A Java library for reading and writing iCalendar (*.ics) files
 '''
@@ -157,8 +163,4 @@ uploadArchives {
             }
         }
     }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '1.11'
 }
