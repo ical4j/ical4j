@@ -31,6 +31,14 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -72,17 +80,39 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private static final Properties ALIASES = new Properties();
 
     static {
+        InputStream aliasInputStream = null;
         try {
-            ALIASES.load(ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias"));
+            aliasInputStream = ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias");
+            ALIASES.load(aliasInputStream);
         } catch (IOException ioe) {
             LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
                     "Error loading timezone aliases: " + ioe.getMessage());
+        } finally {
+            if (aliasInputStream != null) {
+                try {
+                    aliasInputStream.close();
+                } catch (IOException e) {
+                    LogFactory.getLog(TimeZoneRegistryImpl.class).warn(
+                            "Error closing resource stream: " + e.getMessage());
+                }
+            }
         }
+
         try {
-            ALIASES.load(ResourceLoader.getResourceAsStream("tz.alias"));
+            aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias");
+        	ALIASES.load(aliasInputStream);
         } catch (Exception e) {
             LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
-                    "Error loading custom timezone aliases: " + e.getMessage());
+        			"Error loading custom timezone aliases: " + e.getMessage());
+        } finally {
+            if (aliasInputStream != null) {
+                try {
+                    aliasInputStream.close();
+                } catch (IOException e) {
+                    LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                            "Error closing resource stream: " + e.getMessage());
+                }
+            }
         }
     }
 
