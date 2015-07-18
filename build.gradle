@@ -73,6 +73,10 @@ dependencies {
             "org.slf4j:slf4j-log4j12:$slf4jVersion"
 }
 
+javadoc {
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from 'build/docs/javadoc'
