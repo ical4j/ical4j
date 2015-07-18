@@ -16,4 +16,3 @@ deploy:
     tags: true
 before_deploy: "./gradlew assembleDist"
 sudo: false
-env: RELEASE_VERSION = 2.0
