@@ -31,14 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -50,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
@@ -92,7 +85,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                 try {
                     aliasInputStream.close();
                 } catch (IOException e) {
-                    LogFactory.getLog(TimeZoneRegistryImpl.class).warn(
+                    LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
                             "Error closing resource stream: " + e.getMessage());
                 }
             }
