@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Map;
 import java.util.Properties;
@@ -71,19 +72,39 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private static final Properties ALIASES = new Properties();
     static {
+        InputStream aliasInputStream = null;
         try {
-            ALIASES.load(ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias"));
-        }
-        catch (IOException ioe) {
+            aliasInputStream = ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias");
+            ALIASES.load(aliasInputStream);
+        } catch (IOException ioe) {
             LogFactory.getLog(TimeZoneRegistryImpl.class).warn(
                     "Error loading timezone aliases: " + ioe.getMessage());
+        } finally {
+            if (aliasInputStream != null) {
+                try {
+                    aliasInputStream.close();
+                } catch (IOException e) {
+                    LogFactory.getLog(TimeZoneRegistryImpl.class).warn(
+                            "Error closing resource stream: " + e.getMessage());
+                }
+            }
         }
+
         try {
-        	ALIASES.load(ResourceLoader.getResourceAsStream("tz.alias"));
-        }
-        catch (Exception e) {
+            aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias");
+        	ALIASES.load(aliasInputStream);
+        } catch (Exception e) {
         	LogFactory.getLog(TimeZoneRegistryImpl.class).debug(
         			"Error loading custom timezone aliases: " + e.getMessage());
+        } finally {
+            if (aliasInputStream != null) {
+                try {
+                    aliasInputStream.close();
+                } catch (IOException e) {
+                    LogFactory.getLog(TimeZoneRegistryImpl.class).warn(
+                            "Error closing resource stream: " + e.getMessage());
+                }
+            }
         }
     }
 
