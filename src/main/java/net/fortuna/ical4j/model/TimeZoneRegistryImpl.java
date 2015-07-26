@@ -31,17 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.URLConnection;
-import java.net.URL;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -54,7 +43,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -135,7 +127,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             }
         }
         catch (Throwable e) {
-            LogFactory.getLog(TimeZoneRegistryImpl.class).debug(
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
                     "Error loading proxy server configuration: " + e.getMessage());
         }
     }
