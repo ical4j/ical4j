@@ -35,12 +35,10 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.util.CompatibilityHints;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import junit.framework.TestCase;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created on 15/06/2005
@@ -49,7 +47,7 @@ import junit.framework.TestCase;
  */
 public class ParameterFactoryImplTest extends TestCase {
 
-    private static Log log = LogFactory.getLog(ParameterFactoryImplTest.class);
+    private Logger log = LoggerFactory.getLogger(ParameterFactoryImplTest.class);
 
     /**
      * @throws Exception
@@ -58,7 +56,7 @@ public class ParameterFactoryImplTest extends TestCase {
         Parameter p = ParameterFactoryImpl.getInstance().createParameter(
                 Parameter.ALTREP, "Test");
         assertNotNull(p);
-        log.info(p);
+        log.info(p.toString());
     }
 
     /**
@@ -68,7 +66,7 @@ public class ParameterFactoryImplTest extends TestCase {
         Parameter p = ParameterFactoryImpl.getInstance().createParameter(
                 "X-my-param", "Test");
         assertNotNull(p);
-        log.info(p);
+        log.info(p.toString());
     }
 
     /**
@@ -79,20 +77,19 @@ public class ParameterFactoryImplTest extends TestCase {
             ParameterFactoryImpl.getInstance().createParameter("my-param",
                     "Test");
             fail("Should throw an IllegalArgumentException");
-        }
-        catch (IllegalArgumentException iae) {
+        } catch (IllegalArgumentException iae) {
             log.debug("Invalid parameter", iae);
         }
     }
-    
+
     /**
      * @throws Exception
      */
     public void testRelaxedParsing() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
-        
+
         ParameterFactoryImpl.getInstance().createParameter("VVENUE", "My Place");
-        
+
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 }

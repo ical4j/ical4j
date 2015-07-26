@@ -31,15 +31,13 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.net.URISyntaxException;
-
-import net.fortuna.ical4j.util.CompatibilityHints;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URISyntaxException;
 
 /**
  * $Id$
@@ -49,7 +47,7 @@ import junit.framework.TestSuite;
  */
 public class AddressListTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(AddressListTest.class);
+    private static Logger LOG = LoggerFactory.getLogger(AddressListTest.class);
     
     private String value;
     

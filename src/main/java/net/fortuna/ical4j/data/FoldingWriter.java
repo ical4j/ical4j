@@ -31,19 +31,20 @@
  */
 package net.fortuna.ical4j.data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.Writer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <pre>
  * $Id$ [Apr 6, 2004]
  * </pre>
- *
+ * <p/>
  * A writer that performs iCalendar folding as it writes.
+ *
  * @author Ben Fortuna
  */
 public class FoldingWriter extends FilterWriter {
@@ -58,16 +59,16 @@ public class FoldingWriter extends FilterWriter {
      */
     public static final int MAX_FOLD_LENGTH = 75;
 
-    private static final char[] FOLD_PATTERN = { '\r', '\n', ' ' };
+    private static final char[] FOLD_PATTERN = {'\r', '\n', ' '};
 
-    private final Log log = LogFactory.getLog(FoldingWriter.class);
+    private final Logger log = LoggerFactory.getLogger(FoldingWriter.class);
 
     private int lineLength;
 
     private final int foldLength;
 
     /**
-     * @param writer a writer to write output to
+     * @param writer     a writer to write output to
      * @param foldLength the maximum line length
      */
     public FoldingWriter(final Writer writer, final int foldLength) {
@@ -91,14 +92,14 @@ public class FoldingWriter extends FilterWriter {
          * super.write(c); if (c == '\n') { lineLength = 0; } else { lineLength += 1; } if (lineLength >= FOLD_LENGTH) {
          * super.write(FOLD_PATTERN); }
          */
-        write(new char[] { (char) c }, 0, 1);
+        write(new char[]{(char) c}, 0, 1);
     }
 
     /**
      * {@inheritDoc}
      */
     public final void write(final char[] buffer, final int offset,
-            final int length) throws IOException {
+                            final int length) throws IOException {
         final int maxIndex = offset + length - 1;
         for (int i = offset; i <= maxIndex; i++) {
 
@@ -121,8 +122,7 @@ public class FoldingWriter extends FilterWriter {
 
             if (buffer[i] == '\r' || buffer[i] == '\n') {
                 lineLength = 0;
-            }
-            else {
+            } else {
                 lineLength += 1;
             }
         }

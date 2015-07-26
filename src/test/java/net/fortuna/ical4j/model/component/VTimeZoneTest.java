@@ -36,23 +36,22 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * $Id: VTimeZoneTest.java [5/07/2004]
- *
+ * <p/>
  * A test case for VTimeZone.
- * 
+ *
  * @author benfortuna
  */
 public class VTimeZoneTest extends ComponentTest {
 
-    private static Log log = LogFactory.getLog(VTimeZoneTest.class);
+    private Logger log = LoggerFactory.getLogger(VTimeZoneTest.class);
 
     private VTimeZone tz;
-    
+
     /**
      * @param testMethod
      * @param component
@@ -63,27 +62,27 @@ public class VTimeZoneTest extends ComponentTest {
     }
 
     /**
-     * 
+     *
      */
     public void testCreateDefinition() {
         Calendar calendar = new Calendar();
         calendar.getComponents().add(tz);
-        log.info(calendar);
+        log.info(calendar.toString());
     }
-    
+
     /**
      * @return
      */
     public static TestSuite suite() {
         TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         TestSuite suite = new TestSuite();
-        
+
         suite.addTest(new VTimeZoneTest("testCreateDefinition", registry.getTimeZone("Australia/Melbourne").getVTimeZone()));
-        
+
         VTimeZone tz = new VTimeZone();
         suite.addTest(new VTimeZoneTest("testIsCalendarComponent", tz));
         suite.addTest(new VTimeZoneTest("testValidationException", tz));
-        
+
         return suite;
     }
 }

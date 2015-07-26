@@ -33,8 +33,8 @@ package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -49,7 +49,7 @@ import java.util.Iterator;
  */
 public class PeriodListTest extends TestCase {
 
-    private static Log log = LogFactory.getLog(PeriodListTest.class);
+    private Logger log = LoggerFactory.getLogger(PeriodListTest.class);
 
     private PeriodList periodList;
 

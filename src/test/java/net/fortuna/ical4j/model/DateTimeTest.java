@@ -36,8 +36,8 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.TimeZones;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -46,35 +46,34 @@ import java.util.Calendar;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 30/06/2005
  *
  * @author Ben Fortuna
- *
  */
 public class DateTimeTest extends TestCase {
 
-    private static Log log = LogFactory.getLog(DateTimeTest.class);
-    
+    private Logger log = LoggerFactory.getLogger(DateTimeTest.class);
+
     private static TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
 
     private DateTime dateTime;
-    
+
     private String expectedToString;
-    
+
     private String badlyFormated;
 
     // static {
-        // TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
+    // TimeZone.setDefault(TimeZone.getTimeZone("Europe/Paris"));
     // }
-    
+
     /**
      * @param testMethod
      */
     public DateTimeTest(String testMethod) {
         super(testMethod);
     }
-    
+
     /**
      * Default constructor.
      */
@@ -83,7 +82,7 @@ public class DateTimeTest extends TestCase {
         this.dateTime = dateTime;
         this.expectedToString = expectedToString;
     }
-    
+
     public DateTimeTest(String badlyFormated, String expectedToString) {
         super("testRelaxed");
         this.badlyFormated = badlyFormated;
@@ -98,9 +97,9 @@ public class DateTimeTest extends TestCase {
         // ensure relaxing parsing is disabled for these tests..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
-    
+
     /**
-     * 
+     *
      */
     public void testToString() {
         assertNotNull("Null input date", dateTime);
@@ -114,29 +113,27 @@ public class DateTimeTest extends TestCase {
         try {
             new DateTime("20050630");
             fail("Should throw ParseException");
-        }
-        catch (ParseException pe) {
+        } catch (ParseException pe) {
             log.info("Exception occurred: " + pe.getMessage());
         }
-        
+
         try {
             new DateTime("20000402T020000",
                     registry.getTimeZone("America/Los_Angeles"));
             fail("Should throw ParseException");
-        }
-        catch (ParseException pe) {
+        } catch (ParseException pe) {
             log.info("Exception occurred: " + pe.getMessage());
         }
     }
-    
+
     public void testRelaxed() throws Exception {
-        
+
         try {
             new DateTime(badlyFormated);
             fail("expected ParseException");
         } catch (ParseException pe) {
         }
-        try { 
+        try {
             CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
             DateTime dt = new DateTime(badlyFormated);
             assertEquals(this.expectedToString, dt.toString());
@@ -146,9 +143,10 @@ public class DateTimeTest extends TestCase {
             CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         }
     }
-    
+
     /**
      * Test equality of DateTime instances created using different constructors.
+     *
      * @throws ParseException
      */
     public void testDateTimeEquals() throws ParseException {
@@ -157,28 +155,29 @@ public class DateTimeTest extends TestCase {
         java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
 
         DateTime date1 = new DateTime("20050101T093000");
-    
+
         Calendar calendar = Calendar.getInstance(); //TimeZone.getTimeZone("Etc/UTC"));
         calendar.clear();
         calendar.set(2005, 0, 1, 9, 30, 00);
         calendar.set(Calendar.MILLISECOND, 1);
         DateTime date2 = new DateTime(calendar.getTime());
-    
+
         assertEquals(date1.hashCode(), date2.hashCode());
         assertEquals(date1.toString(), date2.toString());
         assertEquals(date1, date2);
 
         java.util.TimeZone.setDefault(originalTzDefault);
     }
-    
+
     /**
      * Test that equality of two DateTime instances created using different constructors
-     *  implies equality of hashCode.
+     * implies equality of hashCode.
+     *
      * @throws ParseException
      */
     public void testDateTimeHashCode() throws ParseException {
         TimeZone tz1 = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone("Europe/Paris");
-        TimeZone tz2 = (TimeZone)tz1.clone();
+        TimeZone tz2 = (TimeZone) tz1.clone();
         DateTime date1 = new DateTime("20050101T093000", tz1);
         DateTime date2 = new DateTime("20050101T093000", tz2);
         // verify that if equals() == true, hashCode must match also
@@ -195,19 +194,19 @@ public class DateTimeTest extends TestCase {
         // ordinary date..
         DateTime date1 = new DateTime("20050101T093000");
         assertFalse(date1.isUtc());
-        
+
         // UTC date..
         DateTime date2 = new DateTime(true);
         assertTrue(date2.isUtc());
-        
+
         TimeZone utcTz = registry.getTimeZone(TimeZones.UTC_ID);
         utcTz.setID(TimeZones.UTC_ID);
-        
+
         // UTC timezone, but not UTC..
         DateTime date3 = new DateTime("20050101T093000", utcTz);
 //        date3.setUtc(false);
         assertFalse(date3.isUtc());
-        
+
         DateTime date4 = new DateTime();
         date4.setUtc(true);
         assertTrue(date4.isUtc());
@@ -218,14 +217,14 @@ public class DateTimeTest extends TestCase {
         date5.setTimeZone(utcTz);
         assertFalse(date5.isUtc());
     }
-    
+
     public String getName() {
         if (StringUtils.isNotEmpty(expectedToString)) {
             return super.getName() + " [" + expectedToString + "]";
         }
         return super.getName();
     }
-    
+
     /**
      * @return
      */
@@ -261,18 +260,18 @@ public class DateTimeTest extends TestCase {
         suite.addTest(new DateTimeTest(new DateTime("20070101T080000", tz), "20070101T080000"));
         suite.addTest(new DateTimeTest(new DateTime("20050630T093000", tz), "20050630T093000"));
         suite.addTest(new DateTimeTest(new DateTime("20050630T093000Z"), "20050630T093000Z"));
-        suite.addTest(new DateTimeTest(new DateTime("19390901T000000",tz), "19390901T000000"));
-        
-        suite.addTest(new DateTimeTest(new DateTime("20000402T020000",tz), "20000402T020000"));
-        suite.addTest(new DateTimeTest(new DateTime("20000402T020000",tz), "20000402T020000"));
-        
+        suite.addTest(new DateTimeTest(new DateTime("19390901T000000", tz), "19390901T000000"));
+
+        suite.addTest(new DateTimeTest(new DateTime("20000402T020000", tz), "20000402T020000"));
+        suite.addTest(new DateTimeTest(new DateTime("20000402T020000", tz), "20000402T020000"));
+
         DateFormat df = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
 //        Calendar cal = Calendar.getInstance(); //java.util.TimeZone.getTimeZone("America/Los_Angeles"));
         cal.clear();
         cal.set(2000, 0, 1, 2, 0, 0);
         for (int i = 0; i < 365; i++) {
             String dateString = df.format(cal.getTime());
-            suite.addTest(new DateTimeTest(new DateTime(dateString), dateString)); 
+            suite.addTest(new DateTimeTest(new DateTime(dateString), dateString));
             cal.add(Calendar.DAY_OF_YEAR, 1);
         }
 
@@ -280,15 +279,15 @@ public class DateTimeTest extends TestCase {
                 registry.getTimeZone("America/Los_Angeles")), "20071104T000000"));
         suite.addTest(new DateTimeTest(new DateTime("20110326T090000",
                 registry.getTimeZone("Europe/Minsk")), "20110326T090000"));
-        
+
         // other tests..
         suite.addTest(new DateTimeTest("testDateTimeString"));
         suite.addTest(new DateTimeTest("testDateTimeEquals"));
         suite.addTest(new DateTimeTest("testDateTimeHashCode"));
         suite.addTest(new DateTimeTest("testUtc"));
-        
+
         suite.addTest(new DateTimeTest("00001231T000000Z", "00011231T000000"));
-        
+
         return suite;
     }
 }

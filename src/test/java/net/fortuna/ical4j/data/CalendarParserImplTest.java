@@ -31,32 +31,32 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.IOException;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 11/11/2006
- *
+ * <p/>
  * Unit tests for {@link CalendarParserImpl}.
+ *
  * @author Ben Fortuna
  */
 public class CalendarParserImplTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(CalendarParserImplTest.class);
-    
+    private static final Logger LOG = LoggerFactory.getLogger(CalendarParserImplTest.class);
+
     private String filename;
-    
+
     private int expectedErrorLineNo;
-    
+
     /**
      * @param filename
      * @param expectedErrorLineNo
@@ -66,7 +66,7 @@ public class CalendarParserImplTest extends TestCase {
         this.filename = filename;
         this.expectedErrorLineNo = expectedErrorLineNo;
     }
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
@@ -74,7 +74,7 @@ public class CalendarParserImplTest extends TestCase {
         super.setUp();
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
     }
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
@@ -82,17 +82,17 @@ public class CalendarParserImplTest extends TestCase {
         super.tearDown();
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
     }
-    
+
     /**
      * Test the accuracy of parser exception line number.
+     *
      * @throws IOException
      */
     public void testParseException() throws IOException {
         try {
             Calendars.load(filename);
             fail("Should throw ParserException: [" + filename + "]");
-        }
-        catch (ParserException pe) {
+        } catch (ParserException pe) {
             LOG.info(pe.getMessage());
             assertEquals(expectedErrorLineNo, pe.getLineNo());
         }
@@ -101,13 +101,14 @@ public class CalendarParserImplTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#getName()
      */
+
     /**
      * Overridden to return the current iCalendar file under test.
      */
     public final String getName() {
         return super.getName() + " [" + filename + "]";
     }
-    
+
     /**
      * @return
      */
@@ -120,7 +121,7 @@ public class CalendarParserImplTest extends TestCase {
         // see that invalid property "X" starts on line 23, and ends there.
 //        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/CalendarDataFile.ics", 23));
         suite.addTest(new CalendarParserImplTest("etc/samples/invalid/CalendarDataFile.ics", 24));
-        
+
         suite.addTest(new CalendarParserImplTest("etc/samples/invalid/overlaps.ics", 1));
         suite.addTest(new CalendarParserImplTest("etc/samples/invalid/phpicalendar_sample.ics", 93));
         suite.addTest(new CalendarParserImplTest("etc/samples/invalid/schedule-unstable.ics", 196));

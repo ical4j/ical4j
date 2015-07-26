@@ -34,8 +34,8 @@ package net.fortuna.ical4j.model;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -51,8 +51,8 @@ import java.util.GregorianCalendar;
  * @see net.fortuna.ical4j.model.Period
  */
 public class PeriodTest extends TestCase {
-    
-    private static final Log LOG = LogFactory.getLog(PeriodTest.class);
+
+    private static final Logger LOG = LoggerFactory.getLogger(PeriodTest.class);
 
     private Period period;
     

@@ -31,88 +31,87 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.io.UnsupportedEncodingException;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.parameter.Encoding;
-
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.StringDecoder;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 03/10/2006
- *
+ * <p/>
  * Unit tests for {@link DefaultDecoderFactory}.
+ *
  * @author Ben Fortuna
  */
 public class DefaultDecoderFactoryTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(
-            DefaultDecoderFactoryTest.class);
-    
+    private static Logger LOG = LoggerFactory.getLogger(DefaultDecoderFactoryTest.class);
+
     private DefaultDecoderFactory factory = new DefaultDecoderFactory();
-    
+
     /**
      * Test creation of binary decoder.
+     *
      * @throws UnsupportedEncodingException
      * @throws DecoderException
      */
     public void testCreateBinaryDecoder() throws UnsupportedEncodingException,
-        DecoderException {
-        
+            DecoderException {
+
         BinaryDecoder decoder = factory.createBinaryDecoder(
                 Encoding.QUOTED_PRINTABLE);
-        
+
         assertNotNull(decoder);
-        
+
         String encoded = "=C3=A0 la maison";
-        
+
         String decoded = (String) decoder.decode(encoded);
-        
+
         assertNotNull(decoded);
-        
+
         LOG.info("Decoded: [" + decoded + "]");
-        
+
         try {
             factory.createBinaryDecoder(new Encoding("9-BIT"));
             fail("Should throw UnsupportedEncodingException");
-        }
-        catch (UnsupportedEncodingException uee) {
+        } catch (UnsupportedEncodingException uee) {
             LOG.debug("Caught exception: " + uee.getMessage());
         }
     }
 
     /**
      * Test creation of string decoder.
+     *
      * @throws UnsupportedEncodingException
      * @throws DecoderException
      */
-    public void testCreateStringDecoder()  throws UnsupportedEncodingException,
-        DecoderException {
-        
+    public void testCreateStringDecoder() throws UnsupportedEncodingException,
+            DecoderException {
+
         StringDecoder decoder = factory.createStringDecoder(
                 Encoding.QUOTED_PRINTABLE);
-        
+
         assertNotNull(decoder);
-        
+
         String encoded = "=C3=A0 la maison";
-        
+
         String decoded = (String) decoder.decode(encoded);
-        
+
         assertNotNull(decoded);
-        
+
         LOG.info("Decoded: [" + decoded + "]");
-        
+
         try {
             factory.createStringDecoder(new Encoding("9-BIT"));
             fail("Should throw UnsupportedEncodingException");
-        }
-        catch (UnsupportedEncodingException uee) {
+        } catch (UnsupportedEncodingException uee) {
             LOG.debug("Caught exception: " + uee.getMessage());
         }
     }
