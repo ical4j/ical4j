@@ -31,28 +31,27 @@
  */
 package net.fortuna.ical4j.data;
 
+import junit.framework.TestCase;
+import net.fortuna.ical4j.util.Strings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.StringWriter;
 
-import net.fortuna.ical4j.util.Strings;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import junit.framework.TestCase;
-
 /**
  * $Id$
- *
+ * <p/>
  * Created on 21/01/2006
- *
+ * <p/>
  * Unit tests for FoldingWriter.
+ *
  * @author Ben Fortuna
  */
 public class FoldingWriterTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(FoldingWriterTest.class);
-    
+    private static Logger LOG = LoggerFactory.getLogger(FoldingWriterTest.class);
+
     /**
      * Test writing a line equal to fold length.
      */
@@ -64,6 +63,6 @@ public class FoldingWriterTest extends TestCase {
         writer.write("PRODID:-//Open Source Applications Foundation//NONSGML Scooby Server//EN");
         writer.write(Strings.LINE_SEPARATOR);
         writer.write("VERSION:2.0");
-        LOG.info(sw.getBuffer());
+        LOG.info(sw.getBuffer().toString());
     }
 }

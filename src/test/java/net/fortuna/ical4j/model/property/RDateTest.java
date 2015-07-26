@@ -31,33 +31,28 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import static org.junit.Assert.assertEquals;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PeriodList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
-
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 /**
  * $Id$
- *
+ * <p/>
  * Created on 10/12/2006
- *
+ * <p/>
  * Unit tests for {@link RDate}.
+ *
  * @author Ben Fortuna
  */
 public class RDateTest {
 
-//    private static final Log LOG = LogFactory.getLog(RDateTest.class);
-    
+//    private static final Logger LOGLoggerLogFactoLoggergetLog(RDateTest.class);
+
     private TimeZone timezone;
 
     @Before
@@ -87,7 +82,7 @@ public class RDateTest {
             LOG.info("Caught exception: " + uoe.getMessage());
         }
         */
-        
+
         rDate.setTimeZone(timezone);
         assertEquals(timezone, rDate.getPeriods().getTimeZone());
     }

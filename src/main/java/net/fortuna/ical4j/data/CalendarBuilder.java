@@ -40,8 +40,8 @@ import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Constants;
 import net.fortuna.ical4j.util.Strings;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,10 +59,10 @@ import java.util.List;
  * @author Ben Fortuna
  *         <p/>
  *         <pre>
- *                 $Id$
+ *                         $Id$
  *
- *                 Created: Apr 5, 2004
- *                 </pre>
+ *                         Created: Apr 5, 2004
+ *                         </pre>
  * @version 2.0
  */
 public class CalendarBuilder {
@@ -356,7 +356,7 @@ public class CalendarBuilder {
                 ((DateListProperty) property).setTimeZone(timezone);
             } catch (ClassCastException e2) {
                 if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
-                    Log log = LogFactory.getLog(CalendarBuilder.class);
+                    Logger log = LoggerFactory.getLogger(CalendarBuilder.class);
                     log.warn("Error setting timezone [" + timezone.getID()
                             + "] on property [" + property.getName()
                             + "]", e);

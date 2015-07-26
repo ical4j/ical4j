@@ -62,4 +62,14 @@ class ContentBuilderSpec extends Specification {
 		expect:
 		assert builder.dtstart('20120808T150000') as String == 'DTSTART:20120808T150000\r\n'
 	}
+
+	def 'build DTSTART property with tzid parameter and assert the result'() {
+		expect:
+		assert builder.with {
+            dtstart('20150321T193000') {
+                tzid_ 'Australia/Lord_Howe'
+            }
+        } as String == 'DTSTART;TZID=Australia/Lord_Howe:20150321T193000\r\n'
+
+	}
 }

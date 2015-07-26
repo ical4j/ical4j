@@ -32,24 +32,24 @@
 package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 8/02/2006
- *
+ * <p/>
  * Abstract base class for property unit tests.
+ *
  * @author Ben Fortuna
  */
 public abstract class AbstractPropertyTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(AbstractPropertyTest.class);
+    private static Logger LOG = LoggerFactory.getLogger(AbstractPropertyTest.class);
 
     /**
-     * 
+     *
      */
     public AbstractPropertyTest() {
         super();
@@ -61,15 +61,14 @@ public abstract class AbstractPropertyTest extends TestCase {
     public AbstractPropertyTest(String name) {
         super(name);
     }
-    
+
     /**
      * @param property
      */
     protected void assertValidationException(final Property property) {
         try {
             property.validate();
-        }
-        catch (ValidationException ve) {
+        } catch (ValidationException ve) {
             LOG.debug("Exception caught", ve);
             return;
         }

@@ -35,8 +35,8 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -118,9 +118,9 @@ import java.util.List;
  * </p>
  */
 public class HCalendarParser implements CalendarParser {
-    
-    private static final Log LOG = LogFactory.getLog(HCalendarParser.class);
-    
+
+    private static final Logger LOG = LoggerFactory.getLogger(HCalendarParser.class);
+
     private static final DocumentBuilderFactory BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
     private static final XPath XPATH = XPathFactory.newInstance().newXPath();
     private static final XPathExpression XPATH_METHOD;

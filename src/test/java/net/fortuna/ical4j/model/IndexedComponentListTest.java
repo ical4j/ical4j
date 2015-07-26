@@ -31,31 +31,31 @@
  */
 package net.fortuna.ical4j.model;
 
+import junit.framework.TestCase;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.component.CalendarComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.component.CalendarComponent;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * $Id$
- *
+ * <p/>
  * Created on 5/02/2006
- *
+ * <p/>
  * Unit tests for indexed component list.
+ *
  * @author Ben Fortuna
  */
 public class IndexedComponentListTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(IndexedComponentListTest.class);
-    
+    private static Logger LOG = LoggerFactory.getLogger(IndexedComponentListTest.class);
+
     private Calendar calendar;
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
@@ -72,9 +72,9 @@ public class IndexedComponentListTest extends TestCase {
         IndexedComponentList<CalendarComponent> list = new IndexedComponentList<CalendarComponent>(calendar.getComponents(),
                 Property.LOCATION);
         LOG.info(list.getComponents("ABC").size() + " programs on ABC."
-            + " (" + (System.currentTimeMillis() - start) + "ms)");
+                + " (" + (System.currentTimeMillis() - start) + "ms)");
     }
-    
+
     /**
      * Perform manual indexing.
      */
@@ -88,6 +88,6 @@ public class IndexedComponentListTest extends TestCase {
             }
         }
         LOG.info(list.size() + " programs on ABC."
-            + " (" + (System.currentTimeMillis() - start) + "ms)");
+                + " (" + (System.currentTimeMillis() - start) + "ms)");
     }
 }

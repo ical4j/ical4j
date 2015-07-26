@@ -31,29 +31,29 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.FileReader;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.parameter.CuType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.FileReader;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 5/02/2006
- *
+ * <p/>
  * Unit tests for indexed property list.
+ *
  * @author Ben Fortuna
  */
 public class IndexedPropertyListTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(IndexedPropertyListTest.class);
-    
+    private static Logger LOG = LoggerFactory.getLogger(IndexedPropertyListTest.class);
+
     private Calendar calendar;
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */

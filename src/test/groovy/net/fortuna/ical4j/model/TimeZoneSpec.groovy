@@ -105,4 +105,15 @@ class TimeZoneSpec extends Specification {
                 ['Australia/Melbourne','America/Los_Angeles','Europe/London','Europe/Vienna'],
                 1, 2014, [0, 6, 11], 31..30, java.util.Calendar.SUNDAY, 36000000].combinations()
     }
+
+    def 'verify valid timezone ids'() {
+        expect: 'the specified id translates to a timezone instance'
+        def tz = tzRegistry.getTimeZone(tzid)
+
+        and: 'the timezone id matches the specified id'
+        tz.ID == tzid
+
+        where:
+        tzid << ['Australia/Lord_Howe']
+    }
 }

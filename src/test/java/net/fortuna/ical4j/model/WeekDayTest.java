@@ -31,23 +31,22 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.util.Calendar;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import junit.framework.TestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Calendar;
 
 /**
  * Created on 13/02/2005
- *
+ * <p/>
  * $Id$
  *
  * @author Ben Fortuna
  */
 public class WeekDayTest extends TestCase {
-    
-    private static Log log = LogFactory.getLog(WeekDayTest.class);
+
+    private Logger log = LoggerFactory.getLogger(WeekDayTest.class);
 
     public void testGetWeekDay() {
         Calendar cal = Calendar.getInstance();
@@ -59,7 +58,7 @@ public class WeekDayTest extends TestCase {
     public void testGetMonthlyOffset() {
         Calendar cal = Calendar.getInstance();
         log.info("Monthly offset: " + WeekDay.getMonthlyOffset(cal));
-        
+
         cal.add(Calendar.DAY_OF_MONTH, 15);
         log.info("Monthly offset: " + WeekDay.getMonthlyOffset(cal));
     }
@@ -67,16 +66,16 @@ public class WeekDayTest extends TestCase {
     public void testGetNegativeMonthlyOffset() {
         Calendar cal = Calendar.getInstance();
         log.info("Negative monthly offset: " + WeekDay.getNegativeMonthlyOffset(cal));
-        
+
         cal.add(Calendar.DAY_OF_MONTH, 15);
         log.info("Negative monthly offset: " + WeekDay.getNegativeMonthlyOffset(cal));
     }
-    
+
     /**
      * Tests the parsing of various offset values.
      */
     public void testOffsetParsing() {
-        log.info(new WeekDay("-1SU"));
-        log.info(new WeekDay("+2SU"));
+        log.info(new WeekDay("-1SU").toString());
+        log.info(new WeekDay("+2SU").toString());
     }
 }

@@ -152,7 +152,7 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('rsvp', new RsvpFactory())
         registerFactory('sentby', new SentByFactory())
         registerFactory('type', new TypeFactory())
-        registerFactory('tzid', new TzIdFactory())
+        registerFactory('tzid_', new TzIdFactory())
         registerFactory('value', new ValueFactory())
         registerFactory('xparameter', new XParameterFactory())
     }
