@@ -53,7 +53,8 @@ import java.text.ParseException;
  * @author Ben Fortuna
  */
 public class CalendarParserImpl implements CalendarParser {
-
+	private static final int IGNORE_BEGINNING_NON_WORD_COUNT = 10;
+	
     private static final int WORD_CHAR_START = 32;
 
     private static final int WORD_CHAR_END = 255;
@@ -107,11 +108,11 @@ public class CalendarParserImpl implements CalendarParser {
             tokeniser.quoteChar('"');
 
             // BEGIN:VCALENDAR
-            assertToken(tokeniser, in, Calendar.BEGIN);
+            assertToken(tokeniser, in, Calendar.BEGIN, false, true);
 
             assertToken(tokeniser, in, ':');
 
-            assertToken(tokeniser, in, Calendar.VCALENDAR, true);
+            assertToken(tokeniser, in, Calendar.VCALENDAR, true, false);
 
             assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
 
@@ -128,7 +129,7 @@ public class CalendarParserImpl implements CalendarParser {
 
             assertToken(tokeniser, in, ':');
 
-            assertToken(tokeniser, in, Calendar.VCALENDAR, true);
+            assertToken(tokeniser, in, Calendar.VCALENDAR, true, false);
 
             handler.endCalendar();
         } catch (Exception e) {
@@ -197,7 +198,6 @@ public class CalendarParserImpl implements CalendarParser {
                 URISyntaxException, ParseException {
 
             final String name = tokeniser.sval;
-
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug(MessageFormat.format(PARSE_DEBUG_MESSAGE, name));
@@ -436,7 +436,7 @@ public class CalendarParserImpl implements CalendarParser {
      */
     private void assertToken(final StreamTokenizer tokeniser, Reader in, final String token)
             throws IOException, ParserException {
-        assertToken(tokeniser, in, token, false);
+        assertToken(tokeniser, in, token, false, false);
     }
 
     /**
@@ -448,23 +448,73 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws ParserException when next token in the stream does not match the expected token
      */
     private void assertToken(final StreamTokenizer tokeniser, Reader in,
-                             final String token, final boolean ignoreCase) throws IOException,
+            final String token, final boolean ignoreCase, final boolean isBeginToken) throws IOException,
             ParserException {
 
         // ensure next token is a word token..
-        assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
+        String sval;
+        if(isBeginToken) {
+            skipNewLines(tokeniser, in, token);
+            sval = getSvalIgnoringBom(tokeniser, in, token);
+        } else {
+            assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
+            sval = tokeniser.sval;
+        }
 
         if (ignoreCase) {
-            if (!token.equalsIgnoreCase(tokeniser.sval)) {
-                throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, tokeniser.sval), getLineNumber(tokeniser, in));
+            if (!token.equalsIgnoreCase(sval)) {
+                throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, sval), getLineNumber(tokeniser, in));
             }
-        } else if (!token.equals(tokeniser.sval)) {
-            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, tokeniser.sval), getLineNumber(tokeniser, in));
+        }
+        else if (!token.equals(sval)) {
+            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, sval), getLineNumber(tokeniser, in));
         }
 
         if (log.isDebugEnabled()) {
             log.debug("[" + token + "]");
         }
+    }
+
+    /**
+     * Skip newlines and linefeed at the beginning.
+     * 
+     * @param tokeniser
+     * @param in
+     * @param token
+     * @throws ParserException
+     * @throws IOException
+     */
+    private void skipNewLines(StreamTokenizer tokeniser, Reader in, String token) throws ParserException, IOException {
+        for (int i = 0;; i++) {
+            try {
+                assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
+                break;
+            } catch (ParserException exc) {
+                //Skip a maximum of 10 newlines, linefeeds etc at the beginning
+                if (i == IGNORE_BEGINNING_NON_WORD_COUNT) {
+                    throw exc;
+                }
+            }
+        }
+    }
+
+    /**
+     * Ignore BOM character.
+     * 
+     * @param tokeniser
+     * @param in
+     * @param token
+     * @return
+     * @throws ParserException
+     * @throws IOException
+     */
+    private String getSvalIgnoringBom(StreamTokenizer tokeniser, Reader in, String token) throws ParserException, IOException {
+        if(tokeniser.sval != null) {
+            if(tokeniser.sval.contains(token)) {
+                return token;
+            }
+        }
+        return tokeniser.sval;
     }
 
     /**

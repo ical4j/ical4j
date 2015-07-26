@@ -14,5 +14,6 @@ deploy:
   skip_cleanup: true
   on:
     tags: true
+    jdk: openjdk7
 before_deploy: "./gradlew assembleDist"
 sudo: false
