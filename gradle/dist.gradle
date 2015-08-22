@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.hidetake:gradle-ssh-plugin:1.1.3'
+    }
+}
+
+apply plugin: 'distribution'
+apply plugin: 'org.hidetake.ssh'
+
+distributions {
+    main {
+        contents {
+            from { ['README.md', 'LICENSE', 'AUTHORS', 'CHANGELOG', 'build/docs', 'build/libs']}
+        }
+    }
+}
+
+distTar {
+    compression = Compression.GZIP
+}
+
+remotes {
+    sourceforge {
+        host = 'frs.sourceforge.net'
+        user = 'fortuna'
+        identity = file("${System.getProperty('user.home')}/.ssh/id_rsa")
+    }
+    sourceforge_shell {
+        host = 'shell.sourceforge.net'
+        user = 'fortuna'
+        identity = file("${System.getProperty('user.home')}/.ssh/id_rsa")
+    }
+}
+
+task uploadDist(dependsOn: 'assembleMainDist') << {
+    ssh.run {
+        session(remotes.sourceforge_shell) {
+            execute "mkdir -p /home/frs/project/ical4j/$project.name/$project.version"
+        }
+        session(remotes.sourceforge) {
+            put "$buildDir/distributions/$project.name-${project.version}.zip", "/home/frs/project/ical4j/$project.name/$project.version"
+            put "$buildDir/distributions/$project.name-${project.version}.tgz", "/home/frs/project/ical4j/$project.name/$project.version"
+        }
+    }
+}
