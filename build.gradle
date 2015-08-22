@@ -19,6 +19,7 @@ apply plugin: 'osgi'
 apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'release'
+apply plugin: 'distribution'
 //apply plugin: 'github-pages'
 //apply plugin: 'github'
 
@@ -163,4 +164,16 @@ uploadArchives {
             }
         }
     }
+}
+
+distributions {
+    main {
+        contents {
+            from { ['README.md', 'LICENSE', 'AUTHORS', 'CHANGELOG', 'build/docs', 'build/libs']}
+        }
+    }
+}
+
+distTar {
+    compression = Compression.GZIP
 }
