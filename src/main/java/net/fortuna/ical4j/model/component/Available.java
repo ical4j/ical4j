@@ -35,7 +35,8 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
 
 /**
  * $Id$ [05-Apr-2004]

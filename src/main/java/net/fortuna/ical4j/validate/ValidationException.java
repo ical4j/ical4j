@@ -29,19 +29,42 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.validate;
 
-import java.io.Serializable;
+import java.text.MessageFormat;
 
 /**
- * @author fortuna
+ * $Id$ [23-Apr-2004]
  *
+ * An exception thrown during validation.
+ * 
+ * @author Ben Fortuna
  */
-public interface Validator extends Serializable {
+public class ValidationException extends RuntimeException {
+    
+    private static final long serialVersionUID = 309245291364742896L;
 
     /**
-     * Validates the associated model against an applicable standard.
-     * @throws ValidationException where the model does not confirm to the applicable standard
+     * Default constructor.
      */
-    void validate() throws ValidationException;
+    public ValidationException() {
+        super();
+    }
+
+    /**
+     * Constructor with message.
+     * @param message a message
+     */
+    public ValidationException(final String message) {
+        super(message);
+    }
+
+    /**
+     * Constructor with message pattern and arguments.
+     * @param message a message pattern
+     * @param args message arguments
+     */
+    public ValidationException(final String message, Object[] args) {
+        super(MessageFormat.format(message, args));
+    }
 }

@@ -34,9 +34,9 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

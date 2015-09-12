@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -432,19 +433,6 @@ public abstract class Property extends Content {
         buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
-    }
-
-    /**
-     * Indicates whether this property is a calendar property.
-     *
-     * @return boolean
-     */
-    public boolean isCalendarProperty() {
-
-        return PRODID.equalsIgnoreCase(getName())
-                || VERSION.equalsIgnoreCase(getName())
-                || CALSCALE.equalsIgnoreCase(getName())
-                || METHOD.equalsIgnoreCase(getName());
     }
 
     /**

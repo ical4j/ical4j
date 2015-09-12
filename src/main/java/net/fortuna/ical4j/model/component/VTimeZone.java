@@ -36,8 +36,11 @@ import net.fortuna.ical4j.model.property.LastModified;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzUrl;
-import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.component.VTimeZoneITIPValidator;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -122,7 +125,7 @@ public class VTimeZone extends CalendarComponent {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
-    private final Validator itipValidator = new ITIPValidator();
+    private final Validator itipValidator = new VTimeZoneITIPValidator();
     
     private ComponentList<Observance> observances;
 
@@ -231,59 +234,6 @@ public class VTimeZone extends CalendarComponent {
         return itipValidator;
     }
 
-    /**
-     * Common validation for all iTIP methods.
-     * 
-     * <pre>
-     *    Component/Property  Presence
-     *    ------------------- ----------------------------------------------
-     *    VTIMEZONE           0+      MUST be present if any date/time refers
-     *                                to timezone
-     *        DAYLIGHT        0+      MUST be one or more of either STANDARD or
-     *                                DAYLIGHT
-     *           COMMENT      0 or 1
-     *           DTSTART      1       MUST be local time format
-     *           RDATE        0+      if present RRULE MUST NOT be present
-     *           RRULE        0+      if present RDATE MUST NOT be present
-     *           TZNAME       0 or 1
-     *           TZOFFSET     1
-     *           TZOFFSETFROM 1
-     *           TZOFFSETTO   1
-     *           X-PROPERTY   0+
-     *        LAST-MODIFIED   0 or 1
-     *        STANDARD        0+      MUST be one or more of either STANDARD or
-     *                                DAYLIGHT
-     *           COMMENT      0 or 1
-     *           DTSTART      1       MUST be local time format
-     *           RDATE        0+      if present RRULE MUST NOT be present
-     *           RRULE        0+      if present RDATE MUST NOT be present
-     *           TZNAME       0 or 1
-     *           TZOFFSETFROM 1
-     *           TZOFFSETTO   1
-     *           X-PROPERTY   0+
-     *        TZID            1
-     *        TZURL           0 or 1
-     *        X-PROPERTY      0+
-     * </pre>
-     */
-    private class ITIPValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
-
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
-            for (final Observance observance : getObservances()) {
-                PropertyValidator.getInstance().assertOne(Property.DTSTART, observance.getProperties());
-                PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM, observance.getProperties());
-                PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO, observance.getProperties());
-                
-                PropertyValidator.getInstance().assertOneOrLess(Property.TZNAME, observance.getProperties());
-            }
-        }
-    }
-    
     /**
      * @return Returns the types.
      */

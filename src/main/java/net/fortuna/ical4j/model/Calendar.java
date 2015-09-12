@@ -34,9 +34,10 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.ComponentValidator;
-import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ComponentValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -285,7 +286,7 @@ public class Calendar implements Serializable {
         // validate properties..
         for (final Property property : getProperties()) {
             if (!(property instanceof XProperty)
-                    && !property.isCalendarProperty()) {
+                    && !(property instanceof CalendarProperty)) {
                 throw new ValidationException("Invalid property: "
                         + property.getName());
             }

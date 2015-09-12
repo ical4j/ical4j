@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -46,7 +47,7 @@ import java.text.ParseException;
  *
  * @author benf
  */
-public class Method extends Property {
+public class Method extends Property implements CalendarProperty {
 
     private static final long serialVersionUID = 7220956532685378719L;
 
