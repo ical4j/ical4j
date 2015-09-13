@@ -47,7 +47,7 @@ import java.text.ParseException;
  *
  * @author benf
  */
-public class Method extends Property implements CalendarProperty {
+public class Method extends Property {
 
     private static final long serialVersionUID = 7220956532685378719L;
 

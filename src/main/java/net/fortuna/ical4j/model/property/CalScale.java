@@ -48,7 +48,7 @@ import java.text.ParseException;
  *
  * @author benf
  */
-public class CalScale extends Property implements CalendarProperty {
+public class CalScale extends Property {
 
     private static final long serialVersionUID = 7446184786984981423L;
 

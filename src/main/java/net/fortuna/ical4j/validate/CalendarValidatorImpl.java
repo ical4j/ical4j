@@ -4,16 +4,25 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.CalendarProperty;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Version;
-import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.Predicate;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by fortuna on 13/09/15.
  */
 public class CalendarValidatorImpl implements Validator<Calendar> {
+
+    protected final List<Class<? extends Property>> calendarProperties;
+
+    public CalendarValidatorImpl() {
+        calendarProperties = Arrays.asList(CalScale.class, Method.class, ProdId.class, Version.class);
+    }
+
     @Override
     public void validate(Calendar target) throws ValidationException {
         // 'prodid' and 'version' are both REQUIRED,
@@ -43,10 +52,15 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
         // validate properties..
         for (final Property property : target.getProperties()) {
-            if (!(property instanceof XProperty)
-                    && !(property instanceof CalendarProperty)) {
-                throw new ValidationException("Invalid property: "
-                        + property.getName());
+            boolean isCalendarProperty = CollectionUtils.find(calendarProperties, new Predicate<Class<? extends Property>>() {
+                @Override
+                public boolean evaluate(Class<? extends Property> object) {
+                    return object.isInstance(property);
+                }
+            }) != null;
+
+            if (!(property instanceof XProperty) && !isCalendarProperty) {
+                throw new ValidationException("Invalid property: " + property.getName());
             }
         }
 

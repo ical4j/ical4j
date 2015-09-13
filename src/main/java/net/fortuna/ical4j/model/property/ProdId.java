@@ -47,7 +47,7 @@ import java.text.ParseException;
  *
  * @author benf
  */
-public class ProdId extends Property implements Escapable, CalendarProperty {
+public class ProdId extends Property implements Escapable {
 
     private static final long serialVersionUID = -2433059917714523286L;
 
