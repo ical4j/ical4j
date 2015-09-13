@@ -1,8 +1,6 @@
 [![Build Status](https://drone.io/github.com/ical4j/ical4j/status.png)](https://drone.io/github.com/ical4j/ical4j/latest) [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/ical4j/ical4j?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-========================
- iCal4j - Release Notes
-========================
+# iCal4j - Release Notes
 
  - For a concise description of the goals and directions of iCal4j please
  take a look at docs/index.html.
@@ -18,21 +16,13 @@
  be compatible with prior versions of eclipse.
 
 
-=====================
- System Requirements
-=====================
+## Dependencies
 
- - Java 5 or later
+ - Java 6 or later
  
- - commons-codec
- - commons-lang3
- - slf4j/jcl-over-slf4j
- - junit (for unit testing only)
- 
+See [here](docs/Dependencies.md) for further details.
 
-=======================
- How to build - Maven2
-=======================
+## How to build - Maven2
 
  After installing Maven2 and adding to your path, you need to modify your local
  profiles http://wiki.modularity.net.au/ical4j/index.php?title=Maven2. Then 
@@ -46,9 +36,7 @@
  are generated in the 'target' directory.
 
 
-====================
- How to build - Ant
-====================
+## How to build - Ant
  
  If you have downloaded the source distribution, you should be able to package a JAR
  file simply by running ant in the root directory. e.g:
@@ -63,9 +51,7 @@
  
  
  
-=================
- Relaxed Parsing
-=================
+## Relaxed Parsing
 
  iCal4j now has the capability to "relax" its parsing rules to enable parsing of
  *.ics files that don't properly conform to the iCalendar specification (RFC2445)
@@ -126,9 +112,7 @@
  net.fortuna.ical4j.util.CompatibilityHints.
 
 
-======================
- iCal4j and Timezones
-======================
+## iCal4j and Timezones
 
  Supporting timezones in an iCalendar implementation can be a complicated process,
  mostly due to the fact that there is not a definitive list of timezone definitions
@@ -159,9 +143,7 @@
  on output of the calendar) you will be notified if the changes are invalid.
  
 
-============================
- Pre-Java 1.4 Compatibility
-============================
+## Pre-Java 1.4 Compatibility
 
  Choosing Java 1.4 as the minimum required JVM was initially slightly arbitrary, and
  probably based on the fact that most people were using 1.4 as a minimum.
@@ -178,9 +160,7 @@
  (as these APIs aren't available).
 
  
-=================
- Redistribution:
-=================
+## Redistribution:
 
 If you intend to use and distribute iCal4j in your own project please
 follow these very simple guidelines:
