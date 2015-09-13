@@ -32,8 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ParameterValidator;
-import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -59,15 +58,14 @@ public class Region extends Property implements Escapable {
      * Default constructor.
      */
     public Region() {
-        super(REGION, PropertyFactoryImpl.getInstance());
+        this(null);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Region(final String aValue) {
-        super(REGION, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+        this(new ParameterList(), aValue);
     }
 
     /**
@@ -75,24 +73,8 @@ public class Region extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Region(final ParameterList aList, final String aValue) {
-        super(REGION, aList, PropertyFactoryImpl.getInstance());
+        super(REGION, aList, new OneOrLessParameterValidator(Parameter.ABBREV), PropertyFactoryImpl.getInstance());
         setValue(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" abbrev
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ABBREV,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**
