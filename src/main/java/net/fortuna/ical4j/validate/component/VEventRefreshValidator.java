@@ -7,6 +7,10 @@ import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
+import org.apache.commons.collections4.Closure;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Arrays;
 
 /**
  * METHOD:REFRESH Validator.
@@ -68,39 +72,27 @@ public class VEventRefreshValidator implements Validator<VEvent> {
 
     private static final long serialVersionUID = 1L;
 
-    public void validate(VEvent target) throws ValidationException {
-        PropertyValidator.getInstance().assertOne(Property.ATTENDEE, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+    public void validate(final VEvent target) throws ValidationException {
+        CollectionUtils.forAllDo(Arrays.asList(Property.ATTENDEE, Property.DTSTAMP, Property.ORGANIZER, Property.UID),
+                new Closure<String>() {
+                    @Override
+                    public void execute(String input) {
+                        PropertyValidator.getInstance().assertOne(input, target.getProperties());
+                    }
+                });
 
         PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, target.getProperties());
 
-        PropertyValidator.getInstance().assertNone(Property.ATTACH, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.CATEGORIES, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.CLASS, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.CONTACT, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.CREATED, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.DESCRIPTION, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.DTEND, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.DTSTART, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.DURATION, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.EXDATE, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.EXRULE, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.GEO, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.LAST_MODIFIED, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.LOCATION, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.PRIORITY, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.RDATE, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.RELATED_TO, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.RESOURCES, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.RRULE, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.SEQUENCE, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.STATUS, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.SUMMARY, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.TRANSP, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.URL, target.getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.ATTACH, Property.CATEGORIES, Property.CLASS, Property.CONTACT,
+                Property.CREATED, Property.DESCRIPTION, Property.DTEND, Property.DTSTART, Property.DURATION, Property.EXDATE,
+                Property.EXRULE, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.PRIORITY, Property.RDATE,
+                Property.RELATED_TO, Property.REQUEST_STATUS, Property.RESOURCES, Property.RRULE, Property.SEQUENCE,
+                Property.STATUS, Property.SUMMARY, Property.TRANSP, Property.URL), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertNone(input, target.getProperties());
+            }
+        });
 
         ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
     }
