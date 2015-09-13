@@ -9,7 +9,8 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.Predicate;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -17,10 +18,10 @@ import java.util.List;
  */
 public class CalendarValidatorImpl implements Validator<Calendar> {
 
-    protected final List<Class<? extends Property>> calendarProperties;
+    protected final List<Class<? extends Property>> calendarProperties = new ArrayList<Class<? extends Property>>();
 
     public CalendarValidatorImpl() {
-        calendarProperties = Arrays.asList(CalScale.class, Method.class, ProdId.class, Version.class);
+        Collections.addAll(calendarProperties, CalScale.class, Method.class, ProdId.class, Version.class);
     }
 
     @Override
