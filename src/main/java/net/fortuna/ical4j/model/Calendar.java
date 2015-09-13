@@ -33,11 +33,8 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ComponentValidator;
-import net.fortuna.ical4j.validate.PropertyValidator;
-import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -132,9 +129,11 @@ public class Calendar implements Serializable {
      */
     public static final String END = "END";
 
-    private PropertyList properties;
+    private final PropertyList properties;
 
-    private ComponentList<CalendarComponent> components;
+    private final ComponentList<CalendarComponent> components;
+
+    private final Validator<Calendar> validator;
 
     /**
      * Default constructor.
@@ -152,13 +151,24 @@ public class Calendar implements Serializable {
     }
 
     /**
+     * Initialise a Calendar object using the default configured validator.
+     * @param properties a list of initial calendar properties
+     * @param components a list of initial calendar components
+     */
+    public Calendar(PropertyList properties, ComponentList<CalendarComponent> components) {
+        this(properties, components, AbstractCalendarValidatorFactory.getInstance().newInstance());
+    }
+
+    /**
      * Constructor.
      * @param p a list of properties
      * @param c a list of components
+     * @param validator used to ensure the validity of the calendar instance
      */
-    public Calendar(final PropertyList p, final ComponentList<CalendarComponent> c) {
+    public Calendar(PropertyList p, ComponentList<CalendarComponent> c, Validator<Calendar> validator) {
         this.properties = p;
         this.components = c;
+        this.validator = validator;
     }
 
     /**
@@ -258,205 +268,7 @@ public class Calendar implements Serializable {
      * @throws ValidationException where the calendar is not in a valid state
      */
     public void validate(final boolean recurse) throws ValidationException {
-        // 'prodid' and 'version' are both REQUIRED,
-        // but MUST NOT occur more than once
-        PropertyValidator.getInstance().assertOne(Property.PRODID, properties);
-        PropertyValidator.getInstance().assertOne(Property.VERSION, properties);
-
-        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            // require VERSION:2.0 for RFC2445..
-            if (!Version.VERSION_2_0.equals(getProperty(Property.VERSION))) {
-                throw new ValidationException("Unsupported Version: " + getProperty(Property.VERSION).getValue());
-            }
-        }
-        
-        // 'calscale' and 'method' are optional,
-        // but MUST NOT occur more than once
-        PropertyValidator.getInstance().assertOneOrLess(Property.CALSCALE,
-                properties);
-        PropertyValidator.getInstance().assertOneOrLess(Property.METHOD,
-                properties);
-
-        // must contain at least one component
-        if (getComponents().isEmpty()) {
-            throw new ValidationException(
-                    "Calendar must contain at least one component");
-        }
-
-        // validate properties..
-        for (final Property property : getProperties()) {
-            if (!(property instanceof XProperty)
-                    && !(property instanceof CalendarProperty)) {
-                throw new ValidationException("Invalid property: "
-                        + property.getName());
-            }
-        }
-
-//        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            // validate method..
-            final Method method = (Method) getProperty(Property.METHOD);
-            if (Method.PUBLISH.equals(method)) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    
-                    if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-                        ComponentValidator.assertNone(Component.VTODO, getComponents());
-                    }
-                }
-                else if (getComponent(Component.VFREEBUSY) != null) {
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-//                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                    ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-//                else if (getComponent(Component.VJOURNAL) != null) {
-//                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                    ComponentValidator.assertNone(Component.VEVENT, getComponents());
-//                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-//                }
-            }
-            else if (Method.REQUEST.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VFREEBUSY) != null) {
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-//                  ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-            }
-            else if (Method.REPLY.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertOneOrLess(Component.VTIMEZONE, getComponents());
-                    
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VFREEBUSY) != null) {
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertOneOrLess(Component.VTIMEZONE, getComponents());
-                    
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-//                  ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-            }
-            else if (Method.ADD.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-                else if (getComponent(Component.VJOURNAL) != null) {
-                    ComponentValidator.assertOneOrLess(Component.VTIMEZONE, getComponents());
-                    
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-//                  ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-            }
-            else if (Method.CANCEL.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertOneOrLess(Component.VTIMEZONE, getComponents());
-                    
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-                else if (getComponent(Component.VJOURNAL) != null) {
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-//                  ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-            }
-            else if (Method.REFRESH.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
-                }
-            }
-            else if (Method.COUNTER.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertOneOrLess(Component.VTIMEZONE, getComponents());
-                    
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-            }
-            else if (Method.DECLINE_COUNTER.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                    ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-            }
-//        }
-            
-            // perform ITIP validation on components..
-            if (method != null) {
-                for (CalendarComponent component : getComponents()) {
-                    component.validate(method);
-                }
-            }
-        
+        validator.validate(this);
         if (recurse) {
             validateProperties();
             validateComponents();
