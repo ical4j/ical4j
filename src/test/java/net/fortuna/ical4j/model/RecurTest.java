@@ -833,6 +833,13 @@ public class RecurTest extends TestCase {
         recur = new Recur("FREQ=DAILY;COUNT=3;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         suite.addTest(new RecurTest(recur, new DateTime("20131215T000000Z"),
                 new DateTime("20131215T000000Z"), new DateTime("20180101T120000Z"), Value.DATE_TIME, 3));
+        
+        // rrule with bymonth and count. Should return correct number of occurrences near the end of its perioud.
+        recur = new Recur("FREQ=MONTHLY;COUNT=3;INTERVAL=1;BYMONTH=1,9,10,12;BYMONTHDAY=12");
+        suite.addTest(new RecurTest(recur, new DateTime("20150917T000000Z"),
+                new DateTime("20160101T000000Z"), new DateTime("20160201T000000Z"), Value.DATE, 1));
+        suite.addTest(new RecurTest(recur, new DateTime("20150917T000000Z"),
+                new DateTime("20160201T000000Z"), new DateTime("20160301T000000Z"), Value.DATE, 0));
       
         return suite;
     }
