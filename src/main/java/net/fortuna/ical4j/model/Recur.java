@@ -594,7 +594,7 @@ public class Recur implements Serializable {
             }
         }
 
-        int invalidCandidateCount = 0;
+        HashSet<Date> invalidCandidates = new HashSet<Date>();
         int noCandidateIncrementCount = 0;
         Date candidate = null;
         while ((maxCount < 0) || (dates.size() < maxCount)) {
@@ -611,7 +611,7 @@ public class Recur implements Serializable {
                 break;
             }
             if (getCount() >= 1
-                    && (dates.size() + invalidCandidateCount) >= getCount()) {
+                    && (dates.size() + invalidCandidates.size()) >= getCount()) {
 
                 break;
             }
@@ -637,9 +637,9 @@ public class Recur implements Serializable {
                         // candidates exclusive of periodEnd..
                         if (candidate.before(periodStart)
                                 || !candidate.before(periodEnd)) {
-                            invalidCandidateCount++;
+                            invalidCandidates.add(candidate);
                         } else if (getCount() >= 1
-                                && (dates.size() + invalidCandidateCount) >= getCount()) {
+                                && (dates.size() + invalidCandidates.size()) >= getCount()) {
                             break;
                         } else if (!(getUntil() != null
                                 && candidate.after(getUntil()))) {
