@@ -859,10 +859,15 @@ public class Recur implements Serializable {
         final DateList monthlyDates = getDateListInstance(dates);
         for (final Date date : dates) {
             final Calendar cal = getCalendarInstance(date, true);
+            final Calendar freqEnd = getCalendarInstance(date, true);
+            increment(freqEnd);
             for (final Integer month : getMonthList()) {
                 // Java months are zero-based..
 //                cal.set(Calendar.MONTH, month.intValue() - 1);
                 cal.roll(Calendar.MONTH, (month - 1) - cal.get(Calendar.MONTH));
+                if (cal.after(freqEnd)) {
+                    break; // Do not break out of the FREQ-defined boundary
+                }
                 monthlyDates.add(Dates.getInstance(cal.getTime(), monthlyDates.getType()));
             }
         }
