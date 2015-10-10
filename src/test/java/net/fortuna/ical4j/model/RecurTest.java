@@ -840,6 +840,11 @@ public class RecurTest extends TestCase {
                 new DateTime("20160101T000000Z"), new DateTime("20160201T000000Z"), Value.DATE, 1));
         suite.addTest(new RecurTest(recur, new DateTime("20150917T000000Z"),
                 new DateTime("20160201T000000Z"), new DateTime("20160301T000000Z"), Value.DATE, 0));
+
+        // rrule with bymonth, byday and bysetpos. Issue #39
+        recur = new Recur("FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYMONTH=2,3,9,10;BYMONTHDAY=28,29,30,31;BYSETPOS=-1");
+        suite.addTest(new RecurTest(recur, new DateTime("20150701T000000"),
+                new DateTime("20150701T000000"), new DateTime("20150930T000000")));
       
         return suite;
     }
