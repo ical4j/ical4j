@@ -5,6 +5,10 @@ import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
+import org.apache.commons.collections4.Closure;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Arrays;
 
 /**
  * <pre>
@@ -45,20 +49,25 @@ public class VFreeBusyReplyValidator implements Validator<VFreeBusy> {
 
     private static final long serialVersionUID = 1L;
 
-    public void validate(VFreeBusy target) throws ValidationException {
+    public void validate(final VFreeBusy target) throws ValidationException {
 
         // FREEBUSY is 1+ in RFC2446 but 0+ in Calsify
 
-        PropertyValidator.getInstance().assertOne(Property.ATTENDEE, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTEND, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTART, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.ATTENDEE, Property.DTSTAMP, Property.DTEND, Property.DTSTART,
+                Property.ORGANIZER, Property.UID), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertOne(input, target.getProperties());
+            }
+        });
 
         PropertyValidator.getInstance().assertOneOrLess(Property.URL, target.getProperties());
 
-        PropertyValidator.getInstance().assertNone(Property.DURATION, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.SEQUENCE, target.getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.DURATION, Property.SEQUENCE), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertNone(input, target.getProperties());
+            }
+        });
     }
 }

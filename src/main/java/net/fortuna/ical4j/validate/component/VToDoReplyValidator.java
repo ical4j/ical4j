@@ -7,6 +7,10 @@ import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
+import org.apache.commons.collections4.Closure;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Arrays;
 
 /**
  * <pre>
@@ -66,31 +70,22 @@ public class VToDoReplyValidator implements Validator<VToDo> {
 
     private static final long serialVersionUID = 1L;
 
-    public void validate(VToDo target) throws ValidationException {
+    public void validate(final VToDo target) throws ValidationException {
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, target.getProperties());
 
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
         PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
         PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
 
-        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DUE, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.GEO, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LOCATION, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.PERCENT_COMPLETE, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.PRIORITY, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.RESOURCES, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, target.getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.URL, target.getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
+                Property.DTSTART, Property.DUE, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,
+                Property.PERCENT_COMPLETE, Property.PRIORITY, Property.RESOURCES, Property.RECURRENCE_ID, Property.SEQUENCE,
+                Property.STATUS, Property.SUMMARY, Property.URL), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertOneOrLess(input, target.getProperties());
+            }
+        });
 
         ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
     }
