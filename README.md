@@ -16,11 +16,28 @@
  be compatible with prior versions of eclipse.
 
 
-## Dependencies
+## System Requirements
 
  - Java 6 or later
  
 See [here](docs/Dependencies.md) for further details.
+
+## Building with Gradle
+
+iCal4j includes the Gradle wrapper for a simpler and more consistent build.
+
+**Run unit tests**
+
+`./gradlew clean test`
+
+**Build a new release**
+
+`./gradlew clean test release -PreleaseVersion=2.0.0`
+
+**Upload release binaries and packages**
+
+`RELEASE_VERSION=2.0.0 ./gradlew uploadArchives uploadDist`
+
 
 ## How to build - Maven2
 
@@ -48,8 +65,6 @@ See [here](docs/Dependencies.md) for further details.
  and add overridden properties to this. You can also override properties via Java system
  properties (e.g. -Dproject.classpath="..."). You shouldn't need to modify the "build.xml" at all,
  so if you do find a need let me know and I'll try to rectify this.
- 
- 
  
 ## Relaxed Parsing
 
