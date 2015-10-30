@@ -10,10 +10,10 @@ deploy:
     secure: DpTp3xxZrKP21I13G8dYY5EBra5tcf9TsF1y9oLRdOSoVvUe0XaOQ+9WPG2RgnuH1DPVj1n2Rr6emAZ84lSzz4H7T8gPYP4pLjmJBGyriGC7N3MTG2FCBn5l6DgTKNLxtfpek/b7nClif6vVTEse/T8/9an/Yszp9bbIZNNwStE=
   file:
     - build/distributions/ical4j-$RELEASE_VERSION.zip
-    - build/distributions/ical4j-$RELEASE_VERSION.tar.gz
+    - build/distributions/ical4j-$RELEASE_VERSION.tgz
   skip_cleanup: true
   on:
     tags: true
     jdk: openjdk7
-before_deploy: "./gradlew assembleDist"
+before_deploy: "./gradlew assembleMainDist"
 sudo: false
