@@ -1,2 +1,5 @@
 .idea
 ical4j.iml
+target/
+zones.tab
+zones.h
