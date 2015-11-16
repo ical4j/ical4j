@@ -9,7 +9,7 @@
 	<groupId>org.mnode.ical4j</groupId>
 	<artifactId>ical4j</artifactId>
 	<name>iCal4j</name>
-	<version>1.0.7</version>
+	<version>1.0.8-SNAPSHOT</version>
 	<description>
 		A Java library for reading and writing iCalendar (*.ics) files
 	</description>
