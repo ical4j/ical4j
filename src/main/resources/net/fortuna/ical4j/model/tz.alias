@@ -1,18 +1,3 @@
-## Unsupported timezone identifiers..
-Etc/GMT+0=Etc/GMT
-Etc/GMT-0=Etc/GMT
-Etc/GMT0=Etc/GMT
-GMT=Etc/GMT
-
-### Temporary hack to support above timezones..
-Etc/GMT=Europe/London
-Etc/Greenwich=Etc/GMT
-Etc/UCT=Europe/London
-Etc/UTC=Europe/London
-Etc/Universal=Etc/UTC
-
-Etc/Zulu=Etc/UTC
-
 ## Non-Oslon aliases:
 #
 US/Pacific-New=America/Los_Angeles
@@ -89,10 +74,6 @@ Europe/Belfast = Europe/London
 Europe/Tiraspol = Europe/Chisinau
 GB = Europe/London
 GB-Eire = Europe/London
-GMT+0 = Etc/GMT
-GMT-0 = Etc/GMT
-GMT0 = Etc/GMT
-Greenwich = Etc/GMT
 Hongkong = Asia/Hong_Kong
 Iceland = Atlantic/Reykjavik
 Iran = Asia/Tehran
@@ -118,7 +99,6 @@ ROC = Asia/Taipei
 ROK = Asia/Seoul
 Singapore = Asia/Singapore
 Turkey = Europe/Istanbul
-UCT = Etc/UCT
 US/Alaska = America/Anchorage
 US/Aleutian = America/Adak
 US/Arizona = America/Phoenix
@@ -131,7 +111,4 @@ US/Michigan = America/Detroit
 US/Mountain = America/Denver
 US/Pacific = America/Los_Angeles
 US/Samoa = Pacific/Pago_Pago
-UTC = Etc/UTC
-Universal = Etc/UTC
 W-SU = Europe/Moscow
-Zulu = Etc/UTC
