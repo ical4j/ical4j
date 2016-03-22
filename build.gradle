@@ -100,6 +100,10 @@ scmVersion {
         prefix = 'ical4j'
     }
     versionCreator 'versionWithBranch'
+    nextVersion {
+        suffix = 'beta1'
+        separator = '-'
+    }
 }
 
 group = 'org.mnode.ical4j'
