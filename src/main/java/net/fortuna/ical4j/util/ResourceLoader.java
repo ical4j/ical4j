@@ -54,7 +54,9 @@ public class ResourceLoader {
     public static URL getResource(String name) {
         URL resource = null;
         try {
-            resource = Thread.currentThread().getContextClassLoader().getResource(name);
+            if (Thread.currentThread().getContextClassLoader() != null) {
+                resource = Thread.currentThread().getContextClassLoader().getResource(name);
+            }
         } catch (SecurityException e) {
             LOG.info("Unable to access context classloader, using default. " + e.getMessage());
         }
