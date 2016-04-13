@@ -149,6 +149,13 @@ public class Date extends Iso8601 {
     protected Date(final long time, final int precision, TimeZone tz) {
         super(time, DEFAULT_PATTERN, precision, tz);
     }
+    
+    /**
+     * @param calendar a calendar value
+     */
+    public Date(final java.util.Calendar calendar) {
+        this(calendar.getTimeInMillis(), Dates.PRECISION_DAY, TimeZones.getDateTimeZone());
+    }
 
     /**
      * @param date a date value
