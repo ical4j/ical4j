@@ -20,3 +20,5 @@ deploy:
     jdk: openjdk7
 before_deploy: "./gradlew assembleMainDist"
 sudo: true
+addons:
+  hostname: travis-ci
