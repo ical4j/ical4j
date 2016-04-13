@@ -3,6 +3,10 @@ jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk7
+before_script:
+  - sudo keytool -import -alias sonar -keystore $JAVA_HOME/jre/lib/security/cacerts -file sonar_cert.pem -storepass changeit -noprompt
+script:
+  - ./gradlew check sonarqube
 deploy:
   provider: releases
   api_key:
