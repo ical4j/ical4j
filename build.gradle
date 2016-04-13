@@ -9,10 +9,15 @@ buildscript {
     }
 }
 
+plugins {
+  id "org.sonarqube" version "1.2"
+}
+
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'osgi'
 apply plugin: 'maven'
+apply plugin: 'jacoco'
 apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
 apply from: 'gradle/dist.gradle'
