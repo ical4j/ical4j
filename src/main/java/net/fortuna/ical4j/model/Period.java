@@ -313,6 +313,7 @@ public class Period extends DateRange implements Comparable<Period> {
 
     /**
      * Compares the specified period with this period.
+     * First, compare the start dates.  If they are the same, compare the end dates.
      * 
      * @param arg0 a period to compare with this one
      * @return a postive value if this period is greater, negative if the other is
