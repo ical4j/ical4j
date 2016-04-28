@@ -52,7 +52,7 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
      * Constructor made private to prevent instantiation.
      */
     private ComponentFactoryImpl() {
-        super(ServiceLoader.load(ComponentFactory.class));
+        super(ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader()));
     }
 
     /**
