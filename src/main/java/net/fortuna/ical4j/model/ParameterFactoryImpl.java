@@ -52,7 +52,7 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
     private static ParameterFactoryImpl instance = new ParameterFactoryImpl();
 
     protected ParameterFactoryImpl() {
-        super(ServiceLoader.load(ParameterFactory.class));
+        super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()));
     }
 
     /**
