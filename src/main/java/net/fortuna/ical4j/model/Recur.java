@@ -166,7 +166,7 @@ public class Recur implements Serializable {
 
     private NumberList setPosList;
 
-    private String weekStartDay;
+    private WeekDay.Day weekStartDay;
 
     private int calendarWeekStartDay;
 
@@ -229,8 +229,8 @@ public class Recur implements Serializable {
             } else if (BYSETPOS.equals(token)) {
                 setPosList = new NumberList(nextToken(t, token), 1, 366, true);
             } else if (WKST.equals(token)) {
-                weekStartDay = nextToken(t, token);
-                calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
+                weekStartDay = WeekDay.Day.valueOf(nextToken(t, token));
+                calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(weekStartDay));
             } else {
                 if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                     // assume experimental value..
@@ -404,17 +404,17 @@ public class Recur implements Serializable {
     /**
      * @return Returns the weekStartDay or null if there is none.
      */
-    public final String getWeekStartDay() {
+    public final WeekDay.Day getWeekStartDay() {
         return weekStartDay;
     }
 
     /**
      * @param weekStartDay The weekStartDay to set.
      */
-    public final void setWeekStartDay(final String weekStartDay) {
+    public final void setWeekStartDay(final WeekDay.Day weekStartDay) {
         this.weekStartDay = weekStartDay;
         if (weekStartDay != null) {
-            calendarWeekStartDay = WeekDay.getCalendarDay(new WeekDay(weekStartDay));
+            calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(weekStartDay));
         }
     }
 
@@ -1046,9 +1046,8 @@ public class Recur implements Serializable {
      * offsets are from 1 to the size of the list. If an invalid offset is supplied, all elements from <code>list</code>
      * are added to <code>sublist</code>.
      *
-     * @param list
+     * @param dates
      * @param offset
-     * @param sublist
      */
     private List<Date> getOffsetDates(final DateList dates, final int offset) {
         if (offset == 0) {
