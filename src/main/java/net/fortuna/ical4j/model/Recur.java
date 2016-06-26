@@ -41,8 +41,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.*;
+import java.util.Calendar;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -192,13 +192,14 @@ public class Recur implements Serializable {
     public Recur(final String aValue) throws ParseException {
         // default week start is Monday per RFC5545
         calendarWeekStartDay = Calendar.MONDAY;
-        final StringTokenizer t = new StringTokenizer(aValue, ";=");
-        while (t.hasMoreTokens()) {
-            final String token = t.nextToken();
+
+        Iterator<String> tokens = Arrays.asList(aValue.split("[;=]")).iterator();
+        while (tokens.hasNext()) {
+            final String token = tokens.next();
             if (FREQ.equals(token)) {
-                frequency = nextToken(t, token);
+                frequency = nextToken(tokens, token);
             } else if (UNTIL.equals(token)) {
-                final String untilString = nextToken(t, token);
+                final String untilString = nextToken(tokens, token);
                 if (untilString != null && untilString.contains("T")) {
                     until = new DateTime(untilString);
                     // UNTIL must be specified in UTC time..
@@ -207,46 +208,46 @@ public class Recur implements Serializable {
                     until = new Date(untilString);
                 }
             } else if (COUNT.equals(token)) {
-                count = Integer.parseInt(nextToken(t, token));
+                count = Integer.parseInt(nextToken(tokens, token));
             } else if (INTERVAL.equals(token)) {
-                interval = Integer.parseInt(nextToken(t, token));
+                interval = Integer.parseInt(nextToken(tokens, token));
             } else if (BYSECOND.equals(token)) {
-                secondList = new NumberList(nextToken(t, token), 0, 59, false);
+                secondList = new NumberList(nextToken(tokens, token), 0, 59, false);
             } else if (BYMINUTE.equals(token)) {
-                minuteList = new NumberList(nextToken(t, token), 0, 59, false);
+                minuteList = new NumberList(nextToken(tokens, token), 0, 59, false);
             } else if (BYHOUR.equals(token)) {
-                hourList = new NumberList(nextToken(t, token), 0, 23, false);
+                hourList = new NumberList(nextToken(tokens, token), 0, 23, false);
             } else if (BYDAY.equals(token)) {
-                dayList = new WeekDayList(nextToken(t, token));
+                dayList = new WeekDayList(nextToken(tokens, token));
             } else if (BYMONTHDAY.equals(token)) {
-                monthDayList = new NumberList(nextToken(t, token), 1, 31, true);
+                monthDayList = new NumberList(nextToken(tokens, token), 1, 31, true);
             } else if (BYYEARDAY.equals(token)) {
-                yearDayList = new NumberList(nextToken(t, token), 1, 366, true);
+                yearDayList = new NumberList(nextToken(tokens, token), 1, 366, true);
             } else if (BYWEEKNO.equals(token)) {
-                weekNoList = new NumberList(nextToken(t, token), 1, 53, true);
+                weekNoList = new NumberList(nextToken(tokens, token), 1, 53, true);
             } else if (BYMONTH.equals(token)) {
-                monthList = new NumberList(nextToken(t, token), 1, 12, false);
+                monthList = new NumberList(nextToken(tokens, token), 1, 12, false);
             } else if (BYSETPOS.equals(token)) {
-                setPosList = new NumberList(nextToken(t, token), 1, 366, true);
+                setPosList = new NumberList(nextToken(tokens, token), 1, 366, true);
             } else if (WKST.equals(token)) {
-                weekStartDay = WeekDay.Day.valueOf(nextToken(t, token));
+                weekStartDay = WeekDay.Day.valueOf(nextToken(tokens, token));
                 calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(weekStartDay));
             } else {
                 if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                     // assume experimental value..
-                    experimentalValues.put(token, nextToken(t, token));
+                    experimentalValues.put(token, nextToken(tokens, token));
                 } else {
                     throw new IllegalArgumentException(String.format("Invalid recurrence rule part: %s=%s",
-                            token, nextToken(t, token)));
+                            token, nextToken(tokens, token)));
                 }
             }
         }
         validateFrequency();
     }
 
-    private String nextToken(StringTokenizer t, String lastToken) {
+    private String nextToken(Iterator<String> tokens, String lastToken) {
         try {
-            return t.nextToken();
+            return tokens.next();
         } catch (NoSuchElementException e) {
             throw new IllegalArgumentException("Missing expected token, last token: " + lastToken);
         }

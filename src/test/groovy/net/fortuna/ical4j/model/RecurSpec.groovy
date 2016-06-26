@@ -185,4 +185,16 @@ class RecurSpec extends Specification {
 		then:
 		recur.experimentalValues['X-BYMILLISECOND'] == '300'
 	}
+
+	def 'verify handling empty rule parts'() {
+		setup: 'parse recurrence rule'
+		def recur = new Recur(rule)
+
+		expect:
+//		thrown(NumberFormatException)
+		recur != null
+
+		where:
+		rule << ["FREQ=WEEKLY;BYDAY=;INTERVAL=1"]
+	}
 }
