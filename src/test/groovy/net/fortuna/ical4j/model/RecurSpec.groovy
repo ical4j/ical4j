@@ -191,10 +191,10 @@ class RecurSpec extends Specification {
 		def recur = new Recur(rule)
 
 		expect:
-//		thrown(NumberFormatException)
-		recur != null
+		recur as String == parsedString
 
 		where:
-		rule << ["FREQ=WEEKLY;BYDAY=;INTERVAL=1"]
+		rule							| parsedString
+		'FREQ=WEEKLY;BYDAY=;INTERVAL=1'	| 'FREQ=WEEKLY;INTERVAL=1'
 	}
 }
