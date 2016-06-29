@@ -65,7 +65,7 @@ dependencies {
             'commons-codec:commons-codec:1.9',
             'org.apache.commons:commons-lang3:3.3.2',
             'org.codehaus.groovy:groovy-all:2.3.2',
-            'biz.aQute.bnd:bndlib:2.3.0'
+            'biz.aQute.bnd:bndlib:2.3.0', 'javax.cache:cache-api:1.0.0'
 
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0',
             'commons-io:commons-io:2.4',
