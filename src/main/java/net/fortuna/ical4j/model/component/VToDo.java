@@ -203,18 +203,17 @@ public class VToDo extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        buffer.append(BEGIN);
-        buffer.append(':');
-        buffer.append(getName());
-        buffer.append(Strings.LINE_SEPARATOR);
-        buffer.append(getProperties());
-        buffer.append(getAlarms());
-        buffer.append(END);
-        buffer.append(':');
-        buffer.append(getName());
-        buffer.append(Strings.LINE_SEPARATOR);
-        return buffer.toString();
+        String buffer = BEGIN +
+                ':' +
+                getName() +
+                Strings.LINE_SEPARATOR +
+                getProperties() +
+                getAlarms() +
+                END +
+                ':' +
+                getName() +
+                Strings.LINE_SEPARATOR;
+        return buffer;
     }
 
     /**
