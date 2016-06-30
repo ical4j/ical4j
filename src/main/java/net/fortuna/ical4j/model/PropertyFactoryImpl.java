@@ -56,7 +56,7 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
      * Constructor made private to prevent instantiation.
      */
     protected PropertyFactoryImpl() {
-        super(ServiceLoader.load(PropertyFactory.class));
+        super(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()));
     }
 
     /**
