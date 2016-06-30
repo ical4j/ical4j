@@ -143,18 +143,17 @@ public abstract class Component implements Serializable {
      * {@inheritDoc}
      */
     public String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        buffer.append(BEGIN);
-        buffer.append(':');
-        buffer.append(getName());
-        buffer.append(Strings.LINE_SEPARATOR);
-        buffer.append(getProperties());
-        buffer.append(END);
-        buffer.append(':');
-        buffer.append(getName());
-        buffer.append(Strings.LINE_SEPARATOR);
+        String buffer = BEGIN +
+                ':' +
+                getName() +
+                Strings.LINE_SEPARATOR +
+                getProperties() +
+                END +
+                ':' +
+                getName() +
+                Strings.LINE_SEPARATOR;
 
-        return buffer.toString();
+        return buffer;
     }
 
     /**
