@@ -124,18 +124,18 @@ public class Dur implements Comparable<Dur>, Serializable {
             else if ("-".equals(token)) {
                 negative = true;
             }
-            else if ("P".equals(token)) {
-                // does nothing..
-            }
+            // does nothing..
+//            else if ("P".equals(token)) {
+//            }
             else if ("W".equals(token)) {
                 weeks = Integer.parseInt(prevToken);
             }
             else if ("D".equals(token)) {
                 days = Integer.parseInt(prevToken);
             }
-            else if ("T".equals(token)) {
-                // does nothing..
-            }
+            // does nothing..
+//            else if ("T".equals(token)) {
+//            }
             else if ("H".equals(token)) {
                 hours = Integer.parseInt(prevToken);
             }
