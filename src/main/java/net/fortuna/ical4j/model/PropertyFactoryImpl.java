@@ -95,7 +95,7 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
                                    final ParameterList parameters, final String value)
             throws IOException, URISyntaxException, ParseException {
 
-        final PropertyFactory factory = (PropertyFactory) getFactory(name);
+        final PropertyFactory factory = getFactory(name);
         if (factory != null) {
             return factory.createProperty(parameters, value);
         } else if (isExperimentalName(name)) {
