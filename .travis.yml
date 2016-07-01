@@ -1,6 +1,7 @@
 cache:
   directories:
-    - .gradle
+    - $HOME/.gradle
+    - $HOME/.sonar
 language: java
 jdk:
   - oraclejdk8
