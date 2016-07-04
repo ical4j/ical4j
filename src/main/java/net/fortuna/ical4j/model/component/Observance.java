@@ -155,9 +155,18 @@ public abstract class Observance extends Component {
 
         if (initialOnset == null) {
             try {
-                initialOnset = applyOffsetFrom(calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate()));
+                DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
+                if (dtStart == null) {
+                    throw new ConstraintViolationException("Missing DTSTART property");
+                }
+                initialOnset = applyOffsetFrom(calculateOnset(dtStart.getDate()));
             } catch (ParseException e) {
                 Logger log = LoggerFactory.getLogger(Observance.class);
+                log.error("Unexpected error calculating initial onset", e);
+                // XXX: is this correct?
+                return null;
+            } catch (ConstraintViolationException e) {
+                Log log = LogFactory.getLog(Observance.class);
                 log.error("Unexpected error calculating initial onset", e);
                 // XXX: is this correct?
                 return null;
