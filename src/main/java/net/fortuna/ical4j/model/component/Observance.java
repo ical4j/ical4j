@@ -166,7 +166,7 @@ public abstract class Observance extends Component {
                 // XXX: is this correct?
                 return null;
             } catch (ConstraintViolationException e) {
-                Log log = LogFactory.getLog(Observance.class);
+                Logger log = LoggerFactory.getLogger(Observance.class);
                 log.error("Unexpected error calculating initial onset", e);
                 // XXX: is this correct?
                 return null;
