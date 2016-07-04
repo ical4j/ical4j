@@ -178,19 +178,18 @@ public class Calendar implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        buffer.append(BEGIN);
-        buffer.append(':');
-        buffer.append(VCALENDAR);
-        buffer.append(Strings.LINE_SEPARATOR);
-        buffer.append(getProperties());
-        buffer.append(getComponents());
-        buffer.append(END);
-        buffer.append(':');
-        buffer.append(VCALENDAR);
-        buffer.append(Strings.LINE_SEPARATOR);
+        String buffer = BEGIN +
+                ':' +
+                VCALENDAR +
+                Strings.LINE_SEPARATOR +
+                getProperties() +
+                getComponents() +
+                END +
+                ':' +
+                VCALENDAR +
+                Strings.LINE_SEPARATOR;
 
-        return buffer.toString();
+        return buffer;
     }
 
     /**

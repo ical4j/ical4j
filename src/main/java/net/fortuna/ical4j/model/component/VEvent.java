@@ -285,18 +285,17 @@ public class VEvent extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        b.append(BEGIN);
-        b.append(':');
-        b.append(getName());
-        b.append(Strings.LINE_SEPARATOR);
-        b.append(getProperties());
-        b.append(getAlarms());
-        b.append(END);
-        b.append(':');
-        b.append(getName());
-        b.append(Strings.LINE_SEPARATOR);
-        return b.toString();
+        String b = BEGIN +
+                ':' +
+                getName() +
+                Strings.LINE_SEPARATOR +
+                getProperties() +
+                getAlarms() +
+                END +
+                ':' +
+                getName() +
+                Strings.LINE_SEPARATOR;
+        return b;
     }
 
     /**
