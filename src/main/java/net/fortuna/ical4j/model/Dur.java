@@ -222,7 +222,7 @@ public class Dur implements Comparable, Serializable {
 
         // Init our duration interval (which is in units that evolve as we
         // compute, below)
-        int dur = 0;
+        long dur = 0;
 
         // Count days to get to the right year (loop in the very rare chance
         // that a leap year causes us to come up short)
@@ -251,13 +251,13 @@ public class Dur implements Comparable, Serializable {
         dur += endCal.get(Calendar.SECOND) - startCal.get(Calendar.SECOND);
 
         // Now unwind our units
-        seconds = dur % SECONDS_PER_MINUTE;
+        seconds = (int) (dur % SECONDS_PER_MINUTE);
         dur = dur / SECONDS_PER_MINUTE; // seconds -> minutes (drop remainder seconds)
-        minutes = dur % MINUTES_PER_HOUR;
+        minutes = (int) (dur % MINUTES_PER_HOUR);
         dur /= MINUTES_PER_HOUR; // minutes -> hours (drop remainder minutes)
-        hours = dur % HOURS_PER_DAY;
+        hours = (int) (dur % HOURS_PER_DAY);
         dur /= HOURS_PER_DAY; // hours -> days (drop remainder hours)
-        days = dur;
+        days = (int) dur;
         weeks = 0;
 
         // Special case for week-only representation
