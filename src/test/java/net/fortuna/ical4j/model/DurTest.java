@@ -31,7 +31,9 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -271,6 +273,18 @@ public class DurTest extends TestCase {
         Dur oneSecond = new Dur("P1S");
         Dur twoSeconds = new Dur("P2S");
         
+
+        //set up a Duration which has seconds that overflow the integer boundary
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        df.setTimeZone(tz);
+
+        Calendar overflow = Calendar.getInstance(tz);
+        overflow.setTime(start);
+        overflow.add(Calendar.SECOND, Integer.MAX_VALUE);
+        overflow.add(Calendar.SECOND, 1);
+        Dur durationOverflow = new Dur(start, overflow.getTime());
+        
         suite.addTest(new DurTest("testEquals", oneWeek.add(oneWeek), twoWeeks));
         suite.addTest(new DurTest("testEquals", oneDay.add(oneDay), twoDays));
         suite.addTest(new DurTest("testEquals", oneHour.add(oneHour), twoHours));
@@ -288,6 +302,8 @@ public class DurTest extends TestCase {
         suite.addTest(new DurTest("testEquals", new Dur(0, -23, 0, 0).add(twoHours.negate()), new Dur("-P1D1H")));
         suite.addTest(new DurTest("testEquals", new Dur(0, 0, -59, 0).add(twoMinutes.negate()), new Dur("-P1H1M")));
         suite.addTest(new DurTest("testEquals", new Dur(0, 0, 0, -59).add(twoSeconds.negate()), new Dur("-P1M1S")));
+        
+        suite.addTest(new DurTest("testEquals", durationOverflow, new Dur("P24855DT3H14M8S")));
         
         suite.addTest(new DurTest("testCompareToGreater", new Dur(1), new Dur(-1)));
         suite.addTest(new DurTest("testCompareToGreater", new Dur(0, 0, 0, 3), new Dur(0, 0, 0, -5)));
