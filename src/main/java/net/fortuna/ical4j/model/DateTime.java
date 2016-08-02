@@ -529,7 +529,7 @@ public class DateTime extends Date {
 			this.templateFormat = dateFormat;
 		}
 
-		public DateFormat get() {
+		public synchronized DateFormat get() {
 			DateFormat dateFormat = threadMap.get(Thread.currentThread());
 			if (dateFormat == null) {
 				dateFormat = (DateFormat) templateFormat.clone();
