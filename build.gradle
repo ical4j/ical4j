@@ -23,7 +23,7 @@ apply plugin: 'checkstyle'
 apply plugin: 'pl.allegro.tech.build.axion-release'
 apply from: 'gradle/dist.gradle'
 
-checkstyleMain {
+checkstyle {
     configFile = file("${project.projectDir}/etc/checkstyle.xml")
 }
 

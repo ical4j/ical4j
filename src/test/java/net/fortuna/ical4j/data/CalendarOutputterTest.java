@@ -59,7 +59,7 @@ import java.io.*;
  *
  * @author benf
  */
-//@Ignore
+@Ignore
 public class CalendarOutputterTest extends TestCase {
 
     private static Logger log = LoggerFactory.getLogger(CalendarOutputterTest.class);
@@ -131,8 +131,6 @@ public class CalendarOutputterTest extends TestCase {
                 bout.close();
                 bin.close();
             }
-
-            System.out.println(out.toString());
 
             String rawData = rout.toString();
 
