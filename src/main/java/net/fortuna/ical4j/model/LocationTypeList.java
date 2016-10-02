@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -39,96 +39,96 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * $Id LocationTypeList.java $ [23-Apr-2004]
- * 
+ *
  * Defines a list of iCalendar location types.
- * 
+ *
  * @author Ben Fortuna
  */
 public class LocationTypeList implements Serializable {
 
-    private static final long serialVersionUID = -9181735547604179160L;
+  private static final long serialVersionUID = -9181735547604179160L;
 
-    private List<String> locationTypes;
+  private List<String> locationTypes;
 
-    /**
-     * Default constructor.
-     */
-    public LocationTypeList() {
-        locationTypes = new CopyOnWriteArrayList<String>();
+  /**
+   * Default constructor.
+   */
+  public LocationTypeList() {
+    locationTypes = new CopyOnWriteArrayList<String>();
+  }
+
+  /**
+   * Parses the specified string representation to create a list of categories.
+   *
+   * @param aValue
+   *            a string representation of a list of categories
+   */
+  public LocationTypeList(final String aValue) {
+    locationTypes = new CopyOnWriteArrayList<String>();
+
+    final StringTokenizer t = new StringTokenizer(aValue, ",");
+    while (t.hasMoreTokens()) {
+      locationTypes.add(t.nextToken());
     }
+  }
 
-    /**
-     * Parses the specified string representation to create a list of categories.
-     * 
-     * @param aValue
-     *            a string representation of a list of categories
-     */
-    public LocationTypeList(final String aValue) {
-        locationTypes = new CopyOnWriteArrayList<String>();
-
-        final StringTokenizer t = new StringTokenizer(aValue, ",");
-        while (t.hasMoreTokens()) {
-            locationTypes.add(t.nextToken());
-        }
+  /**
+   * {@inheritDoc}
+   */
+  public final String toString() {
+    final StringBuilder b = new StringBuilder();
+    for (final Iterator<String> i = locationTypes.iterator(); i.hasNext(); ) {
+      b.append(i.next());
+      if (i.hasNext()) {
+        b.append(',');
+      }
     }
+    return b.toString();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<String> i = locationTypes.iterator(); i.hasNext();) {
-            b.append(i.next());
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
-    }
+  /**
+   * Add a location type to the list.
+   *
+   * @param locationType the location type to add
+   * @return true if the object is added successfully
+   * @see List#add(java.lang.Object)
+   */
+  public final boolean add(final String locationType) {
+    return locationTypes.add(locationType);
+  }
 
-    /**
-     * Add a location type to the list.
-     * 
-     * @param locationType the location type to add
-     * @return true if the object is added successfully
-     * @see List#add(java.lang.Object)
-     */
-    public final boolean add(final String locationType) {
-        return locationTypes.add(locationType);
-    }
+  /**
+   * @return boolean indicates if the list is empty
+   * @see List#isEmpty()
+   */
+  public final boolean isEmpty() {
+    return locationTypes.isEmpty();
+  }
 
-    /**
-     * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
-     */
-    public final boolean isEmpty() {
-        return locationTypes.isEmpty();
-    }
+  /**
+   * @return an iterator
+   * @see List#iterator()
+   */
+  public final Iterator<String> iterator() {
+    return locationTypes.iterator();
+  }
 
-    /**
-     * @return an iterator
-     * @see List#iterator()
-     */
-    public final Iterator<String> iterator() {
-        return locationTypes.iterator();
-    }
+  /**
+   * Remove a locationType from the list.
+   *
+   * @param locationType the location type to remove
+   * @return true if the list contained the specified category
+   * @see List#remove(java.lang.Object)
+   */
+  public final boolean remove(final String locationType) {
+    return locationTypes.remove(locationType);
+  }
 
-    /**
-     * Remove a locationType from the list.
-     * 
-     * @param locationType the location type to remove
-     * @return true if the list contained the specified category
-     * @see List#remove(java.lang.Object)
-     */
-    public final boolean remove(final String locationType) {
-        return locationTypes.remove(locationType);
-    }
-
-    /**
-     * @return the number of categories in the list
-     * @see List#size()
-     */
-    public final int size() {
-        return locationTypes.size();
-    }
+  /**
+   * @return the number of categories in the list
+   * @see List#size()
+   */
+  public final int size() {
+    return locationTypes.size();
+  }
 }

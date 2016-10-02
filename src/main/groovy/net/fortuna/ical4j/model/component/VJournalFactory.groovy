@@ -37,21 +37,20 @@ import net.fortuna.ical4j.model.PropertyList;
  * @author fortuna
  *
  */
-public class VJournalFactory extends AbstractComponentFactory{
+public class VJournalFactory extends AbstractComponentFactory {
 
 
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         VJournal journal
-         if (FactoryBuilderSupport.checkValueIsType(value, name, VJournal.class)) {
-             journal = (VJournal) value
-         }
-         else {
-             journal = super.newInstance(builder, name, value, attributes);
-         }
-         return journal
-     }
-     
-     protected Object newInstance(PropertyList properties) {
-         return new VJournal(properties)
-     }
+    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        VJournal journal
+        if (FactoryBuilderSupport.checkValueIsType(value, name, VJournal.class)) {
+            journal = (VJournal) value
+        } else {
+            journal = super.newInstance(builder, name, value, attributes);
+        }
+        return journal
+    }
+
+    protected Object newInstance(PropertyList properties) {
+        return new VJournal(properties)
+    }
 }

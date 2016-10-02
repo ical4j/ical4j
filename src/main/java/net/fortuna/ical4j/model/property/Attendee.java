@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -52,149 +52,148 @@ import java.text.ParseException;
  */
 public class Attendee extends Property {
 
-    private static final long serialVersionUID = 8430929418723298803L;
+  private static final long serialVersionUID = 8430929418723298803L;
 
-    private URI calAddress;
+  private URI calAddress;
 
-    /**
-     * Default constructor.
-     */
-    public Attendee() {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
-    }
+  /**
+   * Default constructor.
+   */
+  public Attendee() {
+    super(ATTENDEE, PropertyFactoryImpl.getInstance());
+  }
 
-    /**
-     * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
-     */
-    public Attendee(final String aValue) throws URISyntaxException {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aValue a value string for this component
+   * @throws URISyntaxException where the specified value string is not a valid uri
+   */
+  public Attendee(final String aValue) throws URISyntaxException {
+    super(ATTENDEE, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
-     */
-    public Attendee(final ParameterList aList, final String aValue)
-            throws URISyntaxException {
-        super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   * @throws URISyntaxException where the specified value string is not a valid uri
+   */
+  public Attendee(final ParameterList aList, final String aValue)
+      throws URISyntaxException {
+    super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param aUri a URI
-     */
-    public Attendee(final URI aUri) {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
-        calAddress = aUri;
-    }
+  /**
+   * @param aUri a URI
+   */
+  public Attendee(final URI aUri) {
+    super(ATTENDEE, PropertyFactoryImpl.getInstance());
+    calAddress = aUri;
+  }
 
-    /**
-     * @param aList a list of parameters for this component
-     * @param aUri  a URI
-     */
-    public Attendee(final ParameterList aList, final URI aUri) {
-        super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
-        calAddress = aUri;
-    }
+  /**
+   * @param aList a list of parameters for this component
+   * @param aUri  a URI
+   */
+  public Attendee(final ParameterList aList, final URI aUri) {
+    super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
+    calAddress = aUri;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) throws URISyntaxException {
-        calAddress = Uris.create(aValue);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) throws URISyntaxException {
+    calAddress = Uris.create(aValue);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once (";" cutypeparam) / (";"memberparam) / (";"
          * roleparam) / (";" partstatparam) / (";" rsvpparam) / (";" deltoparam) / (";" delfromparam) / (";"
          * sentbyparam) / (";"cnparam) / (";" dirparam) / (";" languageparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.CUTYPE,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.MEMBER,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ROLE,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.PARTSTAT,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.RSVP,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(
-                Parameter.DELEGATED_TO, getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(
-                Parameter.DELEGATED_FROM, getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.SENT_BY,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.CN,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.DIR,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.CUTYPE,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.MEMBER,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.ROLE,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.PARTSTAT,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.RSVP,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(
+        Parameter.DELEGATED_TO, getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(
+        Parameter.DELEGATED_FROM, getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.SENT_BY,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.CN,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.DIR,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
+        getParameters());
 
         /* scheduleagent and schedulestatus added for CalDAV scheduling
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_AGENT,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_STATUS,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_AGENT,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_STATUS,
+        getParameters());
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+  }
+
+  /**
+   * @return Returns the calAddress.
+   */
+  public final URI getCalAddress() {
+    return calAddress;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return Uris.decode(Strings.valueOf(getCalAddress()));
+  }
+
+  /**
+   * @param calAddress The calAddress to set.
+   */
+  public final void setCalAddress(final URI calAddress) {
+    this.calAddress = calAddress;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final Property copy() throws IOException, URISyntaxException, ParseException {
+    // URI are immutable
+    return new Attendee(new ParameterList(getParameters(), false), calAddress);
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(ATTENDEE);
     }
 
-    /**
-     * @return Returns the calAddress.
-     */
-    public final URI getCalAddress() {
-        return calAddress;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Attendee(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return Uris.decode(Strings.valueOf(getCalAddress()));
+    public Property createProperty() {
+      return new Attendee();
     }
-
-    /**
-     * @param calAddress The calAddress to set.
-     */
-    public final void setCalAddress(final URI calAddress) {
-        this.calAddress = calAddress;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final Property copy() throws IOException, URISyntaxException, ParseException {
-        // URI are immutable
-        return new Attendee(new ParameterList(getParameters(), false), calAddress);
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(ATTENDEE);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Attendee(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Attendee();
-        }
-    }
-
+  }
 }

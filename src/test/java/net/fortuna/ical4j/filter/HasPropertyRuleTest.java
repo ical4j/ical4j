@@ -31,13 +31,13 @@
  */
 package net.fortuna.ical4j.filter;
 
-import java.net.URI;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
+
+import java.net.URI;
 
 /**
  * $Id$
@@ -54,7 +54,7 @@ public class HasPropertyRuleTest extends ComponentRuleTest {
      * @param rule
      * @param component
      */
-    public HasPropertyRuleTest(String testMethod, Rule<Component> rule, Component component) {
+    public HasPropertyRuleTest(String testMethod, HasPropertyRule rule, Component component) {
         super(testMethod, rule, component);
     }
     
@@ -74,7 +74,7 @@ public class HasPropertyRuleTest extends ComponentRuleTest {
         component.getProperties().add(attendee);
         HasPropertyRule organiserRule = new HasPropertyRule(organiser);
         suite.addTest(new HasPropertyRuleTest("testMatchComponent", organiserRule, component));
-        HasPropertyRule attendeeRule = new HasPropertyRule(attendee);
+        HasPropertyRule  attendeeRule = new HasPropertyRule(attendee);
         suite.addTest(new HasPropertyRuleTest("testMatchComponent", attendeeRule, component));
         return suite;
     }

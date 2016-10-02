@@ -31,12 +31,7 @@
  */
 package net.fortuna.ical4j.filter;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Collection;
-
+import com.google.common.collect.Lists;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
@@ -46,6 +41,12 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * $Id$
@@ -59,29 +60,29 @@ public class FilterTest<T extends Component> extends TestCase {
 
     private Filter<T> filter;
     
-    private Collection<T> collection;
+    private List<T> list;
     
     private int expectedFilteredSize;
     
     /**
      * @param testMethod
      * @param filter
-     * @param collection
+     * @param list
      */
-    public FilterTest(String testMethod, Filter<T> filter, Collection<T> collection) {
+    public FilterTest(String testMethod, Filter<T> filter, List<T> list) {
         super(testMethod);
         this.filter = filter;
-        this.collection = collection;
+        this.list = list;
     }
 
     /**
      * @param testMethod
      * @param filter
-     * @param collection
+     * @param list
      * @param expectedFilteredSize
      */
-    public FilterTest(String testMethod, Filter<T> filter, Collection<T> collection, int expectedFilteredSize) {
-        this(testMethod, filter, collection);
+    public FilterTest(String testMethod, Filter<T> filter, List<T> list, int expectedFilteredSize) {
+        this(testMethod, filter, list);
         this.expectedFilteredSize = expectedFilteredSize;
     }
     
@@ -89,21 +90,21 @@ public class FilterTest<T extends Component> extends TestCase {
      * 
      */
     public void testFilteredIsEmpty() {
-        assertTrue(filter.filter(collection).isEmpty());
+        assertTrue(filter.filter(list).isEmpty());
     }
     
     /**
      * 
      */
     public void testFilteredIsNotEmpty() {
-        assertFalse(filter.filter(collection).isEmpty());
+        assertFalse(filter.filter(list).isEmpty());
     }
 
     /**
      * 
      */
     public void testFilteredSize() {
-        assertEquals(expectedFilteredSize, filter.filter(collection).size());
+        assertEquals(expectedFilteredSize, filter.filter(list).size());
     }
     
     /**
@@ -140,32 +141,33 @@ public class FilterTest<T extends Component> extends TestCase {
         calendar.getComponents().add(e2);
         calendar.getComponents().add(e3);
         
-        Rule<Component> organiserRuleMatch = new HasPropertyRule(organizer);
-        Rule<Component> attendee1RuleMatch = new HasPropertyRule(a1);
+        Rule<CalendarComponent> organiserRuleMatch = new HasPropertyRule(organizer);
+        Rule<CalendarComponent> attendee1RuleMatch = new HasPropertyRule(a1);
 
-        Rule<Component> organiserRuleNoMatch = new HasPropertyRule(new Organizer(new URI("Mailto:X@example.com")));
-        Rule<Component> attendeeRuleNoMatch = new HasPropertyRule(new Attendee(new URI("Mailto:X@example.com")));
+        Rule<CalendarComponent> organiserRuleNoMatch = new HasPropertyRule(new Organizer(new URI("Mailto:X@example.com")));
+        Rule<CalendarComponent> attendeeRuleNoMatch = new HasPropertyRule(new Attendee(new URI("Mailto:X@example.com")));
         
         TestSuite suite = new TestSuite();
         //testFilterMatchAll..
-        Filter<CalendarComponent> filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleMatch, attendee1RuleMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest<CalendarComponent>("testFilteredSize", filter, calendar.getComponents(), 2));
+        Filter<CalendarComponent> filter = new Filter<>(Lists.newArrayList(organiserRuleMatch,  attendee1RuleMatch),
+            Filter.MATCH_ALL);
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 2));
 
-        filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleNoMatch, attendee1RuleMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest<CalendarComponent>("testFilteredIsEmpty", filter, calendar.getComponents()));
+        filter = new Filter<>(Lists.newArrayList(organiserRuleNoMatch,  attendee1RuleMatch), Filter.MATCH_ALL);
+        suite.addTest(new FilterTest<>("testFilteredIsEmpty", filter, calendar.getComponents()));
 
-        filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest<CalendarComponent>("testFilteredIsEmpty", filter, calendar.getComponents()));
+        filter = new Filter<>(Lists.newArrayList(organiserRuleMatch,  attendeeRuleNoMatch), Filter.MATCH_ALL);
+        suite.addTest(new FilterTest<>("testFilteredIsEmpty", filter, calendar.getComponents()));
         
         //testFilterMatchAny..
-        filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleMatch, attendee1RuleMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest<CalendarComponent>("testFilteredSize", filter, calendar.getComponents(), 3));
+        filter = new Filter<>(Lists.newArrayList(organiserRuleMatch,  attendee1RuleMatch), Filter.MATCH_ANY);
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 3));
 
-        filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleNoMatch, attendee1RuleMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest<CalendarComponent>("testFilteredSize", filter, calendar.getComponents(), 2));
+        filter = new Filter<>(Lists.newArrayList(organiserRuleNoMatch,  attendee1RuleMatch), Filter.MATCH_ANY);
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 2));
 
-        filter = new Filter<CalendarComponent>(new Rule[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest<CalendarComponent>("testFilteredSize", filter, calendar.getComponents(), 3));
+        filter = new Filter<>(Lists.newArrayList(organiserRuleMatch,  attendeeRuleNoMatch), Filter.MATCH_ANY);
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 3));
         return suite;
     }
 }

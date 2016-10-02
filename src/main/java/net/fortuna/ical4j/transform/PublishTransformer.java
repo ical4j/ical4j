@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -48,38 +48,36 @@ import net.fortuna.ical4j.model.property.Sequence;
  */
 public class PublishTransformer extends Transformer {
 
-    /**
-     * {@inheritDoc}
-     */
-    public final Calendar transform(final Calendar calendar) {
-        PropertyList calProps = calendar.getProperties();
+  /**
+   * {@inheritDoc}
+   */
+  public final Calendar transform(final Calendar calendar) {
+    PropertyList calProps = calendar.getProperties();
 
-        Property method = calProps.getProperty(Property.METHOD);
+    Property method = calProps.getProperty(Property.METHOD);
 
-        if (method != null) {
-            calProps.remove(method);
-        }
-
-        calProps.add(Method.PUBLISH);
-
-        // if a calendar component has already been published previously
-        // update the sequence number..
-        for (Component component : calendar.getComponents()) {
-            PropertyList compProps = component.getProperties();
-
-            Sequence sequence = (Sequence) compProps
-                    .getProperty(Property.SEQUENCE);
-
-            if (sequence == null) {
-                compProps.add(new Sequence(0));
-            }
-            else {
-                compProps.remove(sequence);
-                compProps.add(new Sequence(sequence.getSequenceNo() + 1));
-            }
-        }
-
-        return calendar;
+    if (method != null) {
+      calProps.remove(method);
     }
 
+    calProps.add(Method.PUBLISH);
+
+    // if a calendar component has already been published previously
+    // update the sequence number..
+    for (Component component : calendar.getComponents()) {
+      PropertyList compProps = component.getProperties();
+
+      Sequence sequence = (Sequence) compProps
+          .getProperty(Property.SEQUENCE);
+
+      if (sequence == null) {
+        compProps.add(new Sequence(0));
+      } else {
+        compProps.remove(sequence);
+        compProps.add(new Sequence(sequence.getSequenceNo() + 1));
+      }
+    }
+
+    return calendar;
+  }
 }

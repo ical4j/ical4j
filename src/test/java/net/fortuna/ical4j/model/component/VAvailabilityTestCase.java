@@ -31,16 +31,16 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
+
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 
 
 /**

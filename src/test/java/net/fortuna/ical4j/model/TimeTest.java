@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.ParseException;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import java.text.ParseException;
 
 /**
  * @author fortuna

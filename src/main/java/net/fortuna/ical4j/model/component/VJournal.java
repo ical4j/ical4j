@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -100,452 +100,453 @@ import java.util.Map;
  */
 public class VJournal extends CalendarComponent {
 
-    private static final long serialVersionUID = -7635140949183238830L;
+  private static final long serialVersionUID = -7635140949183238830L;
 
-    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
-    {
-        methodValidators.put(Method.ADD, new AddValidator());
-        methodValidators.put(Method.CANCEL, new CancelValidator());
-        methodValidators.put(Method.PUBLISH, new PublishValidator());
+  private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
+
+  {
+    methodValidators.put(Method.ADD, new AddValidator());
+    methodValidators.put(Method.CANCEL, new CancelValidator());
+    methodValidators.put(Method.PUBLISH, new PublishValidator());
+  }
+
+  /**
+   * Default constructor.
+   */
+  public VJournal() {
+    this(true);
+  }
+
+  public VJournal(boolean initialise) {
+    super(VJOURNAL);
+    if (initialise) {
+      getProperties().add(new DtStamp());
     }
-    
-    /**
-     * Default constructor.
-     */
-    public VJournal() {
-        this(true);
+  }
+
+  /**
+   * Constructor.
+   * @param properties a list of properties
+   */
+  public VJournal(final PropertyList properties) {
+    super(VJOURNAL, properties);
+  }
+
+  /**
+   * Constructs a new VJOURNAL instance associated with the specified time with the specified summary.
+   * @param start the date the journal entry is associated with
+   * @param summary the journal summary
+   */
+  public VJournal(final Date start, final String summary) {
+    this();
+    getProperties().add(new DtStart(start));
+    getProperties().add(new Summary(summary));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate(final boolean recurse)
+      throws ValidationException {
+
+    if (!CompatibilityHints
+        .isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+
+      // From "4.8.4.7 Unique Identifier":
+      // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
+      // "VJOURNAL" or "VFREEBUSY" calendar components.
+      PropertyValidator.getInstance().assertOne(Property.UID,
+          getProperties());
+
+      // From "4.8.7.2 Date/Time Stamp":
+      // Conformance: This property MUST be included in the "VEVENT", "VTODO",
+      // "VJOURNAL" or "VFREEBUSY" calendar components.
+      PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
+          getProperties());
     }
-
-    public VJournal(boolean initialise) {
-        super(VJOURNAL);
-        if (initialise) {
-            getProperties().add(new DtStamp());
-        }
-    }
-
-    /**
-     * Constructor.
-     * @param properties a list of properties
-     */
-    public VJournal(final PropertyList properties) {
-        super(VJOURNAL, properties);
-    }
-
-    /**
-     * Constructs a new VJOURNAL instance associated with the specified time with the specified summary.
-     * @param start the date the journal entry is associated with
-     * @param summary the journal summary
-     */
-    public VJournal(final Date start, final String summary) {
-        this();
-        getProperties().add(new DtStart(start));
-        getProperties().add(new Summary(summary));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
-        if (!CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-
-            // From "4.8.4.7 Unique Identifier":
-            // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.getInstance().assertOne(Property.UID,
-                    getProperties());
-
-            // From "4.8.7.2 Date/Time Stamp":
-            // Conformance: This property MUST be included in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
-                    getProperties());
-        }
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once class / created / description / dtstart /
          * dtstamp / last-mod / organizer / recurid / seq / status / summary / uid / url /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTAMP,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.ORGANIZER,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.UID,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.URL,
-                getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.CLASS,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.CREATED,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.DTSTAMP,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.ORGANIZER,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.STATUS,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.UID,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.URL,
+        getProperties());
 
-        final Status status = (Status) getProperty(Property.STATUS);
-        if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {
-            throw new ValidationException("Status property ["
-                    + status.toString() + "] may not occur in VJOURNAL");
-        }
+    final Status status = (Status) getProperty(Property.STATUS);
+    if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
+        && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
+        && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {
+      throw new ValidationException("Status property ["
+          + status.toString() + "] may not occur in VJOURNAL");
+    }
 
         /*
          * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
          * contact / exdate / exrule / related / rdate / rrule / rstatus / x-prop
          */
 
-        if (recurse) {
-            validateProperties();
-        }
+    if (recurse) {
+      validateProperties();
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected Validator getValidator(Method method) {
+    return methodValidators.get(method);
+  }
+
+  /**
+   * <pre>
+   * Component/Property  Presence
+   * ------------------- ----------------------------------------------
+   * METHOD               1      MUST be "ADD"
+   * VJOURNAL             1
+   *     DESCRIPTION      1      Can be null.
+   *     DTSTAMP          1
+   *     DTSTART          1
+   *     ORGANIZER        1
+   *     SEQUENCE         1      MUST be greater than 0
+   *     UID              1      MUST match that of the original journal
+   *
+   *     ATTACH           0+
+   *     CATEGORIES       0 or 1 This property MAY contain a list of values
+   *     CLASS            0 or 1
+   *     COMMENT          0 or 1
+   *     CONTACT          0+
+   *     CREATED          0 or 1
+   *     EXDATE           0+
+   *     EXRULE           0+
+   *     LAST-MODIFIED    0 or 1
+   *     RDATE            0+
+   *     RELATED-TO       0+
+   *     RRULE            0+
+   *     STATUS           0 or 1  MAY be one of DRAFT/FINAL/CANCELLED
+   *     SUMMARY          0 or 1  Can be null
+   *     URL              0 or 1
+   *     X-PROPERTY       0+
+   *
+   *     ATTENDEE         0
+   *     RECURRENCE-ID    0
+   *
+   * VALARM               0+
+   * VTIMEZONE            0 or 1 MUST be present if any date/time refers to
+   *                             a timezone
+   * X-COMPONENT          0+
+   *
+   * VEVENT               0
+   * VFREEBUSY            0
+   * VTODO                0
+   * </pre>
+   *
+   */
+  private class AddValidator implements Validator {
+
+    private static final long serialVersionUID = 1L;
+
+    public void validate() throws ValidationException {
+      PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+
+      PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+
+      PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
+      PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, getProperties());
+    }
+  }
+
+  /**
+   * <pre>
+   * Component/Property   Presence
+   * -------------------  ---------------------------------------------
+   * METHOD               1       MUST be "CANCEL"
+   * VJOURNAL             1+      All MUST have the same UID
+   *     DTSTAMP          1
+   *     ORGANIZER        1
+   *     SEQUENCE         1
+   *     UID              1       MUST be the UID of the original REQUEST
+   *
+   *     ATTACH           0+
+   *     ATTENDEE         0+
+   *     CATEGORIES       0 or 1  This property MAY contain a list of values
+   *     CLASS            0 or 1
+   *     COMMENT          0 or 1
+   *     CONTACT          0+
+   *     CREATED          0 or 1
+   *     DESCRIPTION      0 or 1
+   *     DTSTART          0 or 1
+   *     EXDATE           0+
+   *     EXRULE           0+
+   *     LAST-MODIFIED    0 or 1
+   *     RDATE            0+
+   *     RECURRENCE-ID    0 or 1  only if referring to an instance of a
+   *                              recurring calendar component.  Otherwise
+   *                              it MUST NOT be present.
+   *     RELATED-TO       0+
+   *     RRULE            0+
+   *     STATUS           0 or 1  MAY be present, must be "CANCELLED" if
+   *                              present
+   *     SUMMARY          0 or 1
+   *     URL              0 or 1
+   *     X-PROPERTY       0+
+   *
+   *     REQUEST-STATUS   0
+   *
+   * VTIMEZONE            0+      MUST be present if any date/time refers to
+   *                              a timezone
+   * X-COMPONENT          0+
+   * VALARM               0
+   * VEVENT               0
+   * VFREEBUSY            0
+   * VTODO                0
+   * </pre>
+   *
+   */
+  private class CancelValidator implements Validator {
+
+    private static final long serialVersionUID = 1L;
+
+    public void validate() throws ValidationException {
+      PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+
+      PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+
+      PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
+    }
+  }
+
+  /**
+   * <pre>
+   * Component/Property  Presence
+   * ------------------- ----------------------------------------------
+   * METHOD               1       MUST be "PUBLISH"
+   * VJOURNAL             1+
+   *     DESCRIPTION      1       Can be null.
+   *     DTSTAMP          1
+   *     DTSTART          1
+   *     ORGANIZER        1
+   *     UID              1
+   *
+   *     ATTACH           0+
+   *     CATEGORIES       0 or 1  This property MAY contain a list of values
+   *     CLASS            0 or 1
+   *     COMMENT          0 or 1
+   *     CONTACT          0+
+   *     CREATED          0 or 1
+   *     EXDATE           0+
+   *     EXRULE           0+
+   *     LAST-MODIFIED    0 or 1
+   *     RDATE            0+
+   *     RECURRENCE-ID    0 or 1  MUST only if referring to an instance of a
+   *                              recurring calendar component.  Otherwise
+   *                              it MUST NOT be present.
+   *     RELATED-TO       0+
+   *     RRULE            0+
+   *     SEQUENCE         0 or 1  MUST echo the original SEQUENCE number.
+   *                              MUST be present if non-zero. MAY be
+   *                              present if zero.
+   *     STATUS           0 or 1  MAY be one of DRAFT/FINAL/CANCELLED
+   *     SUMMARY          0 or 1  Can be null
+   *     URL              0 or 1
+   *     X-PROPERTY       0+
+   *
+   *     ATTENDEE         0
+   *
+   * VALARM               0+
+   * VTIMEZONE            0+      MUST be present if any date/time refers to
+   *                              a timezone
+   * X-COMPONENT          0+
+   *
+   * VEVENT               0
+   * VFREEBUSY            0
+   * VTODO                0
+   * </pre>
+   *
+   */
+  private class PublishValidator implements Validator {
+
+    private static final long serialVersionUID = 1L;
+
+    public void validate() throws ValidationException {
+      PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
+
+      PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
+
+      PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
+    }
+  }
+
+  /**
+   * @return the optional access classification property for a journal entry
+   */
+  public final Clazz getClassification() {
+    return (Clazz) getProperty(Property.CLASS);
+  }
+
+  /**
+   * @return the optional creation-time property for a journal entry
+   */
+  public final Created getCreated() {
+    return (Created) getProperty(Property.CREATED);
+  }
+
+  /**
+   * @return the optional description property for a journal entry
+   */
+  public final Description getDescription() {
+    return (Description) getProperty(Property.DESCRIPTION);
+  }
+
+  /**
+   * Convenience method to pull the DTSTART out of the property list.
+   * @return The DtStart object representation of the start Date
+   */
+  public final DtStart getStartDate() {
+    return (DtStart) getProperty(Property.DTSTART);
+  }
+
+  /**
+   * @return the optional last-modified property for a journal entry
+   */
+  public final LastModified getLastModified() {
+    return (LastModified) getProperty(Property.LAST_MODIFIED);
+  }
+
+  /**
+   * @return the optional organizer property for a journal entry
+   */
+  public final Organizer getOrganizer() {
+    return (Organizer) getProperty(Property.ORGANIZER);
+  }
+
+  /**
+   * @return the optional date-stamp property
+   */
+  public final DtStamp getDateStamp() {
+    return (DtStamp) getProperty(Property.DTSTAMP);
+  }
+
+  /**
+   * @return the optional sequence number property for a journal entry
+   */
+  public final Sequence getSequence() {
+    return (Sequence) getProperty(Property.SEQUENCE);
+  }
+
+  /**
+   * @return the optional status property for a journal entry
+   */
+  public final Status getStatus() {
+    return (Status) getProperty(Property.STATUS);
+  }
+
+  /**
+   * @return the optional summary property for a journal entry
+   */
+  public final Summary getSummary() {
+    return (Summary) getProperty(Property.SUMMARY);
+  }
+
+  /**
+   * @return the optional URL property for a journal entry
+   */
+  public final Url getUrl() {
+    return (Url) getProperty(Property.URL);
+  }
+
+  /**
+   * @return the optional recurrence identifier property for a journal entry
+   */
+  public final RecurrenceId getRecurrenceId() {
+    return (RecurrenceId) getProperty(Property.RECURRENCE_ID);
+  }
+
+  /**
+   * Returns the UID property of this component if available.
+   * @return a Uid instance, or null if no UID property exists
+   */
+  public final Uid getUid() {
+    return (Uid) getProperty(Property.UID);
+  }
+
+  public static class Factory extends Content.Factory implements ComponentFactory<VJournal> {
+
+    public Factory() {
+      super(VJOURNAL);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected Validator getValidator(Method method) {
-        return methodValidators.get(method);
+    @Override
+    public VJournal createComponent() {
+      return new VJournal(false);
     }
 
-    /**
-     * <pre>
-     * Component/Property  Presence
-     * ------------------- ----------------------------------------------
-     * METHOD               1      MUST be "ADD"
-     * VJOURNAL             1
-     *     DESCRIPTION      1      Can be null.
-     *     DTSTAMP          1
-     *     DTSTART          1
-     *     ORGANIZER        1
-     *     SEQUENCE         1      MUST be greater than 0
-     *     UID              1      MUST match that of the original journal
-     * 
-     *     ATTACH           0+
-     *     CATEGORIES       0 or 1 This property MAY contain a list of values
-     *     CLASS            0 or 1
-     *     COMMENT          0 or 1
-     *     CONTACT          0+
-     *     CREATED          0 or 1
-     *     EXDATE           0+
-     *     EXRULE           0+
-     *     LAST-MODIFIED    0 or 1
-     *     RDATE            0+
-     *     RELATED-TO       0+
-     *     RRULE            0+
-     *     STATUS           0 or 1  MAY be one of DRAFT/FINAL/CANCELLED
-     *     SUMMARY          0 or 1  Can be null
-     *     URL              0 or 1
-     *     X-PROPERTY       0+
-     * 
-     *     ATTENDEE         0
-     *     RECURRENCE-ID    0
-     * 
-     * VALARM               0+
-     * VTIMEZONE            0 or 1 MUST be present if any date/time refers to
-     *                             a timezone
-     * X-COMPONENT          0+
-     * 
-     * VEVENT               0
-     * VFREEBUSY            0
-     * VTODO                0
-     * </pre>
-     * 
-     */
-    private class AddValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
-        
-        public void validate() throws ValidationException {
-            PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
-            
-            PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
-            
-            PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
-            PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, getProperties());
-        }
-    }
-    
-    /**
-     * <pre>
-     * Component/Property   Presence
-     * -------------------  ---------------------------------------------
-     * METHOD               1       MUST be "CANCEL"
-     * VJOURNAL             1+      All MUST have the same UID
-     *     DTSTAMP          1
-     *     ORGANIZER        1
-     *     SEQUENCE         1
-     *     UID              1       MUST be the UID of the original REQUEST
-     * 
-     *     ATTACH           0+
-     *     ATTENDEE         0+
-     *     CATEGORIES       0 or 1  This property MAY contain a list of values
-     *     CLASS            0 or 1
-     *     COMMENT          0 or 1
-     *     CONTACT          0+
-     *     CREATED          0 or 1
-     *     DESCRIPTION      0 or 1
-     *     DTSTART          0 or 1
-     *     EXDATE           0+
-     *     EXRULE           0+
-     *     LAST-MODIFIED    0 or 1
-     *     RDATE            0+
-     *     RECURRENCE-ID    0 or 1  only if referring to an instance of a
-     *                              recurring calendar component.  Otherwise
-     *                              it MUST NOT be present.
-     *     RELATED-TO       0+
-     *     RRULE            0+
-     *     STATUS           0 or 1  MAY be present, must be "CANCELLED" if
-     *                              present
-     *     SUMMARY          0 or 1
-     *     URL              0 or 1
-     *     X-PROPERTY       0+
-     * 
-     *     REQUEST-STATUS   0
-     * 
-     * VTIMEZONE            0+      MUST be present if any date/time refers to
-     *                              a timezone
-     * X-COMPONENT          0+
-     * VALARM               0
-     * VEVENT               0
-     * VFREEBUSY            0
-     * VTODO                0
-     * </pre>
-     * 
-     */
-    private class CancelValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
-
-        public void validate() throws ValidationException {
-            PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.SEQUENCE, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
-            
-            PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
-            
-            PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, getProperties());
-        }
-    }
-    
-    /**
-     * <pre>
-     * Component/Property  Presence
-     * ------------------- ----------------------------------------------
-     * METHOD               1       MUST be "PUBLISH"
-     * VJOURNAL             1+
-     *     DESCRIPTION      1       Can be null.
-     *     DTSTAMP          1
-     *     DTSTART          1
-     *     ORGANIZER        1
-     *     UID              1
-     * 
-     *     ATTACH           0+
-     *     CATEGORIES       0 or 1  This property MAY contain a list of values
-     *     CLASS            0 or 1
-     *     COMMENT          0 or 1
-     *     CONTACT          0+
-     *     CREATED          0 or 1
-     *     EXDATE           0+
-     *     EXRULE           0+
-     *     LAST-MODIFIED    0 or 1
-     *     RDATE            0+
-     *     RECURRENCE-ID    0 or 1  MUST only if referring to an instance of a
-     *                              recurring calendar component.  Otherwise
-     *                              it MUST NOT be present.
-     *     RELATED-TO       0+
-     *     RRULE            0+
-     *     SEQUENCE         0 or 1  MUST echo the original SEQUENCE number.
-     *                              MUST be present if non-zero. MAY be
-     *                              present if zero.
-     *     STATUS           0 or 1  MAY be one of DRAFT/FINAL/CANCELLED
-     *     SUMMARY          0 or 1  Can be null
-     *     URL              0 or 1
-     *     X-PROPERTY       0+
-     * 
-     *     ATTENDEE         0
-     * 
-     * VALARM               0+
-     * VTIMEZONE            0+      MUST be present if any date/time refers to
-     *                              a timezone
-     * X-COMPONENT          0+
-     * 
-     * VEVENT               0
-     * VFREEBUSY            0
-     * VTODO                0
-     * </pre>
-     * 
-     */
-    private class PublishValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
-
-        public void validate() throws ValidationException {
-            PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.DTSTAMP, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.ORGANIZER, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.UID, getProperties());
-            
-            PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.CLASS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.CREATED, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.STATUS, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.URL, getProperties());
-            
-            PropertyValidator.getInstance().assertNone(Property.ATTENDEE, getProperties());
-        }
-    }
-    
-    /**
-     * @return the optional access classification property for a journal entry
-     */
-    public final Clazz getClassification() {
-        return (Clazz) getProperty(Property.CLASS);
+    @Override
+    public VJournal createComponent(PropertyList properties) {
+      return new VJournal(properties);
     }
 
-    /**
-     * @return the optional creation-time property for a journal entry
-     */
-    public final Created getCreated() {
-        return (Created) getProperty(Property.CREATED);
+    @Override
+    public VJournal createComponent(PropertyList properties, ComponentList subComponents) {
+      throw new UnsupportedOperationException(String.format("%s does not support sub-components", VJOURNAL));
     }
-
-    /**
-     * @return the optional description property for a journal entry
-     */
-    public final Description getDescription() {
-        return (Description) getProperty(Property.DESCRIPTION);
-    }
-
-    /**
-     * Convenience method to pull the DTSTART out of the property list.
-     * @return The DtStart object representation of the start Date
-     */
-    public final DtStart getStartDate() {
-        return (DtStart) getProperty(Property.DTSTART);
-    }
-
-    /**
-     * @return the optional last-modified property for a journal entry
-     */
-    public final LastModified getLastModified() {
-        return (LastModified) getProperty(Property.LAST_MODIFIED);
-    }
-
-    /**
-     * @return the optional organizer property for a journal entry
-     */
-    public final Organizer getOrganizer() {
-        return (Organizer) getProperty(Property.ORGANIZER);
-    }
-
-    /**
-     * @return the optional date-stamp property
-     */
-    public final DtStamp getDateStamp() {
-        return (DtStamp) getProperty(Property.DTSTAMP);
-    }
-
-    /**
-     * @return the optional sequence number property for a journal entry
-     */
-    public final Sequence getSequence() {
-        return (Sequence) getProperty(Property.SEQUENCE);
-    }
-
-    /**
-     * @return the optional status property for a journal entry
-     */
-    public final Status getStatus() {
-        return (Status) getProperty(Property.STATUS);
-    }
-
-    /**
-     * @return the optional summary property for a journal entry
-     */
-    public final Summary getSummary() {
-        return (Summary) getProperty(Property.SUMMARY);
-    }
-
-    /**
-     * @return the optional URL property for a journal entry
-     */
-    public final Url getUrl() {
-        return (Url) getProperty(Property.URL);
-    }
-
-    /**
-     * @return the optional recurrence identifier property for a journal entry
-     */
-    public final RecurrenceId getRecurrenceId() {
-        return (RecurrenceId) getProperty(Property.RECURRENCE_ID);
-    }
-
-    /**
-     * Returns the UID property of this component if available.
-     * @return a Uid instance, or null if no UID property exists
-     */
-    public final Uid getUid() {
-        return (Uid) getProperty(Property.UID);
-    }
-
-    public static class Factory extends Content.Factory implements ComponentFactory<VJournal> {
-
-        public Factory() {
-            super(VJOURNAL);
-        }
-
-        @Override
-        public VJournal createComponent() {
-            return new VJournal(false);
-        }
-
-        @Override
-        public VJournal createComponent(PropertyList properties) {
-            return new VJournal(properties);
-        }
-
-        @Override
-        public VJournal createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VJOURNAL));
-        }
-    }
+  }
 }

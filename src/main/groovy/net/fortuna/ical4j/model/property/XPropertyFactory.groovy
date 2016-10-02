@@ -41,14 +41,13 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class XPropertyFactory extends AbstractPropertyFactory{
+public class XPropertyFactory extends AbstractPropertyFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         XProperty instance
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XProperty.class)) {
             instance = (XProperty) value
-        }
-        else {
+        } else {
             String propertyName = attributes.remove('name')
             if (propertyName == null) {
                 propertyName = value
@@ -62,11 +61,11 @@ public class XPropertyFactory extends AbstractPropertyFactory{
         }
         return instance
     }
-    
+
     protected static Object newInstance(String name, ParameterList parameters, String value) {
         return new XProperty(name, parameters, value)
     }
-    
+
     protected Object newInstance(ParameterList parameters, String value) {
         return null
     }

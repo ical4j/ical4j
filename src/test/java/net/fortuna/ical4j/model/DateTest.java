@@ -31,12 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.ParseException;
-import java.util.Calendar;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.util.TimeZones;
+
+import java.text.ParseException;
+import java.util.Calendar;
 
 /**
  * $Id$

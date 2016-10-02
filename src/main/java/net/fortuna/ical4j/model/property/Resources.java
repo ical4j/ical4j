@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -49,98 +49,97 @@ import java.text.ParseException;
  */
 public class Resources extends Property {
 
-    private static final long serialVersionUID = -848562477226746807L;
+  private static final long serialVersionUID = -848562477226746807L;
 
-    private TextList resources;
+  private TextList resources;
 
-    /**
-     * Default constructor.
-     */
-    public Resources() {
-        super(RESOURCES, PropertyFactoryImpl.getInstance());
-        resources = new TextList();
-    }
+  /**
+   * Default constructor.
+   */
+  public Resources() {
+    super(RESOURCES, PropertyFactoryImpl.getInstance());
+    resources = new TextList();
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Resources(final ParameterList aList, final String aValue) {
-        super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Resources(final ParameterList aList, final String aValue) {
+    super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param rList a list of resources
-     */
-    public Resources(final TextList rList) {
-        super(RESOURCES, PropertyFactoryImpl.getInstance());
-        resources = rList;
-    }
+  /**
+   * @param rList a list of resources
+   */
+  public Resources(final TextList rList) {
+    super(RESOURCES, PropertyFactoryImpl.getInstance());
+    resources = rList;
+  }
 
-    /**
-     * @param aList a list of parameters for this component
-     * @param rList a list of resources
-     */
-    public Resources(final ParameterList aList, final TextList rList) {
-        super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
-        resources = rList;
-    }
+  /**
+   * @param aList a list of parameters for this component
+   * @param rList a list of resources
+   */
+  public Resources(final ParameterList aList, final TextList rList) {
+    super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
+    resources = rList;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once (";" altrepparam) / (";" languageparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
+        getParameters());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+  }
+
+  /**
+   * @return Returns the resources.
+   */
+  public final TextList getResources() {
+    return resources;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    resources = new TextList(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return getResources().toString();
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(RESOURCES);
     }
 
-    /**
-     * @return Returns the resources.
-     */
-    public final TextList getResources() {
-        return resources;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Resources(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        resources = new TextList(aValue);
+    public Property createProperty() {
+      return new Resources();
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return getResources().toString();
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(RESOURCES);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Resources(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Resources();
-        }
-    }
-
+  }
 }

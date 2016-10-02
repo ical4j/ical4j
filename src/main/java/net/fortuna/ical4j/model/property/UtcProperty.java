@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -44,72 +44,72 @@ import net.fortuna.ical4j.model.*;
  */
 public abstract class UtcProperty extends DateProperty {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = 4850079486497487938L;
+  /**
+   *
+   */
+  private static final long serialVersionUID = 4850079486497487938L;
 
-    /**
-     * @param name       a property name
-     * @param parameters list of parameters
-     */
-    public UtcProperty(final String name, final ParameterList parameters, PropertyFactoryImpl factory) {
-        super(name, parameters, factory);
-        setDate(new DateTime(true));
+  /**
+   * @param name       a property name
+   * @param parameters list of parameters
+   */
+  public UtcProperty(final String name, final ParameterList parameters, PropertyFactoryImpl factory) {
+    super(name, parameters, factory);
+    setDate(new DateTime(true));
+  }
+
+  /**
+   * @param name a property name
+   */
+  public UtcProperty(final String name, PropertyFactoryImpl factory) {
+    super(name, factory);
+    setDate(new DateTime(true));
+  }
+
+  /**
+   * @return Returns the date-time.
+   */
+  public final DateTime getDateTime() {
+    return (DateTime) getDate();
+  }
+
+  /**
+   * @param dateTime The dateTime to set.
+   */
+  public void setDateTime(final DateTime dateTime) {
+    // time must be in UTC..
+    if (dateTime != null) {
+      final DateTime utcDateTime = new DateTime(dateTime);
+      utcDateTime.setUtc(true);
+      setDate(utcDateTime);
+    } else {
+      setDate(null);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setTimeZone(TimeZone timezone) {
+    throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void validate() throws ValidationException {
+    super.validate();
+
+    if (getDate() != null && !(getDate() instanceof DateTime)) {
+      throw new ValidationException(
+          "Property must have a DATE-TIME value");
     }
 
-    /**
-     * @param name a property name
-     */
-    public UtcProperty(final String name, PropertyFactoryImpl factory) {
-        super(name, factory);
-        setDate(new DateTime(true));
+    final DateTime dateTime = (DateTime) getDate();
+
+    if (dateTime != null && !dateTime.isUtc()) {
+      throw new ValidationException(getName() +
+          ": DATE-TIME value must be specified in UTC time");
     }
-
-    /**
-     * @return Returns the date-time.
-     */
-    public final DateTime getDateTime() {
-        return (DateTime) getDate();
-    }
-
-    /**
-     * @param dateTime The dateTime to set.
-     */
-    public void setDateTime(final DateTime dateTime) {
-        // time must be in UTC..
-        if (dateTime != null) {
-            final DateTime utcDateTime = new DateTime(dateTime);
-            utcDateTime.setUtc(true);
-            setDate(utcDateTime);
-        } else {
-            setDate(null);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setTimeZone(TimeZone timezone) {
-        throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validate() throws ValidationException {
-        super.validate();
-
-        if (getDate() != null && !(getDate() instanceof DateTime)) {
-            throw new ValidationException(
-                    "Property must have a DATE-TIME value");
-        }
-
-        final DateTime dateTime = (DateTime) getDate();
-
-        if (dateTime != null && !dateTime.isUtc()) {
-            throw new ValidationException(getName() +
-                    ": DATE-TIME value must be specified in UTC time");
-        }
-    }
+  }
 }

@@ -41,8 +41,7 @@ class SentByFactory extends AbstractParameterFactory {
         SentBy sentBy
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, SentBy)) {
             sentBy = value
-        }
-        else {
+        } else {
             sentBy = [value]
         }
         return sentBy

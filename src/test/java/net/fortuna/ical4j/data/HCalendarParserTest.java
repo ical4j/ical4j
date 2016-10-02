@@ -31,13 +31,13 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.FileReader;
-import java.io.IOException;
-
+import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.Calendars;
-import junit.framework.TestCase;
+
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * $Id$

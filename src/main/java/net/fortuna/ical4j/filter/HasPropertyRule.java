@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -34,6 +34,7 @@ package net.fortuna.ical4j.filter;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 
 /**
  * $Id$
@@ -44,46 +45,45 @@ import net.fortuna.ical4j.model.PropertyList;
  * matching only on the value of the property.
  * @author Ben Fortuna
  */
-public class HasPropertyRule implements Rule<Component> {
+public class HasPropertyRule<T extends Component> implements Rule<T> {
 
-    private Property property;
+  private Property property;
 
-    private boolean matchEquals;
+  private boolean matchEquals;
 
-    /**
-     * Constructs a new instance with the specified property. Ignores any parameters matching only on the value of the
-     * property.
-     * @param property a property instance to check for
-     */
-    public HasPropertyRule(final Property property) {
-        this(property, false);
+  /**
+   * Constructs a new instance with the specified property. Ignores any parameters matching only on the value of the
+   * property.
+   * @param property a property instance to check for
+   */
+  public HasPropertyRule(final Property property) {
+    this(property, false);
+  }
+
+  /**
+   * Constructs a new instance with the specified property.
+   * @param property the property to match
+   * @param matchEquals if true, matches must contain an identical property (as indicated by
+   * <code>Property.equals()</code>
+   */
+  public HasPropertyRule(final Property property, final boolean matchEquals) {
+    this.property = property;
+    this.matchEquals = matchEquals;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final boolean match(final T component) {
+    boolean match = false;
+    final PropertyList properties = component.getProperties(property.getName());
+    for (final Property p : properties) {
+      if (matchEquals && property.equals(p)) {
+        match = true;
+      } else if (property.getValue().equals(p.getValue())) {
+        match = true;
+      }
     }
-
-    /**
-     * Constructs a new instance with the specified property.
-     * @param property the property to match
-     * @param matchEquals if true, matches must contain an identical property (as indicated by
-     * <code>Property.equals()</code>
-     */
-    public HasPropertyRule(final Property property, final boolean matchEquals) {
-        this.property = property;
-        this.matchEquals = matchEquals;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final boolean match(final Component component) {
-        boolean match = false;
-        final PropertyList properties = component.getProperties(property.getName());
-        for (final Property p : properties) {
-            if (matchEquals && property.equals(p)) {
-                match = true;
-            }
-            else if (property.getValue().equals(p.getValue())) {
-                match = true;
-            }
-        }
-        return match;
-    }
+    return match;
+  }
 }

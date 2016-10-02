@@ -31,15 +31,9 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.DateList
-import net.fortuna.ical4j.model.DateTime
-import net.fortuna.ical4j.model.Period
-import net.fortuna.ical4j.model.PeriodList
-import net.fortuna.ical4j.model.TimeZoneRegistry
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory
+import net.fortuna.ical4j.model.*
 import spock.lang.Shared
 import spock.lang.Specification
-
 
 class RDateSpec extends Specification {
 	

@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -49,95 +49,95 @@ import java.util.regex.Pattern;
  */
 public class TextList implements Serializable {
 
-	private static final long serialVersionUID = -417427815871330636L;
-	
-	private List<String> texts;
+  private static final long serialVersionUID = -417427815871330636L;
 
-    /**
-     * Default constructor.
-     */
-    public TextList() {
-        texts = new CopyOnWriteArrayList<String>();
+  private List<String> texts;
+
+  /**
+   * Default constructor.
+   */
+  public TextList() {
+    texts = new CopyOnWriteArrayList<String>();
+  }
+
+  /**
+   * Parses the specified string representation to create a list of categories.
+   * @param aValue a string representation of a list of categories
+   */
+  public TextList(final String aValue) {
+    texts = new CopyOnWriteArrayList<String>();
+
+    final Pattern pattern = Pattern.compile("(?:\\\\.|[^\\\\,]++)+");
+
+    final Matcher matcher = pattern.matcher(aValue);
+
+    while (matcher.find()) {
+      texts.add(Strings.unescape(matcher.group().replace("\\\\", "\\")));
     }
+  }
 
-    /**
-     * Parses the specified string representation to create a list of categories.
-     * @param aValue a string representation of a list of categories
-     */
-    public TextList(final String aValue) {
-        texts = new CopyOnWriteArrayList<String>();
+  /**
+   * @param textValues an array of text values
+   */
+  public TextList(String[] textValues) {
+    texts = Arrays.asList(textValues);
+  }
 
-        final Pattern pattern = Pattern.compile("(?:\\\\.|[^\\\\,]++)+");
-
-        final Matcher matcher = pattern.matcher(aValue);
-
-        while (matcher.find()){
-            texts.add(Strings.unescape(matcher.group().replace("\\\\","\\")));
-        }
+  /**
+   * {@inheritDoc}
+   */
+  public final String toString() {
+    final StringBuilder b = new StringBuilder();
+    for (final Iterator<String> i = texts.iterator(); i.hasNext(); ) {
+      b.append(Strings.escape(i.next()));
+      if (i.hasNext()) {
+        b.append(',');
+      }
     }
+    return b.toString();
+  }
 
-    /**
-     * @param textValues an array of text values
-     */
-    public TextList(String[] textValues) {
-        texts = Arrays.asList(textValues);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<String> i = texts.iterator(); i.hasNext();) {
-            b.append(Strings.escape(i.next()));
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
-    }
+  /**
+   * Add an address to the list.
+   * @param text the category to add
+   * @return true
+   * @see List#add(java.lang.Object)
+   */
+  public final boolean add(final String text) {
+    return texts.add(text);
+  }
 
-    /**
-     * Add an address to the list.
-     * @param text the category to add
-     * @return true
-     * @see List#add(java.lang.Object)
-     */
-    public final boolean add(final String text) {
-        return texts.add(text);
-    }
+  /**
+   * @return boolean indicates if the list is empty
+   * @see List#isEmpty()
+   */
+  public final boolean isEmpty() {
+    return texts.isEmpty();
+  }
 
-    /**
-     * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
-     */
-    public final boolean isEmpty() {
-        return texts.isEmpty();
-    }
+  /**
+   * @return an iterator
+   * @see List#iterator()
+   */
+  public final Iterator<String> iterator() {
+    return texts.iterator();
+  }
 
-    /**
-     * @return an iterator
-     * @see List#iterator()
-     */
-    public final Iterator<String> iterator() {
-        return texts.iterator();
-    }
+  /**
+   * Remove a text from the list.
+   * @param text the text element to remove
+   * @return true if the list contained the specified text element
+   * @see List#remove(java.lang.Object)
+   */
+  public final boolean remove(final String text) {
+    return texts.remove(text);
+  }
 
-    /**
-     * Remove a text from the list.
-     * @param text the text element to remove
-     * @return true if the list contained the specified text element
-     * @see List#remove(java.lang.Object)
-     */
-    public final boolean remove(final String text) {
-        return texts.remove(text);
-    }
-
-    /**
-     * @return the number of text elements in the list
-     * @see List#size()
-     */
-    public final int size() {
-        return texts.size();
-    }
+  /**
+   * @return the number of text elements in the list
+   * @see List#size()
+   */
+  public final int size() {
+    return texts.size();
+  }
 }

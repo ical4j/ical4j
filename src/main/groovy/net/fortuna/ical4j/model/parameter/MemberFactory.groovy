@@ -41,8 +41,7 @@ class MemberFactory extends AbstractParameterFactory {
         Member member
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Member)) {
             member = value
-        }
-        else {
+        } else {
             member = [value]
         }
         return member

@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -129,95 +129,94 @@ import java.text.ParseException;
  */
 public class Sequence extends Property {
 
-    private static final long serialVersionUID = -1606972893204822853L;
+  private static final long serialVersionUID = -1606972893204822853L;
 
-    private int sequenceNo;
+  private int sequenceNo;
 
-    /**
-     * Default constructor.
-     */
-    public Sequence() {
-        super(SEQUENCE, PropertyFactoryImpl.getInstance());
-        sequenceNo = 0;
+  /**
+   * Default constructor.
+   */
+  public Sequence() {
+    super(SEQUENCE, PropertyFactoryImpl.getInstance());
+    sequenceNo = 0;
+  }
+
+  /**
+   * @param aValue a value string for this component
+   */
+  public Sequence(final String aValue) {
+    super(SEQUENCE, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Sequence(final ParameterList aList, final String aValue) {
+    super(SEQUENCE, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param aSequenceNo a sequence number
+   */
+  public Sequence(final int aSequenceNo) {
+    super(SEQUENCE, PropertyFactoryImpl.getInstance());
+    sequenceNo = aSequenceNo;
+  }
+
+  /**
+   * @param aList       a list of parameters for this component
+   * @param aSequenceNo a sequence number
+   */
+  public Sequence(final ParameterList aList, final int aSequenceNo) {
+    super(SEQUENCE, aList, PropertyFactoryImpl.getInstance());
+    sequenceNo = aSequenceNo;
+  }
+
+  /**
+   * @return Returns the sequenceNo.
+   */
+  public final int getSequenceNo() {
+    return sequenceNo;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    sequenceNo = Integer.parseInt(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return String.valueOf(getSequenceNo());
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(SEQUENCE);
     }
 
-    /**
-     * @param aValue a value string for this component
-     */
-    public Sequence(final String aValue) {
-        super(SEQUENCE, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Sequence(parameters, value);
     }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Sequence(final ParameterList aList, final String aValue) {
-        super(SEQUENCE, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty() {
+      return new Sequence();
     }
-
-    /**
-     * @param aSequenceNo a sequence number
-     */
-    public Sequence(final int aSequenceNo) {
-        super(SEQUENCE, PropertyFactoryImpl.getInstance());
-        sequenceNo = aSequenceNo;
-    }
-
-    /**
-     * @param aList       a list of parameters for this component
-     * @param aSequenceNo a sequence number
-     */
-    public Sequence(final ParameterList aList, final int aSequenceNo) {
-        super(SEQUENCE, aList, PropertyFactoryImpl.getInstance());
-        sequenceNo = aSequenceNo;
-    }
-
-    /**
-     * @return Returns the sequenceNo.
-     */
-    public final int getSequenceNo() {
-        return sequenceNo;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        sequenceNo = Integer.parseInt(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return String.valueOf(getSequenceNo());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(SEQUENCE);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Sequence(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Sequence();
-        }
-    }
-
+  }
 }

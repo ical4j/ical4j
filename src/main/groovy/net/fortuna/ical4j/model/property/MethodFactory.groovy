@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
 
 /**
@@ -42,78 +41,60 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class MethodFactory extends AbstractPropertyFactory{
+public class MethodFactory extends AbstractPropertyFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Method instance
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Method.class)) {
             instance = (Method) value
-        }
-        else {
+        } else {
             String instanceValue = attributes.remove('value')
             if (instanceValue != null) {
                 if (Method.ADD.getValue().equals(instanceValue)) {
                     instance = Method.ADD
-                }
-                else if (Method.CANCEL.getValue().equals(instanceValue)) {
+                } else if (Method.CANCEL.getValue().equals(instanceValue)) {
                     instance = Method.CANCEL
-                }
-                else if (Method.COUNTER.getValue().equals(instanceValue)) {
+                } else if (Method.COUNTER.getValue().equals(instanceValue)) {
                     instance = Method.COUNTER
-                }
-                else if (Method.DECLINE_COUNTER.getValue().equals(instanceValue)) {
+                } else if (Method.DECLINE_COUNTER.getValue().equals(instanceValue)) {
                     instance = Method.DECLINE_COUNTER
-                }
-                else if (Method.PUBLISH.getValue().equals(instanceValue)) {
+                } else if (Method.PUBLISH.getValue().equals(instanceValue)) {
                     instance = Method.PUBLISH
-                }
-                else if (Method.REFRESH.getValue().equals(instanceValue)) {
+                } else if (Method.REFRESH.getValue().equals(instanceValue)) {
                     instance = Method.REFRESH
-                }
-                else if (Method.REPLY.getValue().equals(instanceValue)) {
+                } else if (Method.REPLY.getValue().equals(instanceValue)) {
                     instance = Method.REPLY
-                }
-                else if (Method.REQUEST.getValue().equals(instanceValue)) {
+                } else if (Method.REQUEST.getValue().equals(instanceValue)) {
                     instance = Method.REQUEST
-                }
-                else {
+                } else {
                     attributes.put('value', instanceValue)
                     instance = super.newInstance(builder, name, value, attributes)
                 }
-            }
-            else {
+            } else {
                 if (Method.ADD.getValue().equals(value)) {
                     instance = Method.ADD
-                }
-                else if (Method.CANCEL.getValue().equals(value)) {
+                } else if (Method.CANCEL.getValue().equals(value)) {
                     instance = Method.CANCEL
-                }
-                else if (Method.COUNTER.getValue().equals(value)) {
+                } else if (Method.COUNTER.getValue().equals(value)) {
                     instance = Method.COUNTER
-                }
-                else if (Method.DECLINE_COUNTER.getValue().equals(value)) {
+                } else if (Method.DECLINE_COUNTER.getValue().equals(value)) {
                     instance = Method.DECLINE_COUNTER
-                }
-                else if (Method.PUBLISH.getValue().equals(value)) {
+                } else if (Method.PUBLISH.getValue().equals(value)) {
                     instance = Method.PUBLISH
-                }
-                else if (Method.REFRESH.getValue().equals(value)) {
+                } else if (Method.REFRESH.getValue().equals(value)) {
                     instance = Method.REFRESH
-                }
-                else if (Method.REPLY.getValue().equals(value)) {
+                } else if (Method.REPLY.getValue().equals(value)) {
                     instance = Method.REPLY
-                }
-                else if (Method.REQUEST.getValue().equals(value)) {
+                } else if (Method.REQUEST.getValue().equals(value)) {
                     instance = Method.REQUEST
-                }
-                else {
+                } else {
                     instance = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
         return instance
     }
-    
+
     protected Object newInstance(ParameterList parameters, String value) {
         return new Method(parameters, value)
     }

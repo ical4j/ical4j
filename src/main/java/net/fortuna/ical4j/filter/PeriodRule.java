@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -45,20 +45,20 @@ import net.fortuna.ical4j.model.PeriodList;
  */
 public class PeriodRule<T extends Component> implements Rule<T> {
 
-    private Period period;
+  private Period period;
 
-    /**
-     * Constructs a new instance using the specified period.
-     * @param period a period instance to match on
-     */
-    public PeriodRule(final Period period) {
-        this.period = period;
-    }
+  /**
+   * Constructs a new instance using the specified period.
+   * @param period a period instance to match on
+   */
+  public PeriodRule(final Period period) {
+    this.period = period;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final boolean match(final Component component) {
+  /**
+   * {@inheritDoc}
+   */
+  public final boolean match(final Component component) {
 
         /*
         DtStart start = (DtStart) component.getProperty(Property.DTSTART);
@@ -76,14 +76,14 @@ public class PeriodRule<T extends Component> implements Rule<T> {
             }
         }
         */
-        
+
 //        try {
-        final PeriodList recurrenceSet = component.calculateRecurrenceSet(period);
-        return (!recurrenceSet.isEmpty());
+    final PeriodList recurrenceSet = component.calculateRecurrenceSet(period);
+    return (!recurrenceSet.isEmpty());
 //        }
 //        catch (ValidationException ve) {
 //            log.error("Invalid component data", ve);
 //            return false;
 //        }
-    }
+  }
 }

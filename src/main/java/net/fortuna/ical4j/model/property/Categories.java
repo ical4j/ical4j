@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -91,104 +91,103 @@ import java.text.ParseException;
  */
 public class Categories extends Property {
 
-    private static final long serialVersionUID = -7769987073466681634L;
+  private static final long serialVersionUID = -7769987073466681634L;
 
-    private TextList categories;
+  private TextList categories;
 
-    /**
-     * Default constructor.
-     */
-    public Categories() {
-        super(CATEGORIES, PropertyFactoryImpl.getInstance());
-        categories = new TextList();
-    }
+  /**
+   * Default constructor.
+   */
+  public Categories() {
+    super(CATEGORIES, PropertyFactoryImpl.getInstance());
+    categories = new TextList();
+  }
 
-    /**
-     * @param aValue a value string for this component
-     */
-    public Categories(final String aValue) {
-        super(CATEGORIES, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aValue a value string for this component
+   */
+  public Categories(final String aValue) {
+    super(CATEGORIES, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Categories(final ParameterList aList, final String aValue) {
-        super(CATEGORIES, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Categories(final ParameterList aList, final String aValue) {
+    super(CATEGORIES, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param cList a list of categories
-     */
-    public Categories(final TextList cList) {
-        super(CATEGORIES, PropertyFactoryImpl.getInstance());
-        categories = cList;
-    }
+  /**
+   * @param cList a list of categories
+   */
+  public Categories(final TextList cList) {
+    super(CATEGORIES, PropertyFactoryImpl.getInstance());
+    categories = cList;
+  }
 
-    /**
-     * @param aList a list of parameters for this component
-     * @param cList a list of categories
-     */
-    public Categories(final ParameterList aList, final TextList cList) {
-        super(CATEGORIES, aList, PropertyFactoryImpl.getInstance());
-        categories = cList;
-    }
+  /**
+   * @param aList a list of parameters for this component
+   * @param cList a list of categories
+   */
+  public Categories(final ParameterList aList, final TextList cList) {
+    super(CATEGORIES, aList, PropertyFactoryImpl.getInstance());
+    categories = cList;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        categories = new TextList(aValue);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    categories = new TextList(aValue);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
 
         /*
          * ; the following is optional, ; but MUST NOT occur more than once (";" languageparam ) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
+        getParameters());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+  }
+
+  /**
+   * @return Returns the categories.
+   */
+  public final TextList getCategories() {
+    return categories;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return getCategories().toString();
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(CATEGORIES);
     }
 
-    /**
-     * @return Returns the categories.
-     */
-    public final TextList getCategories() {
-        return categories;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Categories(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return getCategories().toString();
+    public Property createProperty() {
+      return new Categories();
     }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(CATEGORIES);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Categories(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Categories();
-        }
-    }
-
+  }
 }

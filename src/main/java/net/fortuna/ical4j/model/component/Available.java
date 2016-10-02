@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -85,50 +85,50 @@ import net.fortuna.ical4j.util.PropertyValidator;
  */
 public class Available extends Component {
 
-    private static final long serialVersionUID = -2494710612002978763L;
+  private static final long serialVersionUID = -2494710612002978763L;
 
-    /**
-     * Default constructor.
-     */
-    public Available() {
-        super(AVAILABLE);
-    }
+  /**
+   * Default constructor.
+   */
+  public Available() {
+    super(AVAILABLE);
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param properties a list of properties
-     */
-    public Available(final PropertyList properties) {
-        super(AVAILABLE, properties);
-    }
+  /**
+   * Constructor.
+   *
+   * @param properties a list of properties
+   */
+  public Available(final PropertyList properties) {
+    super(AVAILABLE, properties);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate(final boolean recurse)
+      throws ValidationException {
 
         /*
          * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
          */
-        PropertyValidator.getInstance().assertOne(Property.DTSTART,
-                getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
-                getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID,
-                getProperties());
+    PropertyValidator.getInstance().assertOne(Property.DTSTART,
+        getProperties());
+    PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
+        getProperties());
+    PropertyValidator.getInstance().assertOne(Property.UID,
+        getProperties());
 
         /*       If specified, the "DTSTART" and "DTEND" properties in
          *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
          *      "DATE-TIME" values specified as either date with UTC time or date
          *      with local time and a time zone reference.
          */
-        final DtStart start = (DtStart) getProperty(Property.DTSTART);
-        if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
-            throw new ValidationException("Property [" + Property.DTSTART
-                    + "] must be a " + Value.DATE_TIME);
-        }
+    final DtStart start = (DtStart) getProperty(Property.DTSTART);
+    if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
+      throw new ValidationException("Property [" + Property.DTSTART
+          + "] must be a " + Value.DATE_TIME);
+    }
 
         /*
          *                ; the following are optional,
@@ -137,16 +137,16 @@ public class Available extends Component {
          *               created / last-mod / recurid / rrule /
          *               summary /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.RRULE,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY,
-                getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.CREATED,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.RRULE,
+        getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY,
+        getProperties());
 
         /*
          ; either a 'dtend' or a 'duration' is required
@@ -155,19 +155,19 @@ public class Available extends Component {
          ; 'availableprop', and each MUST NOT occur more
          ; than once
          */
-        if (getProperty(Property.DTEND) != null) {
-            PropertyValidator.getInstance().assertOne(Property.DTEND,
-                    getProperties());
+    if (getProperty(Property.DTEND) != null) {
+      PropertyValidator.getInstance().assertOne(Property.DTEND,
+          getProperties());
             /* Must be DATE_TIME */
-            final DtEnd end = (DtEnd) getProperty(Property.DTEND);
-            if (Value.DATE.equals(end.getParameter(Parameter.VALUE))) {
-                throw new ValidationException("Property [" + Property.DTEND
-                        + "] must be a " + Value.DATE_TIME);
-            }
-        } else {
-            PropertyValidator.getInstance().assertOne(Property.DURATION,
-                    getProperties());
-        }
+      final DtEnd end = (DtEnd) getProperty(Property.DTEND);
+      if (Value.DATE.equals(end.getParameter(Parameter.VALUE))) {
+        throw new ValidationException("Property [" + Property.DTEND
+            + "] must be a " + Value.DATE_TIME);
+      }
+    } else {
+      PropertyValidator.getInstance().assertOne(Property.DURATION,
+          getProperties());
+    }
 
         /*
          * ; the following are optional, ; and MAY occur more than once
@@ -175,30 +175,30 @@ public class Available extends Component {
          *               rdate / x-prop
          */
 
-        if (recurse) {
-            validateProperties();
-        }
+    if (recurse) {
+      validateProperties();
+    }
+  }
+
+  public static class Factory extends Content.Factory implements ComponentFactory<Available> {
+
+    public Factory() {
+      super(AVAILABLE);
     }
 
-    public static class Factory extends Content.Factory implements ComponentFactory<Available> {
-
-        public Factory() {
-            super(AVAILABLE);
-        }
-
-        @Override
-        public Available createComponent() {
-            return new Available();
-        }
-
-        @Override
-        public Available createComponent(PropertyList properties) {
-            return new Available(properties);
-        }
-
-        @Override
-        public Available createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", AVAILABLE));
-        }
+    @Override
+    public Available createComponent() {
+      return new Available();
     }
+
+    @Override
+    public Available createComponent(PropertyList properties) {
+      return new Available(properties);
+    }
+
+    @Override
+    public Available createComponent(PropertyList properties, ComponentList subComponents) {
+      throw new UnsupportedOperationException(String.format("%s does not support sub-components", AVAILABLE));
+    }
+  }
 }

@@ -41,8 +41,7 @@ class AltRepFactory extends AbstractParameterFactory {
         AltRep altRep
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, AltRep)) {
             altRep = value
-        }
-        else {
+        } else {
             altRep = [value]
         }
         return altRep

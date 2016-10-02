@@ -31,11 +31,12 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.net.URISyntaxException;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
+
+import java.net.URISyntaxException;
 
 /**
  * $Id$

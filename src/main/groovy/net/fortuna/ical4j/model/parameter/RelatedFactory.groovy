@@ -41,18 +41,17 @@ class RelatedFactory extends AbstractParameterFactory {
         Related related
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Related)) {
             related = value
-        }
-        else {
-			switch(value) {
-				case Related.END.value:
-					related = Related.END
-					break
-				case Related.START.value:
-		            related = Related.START
-					break
-				default:
-		            related = new Related(value)
-	        }
+        } else {
+            switch (value) {
+                case Related.END.value:
+                    related = Related.END
+                    break
+                case Related.START.value:
+                    related = Related.START
+                    break
+                default:
+                    related = new Related(value)
+            }
         }
         return related
     }

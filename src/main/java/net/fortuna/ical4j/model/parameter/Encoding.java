@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -88,77 +88,76 @@ import java.net.URISyntaxException;
  */
 public class Encoding extends Parameter {
 
-    private static final long serialVersionUID = 7536336461076399077L;
+  private static final long serialVersionUID = 7536336461076399077L;
 
-    private static final String VALUE_SEVEN_BIT = "7BIT";
+  private static final String VALUE_SEVEN_BIT = "7BIT";
 
-    private static final String VALUE_EIGHT_BIT = "8BIT";
+  private static final String VALUE_EIGHT_BIT = "8BIT";
 
-    private static final String VALUE_BINARY = "BINARY";
+  private static final String VALUE_BINARY = "BINARY";
 
-    private static final String VALUE_QUOTED_PRINTABLE = "QUOTED-PRINTABLE";
+  private static final String VALUE_QUOTED_PRINTABLE = "QUOTED-PRINTABLE";
 
-    private static final String VALUE_BASE64 = "BASE64";
+  private static final String VALUE_BASE64 = "BASE64";
 
-    /**
-     * 7 bit encoding.
-     */
-    public static final Encoding SEVEN_BIT = new Encoding(VALUE_SEVEN_BIT);
+  /**
+   * 7 bit encoding.
+   */
+  public static final Encoding SEVEN_BIT = new Encoding(VALUE_SEVEN_BIT);
 
-    /**
-     * 8 bit encoding.
-     */
-    public static final Encoding EIGHT_BIT = new Encoding(VALUE_EIGHT_BIT);
+  /**
+   * 8 bit encoding.
+   */
+  public static final Encoding EIGHT_BIT = new Encoding(VALUE_EIGHT_BIT);
 
-    /**
-     * Binary encoding.
-     */
-    public static final Encoding BINARY = new Encoding(VALUE_BINARY);
+  /**
+   * Binary encoding.
+   */
+  public static final Encoding BINARY = new Encoding(VALUE_BINARY);
 
-    /**
-     * Quoted printable encoding.
-     */
-    public static final Encoding QUOTED_PRINTABLE = new Encoding(
-            VALUE_QUOTED_PRINTABLE);
+  /**
+   * Quoted printable encoding.
+   */
+  public static final Encoding QUOTED_PRINTABLE = new Encoding(
+      VALUE_QUOTED_PRINTABLE);
 
-    /**
-     * Base64 encoding.
-     */
-    public static final Encoding BASE64 = new Encoding(VALUE_BASE64);
+  /**
+   * Base64 encoding.
+   */
+  public static final Encoding BASE64 = new Encoding(VALUE_BASE64);
 
-    private String value;
+  private String value;
 
-    /**
-     * @param aValue a string representation of an Inline Encoding
-     */
-    public Encoding(final String aValue) {
-        super(ENCODING, ParameterFactoryImpl.getInstance());
-        this.value = Strings.unquote(aValue);
+  /**
+   * @param aValue a string representation of an Inline Encoding
+   */
+  public Encoding(final String aValue) {
+    super(ENCODING, ParameterFactoryImpl.getInstance());
+    this.value = Strings.unquote(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  public static class Factory extends Content.Factory implements ParameterFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(ENCODING);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Parameter createParameter(final String value) throws URISyntaxException {
+      Encoding parameter = new Encoding(value);
+      if (Encoding.EIGHT_BIT.equals(parameter)) {
+        parameter = Encoding.EIGHT_BIT;
+      } else if (Encoding.BASE64.equals(parameter)) {
+        parameter = Encoding.BASE64;
+      }
+      return parameter;
     }
-
-    public static class Factory extends Content.Factory implements ParameterFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(ENCODING);
-        }
-
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            Encoding parameter = new Encoding(value);
-            if (Encoding.EIGHT_BIT.equals(parameter)) {
-                parameter = Encoding.EIGHT_BIT;
-            } else if (Encoding.BASE64.equals(parameter)) {
-                parameter = Encoding.BASE64;
-            }
-            return parameter;
-        }
-    }
-
+  }
 }

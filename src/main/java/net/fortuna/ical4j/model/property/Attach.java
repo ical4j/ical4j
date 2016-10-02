@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -104,78 +104,78 @@ import java.text.ParseException;
  */
 public class Attach extends Property {
 
-    private static final long serialVersionUID = 4439949507756383452L;
+  private static final long serialVersionUID = 4439949507756383452L;
 
-    private URI uri;
+  private URI uri;
 
-    private byte[] binary;
+  private byte[] binary;
 
-    /**
-     * Default constructor.
-     */
-    public Attach() {
-        super(ATTACH, PropertyFactoryImpl.getInstance());
-    }
+  /**
+   * Default constructor.
+   */
+  public Attach() {
+    super(ATTACH, PropertyFactoryImpl.getInstance());
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     * @throws IOException        when there is an error reading the binary stream
-     * @throws URISyntaxException where the specified string is not a valid uri
-     */
-    public Attach(final ParameterList aList, final String aValue)
-            throws IOException, URISyntaxException {
-        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   * @throws IOException        when there is an error reading the binary stream
+   * @throws URISyntaxException where the specified string is not a valid uri
+   */
+  public Attach(final ParameterList aList, final String aValue)
+      throws IOException, URISyntaxException {
+    super(ATTACH, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param data binary data
-     */
-    public Attach(final byte[] data) {
-        super(ATTACH, PropertyFactoryImpl.getInstance());
-        // add required parameters..
-        getParameters().add(Encoding.BASE64);
-        getParameters().add(Value.BINARY);
-        this.binary = data;
-    }
+  /**
+   * @param data binary data
+   */
+  public Attach(final byte[] data) {
+    super(ATTACH, PropertyFactoryImpl.getInstance());
+    // add required parameters..
+    getParameters().add(Encoding.BASE64);
+    getParameters().add(Value.BINARY);
+    this.binary = data;
+  }
 
-    /**
-     * @param aList a list of parameters for this component
-     * @param data  binary data
-     */
-    public Attach(final ParameterList aList, final byte[] data) {
-        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
-        this.binary = data;
-    }
+  /**
+   * @param aList a list of parameters for this component
+   * @param data  binary data
+   */
+  public Attach(final ParameterList aList, final byte[] data) {
+    super(ATTACH, aList, PropertyFactoryImpl.getInstance());
+    this.binary = data;
+  }
 
-    /**
-     * @param aUri a URI
-     */
-    public Attach(final URI aUri) {
-        super(ATTACH, PropertyFactoryImpl.getInstance());
-        this.uri = aUri;
-    }
+  /**
+   * @param aUri a URI
+   */
+  public Attach(final URI aUri) {
+    super(ATTACH, PropertyFactoryImpl.getInstance());
+    this.uri = aUri;
+  }
 
-    /**
-     * @param aList a list of parameters for this component
-     * @param aUri  a URI
-     */
-    public Attach(final ParameterList aList, final URI aUri) {
-        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
-        this.uri = aUri;
-    }
+  /**
+   * @param aList a list of parameters for this component
+   * @param aUri  a URI
+   */
+  public Attach(final ParameterList aList, final URI aUri) {
+    super(ATTACH, aList, PropertyFactoryImpl.getInstance());
+    this.uri = aUri;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
 
         /*
          * ; the following is optional, ; but MUST NOT occur more than once (";" fmttypeparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.FMTTYPE,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.FMTTYPE,
+        getParameters());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
@@ -185,125 +185,124 @@ public class Attach extends Property {
          * If the value type parameter is ";VALUE=BINARY", then the inline encoding parameter MUST be specified with the
          * value ";ENCODING=BASE64".
          */
-        if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
-            ParameterValidator.getInstance().assertOne(Parameter.ENCODING,
-                    getParameters());
-            if (!Encoding.BASE64.equals(getParameter(Parameter.ENCODING))) {
-                throw new ValidationException(
-                        "If the value type parameter is [BINARY], the inline"
-                                + "encoding parameter MUST be specified with the value [BASE64]"
-                );
-            }
-        }
+    if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
+      ParameterValidator.getInstance().assertOne(Parameter.ENCODING,
+          getParameters());
+      if (!Encoding.BASE64.equals(getParameter(Parameter.ENCODING))) {
+        throw new ValidationException(
+            "If the value type parameter is [BINARY], the inline"
+                + "encoding parameter MUST be specified with the value [BASE64]"
+        );
+      }
+    }
+  }
+
+  /**
+   * @return Returns the binary.
+   */
+  public final byte[] getBinary() {
+    return binary;
+  }
+
+  /**
+   * @return Returns the uri.
+   */
+  public final URI getUri() {
+    return uri;
+  }
+
+  /**
+   * Sets the current value of the Attach instance. If the specified
+   * value is encoded binary data, the value is decoded and stored in
+   * the binary field. Otherwise the value is assumed to be a URI
+   * location to binary data and is stored as such.
+   *
+   * @param aValue a string encoded binary or URI value
+   * @throws IOException        where binary data cannot be decoded
+   * @throws URISyntaxException where the specified value is not a valid URI
+   */
+  public final void setValue(final String aValue) throws IOException,
+      URISyntaxException {
+
+    // determine if ATTACH is a URI or an embedded
+    // binary..
+    if (getParameter(Parameter.ENCODING) != null) {
+      // binary = Base64.decode(aValue);
+      try {
+        final BinaryDecoder decoder = DecoderFactory.getInstance()
+            .createBinaryDecoder(
+                (Encoding) getParameter(Parameter.ENCODING));
+        binary = decoder.decode(aValue.getBytes());
+      } catch (UnsupportedEncodingException uee) {
+        Logger log = LoggerFactory.getLogger(Attach.class);
+        log.error("Error encoding binary data", uee);
+      } catch (DecoderException de) {
+        Logger log = LoggerFactory.getLogger(Attach.class);
+        log.error("Error decoding binary data", de);
+      }
+    }
+    // assume URI..
+    else {
+      uri = Uris.create(aValue);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    if (getUri() != null) {
+      return Uris.decode(Strings.valueOf(getUri()));
+    } else if (getBinary() != null) {
+      // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
+      try {
+        final BinaryEncoder encoder = EncoderFactory.getInstance()
+            .createBinaryEncoder(
+                (Encoding) getParameter(Parameter.ENCODING));
+        return new String(encoder.encode(getBinary()));
+      } catch (UnsupportedEncodingException uee) {
+        Logger log = LoggerFactory.getLogger(Attach.class);
+        log.error("Error encoding binary data", uee);
+      } catch (EncoderException ee) {
+        Logger log = LoggerFactory.getLogger(Attach.class);
+        log.error("Error encoding binary data", ee);
+      }
+    }
+    return null;
+  }
+
+  /**
+   * @param binary The binary to set.
+   */
+  public final void setBinary(final byte[] binary) {
+    this.binary = binary;
+    // unset uri..
+    this.uri = null;
+  }
+
+  /**
+   * @param uri The uri to set.
+   */
+  public final void setUri(final URI uri) {
+    this.uri = uri;
+    // unset binary..
+    this.binary = null;
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(ATTACH);
     }
 
-    /**
-     * @return Returns the binary.
-     */
-    public final byte[] getBinary() {
-        return binary;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Attach(parameters, value);
     }
 
-    /**
-     * @return Returns the uri.
-     */
-    public final URI getUri() {
-        return uri;
+    public Property createProperty() {
+      return new Attach();
     }
-
-    /**
-     * Sets the current value of the Attach instance. If the specified
-     * value is encoded binary data, the value is decoded and stored in
-     * the binary field. Otherwise the value is assumed to be a URI
-     * location to binary data and is stored as such.
-     *
-     * @param aValue a string encoded binary or URI value
-     * @throws IOException        where binary data cannot be decoded
-     * @throws URISyntaxException where the specified value is not a valid URI
-     */
-    public final void setValue(final String aValue) throws IOException,
-            URISyntaxException {
-
-        // determine if ATTACH is a URI or an embedded
-        // binary..
-        if (getParameter(Parameter.ENCODING) != null) {
-            // binary = Base64.decode(aValue);
-            try {
-                final BinaryDecoder decoder = DecoderFactory.getInstance()
-                        .createBinaryDecoder(
-                                (Encoding) getParameter(Parameter.ENCODING));
-                binary = decoder.decode(aValue.getBytes());
-            } catch (UnsupportedEncodingException uee) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error encoding binary data", uee);
-            } catch (DecoderException de) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error decoding binary data", de);
-            }
-        }
-        // assume URI..
-        else {
-            uri = Uris.create(aValue);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        if (getUri() != null) {
-            return Uris.decode(Strings.valueOf(getUri()));
-        } else if (getBinary() != null) {
-            // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
-            try {
-                final BinaryEncoder encoder = EncoderFactory.getInstance()
-                        .createBinaryEncoder(
-                                (Encoding) getParameter(Parameter.ENCODING));
-                return new String(encoder.encode(getBinary()));
-            } catch (UnsupportedEncodingException uee) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error encoding binary data", uee);
-            } catch (EncoderException ee) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error encoding binary data", ee);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @param binary The binary to set.
-     */
-    public final void setBinary(final byte[] binary) {
-        this.binary = binary;
-        // unset uri..
-        this.uri = null;
-    }
-
-    /**
-     * @param uri The uri to set.
-     */
-    public final void setUri(final URI uri) {
-        this.uri = uri;
-        // unset binary..
-        this.binary = null;
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(ATTACH);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Attach(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Attach();
-        }
-    }
-
+  }
 }

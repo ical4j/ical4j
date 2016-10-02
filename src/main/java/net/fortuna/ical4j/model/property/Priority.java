@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -123,136 +123,135 @@ import java.text.ParseException;
  */
 public class Priority extends Property {
 
-    private static final long serialVersionUID = -5654367843953827397L;
+  private static final long serialVersionUID = -5654367843953827397L;
 
-    /**
-     * Undefined priority.
-     */
-    public static final Priority UNDEFINED = new ImmutablePriority(0);
+  /**
+   * Undefined priority.
+   */
+  public static final Priority UNDEFINED = new ImmutablePriority(0);
 
-    /**
-     * High priority.
-     */
-    public static final Priority HIGH = new ImmutablePriority(1);
+  /**
+   * High priority.
+   */
+  public static final Priority HIGH = new ImmutablePriority(1);
 
-    /**
-     * Medium priority.
-     */
-    public static final Priority MEDIUM = new ImmutablePriority(5);
+  /**
+   * Medium priority.
+   */
+  public static final Priority MEDIUM = new ImmutablePriority(5);
 
-    /**
-     * Low priority.
-     */
-    public static final Priority LOW = new ImmutablePriority(9);
+  /**
+   * Low priority.
+   */
+  public static final Priority LOW = new ImmutablePriority(9);
 
-    /**
-     * @author Ben Fortuna An immutable instance of Priority.
-     */
-    private static final class ImmutablePriority extends Priority {
+  /**
+   * @author Ben Fortuna An immutable instance of Priority.
+   */
+  private static final class ImmutablePriority extends Priority {
 
-        private static final long serialVersionUID = 5884973714694108418L;
+    private static final long serialVersionUID = 5884973714694108418L;
 
-        private ImmutablePriority(final int level) {
-            super(new ParameterList(true), level);
-        }
-
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        public void setLevel(final int level) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
+    private ImmutablePriority(final int level) {
+      super(new ParameterList(true), level);
     }
 
-    private int level;
-
-    /**
-     * Default constructor.
-     */
-    public Priority() {
-        super(PRIORITY, PropertyFactoryImpl.getInstance());
-        level = UNDEFINED.getLevel();
-    }
-
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Priority(final ParameterList aList, final String aValue) {
-        super(PRIORITY, aList, PropertyFactoryImpl.getInstance());
-        level = Integer.parseInt(aValue);
-    }
-
-    /**
-     * @param aLevel an int representation of a priority level
-     */
-    public Priority(final int aLevel) {
-        super(PRIORITY, PropertyFactoryImpl.getInstance());
-        level = aLevel;
-    }
-
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aLevel an int representation of a priority level
-     */
-    public Priority(final ParameterList aList, final int aLevel) {
-        super(PRIORITY, aList, PropertyFactoryImpl.getInstance());
-        level = aLevel;
-    }
-
-    /**
-     * @return Returns the level.
-     */
-    public final int getLevel() {
-        return level;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void setValue(final String aValue) {
-        level = Integer.parseInt(aValue);
+      throw new UnsupportedOperationException(
+          "Cannot modify constant instances");
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return String.valueOf(getLevel());
-    }
-
-    /**
-     * @param level The level to set.
-     */
     public void setLevel(final int level) {
-        this.level = level;
+      throw new UnsupportedOperationException(
+          "Cannot modify constant instances");
+    }
+  }
+
+  private int level;
+
+  /**
+   * Default constructor.
+   */
+  public Priority() {
+    super(PRIORITY, PropertyFactoryImpl.getInstance());
+    level = UNDEFINED.getLevel();
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Priority(final ParameterList aList, final String aValue) {
+    super(PRIORITY, aList, PropertyFactoryImpl.getInstance());
+    level = Integer.parseInt(aValue);
+  }
+
+  /**
+   * @param aLevel an int representation of a priority level
+   */
+  public Priority(final int aLevel) {
+    super(PRIORITY, PropertyFactoryImpl.getInstance());
+    level = aLevel;
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aLevel an int representation of a priority level
+   */
+  public Priority(final ParameterList aList, final int aLevel) {
+    super(PRIORITY, aList, PropertyFactoryImpl.getInstance());
+    level = aLevel;
+  }
+
+  /**
+   * @return Returns the level.
+   */
+  public final int getLevel() {
+    return level;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setValue(final String aValue) {
+    level = Integer.parseInt(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return String.valueOf(getLevel());
+  }
+
+  /**
+   * @param level The level to set.
+   */
+  public void setLevel(final int level) {
+    this.level = level;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(PRIORITY);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Priority(parameters, value);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(PRIORITY);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Priority(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Priority();
-        }
+    public Property createProperty() {
+      return new Priority();
     }
-
+  }
 }

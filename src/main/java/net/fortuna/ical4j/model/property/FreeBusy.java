@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -105,117 +105,116 @@ import java.text.ParseException;
  */
 public class FreeBusy extends Property {
 
-    private static final long serialVersionUID = -6415954847619338567L;
+  private static final long serialVersionUID = -6415954847619338567L;
 
-    private PeriodList periods;
+  private PeriodList periods;
 
-    /**
-     * Default constructor.
-     */
-    public FreeBusy() {
-        super(FREEBUSY, PropertyFactoryImpl.getInstance());
-        periods = new PeriodList();
+  /**
+   * Default constructor.
+   */
+  public FreeBusy() {
+    super(FREEBUSY, PropertyFactoryImpl.getInstance());
+    periods = new PeriodList();
+  }
+
+  /**
+   * @param aValue a freebusy value
+   * @throws ParseException where the specified string is not a valid freebusy value
+   */
+  public FreeBusy(final String aValue) throws ParseException {
+    super(FREEBUSY, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   * @throws ParseException when the specified string is not a valid list of periods
+   */
+  public FreeBusy(final ParameterList aList, final String aValue)
+      throws ParseException {
+    super(FREEBUSY, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param pList a list of periods
+   */
+  public FreeBusy(final PeriodList pList) {
+    super(FREEBUSY, PropertyFactoryImpl.getInstance());
+    if (!pList.isUtc()) {
+      throw new IllegalArgumentException("Periods must be in UTC format");
     }
+    periods = pList;
+  }
 
-    /**
-     * @param aValue a freebusy value
-     * @throws ParseException where the specified string is not a valid freebusy value
-     */
-    public FreeBusy(final String aValue) throws ParseException {
-        super(FREEBUSY, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+  /**
+   * @param aList a list of parameters for this component
+   * @param pList a list of periods
+   */
+  public FreeBusy(final ParameterList aList, final PeriodList pList) {
+    super(FREEBUSY, aList, PropertyFactoryImpl.getInstance());
+    if (!pList.isUtc()) {
+      throw new IllegalArgumentException("Periods must be in UTC format");
     }
+    periods = pList;
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     * @throws ParseException when the specified string is not a valid list of periods
-     */
-    public FreeBusy(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(FREEBUSY, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
-
-    /**
-     * @param pList a list of periods
-     */
-    public FreeBusy(final PeriodList pList) {
-        super(FREEBUSY, PropertyFactoryImpl.getInstance());
-        if (!pList.isUtc()) {
-            throw new IllegalArgumentException("Periods must be in UTC format");
-        }
-        periods = pList;
-    }
-
-    /**
-     * @param aList a list of parameters for this component
-     * @param pList a list of periods
-     */
-    public FreeBusy(final ParameterList aList, final PeriodList pList) {
-        super(FREEBUSY, aList, PropertyFactoryImpl.getInstance());
-        if (!pList.isUtc()) {
-            throw new IllegalArgumentException("Periods must be in UTC format");
-        }
-        periods = pList;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
 
         /*
          * ; the following is optional, ; but MUST NOT occur more than once (";" fbtypeparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.FBTYPE,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.FBTYPE,
+        getParameters());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
 
-        if (!periods.isUtc()) {
-            throw new ValidationException("Periods must be in UTC format");
-        }
+    if (!periods.isUtc()) {
+      throw new ValidationException("Periods must be in UTC format");
+    }
+  }
+
+  /**
+   * @return Returns the periods.
+   */
+  public final PeriodList getPeriods() {
+    return periods;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) throws ParseException {
+    periods = new PeriodList(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return getPeriods().toString();
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(FREEBUSY);
     }
 
-    /**
-     * @return Returns the periods.
-     */
-    public final PeriodList getPeriods() {
-        return periods;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new FreeBusy(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) throws ParseException {
-        periods = new PeriodList(aValue);
+    public Property createProperty() {
+      return new FreeBusy();
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return getPeriods().toString();
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(FREEBUSY);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new FreeBusy(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new FreeBusy();
-        }
-    }
-
+  }
 }

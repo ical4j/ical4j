@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -49,124 +49,123 @@ import java.text.NumberFormat;
  */
 public class UtcOffset implements Serializable {
 
-    private static final long serialVersionUID = 5883111996721531728L;
-    
-    private static final int HOUR_START_INDEX = 1;
+  private static final long serialVersionUID = 5883111996721531728L;
 
-    private static final int HOUR_END_INDEX = 3;
+  private static final int HOUR_START_INDEX = 1;
 
-    private static final int MINUTE_START_INDEX = 3;
+  private static final int HOUR_END_INDEX = 3;
 
-    private static final int MINUTE_END_INDEX = 5;
+  private static final int MINUTE_START_INDEX = 3;
 
-    private static final int SECOND_START_INDEX = 5;
+  private static final int MINUTE_END_INDEX = 5;
 
-    private static final int SECOND_END_INDEX = 7;
+  private static final int SECOND_START_INDEX = 5;
 
-    private static final NumberFormat HOUR_FORMAT = new DecimalFormat("00");
+  private static final int SECOND_END_INDEX = 7;
 
-    private static final NumberFormat MINUTE_FORMAT = new DecimalFormat("00");
+  private static final NumberFormat HOUR_FORMAT = new DecimalFormat("00");
 
-    private static final NumberFormat SECOND_FORMAT = new DecimalFormat("00");
+  private static final NumberFormat MINUTE_FORMAT = new DecimalFormat("00");
 
-    private long offset;
+  private static final NumberFormat SECOND_FORMAT = new DecimalFormat("00");
 
-    /**
-     * @param value a string representation of an offset
-     */
-    public UtcOffset(final String value) {
+  private long offset;
 
-        if (value.length() < MINUTE_END_INDEX) {
-            throw new IllegalArgumentException("Invalid UTC offset [" + value
-                    + "] - must be of the form: (+/-)HHMM[SS]");
-        }
-        
-        final boolean negative = value.charAt(0) == '-';
+  /**
+   * @param value a string representation of an offset
+   */
+  public UtcOffset(final String value) {
 
-        if (!negative && !(value.charAt(0) == '+')) {
-            throw new IllegalArgumentException("UTC offset value must be signed");
-        }
-        
-        offset = 0;
-        offset += Integer.parseInt(value.substring(HOUR_START_INDEX,
-                HOUR_END_INDEX))
-                * Dates.MILLIS_PER_HOUR;
+    if (value.length() < MINUTE_END_INDEX) {
+      throw new IllegalArgumentException("Invalid UTC offset [" + value
+          + "] - must be of the form: (+/-)HHMM[SS]");
+    }
+
+    final boolean negative = value.charAt(0) == '-';
+
+    if (!negative && !(value.charAt(0) == '+')) {
+      throw new IllegalArgumentException("UTC offset value must be signed");
+    }
+
+    offset = 0;
+    offset += Integer.parseInt(value.substring(HOUR_START_INDEX,
+        HOUR_END_INDEX))
+        * Dates.MILLIS_PER_HOUR;
 
 //cludge to handle Utcffset of vcard 3
-        if ( value.contains(":")){
-        	offset += Integer.parseInt(value.substring(MINUTE_START_INDEX +1, MINUTE_END_INDEX +1))
-                    * Dates.MILLIS_PER_MINUTE;
-        } else {
-        	offset += Integer.parseInt(value.substring(MINUTE_START_INDEX, MINUTE_END_INDEX))
-                                     * Dates.MILLIS_PER_MINUTE;
-        }
+    if (value.contains(":")) {
+      offset += Integer.parseInt(value.substring(MINUTE_START_INDEX + 1, MINUTE_END_INDEX + 1))
+          * Dates.MILLIS_PER_MINUTE;
+    } else {
+      offset += Integer.parseInt(value.substring(MINUTE_START_INDEX, MINUTE_END_INDEX))
+          * Dates.MILLIS_PER_MINUTE;
+    }
 
 //        offset += Integer.parseInt(value.substring(MINUTE_START_INDEX,
 //                MINUTE_END_INDEX))
 //                * Dates.MILLIS_PER_MINUTE;
-        if (value.length() == SECOND_END_INDEX) {
-            offset += Integer.parseInt(value.substring(SECOND_START_INDEX,
-                    SECOND_END_INDEX))
-                    * Dates.MILLIS_PER_SECOND;
-        }
-        if (negative) {
-            offset = -offset;
-        }
+    if (value.length() == SECOND_END_INDEX) {
+      offset += Integer.parseInt(value.substring(SECOND_START_INDEX,
+          SECOND_END_INDEX))
+          * Dates.MILLIS_PER_SECOND;
     }
-
-    /**
-     * @param offset an offset value in milliseconds
-     */
-    public UtcOffset(final long offset) {
-        this.offset = (long) Math.floor(offset / (double) Dates.MILLIS_PER_SECOND) * Dates.MILLIS_PER_SECOND;
+    if (negative) {
+      offset = -offset;
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        long remainder = Math.abs(offset);
+  /**
+   * @param offset an offset value in milliseconds
+   */
+  public UtcOffset(final long offset) {
+    this.offset = (long) Math.floor(offset / (double) Dates.MILLIS_PER_SECOND) * Dates.MILLIS_PER_SECOND;
+  }
 
-        if (offset < 0) {
-            b.append('-');
-        }
-        else {
-            b.append('+');
-        }
-        b.append(HOUR_FORMAT.format(remainder / Dates.MILLIS_PER_HOUR));
+  /**
+   * {@inheritDoc}
+   */
+  public final String toString() {
+    final StringBuilder b = new StringBuilder();
+    long remainder = Math.abs(offset);
 
-        remainder = remainder % Dates.MILLIS_PER_HOUR;
-        b.append(MINUTE_FORMAT.format(remainder / Dates.MILLIS_PER_MINUTE));
-
-        remainder = remainder % Dates.MILLIS_PER_MINUTE;
-        if (remainder > 0) {
-            b.append(SECOND_FORMAT.format(remainder / Dates.MILLIS_PER_SECOND));
-        }
-        return b.toString();
+    if (offset < 0) {
+      b.append('-');
+    } else {
+      b.append('+');
     }
+    b.append(HOUR_FORMAT.format(remainder / Dates.MILLIS_PER_HOUR));
 
-    /**
-     * @return Returns the offset.
-     */
-    public final long getOffset() {
-        return offset;
-    }
+    remainder = remainder % Dates.MILLIS_PER_HOUR;
+    b.append(MINUTE_FORMAT.format(remainder / Dates.MILLIS_PER_MINUTE));
 
-    /**
-     * {@inheritDoc}
-     */
-    public final boolean equals(final Object arg0) {
-        if (arg0 instanceof UtcOffset) {
-            return getOffset() == ((UtcOffset) arg0).getOffset();
-        }
-        return super.equals(arg0);
+    remainder = remainder % Dates.MILLIS_PER_MINUTE;
+    if (remainder > 0) {
+      b.append(SECOND_FORMAT.format(remainder / Dates.MILLIS_PER_SECOND));
     }
+    return b.toString();
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final int hashCode() {
-        return new HashCodeBuilder().append(getOffset()).toHashCode();
+  /**
+   * @return Returns the offset.
+   */
+  public final long getOffset() {
+    return offset;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final boolean equals(final Object arg0) {
+    if (arg0 instanceof UtcOffset) {
+      return getOffset() == ((UtcOffset) arg0).getOffset();
     }
+    return super.equals(arg0);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final int hashCode() {
+    return new HashCodeBuilder().append(getOffset()).toHashCode();
+  }
 }

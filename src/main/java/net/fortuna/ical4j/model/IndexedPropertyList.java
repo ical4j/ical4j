@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -46,59 +46,59 @@ import java.util.Map;
  */
 public class IndexedPropertyList {
 
-    private static final PropertyList EMPTY_LIST = new PropertyList();
-    
-    private Map<String, PropertyList> index;
-    
-    /**
-     * Creates a new instance indexed on the parameters with the specified name.
-     * @param list a list of properties
-     * @param parameterName the name of parameters on which to index
-     */
-    public IndexedPropertyList(final PropertyList list, final String parameterName) {
-        final Map<String, PropertyList> indexedProperties = new HashMap<String, PropertyList>();
-        for (final Property property : list) {
-            for (final Iterator<Parameter> j = property.getParameters(parameterName).iterator(); j.hasNext();) {
-                final Parameter parameter = j.next();
-                PropertyList properties = indexedProperties.get(parameter.getValue());
-                if (properties == null) {
-                    properties = new PropertyList();
-                    indexedProperties.put(parameter.getValue(), properties);
-                }
-                properties.add(property);
-            }
-        }
-        this.index = Collections.unmodifiableMap(indexedProperties);
-    }
-    
-    /**
-     * Returns a list of properties containing a parameter with the
-     * specified value.
-     * @param paramValue the value of the parameter contained in the
-     * returned properties
-     * @return a property list
-     */
-    public PropertyList getProperties(final String paramValue) {
-        PropertyList properties = index.get(paramValue);
+  private static final PropertyList EMPTY_LIST = new PropertyList();
+
+  private Map<String, PropertyList> index;
+
+  /**
+   * Creates a new instance indexed on the parameters with the specified name.
+   * @param list a list of properties
+   * @param parameterName the name of parameters on which to index
+   */
+  public IndexedPropertyList(final PropertyList list, final String parameterName) {
+    final Map<String, PropertyList> indexedProperties = new HashMap<String, PropertyList>();
+    for (final Property property : list) {
+      for (final Iterator<Parameter> j = property.getParameters(parameterName).iterator(); j.hasNext(); ) {
+        final Parameter parameter = j.next();
+        PropertyList properties = indexedProperties.get(parameter.getValue());
         if (properties == null) {
-            properties = EMPTY_LIST;
+          properties = new PropertyList();
+          indexedProperties.put(parameter.getValue(), properties);
         }
-        return properties;
+        properties.add(property);
+      }
     }
-    
-    /**
-     * Returns the first property containing a parameter with the specified
-     * value.
-     * @param paramValue the value of the parameter identified in the returned
-     * property
-     * @return a property or null if no property is found containing a parameter
-     * with the specified value
-     */
-    public Property getProperty(final String paramValue) {
-        final PropertyList properties = getProperties(paramValue);
-        if (!properties.isEmpty()) {
-            return properties.get(0);
-        }
-        return null;
+    this.index = Collections.unmodifiableMap(indexedProperties);
+  }
+
+  /**
+   * Returns a list of properties containing a parameter with the
+   * specified value.
+   * @param paramValue the value of the parameter contained in the
+   * returned properties
+   * @return a property list
+   */
+  public PropertyList getProperties(final String paramValue) {
+    PropertyList properties = index.get(paramValue);
+    if (properties == null) {
+      properties = EMPTY_LIST;
     }
+    return properties;
+  }
+
+  /**
+   * Returns the first property containing a parameter with the specified
+   * value.
+   * @param paramValue the value of the parameter identified in the returned
+   * property
+   * @return a property or null if no property is found containing a parameter
+   * with the specified value
+   */
+  public Property getProperty(final String paramValue) {
+    final PropertyList properties = getProperties(paramValue);
+    if (!properties.isEmpty()) {
+      return properties.get(0);
+    }
+    return null;
+  }
 }

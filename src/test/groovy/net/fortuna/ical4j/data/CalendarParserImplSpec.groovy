@@ -31,12 +31,13 @@
  */
 package net.fortuna.ical4j.data
 
-import static net.fortuna.ical4j.util.CompatibilityHints.*
-
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.util.Calendars
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_UNFOLDING
 
 class CalendarParserImplSpec extends Specification {
 	
