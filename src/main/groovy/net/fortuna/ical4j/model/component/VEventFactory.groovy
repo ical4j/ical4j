@@ -31,38 +31,35 @@
  */
 package net.fortuna.ical4j.model.component
 
-import groovy.util.FactoryBuilderSupport
 import net.fortuna.ical4j.model.PropertyList
 
 /**
  * @author fortuna
  *
  */
-class VEventFactory extends AbstractComponentFactory{
+class VEventFactory extends AbstractComponentFactory {
 
 
-     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         VEvent event
-         if (FactoryBuilderSupport.checkValueIsType(value, name, VEvent.class)) {
-             event = (VEvent) value
-         }
-         else {
-             event = super.newInstance(builder, name, value, attributes);
-         }
-         return event
-     }
-     
-     protected Object newInstance(PropertyList properties) {
-         return new VEvent(properties)
-     }
-    
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        VEvent event
+        if (FactoryBuilderSupport.checkValueIsType(value, name, VEvent.class)) {
+            event = (VEvent) value
+        } else {
+            event = super.newInstance(builder, name, value, attributes);
+        }
+        return event
+    }
+
+    protected Object newInstance(PropertyList properties) {
+        return new VEvent(properties)
+    }
+
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-		if (child instanceof VAlarm) {
-			parent.alarms.add child
-		}
-		else {
-			super.setChild(build, parent, child)
-		}
+        if (child instanceof VAlarm) {
+            parent.alarms.add child
+        } else {
+            super.setChild(build, parent, child)
+        }
     }
 }
 

@@ -41,8 +41,7 @@ class DelegatedFromFactory extends AbstractParameterFactory {
         DelegatedFrom delegatedFrom
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, DelegatedFrom)) {
             delegatedFrom = value
-        }
-        else {
+        } else {
             delegatedFrom = [value]
         }
         return delegatedFrom

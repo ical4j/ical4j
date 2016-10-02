@@ -31,17 +31,17 @@
  */
 package net.fortuna.ical4j.model;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
 
 /**
  * $Id$

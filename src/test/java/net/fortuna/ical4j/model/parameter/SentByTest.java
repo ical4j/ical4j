@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import java.net.URISyntaxException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterTest;
+
+import java.net.URISyntaxException;
 
 /**
  * Created: [18/11/2008]

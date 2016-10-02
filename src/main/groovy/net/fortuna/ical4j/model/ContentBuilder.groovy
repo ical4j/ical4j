@@ -48,12 +48,12 @@ class ContentBuilder extends FactoryBuilderSupport {
     ContentBuilder(boolean init = true) {
         super(init)
     }
-    
+
     def registerCalendarAndCollections() {
         registerFactory('calendar', new CalendarFactory())
         registerFactory('parameters', new ParameterListFactory())
     }
-    
+
     def registerComponents() {
         // components..
         registerFactory('available', new AvailableFactory())
@@ -69,7 +69,7 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('vvenue', new VVenueFactory())
         registerFactory('xcomponent', new XComponentFactory())
     }
-    
+
     def registerProperties() {
         // properties..
         registerFactory('action', new ActionFactory())
@@ -129,7 +129,7 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('version', new VersionFactory())
         registerFactory('xproperty', new XPropertyFactory())
     }
-    
+
     def registerParameters() {
         // parameters..
         registerFactory('abbrev', new AbbrevFactory())

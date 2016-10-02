@@ -41,24 +41,23 @@ class CuTypeFactory extends AbstractParameterFactory {
         CuType cuType
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, CuType)) {
             cuType = value
-        }
-        else {
-			switch(value) {
-				case CuType.GROUP.value:
-					cuType = CuType.GROUP
-					break
-				case CuType.INDIVIDUAL.value:
-					cuType = CuType.INDIVIDUAL
-					break
-				case CuType.RESOURCE.value:
-					cuType = CuType.RESOURCE
-					break
-				case CuType.ROOM.value:
-					cuType = CuType.ROOM
-					break
-				default:
-					cuType = new CuType(value)
-			}
+        } else {
+            switch (value) {
+                case CuType.GROUP.value:
+                    cuType = CuType.GROUP
+                    break
+                case CuType.INDIVIDUAL.value:
+                    cuType = CuType.INDIVIDUAL
+                    break
+                case CuType.RESOURCE.value:
+                    cuType = CuType.RESOURCE
+                    break
+                case CuType.ROOM.value:
+                    cuType = CuType.ROOM
+                    break
+                default:
+                    cuType = new CuType(value)
+            }
         }
         return cuType
     }

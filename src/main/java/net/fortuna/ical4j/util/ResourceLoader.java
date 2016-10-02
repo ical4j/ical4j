@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -42,47 +42,47 @@ import java.net.URL;
  */
 public class ResourceLoader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ResourceLoader.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ResourceLoader.class);
 
-    /**
-     * Load a resource via the thread context classloader. If security permissions don't allow
-     * this fallback to loading via current classloader.
-     *
-     * @param name a resource name
-     * @return a {@link URL} or null if resource is not found
-     */
-    public static URL getResource(String name) {
-        URL resource = null;
-        try {
-            if (Thread.currentThread().getContextClassLoader() != null) {
-                resource = Thread.currentThread().getContextClassLoader().getResource(name);
-            }
-        } catch (SecurityException e) {
-            LOG.info("Unable to access context classloader, using default. " + e.getMessage());
-        }
-        if (resource == null) {
-            resource = ResourceLoader.class.getResource("/" + name);
-        }
-        return resource;
+  /**
+   * Load a resource via the thread context classloader. If security permissions don't allow
+   * this fallback to loading via current classloader.
+   *
+   * @param name a resource name
+   * @return a {@link URL} or null if resource is not found
+   */
+  public static URL getResource(String name) {
+    URL resource = null;
+    try {
+      if (Thread.currentThread().getContextClassLoader() != null) {
+        resource = Thread.currentThread().getContextClassLoader().getResource(name);
+      }
+    } catch (SecurityException e) {
+      LOG.info("Unable to access context classloader, using default. " + e.getMessage());
     }
+    if (resource == null) {
+      resource = ResourceLoader.class.getResource("/" + name);
+    }
+    return resource;
+  }
 
-    /**
-     * Load a resource via the thread context classloader. If security permissions don't allow
-     * this fallback to loading via current classloader.
-     *
-     * @param name a resource name
-     * @return an {@link InputStream} or null if resource is not found
-     */
-    public static InputStream getResourceAsStream(String name) {
-        InputStream stream = null;
-        try {
-            stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
-        } catch (SecurityException e) {
-            LOG.info("Unable to access context classloader, using default. " + e.getMessage());
-        }
-        if (stream == null) {
-            stream = ResourceLoader.class.getResourceAsStream("/" + name);
-        }
-        return stream;
+  /**
+   * Load a resource via the thread context classloader. If security permissions don't allow
+   * this fallback to loading via current classloader.
+   *
+   * @param name a resource name
+   * @return an {@link InputStream} or null if resource is not found
+   */
+  public static InputStream getResourceAsStream(String name) {
+    InputStream stream = null;
+    try {
+      stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+    } catch (SecurityException e) {
+      LOG.info("Unable to access context classloader, using default. " + e.getMessage());
     }
+    if (stream == null) {
+      stream = ResourceLoader.class.getResourceAsStream("/" + name);
+    }
+    return stream;
+  }
 }

@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -50,50 +50,49 @@ import java.net.URISyntaxException;
  */
 public class AltRep extends Parameter {
 
-    private static final long serialVersionUID = -2445932592596993470L;
+  private static final long serialVersionUID = -2445932592596993470L;
 
-    private URI uri;
+  private URI uri;
 
-    /**
-     * @param aValue a string representation of an alternate text represenation
-     * @throws URISyntaxException when the specified string is not a value (quoted) uri
-     */
-    public AltRep(final String aValue) throws URISyntaxException {
-        this(Uris.create(Strings.unquote(aValue)));
+  /**
+   * @param aValue a string representation of an alternate text represenation
+   * @throws URISyntaxException when the specified string is not a value (quoted) uri
+   */
+  public AltRep(final String aValue) throws URISyntaxException {
+    this(Uris.create(Strings.unquote(aValue)));
+  }
+
+  /**
+   * @param aUri a URI representing an alternate text representation
+   */
+  public AltRep(final URI aUri) {
+    super(ALTREP, ParameterFactoryImpl.getInstance());
+    this.uri = aUri;
+  }
+
+  /**
+   * @return Returns the uri.
+   */
+  public final URI getUri() {
+    return uri;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return Uris.decode(Strings.valueOf(getUri()));
+  }
+
+  public static class Factory extends Content.Factory implements ParameterFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(ALTREP);
     }
 
-    /**
-     * @param aUri a URI representing an alternate text representation
-     */
-    public AltRep(final URI aUri) {
-        super(ALTREP, ParameterFactoryImpl.getInstance());
-        this.uri = aUri;
+    public Parameter createParameter(final String value) throws URISyntaxException {
+      return new AltRep(value);
     }
-
-    /**
-     * @return Returns the uri.
-     */
-    public final URI getUri() {
-        return uri;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return Uris.decode(Strings.valueOf(getUri()));
-    }
-
-    public static class Factory extends Content.Factory implements ParameterFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(ALTREP);
-        }
-
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            return new AltRep(value);
-        }
-    }
-
+  }
 }

@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -119,420 +119,420 @@ import java.util.List;
  */
 public class HCalendarParser implements CalendarParser {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HCalendarParser.class);
+  private static final Logger LOG = LoggerFactory.getLogger(HCalendarParser.class);
 
-    private static final DocumentBuilderFactory BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
-    private static final XPath XPATH = XPathFactory.newInstance().newXPath();
-    private static final XPathExpression XPATH_METHOD;
-    private static final XPathExpression XPATH_VEVENTS;
-    private static final XPathExpression XPATH_DTSTART;
-    private static final XPathExpression XPATH_DTEND;
-    private static final XPathExpression XPATH_DURATION;
-    private static final XPathExpression XPATH_SUMMARY;
-    private static final XPathExpression XPATH_UID;
-    private static final XPathExpression XPATH_DTSTAMP;
-    private static final XPathExpression XPATH_CATEGORY;
-    private static final XPathExpression XPATH_LOCATION;
-    private static final XPathExpression XPATH_URL;
-    private static final XPathExpression XPATH_DESCRIPTION;
-    private static final XPathExpression XPATH_LAST_MODIFIED;
-    private static final XPathExpression XPATH_STATUS;
-    private static final XPathExpression XPATH_CLASS;
-    private static final XPathExpression XPATH_ATTENDEE;
-    private static final XPathExpression XPATH_CONTACT;
-    private static final XPathExpression XPATH_ORGANIZER;
-    private static final XPathExpression XPATH_SEQUENCE;
-    private static final XPathExpression XPATH_ATTACH;
-    private static final String HCAL_DATE_PATTERN = "yyyy-MM-dd";
-    private static final SimpleDateFormat HCAL_DATE_FORMAT = new SimpleDateFormat(HCAL_DATE_PATTERN);
-    private static final String HCAL_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ssz";
-    private static final SimpleDateFormat HCAL_DATE_TIME_FORMAT = new SimpleDateFormat(HCAL_DATE_TIME_PATTERN);
+  private static final DocumentBuilderFactory BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+  private static final XPath XPATH = XPathFactory.newInstance().newXPath();
+  private static final XPathExpression XPATH_METHOD;
+  private static final XPathExpression XPATH_VEVENTS;
+  private static final XPathExpression XPATH_DTSTART;
+  private static final XPathExpression XPATH_DTEND;
+  private static final XPathExpression XPATH_DURATION;
+  private static final XPathExpression XPATH_SUMMARY;
+  private static final XPathExpression XPATH_UID;
+  private static final XPathExpression XPATH_DTSTAMP;
+  private static final XPathExpression XPATH_CATEGORY;
+  private static final XPathExpression XPATH_LOCATION;
+  private static final XPathExpression XPATH_URL;
+  private static final XPathExpression XPATH_DESCRIPTION;
+  private static final XPathExpression XPATH_LAST_MODIFIED;
+  private static final XPathExpression XPATH_STATUS;
+  private static final XPathExpression XPATH_CLASS;
+  private static final XPathExpression XPATH_ATTENDEE;
+  private static final XPathExpression XPATH_CONTACT;
+  private static final XPathExpression XPATH_ORGANIZER;
+  private static final XPathExpression XPATH_SEQUENCE;
+  private static final XPathExpression XPATH_ATTACH;
+  private static final String HCAL_DATE_PATTERN = "yyyy-MM-dd";
+  private static final SimpleDateFormat HCAL_DATE_FORMAT = new SimpleDateFormat(HCAL_DATE_PATTERN);
+  private static final String HCAL_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ssz";
+  private static final SimpleDateFormat HCAL_DATE_TIME_FORMAT = new SimpleDateFormat(HCAL_DATE_TIME_PATTERN);
 
-    static {
-        BUILDER_FACTORY.setNamespaceAware(true);
-        BUILDER_FACTORY.setIgnoringComments(true);
+  static {
+    BUILDER_FACTORY.setNamespaceAware(true);
+    BUILDER_FACTORY.setIgnoringComments(true);
 
-        XPATH_METHOD = compileExpression("//*[contains(@class, 'method')]");
-        XPATH_VEVENTS = compileExpression("//*[contains(@class, 'vevent')]");
-        XPATH_DTSTART = compileExpression(".//*[contains(@class, 'dtstart')]");
-        XPATH_DTEND = compileExpression(".//*[contains(@class, 'dtend')]");
-        XPATH_DURATION = compileExpression(".//*[contains(@class, 'duration')]");
-        XPATH_SUMMARY = compileExpression(".//*[contains(@class, 'summary')]");
-        XPATH_UID = compileExpression(".//*[contains(@class, 'uid')]");
-        XPATH_DTSTAMP = compileExpression(".//*[contains(@class, 'dtstamp')]");
-        XPATH_CATEGORY = compileExpression(".//*[contains(@class, 'category')]");
-        XPATH_LOCATION = compileExpression(".//*[contains(@class, 'location')]");
-        XPATH_URL = compileExpression(".//*[contains(@class, 'url')]");
-        XPATH_DESCRIPTION = compileExpression(".//*[contains(@class, 'description')]");
-        XPATH_LAST_MODIFIED = compileExpression(".//*[contains(@class, 'last-modified')]");
-        XPATH_STATUS = compileExpression(".//*[contains(@class, 'status')]");
-        XPATH_CLASS = compileExpression(".//*[contains(@class, 'class')]");
-        XPATH_ATTENDEE = compileExpression(".//*[contains(@class, 'attendee')]");
-        XPATH_CONTACT = compileExpression(".//*[contains(@class, 'contact')]");
-        XPATH_ORGANIZER = compileExpression(".//*[contains(@class, 'organizer')]");
-        XPATH_SEQUENCE = compileExpression(".//*[contains(@class, 'sequence')]");
-        XPATH_ATTACH = compileExpression(".//*[contains(@class, 'attach')]");
+    XPATH_METHOD = compileExpression("//*[contains(@class, 'method')]");
+    XPATH_VEVENTS = compileExpression("//*[contains(@class, 'vevent')]");
+    XPATH_DTSTART = compileExpression(".//*[contains(@class, 'dtstart')]");
+    XPATH_DTEND = compileExpression(".//*[contains(@class, 'dtend')]");
+    XPATH_DURATION = compileExpression(".//*[contains(@class, 'duration')]");
+    XPATH_SUMMARY = compileExpression(".//*[contains(@class, 'summary')]");
+    XPATH_UID = compileExpression(".//*[contains(@class, 'uid')]");
+    XPATH_DTSTAMP = compileExpression(".//*[contains(@class, 'dtstamp')]");
+    XPATH_CATEGORY = compileExpression(".//*[contains(@class, 'category')]");
+    XPATH_LOCATION = compileExpression(".//*[contains(@class, 'location')]");
+    XPATH_URL = compileExpression(".//*[contains(@class, 'url')]");
+    XPATH_DESCRIPTION = compileExpression(".//*[contains(@class, 'description')]");
+    XPATH_LAST_MODIFIED = compileExpression(".//*[contains(@class, 'last-modified')]");
+    XPATH_STATUS = compileExpression(".//*[contains(@class, 'status')]");
+    XPATH_CLASS = compileExpression(".//*[contains(@class, 'class')]");
+    XPATH_ATTENDEE = compileExpression(".//*[contains(@class, 'attendee')]");
+    XPATH_CONTACT = compileExpression(".//*[contains(@class, 'contact')]");
+    XPATH_ORGANIZER = compileExpression(".//*[contains(@class, 'organizer')]");
+    XPATH_SEQUENCE = compileExpression(".//*[contains(@class, 'sequence')]");
+    XPATH_ATTACH = compileExpression(".//*[contains(@class, 'attach')]");
+  }
+
+  private static XPathExpression compileExpression(String expr) {
+    try {
+      return XPATH.compile(expr);
+    } catch (XPathException e) {
+      throw new CalendarException(e);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void parse(InputStream in, ContentHandler handler) throws IOException, ParserException {
+    parse(new InputSource(in), handler);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void parse(Reader in, ContentHandler handler) throws IOException, ParserException {
+    parse(new InputSource(in), handler);
+  }
+
+  private void parse(InputSource in, ContentHandler handler) throws IOException, ParserException {
+    try {
+      Document d = BUILDER_FACTORY.newDocumentBuilder().parse(in);
+      buildCalendar(d, handler);
+    } catch (ParserConfigurationException e) {
+      throw new CalendarException(e);
+    } catch (SAXException e) {
+      if (e instanceof SAXParseException) {
+        SAXParseException pe = (SAXParseException) e;
+        throw new ParserException("Could not parse XML", pe.getLineNumber(), e);
+      }
+      throw new ParserException(e.getMessage(), -1, e);
+    }
+  }
+
+  private static NodeList findNodes(XPathExpression expr, Object context) throws ParserException {
+    try {
+      return (NodeList) expr.evaluate(context, XPathConstants.NODESET);
+    } catch (XPathException e) {
+      throw new ParserException("Unable to find nodes", -1, e);
+    }
+  }
+
+  private static Node findNode(XPathExpression expr, Object context) throws ParserException {
+    try {
+      return (Node) expr.evaluate(context, XPathConstants.NODE);
+    } catch (XPathException e) {
+      throw new ParserException("Unable to find node", -1, e);
+    }
+  }
+
+  private static List<Element> findElements(XPathExpression expr, Object context) throws ParserException {
+    NodeList nodes = findNodes(expr, context);
+    List<Element> elements = new ArrayList<Element>();
+    for (int i = 0; i < nodes.getLength(); i++) {
+      Node n = nodes.item(i);
+      if (n instanceof Element)
+        elements.add((Element) n);
+    }
+    return elements;
+  }
+
+  private static Element findElement(XPathExpression expr, Object context) throws ParserException {
+    Node n = findNode(expr, context);
+    if (n == null || (!(n instanceof Element)))
+      return null;
+    return (Element) n;
+  }
+
+  private static String getTextContent(Element element) throws ParserException {
+    try {
+      String content = element.getFirstChild().getNodeValue();
+      if (content != null) {
+        return content.trim().replaceAll("\\s+", " ");
+      }
+      return null;
+    } catch (DOMException e) {
+      throw new ParserException("Unable to get text content for element " + element.getNodeName(), -1, e);
+    }
+  }
+
+  private void buildCalendar(Document d, ContentHandler handler) throws ParserException {
+    // "The root class name for hCalendar is "vcalendar". An element with a
+    // class name of "vcalendar" is itself called an hCalendar.
+    //
+    // The root class name for events is "vevent". An element with a class
+    // name of "vevent" is itself called an hCalender event.
+    //
+    // For authoring convenience, both "vevent" and "vcalendar" are
+    // treated as root class names for parsing purposes. If a document
+    // contains elements with class name "vevent" but not "vcalendar", the
+    // entire document has an implied "vcalendar" context."
+
+    // XXX: We assume that the entire document has a single vcalendar
+    // context. It is possible that the document contains more than one
+    // vcalendar element. In this case, we should probably only process
+    // that element and log a warning about skipping the others.
+
+    if (LOG.isDebugEnabled())
+      LOG.debug("Building calendar");
+
+    handler.startCalendar();
+
+    // no PRODID, as the using application should set that itself
+
+    handler.startProperty(Property.VERSION);
+    try {
+      handler.propertyValue(Version.VERSION_2_0.getValue());
+    } catch (Exception e) {
+    }
+    handler.endProperty(Property.VERSION);
+
+    Element method = findElement(XPATH_METHOD, d);
+    if (method != null) {
+      buildProperty(method, Property.METHOD, handler);
     }
 
-    private static XPathExpression compileExpression(String expr) {
-        try {
-            return XPATH.compile(expr);
-        } catch (XPathException e) {
-            throw new CalendarException(e);
-        }
+    List<Element> vevents = findElements(XPATH_VEVENTS, d);
+    for (Element vevent : vevents) {
+      buildEvent(vevent, handler);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void parse(InputStream in, ContentHandler handler) throws IOException, ParserException {
-        parse(new InputSource(in), handler);
+    // XXX: support other "first class components": vjournal, vtodo,
+    // vfreebusy, vavailability, vvenue
+
+    handler.endCalendar();
+  }
+
+  private void buildEvent(Element element, ContentHandler handler) throws ParserException {
+    if (LOG.isDebugEnabled())
+      LOG.debug("Building event");
+
+    handler.startComponent(Component.VEVENT);
+
+    buildProperty(findElement(XPATH_DTSTART, element), Property.DTSTART, handler);
+    buildProperty(findElement(XPATH_DTEND, element), Property.DTEND, handler);
+    buildProperty(findElement(XPATH_DURATION, element), Property.DURATION, handler);
+    buildProperty(findElement(XPATH_SUMMARY, element), Property.SUMMARY, handler);
+    buildProperty(findElement(XPATH_UID, element), Property.UID, handler);
+    buildProperty(findElement(XPATH_DTSTAMP, element), Property.DTSTAMP, handler);
+    List<Element> categories = findElements(XPATH_CATEGORY, element);
+    for (Element category : categories) {
+      buildProperty(category, Property.CATEGORIES, handler);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void parse(Reader in, ContentHandler handler) throws IOException, ParserException {
-        parse(new InputSource(in), handler);
+    buildProperty(findElement(XPATH_LOCATION, element), Property.LOCATION, handler);
+    buildProperty(findElement(XPATH_URL, element), Property.URL, handler);
+    buildProperty(findElement(XPATH_DESCRIPTION, element), Property.DESCRIPTION, handler);
+    buildProperty(findElement(XPATH_LAST_MODIFIED, element), Property.LAST_MODIFIED, handler);
+    buildProperty(findElement(XPATH_STATUS, element), Property.STATUS, handler);
+    buildProperty(findElement(XPATH_CLASS, element), Property.CLASS, handler);
+    List<Element> attendees = findElements(XPATH_ATTENDEE, element);
+    for (Element attendee : attendees) {
+      buildProperty(attendee, Property.ATTENDEE, handler);
     }
+    buildProperty(findElement(XPATH_CONTACT, element), Property.CONTACT, handler);
+    buildProperty(findElement(XPATH_ORGANIZER, element), Property.ORGANIZER, handler);
+    buildProperty(findElement(XPATH_SEQUENCE, element), Property.SEQUENCE, handler);
+    buildProperty(findElement(XPATH_ATTACH, element), Property.ATTACH, handler);
 
-    private void parse(InputSource in, ContentHandler handler) throws IOException, ParserException {
-        try {
-            Document d = BUILDER_FACTORY.newDocumentBuilder().parse(in);
-            buildCalendar(d, handler);
-        } catch (ParserConfigurationException e) {
-            throw new CalendarException(e);
-        } catch (SAXException e) {
-            if (e instanceof SAXParseException) {
-                SAXParseException pe = (SAXParseException) e;
-                throw new ParserException("Could not parse XML", pe.getLineNumber(), e);
-            }
-            throw new ParserException(e.getMessage(), -1, e);
-        }
-    }
+    handler.endComponent(Component.VEVENT);
+  }
 
-    private static NodeList findNodes(XPathExpression expr, Object context) throws ParserException {
-        try {
-            return (NodeList) expr.evaluate(context, XPathConstants.NODESET);
-        } catch (XPathException e) {
-            throw new ParserException("Unable to find nodes", -1, e);
-        }
-    }
+  private void buildProperty(Element element, String propName, ContentHandler handler) throws ParserException {
+    if (element == null)
+      return;
 
-    private static Node findNode(XPathExpression expr, Object context) throws ParserException {
-        try {
-            return (Node) expr.evaluate(context, XPathConstants.NODE);
-        } catch (XPathException e) {
-            throw new ParserException("Unable to find node", -1, e);
-        }
-    }
+    if (LOG.isDebugEnabled())
+      LOG.debug("Building property " + propName);
 
-    private static List<Element> findElements(XPathExpression expr, Object context) throws ParserException {
-        NodeList nodes = findNodes(expr, context);
-        List<Element> elements = new ArrayList<Element>();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node n = nodes.item(i);
-            if (n instanceof Element)
-                elements.add((Element) n);
-        }
-        return elements;
-    }
+    String className = className(propName);
+    String elementName = element.getLocalName().toLowerCase();
 
-    private static Element findElement(XPathExpression expr, Object context) throws ParserException {
-        Node n = findNode(expr, context);
-        if (n == null || (!(n instanceof Element)))
-            return null;
-        return (Element) n;
-    }
-
-    private static String getTextContent(Element element) throws ParserException {
-        try {
-            String content = element.getFirstChild().getNodeValue();
-            if (content != null) {
-                return content.trim().replaceAll("\\s+", " ");
-            }
-            return null;
-        } catch (DOMException e) {
-            throw new ParserException("Unable to get text content for element " + element.getNodeName(), -1, e);
-        }
-    }
-
-    private void buildCalendar(Document d, ContentHandler handler) throws ParserException {
-        // "The root class name for hCalendar is "vcalendar". An element with a
-        // class name of "vcalendar" is itself called an hCalendar.
-        //
-        // The root class name for events is "vevent". An element with a class
-        // name of "vevent" is itself called an hCalender event.
-        //
-        // For authoring convenience, both "vevent" and "vcalendar" are
-        // treated as root class names for parsing purposes. If a document
-        // contains elements with class name "vevent" but not "vcalendar", the
-        // entire document has an implied "vcalendar" context."
-
-        // XXX: We assume that the entire document has a single vcalendar
-        // context. It is possible that the document contains more than one
-        // vcalendar element. In this case, we should probably only process
-        // that element and log a warning about skipping the others.
-
+    String value;
+    if (elementName.equals("abbr")) {
+      // "If an <abbr> element is used for a property, then the 'title'
+      // attribute of the <abbr> element is the value of the property,
+      // instead of the contents of the element, which instead provide a
+      // human presentable version of the value."
+      value = element.getAttribute("title");
+      if (StringUtils.isBlank(value))
+        throw new ParserException("Abbr element '" + className + "' requires a non-empty title", -1);
+      if (LOG.isDebugEnabled())
+        LOG.debug("Setting value '" + value + "' from title attribute");
+    } else if (isHeaderElement(elementName)) {
+      // try title first. if that's not set, fall back to text content.
+      value = element.getAttribute("title");
+      if (!StringUtils.isBlank(value)) {
         if (LOG.isDebugEnabled())
-            LOG.debug("Building calendar");
+          LOG.debug("Setting value '" + value + "' from title attribute");
+      } else {
+        value = getTextContent(element);
+        if (LOG.isDebugEnabled())
+          LOG.debug("Setting value '" + value + "' from text content");
+      }
+    } else if (elementName.equals("a") && isUrlProperty(propName)) {
+      value = element.getAttribute("href");
+      if (StringUtils.isBlank(value))
+        throw new ParserException("A element '" + className + "' requires a non-empty href", -1);
+      if (LOG.isDebugEnabled())
+        LOG.debug("Setting value '" + value + "' from href attribute");
+    } else if (elementName.equals("img")) {
+      if (isUrlProperty(propName)) {
+        value = element.getAttribute("src");
+        if (StringUtils.isBlank(value))
+          throw new ParserException("Img element '" + className + "' requires a non-empty src", -1);
+        if (LOG.isDebugEnabled())
+          LOG.debug("Setting value '" + value + "' from src attribute");
+      } else {
+        value = element.getAttribute("alt");
+        if (StringUtils.isBlank(value))
+          throw new ParserException("Img element '" + className + "' requires a non-empty alt", -1);
+        if (LOG.isDebugEnabled())
+          LOG.debug("Setting value '" + value + "' from alt attribute");
+      }
+    } else {
+      value = getTextContent(element);
+      if (!StringUtils.isBlank(value)) {
+        if (LOG.isDebugEnabled())
+          LOG.debug("Setting value '" + value + "' from text content");
+      }
+    }
 
-        handler.startCalendar();
+    if (StringUtils.isBlank(value)) {
+      if (LOG.isDebugEnabled())
+        LOG.debug("Skipping property with empty value");
+      return;
+    }
 
-        // no PRODID, as the using application should set that itself
+    handler.startProperty(propName);
 
-        handler.startProperty(Property.VERSION);
+    // if it's a date property, we have to convert from the
+    // hCalendar-formatted date (RFC 3339) to an iCalendar-formatted date
+    if (isDateProperty(propName)) {
+      try {
+        Date date = icalDate(value);
+        value = date.toString();
+
+        if (!(date instanceof DateTime))
+          try {
+            handler.parameter(Parameter.VALUE, Value.DATE.getValue());
+          } catch (Exception e) {
+          }
+      } catch (ParseException e) {
+        throw new ParserException("Malformed date value for element '" + className + "'", -1, e);
+      }
+    }
+
+    if (isTextProperty(propName)) {
+      String lang = element.getAttributeNS(XMLConstants.XML_NS_URI, "lang");
+      if (!StringUtils.isBlank(lang))
         try {
-            handler.propertyValue(Version.VERSION_2_0.getValue());
+          handler.parameter(Parameter.LANGUAGE, lang);
         } catch (Exception e) {
         }
-        handler.endProperty(Property.VERSION);
-
-        Element method = findElement(XPATH_METHOD, d);
-        if (method != null) {
-            buildProperty(method, Property.METHOD, handler);
-        }
-
-        List<Element> vevents = findElements(XPATH_VEVENTS, d);
-        for (Element vevent : vevents) {
-            buildEvent(vevent, handler);
-        }
-
-        // XXX: support other "first class components": vjournal, vtodo,
-        // vfreebusy, vavailability, vvenue
-
-        handler.endCalendar();
     }
 
-    private void buildEvent(Element element, ContentHandler handler) throws ParserException {
-        if (LOG.isDebugEnabled())
-            LOG.debug("Building event");
+    // XXX: other parameters?
 
-        handler.startComponent(Component.VEVENT);
-
-        buildProperty(findElement(XPATH_DTSTART, element), Property.DTSTART, handler);
-        buildProperty(findElement(XPATH_DTEND, element), Property.DTEND, handler);
-        buildProperty(findElement(XPATH_DURATION, element), Property.DURATION, handler);
-        buildProperty(findElement(XPATH_SUMMARY, element), Property.SUMMARY, handler);
-        buildProperty(findElement(XPATH_UID, element), Property.UID, handler);
-        buildProperty(findElement(XPATH_DTSTAMP, element), Property.DTSTAMP, handler);
-        List<Element> categories = findElements(XPATH_CATEGORY, element);
-        for (Element category : categories) {
-            buildProperty(category, Property.CATEGORIES, handler);
-        }
-        buildProperty(findElement(XPATH_LOCATION, element), Property.LOCATION, handler);
-        buildProperty(findElement(XPATH_URL, element), Property.URL, handler);
-        buildProperty(findElement(XPATH_DESCRIPTION, element), Property.DESCRIPTION, handler);
-        buildProperty(findElement(XPATH_LAST_MODIFIED, element), Property.LAST_MODIFIED, handler);
-        buildProperty(findElement(XPATH_STATUS, element), Property.STATUS, handler);
-        buildProperty(findElement(XPATH_CLASS, element), Property.CLASS, handler);
-        List<Element> attendees = findElements(XPATH_ATTENDEE, element);
-        for (Element attendee : attendees) {
-            buildProperty(attendee, Property.ATTENDEE, handler);
-        }
-        buildProperty(findElement(XPATH_CONTACT, element), Property.CONTACT, handler);
-        buildProperty(findElement(XPATH_ORGANIZER, element), Property.ORGANIZER, handler);
-        buildProperty(findElement(XPATH_SEQUENCE, element), Property.SEQUENCE, handler);
-        buildProperty(findElement(XPATH_ATTACH, element), Property.ATTACH, handler);
-
-        handler.endComponent(Component.VEVENT);
+    try {
+      handler.propertyValue(value);
+    } catch (URISyntaxException e) {
+      throw new ParserException("Malformed URI value for element '" + className + "'", -1, e);
+    } catch (ParseException e) {
+      throw new ParserException("Malformed value for element '" + className + "'", -1, e);
+    } catch (IOException e) {
+      throw new CalendarException(e);
     }
 
-    private void buildProperty(Element element, String propName, ContentHandler handler) throws ParserException {
-        if (element == null)
-            return;
+    handler.endProperty(propName);
+  }
 
-        if (LOG.isDebugEnabled())
-            LOG.debug("Building property " + propName);
-
-        String className = className(propName);
-        String elementName = element.getLocalName().toLowerCase();
-
-        String value;
-        if (elementName.equals("abbr")) {
-            // "If an <abbr> element is used for a property, then the 'title'
-            // attribute of the <abbr> element is the value of the property,
-            // instead of the contents of the element, which instead provide a
-            // human presentable version of the value."
-            value = element.getAttribute("title");
-            if (StringUtils.isBlank(value))
-                throw new ParserException("Abbr element '" + className + "' requires a non-empty title", -1);
-            if (LOG.isDebugEnabled())
-                LOG.debug("Setting value '" + value + "' from title attribute");
-        } else if (isHeaderElement(elementName)) {
-            // try title first. if that's not set, fall back to text content.
-            value = element.getAttribute("title");
-            if (!StringUtils.isBlank(value)) {
-                if (LOG.isDebugEnabled())
-                    LOG.debug("Setting value '" + value + "' from title attribute");
-            } else {
-                value = getTextContent(element);
-                if (LOG.isDebugEnabled())
-                    LOG.debug("Setting value '" + value + "' from text content");
-            }
-        } else if (elementName.equals("a") && isUrlProperty(propName)) {
-            value = element.getAttribute("href");
-            if (StringUtils.isBlank(value))
-                throw new ParserException("A element '" + className + "' requires a non-empty href", -1);
-            if (LOG.isDebugEnabled())
-                LOG.debug("Setting value '" + value + "' from href attribute");
-        } else if (elementName.equals("img")) {
-            if (isUrlProperty(propName)) {
-                value = element.getAttribute("src");
-                if (StringUtils.isBlank(value))
-                    throw new ParserException("Img element '" + className + "' requires a non-empty src", -1);
-                if (LOG.isDebugEnabled())
-                    LOG.debug("Setting value '" + value + "' from src attribute");
-            } else {
-                value = element.getAttribute("alt");
-                if (StringUtils.isBlank(value))
-                    throw new ParserException("Img element '" + className + "' requires a non-empty alt", -1);
-                if (LOG.isDebugEnabled())
-                    LOG.debug("Setting value '" + value + "' from alt attribute");
-            }
-        } else {
-            value = getTextContent(element);
-            if (!StringUtils.isBlank(value)) {
-                if (LOG.isDebugEnabled())
-                    LOG.debug("Setting value '" + value + "' from text content");
-            }
-        }
-
-        if (StringUtils.isBlank(value)) {
-            if (LOG.isDebugEnabled())
-                LOG.debug("Skipping property with empty value");
-            return;
-        }
-
-        handler.startProperty(propName);
-
-        // if it's a date property, we have to convert from the
-        // hCalendar-formatted date (RFC 3339) to an iCalendar-formatted date
-        if (isDateProperty(propName)) {
-            try {
-                Date date = icalDate(value);
-                value = date.toString();
-
-                if (!(date instanceof DateTime))
-                    try {
-                        handler.parameter(Parameter.VALUE, Value.DATE.getValue());
-                    } catch (Exception e) {
-                    }
-            } catch (ParseException e) {
-                throw new ParserException("Malformed date value for element '" + className + "'", -1, e);
-            }
-        }
-
-        if (isTextProperty(propName)) {
-            String lang = element.getAttributeNS(XMLConstants.XML_NS_URI, "lang");
-            if (!StringUtils.isBlank(lang))
-                try {
-                    handler.parameter(Parameter.LANGUAGE, lang);
-                } catch (Exception e) {
-                }
-        }
-
-        // XXX: other parameters?
-
-        try {
-            handler.propertyValue(value);
-        } catch (URISyntaxException e) {
-            throw new ParserException("Malformed URI value for element '" + className + "'", -1, e);
-        } catch (ParseException e) {
-            throw new ParserException("Malformed value for element '" + className + "'", -1, e);
-        } catch (IOException e) {
-            throw new CalendarException(e);
-        }
-
-        handler.endProperty(propName);
-    }
-
-    // "The basic format of hCalendar is to use iCalendar object/property
-    // names in lower-case for class names ..."
+  // "The basic format of hCalendar is to use iCalendar object/property
+  // names in lower-case for class names ..."
     /*
      * private static String _icalName(Element element) { return element.getAttribute("class").toUpperCase(); }
      */
 
-    private static String className(String propName) {
-        return propName.toLowerCase();
+  private static String className(String propName) {
+    return propName.toLowerCase();
+  }
+
+  private static boolean isHeaderElement(String name) {
+    return (name.equals("h1") || name.equals("h2") || name.equals("h3")
+        || name.equals("h4") || name.equals("h5") || name
+        .equals("h6"));
+  }
+
+  private static boolean isDateProperty(String name) {
+    return (name.equals(Property.DTSTART) || name.equals(Property.DTEND) || name.equals(Property.DTSTAMP) || name
+        .equals(Property.LAST_MODIFIED));
+  }
+
+  private static boolean isUrlProperty(String name) {
+    return (name.equals(Property.URL));
+  }
+
+  private static boolean isTextProperty(String name) {
+    return (name.equals(Property.SUMMARY) || name.equals(Property.LOCATION) || name.equals(Property.CATEGORIES)
+        || name.equals(Property.DESCRIPTION) || name.equals(Property.ATTENDEE)
+        || name.equals(Property.CONTACT) || name
+        .equals(Property.ORGANIZER));
+  }
+
+  private static Date icalDate(String original) throws ParseException {
+    // in the real world, some generators use iCalendar formatted
+    // dates and date-times, so try parsing those formats first before
+    // going to RFC 3339 formats
+
+    if (original.indexOf('T') == -1) {
+      // date-only
+      try {
+        // for some reason Date's pattern matches yyyy-MM-dd, so
+        // don't check it if we find -
+        if (original.indexOf('-') == -1)
+          return new Date(original);
+      } catch (Exception e) {
+      }
+      return new Date(HCAL_DATE_FORMAT.parse(original));
     }
 
-    private static boolean isHeaderElement(String name) {
-        return (name.equals("h1") || name.equals("h2") || name.equals("h3")
-                || name.equals("h4") || name.equals("h5") || name
-                .equals("h6"));
+    try {
+      return new DateTime(original);
+    } catch (Exception e) {
     }
 
-    private static boolean isDateProperty(String name) {
-        return (name.equals(Property.DTSTART) || name.equals(Property.DTEND) || name.equals(Property.DTSTAMP) || name
-                .equals(Property.LAST_MODIFIED));
+    // the date-time value can represent its time zone in a few different
+    // ways. we have to normalize those to match our pattern.
+
+    String normalized;
+
+    if (LOG.isDebugEnabled())
+      LOG.debug("normalizing date-time " + original);
+
+    // 2002-10-09T19:00:00Z
+    if (original.charAt(original.length() - 1) == 'Z') {
+      normalized = original.replaceAll("Z", "GMT-00:00");
+    }
+    // 2002-10-10T00:00:00+05:00
+    else if (!original.contains("GMT")
+        && (original.charAt(original.length() - 6) == '+' || original.charAt(original.length() - 6) == '-')) {
+      String tzId = "GMT" + original.substring(original.length() - 6);
+      normalized = original.substring(0, original.length() - 6) + tzId;
+    } else {
+      // 2002-10-10T00:00:00GMT+05:00
+      normalized = original;
     }
 
-    private static boolean isUrlProperty(String name) {
-        return (name.equals(Property.URL));
-    }
+    DateTime dt = new DateTime(HCAL_DATE_TIME_FORMAT.parse(normalized));
 
-    private static boolean isTextProperty(String name) {
-        return (name.equals(Property.SUMMARY) || name.equals(Property.LOCATION) || name.equals(Property.CATEGORIES)
-                || name.equals(Property.DESCRIPTION) || name.equals(Property.ATTENDEE)
-                || name.equals(Property.CONTACT) || name
-                .equals(Property.ORGANIZER));
-    }
+    // hCalendar does not specify a representation for timezone ids
+    // or any other sort of timezone information. the best it does is
+    // give us a timezone offset that we can use to convert the local
+    // time to UTC. furthermore, it has no representation for floating
+    // date-times. therefore, all dates are converted to UTC.
 
-    private static Date icalDate(String original) throws ParseException {
-        // in the real world, some generators use iCalendar formatted
-        // dates and date-times, so try parsing those formats first before
-        // going to RFC 3339 formats
+    dt.setUtc(true);
 
-        if (original.indexOf('T') == -1) {
-            // date-only
-            try {
-                // for some reason Date's pattern matches yyyy-MM-dd, so
-                // don't check it if we find -
-                if (original.indexOf('-') == -1)
-                    return new Date(original);
-            } catch (Exception e) {
-            }
-            return new Date(HCAL_DATE_FORMAT.parse(original));
-        }
-
-        try {
-            return new DateTime(original);
-        } catch (Exception e) {
-        }
-
-        // the date-time value can represent its time zone in a few different
-        // ways. we have to normalize those to match our pattern.
-
-        String normalized;
-
-        if (LOG.isDebugEnabled())
-            LOG.debug("normalizing date-time " + original);
-
-        // 2002-10-09T19:00:00Z
-        if (original.charAt(original.length() - 1) == 'Z') {
-            normalized = original.replaceAll("Z", "GMT-00:00");
-        }
-        // 2002-10-10T00:00:00+05:00
-        else if (!original.contains("GMT")
-                && (original.charAt(original.length() - 6) == '+' || original.charAt(original.length() - 6) == '-')) {
-            String tzId = "GMT" + original.substring(original.length() - 6);
-            normalized = original.substring(0, original.length() - 6) + tzId;
-        } else {
-            // 2002-10-10T00:00:00GMT+05:00
-            normalized = original;
-        }
-
-        DateTime dt = new DateTime(HCAL_DATE_TIME_FORMAT.parse(normalized));
-
-        // hCalendar does not specify a representation for timezone ids
-        // or any other sort of timezone information. the best it does is
-        // give us a timezone offset that we can use to convert the local
-        // time to UTC. furthermore, it has no representation for floating
-        // date-times. therefore, all dates are converted to UTC.
-
-        dt.setUtc(true);
-
-        return dt;
-    }
+    return dt;
+  }
 }

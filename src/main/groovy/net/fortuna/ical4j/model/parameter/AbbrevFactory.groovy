@@ -42,8 +42,7 @@ class AbbrevFactory extends AbstractParameterFactory {
         Abbrev abbrev
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Abbrev)) {
             abbrev = value
-        }
-        else {
+        } else {
             abbrev = [value]
         }
         return abbrev

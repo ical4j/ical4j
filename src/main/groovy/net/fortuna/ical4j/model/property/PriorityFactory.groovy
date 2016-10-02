@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
 
 /**
@@ -42,54 +41,44 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class PriorityFactory extends AbstractPropertyFactory{
+public class PriorityFactory extends AbstractPropertyFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Priority instance
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Priority.class)) {
             instance = (Priority) value
-        }
-        else {
+        } else {
             String instanceValue = attributes.remove('value')
             if (instanceValue != null) {
                 if (Priority.HIGH.getValue().equals(instanceValue)) {
                     instance = Priority.HIGH
-                }
-                else if (Priority.MEDIUM.getValue().equals(instanceValue)) {
+                } else if (Priority.MEDIUM.getValue().equals(instanceValue)) {
                     instance = Priority.MEDIUM
-                }
-                else if (Priority.LOW.getValue().equals(instanceValue)) {
+                } else if (Priority.LOW.getValue().equals(instanceValue)) {
                     instance = Priority.LOW
-                }
-                else if (Priority.UNDEFINED.getValue().equals(instanceValue)) {
+                } else if (Priority.UNDEFINED.getValue().equals(instanceValue)) {
                     instance = Priority.UNDEFINED
-                }
-                else {
+                } else {
                     attributes.put('value', instanceValue)
                     instance = super.newInstance(builder, name, value, attributes)
                 }
-            }
-            else {
+            } else {
                 if (Priority.HIGH.getValue().equals(value)) {
                     instance = Priority.HIGH
-                }
-                else if (Priority.MEDIUM.getValue().equals(value)) {
+                } else if (Priority.MEDIUM.getValue().equals(value)) {
                     instance = Priority.MEDIUM
-                }
-                else if (Priority.LOW.getValue().equals(value)) {
+                } else if (Priority.LOW.getValue().equals(value)) {
                     instance = Priority.LOW
-                }
-                else if (Priority.UNDEFINED.getValue().equals(value)) {
+                } else if (Priority.UNDEFINED.getValue().equals(value)) {
                     instance = Priority.UNDEFINED
-                }
-                else {
+                } else {
                     instance = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
         return instance
     }
-    
+
     protected Object newInstance(ParameterList parameters, String value) {
         return new Priority(parameters, value)
     }

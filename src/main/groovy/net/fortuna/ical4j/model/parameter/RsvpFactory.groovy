@@ -41,18 +41,17 @@ class RsvpFactory extends AbstractParameterFactory {
         Rsvp rsvp
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Rsvp)) {
             rsvp = value
-        }
-        else {
-			switch(value) {
-				case Rsvp.FALSE.value:
-					rsvp = Rsvp.FALSE
-					break
-				case Rsvp.TRUE.value:
-		            rsvp = Rsvp.TRUE
-					break
-				default:
-		            rsvp = [value]
-	        }
+        } else {
+            switch (value) {
+                case Rsvp.FALSE.value:
+                    rsvp = Rsvp.FALSE
+                    break
+                case Rsvp.TRUE.value:
+                    rsvp = Rsvp.TRUE
+                    break
+                default:
+                    rsvp = [value]
+            }
         }
         return rsvp
     }

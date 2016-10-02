@@ -45,18 +45,16 @@ class CalendarFactory extends AbstractFactory {
         Calendar calendar
         if (FactoryBuilderSupport.checkValueIsType(value, name, Calendar)) {
             calendar = value
-        }
-        else {
+        } else {
             calendar = []
         }
         return calendar
     }
- 
+
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof Property) {
             parent.properties.add(child)
-        }
-        else if (child instanceof Component) {
+        } else if (child instanceof Component) {
             parent.components.add(child)
         }
     }

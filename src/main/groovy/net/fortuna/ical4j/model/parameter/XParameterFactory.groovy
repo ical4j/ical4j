@@ -41,8 +41,7 @@ class XParameterFactory extends AbstractParameterFactory {
         XParameter parameter
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XParameter)) {
             parameter = value
-        }
-        else {
+        } else {
             def paramName = attributes.remove('name')
             if (paramName == null) {
                 paramName = value

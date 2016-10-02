@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.property.Uid;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$

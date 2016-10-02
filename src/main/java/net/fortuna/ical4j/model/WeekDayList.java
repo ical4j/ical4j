@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -42,57 +42,56 @@ import java.util.StringTokenizer;
  * $Id$ [29-May-2004]
  *
  * Defines a list of days.
- * 
+ *
  * @author Ben Fortuna
  */
 public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
-    
-    private static final long serialVersionUID = 1243262497035300445L;
 
-    /**
-     * Default constructor.
-     */
-    public WeekDayList() {
-    }
+  private static final long serialVersionUID = 1243262497035300445L;
 
-    /**
-     * Creates a new instance with the specified initial capacity.
-     * @param initialCapacity the initial capacity of the list
-     */
-    public WeekDayList(final int initialCapacity) {
-        super(initialCapacity);
-    }
+  /**
+   * Default constructor.
+   */
+  public WeekDayList() {
+  }
 
-    /**
-     * Constructor.
-     * @param aString a string representation of a day list
-     */
-    public WeekDayList(final String aString) {
-        final boolean outlookCompatibility =
-            CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
-        
-        final StringTokenizer t = new StringTokenizer(aString, ",");
-        while (t.hasMoreTokens()) {
-            if (outlookCompatibility) {
-                add(new WeekDay(t.nextToken().replaceAll(" ", "")));
-            }
-            else {
-                add(new WeekDay(t.nextToken()));
-            }
-        }
-    }
+  /**
+   * Creates a new instance with the specified initial capacity.
+   * @param initialCapacity the initial capacity of the list
+   */
+  public WeekDayList(final int initialCapacity) {
+    super(initialCapacity);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<WeekDay> i = iterator(); i.hasNext();) {
-            b.append(i.next());
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+  /**
+   * Constructor.
+   * @param aString a string representation of a day list
+   */
+  public WeekDayList(final String aString) {
+    final boolean outlookCompatibility =
+        CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
+
+    final StringTokenizer t = new StringTokenizer(aString, ",");
+    while (t.hasMoreTokens()) {
+      if (outlookCompatibility) {
+        add(new WeekDay(t.nextToken().replaceAll(" ", "")));
+      } else {
+        add(new WeekDay(t.nextToken()));
+      }
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String toString() {
+    final StringBuilder b = new StringBuilder();
+    for (final Iterator<WeekDay> i = iterator(); i.hasNext(); ) {
+      b.append(i.next());
+      if (i.hasNext()) {
+        b.append(',');
+      }
+    }
+    return b.toString();
+  }
 }

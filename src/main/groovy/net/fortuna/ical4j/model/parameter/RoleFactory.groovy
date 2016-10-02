@@ -41,24 +41,23 @@ class RoleFactory extends AbstractParameterFactory {
         Role role
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Role)) {
             role = value
-        }
-        else {
-			switch(value) {
-				case Role.CHAIR.value:
-					role = Role.CHAIR
-					break
-				case Role.NON_PARTICIPANT.value:
-		            role = Role.NON_PARTICIPANT
-					break
-				case Role.OPT_PARTICIPANT.value:
-		            role = Role.OPT_PARTICIPANT
-					break
-				case Role.REQ_PARTICIPANT.value:
-		            role = Role.REQ_PARTICIPANT
-					break
-				default:
-		            role = [value]
-	        }
+        } else {
+            switch (value) {
+                case Role.CHAIR.value:
+                    role = Role.CHAIR
+                    break
+                case Role.NON_PARTICIPANT.value:
+                    role = Role.NON_PARTICIPANT
+                    break
+                case Role.OPT_PARTICIPANT.value:
+                    role = Role.OPT_PARTICIPANT
+                    break
+                case Role.REQ_PARTICIPANT.value:
+                    role = Role.REQ_PARTICIPANT
+                    break
+                default:
+                    role = [value]
+            }
         }
         return role
     }

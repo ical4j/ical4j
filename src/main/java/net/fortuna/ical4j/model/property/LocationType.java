@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -49,104 +49,103 @@ import java.text.ParseException;
  */
 public class LocationType extends Property {
 
-    private static final long serialVersionUID = -3541686430899510312L;
+  private static final long serialVersionUID = -3541686430899510312L;
 
-    private LocationTypeList locationTypes;
+  private LocationTypeList locationTypes;
 
-    /**
-     * Default constructor.
-     */
-    public LocationType() {
-        super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
-        locationTypes = new LocationTypeList();
-    }
+  /**
+   * Default constructor.
+   */
+  public LocationType() {
+    super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
+    locationTypes = new LocationTypeList();
+  }
 
-    /**
-     * @param aValue a value string for this component
-     */
-    public LocationType(final String aValue) {
-        super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aValue a value string for this component
+   */
+  public LocationType(final String aValue) {
+    super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public LocationType(final ParameterList aList, final String aValue) {
-        super(LOCATION_TYPE, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public LocationType(final ParameterList aList, final String aValue) {
+    super(LOCATION_TYPE, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param cList a list of locationTypes
-     */
-    public LocationType(final LocationTypeList cList) {
-        super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
-        locationTypes = cList;
-    }
+  /**
+   * @param cList a list of locationTypes
+   */
+  public LocationType(final LocationTypeList cList) {
+    super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
+    locationTypes = cList;
+  }
 
-    /**
-     * @param aList a list of parameters for this component
-     * @param cList a list of locationTypes
-     */
-    public LocationType(final ParameterList aList, final LocationTypeList cList) {
-        super(LOCATION_TYPE, aList, PropertyFactoryImpl.getInstance());
-        locationTypes = cList;
-    }
+  /**
+   * @param aList a list of parameters for this component
+   * @param cList a list of locationTypes
+   */
+  public LocationType(final ParameterList aList, final LocationTypeList cList) {
+    super(LOCATION_TYPE, aList, PropertyFactoryImpl.getInstance());
+    locationTypes = cList;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        locationTypes = new LocationTypeList(aValue);
-    }
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    locationTypes = new LocationTypeList(aValue);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
 
         /*
          * ; the following is optional, ; but MUST NOT occur more than once (";" languageparam ) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
+        getParameters());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+  }
+
+  /**
+   * @return Returns the locationTypes.
+   */
+  public final LocationTypeList getLocationTypes() {
+    return locationTypes;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return getLocationTypes().toString();
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(LOCATION_TYPE);
     }
 
-    /**
-     * @return Returns the locationTypes.
-     */
-    public final LocationTypeList getLocationTypes() {
-        return locationTypes;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new LocationType(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return getLocationTypes().toString();
+    public Property createProperty() {
+      return new LocationType();
     }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(LOCATION_TYPE);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new LocationType(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new LocationType();
-        }
-    }
-
+  }
 }

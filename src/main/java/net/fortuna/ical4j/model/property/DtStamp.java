@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -85,70 +85,69 @@ import java.text.ParseException;
  */
 public class DtStamp extends UtcProperty {
 
-    private static final long serialVersionUID = 7581197869433744070L;
+  private static final long serialVersionUID = 7581197869433744070L;
 
-    /**
-     * Default constructor. Initialises the dateTime value to the time of instantiation.
-     */
-    public DtStamp() {
-        super(DTSTAMP, PropertyFactoryImpl.getInstance());
+  /**
+   * Default constructor. Initialises the dateTime value to the time of instantiation.
+   */
+  public DtStamp() {
+    super(DTSTAMP, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aValue a string representation of a DTSTAMP value
+   * @throws ParseException if the specified value is not a valid representation
+   */
+  public DtStamp(final String aValue) throws ParseException {
+    this(new ParameterList(), aValue);
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   * @throws ParseException where the specified value string is not a valid date-time/date representation
+   */
+  public DtStamp(final ParameterList aList, final String aValue)
+      throws ParseException {
+    super(DTSTAMP, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param aDate a date representing a date-time
+   */
+  public DtStamp(final DateTime aDate) {
+    super(DTSTAMP, PropertyFactoryImpl.getInstance());
+    // time must be in UTC..
+    aDate.setUtc(true);
+    setDate(aDate);
+  }
+
+  /**
+   * @param aList a list of parameters for this component
+   * @param aDate a date representing a date-time
+   */
+  public DtStamp(final ParameterList aList, final DateTime aDate) {
+    super(DTSTAMP, aList, PropertyFactoryImpl.getInstance());
+    // time must be in UTC..
+    aDate.setUtc(true);
+    setDate(aDate);
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(DTSTAMP);
     }
 
-    /**
-     * @param aValue a string representation of a DTSTAMP value
-     * @throws ParseException if the specified value is not a valid representation
-     */
-    public DtStamp(final String aValue) throws ParseException {
-        this(new ParameterList(), aValue);
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new DtStamp(parameters, value);
     }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
-     */
-    public DtStamp(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(DTSTAMP, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty() {
+      return new DtStamp();
     }
-
-    /**
-     * @param aDate a date representing a date-time
-     */
-    public DtStamp(final DateTime aDate) {
-        super(DTSTAMP, PropertyFactoryImpl.getInstance());
-        // time must be in UTC..
-        aDate.setUtc(true);
-        setDate(aDate);
-    }
-
-    /**
-     * @param aList a list of parameters for this component
-     * @param aDate a date representing a date-time
-     */
-    public DtStamp(final ParameterList aList, final DateTime aDate) {
-        super(DTSTAMP, aList, PropertyFactoryImpl.getInstance());
-        // time must be in UTC..
-        aDate.setUtc(true);
-        setDate(aDate);
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(DTSTAMP);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new DtStamp(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new DtStamp();
-        }
-    }
-
+  }
 }

@@ -20,13 +20,18 @@ apply plugin: 'osgi'
 apply plugin: 'maven'
 apply plugin: 'jacoco'
 apply plugin: 'signing'
+apply plugin: 'checkstyle'
 apply plugin: 'pl.allegro.tech.build.axion-release'
 apply from: 'gradle/dist.gradle'
 apply plugin: 'com.updateimpact.updateimpact'
 
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+checkstyleMain {
+    configFile = file("${project.projectDir}/etc/checkstyle.xml")
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 /*
 githubPages {
@@ -74,6 +79,8 @@ dependencies {
             'commons-io:commons-io:2.4',
             'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
             "org.slf4j:slf4j-log4j12:$slf4jVersion"
+
+    compile group: 'com.google.guava', name: 'guava', version: 'r05'
 }
 
 updateImpactSubmit {

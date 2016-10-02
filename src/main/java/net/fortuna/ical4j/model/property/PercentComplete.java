@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -48,95 +48,94 @@ import java.text.ParseException;
  */
 public class PercentComplete extends Property {
 
-    private static final long serialVersionUID = 7788138484983240112L;
+  private static final long serialVersionUID = 7788138484983240112L;
 
-    private int percentage;
+  private int percentage;
 
-    /**
-     * Default constructor.
-     */
-    public PercentComplete() {
-        super(PERCENT_COMPLETE, PropertyFactoryImpl.getInstance());
+  /**
+   * Default constructor.
+   */
+  public PercentComplete() {
+    super(PERCENT_COMPLETE, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public PercentComplete(final ParameterList aList, final String aValue) {
+    super(PERCENT_COMPLETE, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param aPercentage an int representation of a percentage
+   */
+  public PercentComplete(final int aPercentage) {
+    super(PERCENT_COMPLETE, PropertyFactoryImpl.getInstance());
+    percentage = aPercentage;
+  }
+
+  /**
+   * @param aList       a list of parameters for this component
+   * @param aPercentage an int representation of a percentage
+   */
+  public PercentComplete(final ParameterList aList, final int aPercentage) {
+    super(PERCENT_COMPLETE, aList, PropertyFactoryImpl.getInstance());
+    percentage = aPercentage;
+  }
+
+  /**
+   * @return Returns the percentage.
+   */
+  public final int getPercentage() {
+    return percentage;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    percentage = Integer.parseInt(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return String.valueOf(getPercentage());
+  }
+
+  /**
+   * @param percentage The percentage to set.
+   */
+  public final void setPercentage(final int percentage) {
+    this.percentage = percentage;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    if (percentage < 0 || percentage > 100) {
+      throw new ValidationException(getName() + " with invalid value: " + percentage);
+    }
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(PERCENT_COMPLETE);
     }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public PercentComplete(final ParameterList aList, final String aValue) {
-        super(PERCENT_COMPLETE, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new PercentComplete(parameters, value);
     }
 
-    /**
-     * @param aPercentage an int representation of a percentage
-     */
-    public PercentComplete(final int aPercentage) {
-        super(PERCENT_COMPLETE, PropertyFactoryImpl.getInstance());
-        percentage = aPercentage;
+    public Property createProperty() {
+      return new PercentComplete();
     }
-
-    /**
-     * @param aList       a list of parameters for this component
-     * @param aPercentage an int representation of a percentage
-     */
-    public PercentComplete(final ParameterList aList, final int aPercentage) {
-        super(PERCENT_COMPLETE, aList, PropertyFactoryImpl.getInstance());
-        percentage = aPercentage;
-    }
-
-    /**
-     * @return Returns the percentage.
-     */
-    public final int getPercentage() {
-        return percentage;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        percentage = Integer.parseInt(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return String.valueOf(getPercentage());
-    }
-
-    /**
-     * @param percentage The percentage to set.
-     */
-    public final void setPercentage(final int percentage) {
-        this.percentage = percentage;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        if (percentage < 0 || percentage > 100) {
-            throw new ValidationException(getName() + " with invalid value: " + percentage);
-        }
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(PERCENT_COMPLETE);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new PercentComplete(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new PercentComplete();
-        }
-    }
-
+  }
 }

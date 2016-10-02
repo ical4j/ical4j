@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -47,58 +47,57 @@ import java.util.ServiceLoader;
  */
 public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactory> {
 
-    private static final long serialVersionUID = -4034423507432249165L;
+  private static final long serialVersionUID = -4034423507432249165L;
 
-    private static ParameterFactoryImpl instance = new ParameterFactoryImpl();
+  private static ParameterFactoryImpl instance = new ParameterFactoryImpl();
 
-    protected ParameterFactoryImpl() {
-        super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()));
+  protected ParameterFactoryImpl() {
+    super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()));
+  }
+
+  /**
+   * @return Returns the instance.
+   */
+  public static ParameterFactoryImpl getInstance() {
+    return instance;
+  }
+
+  @Override
+  protected boolean factorySupports(ParameterFactory factory, String key) {
+    return factory.supports(key);
+  }
+
+  /**
+   * Creates a parameter.
+   *
+   * @param name  name of the parameter
+   * @param value a parameter value
+   * @return a component
+   * @throws URISyntaxException thrown when the specified string is not a valid representation of a URI for selected
+   *                            parameters
+   */
+  public Parameter createParameter(final String name, final String value)
+      throws URISyntaxException {
+    final ParameterFactory factory = getFactory(name);
+    Parameter parameter;
+    if (factory != null) {
+      parameter = factory.createParameter(value);
+    } else if (isExperimentalName(name)) {
+      parameter = new XParameter(name, value);
+    } else if (allowIllegalNames()) {
+      parameter = new XParameter(name, value);
+    } else {
+      throw new IllegalArgumentException(String.format("Unsupported parameter name: %s", name));
     }
+    return parameter;
+  }
 
-    /**
-     * @return Returns the instance.
-     */
-    public static ParameterFactoryImpl getInstance() {
-        return instance;
-    }
-
-    @Override
-    protected boolean factorySupports(ParameterFactory factory, String key) {
-        return factory.supports(key);
-    }
-
-    /**
-     * Creates a parameter.
-     *
-     * @param name  name of the parameter
-     * @param value a parameter value
-     * @return a component
-     * @throws URISyntaxException thrown when the specified string is not a valid representation of a URI for selected
-     *                            parameters
-     */
-    public Parameter createParameter(final String name, final String value)
-            throws URISyntaxException {
-        final ParameterFactory factory = getFactory(name);
-        Parameter parameter;
-        if (factory != null) {
-            parameter = factory.createParameter(value);
-        } else if (isExperimentalName(name)) {
-            parameter = new XParameter(name, value);
-        } else if (allowIllegalNames()) {
-            parameter = new XParameter(name, value);
-        } else {
-            throw new IllegalArgumentException(String.format("Unsupported parameter name: %s", name));
-        }
-        return parameter;
-    }
-
-    /**
-     * @param name
-     * @return
-     */
-    private boolean isExperimentalName(final String name) {
-        return name.startsWith(Parameter.EXPERIMENTAL_PREFIX)
-                && name.length() > Parameter.EXPERIMENTAL_PREFIX.length();
-    }
-
+  /**
+   * @param name
+   * @return
+   */
+  private boolean isExperimentalName(final String name) {
+    return name.startsWith(Parameter.EXPERIMENTAL_PREFIX)
+        && name.length() > Parameter.EXPERIMENTAL_PREFIX.length();
+  }
 }

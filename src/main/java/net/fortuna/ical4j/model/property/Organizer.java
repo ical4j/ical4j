@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -129,127 +129,126 @@ import java.text.ParseException;
  */
 public class Organizer extends Property {
 
-    private static final long serialVersionUID = -5216965653165090725L;
+  private static final long serialVersionUID = -5216965653165090725L;
 
-    private URI calAddress;
+  private URI calAddress;
 
-    /**
-     * Default constructor.
-     */
-    public Organizer() {
-        super(ORGANIZER, PropertyFactoryImpl.getInstance());
-    }
+  /**
+   * Default constructor.
+   */
+  public Organizer() {
+    super(ORGANIZER, PropertyFactoryImpl.getInstance());
+  }
 
-    /**
-     * Constructs a new instance with the specified value.
-     *
-     * @param value an organizer URI
-     * @throws URISyntaxException where the specified value is not a valid URI
-     */
-    public Organizer(String value) throws URISyntaxException {
-        super(ORGANIZER, PropertyFactoryImpl.getInstance());
-        setValue(value);
-    }
+  /**
+   * Constructs a new instance with the specified value.
+   *
+   * @param value an organizer URI
+   * @throws URISyntaxException where the specified value is not a valid URI
+   */
+  public Organizer(String value) throws URISyntaxException {
+    super(ORGANIZER, PropertyFactoryImpl.getInstance());
+    setValue(value);
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
-     */
-    public Organizer(final ParameterList aList, final String aValue)
-            throws URISyntaxException {
-        super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   * @throws URISyntaxException where the specified value string is not a valid uri
+   */
+  public Organizer(final ParameterList aList, final String aValue)
+      throws URISyntaxException {
+    super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param aUri a URI representation of a calendar address
-     */
-    public Organizer(final URI aUri) {
-        super(ORGANIZER, PropertyFactoryImpl.getInstance());
-        calAddress = aUri;
-    }
+  /**
+   * @param aUri a URI representation of a calendar address
+   */
+  public Organizer(final URI aUri) {
+    super(ORGANIZER, PropertyFactoryImpl.getInstance());
+    calAddress = aUri;
+  }
 
-    /**
-     * @param aList a list of parameters for this component
-     * @param aUri  a URI representation of a calendar address
-     */
-    public Organizer(final ParameterList aList, final URI aUri) {
-        super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
-        calAddress = aUri;
-    }
+  /**
+   * @param aList a list of parameters for this component
+   * @param aUri  a URI representation of a calendar address
+   */
+  public Organizer(final ParameterList aList, final URI aUri) {
+    super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
+    calAddress = aUri;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once (";" cnparam) / (";" dirparam) / (";"
          * sentbyparam) / (";" languageparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.CN,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.DIR,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.SENT_BY,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.CN,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.DIR,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.SENT_BY,
+        getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
+        getParameters());
 
         /* schedulestatus added for CalDAV scheduling
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_STATUS,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_STATUS,
+        getParameters());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+  }
+
+  /**
+   * @return Returns the calAddress.
+   */
+  public final URI getCalAddress() {
+    return calAddress;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) throws URISyntaxException {
+    calAddress = Uris.create(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return Uris.decode(Strings.valueOf(getCalAddress()));
+  }
+
+  /**
+   * @param calAddress The calAddress to set.
+   */
+  public final void setCalAddress(final URI calAddress) {
+    this.calAddress = calAddress;
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(ORGANIZER);
     }
 
-    /**
-     * @return Returns the calAddress.
-     */
-    public final URI getCalAddress() {
-        return calAddress;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Organizer(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) throws URISyntaxException {
-        calAddress = Uris.create(aValue);
+    public Property createProperty() {
+      return new Organizer();
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return Uris.decode(Strings.valueOf(getCalAddress()));
-    }
-
-    /**
-     * @param calAddress The calAddress to set.
-     */
-    public final void setCalAddress(final URI calAddress) {
-        this.calAddress = calAddress;
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(ORGANIZER);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Organizer(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Organizer();
-        }
-    }
-
+  }
 }

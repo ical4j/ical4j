@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -46,104 +46,104 @@ import java.util.ServiceLoader;
  */
 public final class ComponentFactoryImpl extends AbstractContentFactory<ComponentFactory> {
 
-    private static ComponentFactoryImpl instance = new ComponentFactoryImpl();
+  private static ComponentFactoryImpl instance = new ComponentFactoryImpl();
 
-    /**
-     * Constructor made private to prevent instantiation.
-     */
-    private ComponentFactoryImpl() {
-        super(ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader()));
-    }
+  /**
+   * Constructor made private to prevent instantiation.
+   */
+  private ComponentFactoryImpl() {
+    super(ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader()));
+  }
 
-    /**
-     * @return Returns the instance.
-     */
-    public static ComponentFactoryImpl getInstance() {
-        return instance;
-    }
+  /**
+   * @return Returns the instance.
+   */
+  public static ComponentFactoryImpl getInstance() {
+    return instance;
+  }
 
-    @Override
-    protected boolean factorySupports(ComponentFactory factory, String key) {
-        return factory.supports(key);
-    }
+  @Override
+  protected boolean factorySupports(ComponentFactory factory, String key) {
+    return factory.supports(key);
+  }
 
-    /**
-     * @param name a component name
-     * @return a new component instance of the specified type
-     */
-    public <T extends Component> T createComponent(final String name) {
-        Component component;
-        ComponentFactory factory = getFactory(name);
-        if (factory != null) {
-            component = factory.createComponent();
-        } else if (isExperimentalName(name)) {
-            component = new XComponent(name);
-        } else if (allowIllegalNames()) {
-            component = new XComponent(name);
-        } else {
-            throw new IllegalArgumentException("Unsupported component [" + name + "]");
-        }
-        return (T) component;
+  /**
+   * @param name a component name
+   * @return a new component instance of the specified type
+   */
+  public <T extends Component> T createComponent(final String name) {
+    Component component;
+    ComponentFactory factory = getFactory(name);
+    if (factory != null) {
+      component = factory.createComponent();
+    } else if (isExperimentalName(name)) {
+      component = new XComponent(name);
+    } else if (allowIllegalNames()) {
+      component = new XComponent(name);
+    } else {
+      throw new IllegalArgumentException("Unsupported component [" + name + "]");
     }
+    return (T) component;
+  }
 
-    /**
-     * Creates a component.
-     *
-     * @param name       name of the component
-     * @param properties a list of component properties
-     * @return a component
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T createComponent(final String name, final PropertyList properties) {
-        Component component;
-        ComponentFactory factory = getFactory(name);
-        if (factory != null) {
-            component = factory.createComponent(properties);
-        } else if (isExperimentalName(name)) {
-            component = new XComponent(name, properties);
-        } else if (allowIllegalNames()) {
-            component = new XComponent(name, properties);
-        } else {
-            throw new IllegalArgumentException("Unsupported component [" + name + "]");
-        }
-        return (T) component;
+  /**
+   * Creates a component.
+   *
+   * @param name       name of the component
+   * @param properties a list of component properties
+   * @return a component
+   */
+  @SuppressWarnings("unchecked")
+  public <T extends Component> T createComponent(final String name, final PropertyList properties) {
+    Component component;
+    ComponentFactory factory = getFactory(name);
+    if (factory != null) {
+      component = factory.createComponent(properties);
+    } else if (isExperimentalName(name)) {
+      component = new XComponent(name, properties);
+    } else if (allowIllegalNames()) {
+      component = new XComponent(name, properties);
+    } else {
+      throw new IllegalArgumentException("Unsupported component [" + name + "]");
     }
+    return (T) component;
+  }
 
-    /**
-     * Creates a component which contains sub-components. Currently the only such component is VTIMEZONE.
-     *
-     * @param name       name of the component
-     * @param properties a list of component properties
-     * @param components a list of sub-components (namely standard/daylight timezones)
-     * @return a component
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Component> T createComponent(final String name, final PropertyList properties,
-                                                   final ComponentList<? extends Component> components) {
-        Component component;
-        ComponentFactory factory = getFactory(name);
-        if (factory != null) {
-            component = factory.createComponent(properties, components);
-        } else {
-            throw new IllegalArgumentException("Unsupported component [" + name + "]");
-        }
-        return (T) component;
+  /**
+   * Creates a component which contains sub-components. Currently the only such component is VTIMEZONE.
+   *
+   * @param name       name of the component
+   * @param properties a list of component properties
+   * @param components a list of sub-components (namely standard/daylight timezones)
+   * @return a component
+   */
+  @SuppressWarnings("unchecked")
+  public <T extends Component> T createComponent(final String name, final PropertyList properties,
+                                                 final ComponentList<? extends Component> components) {
+    Component component;
+    ComponentFactory factory = getFactory(name);
+    if (factory != null) {
+      component = factory.createComponent(properties, components);
+    } else {
+      throw new IllegalArgumentException("Unsupported component [" + name + "]");
     }
+    return (T) component;
+  }
 
-    /**
-     * @param name
-     * @return
-     */
-    private boolean isExperimentalName(final String name) {
-        return name.startsWith(Component.EXPERIMENTAL_PREFIX)
-                && name.length() > Component.EXPERIMENTAL_PREFIX.length();
-    }
+  /**
+   * @param name
+   * @return
+   */
+  private boolean isExperimentalName(final String name) {
+    return name.startsWith(Component.EXPERIMENTAL_PREFIX)
+        && name.length() > Component.EXPERIMENTAL_PREFIX.length();
+  }
 
-    /**
-     * @return true if non-standard names are allowed, otherwise false
-     */
-    protected boolean allowIllegalNames() {
-        return CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
-    }
+  /**
+   * @return true if non-standard names are allowed, otherwise false
+   */
+  protected boolean allowIllegalNames() {
+    return CompatibilityHints
+        .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+  }
 }

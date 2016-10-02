@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -48,104 +48,103 @@ import java.text.ParseException;
  */
 public class TzOffsetFrom extends Property {
 
-    private static final long serialVersionUID = 450274263165493502L;
+  private static final long serialVersionUID = 450274263165493502L;
 
-    private UtcOffset offset;
+  private UtcOffset offset;
 
-    /**
-     * Default constructor.
-     */
-    public TzOffsetFrom() {
-        super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
+  /**
+   * Default constructor.
+   */
+  public TzOffsetFrom() {
+    super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aValue a value string for this component
+   */
+  public TzOffsetFrom(final String aValue) {
+    super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public TzOffsetFrom(final ParameterList aList, final String aValue) {
+    super(TZOFFSETFROM, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param anOffset a timezone offset in milliseconds
+   */
+  public TzOffsetFrom(final UtcOffset anOffset) {
+    super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
+    offset = anOffset;
+  }
+
+  /**
+   * @param aList    a list of parameters for this component
+   * @param anOffset a timezone offset in milliseconds
+   */
+  public TzOffsetFrom(final ParameterList aList, final UtcOffset anOffset) {
+    super(TZOFFSETFROM, aList, PropertyFactoryImpl.getInstance());
+    offset = anOffset;
+  }
+
+  /**
+   * @return Returns the offset.
+   */
+  public final UtcOffset getOffset() {
+    return offset;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    offset = new UtcOffset(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    if (offset != null) {
+      return offset.toString();
+    }
+    return "";
+  }
+
+  /**
+   * @param offset The offset to set.
+   */
+  public final void setOffset(final UtcOffset offset) {
+    this.offset = offset;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(TZOFFSETFROM);
     }
 
-    /**
-     * @param aValue a value string for this component
-     */
-    public TzOffsetFrom(final String aValue) {
-        super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new TzOffsetFrom(parameters, value);
     }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public TzOffsetFrom(final ParameterList aList, final String aValue) {
-        super(TZOFFSETFROM, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty() {
+      return new TzOffsetFrom();
     }
-
-    /**
-     * @param anOffset a timezone offset in milliseconds
-     */
-    public TzOffsetFrom(final UtcOffset anOffset) {
-        super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
-        offset = anOffset;
-    }
-
-    /**
-     * @param aList    a list of parameters for this component
-     * @param anOffset a timezone offset in milliseconds
-     */
-    public TzOffsetFrom(final ParameterList aList, final UtcOffset anOffset) {
-        super(TZOFFSETFROM, aList, PropertyFactoryImpl.getInstance());
-        offset = anOffset;
-    }
-
-    /**
-     * @return Returns the offset.
-     */
-    public final UtcOffset getOffset() {
-        return offset;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        offset = new UtcOffset(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        if (offset != null) {
-            return offset.toString();
-        }
-        return "";
-    }
-
-    /**
-     * @param offset The offset to set.
-     */
-    public final void setOffset(final UtcOffset offset) {
-        this.offset = offset;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(TZOFFSETFROM);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new TzOffsetFrom(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new TzOffsetFrom();
-        }
-    }
-
+  }
 }

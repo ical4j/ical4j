@@ -31,14 +31,14 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Calendar;
-
+import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
-import junit.framework.TestCase;
+
+import java.util.Calendar;
 
 /**
  * $Id$

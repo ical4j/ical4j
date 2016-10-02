@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.ParseException;
-
-import net.fortuna.ical4j.model.parameter.Value;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.parameter.Value;
+
+import java.text.ParseException;
 
 /**
  * $Id$

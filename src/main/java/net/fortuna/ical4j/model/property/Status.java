@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -115,148 +115,147 @@ import java.text.ParseException;
  */
 public class Status extends Property {
 
-    private static final long serialVersionUID = 7401102230299289898L;
+  private static final long serialVersionUID = 7401102230299289898L;
 
-    // Status values for a "VEVENT"
-    /**
-     * Tentative VEVENT status.
-     */
-    public static final Status VEVENT_TENTATIVE = new ImmutableStatus(
-            "TENTATIVE");
+  // Status values for a "VEVENT"
+  /**
+   * Tentative VEVENT status.
+   */
+  public static final Status VEVENT_TENTATIVE = new ImmutableStatus(
+      "TENTATIVE");
 
-    /**
-     * Confirmed VEVENT status.
-     */
-    public static final Status VEVENT_CONFIRMED = new ImmutableStatus(
-            "CONFIRMED");
+  /**
+   * Confirmed VEVENT status.
+   */
+  public static final Status VEVENT_CONFIRMED = new ImmutableStatus(
+      "CONFIRMED");
 
-    /**
-     * Cancelled VEVENT status.
-     */
-    public static final Status VEVENT_CANCELLED = new ImmutableStatus(
-            "CANCELLED");
+  /**
+   * Cancelled VEVENT status.
+   */
+  public static final Status VEVENT_CANCELLED = new ImmutableStatus(
+      "CANCELLED");
 
-    // Status values for "VTODO"
-    /**
-     * Tentative VTODO status.
-     */
-    public static final Status VTODO_NEEDS_ACTION = new ImmutableStatus(
-            "NEEDS-ACTION");
+  // Status values for "VTODO"
+  /**
+   * Tentative VTODO status.
+   */
+  public static final Status VTODO_NEEDS_ACTION = new ImmutableStatus(
+      "NEEDS-ACTION");
 
-    /**
-     * Completed VTODO status.
-     */
-    public static final Status VTODO_COMPLETED = new ImmutableStatus(
-            "COMPLETED");
+  /**
+   * Completed VTODO status.
+   */
+  public static final Status VTODO_COMPLETED = new ImmutableStatus(
+      "COMPLETED");
 
-    /**
-     * In-process VTODO status.
-     */
-    public static final Status VTODO_IN_PROCESS = new ImmutableStatus(
-            "IN-PROCESS");
+  /**
+   * In-process VTODO status.
+   */
+  public static final Status VTODO_IN_PROCESS = new ImmutableStatus(
+      "IN-PROCESS");
 
-    /**
-     * Cancelled VTODO status.
-     */
-    public static final Status VTODO_CANCELLED = new ImmutableStatus(
-            "CANCELLED");
+  /**
+   * Cancelled VTODO status.
+   */
+  public static final Status VTODO_CANCELLED = new ImmutableStatus(
+      "CANCELLED");
 
-    // Status values for "VJOURNAL"
-    /**
-     * Draft VJOURNAL status.
-     */
-    public static final Status VJOURNAL_DRAFT = new ImmutableStatus("DRAFT");
+  // Status values for "VJOURNAL"
+  /**
+   * Draft VJOURNAL status.
+   */
+  public static final Status VJOURNAL_DRAFT = new ImmutableStatus("DRAFT");
 
-    /**
-     * Final VJOURNAL status.
-     */
-    public static final Status VJOURNAL_FINAL = new ImmutableStatus("FINAL");
+  /**
+   * Final VJOURNAL status.
+   */
+  public static final Status VJOURNAL_FINAL = new ImmutableStatus("FINAL");
 
-    /**
-     * Cancelled VJOURNAL status.
-     */
-    public static final Status VJOURNAL_CANCELLED = new ImmutableStatus(
-            "CANCELLED");
+  /**
+   * Cancelled VJOURNAL status.
+   */
+  public static final Status VJOURNAL_CANCELLED = new ImmutableStatus(
+      "CANCELLED");
 
-    /**
-     * @author Ben Fortuna An immutable instance of Status.
-     */
-    private static final class ImmutableStatus extends Status {
+  /**
+   * @author Ben Fortuna An immutable instance of Status.
+   */
+  private static final class ImmutableStatus extends Status {
 
-        private static final long serialVersionUID = 7771868877237685612L;
+    private static final long serialVersionUID = 7771868877237685612L;
 
-        private ImmutableStatus(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
+    private ImmutableStatus(final String value) {
+      super(new ParameterList(true), value);
     }
 
-    private String value;
-
-    /**
-     * Default constructor.
-     */
-    public Status() {
-        super(STATUS, PropertyFactoryImpl.getInstance());
-    }
-
-    /**
-     * @param aValue a value string for this component
-     */
-    public Status(final String aValue) {
-        super(STATUS, PropertyFactoryImpl.getInstance());
-        this.value = aValue;
-    }
-
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Status(final ParameterList aList, final String aValue) {
-        super(STATUS, aList, PropertyFactoryImpl.getInstance());
-        this.value = aValue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void setValue(final String aValue) {
-        this.value = aValue;
+      throw new UnsupportedOperationException(
+          "Cannot modify constant instances");
+    }
+  }
+
+  private String value;
+
+  /**
+   * Default constructor.
+   */
+  public Status() {
+    super(STATUS, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aValue a value string for this component
+   */
+  public Status(final String aValue) {
+    super(STATUS, PropertyFactoryImpl.getInstance());
+    this.value = aValue;
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Status(final ParameterList aList, final String aValue) {
+    super(STATUS, aList, PropertyFactoryImpl.getInstance());
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setValue(final String aValue) {
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(STATUS);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Status(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    public Property createProperty() {
+      return new Status();
     }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(STATUS);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Status(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Status();
-        }
-    }
-
+  }
 }

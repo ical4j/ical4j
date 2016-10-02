@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -49,73 +49,72 @@ import java.text.ParseException;
  */
 public class ExtendedAddress extends Property implements Escapable {
 
-    private static final long serialVersionUID = 6506776332370144983L;
+  private static final long serialVersionUID = 6506776332370144983L;
 
-    private String value;
+  private String value;
 
-    /**
-     * Default constructor.
-     */
-    public ExtendedAddress() {
-        super(EXTENDED_ADDRESS, PropertyFactoryImpl.getInstance());
-    }
+  /**
+   * Default constructor.
+   */
+  public ExtendedAddress() {
+    super(EXTENDED_ADDRESS, PropertyFactoryImpl.getInstance());
+  }
 
-    /**
-     * @param aValue a value string for this component
-     */
-    public ExtendedAddress(final String aValue) {
-        super(EXTENDED_ADDRESS, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aValue a value string for this component
+   */
+  public ExtendedAddress(final String aValue) {
+    super(EXTENDED_ADDRESS, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public ExtendedAddress(final ParameterList aList, final String aValue) {
-        super(EXTENDED_ADDRESS, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public ExtendedAddress(final ParameterList aList, final String aValue) {
+    super(EXTENDED_ADDRESS, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(EXTENDED_ADDRESS);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        this.value = aValue;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new ExtendedAddress(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Property createProperty() {
+      return new ExtendedAddress();
     }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(EXTENDED_ADDRESS);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new ExtendedAddress(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new ExtendedAddress();
-        }
-    }
-
+  }
 }

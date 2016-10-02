@@ -31,8 +31,6 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
@@ -40,6 +38,8 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.util.Calendars;
+
+import java.io.IOException;
 
 /**
  * Created on 21/08/2007

@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
 
 /**
@@ -42,42 +41,36 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class TranspFactory extends AbstractPropertyFactory{
+public class TranspFactory extends AbstractPropertyFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Transp instance
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Transp.class)) {
             instance = (Transp) value
-        }
-        else {
+        } else {
             String instanceValue = attributes.remove('value')
             if (instanceValue != null) {
                 if (Transp.OPAQUE.getValue().equals(instanceValue)) {
                     instance = Transp.OPAQUE
-                }
-                else if (Transp.TRANSPARENT.getValue().equals(instanceValue)) {
+                } else if (Transp.TRANSPARENT.getValue().equals(instanceValue)) {
                     instance = Transp.TRANSPARENT
-                }
-                else {
+                } else {
                     attributes.put('value', instanceValue)
                     instance = super.newInstance(builder, name, value, attributes)
                 }
-            }
-            else {
+            } else {
                 if (Transp.OPAQUE.getValue().equals(value)) {
                     instance = Transp.OPAQUE
-                }
-                else if (Transp.TRANSPARENT.getValue().equals(value)) {
+                } else if (Transp.TRANSPARENT.getValue().equals(value)) {
                     instance = Transp.TRANSPARENT
-                }
-                else {
+                } else {
                     instance = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
         return instance
     }
-    
+
     protected Object newInstance(ParameterList parameters, String value) {
         return new Transp(parameters, value)
     }

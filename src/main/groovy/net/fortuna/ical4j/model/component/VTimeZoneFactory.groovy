@@ -31,38 +31,35 @@
  */
 package net.fortuna.ical4j.model.component
 
-import groovy.util.FactoryBuilderSupport;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.PropertyList
 
 /**
  * @author fortuna
  *
  */
-class VTimeZoneFactory extends AbstractComponentFactory{
+class VTimeZoneFactory extends AbstractComponentFactory {
 
 
-     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         VTimeZone timeZone
-         if (FactoryBuilderSupport.checkValueIsType(value, name, VTimeZone.class)) {
-             timeZone = (VTimeZone) value
-         }
-         else {
-             timeZone = super.newInstance(builder, name, value, attributes);
-         }
-         return timeZone
-     }
-     
-     protected Object newInstance(PropertyList properties) {
-         return new VTimeZone(properties)
-     }
-    
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        VTimeZone timeZone
+        if (FactoryBuilderSupport.checkValueIsType(value, name, VTimeZone.class)) {
+            timeZone = (VTimeZone) value
+        } else {
+            timeZone = super.newInstance(builder, name, value, attributes);
+        }
+        return timeZone
+    }
+
+    protected Object newInstance(PropertyList properties) {
+        return new VTimeZone(properties)
+    }
+
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-		if (child instanceof Observance) {
-			parent.observances.add child
-		}
-		else {
-			super.setChild(build, parent, child)
-		}
+        if (child instanceof Observance) {
+            parent.observances.add child
+        } else {
+            super.setChild(build, parent, child)
+        }
     }
 }
 

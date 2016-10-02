@@ -31,37 +31,34 @@
  */
 package net.fortuna.ical4j.model.component
 
-import groovy.util.FactoryBuilderSupport;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.PropertyList
 
 /**
  * @author fortuna
  *
  */
-public class VToDoFactory extends AbstractComponentFactory{
+public class VToDoFactory extends AbstractComponentFactory {
 
 
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         VToDo toDo
-         if (FactoryBuilderSupport.checkValueIsType(value, name, VToDo.class)) {
-             toDo = (VToDo) value
-         }
-         else {
-             toDo = super.newInstance(builder, name, value, attributes);
-         }
-         return toDo
-     }
-     
-     protected Object newInstance(PropertyList properties) {
-         return new VToDo(properties)
-     }
-    
+    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        VToDo toDo
+        if (FactoryBuilderSupport.checkValueIsType(value, name, VToDo.class)) {
+            toDo = (VToDo) value
+        } else {
+            toDo = super.newInstance(builder, name, value, attributes);
+        }
+        return toDo
+    }
+
+    protected Object newInstance(PropertyList properties) {
+        return new VToDo(properties)
+    }
+
     public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-		if (child instanceof VAlarm) {
-			parent.alarms.add child
-		}
-		else {
-			super.setChild(build, parent, child)
-		}
+        if (child instanceof VAlarm) {
+            parent.alarms.add child
+        } else {
+            super.setChild(build, parent, child)
+        }
     }
 }

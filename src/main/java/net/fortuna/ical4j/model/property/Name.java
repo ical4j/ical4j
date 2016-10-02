@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -49,73 +49,72 @@ import java.text.ParseException;
  */
 public class Name extends Property implements Escapable {
 
-    private static final long serialVersionUID = -6930099834219160086L;
+  private static final long serialVersionUID = -6930099834219160086L;
 
-    private String value;
+  private String value;
 
-    /**
-     * Default constructor.
-     */
-    public Name() {
-        super(NAME, PropertyFactoryImpl.getInstance());
-    }
+  /**
+   * Default constructor.
+   */
+  public Name() {
+    super(NAME, PropertyFactoryImpl.getInstance());
+  }
 
-    /**
-     * @param aValue a value string for this component
-     */
-    public Name(final String aValue) {
-        super(NAME, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aValue a value string for this component
+   */
+  public Name(final String aValue) {
+    super(NAME, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Name(final ParameterList aList, final String aValue) {
-        super(NAME, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Name(final ParameterList aList, final String aValue) {
+    super(NAME, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(NAME);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        this.value = aValue;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Name(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Property createProperty() {
+      return new Name();
     }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(NAME);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Name(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Name();
-        }
-    }
-
+  }
 }

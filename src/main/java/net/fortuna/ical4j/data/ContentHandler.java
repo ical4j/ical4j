@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -47,55 +47,55 @@ import java.text.ParseException;
  */
 public interface ContentHandler {
 
-    /**
-     * Triggers the start of handling a calendar.
-     */
-    void startCalendar();
+  /**
+   * Triggers the start of handling a calendar.
+   */
+  void startCalendar();
 
-    /**
-     * Triggers the end of handling a calendar.
-     */
-    void endCalendar();
+  /**
+   * Triggers the end of handling a calendar.
+   */
+  void endCalendar();
 
-    /**
-     * Triggers the start of handling a component.
-     * @param name a component name
-     */
-    void startComponent(String name);
+  /**
+   * Triggers the start of handling a component.
+   * @param name a component name
+   */
+  void startComponent(String name);
 
-    /**
-     * Triggers the end of handling a component.
-     * @param name a component name
-     */
-    void endComponent(String name);
+  /**
+   * Triggers the end of handling a component.
+   * @param name a component name
+   */
+  void endComponent(String name);
 
-    /**
-     * Triggers the start of handling a property.
-     * @param name a property name
-     */
-    void startProperty(String name);
+  /**
+   * Triggers the start of handling a property.
+   * @param name a property name
+   */
+  void startProperty(String name);
 
-    /**
-     * Triggers the handling of a property value.
-     * @param value a property value
-     * @throws URISyntaxException where the property value is not a valid URI for applicable properties
-     * @throws ParseException where the date value cannot be parsed for applicable properties
-     * @throws IOException where data cannot be read for applicable properties
-     */
-    void propertyValue(String value) throws URISyntaxException, ParseException,
-            IOException;
+  /**
+   * Triggers the handling of a property value.
+   * @param value a property value
+   * @throws URISyntaxException where the property value is not a valid URI for applicable properties
+   * @throws ParseException where the date value cannot be parsed for applicable properties
+   * @throws IOException where data cannot be read for applicable properties
+   */
+  void propertyValue(String value) throws URISyntaxException, ParseException,
+      IOException;
 
-    /**
-     * Triggers the end of handling a property.
-     * @param name a property name
-     */
-    void endProperty(String name);
+  /**
+   * Triggers the end of handling a property.
+   * @param name a property name
+   */
+  void endProperty(String name);
 
-    /**
-     * Triggers the handling of a parameter.
-     * @param name a parameter name
-     * @param value a parameter value
-     * @throws URISyntaxException where the parameter value is not a valid URI for applicable parameters
-     */
-    void parameter(String name, String value) throws URISyntaxException;
+  /**
+   * Triggers the handling of a parameter.
+   * @param name a parameter name
+   * @param value a parameter value
+   * @throws URISyntaxException where the parameter value is not a valid URI for applicable parameters
+   */
+  void parameter(String name, String value) throws URISyntaxException, ParserException;
 }

@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -44,42 +44,41 @@ import java.net.URISyntaxException;
  */
 public class TzId extends Parameter implements Escapable {
 
-    private static final long serialVersionUID = 2366516258055857879L;
+  private static final long serialVersionUID = 2366516258055857879L;
 
-    /**
-     * Timezone identifier prefix.
-     */
-    public static final String PREFIX = "/";
+  /**
+   * Timezone identifier prefix.
+   */
+  public static final String PREFIX = "/";
 
-    private String value;
+  private String value;
 
-    /**
-     * @param aValue a string representation of a time zone identifier
-     */
-    public TzId(final String aValue) {
-        super(TZID, ParameterFactoryImpl.getInstance());
-        // parameter values may be quoted if they contain characters in the
-        // set [:;,]..
-        this.value = Strings.unquote(aValue);
+  /**
+   * @param aValue a string representation of a time zone identifier
+   */
+  public TzId(final String aValue) {
+    super(TZID, ParameterFactoryImpl.getInstance());
+    // parameter values may be quoted if they contain characters in the
+    // set [:;,]..
+    this.value = Strings.unquote(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  public static class Factory extends Content.Factory implements ParameterFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(TZID);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Parameter createParameter(final String value) throws URISyntaxException {
+      return new TzId(Strings.unescape(value));
     }
-
-    public static class Factory extends Content.Factory implements ParameterFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(TZID);
-        }
-
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            return new TzId(Strings.unescape(value));
-        }
-    }
-
+  }
 }
