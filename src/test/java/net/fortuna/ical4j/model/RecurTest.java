@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.TimeZones;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -495,7 +496,7 @@ public class RecurTest extends TestCase {
             log.info("date_" + i + " = " + dates.get(i).toString()); 
         } 
     }
-    
+
     public void testGetDatesRalph() throws ParseException {
         Recur recur = new
         Recur("FREQ=WEEKLY;WKST=MO;INTERVAL=1;UNTIL=20051003T000000Z;BYDAY=MO,WE");
@@ -803,7 +804,7 @@ public class RecurTest extends TestCase {
         Date getDatesFirstResult;
         try {
             Locale.setDefault(testLocale);
-            getDatesFirstResult = (Date) recur.getDates(seed, periodStart, periodEnd, Value.DATE_TIME).get(0);
+            getDatesFirstResult = recur.getDates(seed, periodStart, periodEnd, Value.DATE_TIME).get(0);
         } finally {
             Locale.setDefault(currentLocale);
         }
@@ -845,7 +846,16 @@ public class RecurTest extends TestCase {
         recur = new Recur("FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYMONTH=2,3,9,10;BYMONTHDAY=28,29,30,31;BYSETPOS=-1");
         suite.addTest(new RecurTest(recur, new DateTime("20150701T000000"),
                 new DateTime("20150701T000000"), new DateTime("20150930T000000")));
-      
+
+        recur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;WKST=MO;UNTIL=20160930T003000Z;");
+        DateTime startDate = new DateTime("20160729T003000Z");
+        startDate.setUtc(true);
+
+        DateTime endDate = (DateTime) recur.getUntil();
+        endDate.setUtc(true);
+
+        suite.addTest(new RecurTest(recur, startDate, endDate, Value.DATE_TIME, 10));
+
         return suite;
     }
 }
