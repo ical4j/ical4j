@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -42,91 +42,91 @@ import java.util.StringTokenizer;
  * $Id$ [29-May-2004]
  *
  * Defines a list of numbers.
- * 
+ *
  * @author Ben Fortuna
  */
 public class NumberList extends ArrayList<Integer> implements Serializable {
-    
-    private static final long serialVersionUID = -1667481795613729889L;
 
-    private final int minValue;
-    
-    private final int maxValue;
+  private static final long serialVersionUID = -1667481795613729889L;
 
-    private final boolean allowsNegativeValues;
-    
-    /**
-     * Default constructor.
-     */
-    public NumberList() {
-    	this(Integer.MIN_VALUE, Integer.MAX_VALUE, true);
-    }
+  private final int minValue;
 
-    /**
-     * Constructor with limits.
-     * @param minValue the minimum allowable value
-     * @param maxValue the maximum allowable value
-     * @param allowsNegativeValues indicates whether negative values are allowed
-     */
-    public NumberList(int minValue, int maxValue, boolean allowsNegativeValues) {
-    	this.minValue = minValue;
-    	this.maxValue = maxValue;
-        this.allowsNegativeValues = allowsNegativeValues;
-    }
+  private final int maxValue;
 
-    /**
-     * Constructor.
-     * @param aString a string representation of a number list
-     */
-    public NumberList(final String aString) {
-    	this(aString, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
-    }
-    
-    /**
-     * @param aString a string representation of a number list
-     * @param minValue the minimum allowable value
-     * @param maxValue the maximum allowable value
-     * @param allowsNegativeValues indicates whether negative values are allowed
-     */
-    public NumberList(final String aString, int minValue, int maxValue, boolean allowsNegativeValues) {
-    	this(minValue, maxValue, allowsNegativeValues);
-        final StringTokenizer t = new StringTokenizer(aString, ",");
-        while (t.hasMoreTokens()) {
-        	final int value = Numbers.parseInt(t.nextToken());
-            add(value);
-        }
-    }
+  private final boolean allowsNegativeValues;
 
-    /**
-     * @param aNumber a number to add to the list
-     * @return true if the number was added, otherwise false
-     */
-    public final boolean add(final Integer aNumber) {
-        int abs = aNumber;
-        if ((abs >> 31 | -abs >>> 31) < 0) {
-            if (!allowsNegativeValues) {
-                throw new IllegalArgumentException("Negative value not allowed: " + aNumber);
-            }
-            abs = Math.abs(abs);
-        }
-    	if (abs < minValue || abs > maxValue) {
-    		throw new IllegalArgumentException(
-    		        "Value not in range [" + minValue + ".." + maxValue + "]: " + aNumber);
-    	}
-        return super.add(aNumber);
-    }
+  /**
+   * Default constructor.
+   */
+  public NumberList() {
+    this(Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<Integer> i = iterator(); i.hasNext();) {
-            b.append(i.next());
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+  /**
+   * Constructor with limits.
+   * @param minValue the minimum allowable value
+   * @param maxValue the maximum allowable value
+   * @param allowsNegativeValues indicates whether negative values are allowed
+   */
+  public NumberList(int minValue, int maxValue, boolean allowsNegativeValues) {
+    this.minValue = minValue;
+    this.maxValue = maxValue;
+    this.allowsNegativeValues = allowsNegativeValues;
+  }
+
+  /**
+   * Constructor.
+   * @param aString a string representation of a number list
+   */
+  public NumberList(final String aString) {
+    this(aString, Integer.MIN_VALUE, Integer.MAX_VALUE, true);
+  }
+
+  /**
+   * @param aString a string representation of a number list
+   * @param minValue the minimum allowable value
+   * @param maxValue the maximum allowable value
+   * @param allowsNegativeValues indicates whether negative values are allowed
+   */
+  public NumberList(final String aString, int minValue, int maxValue, boolean allowsNegativeValues) {
+    this(minValue, maxValue, allowsNegativeValues);
+    final StringTokenizer t = new StringTokenizer(aString, ",");
+    while (t.hasMoreTokens()) {
+      final int value = Numbers.parseInt(t.nextToken());
+      add(value);
     }
+  }
+
+  /**
+   * @param aNumber a number to add to the list
+   * @return true if the number was added, otherwise false
+   */
+  public final boolean add(final Integer aNumber) {
+    int abs = aNumber;
+    if ((abs >> 31 | -abs >>> 31) < 0) {
+      if (!allowsNegativeValues) {
+        throw new IllegalArgumentException("Negative value not allowed: " + aNumber);
+      }
+      abs = Math.abs(abs);
+    }
+    if (abs < minValue || abs > maxValue) {
+      throw new IllegalArgumentException(
+          "Value not in range [" + minValue + ".." + maxValue + "]: " + aNumber);
+    }
+    return super.add(aNumber);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String toString() {
+    final StringBuilder b = new StringBuilder();
+    for (final Iterator<Integer> i = iterator(); i.hasNext(); ) {
+      b.append(i.next());
+      if (i.hasNext()) {
+        b.append(',');
+      }
+    }
+    return b.toString();
+  }
 }

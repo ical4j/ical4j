@@ -29,11 +29,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model
 
-import java.text.SimpleDateFormat;
-
-import groovy.util.GroovyTestCase;
+import java.text.SimpleDateFormat
 
 class DateTimeFormattingTest extends GroovyTestCase {
 

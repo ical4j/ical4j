@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.filter;
 
+import net.fortuna.ical4j.model.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,132 +55,116 @@ import java.util.List;
  */
 public class Filter<T> {
 
-    /**
-     * Indicates that any rule may be matched to include an object in the filtered collection.
-     */
-    public static final int MATCH_ANY = 1;
+  /**
+   * Indicates that any rule may be matched to include an object in the filtered collection.
+   */
+  public static final int MATCH_ANY = 1;
 
-    /**
-     * Indicates that all rules must be matched to include an object in the filtered collection.
-     */
-    public static final int MATCH_ALL = 2;
+  /**
+   * Indicates that all rules must be matched to include an object in the filtered collection.
+   */
+  public static final int MATCH_ALL = 2;
 
-    private List<Rule<T>> rules;
+  private List<Rule<T>> rules;
 
-    private int type;
+  private int type;
 
-    /**
-     * Constructor.
-     *
-     * @param rule a rule that defines this filter
-     * @deprecated Prior implementations of this class did not work as advertised, so
-     * to avoid confusion please use constructors that explicitly specify the desired behaviour
-     */
-    @SuppressWarnings("unchecked")
-    public Filter(final Rule<T> rule) {
-        this(new Rule[]{rule}, MATCH_ANY);
+  /**
+   * Constructor.
+   *
+   * @param rules an array of rules that define this filter
+   * @param type  the type of matching to apply
+   * @see Filter#MATCH_ALL
+   * @see Filter#MATCH_ANY
+   */
+  public Filter(final List<Rule<T>> rules, final int type) {
+    this.rules = rules;
+    this.type = type;
+  }
+
+  /**
+   * Filter the given list into a new list.
+   *
+   * @param c a list to filter
+   * @return a filtered list
+   */
+  public final List<T> filter(final List<T> c) {
+    if (getRules().size() > 0) {
+      // attempt to use the same concrete collection type
+      // as is passed in..
+      List<T> filtered;
+      try {
+        filtered = c.getClass().newInstance();
+      } catch (Exception e) {
+        filtered = new ArrayList<>();
+      }
+
+      if (type == MATCH_ALL) {
+        filtered.addAll(matchAll(c));
+      } else {
+        filtered.addAll(matchAny(c));
+      }
+      return filtered;
     }
+    return c;
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param rules an array of rules that define this filter
-     * @param type  the type of matching to apply
-     * @see Filter#MATCH_ALL
-     * @see Filter#MATCH_ANY
-     */
-    public Filter(final Rule<T>[] rules, final int type) {
-        this.rules = Arrays.asList(rules);
-        this.type = type;
-    }
-
-    /**
-     * Filter the given collection into a new collection.
-     *
-     * @param c a collection to filter
-     * @return a filtered collection
-     */
-    @SuppressWarnings("unchecked")
-    public final Collection<T> filter(final Collection<T> c) {
-        if (getRules() != null && getRules().length > 0) {
-            // attempt to use the same concrete collection type
-            // as is passed in..
-            Collection<T> filtered;
-            try {
-                filtered = c.getClass().newInstance();
-            } catch (Exception e) {
-                filtered = new ArrayList<T>();
-            }
-
-            if (type == MATCH_ALL) {
-                filtered.addAll(matchAll(c));
-            } else {
-                filtered.addAll(matchAny(c));
-            }
-            return filtered;
+  private List<T> matchAll(Collection<T> c) {
+    List<T> list = new ArrayList<>(c);
+    List<T> temp = new ArrayList<>();
+    for (Rule<T> r : getRules()) {
+      for (final T o : list) {
+        if (r.match(o)) {
+          temp.add(o);
         }
-        return c;
+      }
+      list = temp;
+      temp = new ArrayList<>();
     }
+    return list;
+  }
 
-    private List<T> matchAll(Collection<T> c) {
-        List<T> list = new ArrayList<T>(c);
-        List<T> temp = new ArrayList<T>();
-        for (int n = 0; n < getRules().length; n++) {
-            for (final T o : list) {
-                if (getRules()[n].match(o)) {
-                    temp.add(o);
-                }
-            }
-            list = temp;
-            temp = new ArrayList<T>();
+  private List<T> matchAny(Collection<T> c) {
+    final List<T> matches = new ArrayList<>();
+    for (T o : c) {
+      for (Rule<T> r : getRules()) {
+        if (r.match(o)) {
+          matches.add(o);
+          break;
         }
-        return list;
+      }
     }
+    return matches;
+  }
 
-    private List<T> matchAny(Collection<T> c) {
-        final List<T> matches = new ArrayList<T>();
-        for (T o : c) {
-            for (int n = 0; n < getRules().length; n++) {
-                if (getRules()[n].match(o)) {
-                    matches.add(o);
-                    break;
-                }
-            }
-        }
-        return matches;
+  /**
+   * Returns a filtered subset of the specified array.
+   *
+   * @param objects an array to filter
+   * @return a filtered array
+   */
+  public final List<T> filter(final T... objects) {
+    final List<T> filtered = filter(Arrays.asList(objects));
+    try {
+      return filtered;
+    } catch (ArrayStoreException ase) {
+      Logger log = LoggerFactory.getLogger(Filter.class);
+      log.warn("Error converting to array - using default approach", ase);
     }
+    return filtered;
+  }
 
-    /**
-     * Returns a filtered subset of the specified array.
-     *
-     * @param objects an array to filter
-     * @return a filtered array
-     */
-    @SuppressWarnings("unchecked")
-    public final T[] filter(final T[] objects) {
-        final Collection<T> filtered = filter(Arrays.asList(objects));
-        try {
-            return filtered.toArray((T[]) Array.newInstance(objects
-                    .getClass(), filtered.size()));
-        } catch (ArrayStoreException ase) {
-            Logger log = LoggerFactory.getLogger(Filter.class);
-            log.warn("Error converting to array - using default approach", ase);
-        }
-        return (T[]) filtered.toArray();
-    }
+  /**
+   * @return Returns the rules.
+   */
+  public final List<Rule<T>> getRules() {
+    return rules;
+  }
 
-    /**
-     * @return Returns the rules.
-     */
-    @SuppressWarnings("unchecked")
-    public final Rule<T>[] getRules() {
-        return rules.toArray(new Rule[rules.size()]);
-    }
-
-    /**
-     * @param rules The rules to set.
-     */
-    public final void setRules(final Rule<T>[] rules) {
-        this.rules = Arrays.asList(rules);
-    }
+  /**
+   * @param rules The rules to set.
+   */
+  public final void setRules(final Rule<T>[] rules) {
+    this.rules = Arrays.asList(rules);
+  }
 }

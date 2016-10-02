@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -189,138 +189,138 @@ import java.util.Map;
  */
 public class VAlarm extends CalendarComponent {
 
-    private static final long serialVersionUID = -8193965477414653802L;
+  private static final long serialVersionUID = -8193965477414653802L;
 
-    private final Map<Action, Validator> actionValidators = new HashMap<Action, Validator>();
-    {
-        actionValidators.put(Action.AUDIO, new AudioValidator());
-        actionValidators.put(Action.DISPLAY, new DisplayValidator());
-        actionValidators.put(Action.EMAIL, new EmailValidator());
-        actionValidators.put(Action.PROCEDURE, new ProcedureValidator());
-    }
-    
-    private final Validator itipValidator = new ITIPValidator();
-    
-    /**
-     * Default constructor.
-     */
-    public VAlarm() {
-        super(VALARM);
-    }
+  private final Map<Action, Validator> actionValidators = new HashMap<Action, Validator>();
 
-    /**
-     * Constructor.
-     * @param properties a list of properties
-     */
-    public VAlarm(final PropertyList properties) {
-        super(VALARM, properties);
-    }
+  {
+    actionValidators.put(Action.AUDIO, new AudioValidator());
+    actionValidators.put(Action.DISPLAY, new DisplayValidator());
+    actionValidators.put(Action.EMAIL, new EmailValidator());
+    actionValidators.put(Action.PROCEDURE, new ProcedureValidator());
+  }
 
-    /**
-     * Constructs a new VALARM instance that will trigger at the specified time.
-     * @param trigger the time the alarm will trigger
-     */
-    public VAlarm(final DateTime trigger) {
-        this();
-        getProperties().add(new Trigger(trigger));
-    }
+  private final Validator itipValidator = new ITIPValidator();
 
-    /**
-     * Constructs a new VALARM instance that will trigger at the specified time relative to the event/todo component.
-     * @param trigger a duration of time relative to the parent component that the alarm will trigger at
-     */
-    public VAlarm(final Dur trigger) {
-        this();
-        getProperties().add(new Trigger(trigger));
-    }
+  /**
+   * Default constructor.
+   */
+  public VAlarm() {
+    super(VALARM);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
+  /**
+   * Constructor.
+   * @param properties a list of properties
+   */
+  public VAlarm(final PropertyList properties) {
+    super(VALARM, properties);
+  }
+
+  /**
+   * Constructs a new VALARM instance that will trigger at the specified time.
+   * @param trigger the time the alarm will trigger
+   */
+  public VAlarm(final DateTime trigger) {
+    this();
+    getProperties().add(new Trigger(trigger));
+  }
+
+  /**
+   * Constructs a new VALARM instance that will trigger at the specified time relative to the event/todo component.
+   * @param trigger a duration of time relative to the parent component that the alarm will trigger at
+   */
+  public VAlarm(final Dur trigger) {
+    this();
+    getProperties().add(new Trigger(trigger));
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate(final boolean recurse)
+      throws ValidationException {
 
         /*
          * ; 'action' and 'trigger' are both REQUIRED, ; but MUST NOT occur more than once action / trigger /
          */
-        PropertyValidator.getInstance().assertOne(Property.ACTION, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.TRIGGER, getProperties());
+    PropertyValidator.getInstance().assertOne(Property.ACTION, getProperties());
+    PropertyValidator.getInstance().assertOne(Property.TRIGGER, getProperties());
 
         /*
          * ; 'duration' and 'repeat' are both optional, ; and MUST NOT occur more than once each, ; but if one occurs,
          * so MUST the other duration / repeat /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT, getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+    PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT, getProperties());
 
-        try {
-            PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
-            PropertyValidator.getInstance().assertNone(Property.REPEAT, getProperties());
-        }
-        catch (ValidationException ve) {
-            PropertyValidator.getInstance().assertOne(Property.DURATION, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.REPEAT, getProperties());
-        }
+    try {
+      PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
+      PropertyValidator.getInstance().assertNone(Property.REPEAT, getProperties());
+    } catch (ValidationException ve) {
+      PropertyValidator.getInstance().assertOne(Property.DURATION, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.REPEAT, getProperties());
+    }
         
         /*
          * ; the following is optional, ; and MAY occur more than once x-prop
          */
-        
-        final Validator actionValidator = actionValidators.get(getAction());
-        if (actionValidator != null) {
-            actionValidator.validate();
-        }
-        
-        if (recurse) {
-            validateProperties();
-        }
+
+    final Validator actionValidator = actionValidators.get(getAction());
+    if (actionValidator != null) {
+      actionValidator.validate();
     }
-    
+
+    if (recurse) {
+      validateProperties();
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected Validator getValidator(Method method) {
+    return itipValidator;
+  }
+
+  private class AudioValidator implements Validator {
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * {@inheritDoc}
      */
-    protected Validator getValidator(Method method) {
-        return itipValidator;
-    }
-    
-    private class AudioValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
-
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
+    public void validate() throws ValidationException {
             /*
              * ; the following is optional, ; but MUST NOT occur more than once attach /
              */
-            PropertyValidator.getInstance().assertOneOrLess(Property.ATTACH, getProperties());
-        }
+      PropertyValidator.getInstance().assertOneOrLess(Property.ATTACH, getProperties());
     }
+  }
 
-    private class DisplayValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
+  private class DisplayValidator implements Validator {
 
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * {@inheritDoc}
+     */
+    public void validate() throws ValidationException {
             /*
              * ; the following are all REQUIRED, ; but MUST NOT occur more than once action / description / trigger /
              */
-            PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
-        }
+      PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
     }
+  }
 
-    private class EmailValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
+  private class EmailValidator implements Validator {
 
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * {@inheritDoc}
+     */
+    public void validate() throws ValidationException {
             /*
              * ; the following are all REQUIRED, 
              * ; but MUST NOT occur more than once action / description / trigger / summary 
@@ -332,21 +332,21 @@ public class VAlarm extends CalendarComponent {
              * ; the following are optional, 
              * ; and MAY occur more than once attach / x-prop
              */
-            PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
 
-            PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
-        }
+      PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
     }
+  }
 
-    private class ProcedureValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
+  private class ProcedureValidator implements Validator {
 
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * {@inheritDoc}
+     */
+    public void validate() throws ValidationException {
             /*
              * ; the following are all REQUIRED, 
              * ; but MUST NOT occur more than once action / attach / trigger / 
@@ -357,122 +357,122 @@ public class VAlarm extends CalendarComponent {
              * ; and MUST NOT occur more than once description / 
              * ; the following is optional, ; and MAY occur more than once x-prop
              */
-            PropertyValidator.getInstance().assertOne(Property.ATTACH, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.ATTACH, getProperties());
 
-            PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
-        }
+      PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
     }
+  }
+
+  /**
+   * Common validation for all iTIP methods.
+   *
+   * <pre>
+   * Component/Property  Presence
+   * ------------------- ----------------------------------------------
+   * VALARM              0+
+   *     ACTION          1
+   *     ATTACH          0+
+   *     DESCRIPTION     0 or 1
+   *     DURATION        0 or 1  if present REPEAT MUST be present
+   *     REPEAT          0 or 1  if present DURATION MUST be present
+   *     SUMMARY         0 or 1
+   *     TRIGGER         1
+   *     X-PROPERTY      0+
+   * </pre>
+   */
+  private class ITIPValidator implements Validator {
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * Common validation for all iTIP methods.
-     * 
-     * <pre>
-     * Component/Property  Presence
-     * ------------------- ----------------------------------------------
-     * VALARM              0+
-     *     ACTION          1
-     *     ATTACH          0+
-     *     DESCRIPTION     0 or 1
-     *     DURATION        0 or 1  if present REPEAT MUST be present
-     *     REPEAT          0 or 1  if present DURATION MUST be present
-     *     SUMMARY         0 or 1
-     *     TRIGGER         1
-     *     X-PROPERTY      0+
-     * </pre>
+     * {@inheritDoc}
      */
-    private class ITIPValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
+    public void validate() throws ValidationException {
+      PropertyValidator.getInstance().assertOne(Property.ACTION, getProperties());
+      PropertyValidator.getInstance().assertOne(Property.TRIGGER, getProperties());
 
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
-            PropertyValidator.getInstance().assertOne(Property.ACTION, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.TRIGGER, getProperties());
-            
-            PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
-        }
+      PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT, getProperties());
+      PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
     }
-    
-    /**
-     * Returns the mandatory action property.
-     * @return the ACTION property or null if not specified
-     */
-    public final Action getAction() {
-        return (Action) getProperty(Property.ACTION);
+  }
+
+  /**
+   * Returns the mandatory action property.
+   * @return the ACTION property or null if not specified
+   */
+  public final Action getAction() {
+    return (Action) getProperty(Property.ACTION);
+  }
+
+  /**
+   * Returns the mandatory trigger property.
+   * @return the TRIGGER property or null if not specified
+   */
+  public final Trigger getTrigger() {
+    return (Trigger) getProperty(Property.TRIGGER);
+  }
+
+  /**
+   * Returns the optional duration property.
+   * @return the DURATION property or null if not specified
+   */
+  public final Duration getDuration() {
+    return (Duration) getProperty(Property.DURATION);
+  }
+
+  /**
+   * Returns the optional repeat property.
+   * @return the REPEAT property or null if not specified
+   */
+  public final Repeat getRepeat() {
+    return (Repeat) getProperty(Property.REPEAT);
+  }
+
+  /**
+   * Returns the optional attachment property.
+   * @return the ATTACH property or null if not specified
+   */
+  public final Attach getAttachment() {
+    return (Attach) getProperty(Property.ATTACH);
+  }
+
+  /**
+   * Returns the optional description property.
+   * @return the DESCRIPTION property or null if not specified
+   */
+  public final Description getDescription() {
+    return (Description) getProperty(Property.DESCRIPTION);
+  }
+
+  /**
+   * Returns the optional summary property.
+   * @return the SUMMARY property or null if not specified
+   */
+  public final Summary getSummary() {
+    return (Summary) getProperty(Property.SUMMARY);
+  }
+
+  public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {
+
+    public Factory() {
+      super(VALARM);
     }
 
-    /**
-     * Returns the mandatory trigger property.
-     * @return the TRIGGER property or null if not specified
-     */
-    public final Trigger getTrigger() {
-        return (Trigger) getProperty(Property.TRIGGER);
+    @Override
+    public VAlarm createComponent() {
+      return new VAlarm();
     }
 
-    /**
-     * Returns the optional duration property.
-     * @return the DURATION property or null if not specified
-     */
-    public final Duration getDuration() {
-        return (Duration) getProperty(Property.DURATION);
+    @Override
+    public VAlarm createComponent(PropertyList properties) {
+      return new VAlarm(properties);
     }
 
-    /**
-     * Returns the optional repeat property.
-     * @return the REPEAT property or null if not specified
-     */
-    public final Repeat getRepeat() {
-        return (Repeat) getProperty(Property.REPEAT);
+    @Override
+    public VAlarm createComponent(PropertyList properties, ComponentList subComponents) {
+      throw new UnsupportedOperationException(String.format("%s does not support sub-components", VALARM));
     }
-
-    /**
-     * Returns the optional attachment property.
-     * @return the ATTACH property or null if not specified
-     */
-    public final Attach getAttachment() {
-        return (Attach) getProperty(Property.ATTACH);
-    }
-
-    /**
-     * Returns the optional description property.
-     * @return the DESCRIPTION property or null if not specified
-     */
-    public final Description getDescription() {
-        return (Description) getProperty(Property.DESCRIPTION);
-    }
-
-    /**
-     * Returns the optional summary property.
-     * @return the SUMMARY property or null if not specified
-     */
-    public final Summary getSummary() {
-        return (Summary) getProperty(Property.SUMMARY);
-    }
-
-    public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {
-
-        public Factory() {
-            super(VALARM);
-        }
-
-        @Override
-        public VAlarm createComponent() {
-            return new VAlarm();
-        }
-
-        @Override
-        public VAlarm createComponent(PropertyList properties) {
-            return new VAlarm(properties);
-        }
-
-        @Override
-        public VAlarm createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VALARM));
-        }
-    }
+  }
 }

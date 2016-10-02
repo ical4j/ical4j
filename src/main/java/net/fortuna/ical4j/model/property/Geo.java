@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -131,139 +131,138 @@ import java.text.ParseException;
  */
 public class Geo extends Property {
 
-    private static final long serialVersionUID = -902100715801867636L;
+  private static final long serialVersionUID = -902100715801867636L;
 
-    private BigDecimal latitude;
+  private BigDecimal latitude;
 
-    private BigDecimal longitude;
+  private BigDecimal longitude;
 
-    /**
-     * Default constructor.
-     */
-    public Geo() {
-        super(GEO, PropertyFactoryImpl.getInstance());
-        latitude = BigDecimal.valueOf(0);
-        longitude = BigDecimal.valueOf(0);
+  /**
+   * Default constructor.
+   */
+  public Geo() {
+    super(GEO, PropertyFactoryImpl.getInstance());
+    latitude = BigDecimal.valueOf(0);
+    longitude = BigDecimal.valueOf(0);
+  }
+
+  /**
+   * Creates a new instance by parsing the specified string representation.
+   *
+   * @param value a geo value
+   */
+  public Geo(final String value) {
+    super(GEO, PropertyFactoryImpl.getInstance());
+    setValue(value);
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Geo(final ParameterList aList, final String aValue) {
+    super(GEO, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param latitude  a latitudinal value
+   * @param longitude a longitudinal value
+   */
+  public Geo(final BigDecimal latitude, final BigDecimal longitude) {
+    super(GEO, PropertyFactoryImpl.getInstance());
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
+
+  /**
+   * @param aList     a list of parameters for this component
+   * @param latitude  a latitudinal value
+   * @param longitude a longitudinal value
+   */
+  public Geo(final ParameterList aList, final BigDecimal latitude,
+             final BigDecimal longitude) {
+    super(GEO, aList, PropertyFactoryImpl.getInstance());
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
+
+  /**
+   * @return Returns the latitude.
+   */
+  public final BigDecimal getLatitude() {
+    return latitude;
+  }
+
+  /**
+   * @return Returns the longitude.
+   */
+  public final BigDecimal getLongitude() {
+    return longitude;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    final String latitudeString = aValue.substring(0, aValue.indexOf(';'));
+    if (StringUtils.isNotBlank(latitudeString)) {
+      latitude = new BigDecimal(latitudeString);
+    } else {
+      latitude = BigDecimal.valueOf(0);
     }
 
-    /**
-     * Creates a new instance by parsing the specified string representation.
-     *
-     * @param value a geo value
-     */
-    public Geo(final String value) {
-        super(GEO, PropertyFactoryImpl.getInstance());
-        setValue(value);
+    final String longitudeString = aValue.substring(aValue.indexOf(';') + 1);
+    if (StringUtils.isNotBlank(longitudeString)) {
+      longitude = new BigDecimal(longitudeString);
+    } else {
+      longitude = BigDecimal.valueOf(0);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return String.valueOf(getLatitude()) + ";"
+        + String.valueOf(getLongitude());
+  }
+
+  /**
+   * @param latitude The latitude to set.
+   */
+  public final void setLatitude(final BigDecimal latitude) {
+    this.latitude = latitude;
+  }
+
+  /**
+   * @param longitude The longitude to set.
+   */
+  public final void setLongitude(final BigDecimal longitude) {
+    this.longitude = longitude;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(GEO);
     }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Geo(final ParameterList aList, final String aValue) {
-        super(GEO, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Geo(parameters, value);
     }
 
-    /**
-     * @param latitude  a latitudinal value
-     * @param longitude a longitudinal value
-     */
-    public Geo(final BigDecimal latitude, final BigDecimal longitude) {
-        super(GEO, PropertyFactoryImpl.getInstance());
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public Property createProperty() {
+      return new Geo();
     }
-
-    /**
-     * @param aList     a list of parameters for this component
-     * @param latitude  a latitudinal value
-     * @param longitude a longitudinal value
-     */
-    public Geo(final ParameterList aList, final BigDecimal latitude,
-               final BigDecimal longitude) {
-        super(GEO, aList, PropertyFactoryImpl.getInstance());
-        this.latitude = latitude;
-        this.longitude = longitude;
-    }
-
-    /**
-     * @return Returns the latitude.
-     */
-    public final BigDecimal getLatitude() {
-        return latitude;
-    }
-
-    /**
-     * @return Returns the longitude.
-     */
-    public final BigDecimal getLongitude() {
-        return longitude;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        final String latitudeString = aValue.substring(0, aValue.indexOf(';'));
-        if (StringUtils.isNotBlank(latitudeString)) {
-            latitude = new BigDecimal(latitudeString);
-        } else {
-            latitude = BigDecimal.valueOf(0);
-        }
-
-        final String longitudeString = aValue.substring(aValue.indexOf(';') + 1);
-        if (StringUtils.isNotBlank(longitudeString)) {
-            longitude = new BigDecimal(longitudeString);
-        } else {
-            longitude = BigDecimal.valueOf(0);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return String.valueOf(getLatitude()) + ";"
-                + String.valueOf(getLongitude());
-    }
-
-    /**
-     * @param latitude The latitude to set.
-     */
-    public final void setLatitude(final BigDecimal latitude) {
-        this.latitude = latitude;
-    }
-
-    /**
-     * @param longitude The longitude to set.
-     */
-    public final void setLongitude(final BigDecimal longitude) {
-        this.longitude = longitude;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(GEO);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Geo(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Geo();
-        }
-    }
-
+  }
 }

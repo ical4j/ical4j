@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -50,20 +50,20 @@ import java.text.ParseException;
  */
 public interface PropertyFactory<T extends Property> extends Serializable {
 
-    /**
-     * @return a new instance of the specified property
-     */
-    T createProperty();
+  /**
+   * @return a new instance of the specified property
+   */
+  T createProperty();
 
-    /**
-     * @param parameters a list of property parameters
-     * @param value      a property value
-     * @return a new instance of the specified property
-     * @throws IOException        where an unexpected error occurs reading data
-     * @throws URISyntaxException where data contains an invalid URI
-     * @throws ParseException     where data is unable to be parsed correctly
-     */
-    T createProperty(ParameterList parameters, String value) throws IOException, URISyntaxException, ParseException;
+  /**
+   * @param parameters a list of property parameters
+   * @param value      a property value
+   * @return a new instance of the specified property
+   * @throws IOException        where an unexpected error occurs reading data
+   * @throws URISyntaxException where data contains an invalid URI
+   * @throws ParseException     where data is unable to be parsed correctly
+   */
+  T createProperty(ParameterList parameters, String value) throws IOException, URISyntaxException, ParseException;
 
-    boolean supports(String name);
+  boolean supports(String name);
 }

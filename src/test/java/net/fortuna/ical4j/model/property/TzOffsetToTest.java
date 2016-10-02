@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.UtcOffset;
+
+import java.text.ParseException;
 
 /**
  * $Id$

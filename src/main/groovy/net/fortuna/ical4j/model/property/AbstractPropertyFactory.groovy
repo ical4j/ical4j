@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
+
 /**
  * $Id$
  *
@@ -51,14 +52,13 @@ public abstract class AbstractPropertyFactory extends AbstractFactory {
         String propValue = attributes.remove('value')
         if (propValue != null) {
             return newInstance(parameters, propValue)
-        }
-        else {
+        } else {
             return newInstance(parameters, value)
         }
     }
 
     protected abstract Object newInstance(ParameterList parameters, String value);
-    
+
     public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof Parameter) {
             parent.parameters.add(child)

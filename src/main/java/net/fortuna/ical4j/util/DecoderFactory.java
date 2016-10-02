@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -31,16 +31,15 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.io.UnsupportedEncodingException;
-
 import net.fortuna.ical4j.model.parameter.Encoding;
-
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.StringDecoder;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Abstract base class for decoder factory implementations.
- * 
+ *
  * $Id$
  *
  * Created on 13/05/2006
@@ -48,49 +47,49 @@ import org.apache.commons.codec.StringDecoder;
  * @author Ben Fortuna
  */
 public abstract class DecoderFactory {
-    
-    /**
-     * The system property used to specify an alternate
-     * <code>DecoderFactory</code> implementation.
-     */
-    public static final String KEY_FACTORY_CLASS = "net.fortuna.ical4j.factory.decoder";
 
-    private static DecoderFactory instance;
-    static {
-        try {
-            @SuppressWarnings("unchecked")
-			final Class<DecoderFactory> factoryClass = (Class<DecoderFactory>) Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
-            instance = factoryClass.newInstance();
-        }
-        catch (Exception e) {
-            instance = new DefaultDecoderFactory();
-        }
-    }
-    
-    /**
-     * @return Returns the instance.
-     */
-    public static final DecoderFactory getInstance() {
-        return instance;
-    }
+  /**
+   * The system property used to specify an alternate
+   * <code>DecoderFactory</code> implementation.
+   */
+  public static final String KEY_FACTORY_CLASS = "net.fortuna.ical4j.factory.decoder";
 
-    /**
-     * Returns a new {@link BinaryDecoder} for the specified encoding.
-     * @param encoding an encoding type
-     * @return a {@link BinaryDecoder} instance
-     * @throws UnsupportedEncodingException where an encoder supporting the
-     * specified encoding is not available.
-     */
-    public abstract BinaryDecoder createBinaryDecoder(Encoding encoding)
-        throws UnsupportedEncodingException;
-    
-    /**
-     * Returns a new {@link StringDecoder} for the specified encoding.
-     * @param encoding an encoding type
-     * @return a {@link StringDecoder} instance
-     * @throws UnsupportedEncodingException where an encoder supporting the
-     * specified encoding is not available.
-     */
-    public abstract StringDecoder createStringDecoder(Encoding encoding)
-        throws UnsupportedEncodingException;
+  private static DecoderFactory instance;
+
+  static {
+    try {
+      @SuppressWarnings("unchecked")
+      final Class<DecoderFactory> factoryClass = (Class<DecoderFactory>) Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
+      instance = factoryClass.newInstance();
+    } catch (Exception e) {
+      instance = new DefaultDecoderFactory();
+    }
+  }
+
+  /**
+   * @return Returns the instance.
+   */
+  public static final DecoderFactory getInstance() {
+    return instance;
+  }
+
+  /**
+   * Returns a new {@link BinaryDecoder} for the specified encoding.
+   * @param encoding an encoding type
+   * @return a {@link BinaryDecoder} instance
+   * @throws UnsupportedEncodingException where an encoder supporting the
+   * specified encoding is not available.
+   */
+  public abstract BinaryDecoder createBinaryDecoder(Encoding encoding)
+      throws UnsupportedEncodingException;
+
+  /**
+   * Returns a new {@link StringDecoder} for the specified encoding.
+   * @param encoding an encoding type
+   * @return a {@link StringDecoder} instance
+   * @throws UnsupportedEncodingException where an encoder supporting the
+   * specified encoding is not available.
+   */
+  public abstract StringDecoder createStringDecoder(Encoding encoding)
+      throws UnsupportedEncodingException;
 }

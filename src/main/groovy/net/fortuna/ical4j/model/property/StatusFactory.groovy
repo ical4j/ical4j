@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
 
 /**
@@ -48,86 +47,84 @@ class StatusFactory extends AbstractPropertyFactory {
         Status instance
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Status.class)) {
             instance = (Status) value
-        }
-        else {
+        } else {
             String instanceValue = attributes.remove('value')
             if (instanceValue != null) {
-				switch (instanceValue) {
-					case Status.VEVENT_CANCELLED.value:
-						instance = Status.VEVENT_CANCELLED
-						break
-					case Status.VEVENT_CONFIRMED.value:
-						instance = Status.VEVENT_CONFIRMED
-						break
-					case Status.VEVENT_TENTATIVE.value:
-                    	instance = Status.VEVENT_TENTATIVE
-						break
-					case Status.VJOURNAL_CANCELLED.value:
-                    	instance = Status.VJOURNAL_CANCELLED
-						break
-					case Status.VJOURNAL_DRAFT.value:
-                    	instance = Status.VJOURNAL_DRAFT
-						break
-					case Status.VJOURNAL_FINAL.value:
-                    	instance = Status.VJOURNAL_FINAL
-						break
-					case Status.VTODO_CANCELLED.value:
-                    	instance = Status.VTODO_CANCELLED
-						break
-					case Status.VTODO_COMPLETED.value:
-                    	instance = Status.VTODO_COMPLETED
-						break
-					case Status.VTODO_IN_PROCESS.value:
-                    	instance = Status.VTODO_IN_PROCESS
-						break
-					case Status.VTODO_NEEDS_ACTION.value:
-                    	instance = Status.VTODO_NEEDS_ACTION
-						break
-					default:
-                    	attributes.put('value', instanceValue)
-						instance = super.newInstance(builder, name, value, attributes)
+                switch (instanceValue) {
+                    case Status.VEVENT_CANCELLED.value:
+                        instance = Status.VEVENT_CANCELLED
+                        break
+                    case Status.VEVENT_CONFIRMED.value:
+                        instance = Status.VEVENT_CONFIRMED
+                        break
+                    case Status.VEVENT_TENTATIVE.value:
+                        instance = Status.VEVENT_TENTATIVE
+                        break
+                    case Status.VJOURNAL_CANCELLED.value:
+                        instance = Status.VJOURNAL_CANCELLED
+                        break
+                    case Status.VJOURNAL_DRAFT.value:
+                        instance = Status.VJOURNAL_DRAFT
+                        break
+                    case Status.VJOURNAL_FINAL.value:
+                        instance = Status.VJOURNAL_FINAL
+                        break
+                    case Status.VTODO_CANCELLED.value:
+                        instance = Status.VTODO_CANCELLED
+                        break
+                    case Status.VTODO_COMPLETED.value:
+                        instance = Status.VTODO_COMPLETED
+                        break
+                    case Status.VTODO_IN_PROCESS.value:
+                        instance = Status.VTODO_IN_PROCESS
+                        break
+                    case Status.VTODO_NEEDS_ACTION.value:
+                        instance = Status.VTODO_NEEDS_ACTION
+                        break
+                    default:
+                        attributes.put('value', instanceValue)
+                        instance = super.newInstance(builder, name, value, attributes)
                 }
-            }
-            else {
-				switch (value) {
-                	case Status.VEVENT_CANCELLED.value:
-                    	instance = Status.VEVENT_CANCELLED
-						break
-					case Status.VEVENT_CONFIRMED.value:
-	                    instance = Status.VEVENT_CONFIRMED
-						break
-	                case Status.VEVENT_TENTATIVE.value:
-	                    instance = Status.VEVENT_TENTATIVE
-						break
-	                case Status.VJOURNAL_CANCELLED.value:
-	                    instance = Status.VJOURNAL_CANCELLED
-						break
-	                case Status.VJOURNAL_DRAFT.value:
-	                    instance = Status.VJOURNAL_DRAFT
-						break
-	                case Status.VJOURNAL_FINAL.value:
-	                    instance = Status.VJOURNAL_FINAL
-						break
-	                case Status.VTODO_CANCELLED.value:
-	                    instance = Status.VTODO_CANCELLED
-						break
-	                case Status.VTODO_COMPLETED.value:
-	                    instance = Status.VTODO_COMPLETED
-						break
-	                case Status.VTODO_IN_PROCESS.value:
-	                    instance = Status.VTODO_IN_PROCESS
-						break
-	                case Status.VTODO_NEEDS_ACTION.value:
-	                    instance = Status.VTODO_NEEDS_ACTION
-						break
-	                default:
-	                    instance = super.newInstance(builder, name, value, attributes)
-				}
+            } else {
+                switch (value) {
+                    case Status.VEVENT_CANCELLED.value:
+                        instance = Status.VEVENT_CANCELLED
+                        break
+                    case Status.VEVENT_CONFIRMED.value:
+                        instance = Status.VEVENT_CONFIRMED
+                        break
+                    case Status.VEVENT_TENTATIVE.value:
+                        instance = Status.VEVENT_TENTATIVE
+                        break
+                    case Status.VJOURNAL_CANCELLED.value:
+                        instance = Status.VJOURNAL_CANCELLED
+                        break
+                    case Status.VJOURNAL_DRAFT.value:
+                        instance = Status.VJOURNAL_DRAFT
+                        break
+                    case Status.VJOURNAL_FINAL.value:
+                        instance = Status.VJOURNAL_FINAL
+                        break
+                    case Status.VTODO_CANCELLED.value:
+                        instance = Status.VTODO_CANCELLED
+                        break
+                    case Status.VTODO_COMPLETED.value:
+                        instance = Status.VTODO_COMPLETED
+                        break
+                    case Status.VTODO_IN_PROCESS.value:
+                        instance = Status.VTODO_IN_PROCESS
+                        break
+                    case Status.VTODO_NEEDS_ACTION.value:
+                        instance = Status.VTODO_NEEDS_ACTION
+                        break
+                    default:
+                        instance = super.newInstance(builder, name, value, attributes)
+                }
             }
         }
         return instance
     }
-    
+
     protected Object newInstance(ParameterList parameters, String value) {
         return new Status(parameters, value)
     }

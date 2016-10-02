@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -40,92 +40,92 @@ import net.fortuna.ical4j.model.ValidationException;
  *
  * Defines methods for validating parameters and parameter
  * lists.
- * 
+ *
  * @author Ben Fortuna
  */
 public final class ParameterValidator {
 
-    private static final String ASSERT_NONE_MESSAGE = "Parameter [{0}] is not applicable";
+  private static final String ASSERT_NONE_MESSAGE = "Parameter [{0}] is not applicable";
 
-    private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Parameter [{0}] must only be specified once";
+  private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Parameter [{0}] must only be specified once";
 
-    private static final String ASSERT_ONE_MESSAGE = "Parameter [{0}] must be specified once";
+  private static final String ASSERT_ONE_MESSAGE = "Parameter [{0}] must be specified once";
 
-    private static final String ASSERT_NULL_OR_EQUAL_MESSAGE = "Parameter [{0}] is invalid";
+  private static final String ASSERT_NULL_OR_EQUAL_MESSAGE = "Parameter [{0}] is invalid";
 
-    private static ParameterValidator instance = new ParameterValidator();
+  private static ParameterValidator instance = new ParameterValidator();
 
-    /**
-     * Constructor made private to enforce singleton.
-     */
-    private ParameterValidator() {
+  /**
+   * Constructor made private to enforce singleton.
+   */
+  private ParameterValidator() {
+  }
+
+  /**
+   * Ensure a parameter occurs no more than once.
+   *
+   * @param paramName
+   *            the parameter name
+   * @param parameters
+   *            a list of parameters to query
+   * @throws ValidationException
+   *             when the specified parameter occurs more than once
+   */
+  public void assertOneOrLess(final String paramName,
+                              final ParameterList parameters) throws ValidationException {
+
+    if (parameters.getParameters(paramName).size() > 1) {
+      throw new ValidationException(ASSERT_ONE_OR_LESS_MESSAGE, new Object[]{paramName});
     }
+  }
 
-    /**
-     * Ensure a parameter occurs no more than once.
-     *
-     * @param paramName
-     *            the parameter name
-     * @param parameters
-     *            a list of parameters to query
-     * @throws ValidationException
-     *             when the specified parameter occurs more than once
-     */
-    public void assertOneOrLess(final String paramName,
-            final ParameterList parameters) throws ValidationException {
+  /**
+   * Ensure a parameter occurs once.
+   *
+   * @param paramName
+   *            the parameter name
+   * @param parameters
+   *            a list of parameters to query
+   * @throws ValidationException
+   *             when the specified parameter does not occur once
+   */
+  public void assertOne(final String paramName,
+                        final ParameterList parameters) throws ValidationException {
 
-        if (parameters.getParameters(paramName).size() > 1) {
-            throw new ValidationException(ASSERT_ONE_OR_LESS_MESSAGE, new Object[] {paramName});
-        }
+    if (parameters.getParameters(paramName).size() != 1) {
+      throw new ValidationException(ASSERT_ONE_MESSAGE, new Object[]{paramName});
     }
+  }
 
-    /**
-     * Ensure a parameter occurs once.
-     *
-     * @param paramName
-     *            the parameter name
-     * @param parameters
-     *            a list of parameters to query
-     * @throws ValidationException
-     *             when the specified parameter does not occur once
-     */
-    public void assertOne(final String paramName,
-            final ParameterList parameters) throws ValidationException {
+  /**
+   * Ensure a parameter doesn't occur in the specified list.
+   * @param paramName the name of a parameter
+   * @param parameters a list of parameters
+   * @throws ValidationException thrown when the specified property
+   * is found in the list of properties
+   */
+  public void assertNone(final String paramName, final ParameterList parameters) throws ValidationException {
+    if (parameters.getParameter(paramName) != null) {
+      throw new ValidationException(ASSERT_NONE_MESSAGE, new Object[]{paramName});
+    }
+  }
 
-        if (parameters.getParameters(paramName).size() != 1) {
-            throw new ValidationException(ASSERT_ONE_MESSAGE, new Object[] {paramName});
-        }
+  /**
+   * @param param a parameter instance
+   * @param parameters a list of parameters
+   * @throws ValidationException where the assertion fails
+   */
+  public void assertNullOrEqual(final Parameter param, final ParameterList parameters) throws ValidationException {
+    final Parameter p = parameters.getParameter(param.getName());
+    if (p != null && !param.equals(p)) {
+      throw new ValidationException(ASSERT_NULL_OR_EQUAL_MESSAGE, new Object[]{p});
     }
-    
-    /**
-     * Ensure a parameter doesn't occur in the specified list.
-     * @param paramName the name of a parameter
-     * @param parameters a list of parameters
-     * @throws ValidationException thrown when the specified property
-     * is found in the list of properties
-     */
-    public void assertNone(final String paramName, final ParameterList parameters) throws ValidationException {
-        if (parameters.getParameter(paramName) != null) {
-            throw new ValidationException(ASSERT_NONE_MESSAGE, new Object[] {paramName});
-        }
-    }
+  }
 
-    /**
-     * @param param a parameter instance
-     * @param parameters a list of parameters
-     * @throws ValidationException where the assertion fails
-     */
-    public void assertNullOrEqual(final Parameter param, final ParameterList parameters) throws ValidationException {
-        final Parameter p = parameters.getParameter(param.getName());
-        if (p != null && !param.equals(p)) {
-            throw new ValidationException(ASSERT_NULL_OR_EQUAL_MESSAGE, new Object[] {p});
-        }
-    }
-    
-    /**
-     * @return Returns the instance.
-     */
-    public static ParameterValidator getInstance() {
-        return instance;
-    }
+  /**
+   * @return Returns the instance.
+   */
+  public static ParameterValidator getInstance() {
+    return instance;
+  }
 }

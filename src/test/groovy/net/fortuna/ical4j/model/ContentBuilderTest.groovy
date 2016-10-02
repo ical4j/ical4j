@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.property.Version
 import net.fortuna.ical4j.model.component.VFreeBusy
-import net.fortuna.ical4j.util.UidGenerator
+import net.fortuna.ical4j.model.property.Version
 import net.fortuna.ical4j.util.SimpleHostInfo
+import net.fortuna.ical4j.util.UidGenerator
 
 /**
  * $Id$

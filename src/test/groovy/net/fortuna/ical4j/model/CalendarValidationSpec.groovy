@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.util.Calendars;
-import spock.lang.Ignore;
-import spock.lang.Shared;
-import spock.lang.Specification;
+import net.fortuna.ical4j.util.Calendars
+import spock.lang.Ignore
+import spock.lang.Shared
+import spock.lang.Specification
 
 class CalendarValidationSpec extends Specification {
 

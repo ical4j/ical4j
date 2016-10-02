@@ -5,11 +5,11 @@ package net.fortuna.ical4j.model;
  */
 public interface ComponentFactory<T extends Component> {
 
-    T createComponent();
+  T createComponent();
 
-    T createComponent(PropertyList properties);
+  T createComponent(PropertyList properties);
 
-    T createComponent(PropertyList properties, ComponentList subComponents);
+  T createComponent(PropertyList properties, ComponentList subComponents);
 
-    boolean supports(String name);
+  boolean supports(String name);
 }

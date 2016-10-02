@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -47,163 +47,162 @@ import java.net.URISyntaxException;
  */
 public class Value extends Parameter {
 
-    private static final long serialVersionUID = -7238642734500301768L;
+  private static final long serialVersionUID = -7238642734500301768L;
 
-    private static final String VALUE_BINARY = "BINARY";
+  private static final String VALUE_BINARY = "BINARY";
 
-    private static final String VALUE_BOOLEAN = "BOOLEAN";
+  private static final String VALUE_BOOLEAN = "BOOLEAN";
 
-    private static final String VALUE_CAL_ADDRESS = "CAL-ADDRESS";
+  private static final String VALUE_CAL_ADDRESS = "CAL-ADDRESS";
 
-    private static final String VALUE_DATE = "DATE";
+  private static final String VALUE_DATE = "DATE";
 
-    private static final String VALUE_DATE_TIME = "DATE-TIME";
+  private static final String VALUE_DATE_TIME = "DATE-TIME";
 
-    private static final String VALUE_DURATION = "DURATION";
+  private static final String VALUE_DURATION = "DURATION";
 
-    private static final String VALUE_FLOAT = "FLOAT";
+  private static final String VALUE_FLOAT = "FLOAT";
 
-    private static final String VALUE_INTEGER = "INTEGER";
+  private static final String VALUE_INTEGER = "INTEGER";
 
-    private static final String VALUE_PERIOD = "PERIOD";
+  private static final String VALUE_PERIOD = "PERIOD";
 
-    private static final String VALUE_RECUR = "RECUR";
+  private static final String VALUE_RECUR = "RECUR";
 
-    private static final String VALUE_TEXT = "TEXT";
+  private static final String VALUE_TEXT = "TEXT";
 
-    private static final String VALUE_TIME = "TIME";
+  private static final String VALUE_TIME = "TIME";
 
-    private static final String VALUE_URI = "URI";
+  private static final String VALUE_URI = "URI";
 
-    private static final String VALUE_UTC_OFFSET = "UTC-OFFSET";
+  private static final String VALUE_UTC_OFFSET = "UTC-OFFSET";
 
-    /**
-     * Binary value type.
-     */
-    public static final Value BINARY = new Value(VALUE_BINARY);
+  /**
+   * Binary value type.
+   */
+  public static final Value BINARY = new Value(VALUE_BINARY);
 
-    /**
-     * Boolean value type.
-     */
-    public static final Value BOOLEAN = new Value(VALUE_BOOLEAN);
+  /**
+   * Boolean value type.
+   */
+  public static final Value BOOLEAN = new Value(VALUE_BOOLEAN);
 
-    /**
-     * Calendar address value type.
-     */
-    public static final Value CAL_ADDRESS = new Value(VALUE_CAL_ADDRESS);
+  /**
+   * Calendar address value type.
+   */
+  public static final Value CAL_ADDRESS = new Value(VALUE_CAL_ADDRESS);
 
-    /**
-     * Date value type.
-     */
-    public static final Value DATE = new Value(VALUE_DATE);
+  /**
+   * Date value type.
+   */
+  public static final Value DATE = new Value(VALUE_DATE);
 
-    /**
-     * Date-time value type.
-     */
-    public static final Value DATE_TIME = new Value(VALUE_DATE_TIME);
+  /**
+   * Date-time value type.
+   */
+  public static final Value DATE_TIME = new Value(VALUE_DATE_TIME);
 
-    /**
-     * Duration value type.
-     */
-    public static final Value DURATION = new Value(VALUE_DURATION);
+  /**
+   * Duration value type.
+   */
+  public static final Value DURATION = new Value(VALUE_DURATION);
 
-    /**
-     * Float value type.
-     */
-    public static final Value FLOAT = new Value(VALUE_FLOAT);
+  /**
+   * Float value type.
+   */
+  public static final Value FLOAT = new Value(VALUE_FLOAT);
 
-    /**
-     * Integer value type.
-     */
-    public static final Value INTEGER = new Value(VALUE_INTEGER);
+  /**
+   * Integer value type.
+   */
+  public static final Value INTEGER = new Value(VALUE_INTEGER);
 
-    /**
-     * Period value type.
-     */
-    public static final Value PERIOD = new Value(VALUE_PERIOD);
+  /**
+   * Period value type.
+   */
+  public static final Value PERIOD = new Value(VALUE_PERIOD);
 
-    /**
-     * Recurrence value type.
-     */
-    public static final Value RECUR = new Value(VALUE_RECUR);
+  /**
+   * Recurrence value type.
+   */
+  public static final Value RECUR = new Value(VALUE_RECUR);
 
-    /**
-     * Text value type.
-     */
-    public static final Value TEXT = new Value(VALUE_TEXT);
+  /**
+   * Text value type.
+   */
+  public static final Value TEXT = new Value(VALUE_TEXT);
 
-    /**
-     * Time value type.
-     */
-    public static final Value TIME = new Value(VALUE_TIME);
+  /**
+   * Time value type.
+   */
+  public static final Value TIME = new Value(VALUE_TIME);
 
-    /**
-     * URI value type.
-     */
-    public static final Value URI = new Value(VALUE_URI);
+  /**
+   * URI value type.
+   */
+  public static final Value URI = new Value(VALUE_URI);
 
-    /**
-     * UTC offset value type.
-     */
-    public static final Value UTC_OFFSET = new Value(VALUE_UTC_OFFSET);
+  /**
+   * UTC offset value type.
+   */
+  public static final Value UTC_OFFSET = new Value(VALUE_UTC_OFFSET);
 
-    private String value;
+  private String value;
 
-    /**
-     * @param aValue a string representation of a value data type
-     */
-    public Value(final String aValue) {
-        super(VALUE, ParameterFactoryImpl.getInstance());
-        this.value = Strings.unquote(aValue);
+  /**
+   * @param aValue a string representation of a value data type
+   */
+  public Value(final String aValue) {
+    super(VALUE, ParameterFactoryImpl.getInstance());
+    this.value = Strings.unquote(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  public static class Factory extends Content.Factory implements ParameterFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(VALUE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Parameter createParameter(final String value) throws URISyntaxException {
+      Value parameter = new Value(value);
+      if (Value.BINARY.equals(parameter)) {
+        parameter = Value.BINARY;
+      } else if (Value.BOOLEAN.equals(parameter)) {
+        parameter = Value.BOOLEAN;
+      } else if (Value.CAL_ADDRESS.equals(parameter)) {
+        parameter = Value.CAL_ADDRESS;
+      } else if (Value.DATE.equals(parameter)) {
+        parameter = Value.DATE;
+      } else if (Value.DATE_TIME.equals(parameter)) {
+        parameter = Value.DATE_TIME;
+      } else if (Value.DURATION.equals(parameter)) {
+        parameter = Value.DURATION;
+      } else if (Value.FLOAT.equals(parameter)) {
+        parameter = Value.FLOAT;
+      } else if (Value.INTEGER.equals(parameter)) {
+        parameter = Value.INTEGER;
+      } else if (Value.PERIOD.equals(parameter)) {
+        parameter = Value.PERIOD;
+      } else if (Value.RECUR.equals(parameter)) {
+        parameter = Value.RECUR;
+      } else if (Value.TEXT.equals(parameter)) {
+        parameter = Value.TEXT;
+      } else if (Value.TIME.equals(parameter)) {
+        parameter = Value.TIME;
+      } else if (Value.URI.equals(parameter)) {
+        parameter = Value.URI;
+      } else if (Value.UTC_OFFSET.equals(parameter)) {
+        parameter = Value.UTC_OFFSET;
+      }
+      return parameter;
     }
-
-    public static class Factory extends Content.Factory implements ParameterFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(VALUE);
-        }
-
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            Value parameter = new Value(value);
-            if (Value.BINARY.equals(parameter)) {
-                parameter = Value.BINARY;
-            } else if (Value.BOOLEAN.equals(parameter)) {
-                parameter = Value.BOOLEAN;
-            } else if (Value.CAL_ADDRESS.equals(parameter)) {
-                parameter = Value.CAL_ADDRESS;
-            } else if (Value.DATE.equals(parameter)) {
-                parameter = Value.DATE;
-            } else if (Value.DATE_TIME.equals(parameter)) {
-                parameter = Value.DATE_TIME;
-            } else if (Value.DURATION.equals(parameter)) {
-                parameter = Value.DURATION;
-            } else if (Value.FLOAT.equals(parameter)) {
-                parameter = Value.FLOAT;
-            } else if (Value.INTEGER.equals(parameter)) {
-                parameter = Value.INTEGER;
-            } else if (Value.PERIOD.equals(parameter)) {
-                parameter = Value.PERIOD;
-            } else if (Value.RECUR.equals(parameter)) {
-                parameter = Value.RECUR;
-            } else if (Value.TEXT.equals(parameter)) {
-                parameter = Value.TEXT;
-            } else if (Value.TIME.equals(parameter)) {
-                parameter = Value.TIME;
-            } else if (Value.URI.equals(parameter)) {
-                parameter = Value.URI;
-            } else if (Value.UTC_OFFSET.equals(parameter)) {
-                parameter = Value.UTC_OFFSET;
-            }
-            return parameter;
-        }
-    }
-
+  }
 }

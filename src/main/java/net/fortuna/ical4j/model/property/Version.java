@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -51,166 +51,165 @@ import java.text.ParseException;
  */
 public class Version extends Property {
 
-    private static final long serialVersionUID = 8872508067309087704L;
+  private static final long serialVersionUID = 8872508067309087704L;
 
-    /**
-     * iCalendar version 2.0.
-     */
-    public static final Version VERSION_2_0 = new ImmutableVersion("2.0");
+  /**
+   * iCalendar version 2.0.
+   */
+  public static final Version VERSION_2_0 = new ImmutableVersion("2.0");
 
-    /**
-     * @author Ben Fortuna An immutable instance of Version.
-     */
-    private static final class ImmutableVersion extends Version {
+  /**
+   * @author Ben Fortuna An immutable instance of Version.
+   */
+  private static final class ImmutableVersion extends Version {
 
-        private static final long serialVersionUID = -5040679357859594835L;
+    private static final long serialVersionUID = -5040679357859594835L;
 
-        private ImmutableVersion(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        public void setMaxVersion(final String maxVersion) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-
-        public void setMinVersion(final String minVersion) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
+    private ImmutableVersion(final String value) {
+      super(new ParameterList(true), value);
     }
 
-    private String minVersion;
-
-    private String maxVersion;
-
-    /**
-     * Default constructor.
-     */
-    public Version() {
-        super(VERSION, PropertyFactoryImpl.getInstance());
-    }
-
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Version(final ParameterList aList, final String aValue) {
-        super(VERSION, aList, PropertyFactoryImpl.getInstance());
-        if (aValue.indexOf(';') >= 0) {
-            this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
-            this.maxVersion = aValue.substring(aValue.indexOf(';'));
-        } else {
-            this.maxVersion = aValue;
-        }
-    }
-
-    /**
-     * @param minVersion a string representation of the minimum version
-     * @param maxVersion a string representation of the maximum version
-     */
-    public Version(final String minVersion, final String maxVersion) {
-        super(VERSION, PropertyFactoryImpl.getInstance());
-        this.minVersion = minVersion;
-        this.maxVersion = maxVersion;
-    }
-
-    /**
-     * @param aList     a list of parameters for this component
-     * @param aVersion1 a string representation of the minimum version
-     * @param aVersion2 a string representation of the maximum version
-     */
-    public Version(final ParameterList aList, final String aVersion1,
-                   final String aVersion2) {
-        super(VERSION, aList, PropertyFactoryImpl.getInstance());
-        minVersion = aVersion1;
-        maxVersion = aVersion2;
-    }
-
-    /**
-     * @return Returns the maxVersion.
-     */
-    public final String getMaxVersion() {
-        return maxVersion;
-    }
-
-    /**
-     * @return Returns the minVersion.
-     */
-    public final String getMinVersion() {
-        return minVersion;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void setValue(final String aValue) {
-        if (aValue.indexOf(';') >= 0) {
-            this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
-            this.maxVersion = aValue.substring(aValue.indexOf(';'));
-        } else {
-            this.maxVersion = aValue;
-        }
+      throw new UnsupportedOperationException(
+          "Cannot modify constant instances");
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        final StringBuilder b = new StringBuilder();
-        if (getMinVersion() != null) {
-            b.append(getMinVersion());
-            if (getMaxVersion() != null) {
-                b.append(';');
-            }
-        }
-        if (getMaxVersion() != null) {
-            b.append(getMaxVersion());
-        }
-        return b.toString();
-    }
-
-    /**
-     * @param maxVersion The maxVersion to set.
-     */
     public void setMaxVersion(final String maxVersion) {
-        this.maxVersion = maxVersion;
+      throw new UnsupportedOperationException(
+          "Cannot modify constant instances");
     }
 
-    /**
-     * @param minVersion The minVersion to set.
-     */
     public void setMinVersion(final String minVersion) {
-        this.minVersion = minVersion;
+      throw new UnsupportedOperationException(
+          "Cannot modify constant instances");
+    }
+  }
+
+  private String minVersion;
+
+  private String maxVersion;
+
+  /**
+   * Default constructor.
+   */
+  public Version() {
+    super(VERSION, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Version(final ParameterList aList, final String aValue) {
+    super(VERSION, aList, PropertyFactoryImpl.getInstance());
+    if (aValue.indexOf(';') >= 0) {
+      this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
+      this.maxVersion = aValue.substring(aValue.indexOf(';'));
+    } else {
+      this.maxVersion = aValue;
+    }
+  }
+
+  /**
+   * @param minVersion a string representation of the minimum version
+   * @param maxVersion a string representation of the maximum version
+   */
+  public Version(final String minVersion, final String maxVersion) {
+    super(VERSION, PropertyFactoryImpl.getInstance());
+    this.minVersion = minVersion;
+    this.maxVersion = maxVersion;
+  }
+
+  /**
+   * @param aList     a list of parameters for this component
+   * @param aVersion1 a string representation of the minimum version
+   * @param aVersion2 a string representation of the maximum version
+   */
+  public Version(final ParameterList aList, final String aVersion1,
+                 final String aVersion2) {
+    super(VERSION, aList, PropertyFactoryImpl.getInstance());
+    minVersion = aVersion1;
+    maxVersion = aVersion2;
+  }
+
+  /**
+   * @return Returns the maxVersion.
+   */
+  public final String getMaxVersion() {
+    return maxVersion;
+  }
+
+  /**
+   * @return Returns the minVersion.
+   */
+  public final String getMinVersion() {
+    return minVersion;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setValue(final String aValue) {
+    if (aValue.indexOf(';') >= 0) {
+      this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
+      this.maxVersion = aValue.substring(aValue.indexOf(';'));
+    } else {
+      this.maxVersion = aValue;
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    final StringBuilder b = new StringBuilder();
+    if (getMinVersion() != null) {
+      b.append(getMinVersion());
+      if (getMaxVersion() != null) {
+        b.append(';');
+      }
+    }
+    if (getMaxVersion() != null) {
+      b.append(getMaxVersion());
+    }
+    return b.toString();
+  }
+
+  /**
+   * @param maxVersion The maxVersion to set.
+   */
+  public void setMaxVersion(final String maxVersion) {
+    this.maxVersion = maxVersion;
+  }
+
+  /**
+   * @param minVersion The minVersion to set.
+   */
+  public void setMinVersion(final String minVersion) {
+    this.minVersion = minVersion;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(VERSION);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Version(parameters, value);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(VERSION);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Version(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Version();
-        }
+    public Property createProperty() {
+      return new Version();
     }
-
+  }
 }

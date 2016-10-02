@@ -41,26 +41,24 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class RequestStatusFactory extends AbstractPropertyFactory{
+public class RequestStatusFactory extends AbstractPropertyFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         RequestStatus instance
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, RequestStatus.class)) {
             instance = (RequestStatus) value
-        }
-        else {
+        } else {
             String instanceValue = attributes.remove('value')
             if (instanceValue != null) {
                 attributes.put('value', instanceValue)
                 instance = super.newInstance(builder, name, value, attributes)
-            }
-            else {
+            } else {
                 instance = super.newInstance(builder, name, value, attributes)
             }
         }
         return instance
     }
-    
+
     protected Object newInstance(ParameterList parameters, String value) {
         return new RequestStatus(parameters, value)
     }

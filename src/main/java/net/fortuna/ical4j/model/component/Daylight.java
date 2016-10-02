@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -68,43 +68,43 @@ import net.fortuna.ical4j.model.PropertyList;
  */
 public class Daylight extends Observance {
 
-    private static final long serialVersionUID = -2494710612002978763L;
+  private static final long serialVersionUID = -2494710612002978763L;
 
-    /**
-     * Default constructor.
-     */
-    public Daylight() {
-        super(DAYLIGHT);
+  /**
+   * Default constructor.
+   */
+  public Daylight() {
+    super(DAYLIGHT);
+  }
+
+  /**
+   * Constructor.
+   *
+   * @param properties a list of properties
+   */
+  public Daylight(final PropertyList properties) {
+    super(DAYLIGHT, properties);
+  }
+
+  public static class Factory extends Content.Factory implements ComponentFactory<Daylight> {
+
+    public Factory() {
+      super(DAYLIGHT);
     }
 
-    /**
-     * Constructor.
-     *
-     * @param properties a list of properties
-     */
-    public Daylight(final PropertyList properties) {
-        super(DAYLIGHT, properties);
+    @Override
+    public Daylight createComponent() {
+      return new Daylight();
     }
 
-    public static class Factory extends Content.Factory implements ComponentFactory<Daylight> {
-
-        public Factory() {
-            super(DAYLIGHT);
-        }
-
-        @Override
-        public Daylight createComponent() {
-            return new Daylight();
-        }
-
-        @Override
-        public Daylight createComponent(PropertyList properties) {
-            return new Daylight(properties);
-        }
-
-        @Override
-        public Daylight createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", DAYLIGHT));
-        }
+    @Override
+    public Daylight createComponent(PropertyList properties) {
+      return new Daylight(properties);
     }
+
+    @Override
+    public Daylight createComponent(PropertyList properties, ComponentList subComponents) {
+      throw new UnsupportedOperationException(String.format("%s does not support sub-components", DAYLIGHT));
+    }
+  }
 }

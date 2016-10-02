@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -94,108 +94,107 @@ import java.text.ParseException;
  */
 public class Clazz extends Property {
 
-    private static final long serialVersionUID = 4939943639175551481L;
+  private static final long serialVersionUID = 4939943639175551481L;
+
+  /**
+   * Constant for public classification.
+   */
+  public static final Clazz PUBLIC = new ImmutableClazz("PUBLIC");
+
+  /**
+   * Constant for private classification.
+   */
+  public static final Clazz PRIVATE = new ImmutableClazz("PRIVATE");
+
+  /**
+   * Constant for confidential classification.
+   */
+  public static final Clazz CONFIDENTIAL = new ImmutableClazz("CONFIDENTIAL");
+
+  /**
+   * @author Ben Fortuna An immutable instance of Clazz.
+   */
+  private static final class ImmutableClazz extends Clazz {
+
+    private static final long serialVersionUID = 5978394762293365042L;
 
     /**
-     * Constant for public classification.
+     * @param value
      */
-    public static final Clazz PUBLIC = new ImmutableClazz("PUBLIC");
-
-    /**
-     * Constant for private classification.
-     */
-    public static final Clazz PRIVATE = new ImmutableClazz("PRIVATE");
-
-    /**
-     * Constant for confidential classification.
-     */
-    public static final Clazz CONFIDENTIAL = new ImmutableClazz("CONFIDENTIAL");
-
-    /**
-     * @author Ben Fortuna An immutable instance of Clazz.
-     */
-    private static final class ImmutableClazz extends Clazz {
-
-        private static final long serialVersionUID = 5978394762293365042L;
-
-        /**
-         * @param value
-         */
-        private ImmutableClazz(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-    }
-
-    private String value;
-
-    /**
-     * Default constructor.
-     */
-    public Clazz() {
-        super(CLASS, PropertyFactoryImpl.getInstance());
-    }
-
-    /**
-     * @param aValue a value string for this component
-     */
-    public Clazz(final String aValue) {
-        super(CLASS, PropertyFactoryImpl.getInstance());
-        this.value = aValue;
-    }
-
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Clazz(final ParameterList aList, final String aValue) {
-        super(CLASS, aList, PropertyFactoryImpl.getInstance());
-        this.value = aValue;
+    private ImmutableClazz(final String value) {
+      super(new ParameterList(true), value);
     }
 
     /**
      * {@inheritDoc}
      */
     public void setValue(final String aValue) {
-        this.value = aValue;
+      throw new UnsupportedOperationException(
+          "Cannot modify constant instances");
+    }
+  }
+
+  private String value;
+
+  /**
+   * Default constructor.
+   */
+  public Clazz() {
+    super(CLASS, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aValue a value string for this component
+   */
+  public Clazz(final String aValue) {
+    super(CLASS, PropertyFactoryImpl.getInstance());
+    this.value = aValue;
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Clazz(final ParameterList aList, final String aValue) {
+    super(CLASS, aList, PropertyFactoryImpl.getInstance());
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setValue(final String aValue) {
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(CLASS);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Clazz(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    public Property createProperty() {
+      return new Clazz();
     }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(CLASS);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Clazz(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Clazz();
-        }
-    }
-
+  }
 }

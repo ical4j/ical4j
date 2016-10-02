@@ -41,8 +41,7 @@ class TypeFactory extends AbstractParameterFactory {
         Type type
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Type)) {
             type = value
-        }
-        else {
+        } else {
             type = [value]
         }
         return type

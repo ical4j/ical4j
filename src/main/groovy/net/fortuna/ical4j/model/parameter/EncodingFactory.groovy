@@ -41,27 +41,26 @@ class EncodingFactory extends AbstractParameterFactory {
         Encoding encoding
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Encoding)) {
             encoding = value
-        }
-        else {
-			switch(value) {
-				case Encoding.BASE64.value:
-					encoding = Encoding.BASE64
-					break
-				case Encoding.BINARY.value:
-		            encoding = Encoding.BINARY
-					break
-				case Encoding.EIGHT_BIT.value:
-		            encoding = Encoding.EIGHT_BIT
-					break
-				case Encoding.QUOTED_PRINTABLE.value:
-		            encoding = Encoding.QUOTED_PRINTABLE
-					break
-				case Encoding.SEVEN_BIT.value:
-		            encoding = Encoding.SEVEN_BIT
-					break
-				default:
-					encoding = [value]
-	        }
+        } else {
+            switch (value) {
+                case Encoding.BASE64.value:
+                    encoding = Encoding.BASE64
+                    break
+                case Encoding.BINARY.value:
+                    encoding = Encoding.BINARY
+                    break
+                case Encoding.EIGHT_BIT.value:
+                    encoding = Encoding.EIGHT_BIT
+                    break
+                case Encoding.QUOTED_PRINTABLE.value:
+                    encoding = Encoding.QUOTED_PRINTABLE
+                    break
+                case Encoding.SEVEN_BIT.value:
+                    encoding = Encoding.SEVEN_BIT
+                    break
+                default:
+                    encoding = [value]
+            }
         }
         return encoding
     }

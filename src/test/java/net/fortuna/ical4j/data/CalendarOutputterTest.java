@@ -50,6 +50,13 @@ import java.io.*;
  * <p/>
  * Test case for iCalendarOutputter.
  *
+ * Ignored. Unable to simply assert that the output will be exactly the same as the raw input.
+ *  - todo: Properties and parameters might not be same order in output
+ *  - todo: Currently LF and CRLF are not checked correctly
+ *  - todo: Outputter is folding lines to maximum 73 characters. This is forces by the FoldingWriter!›
+ *  - todo: iCal4j does not seem to care about real input file encoding, this will make output different from input
+ *  - todo: This test case seems to expect invalid input be returned from parser and outputter as same invalid input. What!?
+ *
  * @author benf
  */
 @Ignore
@@ -60,7 +67,6 @@ public class CalendarOutputterTest extends TestCase {
     private String filename;
 
     /**
-     * @param method
      * @param file
      */
     public CalendarOutputterTest(final String file) {
@@ -118,6 +124,7 @@ public class CalendarOutputterTest extends TestCase {
                 String line = null;
                 while ((line = bin.readLine()) != null) {
                     bout.write(line);
+                    bout.write('\r');
                     bout.write('\n');
                 }
             } finally {

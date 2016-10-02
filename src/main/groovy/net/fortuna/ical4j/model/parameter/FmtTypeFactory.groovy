@@ -41,8 +41,7 @@ class FmtTypeFactory extends AbstractParameterFactory {
         FmtType fmtType
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, FmtType)) {
             fmtType = value
-        }
-        else {
+        } else {
             fmtType = [value]
         }
         return fmtType

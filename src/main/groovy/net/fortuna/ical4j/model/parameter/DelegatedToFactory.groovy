@@ -41,8 +41,7 @@ class DelegatedToFactory extends AbstractParameterFactory {
         DelegatedTo delegatedTo
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, DelegatedTo)) {
             delegatedTo = value
-        }
-        else {
+        } else {
             delegatedTo = [value]
         }
         return delegatedTo

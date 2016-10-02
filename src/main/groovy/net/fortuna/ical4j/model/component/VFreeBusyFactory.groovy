@@ -37,21 +37,20 @@ import net.fortuna.ical4j.model.PropertyList;
  * @author fortuna
  *
  */
-public class VFreeBusyFactory extends AbstractComponentFactory{
+public class VFreeBusyFactory extends AbstractComponentFactory {
 
 
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         VFreeBusy freeBusy
-         if (FactoryBuilderSupport.checkValueIsType(value, name, VFreeBusy.class)) {
-             freeBusy = (VFreeBusy) value
-         }
-         else {
-             freeBusy = super.newInstance(builder, name, value, attributes);
-         }
-         return freeBusy
-     }
-     
-     protected Object newInstance(PropertyList properties) {
-         return new VFreeBusy(properties)
-     }
+    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        VFreeBusy freeBusy
+        if (FactoryBuilderSupport.checkValueIsType(value, name, VFreeBusy.class)) {
+            freeBusy = (VFreeBusy) value
+        } else {
+            freeBusy = super.newInstance(builder, name, value, attributes);
+        }
+        return freeBusy
+    }
+
+    protected Object newInstance(PropertyList properties) {
+        return new VFreeBusy(properties)
+    }
 }

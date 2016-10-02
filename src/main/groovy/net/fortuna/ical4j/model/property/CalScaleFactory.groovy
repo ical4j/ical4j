@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
 
 /**
@@ -42,36 +41,32 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class CalScaleFactory extends AbstractPropertyFactory{
+public class CalScaleFactory extends AbstractPropertyFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         CalScale calScale
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, CalScale.class)) {
             calScale = (CalScale) value
-        }
-        else {
+        } else {
             String calScaleValue = attributes.remove('value')
             if (calScaleValue != null) {
                 if (CalScale.GREGORIAN.getValue().equals(calScaleValue)) {
                     calScale = CalScale.GREGORIAN
-                }
-                else {
+                } else {
                     attributes.put('value', calScaleValue)
                     calScale = super.newInstance(builder, name, value, attributes)
                 }
-            }
-            else {
+            } else {
                 if (CalScale.GREGORIAN.getValue().equals(value)) {
                     calScale = CalScale.GREGORIAN
-                }
-                else {
+                } else {
                     calScale = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
         return calScale
     }
-    
+
     protected Object newInstance(ParameterList parameters, String value) {
         return new CalScale(parameters, value)
     }

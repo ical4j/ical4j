@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -48,75 +48,74 @@ import java.net.URISyntaxException;
  */
 public class FbType extends Parameter {
 
-    private static final long serialVersionUID = -2217689716824679375L;
+  private static final long serialVersionUID = -2217689716824679375L;
 
-    private static final String VALUE_FREE = "FREE";
+  private static final String VALUE_FREE = "FREE";
 
-    private static final String VALUE_BUSY = "BUSY";
+  private static final String VALUE_BUSY = "BUSY";
 
-    private static final String VALUE_BUSY_UNAVAILABLE = "BUSY-UNAVAILABLE";
+  private static final String VALUE_BUSY_UNAVAILABLE = "BUSY-UNAVAILABLE";
 
-    private static final String VALUE_BUSY_TENTATIVE = "BUSY-TENTATIVE";
+  private static final String VALUE_BUSY_TENTATIVE = "BUSY-TENTATIVE";
 
-    /**
-     * Free time.
-     */
-    public static final FbType FREE = new FbType(VALUE_FREE);
+  /**
+   * Free time.
+   */
+  public static final FbType FREE = new FbType(VALUE_FREE);
 
-    /**
-     * Busy time.
-     */
-    public static final FbType BUSY = new FbType(VALUE_BUSY);
+  /**
+   * Busy time.
+   */
+  public static final FbType BUSY = new FbType(VALUE_BUSY);
 
-    /**
-     * Busy (unavailable) time.
-     */
-    public static final FbType BUSY_UNAVAILABLE = new FbType(
-            VALUE_BUSY_UNAVAILABLE);
+  /**
+   * Busy (unavailable) time.
+   */
+  public static final FbType BUSY_UNAVAILABLE = new FbType(
+      VALUE_BUSY_UNAVAILABLE);
 
-    /**
-     * Busy (tentative) time.
-     */
-    public static final FbType BUSY_TENTATIVE = new FbType(VALUE_BUSY_TENTATIVE);
+  /**
+   * Busy (tentative) time.
+   */
+  public static final FbType BUSY_TENTATIVE = new FbType(VALUE_BUSY_TENTATIVE);
 
-    private String value;
+  private String value;
 
-    /**
-     * @param aValue a string representation of a format type
-     */
-    public FbType(final String aValue) {
-        super(FBTYPE, ParameterFactoryImpl.getInstance());
+  /**
+   * @param aValue a string representation of a format type
+   */
+  public FbType(final String aValue) {
+    super(FBTYPE, ParameterFactoryImpl.getInstance());
 
-        this.value = Strings.unquote(aValue);
+    this.value = Strings.unquote(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  public static class Factory extends Content.Factory implements ParameterFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(FBTYPE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Parameter createParameter(final String value) throws URISyntaxException {
+      FbType parameter = new FbType(value);
+      if (FbType.FREE.equals(parameter)) {
+        parameter = FbType.FREE;
+      } else if (FbType.BUSY.equals(parameter)) {
+        parameter = FbType.BUSY;
+      } else if (FbType.BUSY_TENTATIVE.equals(parameter)) {
+        parameter = FbType.BUSY_TENTATIVE;
+      } else if (FbType.BUSY_UNAVAILABLE.equals(parameter)) {
+        parameter = FbType.BUSY_UNAVAILABLE;
+      }
+      return parameter;
     }
-
-    public static class Factory extends Content.Factory implements ParameterFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(FBTYPE);
-        }
-
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            FbType parameter = new FbType(value);
-            if (FbType.FREE.equals(parameter)) {
-                parameter = FbType.FREE;
-            } else if (FbType.BUSY.equals(parameter)) {
-                parameter = FbType.BUSY;
-            } else if (FbType.BUSY_TENTATIVE.equals(parameter)) {
-                parameter = FbType.BUSY_TENTATIVE;
-            } else if (FbType.BUSY_UNAVAILABLE.equals(parameter)) {
-                parameter = FbType.BUSY_UNAVAILABLE;
-            }
-            return parameter;
-        }
-    }
-
+  }
 }

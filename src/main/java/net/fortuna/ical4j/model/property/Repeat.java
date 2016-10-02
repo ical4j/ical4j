@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -48,93 +48,92 @@ import java.text.ParseException;
  */
 public class Repeat extends Property {
 
-    private static final long serialVersionUID = -1765522613173314831L;
+  private static final long serialVersionUID = -1765522613173314831L;
 
-    private int count;
+  private int count;
 
-    /**
-     * Default constructor.
-     */
-    public Repeat() {
-        super(REPEAT, PropertyFactoryImpl.getInstance());
+  /**
+   * Default constructor.
+   */
+  public Repeat() {
+    super(REPEAT, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Repeat(final ParameterList aList, final String aValue) {
+    super(REPEAT, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param aCount a repetition count
+   */
+  public Repeat(final int aCount) {
+    super(REPEAT, PropertyFactoryImpl.getInstance());
+    count = aCount;
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aCount a repetition count
+   */
+  public Repeat(final ParameterList aList, final int aCount) {
+    super(REPEAT, aList, PropertyFactoryImpl.getInstance());
+    count = aCount;
+  }
+
+  /**
+   * @return Returns the count.
+   */
+  public final int getCount() {
+    return count;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    count = Integer.parseInt(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return String.valueOf(getCount());
+  }
+
+  /**
+   * @param count The count to set.
+   */
+  public final void setCount(final int count) {
+    this.count = count;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(REPEAT);
     }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Repeat(final ParameterList aList, final String aValue) {
-        super(REPEAT, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Repeat(parameters, value);
     }
 
-    /**
-     * @param aCount a repetition count
-     */
-    public Repeat(final int aCount) {
-        super(REPEAT, PropertyFactoryImpl.getInstance());
-        count = aCount;
+    public Property createProperty() {
+      return new Repeat();
     }
-
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aCount a repetition count
-     */
-    public Repeat(final ParameterList aList, final int aCount) {
-        super(REPEAT, aList, PropertyFactoryImpl.getInstance());
-        count = aCount;
-    }
-
-    /**
-     * @return Returns the count.
-     */
-    public final int getCount() {
-        return count;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        count = Integer.parseInt(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return String.valueOf(getCount());
-    }
-
-    /**
-     * @param count The count to set.
-     */
-    public final void setCount(final int count) {
-        this.count = count;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(REPEAT);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Repeat(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Repeat();
-        }
-    }
-
+  }
 }

@@ -41,21 +41,20 @@ class RelTypeFactory extends AbstractParameterFactory {
         RelType relType
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, RelType)) {
             relType = value
-        }
-        else {
-			switch(value) {
-				case RelType.CHILD.value:
-					relType = RelType.CHILD
-					break
-				case RelType.PARENT.value:
-		            relType = RelType.PARENT
-					break
-				case RelType.SIBLING.value:
-		            relType = RelType.SIBLING
-					break
-				default:
-		            relType = [value]
-	        }
+        } else {
+            switch (value) {
+                case RelType.CHILD.value:
+                    relType = RelType.CHILD
+                    break
+                case RelType.PARENT.value:
+                    relType = RelType.PARENT
+                    break
+                case RelType.SIBLING.value:
+                    relType = RelType.SIBLING
+                    break
+                default:
+                    relType = [value]
+            }
         }
         return relType
     }

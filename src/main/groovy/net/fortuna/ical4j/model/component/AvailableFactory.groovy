@@ -37,22 +37,21 @@ import net.fortuna.ical4j.model.PropertyList;
  * @author fortuna
  *
  */
-class AvailableFactory extends AbstractComponentFactory{
+class AvailableFactory extends AbstractComponentFactory {
 
 
-     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         Available available
-         if (FactoryBuilderSupport.checkValueIsType(value, name, Available.class)) {
-             available = (Available) value
-         }
-         else {
-             available = super.newInstance(builder, name, value, attributes);
-         }
-         return available
-     }
-     
-     protected Object newInstance(PropertyList properties) {
-         return new Available(properties)
-     }
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        Available available
+        if (FactoryBuilderSupport.checkValueIsType(value, name, Available.class)) {
+            available = (Available) value
+        } else {
+            available = super.newInstance(builder, name, value, attributes);
+        }
+        return available
+    }
+
+    protected Object newInstance(PropertyList properties) {
+        return new Available(properties)
+    }
 }
 

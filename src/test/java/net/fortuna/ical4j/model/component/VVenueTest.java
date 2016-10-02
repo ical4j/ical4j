@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.net.SocketException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.util.UidGenerator;
+
+import java.net.SocketException;
 
 /**
  * $Id$

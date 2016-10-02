@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -106,95 +106,95 @@ import java.text.ParseException;
  */
 public class DtStart extends DateProperty {
 
-    private static final long serialVersionUID = -5707097476081111815L;
+  private static final long serialVersionUID = -5707097476081111815L;
 
-    /**
-     * Default constructor. The time value is initialised to the time of instantiation.
-     */
-    public DtStart() {
-        super(DTSTART, PropertyFactoryImpl.getInstance());
-    }
+  /**
+   * Default constructor. The time value is initialised to the time of instantiation.
+   */
+  public DtStart() {
+    super(DTSTART, PropertyFactoryImpl.getInstance());
+  }
 
-    /**
-     * Creates a new DTSTART property initialised with the specified timezone.
-     *
-     * @param timezone initial timezone
-     */
-    public DtStart(TimeZone timezone) {
-        super(DTSTART, timezone, PropertyFactoryImpl.getInstance());
-    }
+  /**
+   * Creates a new DTSTART property initialised with the specified timezone.
+   *
+   * @param timezone initial timezone
+   */
+  public DtStart(TimeZone timezone) {
+    super(DTSTART, timezone, PropertyFactoryImpl.getInstance());
+  }
 
-    /**
-     * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
-     */
-    public DtStart(final String aValue) throws ParseException {
-        super(DTSTART, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aValue a value string for this component
+   * @throws ParseException where the specified value string is not a valid date-time/date representation
+   */
+  public DtStart(final String aValue) throws ParseException {
+    super(DTSTART, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * Creates a new DTSTART property initialised with the specified timezone and value.
-     *
-     * @param value    a string representation of a DTSTART value
-     * @param timezone initial timezone
-     * @throws ParseException where the specified value is not a valid string
-     *                        representation
-     */
-    public DtStart(String value, TimeZone timezone) throws ParseException {
-        super(DTSTART, timezone, PropertyFactoryImpl.getInstance());
-        setValue(value);
-    }
+  /**
+   * Creates a new DTSTART property initialised with the specified timezone and value.
+   *
+   * @param value    a string representation of a DTSTART value
+   * @param timezone initial timezone
+   * @throws ParseException where the specified value is not a valid string
+   *                        representation
+   */
+  public DtStart(String value, TimeZone timezone) throws ParseException {
+    super(DTSTART, timezone, PropertyFactoryImpl.getInstance());
+    setValue(value);
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
-     */
-    public DtStart(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(DTSTART, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   * @throws ParseException where the specified value string is not a valid date-time/date representation
+   */
+  public DtStart(final ParameterList aList, final String aValue)
+      throws ParseException {
+    super(DTSTART, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
-     *
-     * @param aDate a date
-     */
-    public DtStart(final Date aDate) {
-        super(DTSTART, PropertyFactoryImpl.getInstance());
-        setDate(aDate);
-    }
+  /**
+   * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+   *
+   * @param aDate a date
+   */
+  public DtStart(final Date aDate) {
+    super(DTSTART, PropertyFactoryImpl.getInstance());
+    setDate(aDate);
+  }
 
-    /**
-     * Constructs a new DtStart with the specified time.
-     *
-     * @param time the time of the DtStart
-     * @param utc  specifies whether time is UTC
-     */
-    public DtStart(final Date time, final boolean utc) {
-        super(DTSTART, PropertyFactoryImpl.getInstance());
-        setDate(time);
-        setUtc(utc);
-    }
+  /**
+   * Constructs a new DtStart with the specified time.
+   *
+   * @param time the time of the DtStart
+   * @param utc  specifies whether time is UTC
+   */
+  public DtStart(final Date time, final boolean utc) {
+    super(DTSTART, PropertyFactoryImpl.getInstance());
+    setDate(time);
+    setUtc(utc);
+  }
 
-    /**
-     * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
-     *
-     * @param aList a list of parameters for this component
-     * @param aDate a date
-     */
-    public DtStart(final ParameterList aList, final Date aDate) {
-        super(DTSTART, aList, PropertyFactoryImpl.getInstance());
-        setDate(aDate);
-    }
+  /**
+   * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+   *
+   * @param aList a list of parameters for this component
+   * @param aDate a date
+   */
+  public DtStart(final ParameterList aList, final Date aDate) {
+    super(DTSTART, aList, PropertyFactoryImpl.getInstance());
+    setDate(aDate);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        super.validate();
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    super.validate();
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
@@ -204,23 +204,22 @@ public class DtStart extends DateProperty {
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(DTSTART);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(DTSTART);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new DtStart(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new DtStart();
-        }
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new DtStart(parameters, value);
     }
 
+    public Property createProperty() {
+      return new DtStart();
+    }
+  }
 }

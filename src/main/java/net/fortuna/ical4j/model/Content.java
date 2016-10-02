@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -47,31 +47,31 @@ import java.util.List;
  */
 public abstract class Content implements Serializable {
 
-    /**
-     *
-     */
-    private static final long serialVersionUID = -2892694760294583989L;
+  /**
+   *
+   */
+  private static final long serialVersionUID = -2892694760294583989L;
 
-    /**
-     * @return the cotent name
-     */
-    public abstract String getName();
+  /**
+   * @return the cotent name
+   */
+  public abstract String getName();
 
-    /**
-     * @return the content value
-     */
-    public abstract String getValue();
+  /**
+   * @return the content value
+   */
+  public abstract String getValue();
 
-    public static abstract class Factory {
+  public static abstract class Factory {
 
-        private final List<String> supportedNames;
+    private final List<String> supportedNames;
 
-        public Factory(String... supportedNames) {
-            this.supportedNames = Arrays.asList(supportedNames);
-        }
-
-        public final boolean supports(String name) {
-            return supportedNames.contains(name);
-        }
+    public Factory(String... supportedNames) {
+      this.supportedNames = Arrays.asList(supportedNames);
     }
+
+    public final boolean supports(String name) {
+      return supportedNames.contains(name);
+    }
+  }
 }
