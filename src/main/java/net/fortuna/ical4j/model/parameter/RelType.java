@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -48,65 +48,64 @@ import java.net.URISyntaxException;
  */
 public class RelType extends Parameter {
 
-    private static final long serialVersionUID = 5346030888832899016L;
+  private static final long serialVersionUID = 5346030888832899016L;
 
-    private static final String VALUE_PARENT = "PARENT";
+  private static final String VALUE_PARENT = "PARENT";
 
-    private static final String VALUE_CHILD = "CHILD";
+  private static final String VALUE_CHILD = "CHILD";
 
-    private static final String VALUE_SIBLING = "SIBLING";
+  private static final String VALUE_SIBLING = "SIBLING";
 
-    /**
-     * Parent.
-     */
-    public static final RelType PARENT = new RelType(VALUE_PARENT);
+  /**
+   * Parent.
+   */
+  public static final RelType PARENT = new RelType(VALUE_PARENT);
 
-    /**
-     * Child.
-     */
-    public static final RelType CHILD = new RelType(VALUE_CHILD);
+  /**
+   * Child.
+   */
+  public static final RelType CHILD = new RelType(VALUE_CHILD);
 
-    /**
-     * Sibling.
-     */
-    public static final RelType SIBLING = new RelType(VALUE_SIBLING);
+  /**
+   * Sibling.
+   */
+  public static final RelType SIBLING = new RelType(VALUE_SIBLING);
 
-    private String value;
+  private String value;
 
-    /**
-     * @param aValue a string representation of a relationship type
-     */
-    public RelType(final String aValue) {
-        super(RELTYPE, ParameterFactoryImpl.getInstance());
-        this.value = Strings.unquote(aValue);
+  /**
+   * @param aValue a string representation of a relationship type
+   */
+  public RelType(final String aValue) {
+    super(RELTYPE, ParameterFactoryImpl.getInstance());
+    this.value = Strings.unquote(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  public static class Factory extends Content.Factory implements ParameterFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(RELTYPE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Parameter createParameter(final String value) throws URISyntaxException {
+      RelType parameter = new RelType(value);
+      if (RelType.PARENT.equals(parameter)) {
+        parameter = RelType.PARENT;
+      } else if (RelType.CHILD.equals(parameter)) {
+        parameter = RelType.CHILD;
+      }
+      if (RelType.SIBLING.equals(parameter)) {
+        parameter = RelType.SIBLING;
+      }
+      return parameter;
     }
-
-    public static class Factory extends Content.Factory implements ParameterFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(RELTYPE);
-        }
-
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            RelType parameter = new RelType(value);
-            if (RelType.PARENT.equals(parameter)) {
-                parameter = RelType.PARENT;
-            } else if (RelType.CHILD.equals(parameter)) {
-                parameter = RelType.CHILD;
-            }
-            if (RelType.SIBLING.equals(parameter)) {
-                parameter = RelType.SIBLING;
-            }
-            return parameter;
-        }
-    }
-
+  }
 }

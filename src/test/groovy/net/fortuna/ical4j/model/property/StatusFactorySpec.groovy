@@ -31,8 +31,7 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ContentBuilder;
-import net.fortuna.ical4j.util.Constants;
+import net.fortuna.ical4j.model.ContentBuilder
 import spock.lang.Specification
 
 class StatusFactorySpec extends Specification {

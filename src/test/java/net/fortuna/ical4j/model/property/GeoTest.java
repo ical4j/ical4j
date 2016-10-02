@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.math.BigDecimal;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
+
+import java.math.BigDecimal;
 
 /**
  * $Id$

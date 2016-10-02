@@ -64,7 +64,7 @@ public class CalendarBuilderTest extends TestCase {
     /**
      * Constructor.
      *
-     * @param method name of method to run in test case
+     * @param testMethod name of method to run in test case
      * @param file   an iCalendar filename
      * @throws FileNotFoundException
      */
@@ -119,10 +119,10 @@ public class CalendarBuilderTest extends TestCase {
             Calendar calendar = builder.build(fin);
             calendar.validate();
             fail("Should throw ParserException or ValidationException");
-        } catch (ValidationException ve) {
+        } catch (ValidationException | ParserException ve) {
             log.trace("Caught exception: [" + filename + "," + ve.getMessage() + "]");
-        } catch (ParserException ve) {
-            log.trace("Caught exception: [" + filename + "," + ve.getMessage() + "]");
+        } catch (Exception e) {
+          throw e;
         }
     }
     
@@ -153,6 +153,8 @@ public class CalendarBuilderTest extends TestCase {
 //                new File("etc/samples/valid/oracle.ics").getPath()));
 
         // valid tests..
+
+        // todo: These tests are confusing and not possible to re-run one single test.
         testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");

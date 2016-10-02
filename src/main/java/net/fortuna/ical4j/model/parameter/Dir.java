@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -50,50 +50,49 @@ import java.net.URISyntaxException;
  */
 public class Dir extends Parameter {
 
-    private static final long serialVersionUID = -8581904779721020689L;
+  private static final long serialVersionUID = -8581904779721020689L;
 
-    private URI uri;
+  private URI uri;
 
-    /**
-     * @param aValue a string representation of a directory entry reference
-     * @throws URISyntaxException when the specified string is not a valid (quoted) uri
-     */
-    public Dir(final String aValue) throws URISyntaxException {
-        this(Uris.create(Strings.unquote(aValue)));
+  /**
+   * @param aValue a string representation of a directory entry reference
+   * @throws URISyntaxException when the specified string is not a valid (quoted) uri
+   */
+  public Dir(final String aValue) throws URISyntaxException {
+    this(Uris.create(Strings.unquote(aValue)));
+  }
+
+  /**
+   * @param aUri a URI representing a directory entry reference
+   */
+  public Dir(final URI aUri) {
+    super(DIR, ParameterFactoryImpl.getInstance());
+    this.uri = aUri;
+  }
+
+  /**
+   * @return Returns the uri.
+   */
+  public final URI getUri() {
+    return uri;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return Uris.decode(Strings.valueOf(getUri()));
+  }
+
+  public static class Factory extends Content.Factory implements ParameterFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(DIR);
     }
 
-    /**
-     * @param aUri a URI representing a directory entry reference
-     */
-    public Dir(final URI aUri) {
-        super(DIR, ParameterFactoryImpl.getInstance());
-        this.uri = aUri;
+    public Parameter createParameter(final String value) throws URISyntaxException {
+      return new Dir(value);
     }
-
-    /**
-     * @return Returns the uri.
-     */
-    public final URI getUri() {
-        return uri;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return Uris.decode(Strings.valueOf(getUri()));
-    }
-
-    public static class Factory extends Content.Factory implements ParameterFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(DIR);
-        }
-
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            return new Dir(value);
-        }
-    }
-
+  }
 }

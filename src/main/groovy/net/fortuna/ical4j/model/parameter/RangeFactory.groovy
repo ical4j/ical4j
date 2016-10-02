@@ -41,18 +41,17 @@ class RangeFactory extends AbstractParameterFactory {
         Range range
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Range)) {
             range = value
-        }
-        else {
-			switch(value) {
-				case Range.THISANDFUTURE.value:
-					range = Range.THISANDFUTURE
-					break
-				case Range.THISANDPRIOR.value:
-		            range = Range.THISANDPRIOR
-					break
-				default:
-		            range = new Range(value)
-	        }
+        } else {
+            switch (value) {
+                case Range.THISANDFUTURE.value:
+                    range = Range.THISANDFUTURE
+                    break
+                case Range.THISANDPRIOR.value:
+                    range = Range.THISANDPRIOR
+                    break
+                default:
+                    range = new Range(value)
+            }
         }
         return range
     }

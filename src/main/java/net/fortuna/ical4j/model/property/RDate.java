@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -128,155 +128,154 @@ import java.text.ParseException;
  */
 public class RDate extends DateListProperty {
 
-    private static final long serialVersionUID = -3320381650013860193L;
+  private static final long serialVersionUID = -3320381650013860193L;
 
-    private PeriodList periods;
+  private PeriodList periods;
 
-    /**
-     * Default constructor.
-     */
-    public RDate() {
-        super(RDATE, PropertyFactoryImpl.getInstance());
-        periods = new PeriodList(false, true);
-    }
+  /**
+   * Default constructor.
+   */
+  public RDate() {
+    super(RDATE, PropertyFactoryImpl.getInstance());
+    periods = new PeriodList(false, true);
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
-     */
-    public RDate(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(RDATE, aList, PropertyFactoryImpl.getInstance());
-        periods = new PeriodList(false, true);
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   * @throws ParseException where the specified value string is not a valid date-time/date representation
+   */
+  public RDate(final ParameterList aList, final String aValue)
+      throws ParseException {
+    super(RDATE, aList, PropertyFactoryImpl.getInstance());
+    periods = new PeriodList(false, true);
+    setValue(aValue);
+  }
 
-    /**
-     * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
-     *
-     * @param dates a list of dates
-     */
-    public RDate(final DateList dates) {
-        super(RDATE, dates, PropertyFactoryImpl.getInstance());
-        periods = new PeriodList(false, true);
-    }
+  /**
+   * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+   *
+   * @param dates a list of dates
+   */
+  public RDate(final DateList dates) {
+    super(RDATE, dates, PropertyFactoryImpl.getInstance());
+    periods = new PeriodList(false, true);
+  }
 
-    /**
-     * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
-     *
-     * @param aList a list of parameters for this component
-     * @param dates a list of dates
-     */
-    public RDate(final ParameterList aList, final DateList dates) {
-        super(RDATE, aList, dates, PropertyFactoryImpl.getInstance());
-        periods = new PeriodList(false, true);
-    }
+  /**
+   * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+   *
+   * @param aList a list of parameters for this component
+   * @param dates a list of dates
+   */
+  public RDate(final ParameterList aList, final DateList dates) {
+    super(RDATE, aList, dates, PropertyFactoryImpl.getInstance());
+    periods = new PeriodList(false, true);
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param periods a list of periods
-     */
-    public RDate(final PeriodList periods) {
-        super(RDATE, new DateList(true), PropertyFactoryImpl.getInstance());
-        this.periods = periods;
-    }
+  /**
+   * Constructor.
+   *
+   * @param periods a list of periods
+   */
+  public RDate(final PeriodList periods) {
+    super(RDATE, new DateList(true), PropertyFactoryImpl.getInstance());
+    this.periods = periods;
+  }
 
-    /**
-     * Constructor.
-     *
-     * @param aList   a list of parameters for this component
-     * @param periods a list of periods
-     */
-    public RDate(final ParameterList aList, final PeriodList periods) {
-        super(RDATE, aList, new DateList(true), PropertyFactoryImpl.getInstance());
-        this.periods = periods;
-    }
+  /**
+   * Constructor.
+   *
+   * @param aList   a list of parameters for this component
+   * @param periods a list of periods
+   */
+  public RDate(final ParameterList aList, final PeriodList periods) {
+    super(RDATE, aList, new DateList(true), PropertyFactoryImpl.getInstance());
+    this.periods = periods;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE" /
          * "PERIOD")) / (";" tzidparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
+        getParameters());
 
-        final Parameter valueParam = getParameter(Parameter.VALUE);
+    final Parameter valueParam = getParameter(Parameter.VALUE);
 
-        if (valueParam != null && !Value.DATE_TIME.equals(valueParam)
-                && !Value.DATE.equals(valueParam)
-                && !Value.PERIOD.equals(valueParam)) {
-            throw new ValidationException("Parameter [" + Parameter.VALUE
-                    + "] is invalid");
-        }
+    if (valueParam != null && !Value.DATE_TIME.equals(valueParam)
+        && !Value.DATE.equals(valueParam)
+        && !Value.PERIOD.equals(valueParam)) {
+      throw new ValidationException("Parameter [" + Parameter.VALUE
+          + "] is invalid");
+    }
 
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
+        getParameters());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+  }
+
+  /**
+   * @return Returns the period list.
+   */
+  public final PeriodList getPeriods() {
+    return periods;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) throws ParseException {
+    if (Value.PERIOD.equals(getParameter(Parameter.VALUE))) {
+      periods = new PeriodList(aValue);
+    } else {
+      super.setValue(aValue);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    if (periods != null && !(periods.isEmpty() && periods.isUnmodifiable())) {
+      return Strings.valueOf(getPeriods());
+    }
+    return super.getValue();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setTimeZone(TimeZone timezone) {
+    if (periods != null && !(periods.isEmpty() && periods.isUnmodifiable())) {
+      periods.setTimeZone(timezone);
+    } else {
+      super.setTimeZone(timezone);
+    }
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(RDATE);
     }
 
-    /**
-     * @return Returns the period list.
-     */
-    public final PeriodList getPeriods() {
-        return periods;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new RDate(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) throws ParseException {
-        if (Value.PERIOD.equals(getParameter(Parameter.VALUE))) {
-            periods = new PeriodList(aValue);
-        } else {
-            super.setValue(aValue);
-        }
+    public Property createProperty() {
+      return new RDate();
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        if (periods != null && !(periods.isEmpty() && periods.isUnmodifiable())) {
-            return Strings.valueOf(getPeriods());
-        }
-        return super.getValue();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void setTimeZone(TimeZone timezone) {
-        if (periods != null && !(periods.isEmpty() && periods.isUnmodifiable())) {
-            periods.setTimeZone(timezone);
-        } else {
-            super.setTimeZone(timezone);
-        }
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(RDATE);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new RDate(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new RDate();
-        }
-    }
-
+  }
 }

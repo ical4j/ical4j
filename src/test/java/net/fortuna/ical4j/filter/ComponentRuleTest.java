@@ -44,9 +44,9 @@ import junit.framework.TestSuite;
  * @author Ben
  *
  */
-public class ComponentRuleTest extends TestCase {
+public class ComponentRuleTest<T extends Rule<Component>> extends TestCase {
 
-    private Rule<Component> rule;
+    private T rule;
     
     private Component component;
     
@@ -55,21 +55,21 @@ public class ComponentRuleTest extends TestCase {
      * @param rule
      * @param component
      */
-    public ComponentRuleTest(String testMethod, Rule<Component> rule, Component component) {
+    public ComponentRuleTest(String testMethod, T rule, Component component) {
         super(testMethod);
         this.rule = rule;
         this.component = component;
     }
     
     /**
-     * Test method for {@link net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)}.
+     * Test method for {@link net.fortuna.ical4j.filter.Rule#match(Object)}.
      */
     public void testMatchComponent() {
         assertTrue(rule.match(component));
     }
     
     /**
-     * Test method for {@link net.fortuna.ical4j.filter.ComponentRule#match(net.fortuna.ical4j.model.Component)}.
+     * Test method for {@link net.fortuna.ical4j.filter.Rule#match(Object)}.
      */
     public void testNotMatchComponent() {
         assertFalse(rule.match(component));

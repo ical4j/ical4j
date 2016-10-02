@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -115,70 +115,69 @@ import java.text.ParseException;
  */
 public class Uid extends Property implements Escapable {
 
-    private static final long serialVersionUID = -7139407612536588584L;
+  private static final long serialVersionUID = -7139407612536588584L;
 
-    private String value;
+  private String value;
 
-    /**
-     * Default constructor.
-     */
-    public Uid() {
-        super(UID, PropertyFactoryImpl.getInstance());
+  /**
+   * Default constructor.
+   */
+  public Uid() {
+    super(UID, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aValue a value string for this component
+   */
+  public Uid(final String aValue) {
+    super(UID, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Uid(final ParameterList aList, final String aValue) {
+    super(UID, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(UID);
     }
 
-    /**
-     * @param aValue a value string for this component
-     */
-    public Uid(final String aValue) {
-        super(UID, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Uid(parameters, value);
     }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Uid(final ParameterList aList, final String aValue) {
-        super(UID, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty() {
+      return new Uid();
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        this.value = aValue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(UID);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Uid(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Uid();
-        }
-    }
-
+  }
 }

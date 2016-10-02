@@ -41,8 +41,7 @@ class TzIdFactory extends AbstractParameterFactory {
         TzId tzId
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, TzId)) {
             tzId = value
-        }
-        else {
+        } else {
             tzId = [value]
         }
         return tzId

@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -53,97 +53,90 @@ import java.text.ParseException;
  * @author Ben Fortuna
  */
 public class CalendarParserImpl implements CalendarParser {
-	private static final int IGNORE_BEGINNING_NON_WORD_COUNT = 10;
-	
-    private static final int WORD_CHAR_START = 32;
+  private static final int IGNORE_BEGINNING_NON_WORD_COUNT = 10;
 
-    private static final int WORD_CHAR_END = 255;
+  private static final int WORD_CHAR_START = 32;
 
-    private static final int WHITESPACE_CHAR_START = 0;
+  private static final int WORD_CHAR_END = 255;
 
-    private static final int WHITESPACE_CHAR_END = 20;
+  private static final int WHITESPACE_CHAR_START = 0;
 
-    private static final String UNEXPECTED_TOKEN_MESSAGE = "Expected [{0}], read [{1}]";
+  private static final int WHITESPACE_CHAR_END = 20;
 
-    private Logger log = LoggerFactory.getLogger(CalendarParserImpl.class);
+  private static final String UNEXPECTED_TOKEN_MESSAGE = "Expected [{0}], read [{1}]";
 
-    private final ComponentListParser componentListParser = new ComponentListParser();
+  private Logger log = LoggerFactory.getLogger(CalendarParserImpl.class);
 
-    private final ComponentParser componentParser = new ComponentParser();
+  private final ComponentListParser componentListParser = new ComponentListParser();
 
-    private final PropertyListParser propertyListParser = new PropertyListParser();
+  private final ComponentParser componentParser = new ComponentParser();
 
-    private final PropertyParser propertyParser = new PropertyParser();
+  private final PropertyListParser propertyListParser = new PropertyListParser();
 
-    private final ParameterListParser paramListParser = new ParameterListParser();
+  private final PropertyParser propertyParser = new PropertyParser();
 
-    private final ParameterParser paramParser = new ParameterParser();
+  private final ParameterListParser paramListParser = new ParameterListParser();
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void parse(final InputStream in, final ContentHandler handler)
-            throws IOException, ParserException {
-        parse(new InputStreamReader(in), handler);
+  private final ParameterParser paramParser = new ParameterParser();
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void parse(final InputStream in, final ContentHandler handler)
+      throws IOException, ParserException {
+    parse(new InputStreamReader(in), handler);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void parse(final Reader in, final ContentHandler handler)
+      throws IOException, ParserException {
+
+    final StreamTokenizer tokeniser = new StreamTokenizer(in);
+    tokeniser.resetSyntax();
+    tokeniser.wordChars(WORD_CHAR_START, WORD_CHAR_END);
+    tokeniser.whitespaceChars(WHITESPACE_CHAR_START, WHITESPACE_CHAR_END);
+    tokeniser.ordinaryChar(':');
+    tokeniser.ordinaryChar(';');
+    tokeniser.ordinaryChar('=');
+    tokeniser.ordinaryChar('\t');
+    tokeniser.eolIsSignificant(true);
+    tokeniser.whitespaceChars(0, 0);
+    tokeniser.quoteChar('"');
+
+    // BEGIN:VCALENDAR
+    assertToken(tokeniser, in, Calendar.BEGIN, false, true);
+
+    assertToken(tokeniser, in, ':');
+
+    assertToken(tokeniser, in, Calendar.VCALENDAR, true, false);
+
+    assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
+
+    handler.startCalendar();
+
+    try {
+      // parse calendar properties..
+      propertyListParser.parse(tokeniser, in, handler);
+
+      // parse components..
+      componentListParser.parse(tokeniser, in, handler);
+    } catch (ParseException | URISyntaxException | IllegalArgumentException e) {
+      throw new ParserException(e.getMessage(), getLineNumber(tokeniser, in), e);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void parse(final Reader in, final ContentHandler handler)
-            throws IOException, ParserException {
+    // END:VCALENDAR
+    // assertToken(tokeniser,Calendar.END);
 
-        final StreamTokenizer tokeniser = new StreamTokenizer(in);
-        try {
-            tokeniser.resetSyntax();
-            tokeniser.wordChars(WORD_CHAR_START, WORD_CHAR_END);
-            tokeniser.whitespaceChars(WHITESPACE_CHAR_START,
-                    WHITESPACE_CHAR_END);
-            tokeniser.ordinaryChar(':');
-            tokeniser.ordinaryChar(';');
-            tokeniser.ordinaryChar('=');
-            tokeniser.ordinaryChar('\t');
-            tokeniser.eolIsSignificant(true);
-            tokeniser.whitespaceChars(0, 0);
-            tokeniser.quoteChar('"');
+    assertToken(tokeniser, in, ':');
 
-            // BEGIN:VCALENDAR
-            assertToken(tokeniser, in, Calendar.BEGIN, false, true);
+    assertToken(tokeniser, in, Calendar.VCALENDAR, true, false);
 
-            assertToken(tokeniser, in, ':');
+    handler.endCalendar();
+  }
 
-            assertToken(tokeniser, in, Calendar.VCALENDAR, true, false);
-
-            assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
-
-            handler.startCalendar();
-
-            // parse calendar properties..
-            propertyListParser.parse(tokeniser, in, handler);
-
-            // parse components..
-            componentListParser.parse(tokeniser, in, handler);
-
-            // END:VCALENDAR
-            // assertToken(tokeniser,Calendar.END);
-
-            assertToken(tokeniser, in, ':');
-
-            assertToken(tokeniser, in, Calendar.VCALENDAR, true, false);
-
-            handler.endCalendar();
-        } catch (Exception e) {
-
-            if (e instanceof IOException) {
-                throw (IOException) e;
-            }
-            if (e instanceof ParserException) {
-                throw (ParserException) e;
-            } else {
-                throw new ParserException(e.getMessage(), getLineNumber(tokeniser, in), e);
-            }
-        }
-    }
+  private class PropertyListParser {
 
     /**
      * Parses an iCalendar property list from the specified stream tokeniser.
@@ -152,31 +145,34 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws IOException
      * @throws ParseException
      * @throws URISyntaxException
-     * @throws URISyntaxException
      * @throws ParserException
      */
-    private class PropertyListParser {
+    public void parse(final StreamTokenizer tokeniser, Reader in,
+                      final ContentHandler handler) throws IOException, ParseException,
+        URISyntaxException, ParserException {
 
-        public void parse(final StreamTokenizer tokeniser, Reader in,
-                          final ContentHandler handler) throws IOException, ParseException,
-                URISyntaxException, ParserException {
+      assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
-            assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
-
-            while (/*
+      while (/*
                      * !Component.BEGIN.equals(tokeniser.sval) &&
                      */!Component.END.equals(tokeniser.sval)) {
-                // check for timezones observances or vevent/vtodo alarms..
-                if (Component.BEGIN.equals(tokeniser.sval)) {
-                    componentParser.parse(tokeniser, in, handler);
-                } else {
-                    propertyParser.parse(tokeniser, in, handler);
-                }
-                absorbWhitespace(tokeniser, in);
-                // assertToken(tokeniser, StreamTokenizer.TT_WORD);
-            }
+        // check for timezones observances or vevent/vtodo alarms..
+        if (Component.BEGIN.equals(tokeniser.sval)) {
+          componentParser.parse(tokeniser, in, handler);
+        } else {
+          propertyParser.parse(tokeniser, in, handler);
         }
+        absorbWhitespace(tokeniser, in);
+        // assertToken(tokeniser, StreamTokenizer.TT_WORD);
+      }
     }
+  }
+
+  private class PropertyParser {
+
+    private static final String PARSE_DEBUG_MESSAGE = "Property [{0}]";
+
+    private static final String PARSE_EXCEPTION_MESSAGE = "Property [{0}]";
 
     /**
      * Parses an iCalendar property from the specified stream tokeniser.
@@ -187,71 +183,66 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParseException
      */
-    private class PropertyParser {
+    private void parse(final StreamTokenizer tokeniser, Reader in,
+                       final ContentHandler handler) throws IOException, ParserException,
+        URISyntaxException, ParseException {
 
-        private static final String PARSE_DEBUG_MESSAGE = "Property [{0}]";
+      final String name = tokeniser.sval;
+      // debugging..
+      if (log.isDebugEnabled()) {
+        log.debug(MessageFormat.format(PARSE_DEBUG_MESSAGE, name));
+      }
 
-        private static final String PARSE_EXCEPTION_MESSAGE = "Property [{0}]";
+      handler.startProperty(name);
 
-        private void parse(final StreamTokenizer tokeniser, Reader in,
-                           final ContentHandler handler) throws IOException, ParserException,
-                URISyntaxException, ParseException {
+      paramListParser.parse(tokeniser, in, handler);
 
-            final String name = tokeniser.sval;
-            // debugging..
-            if (log.isDebugEnabled()) {
-                log.debug(MessageFormat.format(PARSE_DEBUG_MESSAGE, name));
-            }
+      // it appears that control tokens (ie. ':') are allowed
+      // after the first instance on a line is used.. as such
+      // we must continue appending to value until EOL is
+      // reached..
+      // assertToken(tokeniser, StreamTokenizer.TT_WORD);
 
-            handler.startProperty(name);
+      // String value = tokeniser.sval;
+      final StringBuilder value = new StringBuilder();
 
-            paramListParser.parse(tokeniser, in, handler);
+      // assertToken(tokeniser,StreamTokenizer.TT_EOL);
 
-            // it appears that control tokens (ie. ':') are allowed
-            // after the first instance on a line is used.. as such
-            // we must continue appending to value until EOL is
-            // reached..
-            // assertToken(tokeniser, StreamTokenizer.TT_WORD);
+      // DQUOTE is ordinary char for property value
+      // From sec 4.3.11 of rfc-2445:
+      // text       = *(TSAFE-CHAR / ":" / DQUOTE / ESCAPED-CHAR)
+      //
+      tokeniser.ordinaryChar('"');
+      int nextToken = nextToken(tokeniser, in);
 
-            // String value = tokeniser.sval;
-            final StringBuilder value = new StringBuilder();
+      while (nextToken != StreamTokenizer.TT_EOL) {
 
-            // assertToken(tokeniser,StreamTokenizer.TT_EOL);
-
-            // DQUOTE is ordinary char for property value
-            // From sec 4.3.11 of rfc-2445:
-            // text       = *(TSAFE-CHAR / ":" / DQUOTE / ESCAPED-CHAR)
-            //
-            tokeniser.ordinaryChar('"');
-            int nextToken = nextToken(tokeniser, in);
-
-            while (nextToken != StreamTokenizer.TT_EOL) {
-
-                if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
-                    value.append(tokeniser.sval);
-                } else {
-                    value.append((char) tokeniser.ttype);
-                }
-
-                nextToken = nextToken(tokeniser, in);
-            }
-
-            // reset DQUOTE to be quote char
-            tokeniser.quoteChar('"');
-
-            try {
-                handler.propertyValue(value.toString());
-            } catch (ParseException e) {
-                final ParseException eNew = new ParseException("[" + name + "] "
-                        + e.getMessage(), e.getErrorOffset());
-                eNew.initCause(e);
-                throw eNew;
-            }
-
-            handler.endProperty(name);
-
+        if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
+          value.append(tokeniser.sval);
+        } else {
+          value.append((char) tokeniser.ttype);
         }
+
+        nextToken = nextToken(tokeniser, in);
+      }
+
+      // reset DQUOTE to be quote char
+      tokeniser.quoteChar('"');
+
+      try {
+        handler.propertyValue(value.toString());
+      } catch (ParseException e) {
+        final ParseException eNew = new ParseException("[" + name + "] "
+            + e.getMessage(), e.getErrorOffset());
+        eNew.initCause(e);
+        throw eNew;
+      }
+
+      handler.endProperty(name);
     }
+  }
+
+  private class ParameterListParser {
 
     /**
      * Parses a list of iCalendar parameters by parsing the specified stream tokeniser.
@@ -261,76 +252,77 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws ParserException
      * @throws URISyntaxException
      */
-    private class ParameterListParser {
+    public void parse(final StreamTokenizer tokeniser, Reader in,
+                      final ContentHandler handler) throws IOException, ParserException,
+        URISyntaxException {
 
-        public void parse(final StreamTokenizer tokeniser, Reader in,
-                          final ContentHandler handler) throws IOException, ParserException,
-                URISyntaxException {
-
-            while (nextToken(tokeniser, in) == ';') {
-                paramParser.parse(tokeniser, in, handler);
-            }
-        }
+      while (nextToken(tokeniser, in) == ';') {
+        paramParser.parse(tokeniser, in, handler);
+      }
     }
+  }
+
+  private class ParameterParser {
 
     /**
      * @param tokeniser
+     * @param in
      * @param handler
      * @throws IOException
      * @throws ParserException
      * @throws URISyntaxException
      */
-    private class ParameterParser {
+    private void parse(final StreamTokenizer tokeniser, Reader in,
+                       final ContentHandler handler) throws IOException, ParserException,
+        URISyntaxException {
 
-        private void parse(final StreamTokenizer tokeniser, Reader in,
-                           final ContentHandler handler) throws IOException, ParserException,
-                URISyntaxException {
+      assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
-            assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
+      final String paramName = tokeniser.sval;
 
-            final String paramName = tokeniser.sval;
+      // debugging..
+      if (log.isDebugEnabled()) {
+        log.debug("Parameter [" + paramName + "]");
+      }
 
-            // debugging..
-            if (log.isDebugEnabled()) {
-                log.debug("Parameter [" + paramName + "]");
-            }
+      assertToken(tokeniser, in, '=');
 
-            assertToken(tokeniser, in, '=');
+      final StringBuilder paramValue = new StringBuilder();
 
-            final StringBuilder paramValue = new StringBuilder();
+      // preserve quote chars..
+      if (nextToken(tokeniser, in) == '"') {
+        paramValue.append('"');
+        paramValue.append(tokeniser.sval);
+        paramValue.append('"');
+      } else if (tokeniser.sval != null) {
+        paramValue.append(tokeniser.sval);
+        // check for additional words to account for equals (=) in param-value
+        int nextToken = nextToken(tokeniser, in);
 
-            // preserve quote chars..
-            if (nextToken(tokeniser, in) == '"') {
-                paramValue.append('"');
-                paramValue.append(tokeniser.sval);
-                paramValue.append('"');
-            } else if (tokeniser.sval != null) {
-                paramValue.append(tokeniser.sval);
-                // check for additional words to account for equals (=) in param-value
-                int nextToken = nextToken(tokeniser, in);
+        while (nextToken != ';' && nextToken != ':' && nextToken != ',') {
 
-                while (nextToken != ';' && nextToken != ':' && nextToken != ',') {
+          if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
+            paramValue.append(tokeniser.sval);
+          } else {
+            paramValue.append((char) tokeniser.ttype);
+          }
 
-                    if (tokeniser.ttype == StreamTokenizer.TT_WORD) {
-                        paramValue.append(tokeniser.sval);
-                    } else {
-                        paramValue.append((char) tokeniser.ttype);
-                    }
-
-                    nextToken = nextToken(tokeniser, in);
-                }
-                tokeniser.pushBack();
-            } else if (tokeniser.sval == null) {
-                tokeniser.pushBack();
-            }
-
-            try {
-                handler.parameter(paramName, paramValue.toString());
-            } catch (ClassCastException cce) {
-                throw new ParserException("Error parsing parameter", getLineNumber(tokeniser, in), cce);
-            }
+          nextToken = nextToken(tokeniser, in);
         }
+        tokeniser.pushBack();
+      } else if (tokeniser.sval == null) {
+        tokeniser.pushBack();
+      }
+
+      try {
+        handler.parameter(paramName, paramValue.toString());
+      } catch (Exception cce) {
+        throw new ParserException("Error parsing parameter", getLineNumber(tokeniser, in), cce);
+      }
     }
+  }
+
+  private class ComponentListParser {
 
     /**
      * Parses an iCalendar component list from the specified stream tokeniser.
@@ -341,19 +333,19 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParserException
      */
-    private class ComponentListParser {
+    private void parse(final StreamTokenizer tokeniser, Reader in,
+                       final ContentHandler handler) throws IOException, ParseException,
+        URISyntaxException, ParserException {
 
-        private void parse(final StreamTokenizer tokeniser, Reader in,
-                           final ContentHandler handler) throws IOException, ParseException,
-                URISyntaxException, ParserException {
-
-            while (Component.BEGIN.equals(tokeniser.sval)) {
-                componentParser.parse(tokeniser, in, handler);
-                absorbWhitespace(tokeniser, in);
-                // assertToken(tokeniser, StreamTokenizer.TT_WORD);
-            }
-        }
+      while (Component.BEGIN.equals(tokeniser.sval)) {
+        componentParser.parse(tokeniser, in, handler);
+        absorbWhitespace(tokeniser, in);
+        // assertToken(tokeniser, StreamTokenizer.TT_WORD);
+      }
     }
+  }
+
+  private class ComponentParser {
 
     /**
      * Parses an iCalendar component from the specified stream tokeniser.
@@ -364,23 +356,21 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws URISyntaxException
      * @throws ParserException
      */
-    private class ComponentParser {
+    private void parse(final StreamTokenizer tokeniser, Reader in,
+                       final ContentHandler handler) throws IOException, ParseException,
+        URISyntaxException, ParserException {
 
-        private void parse(final StreamTokenizer tokeniser, Reader in,
-                           final ContentHandler handler) throws IOException, ParseException,
-                URISyntaxException, ParserException {
+      assertToken(tokeniser, in, ':');
 
-            assertToken(tokeniser, in, ':');
+      assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
 
-            assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
+      final String name = tokeniser.sval;
 
-            final String name = tokeniser.sval;
+      handler.startComponent(name);
 
-            handler.startComponent(name);
+      assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
 
-            assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
-
-            propertyListParser.parse(tokeniser, in, handler);
+      propertyListParser.parse(tokeniser, in, handler);
 
             /*
              * // a special case for VTIMEZONE component which contains
@@ -396,177 +386,176 @@ public class CalendarParserImpl implements CalendarParser {
              * }
              */
 
-            assertToken(tokeniser, in, ':');
+      assertToken(tokeniser, in, ':');
 
-            assertToken(tokeniser, in, name);
+      assertToken(tokeniser, in, name);
 
-            assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
+      assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
 
-            handler.endComponent(name);
-        }
+      handler.endComponent(name);
+    }
+  }
+
+  /**
+   * Asserts that the next token in the stream matches the specified token.
+   *
+   * @param tokeniser stream tokeniser to perform assertion on
+   * @param token     expected token
+   * @throws IOException     when unable to read from stream
+   * @throws ParserException when next token in the stream does not match the expected token
+   */
+  private void assertToken(final StreamTokenizer tokeniser, Reader in, final int token)
+      throws IOException, ParserException {
+
+    if (nextToken(tokeniser, in) != token) {
+      throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, tokeniser.ttype), getLineNumber(tokeniser, in));
     }
 
-    /**
-     * Asserts that the next token in the stream matches the specified token.
-     *
-     * @param tokeniser stream tokeniser to perform assertion on
-     * @param token     expected token
-     * @throws IOException     when unable to read from stream
-     * @throws ParserException when next token in the stream does not match the expected token
-     */
-    private void assertToken(final StreamTokenizer tokeniser, Reader in, final int token)
-            throws IOException, ParserException {
+    if (log.isDebugEnabled()) {
+      log.debug("[" + token + "]");
+    }
+  }
 
-        if (nextToken(tokeniser, in) != token) {
-            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, tokeniser.ttype), getLineNumber(tokeniser, in));
-        }
+  /**
+   * Asserts that the next token in the stream matches the specified token. This method is case-sensitive.
+   *
+   * @param tokeniser
+   * @param token
+   * @throws IOException
+   * @throws ParserException
+   */
+  private void assertToken(final StreamTokenizer tokeniser, Reader in, final String token)
+      throws IOException, ParserException {
+    assertToken(tokeniser, in, token, false, false);
+  }
 
-        if (log.isDebugEnabled()) {
-            log.debug("[" + token + "]");
-        }
+  /**
+   * Asserts that the next token in the stream matches the specified token.
+   *
+   * @param tokeniser stream tokeniser to perform assertion on
+   * @param token     expected token
+   * @throws IOException     when unable to read from stream
+   * @throws ParserException when next token in the stream does not match the expected token
+   */
+  private void assertToken(final StreamTokenizer tokeniser, Reader in,
+                           final String token, final boolean ignoreCase, final boolean isBeginToken) throws IOException,
+      ParserException {
+
+    // ensure next token is a word token..
+    String sval;
+    if (isBeginToken) {
+      skipNewLines(tokeniser, in, token);
+      sval = getSvalIgnoringBom(tokeniser, in, token);
+    } else {
+      assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
+      sval = tokeniser.sval;
     }
 
-    /**
-     * Asserts that the next token in the stream matches the specified token. This method is case-sensitive.
-     *
-     * @param tokeniser
-     * @param token
-     * @throws IOException
-     * @throws ParserException
-     */
-    private void assertToken(final StreamTokenizer tokeniser, Reader in, final String token)
-            throws IOException, ParserException {
-        assertToken(tokeniser, in, token, false, false);
+    if (ignoreCase) {
+      if (!token.equalsIgnoreCase(sval)) {
+        throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, sval), getLineNumber(tokeniser, in));
+      }
+    } else if (!token.equals(sval)) {
+      throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, sval), getLineNumber(tokeniser, in));
     }
 
-    /**
-     * Asserts that the next token in the stream matches the specified token.
-     *
-     * @param tokeniser stream tokeniser to perform assertion on
-     * @param token     expected token
-     * @throws IOException     when unable to read from stream
-     * @throws ParserException when next token in the stream does not match the expected token
-     */
-    private void assertToken(final StreamTokenizer tokeniser, Reader in,
-            final String token, final boolean ignoreCase, final boolean isBeginToken) throws IOException,
-            ParserException {
-
-        // ensure next token is a word token..
-        String sval;
-        if(isBeginToken) {
-            skipNewLines(tokeniser, in, token);
-            sval = getSvalIgnoringBom(tokeniser, in, token);
-        } else {
-            assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
-            sval = tokeniser.sval;
-        }
-
-        if (ignoreCase) {
-            if (!token.equalsIgnoreCase(sval)) {
-                throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, sval), getLineNumber(tokeniser, in));
-            }
-        }
-        else if (!token.equals(sval)) {
-            throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, sval), getLineNumber(tokeniser, in));
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("[" + token + "]");
-        }
+    if (log.isDebugEnabled()) {
+      log.debug("[" + token + "]");
     }
+  }
 
-    /**
-     * Skip newlines and linefeed at the beginning.
-     * 
-     * @param tokeniser
-     * @param in
-     * @param token
-     * @throws ParserException
-     * @throws IOException
-     */
-    private void skipNewLines(StreamTokenizer tokeniser, Reader in, String token) throws ParserException, IOException {
-        for (int i = 0;; i++) {
-            try {
-                assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
-                break;
-            } catch (ParserException exc) {
-                //Skip a maximum of 10 newlines, linefeeds etc at the beginning
-                if (i == IGNORE_BEGINNING_NON_WORD_COUNT) {
-                    throw exc;
-                }
-            }
+  /**
+   * Skip newlines and linefeed at the beginning.
+   *
+   * @param tokeniser
+   * @param in
+   * @param token
+   * @throws ParserException
+   * @throws IOException
+   */
+  private void skipNewLines(StreamTokenizer tokeniser, Reader in, String token) throws ParserException, IOException {
+    for (int i = 0; ; i++) {
+      try {
+        assertToken(tokeniser, in, StreamTokenizer.TT_WORD);
+        break;
+      } catch (ParserException exc) {
+        //Skip a maximum of 10 newlines, linefeeds etc at the beginning
+        if (i == IGNORE_BEGINNING_NON_WORD_COUNT) {
+          throw exc;
         }
+      }
     }
+  }
 
-    /**
-     * Ignore BOM character.
-     * 
-     * @param tokeniser
-     * @param in
-     * @param token
-     * @return
-     * @throws ParserException
-     * @throws IOException
-     */
-    private String getSvalIgnoringBom(StreamTokenizer tokeniser, Reader in, String token) throws ParserException, IOException {
-        if(tokeniser.sval != null) {
-            if(tokeniser.sval.contains(token)) {
-                return token;
-            }
-        }
-        return tokeniser.sval;
-    }
-
-    /**
-     * Absorbs extraneous newlines.
-     *
-     * @param tokeniser
-     * @throws IOException
-     */
-    private void absorbWhitespace(final StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
-        // HACK: absorb extraneous whitespace between components (KOrganizer)..
-        while (nextToken(tokeniser, in) == StreamTokenizer.TT_EOL) {
-            if (log.isTraceEnabled()) {
-                log.trace("Absorbing extra whitespace..");
-            }
-        }
-        if (log.isTraceEnabled()) {
-            log.trace("Aborting: absorbing extra whitespace complete");
-        }
-    }
-
-    /**
-     * @param tokeniser
-     * @param in
-     * @return
-     */
-    private int getLineNumber(StreamTokenizer tokeniser, Reader in) {
-        int line = tokeniser.lineno();
-        if (tokeniser.ttype == StreamTokenizer.TT_EOL) {
-            line -= 1;
-        }
-        if (in instanceof UnfoldingReader) {
-            // need to take unfolded lines into account
-            final int unfolded = ((UnfoldingReader) in).getLinesUnfolded();
-            line += unfolded;
-        }
-        return line;
-    }
-
-    /**
-     * Reads the next token from the tokeniser.
-     * This method throws a ParseException when reading EOF.
-     *
-     * @param tokeniser
-     * @param in
-     * @return
-     * @throws ParseException When reading EOF.
-     */
-    private int nextToken(StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
-        int token = tokeniser.nextToken();
-        if (token == StreamTokenizer.TT_EOF) {
-            throw new ParserException("Unexpected end of file", getLineNumber(tokeniser, in));
-        }
+  /**
+   * Ignore BOM character.
+   *
+   * @param tokeniser
+   * @param in
+   * @param token
+   * @return
+   * @throws ParserException
+   * @throws IOException
+   */
+  private String getSvalIgnoringBom(StreamTokenizer tokeniser, Reader in, String token) throws ParserException, IOException {
+    if (tokeniser.sval != null) {
+      if (tokeniser.sval.contains(token)) {
         return token;
+      }
     }
+    return tokeniser.sval;
+  }
+
+  /**
+   * Absorbs extraneous newlines.
+   *
+   * @param tokeniser
+   * @throws IOException
+   */
+  private void absorbWhitespace(final StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
+    // HACK: absorb extraneous whitespace between components (KOrganizer)..
+    while (nextToken(tokeniser, in) == StreamTokenizer.TT_EOL) {
+      if (log.isTraceEnabled()) {
+        log.trace("Absorbing extra whitespace..");
+      }
+    }
+    if (log.isTraceEnabled()) {
+      log.trace("Aborting: absorbing extra whitespace complete");
+    }
+  }
+
+  /**
+   * @param tokeniser
+   * @param in
+   * @return
+   */
+  private int getLineNumber(StreamTokenizer tokeniser, Reader in) {
+    int line = tokeniser.lineno();
+    if (tokeniser.ttype == StreamTokenizer.TT_EOL) {
+      line -= 1;
+    }
+    if (in instanceof UnfoldingReader) {
+      // need to take unfolded lines into account
+      final int unfolded = ((UnfoldingReader) in).getLinesUnfolded();
+      line += unfolded;
+    }
+    return line;
+  }
+
+  /**
+   * Reads the next token from the tokeniser.
+   * This method throws a ParseException when reading EOF.
+   *
+   * @param tokeniser
+   * @param in
+   * @return
+   * @throws ParseException When reading EOF.
+   */
+  private int nextToken(StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
+    int token = tokeniser.nextToken();
+    if (token == StreamTokenizer.TT_EOF) {
+      throw new ParserException("Unexpected end of file", getLineNumber(tokeniser, in));
+    }
+    return token;
+  }
 }

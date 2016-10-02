@@ -31,8 +31,8 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
+
 /**
  * $Id$
  *
@@ -41,36 +41,32 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class VersionFactory extends AbstractPropertyFactory{
+public class VersionFactory extends AbstractPropertyFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Version version
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Version.class)) {
             version = (Version) value
-        }
-        else {
+        } else {
             String versionValue = attributes.remove('value')
             if (versionValue != null) {
                 if (Version.VERSION_2_0.getValue().equals(versionValue)) {
                     version = Version.VERSION_2_0
-                }
-                else {
+                } else {
                     attributes.put('value', versionValue)
                     version = super.newInstance(builder, name, value, attributes)
                 }
-            }
-            else {
+            } else {
                 if (Version.VERSION_2_0.getValue().equals(value)) {
                     version = Version.VERSION_2_0
-                }
-                else {
+                } else {
                     version = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
         return version
     }
-    
+
     protected Object newInstance(ParameterList parameters, String value) {
         return new Version(parameters, value)
     }

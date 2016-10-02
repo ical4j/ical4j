@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -48,72 +48,72 @@ import java.util.ServiceLoader;
  */
 public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory> {
 
-    private static final long serialVersionUID = -7174232004486979641L;
+  private static final long serialVersionUID = -7174232004486979641L;
 
-    private static PropertyFactoryImpl instance = new PropertyFactoryImpl();
+  private static PropertyFactoryImpl instance = new PropertyFactoryImpl();
 
-    /**
-     * Constructor made private to prevent instantiation.
-     */
-    protected PropertyFactoryImpl() {
-        super(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()));
+  /**
+   * Constructor made private to prevent instantiation.
+   */
+  protected PropertyFactoryImpl() {
+    super(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()));
+  }
+
+  /**
+   * @return Returns the instance.
+   */
+  public static PropertyFactoryImpl getInstance() {
+    return instance;
+  }
+
+  @Override
+  protected boolean factorySupports(PropertyFactory factory, String key) {
+    return factory.supports(key);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public Property createProperty(final String name) {
+    final PropertyFactory factory = getFactory(name);
+    if (factory != null) {
+      return factory.createProperty();
+    } else if (isExperimentalName(name)) {
+      return new XProperty(name);
+    } else if (allowIllegalNames()) {
+      return new XProperty(name);
+    } else {
+      throw new IllegalArgumentException("Illegal property [" + name
+          + "]");
     }
+  }
 
-    /**
-     * @return Returns the instance.
-     */
-    public static PropertyFactoryImpl getInstance() {
-        return instance;
+  /**
+   * {@inheritDoc}
+   */
+  public Property createProperty(final String name,
+                                 final ParameterList parameters, final String value)
+      throws IOException, URISyntaxException, ParseException {
+
+    final PropertyFactory factory = getFactory(name);
+    if (factory != null) {
+      return factory.createProperty(parameters, value);
+    } else if (isExperimentalName(name)) {
+      return new XProperty(name, parameters, value);
+    } else if (allowIllegalNames()) {
+      return new XProperty(name, parameters, value);
+    } else {
+      throw new IllegalArgumentException("Illegal property [" + name
+          + "]");
     }
+  }
 
-    @Override
-    protected boolean factorySupports(PropertyFactory factory, String key) {
-        return factory.supports(key);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Property createProperty(final String name) {
-        final PropertyFactory factory = getFactory(name);
-        if (factory != null) {
-            return factory.createProperty();
-        } else if (isExperimentalName(name)) {
-            return new XProperty(name);
-        } else if (allowIllegalNames()) {
-            return new XProperty(name);
-        } else {
-            throw new IllegalArgumentException("Illegal property [" + name
-                    + "]");
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Property createProperty(final String name,
-                                   final ParameterList parameters, final String value)
-            throws IOException, URISyntaxException, ParseException {
-
-        final PropertyFactory factory = getFactory(name);
-        if (factory != null) {
-            return factory.createProperty(parameters, value);
-        } else if (isExperimentalName(name)) {
-            return new XProperty(name, parameters, value);
-        } else if (allowIllegalNames()) {
-            return new XProperty(name, parameters, value);
-        } else {
-            throw new IllegalArgumentException("Illegal property [" + name
-                    + "]");
-        }
-    }
-
-    /**
-     * @param name
-     * @return
-     */
-    private boolean isExperimentalName(final String name) {
-        return name.startsWith(Property.EXPERIMENTAL_PREFIX)
-                && name.length() > Property.EXPERIMENTAL_PREFIX.length();
-    }
+  /**
+   * @param name
+   * @return
+   */
+  private boolean isExperimentalName(final String name) {
+    return name.startsWith(Property.EXPERIMENTAL_PREFIX)
+        && name.length() > Property.EXPERIMENTAL_PREFIX.length();
+  }
 }

@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -126,115 +126,114 @@ import java.text.ParseException;
  */
 public class RecurrenceId extends DateProperty {
 
-    private static final long serialVersionUID = 4456883817126011006L;
+  private static final long serialVersionUID = 4456883817126011006L;
 
-    /**
-     * Default constructor.
-     */
-    public RecurrenceId() {
-        super(RECURRENCE_ID, PropertyFactoryImpl.getInstance());
-        setDate(new DateTime());
-    }
+  /**
+   * Default constructor.
+   */
+  public RecurrenceId() {
+    super(RECURRENCE_ID, PropertyFactoryImpl.getInstance());
+    setDate(new DateTime());
+  }
 
-    /**
-     * Creates a new RECURRENCE_ID property initialised with the specified timezone.
-     *
-     * @param timezone initial timezone
-     */
-    public RecurrenceId(TimeZone timezone) {
-        super(RECURRENCE_ID, timezone, PropertyFactoryImpl.getInstance());
-    }
+  /**
+   * Creates a new RECURRENCE_ID property initialised with the specified timezone.
+   *
+   * @param timezone initial timezone
+   */
+  public RecurrenceId(TimeZone timezone) {
+    super(RECURRENCE_ID, timezone, PropertyFactoryImpl.getInstance());
+  }
 
-    /**
-     * Creates a new instance initialised with the parsed value.
-     *
-     * @param value the RECURRENCE_ID value string to parse
-     * @throws ParseException where the specified string is not a valid RECURRENCE_ID value representation
-     */
-    public RecurrenceId(final String value) throws ParseException {
-        super(RECURRENCE_ID, PropertyFactoryImpl.getInstance());
-        setValue(value);
-    }
+  /**
+   * Creates a new instance initialised with the parsed value.
+   *
+   * @param value the RECURRENCE_ID value string to parse
+   * @throws ParseException where the specified string is not a valid RECURRENCE_ID value representation
+   */
+  public RecurrenceId(final String value) throws ParseException {
+    super(RECURRENCE_ID, PropertyFactoryImpl.getInstance());
+    setValue(value);
+  }
 
-    /**
-     * Creates a new RECURRENCE_ID property initialised with the specified timezone and value.
-     *
-     * @param value    a string representation of a RECURRENCE_ID value
-     * @param timezone initial timezone
-     * @throws ParseException where the specified value is not a valid string
-     *                        representation
-     */
-    public RecurrenceId(String value, TimeZone timezone) throws ParseException {
-        super(RECURRENCE_ID, timezone, PropertyFactoryImpl.getInstance());
-        setValue(value);
-    }
+  /**
+   * Creates a new RECURRENCE_ID property initialised with the specified timezone and value.
+   *
+   * @param value    a string representation of a RECURRENCE_ID value
+   * @param timezone initial timezone
+   * @throws ParseException where the specified value is not a valid string
+   *                        representation
+   */
+  public RecurrenceId(String value, TimeZone timezone) throws ParseException {
+    super(RECURRENCE_ID, timezone, PropertyFactoryImpl.getInstance());
+    setValue(value);
+  }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
-     */
-    public RecurrenceId(final ParameterList aList, final String aValue)
-            throws ParseException {
-        super(RECURRENCE_ID, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
-    }
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   * @throws ParseException where the specified value string is not a valid date-time/date representation
+   */
+  public RecurrenceId(final ParameterList aList, final String aValue)
+      throws ParseException {
+    super(RECURRENCE_ID, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
 
-    /**
-     * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
-     *
-     * @param aDate a date representation of a date or date-time
-     */
-    public RecurrenceId(final Date aDate) {
-        super(RECURRENCE_ID, PropertyFactoryImpl.getInstance());
-        setDate(aDate);
-    }
+  /**
+   * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+   *
+   * @param aDate a date representation of a date or date-time
+   */
+  public RecurrenceId(final Date aDate) {
+    super(RECURRENCE_ID, PropertyFactoryImpl.getInstance());
+    setDate(aDate);
+  }
 
-    /**
-     * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
-     *
-     * @param aList a list of parameters for this component
-     * @param aDate a date representation of a date or date-time
-     */
-    public RecurrenceId(final ParameterList aList, final Date aDate) {
-        super(RECURRENCE_ID, aList, PropertyFactoryImpl.getInstance());
-        setDate(aDate);
-    }
+  /**
+   * Constructor. Date or Date-Time format is determined based on the presence of a VALUE parameter.
+   *
+   * @param aList a list of parameters for this component
+   * @param aDate a date representation of a date or date-time
+   */
+  public RecurrenceId(final ParameterList aList, final Date aDate) {
+    super(RECURRENCE_ID, aList, PropertyFactoryImpl.getInstance());
+    setDate(aDate);
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        super.validate();
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    super.validate();
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE)) /
          * (";" tzidparam) / (";" rangeparam) /
          */
 
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.RANGE,
-                getParameters());
+    ParameterValidator.getInstance().assertOneOrLess(Parameter.RANGE,
+        getParameters());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(RECURRENCE_ID);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(RECURRENCE_ID);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new RecurrenceId(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new RecurrenceId();
-        }
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new RecurrenceId(parameters, value);
     }
 
+    public Property createProperty() {
+      return new RecurrenceId();
+    }
+  }
 }

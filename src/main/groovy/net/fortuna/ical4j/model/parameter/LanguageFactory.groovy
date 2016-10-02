@@ -41,8 +41,7 @@ class LanguageFactory extends AbstractParameterFactory {
         Language language
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Language)) {
             language = value
-        }
-        else {
+        } else {
             language = [value]
         }
         return language

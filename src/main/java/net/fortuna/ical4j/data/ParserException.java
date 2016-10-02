@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -43,46 +43,46 @@ import java.text.MessageFormat;
  */
 public class ParserException extends Exception {
 
-    private static final long serialVersionUID = 6116644246112002214L;
+  private static final long serialVersionUID = 6116644246112002214L;
 
-    private static final String ERROR_MESSAGE_PATTERN = "Error at line {0}:";
+  private static final String ERROR_MESSAGE_PATTERN = "Error at line {0}:";
 
-    private int lineNo;
+  private int lineNo;
 
-    /**
-     * @param lineNo line number where parsing error ocurred
-     */
-    public ParserException(final int lineNo) {
-        this.lineNo = lineNo;
-    }
+  /**
+   * @param lineNo line number where parsing error ocurred
+   */
+  public ParserException(final int lineNo) {
+    this.lineNo = lineNo;
+  }
 
-    /**
-     * Constructor with message.
-     * @param message a descriptive message for the exception
-     * @param lineNo line number where parsing error ocurred
-     */
-    public ParserException(final String message, final int lineNo) {
-        super(MessageFormat.format(ERROR_MESSAGE_PATTERN, lineNo) + message);
-        this.lineNo = lineNo;
-    }
+  /**
+   * Constructor with message.
+   * @param message a descriptive message for the exception
+   * @param lineNo line number where parsing error ocurred
+   */
+  public ParserException(final String message, final int lineNo) {
+    super(MessageFormat.format(ERROR_MESSAGE_PATTERN, lineNo) + message);
+    this.lineNo = lineNo;
+  }
 
-    /**
-     * Constructor with message and cause.
-     * @param message a descriptive message for the exception
-     * @param lineNo line number where parsing error ocurred
-     * @param cause a throwable that is the cause of this exception
-     */
-    public ParserException(final String message, final int lineNo,
-            final Throwable cause) {
+  /**
+   * Constructor with message and cause.
+   * @param message a descriptive message for the exception
+   * @param lineNo line number where parsing error ocurred
+   * @param cause a throwable that is the cause of this exception
+   */
+  public ParserException(final String message, final int lineNo,
+                         final Throwable cause) {
 
-        super(MessageFormat.format(ERROR_MESSAGE_PATTERN, lineNo) + message, cause);
-        this.lineNo = lineNo;
-    }
+    super(MessageFormat.format(ERROR_MESSAGE_PATTERN, lineNo) + message, cause);
+    this.lineNo = lineNo;
+  }
 
-    /**
-     * @return the lineNo
-     */
-    public final int getLineNo() {
-        return lineNo;
-    }
+  /**
+   * @return the lineNo
+   */
+  public final int getLineNo() {
+    return lineNo;
+  }
 }

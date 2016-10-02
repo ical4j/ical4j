@@ -152,7 +152,6 @@
 						<phase>generate-resources</phase>
 						<configuration>
 							<outputDirectory>${project.build.directory}/mnode-tools</outputDirectory>
-							<includeArtifacIds>mnode-tools</includeArtifacIds>
 							<includeGroupIds>${project.parent.groupId}</includeGroupIds>
 							<excludeTransitive>true</excludeTransitive>
 						</configuration>

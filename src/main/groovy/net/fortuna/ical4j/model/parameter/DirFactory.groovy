@@ -41,8 +41,7 @@ class DirFactory extends AbstractParameterFactory {
         Dir dir
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Dir)) {
             dir = value
-        }
-        else {
+        } else {
             dir = [value]
         }
         return dir

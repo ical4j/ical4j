@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -60,110 +60,109 @@ import java.text.ParseException;
  */
 public class BusyType extends Property {
 
-	private static final long serialVersionUID = -5140360270562621159L;
+  private static final long serialVersionUID = -5140360270562621159L;
 
-	/**
-	 * Constant for busy time.
-	 */
-	public static final BusyType BUSY = new ImmutableBusyType("BUSY");
+  /**
+   * Constant for busy time.
+   */
+  public static final BusyType BUSY = new ImmutableBusyType("BUSY");
 
-    /**
-     * Constant for busy unavailable time.
-     */
-    public static final BusyType BUSY_UNAVAILABLE = new ImmutableBusyType("BUSY-UNAVAILABLE");
+  /**
+   * Constant for busy unavailable time.
+   */
+  public static final BusyType BUSY_UNAVAILABLE = new ImmutableBusyType("BUSY-UNAVAILABLE");
 
-    /**
-     * Constant for tentatively busy time.
-     */
-    public static final BusyType BUSY_TENTATIVE = new ImmutableBusyType("BUSY-TENTATIVE");
+  /**
+   * Constant for tentatively busy time.
+   */
+  public static final BusyType BUSY_TENTATIVE = new ImmutableBusyType("BUSY-TENTATIVE");
 
-    /** An immutable instance of BusyType.
-     *
-     * @author Ben Fortuna
-     * @author Mike Douglass
-     */
-    private static final class ImmutableBusyType extends BusyType {
+  /** An immutable instance of BusyType.
+   *
+   * @author Ben Fortuna
+   * @author Mike Douglass
+   */
+  private static final class ImmutableBusyType extends BusyType {
 
-		private static final long serialVersionUID = -2454749569982470433L;
-
-		/**
-         * @param value
-         */
-        private ImmutableBusyType(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
-    }
-
-    private String value;
+    private static final long serialVersionUID = -2454749569982470433L;
 
     /**
-     * Default constructor.
+     * @param value
      */
-    public BusyType() {
-        super(BUSYTYPE, PropertyFactoryImpl.getInstance());
-    }
-
-    /**
-     * @param aValue a value string for this component
-     */
-    public BusyType(final String aValue) {
-        super(BUSYTYPE, PropertyFactoryImpl.getInstance());
-        this.value = aValue;
-    }
-
-    /**
-     * @param aList a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public BusyType(final ParameterList aList, final String aValue) {
-        super(BUSYTYPE, aList, PropertyFactoryImpl.getInstance());
-        this.value = aValue;
+    private ImmutableBusyType(final String value) {
+      super(new ParameterList(true), value);
     }
 
     /**
      * {@inheritDoc}
      */
     public void setValue(final String aValue) {
-        this.value = aValue;
+      throw new UnsupportedOperationException(
+          "Cannot modify constant instances");
+    }
+  }
+
+  private String value;
+
+  /**
+   * Default constructor.
+   */
+  public BusyType() {
+    super(BUSYTYPE, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aValue a value string for this component
+   */
+  public BusyType(final String aValue) {
+    super(BUSYTYPE, PropertyFactoryImpl.getInstance());
+    this.value = aValue;
+  }
+
+  /**
+   * @param aList a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public BusyType(final ParameterList aList, final String aValue) {
+    super(BUSYTYPE, aList, PropertyFactoryImpl.getInstance());
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setValue(final String aValue) {
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory<BusyType> {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(BUSYTYPE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public BusyType createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new BusyType(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    public BusyType createProperty() {
+      return new BusyType();
     }
-
-    public static class Factory extends Content.Factory implements PropertyFactory<BusyType> {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(BUSYTYPE);
-        }
-
-        public BusyType createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new BusyType(parameters, value);
-        }
-
-        public BusyType createProperty() {
-            return new BusyType();
-        }
-    }
-
+  }
 }

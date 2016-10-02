@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -51,97 +51,96 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class AddressList implements Serializable {
 
-    private static final long serialVersionUID = 81383256078213569L;
+  private static final long serialVersionUID = 81383256078213569L;
 
-    private List<URI> addresses;
+  private List<URI> addresses;
 
-    /**
-     * Default constructor.
-     */
-    public AddressList() {
-        addresses = new CopyOnWriteArrayList<URI>();
-    }
+  /**
+   * Default constructor.
+   */
+  public AddressList() {
+    addresses = new CopyOnWriteArrayList<URI>();
+  }
 
-    /**
-     * Parses the specified string representation to create a list of addresses.
-     * @param aValue a string representation of a list of addresses
-     * @throws URISyntaxException where the specified string is not a valid representation
-     */
-    public AddressList(final String aValue) throws URISyntaxException {
-        addresses = new CopyOnWriteArrayList<URI>();
-        final StringTokenizer t = new StringTokenizer(aValue, ",");
-        while (t.hasMoreTokens()) {
+  /**
+   * Parses the specified string representation to create a list of addresses.
+   * @param aValue a string representation of a list of addresses
+   * @throws URISyntaxException where the specified string is not a valid representation
+   */
+  public AddressList(final String aValue) throws URISyntaxException {
+    addresses = new CopyOnWriteArrayList<URI>();
+    final StringTokenizer t = new StringTokenizer(aValue, ",");
+    while (t.hasMoreTokens()) {
 
-            try {
-                addresses.add(new URI(Uris.encode(Strings
-                        .unquote(t.nextToken()))));
-            }
-            catch (URISyntaxException use) {
-                // ignore invalid addresses if relaxed parsing is enabled..
-                if (!CompatibilityHints.isHintEnabled(
-                        CompatibilityHints.KEY_RELAXED_PARSING)) {
+      try {
+        addresses.add(new URI(Uris.encode(Strings
+            .unquote(t.nextToken()))));
+      } catch (URISyntaxException use) {
+        // ignore invalid addresses if relaxed parsing is enabled..
+        if (!CompatibilityHints.isHintEnabled(
+            CompatibilityHints.KEY_RELAXED_PARSING)) {
 
-                    throw use;
-                }
-            }
+          throw use;
         }
+      }
     }
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<URI> i = addresses.iterator(); i.hasNext();) {
-            b.append(Strings.quote(Uris.decode(Strings.valueOf(i.next()))));
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+  /**
+   * {@inheritDoc}
+   */
+  public final String toString() {
+    final StringBuilder b = new StringBuilder();
+    for (final Iterator<URI> i = addresses.iterator(); i.hasNext(); ) {
+      b.append(Strings.quote(Uris.decode(Strings.valueOf(i.next()))));
+      if (i.hasNext()) {
+        b.append(',');
+      }
     }
+    return b.toString();
+  }
 
-    /**
-     * Add an address to the list.
-     * @param address the address to add
-     * @return true
-     * @see List#add(java.lang.Object)
-     */
-    public final boolean add(final URI address) {
-        return addresses.add(address);
-    }
+  /**
+   * Add an address to the list.
+   * @param address the address to add
+   * @return true
+   * @see List#add(java.lang.Object)
+   */
+  public final boolean add(final URI address) {
+    return addresses.add(address);
+  }
 
-    /**
-     * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
-     */
-    public final boolean isEmpty() {
-        return addresses.isEmpty();
-    }
+  /**
+   * @return boolean indicates if the list is empty
+   * @see List#isEmpty()
+   */
+  public final boolean isEmpty() {
+    return addresses.isEmpty();
+  }
 
-    /**
-     * @return an iterator
-     * @see List#iterator()
-     */
-    public final Iterator<URI> iterator() {
-        return addresses.iterator();
-    }
+  /**
+   * @return an iterator
+   * @see List#iterator()
+   */
+  public final Iterator<URI> iterator() {
+    return addresses.iterator();
+  }
 
-    /**
-     * Remove an address from the list.
-     * @param address the address to remove
-     * @return true if the list contained the specified address
-     * @see List#remove(java.lang.Object)
-     */
-    public final boolean remove(final URI address) {
-        return addresses.remove(address);
-    }
+  /**
+   * Remove an address from the list.
+   * @param address the address to remove
+   * @return true if the list contained the specified address
+   * @see List#remove(java.lang.Object)
+   */
+  public final boolean remove(final URI address) {
+    return addresses.remove(address);
+  }
 
-    /**
-     * @return the number of addresses in the list
-     * @see List#size()
-     */
-    public final int size() {
-        return addresses.size();
-    }
+  /**
+   * @return the number of addresses in the list
+   * @see List#size()
+   */
+  public final int size() {
+    return addresses.size();
+  }
 }

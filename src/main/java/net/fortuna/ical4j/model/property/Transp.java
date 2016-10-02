@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -94,97 +94,96 @@ import java.text.ParseException;
  */
 public class Transp extends Property {
 
-    private static final long serialVersionUID = 3801479657311785518L;
+  private static final long serialVersionUID = 3801479657311785518L;
 
-    /**
-     * Opaque.
-     */
-    public static final Transp OPAQUE = new ImmutableTransp("OPAQUE");
+  /**
+   * Opaque.
+   */
+  public static final Transp OPAQUE = new ImmutableTransp("OPAQUE");
 
-    /**
-     * Transparent.
-     */
-    public static final Transp TRANSPARENT = new ImmutableTransp("TRANSPARENT");
+  /**
+   * Transparent.
+   */
+  public static final Transp TRANSPARENT = new ImmutableTransp("TRANSPARENT");
 
-    /**
-     * @author Ben Fortuna An immutable instance of Transp.
-     */
-    private static final class ImmutableTransp extends Transp {
+  /**
+   * @author Ben Fortuna An immutable instance of Transp.
+   */
+  private static final class ImmutableTransp extends Transp {
 
-        private static final long serialVersionUID = -6595830107310111996L;
+    private static final long serialVersionUID = -6595830107310111996L;
 
-        private ImmutableTransp(final String value) {
-            super(new ParameterList(true), value);
-        }
-
-        public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
-        }
+    private ImmutableTransp(final String value) {
+      super(new ParameterList(true), value);
     }
 
-    private String value;
-
-    /**
-     * Default constructor.
-     */
-    public Transp() {
-        super(TRANSP, PropertyFactoryImpl.getInstance());
-    }
-
-    /**
-     * @param aValue a value string for this component
-     */
-    public Transp(final String aValue) {
-        super(TRANSP, PropertyFactoryImpl.getInstance());
-        this.value = aValue;
-    }
-
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Transp(final ParameterList aList, final String aValue) {
-        super(TRANSP, aList, PropertyFactoryImpl.getInstance());
-        this.value = aValue;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void setValue(final String aValue) {
-        this.value = aValue;
+      throw new UnsupportedOperationException(
+          "Cannot modify constant instances");
+    }
+  }
+
+  private String value;
+
+  /**
+   * Default constructor.
+   */
+  public Transp() {
+    super(TRANSP, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aValue a value string for this component
+   */
+  public Transp(final String aValue) {
+    super(TRANSP, PropertyFactoryImpl.getInstance());
+    this.value = aValue;
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Transp(final ParameterList aList, final String aValue) {
+    super(TRANSP, aList, PropertyFactoryImpl.getInstance());
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public void setValue(final String aValue) {
+    this.value = aValue;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(TRANSP);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Transp(parameters, value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    public Property createProperty() {
+      return new Transp();
     }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(TRANSP);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Transp(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Transp();
-        }
-    }
-
+  }
 }

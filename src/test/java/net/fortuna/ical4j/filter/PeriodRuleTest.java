@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.filter;
 
+import com.google.common.collect.Lists;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
@@ -43,12 +44,12 @@ import net.fortuna.ical4j.util.TimeZones;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -68,22 +69,22 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
     /**
      * @param testMethod
      * @param filter
-     * @param collection
+     * @param list
      * @param expectedFilteredSize
      */
     public PeriodRuleTest(String testMethod, Filter<CalendarComponent> filter,
-                          Collection<CalendarComponent> collection, int expectedFilteredSize) {
-        super(testMethod, filter, collection, expectedFilteredSize);
+                          List<CalendarComponent> list, int expectedFilteredSize) {
+        super(testMethod, filter, list, expectedFilteredSize);
     }
 
     /**
      * @param testMethod
      * @param filter
-     * @param collection
+     * @param list
      */
     public PeriodRuleTest(String testMethod, Filter<CalendarComponent> filter,
-                          Collection<CalendarComponent> collection) {
-        super(testMethod, filter, collection);
+                          List<CalendarComponent> list) {
+        super(testMethod, filter, list);
     }
 
     /* (non-Javadoc)
@@ -116,9 +117,8 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
      * @return
      * @throws ParserException
      * @throws IOException
-     * @throws FileNotFoundException
      */
-    public static TestSuite suite() throws FileNotFoundException, IOException, ParserException {
+    public static TestSuite suite() throws IOException, ParserException {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(new FileReader("etc/samples/valid/Australian_TV_Melbourne.ics"));
 
@@ -130,7 +130,10 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         cal.set(2004, 3, 1);
         // period of two weeks..
         Period period = new Period(new DateTime(cal.getTime()), new Dur(2));
-        Filter<CalendarComponent> filter = new Filter<CalendarComponent>(new PeriodRule<CalendarComponent>(period));
+        Filter<CalendarComponent> filter = new Filter<>(
+            Lists.newArrayList(new PeriodRule<>(period)),
+            Filter.MATCH_ANY
+        );
 //        ComponentList filtered = (ComponentList) filter.filter(calendar.getComponents());
 //        assertTrue(!filtered.isEmpty());
         suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents()));
@@ -159,8 +162,9 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         Dur dur = new Dur(1, 0, 0, 0);
 
         while (cal.get(java.util.Calendar.MONTH) == java.util.Calendar.JANUARY) {
-            PeriodRule<CalendarComponent> rule = new PeriodRule<CalendarComponent>(new Period(new DateTime(cal.getTime()), dur));
-            filter = new Filter<CalendarComponent>(rule);
+            PeriodRule<CalendarComponent> rule = new PeriodRule<>(new Period(new DateTime(cal.getTime()), dur));
+
+            filter = new Filter<>(Lists.newArrayList(rule), Filter.MATCH_ANY);
             if (cal.get(java.util.Calendar.DAY_OF_MONTH) == 25) {
                 suite.addTest(new PeriodRuleTest("testFilteredSize", filter, components, 1));
             } else {
@@ -175,7 +179,10 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         cal.set(1997, 8, 2, 9, 0, 0);
         DateTime startDt = new DateTime(cal.getTime());
         period = new Period(startDt, new Dur(1));
-        filter = new Filter<CalendarComponent>(new PeriodRule<CalendarComponent>(period));
+        filter = new Filter<>(Lists.newArrayList(
+            new PeriodRule<>(period)),
+            Filter.MATCH_ANY
+        );
         suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, exCal.getComponents()));
 
         // Test exclusion of particular date patterns..
@@ -184,7 +191,10 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         cal.set(1997, 8, 2, 9, 0, 0);
         startDt = new DateTime(cal.getTime());
         period = new Period(startDt, new Dur(52));
-        filter = new Filter<CalendarComponent>(new PeriodRule<CalendarComponent>(period));
+        filter = new Filter<>(Lists.newArrayList(
+            new PeriodRule<>(period)),
+            Filter.MATCH_ANY
+        );
         suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, exCal.getComponents()));
 
         // Asia/Singapore test..
@@ -209,7 +219,10 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         startDt = new DateTime(day.getTime());
         period = new Period(startDt, new Dur(1, 0, 0, 0));
         LOG.info("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
-        filter = new Filter<CalendarComponent>(new PeriodRule<CalendarComponent>(period));
+        filter = new Filter<>(Lists.newArrayList(
+            new PeriodRule<>(period)),
+            Filter.MATCH_ANY
+        );
         suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents(Component.VEVENT)));
 
         // saturday..
@@ -217,7 +230,10 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         startDt = new DateTime(day.getTime());
         period = new Period(startDt, new Dur(1, 0, 0, 0));
         LOG.info("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
-        filter = new Filter<CalendarComponent>(new PeriodRule<CalendarComponent>(period));
+        filter = new Filter<>(Lists.newArrayList(
+            new PeriodRule<>(period)),
+            Filter.MATCH_ANY
+        );
         suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, calendar.getComponents(Component.VEVENT)));
 
         // friday..
@@ -225,7 +241,10 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         startDt = new DateTime(day.getTime());
         period = new Period(startDt, new Dur(1, 0, 0, 0));
         LOG.info("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
-        filter = new Filter<CalendarComponent>(new PeriodRule<CalendarComponent>(period));
+        filter = new Filter<>(Lists.newArrayList(
+            new PeriodRule<>(period)),
+            Filter.MATCH_ANY
+        );
         suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents(Component.VEVENT)));
 
         // saturday..
@@ -233,7 +252,10 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         startDt = new DateTime(day.getTime());
         period = new Period(startDt, new Dur(1, 0, 0, 0));
         LOG.info("period: " + period + " (" + dateFormat.format(period.getStart()) + ")");
-        filter = new Filter<CalendarComponent>(new PeriodRule<CalendarComponent>(period));
+        filter = new Filter<>(Lists.newArrayList(
+            new PeriodRule<>(period)),
+            Filter.MATCH_ANY
+        );
         suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, calendar.getComponents(Component.VEVENT)));
 
         return suite;

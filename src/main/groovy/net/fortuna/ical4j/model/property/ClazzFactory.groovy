@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
 
 /**
@@ -42,48 +41,40 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class ClazzFactory extends AbstractPropertyFactory{
+public class ClazzFactory extends AbstractPropertyFactory {
 
     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Clazz clazz
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Clazz.class)) {
             clazz = (Clazz) value
-        }
-        else {
+        } else {
             String clazzValue = attributes.remove('value')
             if (clazzValue != null) {
                 if (Clazz.CONFIDENTIAL.getValue().equals(clazzValue)) {
                     clazz = Clazz.CONFIDENTIAL
-                }
-                else if (Clazz.PRIVATE.getValue().equals(clazzValue)) {
+                } else if (Clazz.PRIVATE.getValue().equals(clazzValue)) {
                     clazz = Clazz.PRIVATE
-                }
-                else if (Clazz.PUBLIC.getValue().equals(clazzValue)) {
+                } else if (Clazz.PUBLIC.getValue().equals(clazzValue)) {
                     clazz = Clazz.PUBLIC
-                }
-                else {
+                } else {
                     attributes.put('value', clazzValue)
                     clazz = super.newInstance(builder, name, value, attributes)
                 }
-            }
-            else {
+            } else {
                 if (Clazz.CONFIDENTIAL.getValue().equals(value)) {
                     clazz = Clazz.CONFIDENTIAL
-                }
-                else if (Clazz.PRIVATE.getValue().equals(value)) {
+                } else if (Clazz.PRIVATE.getValue().equals(value)) {
                     clazz = Clazz.PRIVATE
-                }
-                else if (Clazz.PUBLIC.getValue().equals(value)) {
+                } else if (Clazz.PUBLIC.getValue().equals(value)) {
                     clazz = Clazz.PUBLIC
-                }
-                else {
+                } else {
                     clazz = super.newInstance(builder, name, value, attributes)
                 }
             }
         }
         return clazz
     }
-    
+
     protected Object newInstance(ParameterList parameters, String value) {
         return new Clazz(parameters, value)
     }

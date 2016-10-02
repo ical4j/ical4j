@@ -41,24 +41,23 @@ class FbTypeFactory extends AbstractParameterFactory {
         FbType fbType
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, FbType)) {
             fbType = value
-        }
-        else {
-			switch(value) {
-				case FbType.BUSY.value:
-		            fbType = FbType.BUSY
-					break
-				case FbType.BUSY_TENTATIVE.value:
-		            fbType = FbType.BUSY_TENTATIVE
-					break
-				case FbType.BUSY_UNAVAILABLE.value:
-		            fbType = FbType.BUSY_UNAVAILABLE
-					break
-				case FbType.FREE.value:
-		            fbType = FbType.FREE
-					break
-				default:
-		            fbType = [value]
-	        }
+        } else {
+            switch (value) {
+                case FbType.BUSY.value:
+                    fbType = FbType.BUSY
+                    break
+                case FbType.BUSY_TENTATIVE.value:
+                    fbType = FbType.BUSY_TENTATIVE
+                    break
+                case FbType.BUSY_UNAVAILABLE.value:
+                    fbType = FbType.BUSY_UNAVAILABLE
+                    break
+                case FbType.FREE.value:
+                    fbType = FbType.FREE
+                    break
+                default:
+                    fbType = [value]
+            }
         }
         return fbType
     }

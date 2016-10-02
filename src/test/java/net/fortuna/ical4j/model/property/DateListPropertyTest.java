@@ -31,15 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$

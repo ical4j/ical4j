@@ -31,12 +31,12 @@
  */
 package net.fortuna.ical4j.data;
 
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * $Id$

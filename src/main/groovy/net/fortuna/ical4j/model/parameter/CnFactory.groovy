@@ -41,8 +41,7 @@ class CnFactory extends AbstractParameterFactory {
         Cn cn
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Cn)) {
             cn = value
-        }
-        else {
+        } else {
             cn = [value]
         }
         return cn

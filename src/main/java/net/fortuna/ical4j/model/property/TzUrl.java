@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -86,95 +86,94 @@ import java.text.ParseException;
  */
 public class TzUrl extends Property {
 
-    private static final long serialVersionUID = 9106100107954797406L;
+  private static final long serialVersionUID = 9106100107954797406L;
 
-    private URI uri;
+  private URI uri;
 
-    /**
-     * Default constructor.
-     */
-    public TzUrl() {
-        super(TZURL, PropertyFactoryImpl.getInstance());
+  /**
+   * Default constructor.
+   */
+  public TzUrl() {
+    super(TZURL, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   * @throws URISyntaxException where the specified value string is not a valid uri
+   */
+  public TzUrl(final ParameterList aList, final String aValue)
+      throws URISyntaxException {
+    super(TZURL, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param aUri a URI
+   */
+  public TzUrl(final URI aUri) {
+    super(TZURL, PropertyFactoryImpl.getInstance());
+    uri = aUri;
+  }
+
+  /**
+   * @param aList a list of parameters for this component
+   * @param aUri  a URI
+   */
+  public TzUrl(final ParameterList aList, final URI aUri) {
+    super(TZURL, aList, PropertyFactoryImpl.getInstance());
+    uri = aUri;
+  }
+
+  /**
+   * @return Returns the uri.
+   */
+  public final URI getUri() {
+    return uri;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) throws URISyntaxException {
+    uri = Uris.create(aValue);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return Uris.decode(Strings.valueOf(getUri()));
+  }
+
+  /**
+   * @param uri The uri to set.
+   */
+  public final void setUri(final URI uri) {
+    this.uri = uri;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    // TODO: Auto-generated method stub
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(TZURL);
     }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     * @throws URISyntaxException where the specified value string is not a valid uri
-     */
-    public TzUrl(final ParameterList aList, final String aValue)
-            throws URISyntaxException {
-        super(TZURL, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new TzUrl(parameters, value);
     }
 
-    /**
-     * @param aUri a URI
-     */
-    public TzUrl(final URI aUri) {
-        super(TZURL, PropertyFactoryImpl.getInstance());
-        uri = aUri;
+    public Property createProperty() {
+      return new TzUrl();
     }
-
-    /**
-     * @param aList a list of parameters for this component
-     * @param aUri  a URI
-     */
-    public TzUrl(final ParameterList aList, final URI aUri) {
-        super(TZURL, aList, PropertyFactoryImpl.getInstance());
-        uri = aUri;
-    }
-
-    /**
-     * @return Returns the uri.
-     */
-    public final URI getUri() {
-        return uri;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) throws URISyntaxException {
-        uri = Uris.create(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return Uris.decode(Strings.valueOf(getUri()));
-    }
-
-    /**
-     * @param uri The uri to set.
-     */
-    public final void setUri(final URI uri) {
-        this.uri = uri;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(TZURL);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new TzUrl(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new TzUrl();
-        }
-    }
-
+  }
 }

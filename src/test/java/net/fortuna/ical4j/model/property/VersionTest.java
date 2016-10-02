@@ -31,13 +31,12 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.PropertyTest;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-
-import junit.framework.TestSuite;
-
-import net.fortuna.ical4j.model.PropertyTest;
 
 /**
  * Created on 16/03/2005

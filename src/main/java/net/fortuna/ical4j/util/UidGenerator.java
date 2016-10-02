@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -46,64 +46,64 @@ import java.net.SocketException;
  */
 public class UidGenerator {
 
-    private final String pid;
+  private final String pid;
 
-    private final HostInfo hostInfo;
+  private final HostInfo hostInfo;
 
-    private static long lastMillis;
+  private static long lastMillis;
 
-    /**
-     * @param pid a unique process identifier for the host machine
-     * @throws SocketException where host information cannot be retrieved
-     */
-    public UidGenerator(String pid) throws SocketException {
-        this(new InetAddressHostInfo(), pid);
+  /**
+   * @param pid a unique process identifier for the host machine
+   * @throws SocketException where host information cannot be retrieved
+   */
+  public UidGenerator(String pid) throws SocketException {
+    this(new InetAddressHostInfo(), pid);
+  }
+
+  /**
+   * @param hostInfo custom host information
+   * @param pid a unique process identifier for the host machine
+   */
+  public UidGenerator(HostInfo hostInfo, String pid) {
+    this.hostInfo = hostInfo;
+    this.pid = pid;
+  }
+
+  /**
+   * @return a unique component identifier
+   */
+  public Uid generateUid() {
+    final StringBuilder b = new StringBuilder();
+    b.append(uniqueTimestamp());
+    b.append('-');
+    b.append(pid);
+    if (hostInfo != null) {
+      b.append('@');
+      b.append(hostInfo.getHostName());
     }
+    return new Uid(b.toString());
+  }
 
-    /**
-     * @param hostInfo custom host information
-     * @param pid a unique process identifier for the host machine
-     */
-    public UidGenerator(HostInfo hostInfo, String pid) {
-        this.hostInfo = hostInfo;
-        this.pid = pid;
+  /**
+   * Generates a timestamp guaranteed to be unique for the current JVM instance.
+   * @return a {@link DateTime} instance representing a unique timestamp
+   */
+  private static DateTime uniqueTimestamp() {
+    long currentMillis;
+    synchronized (UidGenerator.class) {
+      currentMillis = System.currentTimeMillis();
+      // guarantee uniqueness by ensuring timestamp is always greater
+      // than the previous..
+      if (currentMillis < lastMillis) {
+        currentMillis = lastMillis;
+      }
+      if (currentMillis - lastMillis < Dates.MILLIS_PER_SECOND) {
+        currentMillis += Dates.MILLIS_PER_SECOND;
+      }
+      lastMillis = currentMillis;
     }
-
-    /**
-     * @return a unique component identifier
-     */
-    public Uid generateUid() {
-        final StringBuilder b = new StringBuilder();
-        b.append(uniqueTimestamp());
-        b.append('-');
-        b.append(pid);
-        if (hostInfo != null) {
-            b.append('@');
-            b.append(hostInfo.getHostName());
-        }
-        return new Uid(b.toString());
-    }
-
-    /**
-     * Generates a timestamp guaranteed to be unique for the current JVM instance.
-     * @return a {@link DateTime} instance representing a unique timestamp
-     */
-    private static DateTime uniqueTimestamp() {
-        long currentMillis;
-        synchronized (UidGenerator.class) {
-            currentMillis = System.currentTimeMillis();
-            // guarantee uniqueness by ensuring timestamp is always greater
-            // than the previous..
-            if (currentMillis < lastMillis) {
-                currentMillis = lastMillis;
-            }
-            if (currentMillis - lastMillis < Dates.MILLIS_PER_SECOND) {
-                currentMillis += Dates.MILLIS_PER_SECOND;
-            }
-            lastMillis = currentMillis;
-        }
-        final DateTime timestamp = new DateTime(currentMillis);
-        timestamp.setUtc(true);
-        return timestamp;
-    }
+    final DateTime timestamp = new DateTime(currentMillis);
+    timestamp.setUtc(true);
+    return timestamp;
+  }
 }

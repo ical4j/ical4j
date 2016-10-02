@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -143,159 +143,158 @@ import java.text.ParseException;
  */
 public class Trigger extends UtcProperty {
 
-    private static final long serialVersionUID = 5049421499261722194L;
+  private static final long serialVersionUID = 5049421499261722194L;
 
-    private Dur duration;
+  private Dur duration;
 
-    /**
-     * Default constructor.
-     */
-    public Trigger() {
-        super(TRIGGER, PropertyFactoryImpl.getInstance());
+  /**
+   * Default constructor.
+   */
+  public Trigger() {
+    super(TRIGGER, PropertyFactoryImpl.getInstance());
+  }
+
+  /**
+   * @param aList  a list of parameters for this component
+   * @param aValue a value string for this component
+   */
+  public Trigger(final ParameterList aList, final String aValue) {
+    super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
+    setValue(aValue);
+  }
+
+  /**
+   * @param duration a duration in milliseconds
+   */
+  public Trigger(final Dur duration) {
+    super(TRIGGER, PropertyFactoryImpl.getInstance());
+    setDuration(duration);
+  }
+
+  /**
+   * @param aList    a list of parameters for this component
+   * @param duration a duration in milliseconds
+   */
+  public Trigger(final ParameterList aList, final Dur duration) {
+    super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
+    setDuration(duration);
+  }
+
+  /**
+   * @param dateTime a date representation of a date-time
+   */
+  public Trigger(final DateTime dateTime) {
+    super(TRIGGER, PropertyFactoryImpl.getInstance());
+    setDateTime(dateTime);
+  }
+
+  /**
+   * @param aList    a list of parameters for this component
+   * @param dateTime a date representation of a date-time
+   */
+  public Trigger(final ParameterList aList, final DateTime dateTime) {
+    super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
+    setDateTime(dateTime);
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void validate() throws ValidationException {
+    super.validate();
+
+    final Parameter relParam = getParameter(Parameter.RELATED);
+    final Parameter valueParam = getParameter(Parameter.VALUE);
+
+    if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
+
+      ParameterValidator.getInstance().assertOneOrLess(Parameter.RELATED,
+          getParameters());
+
+      ParameterValidator.getInstance().assertNullOrEqual(Value.DURATION,
+          getParameters());
+
+      if (getDuration() == null) {
+        throw new ValidationException("Duration value not specified");
+      }
+    } else {
+      ParameterValidator.getInstance().assertOne(Parameter.VALUE,
+          getParameters());
+
+      ParameterValidator.getInstance().assertNullOrEqual(Value.DATE_TIME,
+          getParameters());
+
+      if (getDateTime() == null) {
+        throw new ValidationException("DATE-TIME value not specified");
+      }
+    }
+  }
+
+  /**
+   * @return Returns the duration.
+   */
+  public final Dur getDuration() {
+    return duration;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final void setValue(final String aValue) {
+    try {
+      super.setValue(aValue);
+      duration = null;
+    } catch (ParseException pe) {
+      duration = new Dur(aValue);
+      super.setDateTime(null);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    if (duration != null) {
+      return duration.toString();
+    }
+    return super.getValue();
+  }
+
+  /**
+   * @param dateTime The dateTime to set.
+   */
+  public final void setDateTime(final DateTime dateTime) {
+    super.setDateTime(dateTime);
+    duration = null;
+    getParameters().replace(Value.DATE_TIME);
+  }
+
+  /**
+   * @param duration The duration to set.
+   */
+  public final void setDuration(final Dur duration) {
+    this.duration = duration;
+    super.setDateTime(null);
+    // duration is the default value type for Trigger..
+    if (getParameter(Parameter.VALUE) != null) {
+      getParameters().replace(Value.DURATION);
+    }
+  }
+
+  public static class Factory extends Content.Factory implements PropertyFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(TRIGGER);
     }
 
-    /**
-     * @param aList  a list of parameters for this component
-     * @param aValue a value string for this component
-     */
-    public Trigger(final ParameterList aList, final String aValue) {
-        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
-        setValue(aValue);
+    public Property createProperty(final ParameterList parameters, final String value)
+        throws IOException, URISyntaxException, ParseException {
+      return new Trigger(parameters, value);
     }
 
-    /**
-     * @param duration a duration in milliseconds
-     */
-    public Trigger(final Dur duration) {
-        super(TRIGGER, PropertyFactoryImpl.getInstance());
-        setDuration(duration);
+    public Property createProperty() {
+      return new Trigger();
     }
-
-    /**
-     * @param aList    a list of parameters for this component
-     * @param duration a duration in milliseconds
-     */
-    public Trigger(final ParameterList aList, final Dur duration) {
-        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
-        setDuration(duration);
-    }
-
-    /**
-     * @param dateTime a date representation of a date-time
-     */
-    public Trigger(final DateTime dateTime) {
-        super(TRIGGER, PropertyFactoryImpl.getInstance());
-        setDateTime(dateTime);
-    }
-
-    /**
-     * @param aList    a list of parameters for this component
-     * @param dateTime a date representation of a date-time
-     */
-    public Trigger(final ParameterList aList, final DateTime dateTime) {
-        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
-        setDateTime(dateTime);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        super.validate();
-
-        final Parameter relParam = getParameter(Parameter.RELATED);
-        final Parameter valueParam = getParameter(Parameter.VALUE);
-
-        if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
-
-            ParameterValidator.getInstance().assertOneOrLess(Parameter.RELATED,
-                    getParameters());
-
-            ParameterValidator.getInstance().assertNullOrEqual(Value.DURATION,
-                    getParameters());
-
-            if (getDuration() == null) {
-                throw new ValidationException("Duration value not specified");
-            }
-        } else {
-            ParameterValidator.getInstance().assertOne(Parameter.VALUE,
-                    getParameters());
-
-            ParameterValidator.getInstance().assertNullOrEqual(Value.DATE_TIME,
-                    getParameters());
-
-            if (getDateTime() == null) {
-                throw new ValidationException("DATE-TIME value not specified");
-            }
-        }
-    }
-
-    /**
-     * @return Returns the duration.
-     */
-    public final Dur getDuration() {
-        return duration;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void setValue(final String aValue) {
-        try {
-            super.setValue(aValue);
-            duration = null;
-        } catch (ParseException pe) {
-            duration = new Dur(aValue);
-            super.setDateTime(null);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        if (duration != null) {
-            return duration.toString();
-        }
-        return super.getValue();
-    }
-
-    /**
-     * @param dateTime The dateTime to set.
-     */
-    public final void setDateTime(final DateTime dateTime) {
-        super.setDateTime(dateTime);
-        duration = null;
-        getParameters().replace(Value.DATE_TIME);
-    }
-
-    /**
-     * @param duration The duration to set.
-     */
-    public final void setDuration(final Dur duration) {
-        this.duration = duration;
-        super.setDateTime(null);
-        // duration is the default value type for Trigger..
-        if (getParameter(Parameter.VALUE) != null) {
-            getParameters().replace(Value.DURATION);
-        }
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(TRIGGER);
-        }
-
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-            return new Trigger(parameters, value);
-        }
-
-        public Property createProperty() {
-            return new Trigger();
-        }
-    }
-
+  }
 }

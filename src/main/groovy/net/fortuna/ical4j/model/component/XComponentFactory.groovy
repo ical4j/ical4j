@@ -41,33 +41,32 @@ import net.fortuna.ical4j.model.PropertyList
 class XComponentFactory extends AbstractFactory {
 
 
-     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         XComponent component
-         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XComponent.class)) {
-             component = (XComponent) value
-         }
-         else {
-             def componentName = attributes.remove('name')
-             if (componentName == null) {
-                 componentName = value
-             }
-             PropertyList properties = attributes.remove('properties')
-             if (properties == null) {
-                 properties = new PropertyList()
-             }
-             component = newInstance(componentName, properties);
-         }
-         return component
-     }
-     
-     protected static Object newInstance(String name, PropertyList properties) {
-         return new XComponent(name, properties)
-     }
-     
-     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-         if (child instanceof Property) {
-             parent.properties.add(child)
-         }
-     }
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+        XComponent component
+        if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XComponent.class)) {
+            component = (XComponent) value
+        } else {
+            def componentName = attributes.remove('name')
+            if (componentName == null) {
+                componentName = value
+            }
+            PropertyList properties = attributes.remove('properties')
+            if (properties == null) {
+                properties = new PropertyList()
+            }
+            component = newInstance(componentName, properties);
+        }
+        return component
+    }
+
+    protected static Object newInstance(String name, PropertyList properties) {
+        return new XComponent(name, properties)
+    }
+
+    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+        if (child instanceof Property) {
+            parent.properties.add(child)
+        }
+    }
 }
 

@@ -41,33 +41,32 @@ class PartStatFactory extends AbstractParameterFactory {
         PartStat partStat
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, PartStat)) {
             partStat = value
-        }
-        else {
-			switch (value) {
-				case PartStat.ACCEPTED.value:
-					partStat = PartStat.ACCEPTED
-					break
-				case PartStat.COMPLETED.value:
-		            partStat = PartStat.COMPLETED
-					break
-				case PartStat.DECLINED.value:
-		            partStat = PartStat.DECLINED
-					break
-				case PartStat.DELEGATED.value:
-		            partStat = PartStat.DELEGATED
-					break
-				case PartStat.IN_PROCESS.value:
-		            partStat = PartStat.IN_PROCESS
-					break
-				case PartStat.NEEDS_ACTION.value:
-		            partStat = PartStat.NEEDS_ACTION
-					break
-				case PartStat.TENTATIVE.value:
-		            partStat = PartStat.TENTATIVE
-					break
-				default:
-		            partStat = [value]
-	        }
+        } else {
+            switch (value) {
+                case PartStat.ACCEPTED.value:
+                    partStat = PartStat.ACCEPTED
+                    break
+                case PartStat.COMPLETED.value:
+                    partStat = PartStat.COMPLETED
+                    break
+                case PartStat.DECLINED.value:
+                    partStat = PartStat.DECLINED
+                    break
+                case PartStat.DELEGATED.value:
+                    partStat = PartStat.DELEGATED
+                    break
+                case PartStat.IN_PROCESS.value:
+                    partStat = PartStat.IN_PROCESS
+                    break
+                case PartStat.NEEDS_ACTION.value:
+                    partStat = PartStat.NEEDS_ACTION
+                    break
+                case PartStat.TENTATIVE.value:
+                    partStat = PartStat.TENTATIVE
+                    break
+                default:
+                    partStat = [value]
+            }
         }
         return partStat
     }

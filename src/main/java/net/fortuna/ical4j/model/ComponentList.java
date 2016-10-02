@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -45,76 +45,76 @@ import java.util.ArrayList;
  */
 public class ComponentList<T extends Component> extends ArrayList<T> implements Serializable {
 
-    private static final long serialVersionUID = 7308557606558767449L;
+  private static final long serialVersionUID = 7308557606558767449L;
 
-    /**
-     * Default constructor.
-     */
-    public ComponentList() {
+  /**
+   * Default constructor.
+   */
+  public ComponentList() {
+  }
+
+  /**
+   * Creates a new instance with the specified initial capacity.
+   * @param initialCapacity the initial capacity of the list
+   */
+  public ComponentList(final int initialCapacity) {
+    super(initialCapacity);
+  }
+
+  /**
+   * Creates a deep copy of the specified component list.
+   * @param components a component list to copy
+   * @throws IOException where an error occurs reading component data
+   * @throws ParseException where component data cannot be parsed
+   * @throws URISyntaxException where component data contains an invalid URI
+   */
+  @SuppressWarnings("unchecked")
+  public ComponentList(ComponentList<? extends T> components) throws ParseException,
+      IOException, URISyntaxException {
+
+    for (T c : components) {
+      add((T) c.copy());
     }
+  }
 
-    /**
-     * Creates a new instance with the specified initial capacity.
-     * @param initialCapacity the initial capacity of the list
-     */
-    public ComponentList(final int initialCapacity) {
-        super(initialCapacity);
+  /**
+   * {@inheritDoc}
+   */
+  public final String toString() {
+    final StringBuilder buffer = new StringBuilder();
+    for (final T c : this) {
+      buffer.append(c.toString());
     }
+    return buffer.toString();
+  }
 
-    /**
-     * Creates a deep copy of the specified component list.
-     * @param components a component list to copy
-     * @throws IOException where an error occurs reading component data
-     * @throws ParseException where component data cannot be parsed
-     * @throws URISyntaxException where component data contains an invalid URI
-     */
-    @SuppressWarnings("unchecked")
-	public ComponentList(ComponentList<? extends T> components) throws ParseException,
-            IOException, URISyntaxException {
-
-        for (T c : components) {
-            add((T) c.copy());
-        }
+  /**
+   * Returns the first component of specified name.
+   * @param aName name of component to return
+   * @return a component or null if no matching component found
+   */
+  public final T getComponent(final String aName) {
+    for (final T c : this) {
+      if (c.getName().equals(aName)) {
+        return c;
+      }
     }
+    return null;
+  }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        for (final T c : this) {
-            buffer.append(c.toString());
-        }
-        return buffer.toString();
+  /**
+   * Returns a list containing all components with specified name.
+   * @param name name of components to return
+   * @return a list of components with the matching name
+   */
+  @SuppressWarnings("unchecked")
+  public final <C extends T> ComponentList<C> getComponents(final String name) {
+    final ComponentList<C> components = new ComponentList<C>();
+    for (final T c : this) {
+      if (c.getName().equals(name)) {
+        components.add((C) c);
+      }
     }
-
-    /**
-     * Returns the first component of specified name.
-     * @param aName name of component to return
-     * @return a component or null if no matching component found
-     */
-    public final T getComponent(final String aName) {
-        for (final T c : this) {
-            if (c.getName().equals(aName)) {
-                return c;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Returns a list containing all components with specified name.
-     * @param name name of components to return
-     * @return a list of components with the matching name
-     */
-    @SuppressWarnings("unchecked")
-	public final <C extends T> ComponentList<C> getComponents(final String name) {
-        final ComponentList<C> components = new ComponentList<C>();
-        for (final T c : this) {
-            if (c.getName().equals(name)) {
-                components.add((C) c);
-            }
-        }
-        return components;
-    }
+    return components;
+  }
 }

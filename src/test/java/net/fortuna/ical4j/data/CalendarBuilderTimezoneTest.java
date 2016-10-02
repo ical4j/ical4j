@@ -31,8 +31,6 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.FileInputStream;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -42,6 +40,8 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.CompatibilityHints;
+
+import java.io.FileInputStream;
 
 /**
  * $Id: CalendarBuilderTimezoneTest.java [Jul 1, 2008]

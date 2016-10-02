@@ -44,7 +44,7 @@ class ParameterListFactory extends AbstractFactory {
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         return new ParameterList()
     }
-    
+
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof Parameter) {
             parent.add(child)

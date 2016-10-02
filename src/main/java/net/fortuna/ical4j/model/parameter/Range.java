@@ -1,22 +1,22 @@
 /**
  * Copyright (c) 2012, Ben Fortuna
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
- *
- *  o Redistributions of source code must retain the above copyright
+ * <p>
+ * o Redistributions of source code must retain the above copyright
  * notice, this list of conditions and the following disclaimer.
- *
- *  o Redistributions in binary form must reproduce the above copyright
+ * <p>
+ * o Redistributions in binary form must reproduce the above copyright
  * notice, this list of conditions and the following disclaimer in the
  * documentation and/or other materials provided with the distribution.
- *
- *  o Neither the name of Ben Fortuna nor the names of any other contributors
+ * <p>
+ * o Neither the name of Ben Fortuna nor the names of any other contributors
  * may be used to endorse or promote products derived from this software
  * without specific prior written permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -49,66 +49,65 @@ import java.net.URISyntaxException;
  */
 public class Range extends Parameter {
 
-    private static final long serialVersionUID = -3057531444558393776L;
+  private static final long serialVersionUID = -3057531444558393776L;
 
-    private static final String VALUE_THISANDPRIOR = "THISANDPRIOR";
+  private static final String VALUE_THISANDPRIOR = "THISANDPRIOR";
 
-    private static final String VALUE_THISANDFUTURE = "THISANDFUTURE";
+  private static final String VALUE_THISANDFUTURE = "THISANDFUTURE";
 
-    /**
-     * This and prior.
-     */
-    public static final Range THISANDPRIOR = new Range(VALUE_THISANDPRIOR);
+  /**
+   * This and prior.
+   */
+  public static final Range THISANDPRIOR = new Range(VALUE_THISANDPRIOR);
 
-    /**
-     * This and future.
-     */
-    public static final Range THISANDFUTURE = new Range(VALUE_THISANDFUTURE);
+  /**
+   * This and future.
+   */
+  public static final Range THISANDFUTURE = new Range(VALUE_THISANDFUTURE);
 
-    private String value;
+  private String value;
 
-    /**
-     * @param aValue a string representation of a recurrence identifier range
-     */
-    public Range(final String aValue) {
-        super(RANGE, ParameterFactoryImpl.getInstance());
-        this.value = Strings.unquote(aValue);
+  /**
+   * @param aValue a string representation of a recurrence identifier range
+   */
+  public Range(final String aValue) {
+    super(RANGE, ParameterFactoryImpl.getInstance());
+    this.value = Strings.unquote(aValue);
 
-        // allow arbitrary ranges for Lotus Notes..
-        // eg. X-LOTUS-RECURID;RANGE=ALL:20101006T203000Z
+    // allow arbitrary ranges for Lotus Notes..
+    // eg. X-LOTUS-RECURID;RANGE=ALL:20101006T203000Z
 
-        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY)) {
-            // value must be one of finite list..
-            if (!VALUE_THISANDPRIOR.equals(value)
-                    && !VALUE_THISANDFUTURE.equals(value)) {
-                throw new IllegalArgumentException("Invalid value [" + value + "]");
-            }
-        }
+    if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY)) {
+      // value must be one of finite list..
+      if (!VALUE_THISANDPRIOR.equals(value)
+          && !VALUE_THISANDFUTURE.equals(value)) {
+        throw new IllegalArgumentException("Invalid value [" + value + "]");
+      }
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  public final String getValue() {
+    return value;
+  }
+
+  public static class Factory extends Content.Factory implements ParameterFactory {
+    private static final long serialVersionUID = 1L;
+
+    public Factory() {
+      super(RANGE);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String getValue() {
-        return value;
+    public Parameter createParameter(final String value) throws URISyntaxException {
+      Range parameter = new Range(value);
+      if (Range.THISANDFUTURE.equals(parameter)) {
+        parameter = Range.THISANDFUTURE;
+      } else if (Range.THISANDPRIOR.equals(parameter)) {
+        parameter = Range.THISANDPRIOR;
+      }
+      return parameter;
     }
-
-    public static class Factory extends Content.Factory implements ParameterFactory {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(RANGE);
-        }
-
-        public Parameter createParameter(final String value) throws URISyntaxException {
-            Range parameter = new Range(value);
-            if (Range.THISANDFUTURE.equals(parameter)) {
-                parameter = Range.THISANDFUTURE;
-            } else if (Range.THISANDPRIOR.equals(parameter)) {
-                parameter = Range.THISANDPRIOR;
-            }
-            return parameter;
-        }
-    }
-
+  }
 }
