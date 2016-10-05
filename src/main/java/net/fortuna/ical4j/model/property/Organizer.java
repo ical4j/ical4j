@@ -36,7 +36,10 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import org.apache.commons.collections4.Closure;
+import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.Arrays;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
