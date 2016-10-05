@@ -31,7 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.validate.ValidationException;
 
 /**
  * $Id$

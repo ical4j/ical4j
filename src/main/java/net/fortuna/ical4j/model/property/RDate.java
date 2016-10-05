@@ -33,8 +33,9 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

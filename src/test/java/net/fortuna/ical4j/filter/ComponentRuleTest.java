@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.filter;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ValidationException;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.validate.ValidationException;
 
 /**
  * $Id$

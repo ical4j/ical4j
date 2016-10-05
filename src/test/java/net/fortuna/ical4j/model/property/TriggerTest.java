@@ -35,8 +35,8 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.PropertyTest;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

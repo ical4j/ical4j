@@ -18,12 +18,9 @@
 
 ## System Requirements
 
- - Java 5 or later
+ - Java 6 or later
  
- - commons-codec
- - commons-lang3
- - slf4j/jcl-over-slf4j
- - junit (for unit testing only)
+See [here](docs/Dependencies.md) for further details.
 
 ## Building with Gradle
 

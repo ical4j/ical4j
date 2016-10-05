@@ -29,10 +29,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.util;
+package net.fortuna.ical4j.validate;
 
 import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.ValidationException;
 
 /**
  * @author Ben

@@ -32,10 +32,10 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.Validator;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 
 /**
  * $Id$

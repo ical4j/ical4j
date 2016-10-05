@@ -39,6 +39,7 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
