@@ -189,14 +189,13 @@ public class Organizer extends Property {
          * ; the following are optional, ; but MUST NOT occur more than once (";" cnparam) / (";" dirparam) / (";"
          * sentbyparam) / (";" languageparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.CN,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.DIR,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.SENT_BY,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
+        CollectionUtils.forAllDo(Arrays.asList(Parameter.CN, Parameter.DIR, Parameter.SENT_BY,
+                Parameter.LANGUAGE), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertOneOrLess(input, getParameters());
+            }
+        });
 
         /* schedulestatus added for CalDAV scheduling
          */
