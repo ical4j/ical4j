@@ -41,6 +41,10 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
+import org.apache.commons.collections4.Closure;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Arrays;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -179,12 +183,12 @@ public class VAvailability extends CalendarComponent {
         /*
          * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
          */
-        PropertyValidator.getInstance().assertOne(Property.DTSTART,
-                getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
-                getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID,
-                getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertOne(input, getProperties());
+            }
+        });
 
         /*       If specified, the "DTSTART" and "DTEND" properties in
          *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
@@ -225,20 +229,13 @@ public class VAvailability extends CalendarComponent {
          *                  busytype / created / last-mod /
          *                  organizer / seq / summary / url /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.BUSYTYPE,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.ORGANIZER,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.URL,
-                getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.BUSYTYPE, Property.CREATED, Property.LAST_MODIFIED,
+                Property.ORGANIZER, Property.SEQUENCE, Property.SUMMARY, Property.URL), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
+            }
+        });
 
         /*
          * ; the following are optional, ; and MAY occur more than once

@@ -41,12 +41,15 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.*;
+import org.apache.commons.collections4.Closure;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -344,40 +347,15 @@ public class VEvent extends CalendarComponent {
          * geo / last-mod / location / organizer / priority / dtstamp / seq / status / summary / transp / uid / url /
          * recurid /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.CLASS,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTART,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.GEO,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LOCATION,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.ORGANIZER,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.PRIORITY,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTAMP,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.SEQUENCE,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.STATUS,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.TRANSP,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.UID,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.URL,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID,
-                getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION,
+                Property.DTSTART, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER,
+                Property.PRIORITY, Property.DTSTAMP, Property.SEQUENCE, Property.STATUS, Property.SUMMARY,
+                Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
+            }
+        });
 
         final Status status = (Status) getProperty(Property.STATUS);
         if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())

@@ -41,7 +41,10 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VFreeBusyPublishValidator;
 import net.fortuna.ical4j.validate.component.VFreeBusyReplyValidator;
 import net.fortuna.ical4j.validate.component.VFreeBusyRequestValidator;
+import org.apache.commons.collections4.Closure;
+import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -497,20 +500,17 @@ public class VFreeBusy extends CalendarComponent {
                     getProperties());
         }
 
-        final PropertyValidator validator = PropertyValidator.getInstance();
-
         /*
          * ; the following are optional, ; but MUST NOT occur more than once contact / dtstart / dtend / duration /
          * dtstamp / organizer / uid / url /
          */
-        validator.assertOneOrLess(Property.CONTACT, getProperties());
-        validator.assertOneOrLess(Property.DTSTART, getProperties());
-        validator.assertOneOrLess(Property.DTEND, getProperties());
-        validator.assertOneOrLess(Property.DURATION, getProperties());
-        validator.assertOneOrLess(Property.DTSTAMP, getProperties());
-        validator.assertOneOrLess(Property.ORGANIZER, getProperties());
-        validator.assertOneOrLess(Property.UID, getProperties());
-        validator.assertOneOrLess(Property.URL, getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.CONTACT, Property.DTSTART, Property.DTEND, Property.DURATION,
+                Property.DTSTAMP, Property.ORGANIZER, Property.UID, Property.URL), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
+            }
+        });
 
         /*
          * ; the following are optional, ; and MAY occur more than once attendee / comment / freebusy / rstatus / x-prop
@@ -521,10 +521,12 @@ public class VFreeBusy extends CalendarComponent {
          * calendar component. Any recurring events are resolved into their individual busy time periods using the
          * "FREEBUSY" property.
          */
-        validator.assertNone(Property.RRULE, getProperties());
-        validator.assertNone(Property.EXRULE, getProperties());
-        validator.assertNone(Property.RDATE, getProperties());
-        validator.assertNone(Property.EXDATE, getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.RRULE, Property.EXRULE, Property.RDATE, Property.EXDATE), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertNone(input, getProperties());
+            }
+        });
 
         // DtEnd value must be later in time that DtStart..
         final DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
