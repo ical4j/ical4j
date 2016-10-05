@@ -126,7 +126,7 @@ public class Attendee extends Property {
                 Parameter.DIR, Parameter.LANGUAGE), new Closure<String>() {
             @Override
             public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, getParameters());
+                ParameterValidator.getInstance().assertOneOrLess(input, getParameters());
             }
         });
 
