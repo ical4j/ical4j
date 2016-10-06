@@ -191,6 +191,22 @@ public abstract class Component implements Serializable {
     }
 
     /**
+     * Convenience method for retrieving a named property.
+     *
+     * @param name name of the property to retrieve
+     * @param optional flag to indicate whether an exception should be thrown for missing property
+     * @return the first matching property in the property list with the specified name
+     * @throws ConstraintViolationException when a property is not found and the optional flag is false
+     */
+    protected final Property getProperty(String name, boolean optional) throws ConstraintViolationException {
+        Property p = getProperties().getProperty(name);
+        if (p == null && !optional) {
+            throw new ConstraintViolationException(String.format("Missing %s property", name));
+        }
+        return p;
+    }
+
+    /**
      * Perform validation on a component and its properties.
      *
      * @throws ValidationException where the component is not in a valid state
