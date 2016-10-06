@@ -155,7 +155,7 @@ public abstract class Observance extends Component {
 
         if (initialOnset == null) {
             try {
-                DtStart dtStart = (DtStart) getProperty(Property.DTSTART, false);
+                DtStart dtStart = (DtStart) getRequiredProperty(Property.DTSTART);
                 initialOnset = applyOffsetFrom(calculateOnset(dtStart.getDate()));
             } catch (ParseException e) {
                 Logger log = LoggerFactory.getLogger(Observance.class);
