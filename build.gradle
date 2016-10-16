@@ -109,10 +109,6 @@ scmVersion {
     branchVersionCreator = [
         'release/.*': 'simple'
     ]
-    nextVersion {
-        suffix = 'beta1'
-        separator = '-'
-    }
 }
 
 group = 'org.mnode.ical4j'
