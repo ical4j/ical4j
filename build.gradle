@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
   id "org.sonarqube" version "1.2"
+  id 'com.gradle.build-scan' version '1.2'
 }
 
 apply plugin: 'java'
@@ -24,6 +25,11 @@ apply from: 'gradle/dist.gradle'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+}
 
 /*
 githubPages {
