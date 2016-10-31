@@ -32,7 +32,7 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
 
 **Build a new release**
 
-`./gradlew clean test release -PreleaseVersion=2.0.0`
+`./gradlew clean test release -Prelease.forceVersion=2.0.0`
 
 **Upload release binaries and packages**
 
