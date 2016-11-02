@@ -18,12 +18,9 @@
 
 ## System Requirements
 
- - Java 5 or later
+ - Java 6 or later
  
- - commons-codec
- - commons-lang3
- - slf4j/jcl-over-slf4j
- - junit (for unit testing only)
+See [here](docs/Dependencies.md) for further details.
 
 ## Building with Gradle
 
@@ -35,7 +32,7 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
 
 **Build a new release**
 
-`./gradlew clean test release -PreleaseVersion=2.0.0`
+`./gradlew clean test release -Prelease.forceVersion=2.0.0`
 
 **Upload release binaries and packages**
 

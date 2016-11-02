@@ -35,8 +35,9 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Dates;
-import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.TimeZones;
+import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,8 +156,14 @@ public abstract class Observance extends Component {
 
         if (initialOnset == null) {
             try {
-                initialOnset = applyOffsetFrom(calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate()));
+                DtStart dtStart = (DtStart) getRequiredProperty(Property.DTSTART);
+                initialOnset = applyOffsetFrom(calculateOnset(dtStart.getDate()));
             } catch (ParseException e) {
+                Logger log = LoggerFactory.getLogger(Observance.class);
+                log.error("Unexpected error calculating initial onset", e);
+                // XXX: is this correct?
+                return null;
+            } catch (ConstraintViolationException e) {
                 Logger log = LoggerFactory.getLogger(Observance.class);
                 log.error("Unexpected error calculating initial onset", e);
                 // XXX: is this correct?

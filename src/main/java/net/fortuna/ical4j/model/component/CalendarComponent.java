@@ -33,9 +33,10 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.Validator;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.validate.EmptyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 
 /**
  * $Id$
@@ -80,7 +81,7 @@ public abstract class CalendarComponent extends Component {
     public final void validate(Method method) throws ValidationException {
         final Validator validator = getValidator(method);
         if (validator != null) {
-            validator.validate();
+            validator.validate(this);
         }
         else {
             throw new ValidationException("Unsupported method: " + method);
@@ -164,14 +165,5 @@ public abstract class CalendarComponent extends Component {
     public final void validateDeclineCounter() throws ValidationException {
         validate(Method.DECLINE_COUNTER);
     }
-    
-    private static class EmptyValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
 
-        public void validate() throws ValidationException {
-            // TODO Auto-generated method stub
-            
-        }
-    }
 }

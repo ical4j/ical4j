@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -143,18 +144,17 @@ public abstract class Component implements Serializable {
      * {@inheritDoc}
      */
     public String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        buffer.append(BEGIN);
-        buffer.append(':');
-        buffer.append(getName());
-        buffer.append(Strings.LINE_SEPARATOR);
-        buffer.append(getProperties());
-        buffer.append(END);
-        buffer.append(':');
-        buffer.append(getName());
-        buffer.append(Strings.LINE_SEPARATOR);
+        String buffer = BEGIN +
+                ':' +
+                getName() +
+                Strings.LINE_SEPARATOR +
+                getProperties() +
+                END +
+                ':' +
+                getName() +
+                Strings.LINE_SEPARATOR;
 
-        return buffer.toString();
+        return buffer;
     }
 
     /**
@@ -189,6 +189,21 @@ public abstract class Component implements Serializable {
      */
     public final Property getProperty(final String name) {
         return getProperties().getProperty(name);
+    }
+
+    /**
+     * Convenience method for retrieving a required named property.
+     *
+     * @param name name of the property to retrieve
+     * @return the first matching property in the property list with the specified name
+     * @throws ConstraintViolationException when a property is not found
+     */
+    protected final Property getRequiredProperty(String name) throws ConstraintViolationException {
+        Property p = getProperties().getProperty(name);
+        if (p == null) {
+            throw new ConstraintViolationException(String.format("Missing %s property", name));
+        }
+        return p;
     }
 
     /**
