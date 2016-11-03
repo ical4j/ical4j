@@ -31,18 +31,17 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-import java.util.Date;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.PropertyTest;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.text.ParseException;
+import java.util.Date;
 
 /**
  * Created on 7/03/2005
@@ -53,8 +52,8 @@ import org.apache.commons.logging.LogFactory;
  *
  */
 public class TriggerTest extends PropertyTest {
-    
-    private static Log log = LogFactory.getLog(TriggerTest.class);
+
+    private Logger log = LoggerFactory.getLogger(TriggerTest.class);
 
     private Trigger trigger;
     
@@ -81,16 +80,16 @@ public class TriggerTest extends PropertyTest {
      */
     public void testSetValue() throws ParseException {
         trigger.setValue(new DateTime(new Date(0).getTime()).toString());
-        
-        log.info(new DateTime(new Date(0).getTime()));
-        log.info(trigger);
+
+        log.info(new DateTime(new Date(0).getTime()).toString());
+        log.info(trigger.toString());
 
 //        trigger.setValue(DurationFormat.getInstance().format(5000));
         trigger.setValue(new Dur(0, 0, 0, 5).toString());
         
 //        log.info(DurationFormat.getInstance().format(5000));
-        log.info(new Dur(0, 0, 0, 5));
-        log.info(trigger);
+        log.info(new Dur(0, 0, 0, 5).toString());
+        log.info(trigger.toString());
     }
 
     /**

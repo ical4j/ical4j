@@ -35,10 +35,11 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Dates;
-import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.TimeZones;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -49,15 +50,16 @@ import java.util.Collections;
 
 /**
  * $Id$ [05-Apr-2004]
- *
+ * <p/>
  * Defines an iCalendar sub-component representing a timezone observance. Class made abstract such that only Standard
  * and Daylight instances are valid.
+ *
  * @author Ben Fortuna
  */
 public abstract class Observance extends Component {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 2523330383042085994L;
 
@@ -74,16 +76,16 @@ public abstract class Observance extends Component {
     // TODO: clear cache when observance definition changes (??)
     private long[] onsetsMillisec;
     private DateTime[] onsetsDates;
-//    private Map onsets = new TreeMap();
+    //    private Map onsets = new TreeMap();
     private Date initialOnset = null;
-    
+
     /**
      * Used for parsing times in a UTC date-time representation.
      */
     private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss";
     private static final DateFormat UTC_FORMAT = new SimpleDateFormat(
             UTC_PATTERN);
-    
+
     static {
         UTC_FORMAT.setTimeZone(TimeZones.getUtcTimeZone());
         UTC_FORMAT.setLenient(false);
@@ -94,6 +96,7 @@ public abstract class Observance extends Component {
 
     /**
      * Constructs a timezone observance with the specified name and no properties.
+     *
      * @param name the name of this observance component
      */
     protected Observance(final String name) {
@@ -102,7 +105,8 @@ public abstract class Observance extends Component {
 
     /**
      * Constructor protected to enforce use of sub-classes from this library.
-     * @param name the name of the time type
+     *
+     * @param name       the name of the time type
      * @param properties a list of properties
      */
     protected Observance(final String name, final PropertyList properties) {
@@ -143,23 +147,30 @@ public abstract class Observance extends Component {
 
     /**
      * Returns the latest applicable onset of this observance for the specified date.
+     *
      * @param date the latest date that an observance onset may occur
      * @return the latest applicable observance date or null if there is no applicable observance onset for the
      * specified date
      */
     public final Date getLatestOnset(final Date date) {
-        
+
         if (initialOnset == null) {
             try {
-                initialOnset = applyOffsetFrom(calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate()));
+                DtStart dtStart = (DtStart) getRequiredProperty(Property.DTSTART);
+                initialOnset = applyOffsetFrom(calculateOnset(dtStart.getDate()));
             } catch (ParseException e) {
-                Log log = LogFactory.getLog(Observance.class);
+                Logger log = LoggerFactory.getLogger(Observance.class);
+                log.error("Unexpected error calculating initial onset", e);
+                // XXX: is this correct?
+                return null;
+            } catch (ConstraintViolationException e) {
+                Logger log = LoggerFactory.getLogger(Observance.class);
                 log.error("Unexpected error calculating initial onset", e);
                 // XXX: is this correct?
                 return null;
             }
         }
-        
+
         // observance not applicable if date is before the effective date of this observance..
         if (date.before(initialOnset)) {
             return null;
@@ -177,7 +188,7 @@ public abstract class Observance extends Component {
         try {
             initialOnsetUTC = calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate());
         } catch (ParseException e) {
-            Log log = LogFactory.getLog(Observance.class);
+            Logger log = LoggerFactory.getLogger(Observance.class);
             log.error("Unexpected error calculating initial onset", e);
             // XXX: is this correct?
             return null;
@@ -203,7 +214,7 @@ public abstract class Observance extends Component {
                      */
                     cacheableOnsets.add(rdateOnset);
                 } catch (ParseException e) {
-                    Log log = LogFactory.getLog(Observance.class);
+                    Logger log = LoggerFactory.getLogger(Observance.class);
                     log.error("Unexpected error calculating onset", e);
                 }
             }
@@ -240,7 +251,7 @@ public abstract class Observance extends Component {
         this.onsetsDates = new DateTime[onsetsMillisec.length];
 
         for (int i = 0; i < onsetsMillisec.length; i++) {
-            cacheableOnset = (DateTime)cacheableOnsets.get(i);
+            cacheableOnset = (DateTime) cacheableOnsets.get(i);
             onsetsMillisec[i] = cacheableOnset.getTime();
             onsetsDates[i] = cacheableOnset;
         }
@@ -250,6 +261,7 @@ public abstract class Observance extends Component {
 
     /**
      * Returns a cached onset for the specified date.
+     *
      * @param date
      * @return a cached onset date or null if no cached onset is applicable for the specified date
      */
@@ -258,13 +270,14 @@ public abstract class Observance extends Component {
         if (index >= 0) {
             return onsetsDates[index];
         } else {
-            int insertionIndex = -index -1;
-            return onsetsDates[insertionIndex -1];
+            int insertionIndex = -index - 1;
+            return onsetsDates[insertionIndex - 1];
         }
     }
 
     /**
      * Returns the mandatory dtstart property.
+     *
      * @return the DTSTART property or null if not specified
      */
     public final DtStart getStartDate() {
@@ -273,6 +286,7 @@ public abstract class Observance extends Component {
 
     /**
      * Returns the mandatory tzoffsetfrom property.
+     *
      * @return the TZOFFSETFROM property or null if not specified
      */
     public final TzOffsetFrom getOffsetFrom() {
@@ -281,26 +295,27 @@ public abstract class Observance extends Component {
 
     /**
      * Returns the mandatory tzoffsetto property.
+     *
      * @return the TZOFFSETTO property or null if not specified
      */
     public final TzOffsetTo getOffsetTo() {
         return (TzOffsetTo) getProperty(Property.TZOFFSETTO);
     }
-    
-//    private Date calculateOnset(DateProperty dateProperty) {
+
+    //    private Date calculateOnset(DateProperty dateProperty) {
 //        return calculateOnset(dateProperty.getValue());
 //    }
 //    
     private DateTime calculateOnset(Date date) throws ParseException {
         return calculateOnset(date.toString());
     }
-    
+
     private DateTime calculateOnset(String dateStr) throws ParseException {
-        
+
         // Translate local onset into UTC time by parsing local time 
         // as GMT and adjusting by TZOFFSETFROM if required
         long utcOnset;
-       
+
         synchronized (UTC_FORMAT) {
             utcOnset = UTC_FORMAT.parse(dateStr).getTime();
         }

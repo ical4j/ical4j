@@ -31,13 +31,13 @@
  */
 package net.fortuna.ical4j.filter;
 
-import java.net.URI;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.validate.ValidationException;
+
+import java.net.URI;
 
 /**
  * $Id$

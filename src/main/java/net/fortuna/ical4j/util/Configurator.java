@@ -31,42 +31,41 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.Properties;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 06/02/2008
- *
+ * <p/>
  * Provides configuration properties specified either as system properties
  * or in an ical4j.properties configuration file.
- * @author Ben
  *
+ * @author Ben
  */
 public final class Configurator {
 
-    private static final Log LOG = LogFactory.getLog(Configurator.class);
-    
+    private static final Logger LOG = LoggerFactory.getLogger(Configurator.class);
+
     private static final Properties CONFIG = new Properties();
-    
+
     static {
         try {
             CONFIG.load(ResourceLoader.getResourceAsStream("ical4j.properties"));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.info("ical4j.properties not found.");
         }
     }
-    
+
     /**
      * Constructor made private to enforce static nature.
      */
     private Configurator() {
     }
-    
+
     /**
      * @param key a compatibility hint key
      * @return true if the specified compatibility hint is enabled, otherwise false

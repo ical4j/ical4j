@@ -31,10 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -42,14 +38,14 @@ import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * Created on 16/03/2005
@@ -62,7 +58,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class CalendarTest extends TestCase {
 
-    private static Log log = LogFactory.getLog(Calendar.class);
+    private static Logger log = LoggerFactory.getLogger(Calendar.class);
     
     private Calendar calendar;
 
@@ -91,8 +87,8 @@ public class CalendarTest extends TestCase {
             fail("Should throw a ValidationException");
     	}
     	catch (ValidationException ve) {
-            log.trace(ve);
-    	}
+            log.trace(ve.toString());
+        }
     }
     
     /**
@@ -309,6 +305,6 @@ public class CalendarTest extends TestCase {
                                                     queryEndCal.getTime());
                                                     */
 
-        log.info(reply);
+        log.info(reply.toString());
     }
 }

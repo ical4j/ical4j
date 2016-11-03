@@ -31,49 +31,42 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
-
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 
 /**
  * $Id: CalendarBuilderTest.java [Apr 5, 2004]
- *
+ * <p/>
  * Test case for iCalendarBuilder.
  *
  * @author benf
  */
 public class CalendarBuilderTest extends TestCase {
 
-    private static Log log = LogFactory.getLog(CalendarBuilderTest.class);
+    private static Logger log = LoggerFactory.getLogger(CalendarBuilderTest.class);
 
     private String filename;
 
     private FileInputStream fin;
-    
+
     private CalendarBuilder builder;
 
     /**
      * Constructor.
      *
-     * @param method
-     *            name of method to run in test case
-     * @param file
-     *            an iCalendar filename
-     * @throws FileNotFoundException 
+     * @param method name of method to run in test case
+     * @param file   an iCalendar filename
+     * @throws FileNotFoundException
      */
     public CalendarBuilderTest(String testMethod, final String file) throws FileNotFoundException {
         super(testMethod);
@@ -92,12 +85,12 @@ public class CalendarBuilderTest extends TestCase {
                 CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        
+
         // uncomment for testing invalid calendars in relaxed parsing mode..
 //        CompatibilityHints.setHintEnabled(
 //                CompatibilityHints.KEY_RELAXED_PARSING, true);
     }
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
@@ -106,7 +99,7 @@ public class CalendarBuilderTest extends TestCase {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
-    
+
     /**
      * @throws IOException
      * @throws ParserException
@@ -116,7 +109,7 @@ public class CalendarBuilderTest extends TestCase {
         Calendar calendar = builder.build(fin);
         calendar.validate();
     }
-    
+
     /**
      * @throws IOException
      * @throws ParserException
@@ -126,11 +119,9 @@ public class CalendarBuilderTest extends TestCase {
             Calendar calendar = builder.build(fin);
             calendar.validate();
             fail("Should throw ParserException or ValidationException");
-        }
-        catch (ValidationException ve) {
+        } catch (ValidationException ve) {
             log.trace("Caught exception: [" + filename + "," + ve.getMessage() + "]");
-        }
-        catch (ParserException ve) {
+        } catch (ParserException ve) {
             log.trace("Caught exception: [" + filename + "," + ve.getMessage() + "]");
         }
     }
@@ -138,6 +129,7 @@ public class CalendarBuilderTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#getName()
      */
+
     /**
      * Overridden to return the current iCalendar file under test.
      */
@@ -147,8 +139,9 @@ public class CalendarBuilderTest extends TestCase {
 
     /**
      * Test suite.
+     *
      * @return test suite
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
     public static Test suite() throws FileNotFoundException {
         TestSuite suite = new TestSuite();
@@ -165,7 +158,7 @@ public class CalendarBuilderTest extends TestCase {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarBuilderTest("testBuildValid", testFiles[i].getPath()));
         }
-        
+
         // invalid tests..
         testFiles = new File("etc/samples/invalid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {

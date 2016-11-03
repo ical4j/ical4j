@@ -34,13 +34,18 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.*;
+import net.fortuna.ical4j.util.DecoderFactory;
+import net.fortuna.ical4j.util.EncoderFactory;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -234,10 +239,10 @@ public class Attach extends Property {
                                 (Encoding) getParameter(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
-                Log log = LogFactory.getLog(Attach.class);
+                Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
             } catch (DecoderException de) {
-                Log log = LogFactory.getLog(Attach.class);
+                Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error decoding binary data", de);
             }
         }
@@ -261,10 +266,10 @@ public class Attach extends Property {
                                 (Encoding) getParameter(Parameter.ENCODING));
                 return new String(encoder.encode(getBinary()));
             } catch (UnsupportedEncodingException uee) {
-                Log log = LogFactory.getLog(Attach.class);
+                Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
             } catch (EncoderException ee) {
-                Log log = LogFactory.getLog(Attach.class);
+                Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", ee);
             }
         }

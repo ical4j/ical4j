@@ -37,8 +37,8 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.TimeZones;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Calendar;
@@ -53,8 +53,8 @@ import java.util.TimeZone;
  * @author Ben Fortuna
  */
 public class RecurTest extends TestCase {
-    
-    private static Log log = LogFactory.getLog(RecurTest.class);
+
+    private static Logger log = LoggerFactory.getLogger(RecurTest.class);
 
     private static final Locale testLocale = Locale.US;
 
@@ -339,10 +339,10 @@ public class RecurTest extends TestCase {
         Date start = new DateTime(cal.getTime().getTime());
         cal.add(Calendar.YEAR, 2);
         Date end = new DateTime(cal.getTime().getTime());
-        log.debug(recur);
+        log.debug(recur.toString());
         
         DateList dates = recur.getDates(new DateTime(testCal.getTime()), start, end, Value.DATE_TIME);
-        log.debug(dates);
+        log.debug(dates.toString());
     }
 
     /*
@@ -435,7 +435,7 @@ public class RecurTest extends TestCase {
         recur.getDayList().add(WeekDay.TH);
         recur.getDayList().add(WeekDay.FR);
         recur.getSetPosList().add(new Integer(-1));
-        log.debug(recur);
+        log.debug(recur.toString());
 
         Calendar cal = Calendar.getInstance();
         Date start = new DateTime(cal.getTime());
@@ -443,7 +443,7 @@ public class RecurTest extends TestCase {
         Date end = new DateTime(cal.getTime());
         
         DateList dates = recur.getDates(start, end, Value.DATE_TIME);
-        log.debug(dates);
+        log.debug(dates.toString());
     }
     
     public void testMgmill2001() {
@@ -514,8 +514,8 @@ public class RecurTest extends TestCase {
         DateTime(queryStartDate.getTime()), new
         DateTime(queryStartDate.getTime()), new
         DateTime(queryEndDate.getTime()), Value.DATE_TIME);
-        
-        log.debug(dateList);
+
+        log.debug(dateList.toString());
     }
     
     /**
@@ -551,24 +551,24 @@ public class RecurTest extends TestCase {
         // testGetDates..
         Recur recur = new Recur(Recur.DAILY, 10);
         recur.setInterval(2);
-        log.debug(recur);
+        log.debug(recur.toString());
         
         Calendar cal = Calendar.getInstance();
         Date start = new Date(cal.getTime().getTime());
         cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
         Date end = new Date(cal.getTime().getTime());
-        log.debug(recur.getDates(start, end, Value.DATE_TIME));        
+        log.debug(recur.getDates(start, end, Value.DATE_TIME).toString());
         
         recur.setUntil(new Date(cal.getTime().getTime()));
-        log.info(recur);
-        log.debug(recur.getDates(start, end, Value.DATE_TIME));
+        log.info(recur.toString());
+        log.debug(recur.getDates(start, end, Value.DATE_TIME).toString());
         
         recur.setFrequency(Recur.WEEKLY);
         recur.getDayList().add(WeekDay.MO);
-        log.debug(recur);
+        log.debug(recur.toString());
 
         DateList dates = recur.getDates(start, end, Value.DATE);
-        log.debug(dates);
+        log.debug(dates.toString());
         
         suite.addTest(new RecurTest(recur, start, end, Value.DATE, 5));
         
@@ -600,7 +600,7 @@ public class RecurTest extends TestCase {
         recur.getDayList().add(WeekDay.WE);
         recur.getDayList().add(WeekDay.TH);
         recur.getDayList().add(WeekDay.FR);
-        log.debug(recur);
+        log.debug(recur.toString());
         
         cal = Calendar.getInstance();
         start = new Date(cal.getTime().getTime());
@@ -639,7 +639,7 @@ public class RecurTest extends TestCase {
         recur = new Recur(Recur.WEEKLY, 10);
         recur.getDayList().add(WeekDay.TU);
         recur.getDayList().add(WeekDay.TH);
-        log.debug(recur);
+        log.debug(recur.toString());
         
         cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 1997);
@@ -833,6 +833,18 @@ public class RecurTest extends TestCase {
         recur = new Recur("FREQ=DAILY;COUNT=3;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         suite.addTest(new RecurTest(recur, new DateTime("20131215T000000Z"),
                 new DateTime("20131215T000000Z"), new DateTime("20180101T120000Z"), Value.DATE_TIME, 3));
+        
+        // rrule with bymonth and count. Should return correct number of occurrences near the end of its perioud.
+        recur = new Recur("FREQ=MONTHLY;COUNT=3;INTERVAL=1;BYMONTH=1,9,10,12;BYMONTHDAY=12");
+        suite.addTest(new RecurTest(recur, new DateTime("20150917T000000Z"),
+                new DateTime("20160101T000000Z"), new DateTime("20160201T000000Z"), Value.DATE, 1));
+        suite.addTest(new RecurTest(recur, new DateTime("20150917T000000Z"),
+                new DateTime("20160201T000000Z"), new DateTime("20160301T000000Z"), Value.DATE, 0));
+
+        // rrule with bymonth, byday and bysetpos. Issue #39
+        recur = new Recur("FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYMONTH=2,3,9,10;BYMONTHDAY=28,29,30,31;BYSETPOS=-1");
+        suite.addTest(new RecurTest(recur, new DateTime("20150701T000000"),
+                new DateTime("20150701T000000"), new DateTime("20150930T000000")));
       
         return suite;
     }

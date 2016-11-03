@@ -34,6 +34,9 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.EmptyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -351,9 +354,11 @@ public abstract class Property extends Content {
      */
     public static final String TEL = "TEL";
 
-    private String name;
+    private final String name;
 
-    private ParameterList parameters;
+    private final ParameterList parameters;
+
+    private final Validator<Property> validator;
 
     private final PropertyFactoryImpl factory;
 
@@ -382,8 +387,13 @@ public abstract class Property extends Content {
      * @param factory the factory used to create the property instance
      */
     protected Property(final String aName, final ParameterList aList, PropertyFactoryImpl factory) {
+        this(aName, aList, new EmptyValidator<Property>(), factory);
+    }
+
+    protected Property(final String aName, final ParameterList aList, Validator<Property> validator, PropertyFactoryImpl factory) {
         this.name = aName;
         this.parameters = aList;
+        this.validator = validator;
         this.factory = factory;
     }
 
@@ -432,19 +442,6 @@ public abstract class Property extends Content {
         buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
-    }
-
-    /**
-     * Indicates whether this property is a calendar property.
-     *
-     * @return boolean
-     */
-    public boolean isCalendarProperty() {
-
-        return PRODID.equalsIgnoreCase(getName())
-                || VERSION.equalsIgnoreCase(getName())
-                || CALSCALE.equalsIgnoreCase(getName())
-                || METHOD.equalsIgnoreCase(getName());
     }
 
     /**
@@ -497,7 +494,9 @@ public abstract class Property extends Content {
      *
      * @throws ValidationException where the property is not in a valid state
      */
-    public abstract void validate() throws ValidationException;
+    public void validate() throws ValidationException {
+        validator.validate(this);
+    }
 
     /**
      * {@inheritDoc}

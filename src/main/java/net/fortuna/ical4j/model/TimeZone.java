@@ -204,9 +204,8 @@ public class TimeZone extends java.util.TimeZone {
 
         TimeZone timeZone = (TimeZone) o;
 
-        if (rawOffset != timeZone.rawOffset) return false;
-
-        return !(vTimeZone != null ? !vTimeZone.equals(timeZone.vTimeZone) : timeZone.vTimeZone != null);
+        return rawOffset == timeZone.rawOffset
+                && !(vTimeZone != null ? !vTimeZone.equals(timeZone.vTimeZone) : timeZone.vTimeZone != null);
     }
 
     public int hashCode() {

@@ -31,24 +31,23 @@
  */
 package net.fortuna.ical4j;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Console;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * $Id$
- *
+ * <p/>
  * Created on 27/10/2007
- *
  */
 public class RegexTestHarness {
 
-    private static final Log LOG = LogFactory.getLog(RegexTestHarness.class);
-    
-    public static void main(String[] args){
+    private static final Logger LOG = LoggerFactory.getLogger(RegexTestHarness.class);
+
+    public static void main(String[] args) {
         Console console = System.console();
         if (console == null) {
             LOG.warn("No console.");
@@ -56,21 +55,22 @@ public class RegexTestHarness {
         }
         while (true) {
 
-            Pattern pattern = 
-            Pattern.compile(console.readLine("%nEnter your regex: ", new Object[] {}));
+            Pattern pattern =
+                    Pattern.compile(console.readLine("%nEnter your regex: ", new Object[]{}));
 
-            Matcher matcher = 
-            pattern.matcher(console.readLine("Enter input string to search: ", new Object[] {}));
+            Matcher matcher =
+                    pattern.matcher(console.readLine("Enter input string to search: ", new Object[]{}));
 
             boolean found = false;
             while (matcher.find()) {
                 console.format("I found the text \"%s\" starting at " +
-                   "index %d and ending at index %d.%n",
-                   new Object[] {matcher.group(), Integer.valueOf(matcher.start()), Integer.valueOf(matcher.end())});
+                                "index %d and ending at index %d.%n",
+                        new Object[]{matcher.group(), Integer.valueOf(matcher.start()), Integer.valueOf(matcher.end())}
+                );
                 found = true;
             }
-            if(!found){
-                console.format("No match found.%n", new Object[] {});
+            if (!found) {
+                console.format("No match found.%n", new Object[]{});
             }
         }
     }

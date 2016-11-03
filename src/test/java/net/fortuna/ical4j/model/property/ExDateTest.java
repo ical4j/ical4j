@@ -31,21 +31,16 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import junit.framework.TestCase;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.text.ParseException;
 import java.util.Iterator;
-
-import junit.framework.TestCase;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.util.CompatibilityHints;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * $Id$
@@ -57,7 +52,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ExDateTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(ExDateTest.class);
+    private static Logger LOG = LoggerFactory.getLogger(ExDateTest.class);
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()

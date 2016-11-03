@@ -32,8 +32,8 @@
 package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.PushbackReader;
@@ -44,59 +44,60 @@ import java.util.Arrays;
  * <pre>
  * $Id$ [06-Apr-2004]
  * </pre>
- *
+ * <p/>
  * A reader which performs iCalendar unfolding as it reads. Note that unfolding rules may be "relaxed" to allow
  * unfolding of non-conformant *.ics files. By specifying the system property "ical4j.unfolding.relaxed=true" iCalendar
  * files created with Mozilla Calendar/Sunbird may be correctly unfolded.
- * 
+ * <p/>
  * To wrap this reader with a {@link java.io.BufferedReader} you must ensure you specify an identical buffer size
  * to that used in the {@link java.io.BufferedReader}.
- * 
+ *
  * @author Ben Fortuna
  */
 public class UnfoldingReader extends PushbackReader {
 
-    private Log log = LogFactory.getLog(UnfoldingReader.class);
+    private Logger log = LoggerFactory.getLogger(UnfoldingReader.class);
 
     /**
      * The pattern used to identify a fold in an iCalendar data stream.
      */
-    private static final char[] DEFAULT_FOLD_PATTERN_1 = { '\r', '\n', ' ' };
-    
-    /** 
-     * The pattern used to identify a fold in Microsoft Outlook 2007. 
-     */ 
-    private static final char[] DEFAULT_FOLD_PATTERN_2 = { '\r', '\n', '\t' };
+    private static final char[] DEFAULT_FOLD_PATTERN_1 = {'\r', '\n', ' '};
+
+    /**
+     * The pattern used to identify a fold in Microsoft Outlook 2007.
+     */
+    private static final char[] DEFAULT_FOLD_PATTERN_2 = {'\r', '\n', '\t'};
 
     /**
      * The pattern used to identify a fold in Mozilla Calendar/Sunbird and KOrganizer.
      */
-    private static final char[] RELAXED_FOLD_PATTERN_1 = { '\n', ' ' };
-    
-    /** 
-     * The pattern used to identify a fold in Microsoft Outlook 2007. 
-     */ 
-    private static final char[] RELAXED_FOLD_PATTERN_2 = { '\n', '\t' };
-    
+    private static final char[] RELAXED_FOLD_PATTERN_1 = {'\n', ' '};
+
+    /**
+     * The pattern used to identify a fold in Microsoft Outlook 2007.
+     */
+    private static final char[] RELAXED_FOLD_PATTERN_2 = {'\n', '\t'};
+
     private char[][] patterns;
 
     private char[][] buffers;
 
     private int linesUnfolded;
-    
+
     private int maxPatternLength = 0;
 
     /**
      * Creates a new unfolding reader instance. Relaxed unfolding flag is read from system property.
+     *
      * @param in the reader to unfold from
      */
     public UnfoldingReader(final Reader in) {
         this(in, DEFAULT_FOLD_PATTERN_1.length, CompatibilityHints
                 .isHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING));
     }
-    
+
     /**
-     * @param in reader source for data
+     * @param in   reader source for data
      * @param size the buffer size
      */
     public UnfoldingReader(final Reader in, int size) {
@@ -104,17 +105,18 @@ public class UnfoldingReader extends PushbackReader {
     }
 
     /**
-     * @param in reader source for data
+     * @param in      reader source for data
      * @param relaxed indicates whether relaxed unfolding is enabled
      */
     public UnfoldingReader(final Reader in, boolean relaxed) {
-        this(in, DEFAULT_FOLD_PATTERN_1.length, relaxed); 
+        this(in, DEFAULT_FOLD_PATTERN_1.length, relaxed);
     }
 
     /**
      * Creates a new unfolding reader instance.
-     * @param in a reader to read from
-     * @param size the buffer size
+     *
+     * @param in      a reader to read from
+     * @param size    the buffer size
      * @param relaxed specifies whether unfolding is relaxed
      */
     public UnfoldingReader(final Reader in, int size, final boolean relaxed) {
@@ -125,8 +127,7 @@ public class UnfoldingReader extends PushbackReader {
             patterns[1] = DEFAULT_FOLD_PATTERN_2;
             patterns[2] = RELAXED_FOLD_PATTERN_1;
             patterns[3] = RELAXED_FOLD_PATTERN_2;
-        }
-        else {
+        } else {
             patterns = new char[2][];
             patterns[0] = DEFAULT_FOLD_PATTERN_1;
             patterns[1] = DEFAULT_FOLD_PATTERN_2;
@@ -159,8 +160,7 @@ public class UnfoldingReader extends PushbackReader {
         }
         if (!doUnfold) {
             return c;
-        }
-        else {
+        } else {
             unread(c);
         }
 
@@ -168,7 +168,7 @@ public class UnfoldingReader extends PushbackReader {
 
         return super.read();
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -190,8 +190,7 @@ public class UnfoldingReader extends PushbackReader {
         }
         if (!doUnfold) {
             return read;
-        }
-        else {
+        } else {
             unread(cbuf, off, read);
         }
 
@@ -199,7 +198,7 @@ public class UnfoldingReader extends PushbackReader {
 
         return super.read(cbuf, off, maxPatternLength);
     }
-    
+
     private void unfold() throws IOException {
         // need to loop since one line fold might be directly followed by another
         boolean didUnfold;
@@ -207,7 +206,7 @@ public class UnfoldingReader extends PushbackReader {
             didUnfold = false;
 
             for (int i = 0; i < buffers.length; i++) {
-                int read = 0;             
+                int read = 0;
                 while (read < buffers[i].length) {
                     final int partialRead = super.read(buffers[i], read, buffers[i].length - read);
                     if (partialRead < 0) {
@@ -218,8 +217,7 @@ public class UnfoldingReader extends PushbackReader {
                 if (read > 0) {
                     if (!Arrays.equals(patterns[i], buffers[i])) {
                         unread(buffers[i], 0, read);
-                    }
-                    else {
+                    } else {
                         if (log.isTraceEnabled()) {
                             log.trace("Unfolding...");
                         }

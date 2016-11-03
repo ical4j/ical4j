@@ -31,14 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Map;
-import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -46,17 +38,29 @@ import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.ResourceLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 18/09/2005
- *
+ * <p/>
  * The default implementation of a <code>TimeZoneRegistry</code>. This implementation will search the classpath for
  * applicable VTimeZone definitions used to back the provided TimeZone instances.
+ *
  * @author Ben Fortuna
  */
 public class TimeZoneRegistryImpl implements TimeZoneRegistry {
@@ -64,26 +68,67 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     private static final String DEFAULT_RESOURCE_PREFIX = "zoneinfo/";
 
     private static final Pattern TZ_ID_SUFFIX = Pattern.compile("(?<=/)[^/]*/[^/]*$");
-    
+
     private static final String UPDATE_ENABLED = "net.fortuna.ical4j.timezone.update.enabled";
+    private static final String UPDATE_CONNECT_TIMEOUT = "net.fortuna.ical4j.timezone.update.timeout.connect";
+    private static final String UPDATE_READ_TIMEOUT = "net.fortuna.ical4j.timezone.update.timeout.read";
+    private static final String UPDATE_PROXY_ENABLED = "net.fortuna.ical4j.timezone.update.proxy.enabled";
+    private static final String UPDATE_PROXY_TYPE = "net.fortuna.ical4j.timezone.update.proxy.type";
+    private static final String UPDATE_PROXY_HOST = "net.fortuna.ical4j.timezone.update.proxy.host";
+    private static final String UPDATE_PROXY_PORT = "net.fortuna.ical4j.timezone.update.proxy.port";
+
+    private static Proxy proxy = null;
 
     private static final Map<String, TimeZone> DEFAULT_TIMEZONES = new ConcurrentHashMap<String, TimeZone>();
 
     private static final Properties ALIASES = new Properties();
+
     static {
+        InputStream aliasInputStream = null;
         try {
-            ALIASES.load(ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias"));
-        }
-        catch (IOException ioe) {
-            LogFactory.getLog(TimeZoneRegistryImpl.class).warn(
+            aliasInputStream = ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias");
+            ALIASES.load(aliasInputStream);
+        } catch (IOException ioe) {
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
                     "Error loading timezone aliases: " + ioe.getMessage());
+        } finally {
+            if (aliasInputStream != null) {
+                try {
+                    aliasInputStream.close();
+                } catch (IOException e) {
+                    LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                            "Error closing resource stream: " + e.getMessage());
+                }
+            }
+        }
+
+        try {
+            aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias");
+        	ALIASES.load(aliasInputStream);
+        } catch (Exception e) {
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
+        			"Error loading custom timezone aliases: " + e.getMessage());
+        } finally {
+            if (aliasInputStream != null) {
+                try {
+                    aliasInputStream.close();
+                } catch (IOException e) {
+                    LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                            "Error closing resource stream: " + e.getMessage());
+                }
+            }
         }
         try {
-        	ALIASES.load(ResourceLoader.getResourceAsStream("tz.alias"));
+            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED))) {
+                final Proxy.Type type = Proxy.Type.valueOf(Configurator.getProperty(UPDATE_PROXY_TYPE));
+                final String proxyHost = Configurator.getProperty(UPDATE_PROXY_HOST);
+                final int proxyPort = Integer.parseInt(Configurator.getProperty(UPDATE_PROXY_PORT));
+                proxy = new Proxy(type, new InetSocketAddress(proxyHost, proxyPort));
+            }
         }
-        catch (Exception e) {
-        	LogFactory.getLog(TimeZoneRegistryImpl.class).debug(
-        			"Error loading custom timezone aliases: " + e.getMessage());
+        catch (Throwable e) {
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
+                    "Error loading proxy server configuration: " + e.getMessage());
         }
     }
 
@@ -100,6 +145,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     /**
      * Creates a new instance using the specified resource prefix.
+     *
      * @param resourcePrefix a prefix prepended to classpath resource lookups for default timezones
      */
     public TimeZoneRegistryImpl(final String resourcePrefix) {
@@ -111,21 +157,20 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * {@inheritDoc}
      */
     public final void register(final TimeZone timezone) {
-    	// for now we only apply updates to included definitions by default..
-    	register(timezone, false);
+        // for now we only apply updates to included definitions by default..
+        register(timezone, false);
     }
-    
+
     /**
      * {@inheritDoc}
      */
     public final void register(final TimeZone timezone, boolean update) {
-    	if (update) {
+        if (update) {
             // load any available updates for the timezone..
             timezones.put(timezone.getID(), new TimeZone(updateDefinition(timezone.getVTimeZone())));
-    	}
-    	else {
+        } else {
             timezones.put(timezone.getID(), timezone);
-    	}
+        }
     }
 
     /**
@@ -142,7 +187,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     	if (id == null) {
     		return null;
     	}
-    	
+
         TimeZone timezone = timezones.get(id);
         if (timezone == null) {
             timezone = DEFAULT_TIMEZONES.get(id);
@@ -151,12 +196,11 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                 final String alias = ALIASES.getProperty(id);
                 if (alias != null) {
                     return getTimeZone(alias);
-                }
-                else {
+                } else {
                     synchronized (DEFAULT_TIMEZONES) {
-                    	// check again as it may be loaded now..
-                    	timezone = DEFAULT_TIMEZONES.get(id);
-                    	if (timezone == null) {
+                        // check again as it may be loaded now..
+                        timezone = DEFAULT_TIMEZONES.get(id);
+                        if (timezone == null) {
                             try {
                                 final VTimeZone vTimeZone = loadVTimeZone(id);
                                 if (vTimeZone != null) {
@@ -164,20 +208,18 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                                     // ((TzId) vTimeZone.getProperties().getProperty(Property.TZID)).setValue(id);
                                     timezone = new TimeZone(vTimeZone);
                                     DEFAULT_TIMEZONES.put(timezone.getID(), timezone);
-                                }
-                                else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                                } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                                     // strip global part of id and match on default tz..
                                     Matcher matcher = TZ_ID_SUFFIX.matcher(id);
                                     if (matcher.find()) {
                                         return getTimeZone(matcher.group());
                                     }
                                 }
-                            }
-                            catch (Exception e) {
-                                Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
+                            } catch (Exception e) {
+                                Logger log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
                                 log.warn("Error occurred loading VTimeZone", e);
                             }
-                    	}
+                        }
                     }
                 }
             }
@@ -202,7 +244,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         }
         return null;
     }
-    
+
     /**
      * @param vTimeZone
      * @return
@@ -211,15 +253,34 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         final TzUrl tzUrl = vTimeZone.getTimeZoneUrl();
         if (tzUrl != null) {
             try {
+                final String connectTimeoutProperty = Configurator.getProperty(UPDATE_CONNECT_TIMEOUT);
+                final String readTimeoutProperty = Configurator.getProperty(UPDATE_READ_TIMEOUT);
+
+                final int connectTimeout = connectTimeoutProperty != null ? Integer.parseInt(connectTimeoutProperty) : 0;
+                final int readTimeout = readTimeoutProperty != null ? Integer.parseInt(readTimeoutProperty) : 0;
+
+                URLConnection connection;
+                URL url = tzUrl.getUri().toURL();
+
+                if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED)) && proxy != null) {
+                    connection = url.openConnection(proxy);
+                }
+                else {
+                    connection = url.openConnection();
+                }
+
+                connection.setConnectTimeout(connectTimeout);
+                connection.setReadTimeout(readTimeout);
+
                 final CalendarBuilder builder = new CalendarBuilder();
-                final Calendar calendar = builder.build(tzUrl.getUri().toURL().openStream());
+
+                final Calendar calendar = builder.build(connection.getInputStream());
                 final VTimeZone updatedVTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
                 if (updatedVTimeZone != null) {
                     return updatedVTimeZone;
                 }
-            }
-            catch (Exception e) {
-                Log log = LogFactory.getLog(TimeZoneRegistryImpl.class);
+            } catch (Exception e) {
+                Logger log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
                 log.warn("Unable to retrieve updates for timezone: " + vTimeZone.getTimeZoneId().getValue(), e);
             }
         }

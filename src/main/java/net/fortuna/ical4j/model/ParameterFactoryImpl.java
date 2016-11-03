@@ -52,7 +52,7 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
     private static ParameterFactoryImpl instance = new ParameterFactoryImpl();
 
     protected ParameterFactoryImpl() {
-        super(ServiceLoader.load(ParameterFactory.class));
+        super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()));
     }
 
     /**
@@ -78,7 +78,7 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
      */
     public Parameter createParameter(final String name, final String value)
             throws URISyntaxException {
-        final ParameterFactory factory = (ParameterFactory) getFactory(name);
+        final ParameterFactory factory = getFactory(name);
         Parameter parameter;
         if (factory != null) {
             parameter = factory.createParameter(value);

@@ -31,48 +31,36 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.URISyntaxException;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.*;
+import java.net.URISyntaxException;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 7/04/2005
  *
  * @author Ben Fortuna
- *
- * Test case for Attach property.
+ *         <p/>
+ *         Test case for Attach property.
  */
 public class AttachTest extends TestCase {
-    
-    private static Log log = LogFactory.getLog(AttachTest.class);
+
+    private Logger log = LoggerFactory.getLogger(AttachTest.class);
 
     private Attach attach;
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
@@ -80,7 +68,7 @@ public class AttachTest extends TestCase {
         super.setUp();
         FileInputStream fin = new FileInputStream("etc/artwork/logo.png");
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        for (int i = fin.read(); i >= 0;) {
+        for (int i = fin.read(); i >= 0; ) {
             bout.write(i);
             i = fin.read();
         }
@@ -92,14 +80,14 @@ public class AttachTest extends TestCase {
 //        Attach attach = new Attach(params, Base64.encodeBytes(bout.toByteArray(), Base64.DONT_BREAK_LINES));
         attach = new Attach(params, bout.toByteArray());
     }
-    
+
     /*
      * Class under test for void Attach(ParameterList, String)
      */
     public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException, ParserException {
 
         //log.info(attach);
-        
+
         // create event start date..
         java.util.Calendar cal = java.util.Calendar.getInstance();
         cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
@@ -115,26 +103,26 @@ public class AttachTest extends TestCase {
         christmas.getProperties().add(summary);
         christmas.getProperties().add(attach);
         christmas.getProperties().add(new Uid("000001@modularity.net.au"));
-        
+
         Calendar calendar = new Calendar();
         calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
         calendar.getComponents().add(christmas);
-        
+
         StringWriter sw = new StringWriter();
         CalendarOutputter out = new CalendarOutputter();
         out.output(calendar, sw);
-        
+
         CalendarBuilder builder = new CalendarBuilder();
         Calendar cout = builder.build(new StringReader(sw.toString()));
-        
+
         VEvent eout = (VEvent) cout.getComponent(Component.VEVENT);
-        
+
         Attach aout = (Attach) eout.getProperty(Property.ATTACH);
         assertNotNull(aout);
         assertEquals(attach, aout);
-        
+
         log.info(sw.toString());
     }
 
@@ -142,20 +130,20 @@ public class AttachTest extends TestCase {
      * Unit testing of serialization.
      */
     public void testSerialization() throws IOException, ClassNotFoundException,
-        URISyntaxException {
-        
+            URISyntaxException {
+
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         ObjectOutputStream out = new ObjectOutputStream(bout);
         out.writeObject(attach);
-        
+
         ObjectInputStream in = new ObjectInputStream(
                 new ByteArrayInputStream(bout.toByteArray()));
-        
+
         Attach clone = (Attach) in.readObject();
-        
+
         assertNotNull(clone);
         assertEquals(attach, clone);
-        
+
         // set a bogus value to trigger logging..
         clone.getParameters().replace(new Encoding("BOGUS"));
         clone.setValue("");

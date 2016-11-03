@@ -127,6 +127,7 @@ public class Dur implements Comparable<Dur>, Serializable {
             duration = Period.parse(value);
         } catch (DateTimeParseException e) {
             duration = Duration.parse(value);
+            }
         }
     }
 

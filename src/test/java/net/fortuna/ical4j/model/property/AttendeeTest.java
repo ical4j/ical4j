@@ -31,10 +31,6 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
@@ -42,9 +38,12 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * $Id$
@@ -56,7 +55,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class AttendeeTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(AttendeeTest.class);
+    private static Logger LOG = LoggerFactory.getLogger(AttendeeTest.class);
     
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()

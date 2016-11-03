@@ -42,8 +42,9 @@ import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.TimeZones;
 import net.fortuna.ical4j.util.UidGenerator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -55,29 +56,30 @@ import java.util.Iterator;
 
 /**
  * $Id: VEventTest.java [28/09/2004]
- *
+ * <p/>
  * A test case for VEvents.
+ *
  * @author Ben Fortuna
  */
 public class VEventTest extends CalendarComponentTest {
 
-    private static Log log = LogFactory.getLog(VEventTest.class);
-    
+    private static Logger log = LoggerFactory.getLogger(VEventTest.class);
+
     private VEvent event;
-    
+
     private Period period;
-    
+
     private Date date;
 
     private TzId tzParam;
-    
+
     /**
      * @param testMethod
      */
     public VEventTest(String testMethod) {
         super(testMethod, null);
     }
-    
+
     /**
      * @param testMethod
      * @param component
@@ -106,7 +108,7 @@ public class VEventTest extends CalendarComponentTest {
         this(testMethod, component);
         this.date = date;
     }
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
@@ -114,14 +116,14 @@ public class VEventTest extends CalendarComponentTest {
         super.setUp();
         // relax validation to avoid UID requirement..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
-        
+
         TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         // create timezone property..
         VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
         // create tzid parameter..
         tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
     }
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
@@ -130,7 +132,7 @@ public class VEventTest extends CalendarComponentTest {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
         super.tearDown();
     }
-    
+
     /**
      * @return
      */
@@ -143,8 +145,8 @@ public class VEventTest extends CalendarComponentTest {
      * @return
      */
     private net.fortuna.ical4j.model.Calendar loadCalendar(String filename)
-        throws IOException, ParserException, ValidationException {
-        
+            throws IOException, ParserException, ValidationException {
+
         net.fortuna.ical4j.model.Calendar calendar = Calendars.load(
                 filename);
         calendar.validate();
@@ -156,9 +158,9 @@ public class VEventTest extends CalendarComponentTest {
         }
         return calendar;
     }
-    
+
     /**
-     *  
+     *
      */
     public final void testChristmas() {
         // create event start date..
@@ -176,9 +178,9 @@ public class VEventTest extends CalendarComponentTest {
         christmas.getProperties().add(start);
         christmas.getProperties().add(summary);
 
-        log.info(christmas);
+        log.info(christmas.toString());
     }
-    
+
     /**
      * Test creating an event with an associated timezone.
      */
@@ -197,8 +199,8 @@ public class VEventTest extends CalendarComponentTest {
         DateTime dt = new DateTime(cal.getTime());
         dt.setTimeZone(timezone);
         VEvent melbourneCup = new VEvent(dt, "Melbourne Cup");
-        
-        log.info(melbourneCup);
+
+        log.info(melbourneCup.toString());
     }
 
     public final void test2() {
@@ -214,9 +216,9 @@ public class VEventTest extends CalendarComponentTest {
         // add timezone information..
         christmas.getProperty(Property.DTSTART).getParameters().add(tzParam);
 
-        log.info(christmas);
+        log.info(christmas.toString());
     }
-    
+
     public final void test3() {
         java.util.Calendar cal = getCalendarInstance();
         // tomorrow..
@@ -227,11 +229,11 @@ public class VEventTest extends CalendarComponentTest {
         VEvent meeting = new VEvent(new DateTime(cal.getTime().getTime()), new Dur(0, 1, 0, 0), "Progress Meeting");
 
         // add timezone information..
-        meeting.getProperty(Property.DTSTART).getParameters().add(tzParam);       
+        meeting.getProperty(Property.DTSTART).getParameters().add(tzParam);
 
-        log.info(meeting);
+        log.info(meeting.toString());
     }
-    
+
 
     /**
      * Test Null Dates
@@ -239,7 +241,7 @@ public class VEventTest extends CalendarComponentTest {
      *
      * @throws Exception
      */
-   public final void testGetConsumedTime() throws Exception {
+    public final void testGetConsumedTime() throws Exception {
 
         // Test Null Dates
         try {
@@ -255,7 +257,7 @@ public class VEventTest extends CalendarComponentTest {
         queryStartDate.set(2005, Calendar.APRIL, 1, 14, 47, 0);
         queryStartDate.set(Calendar.MILLISECOND, 0);
         DateTime queryStart = new DateTime(queryStartDate.getTime().getTime());
-        
+
         Calendar queryEndDate = getCalendarInstance();
         queryEndDate.set(2005, Calendar.MAY, 1, 07, 15, 0);
         queryEndDate.set(Calendar.MILLISECOND, 0);
@@ -264,7 +266,7 @@ public class VEventTest extends CalendarComponentTest {
         Calendar week1EndDate = getCalendarInstance();
         week1EndDate.set(2005, Calendar.APRIL, 8, 11, 15, 0);
         week1EndDate.set(Calendar.MILLISECOND, 0);
-        
+
         Calendar week4StartDate = getCalendarInstance();
         week4StartDate.set(2005, Calendar.APRIL, 24, 14, 47, 0);
         week4StartDate.set(Calendar.MILLISECOND, 0);
@@ -297,17 +299,16 @@ public class VEventTest extends CalendarComponentTest {
 
     /**
      * Test whether you can select weekdays using a daily frequency.
-     * <p>
+     * <p/>
      * This test really belongs in RecurTest, but the weekly range test
      * in this VEventTest matches so perfectly with the daily range test
      * that should produce the same results for some weeks that it was
      * felt leveraging the existing test code was more important.
-     * <p>
+     * <p/>
      * This addresses bug
      * <a href="http://sourceforge.net/tracker/index.php?func=detail&aid=1203990&group_id=107024&atid=646395">1203990</a>
-     *
      */
-   public final void testGetConsumedTimeDaily() throws Exception {
+    public final void testGetConsumedTimeDaily() throws Exception {
 
         // Test Starts 04/03/2005, Ends One week later.
         // Query Calendar Start and End Dates.
@@ -345,12 +346,12 @@ public class VEventTest extends CalendarComponentTest {
 
     /**
      * Test whether you can select weekdays using a monthly frequency.
-     * <p>
+     * <p/>
      * This test really belongs in RecurTest, but the weekly range test
      * in this VEventTest matches so perfectly with the daily range test
      * that should produce the same results for some weeks that it was
      * felt leveraging the existing test code was more important.
-     * <p>
+     * <p/>
      * Section 4.3.10 of the iCalendar specification RFC 2445 reads:
      * <pre>
      * If an integer modifier is not present, it means all days of
@@ -358,7 +359,7 @@ public class VEventTest extends CalendarComponentTest {
      * </pre>
      * This test ensures compliance.
      */
-   public final void testGetConsumedTimeMonthly() throws Exception {
+    public final void testGetConsumedTimeMonthly() throws Exception {
 
         // Test Starts 04/03/2005, Ends two weeks later.
         // Query Calendar Start and End Dates.
@@ -391,7 +392,7 @@ public class VEventTest extends CalendarComponentTest {
         assertEquals(expectedStartOfFirstRange, firstPeriod.getStart());
         assertEquals(expectedEndOfFirstRange, firstPeriod.getEnd());
 //        assertEquals(dailyPeriods, monthlyPeriods);
-        }
+    }
 
 
     public final void testGetConsumedTime2() throws Exception {
@@ -404,34 +405,34 @@ public class VEventTest extends CalendarComponentTest {
         endCal.setTime(start);
         endCal.add(Calendar.WEEK_OF_YEAR, 4);
 //        Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
-        for (Iterator<CalendarComponent> i = calendar.getComponents().iterator(); i.hasNext();) {
+        for (Iterator<CalendarComponent> i = calendar.getComponents().iterator(); i.hasNext(); ) {
             Component c = i.next();
-            
+
             if (c instanceof VEvent) {
                 PeriodList consumed = ((VEvent) c).getConsumedTime(start, new Date(endCal.getTime().getTime()));
-                
+
                 log.debug("Event [" + c + "]");
                 log.debug("Consumed time [" + consumed + "]");
             }
         }
     }
-    
+
     public final void testGetConsumedTime3() throws Exception {
         String filename = "etc/samples/valid/calconnect10.ics";
 
         net.fortuna.ical4j.model.Calendar calendar = loadCalendar(filename);
-        
+
         VEvent vev = (VEvent) calendar.getComponent(Component.VEVENT);
-        
+
         Date start = vev.getStartDate().getDate();
         Calendar cal = getCalendarInstance();
         cal.add(Calendar.YEAR, 1);
         Date latest = new Date(cal.getTime());
-        
+
         PeriodList pl = vev.getConsumedTime(start, latest);
         assertTrue(!pl.isEmpty());
     }
-    
+
     /**
      * Test COUNT rules.
      */
@@ -439,8 +440,8 @@ public class VEventTest extends CalendarComponentTest {
         Recur recur = new Recur(Recur.WEEKLY, 3);
         recur.setInterval(1);
         recur.getDayList().add(WeekDay.SU);
-        log.info(recur);
-        
+        log.info(recur.toString());
+
         Calendar cal = getCalendarInstance();
         cal.set(Calendar.DAY_OF_MONTH, 8);
         Date start = new DateTime(cal.getTime());
@@ -448,20 +449,20 @@ public class VEventTest extends CalendarComponentTest {
         cal.add(Calendar.HOUR_OF_DAY, 1);
         Date end = new DateTime(cal.getTime());
 //        log.info(recur.getDates(start, end, Value.DATE_TIME));
-        
+
         RRule rrule = new RRule(recur);
         VEvent event = new VEvent(start, end, "Test recurrence COUNT");
         event.getProperties().add(rrule);
-        log.info(event);
-        
+        log.info(event.toString());
+
         Calendar rangeCal = getCalendarInstance();
         Date rangeStart = new DateTime(rangeCal.getTime());
         rangeCal.add(Calendar.WEEK_OF_YEAR, 4);
         Date rangeEnd = new DateTime(rangeCal.getTime());
-        
-        log.info(event.getConsumedTime(rangeStart, rangeEnd));
+
+        log.info(event.getConsumedTime(rangeStart, rangeEnd).toString());
     }
-    
+
     /**
      * A test to confirm that the end date is calculated correctly
      * from a given start date and duration.
@@ -476,9 +477,10 @@ public class VEventTest extends CalendarComponentTest {
         cal.add(Calendar.DAY_OF_YEAR, 3);
         assertEquals(new Date(cal.getTime()), endDate);
     }
-    
+
     /**
      * Test to ensure that EXDATE properties are correctly applied.
+     *
      * @throws ParseException
      */
     public void testGetConsumedTimeWithExDate() throws ParseException {
@@ -486,42 +488,43 @@ public class VEventTest extends CalendarComponentTest {
         VEvent event1 = new VEvent(new DateTime("20050103T080000"),
                 new Dur(0, 0, 15, 0),
                 "Event 1");
-    
+
         Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         RRule rRule = new RRule(rRuleRecur);
         event1.getProperties().add(rRule);
-    
+
         ParameterList parameterList = new ParameterList();
         parameterList.add(Value.DATE);
         ExDate exDate = new ExDate(parameterList, "20050106");
         event1.getProperties().add(exDate);
-    
+
         Date start = new Date("20050106");
         Date end = new Date("20050107");
         PeriodList list = event1.getConsumedTime(start, end);
         assertTrue(list.isEmpty());
     }
-    
+
     /**
      * Test to ensure that EXDATE properties are correctly applied.
+     *
      * @throws ParseException
      */
     public void testGetConsumedTimeWithExDate2() throws IOException, ParserException {
         FileInputStream fin = new FileInputStream("etc/samples/valid/friday13.ics");
         net.fortuna.ical4j.model.Calendar calendar = new CalendarBuilder().build(fin);
-        
+
         VEvent event = (VEvent) calendar.getComponent(Component.VEVENT);
-        
+
         Calendar cal = Calendar.getInstance();
         cal.set(1997, 8, 2);
         Date start = new Date(cal.getTime());
         cal.set(1997, 8, 4);
         Date end = new Date(cal.getTime());
-        
+
         PeriodList periods = event.getConsumedTime(start, end);
         assertTrue(periods.isEmpty());
     }
-    
+
     /**
      * Test equality of events with different alarm sub-components.
      */
@@ -534,22 +537,22 @@ public class VEventTest extends CalendarComponentTest {
 
         VEvent e1 = new VEvent(props);
         VEvent e2 = new VEvent(props);
-        
+
         assertTrue(e1.equals(e2));
-        
+
         e2.getAlarms().add(new VAlarm());
-        
+
         assertFalse(e1.equals(e2));
     }
-    
+
     /**
-     * 
+     *
      */
     public void testCalculateRecurrenceSetNotEmpty() {
         PeriodList recurrenceSet = event.calculateRecurrenceSet(period);
         assertTrue(!recurrenceSet.isEmpty());
     }
-    
+
     /**
      * Unit tests for {@link VEvent#getOccurrence(Date)}.
      */
@@ -558,18 +561,18 @@ public class VEventTest extends CalendarComponentTest {
         assertNotNull(occurrence);
         assertEquals(event.getUid(), occurrence.getUid());
     }
-    
+
     /**
      * @return
-     * @throws ValidationException 
-     * @throws ParseException 
-     * @throws URISyntaxException 
-     * @throws IOException 
-     * @throws ParserException 
+     * @throws ValidationException
+     * @throws ParseException
+     * @throws URISyntaxException
+     * @throws IOException
+     * @throws ParserException
      */
     public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException, ParserException {
         UidGenerator uidGenerator = new UidGenerator("1");
-        
+
         Calendar weekday9AM = getCalendarInstance();
         weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
         weekday9AM.set(Calendar.MILLISECOND, 0);
@@ -664,37 +667,37 @@ public class VEventTest extends CalendarComponentTest {
 
         // enable relaxed parsing to allow copying of invalid events..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
-        
+
         TestSuite suite = new TestSuite();
-        
+
         //testCalculateRecurrenceSet..
         DateTime periodStart = new DateTime("20050101T000000");
         DateTime periodEnd = new DateTime("20051231T235959");
         Period period = new Period(periodStart, periodEnd);
         suite.addTest(new VEventTest("testCalculateRecurrenceSetNotEmpty", weekdayNineToFiveEvents, period));
-        
+
         //testGetOccurrence..
         suite.addTest(new VEventTest("testGetOccurrence", weekdayNineToFiveEvents, weekdayNineToFiveEvents.getStartDate().getDate()));
-        
+
         //testGetConsumedTime..
         suite.addTest(new VEventTest("testGetConsumedTime", weekdayNineToFiveEvents));
         suite.addTest(new VEventTest("testGetConsumedTimeDaily", dailyWeekdayEvents));
         suite.addTest(new VEventTest("testGetConsumedTimeMonthly", monthlyWeekdayEvents));
-        
+
         //test event validation..
         UidGenerator ug = new UidGenerator("1");
         Uid uid = ug.generateUid();
-        
+
         DtStart start = new DtStart(new Date());
-        
+
         DtEnd end = new DtEnd(new Date());
         VEvent event = new VEvent();
-        
+
         event.getProperties().add(uid);
         event.getProperties().add(start);
         event.getProperties().add(end);
         suite.addTest(new VEventTest("testValidation", event));
-        
+
         event = (VEvent) event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
         start = new DtStart(new DateTime());
@@ -702,20 +705,20 @@ public class VEventTest extends CalendarComponentTest {
         event.getProperties().remove(event.getProperty(Property.DTSTART));
         event.getProperties().add(start);
         suite.addTest(new VEventTest("testValidationException", event));
-        
+
         // test 1..
         event = (VEvent) event.copy();
         start = (DtStart) event.getProperty(Property.DTSTART);
         start.getParameters().replace(Value.DATE);
         suite.addTest(new VEventTest("testValidationException", event));
-        
+
 //        event = (VEvent) event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
 //        start.getParameters().remove(Value.DATE_TIME);
 //        end = (DtEnd) event.getProperty(Property.DTEND);
 //        end.getParameters().replace(Value.DATE_TIME);
 //        suite.addTest(new VEventTest("testValidation", event));
-        
+
         // test 2..
         event = (VEvent) event.copy();
         start = (DtStart) event.getProperty(Property.DTSTART);
@@ -723,7 +726,7 @@ public class VEventTest extends CalendarComponentTest {
         end = (DtEnd) event.getProperty(Property.DTEND);
         end.getParameters().replace(Value.DATE);
         suite.addTest(new VEventTest("testValidationException", event));
-        
+
         // test 3..
 //        event = (VEvent) event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
@@ -731,10 +734,10 @@ public class VEventTest extends CalendarComponentTest {
 //        end = (DtEnd) event.getProperty(Property.DTEND);
 //        end.getParameters().replace(Value.DATE);
 //        suite.addTest(new VEventTest("testValidationException", event));
-        
+
         // disable relaxed parsing after copying invalid events..
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
-        
+
         suite.addTest(new VEventTest("testChristmas"));
         suite.addTest(new VEventTest("testMelbourneCup"));
         suite.addTest(new VEventTest("testGetConsumedTime2"));
@@ -746,34 +749,33 @@ public class VEventTest extends CalendarComponentTest {
         suite.addTest(new VEventTest("testIsCalendarComponent", event));
         suite.addTest(new VEventTest("testEquals"));
 //        suite.addTest(new VEventTest("testValidation"));
-        
+
         // use relaxed unfolding for samples..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
-        
+
         // test iTIP validation..
 //        File[] testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
-        File[] testFiles = new File[] {new File("etc/samples/valid/calconnect.ics"), new File("etc/samples/valid/calconnect10.ics")};
+        File[] testFiles = new File[]{new File("etc/samples/valid/calconnect.ics"), new File("etc/samples/valid/calconnect10.ics")};
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
             net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFiles[i].getPath());
             if (Method.PUBLISH.equals(calendar.getProperty(Property.METHOD))) {
-                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext();) {
+                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext(); ) {
                     VEvent event1 = (VEvent) it.next();
                     suite.addTest(new VEventTest("testPublishValidation", event1));
                 }
-            }
-            else if (Method.REQUEST.equals(calendar.getProperty(Property.METHOD))) {
-                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext();) {
+            } else if (Method.REQUEST.equals(calendar.getProperty(Property.METHOD))) {
+                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext(); ) {
                     VEvent event1 = (VEvent) it.next();
                     suite.addTest(new VEventTest("testRequestValidation", event1));
                 }
             }
         }
-        
+
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
-        
+
         return suite;
     }
 }

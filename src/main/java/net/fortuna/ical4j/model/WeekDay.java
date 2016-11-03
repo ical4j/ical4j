@@ -55,39 +55,41 @@ public class WeekDay implements Serializable {
     /**
      * Sunday.
      */
-    public static final WeekDay SU = new WeekDay("SU", 0);
+    public static final WeekDay SU = new WeekDay(Day.SU, 0);
 
     /**
      * Monday.
      */
-    public static final WeekDay MO = new WeekDay("MO", 0);
+    public static final WeekDay MO = new WeekDay(Day.MO, 0);
 
     /**
      * Tuesday.
      */
-    public static final WeekDay TU = new WeekDay("TU", 0);
+    public static final WeekDay TU = new WeekDay(Day.TU, 0);
 
     /**
      * Wednesday.
      */
-    public static final WeekDay WE = new WeekDay("WE", 0);
+    public static final WeekDay WE = new WeekDay(Day.WE, 0);
 
     /**
      * Thursday.
      */
-    public static final WeekDay TH = new WeekDay("TH", 0);
+    public static final WeekDay TH = new WeekDay(Day.TH, 0);
 
     /**
      * Friday.
      */
-    public static final WeekDay FR = new WeekDay("FR", 0);
+    public static final WeekDay FR = new WeekDay(Day.FR, 0);
 
     /**
      * Saturday.
      */
-    public static final WeekDay SA = new WeekDay("SA", 0);
+    public static final WeekDay SA = new WeekDay(Day.SA, 0);
 
-    private String day;
+    public enum Day { SU, MO, TU, WE, TH, FR, SA }
+
+    private Day day;
     
     private int offset;
     
@@ -101,7 +103,7 @@ public class WeekDay implements Serializable {
         else {
             offset = 0;
         }
-        day = value.substring(value.length() - 2);
+        day = Day.valueOf(value.substring(value.length() - 2));
         validateDay();
     }
     
@@ -109,7 +111,7 @@ public class WeekDay implements Serializable {
      * @param day a string representation of a week day
      * @param offset a month offset value
      */
-    private WeekDay(final String day, final int offset) {
+    private WeekDay(final Day day, final int offset) {
         this.day = day;
         this.offset = offset;
     }
@@ -139,7 +141,7 @@ public class WeekDay implements Serializable {
     /**
      * @return Returns the day.
      */
-    public final String getDay() {
+    public final Day getDay() {
         return day;
     }
     
@@ -161,13 +163,26 @@ public class WeekDay implements Serializable {
         b.append(getDay());
         return b.toString();
     }
-    
+
+    public static WeekDay getWeekDay(Day day) {
+        switch (day) {
+            case SU: return SU;
+            case MO: return MO;
+            case TU: return TU;
+            case WE: return WE;
+            case TH: return TH;
+            case FR: return FR;
+            case SA: return SA;
+            default: return null;
+        }
+    }
+
     /**
      * Returns a weekday representation of the specified calendar.
      * @param cal a calendar (java.util)
      * @return a weekday instance representing the specified calendar
      */
-    public static final WeekDay getWeekDay(final Calendar cal) {
+    public static WeekDay getWeekDay(final Calendar cal) {
         return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), 0);
     }
     
@@ -176,7 +191,7 @@ public class WeekDay implements Serializable {
      * @param cal a calendar (java.util)
      * @return a weekday instance representing the specified calendar
      */
-    public static final WeekDay getMonthlyOffset(final Calendar cal) {
+    public static WeekDay getMonthlyOffset(final Calendar cal) {
         return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), cal.get(Calendar.DAY_OF_WEEK_IN_MONTH));
     }
     
@@ -185,7 +200,7 @@ public class WeekDay implements Serializable {
      * @param cal a calendar (java.util)
      * @return a weekday instance representing the specified calendar
      */
-    public static final WeekDay getNegativeMonthlyOffset(final Calendar cal) {
+    public static WeekDay getNegativeMonthlyOffset(final Calendar cal) {
         return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), cal.get(Calendar.DAY_OF_WEEK_IN_MONTH) - 6);
     }
     

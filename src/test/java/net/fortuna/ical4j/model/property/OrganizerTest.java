@@ -31,60 +31,58 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * $Id$
- *
+ * <p/>
  * Created on 10/02/2007
- *
+ * <p/>
  * Unit tests for {@link Organizer} property.
- * @author Ben Fortuna
  *
+ * @author Ben Fortuna
  */
 public class OrganizerTest extends TestCase {
 
-    private static final Log LOG = LogFactory.getLog(OrganizerTest.class);
-    
+    private static Logger LOG = LoggerFactory.getLogger(OrganizerTest.class);
+
     protected void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_PARSING, false);
     }
-    
+
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
-    
+
     /**
      * Test handling of invalid address values.
      */
     public void testInvalidAddress() throws URISyntaxException {
         String value = "MAILTO:";
-        
+
         try {
             new Organizer(value);
             fail("Should throw URISyntaxException");
-        }
-        catch (URISyntaxException use) {
+        } catch (URISyntaxException use) {
             LOG.info("Caught exception: " + use.getMessage());
         }
 
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_PARSING, true);
-        
+
         Organizer organizer = new Organizer(value);
         assertEquals(new URI(Uris.INVALID_SCHEME, value, null), organizer.getCalAddress());
         assertEquals(Property.ORGANIZER + ":" + Uris.INVALID_SCHEME + ":" + value + Strings.LINE_SEPARATOR,
