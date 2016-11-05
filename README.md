@@ -3,24 +3,22 @@
 # iCal4j - Release Notes
 
  - For a concise description of the goals and directions of iCal4j please
- take a look at docs/index.html.
+ take a look at the [open issues](https://github.com/ical4j/ical4j/issues).
 
- - You will find examples of how to use iCal4j at docs/introduction.html
- and throughout the API documentation.
+ - You will find examples of how to use iCal4j in [the wiki](https://github.com/ical4j/ical4j/wiki)
+ and throughout the [API documentation](https://ical4j.github.io/docs/ical4j/api).
 
  - Detailed descriptions of changes included in each release may be found
- in the CHANGELOG.
+ in the [CHANGELOG](https://ical4j.github.io/docs/ical4j/release-notes).
  
- - iCal4j was created with the help of eclipse version 3.2 [http://eclipse.org].
- Note that the project metadata included in the source version of iCal4j may not
- be compatible with prior versions of eclipse.
+ - iCal4j was created with the help of [Open Source](http://opensource.org) software.
 
 
 ## System Requirements
 
  - Java 6 or later
  
-See [here](docs/Dependencies.md) for further details.
+See [here](https://github.com/ical4j/ical4j/docs/Dependencies.md) for further details.
 
 ## Building with Gradle
 
