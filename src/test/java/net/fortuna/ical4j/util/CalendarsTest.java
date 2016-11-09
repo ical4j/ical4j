@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,8 @@ public class CalendarsTest extends TestCase {
     private static Logger LOG = LoggerFactory.getLogger(CalendarsTest.class);
 
     private String path;
+    
+    private URL resource;
 
     private Calendar[] calendars;
 
@@ -78,6 +81,7 @@ public class CalendarsTest extends TestCase {
     public CalendarsTest(String testMethod, String path) {
         super(testMethod);
         this.path = path;
+        this.resource = getClass().getResource(path);
     }
 
     /**
@@ -114,7 +118,7 @@ public class CalendarsTest extends TestCase {
      * @throws ParserException
      */
     public void testLoad() throws IOException, ParserException {
-        assertNotNull(Calendars.load(path));
+        assertNotNull(Calendars.load(resource));
     }
 
     /**
@@ -139,7 +143,7 @@ public class CalendarsTest extends TestCase {
      */
     public void testLoadParserException() throws IOException {
         try {
-            Calendars.load(path);
+            Calendars.load(resource);
             fail("Should throw ParserException");
         } catch (ParserException pe) {
             LOG.info("Caught exception: " + pe.getMessage());
@@ -190,21 +194,21 @@ public class CalendarsTest extends TestCase {
     public static TestSuite suite() throws IOException, ParserException {
         TestSuite suite = new TestSuite();
 
-        suite.addTest(new CalendarsTest("testLoad", "etc/samples/valid/Australian32Holidays.ics"));
-        suite.addTest(new CalendarsTest("testLoadFileNotFoundException", "etc/samples/valid/doesnt-exist.ics"));
-        suite.addTest(new CalendarsTest("testLoadParserException", "etc/samples/invalid/google_aus_holidays.ics"));
+        suite.addTest(new CalendarsTest("testLoad", "/samples/valid/Australian32Holidays.ics"));
+        suite.addTest(new CalendarsTest("testLoadFileNotFoundException", "/samples/valid/doesnt-exist.ics"));
+        suite.addTest(new CalendarsTest("testLoadParserException", "/samples/invalid/google_aus_holidays.ics"));
 
         List<Calendar> calendars = new ArrayList<Calendar>();
-        calendars.add(Calendars.load("etc/samples/valid/Australian32Holidays.ics"));
-        calendars.add(Calendars.load("etc/samples/valid/OZMovies.ics"));
+        calendars.add(Calendars.load(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")));
+        calendars.add(Calendars.load(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics")));
         suite.addTest(new CalendarsTest("testMerge", (Calendar[]) calendars.toArray(new Calendar[calendars.size()])));
 
-        Calendar calendar = Calendars.load("etc/samples/valid/Australian32Holidays.ics");
+        Calendar calendar = Calendars.load(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"));
         suite.addTest(new CalendarsTest("testSplit", calendar, 10));
 
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar"));
 
-        calendar = Calendars.load("etc/samples/valid/OZMovies.ics");
+        calendar = Calendars.load(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics"));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, Charset.forName("US-ASCII"), "text/calendar; method=PUBLISH; charset=US-ASCII"));
 

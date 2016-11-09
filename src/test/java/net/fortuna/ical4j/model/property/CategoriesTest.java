@@ -141,7 +141,7 @@ public class CategoriesTest extends PropertyTest {
         suite.addTest(new CategoriesTest(categories, list));
 
         // Test escaping of categories string representation..
-        Calendar calendar = Calendars.load("etc/samples/valid/categories.ics");
+        Calendar calendar = Calendars.load(CategoriesTest.class.getResource("/samples/valid/categories.ics"));
         Categories orig = (Categories) calendar.getComponent(Component.VEVENT)
                 .getProperty(Property.CATEGORIES);
 

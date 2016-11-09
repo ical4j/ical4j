@@ -156,14 +156,14 @@ public class CalendarOutputterTest extends TestCase {
         File[] testFiles = null;
 
         // valid tests..
-        testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        testFiles = new File("src/test/resources/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarOutputterTest(testFiles[i].getPath()));
         }
 
         // invalid tests..
-        testFiles = new File("etc/samples/invalid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        testFiles = new File("src/test/resources/samples/invalid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarOutputterTest(testFiles[i].getPath()));

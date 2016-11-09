@@ -60,12 +60,12 @@ public class HCalendarParserTest extends TestCase {
      * Test method for {@link net.fortuna.ical4j.data.HCalendarParser#parse(java.io.Reader, net.fortuna.ical4j.data.ContentHandler)}.
      */
     public void testParseReaderContentHandler() throws IOException, ParserException {
-        Calendar icsCalendar = Calendars.load("etc/samples/hcalendar/example1.ics");
+        Calendar icsCalendar = Calendars.load(getClass().getResource("/samples/hcalendar/example1.ics"));
         // remove prod-id which seems to be not handled by hcalendar..
         icsCalendar.getProperties().remove(icsCalendar.getProperty(Property.PRODID));
         
         CalendarBuilder builder = new CalendarBuilder(new HCalendarParser());
-        Calendar hcalCalendar = builder.build(new FileReader("etc/samples/hcalendar/example1.html"));
+        Calendar hcalCalendar = builder.build(getClass().getResourceAsStream("/samples/hcalendar/example1.html"));
         
 //        assertEquals(icsCalendar, hcalCalendar);
         assertEquals(icsCalendar.getProperties().size(), hcalCalendar.getProperties().size());

@@ -115,9 +115,6 @@ public class FilterTest<T extends Component> extends TestCase {
      */
     @SuppressWarnings("unchecked")
 	public static TestSuite suite() throws FileNotFoundException, IOException, ParserException, URISyntaxException {
-//        CalendarBuilder builder = new CalendarBuilder();
-//        Calendar calendar = builder.build(new FileReader("etc/samples/valid/incoming.ics"));
-        
         Organizer organizer = new Organizer(new URI("Mailto:B@example.com"));
         Attendee a1 = new Attendee(new URI("Mailto:A@example.com"));
         Attendee a2 = new Attendee(new URI("Mailto:C@example.com"));

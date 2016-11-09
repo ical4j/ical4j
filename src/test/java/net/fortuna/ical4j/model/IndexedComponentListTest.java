@@ -61,7 +61,7 @@ public class IndexedComponentListTest extends TestCase {
      */
     protected void setUp() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
-        calendar = builder.build(new FileReader("etc/samples/valid/Australian_TV_Melbourne.ics"));
+        calendar = builder.build(getClass().getResourceAsStream("/samples/valid/Australian_TV_Melbourne.ics"));
     }
 
     /**
