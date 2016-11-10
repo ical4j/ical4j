@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
@@ -84,12 +84,12 @@ public class CalendarBuilderTimezoneTest extends TestCase {
 
         // Evolution includes VTIMEZONE defs after VEVENT defs,
         // which is allowed by RFC-2445
-        FileInputStream fin = new FileInputStream(
-                "etc/samples/valid/evolution.ics");
+        InputStream in = getClass().getResourceAsStream(
+                "/samples/valid/evolution.ics");
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = null;
 
-        calendar = builder.build(fin);
+        calendar = builder.build(in);
         assertNotNull("Calendar is null", calendar);
         ComponentList<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
         assertTrue("VEVENT not found", comps.size() == 1);
