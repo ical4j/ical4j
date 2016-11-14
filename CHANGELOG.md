@@ -2,9 +2,7 @@
  iCal4j - Changes
 ==================
 
- See the changelog report for further details:
-
- 	http://ical4j.github.io/docs/ical4j/release-notes
+See the [changelog report](http://ical4j.github.io/docs/ical4j/release-notes) for further details.
 
 ==
 
