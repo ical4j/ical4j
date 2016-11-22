@@ -41,9 +41,6 @@ import net.fortuna.ical4j.util.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.cache.annotation.CacheDefaults;
-import javax.cache.annotation.CacheKey;
-import javax.cache.annotation.CacheResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
@@ -66,7 +63,6 @@ import java.util.regex.Pattern;
  *
  * @author Ben Fortuna
  */
-@CacheDefaults(cacheName = "ical4j.timezones")
 public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private static final String DEFAULT_RESOURCE_PREFIX = "zoneinfo/";
@@ -234,8 +230,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     /**
      * Loads an existing VTimeZone from the classpath corresponding to the specified Java timezone.
      */
-    @CacheResult
-    private VTimeZone loadVTimeZone(@CacheKey String id) throws IOException, ParserException {
+    private VTimeZone loadVTimeZone(String id) throws IOException, ParserException {
         final URL resource = ResourceLoader.getResource(resourcePrefix + id + ".ics");
         if (resource != null) {
             final CalendarBuilder builder = new CalendarBuilder();
