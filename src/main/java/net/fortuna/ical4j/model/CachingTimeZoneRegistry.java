@@ -49,6 +49,9 @@ public class CachingTimeZoneRegistry implements TimeZoneRegistry {
     
     @Override
     public TimeZone getTimeZone(final String id) {
+        if (id == null) {
+            throw new IllegalArgumentException("TimeZone ID must not be null");
+        }
         if (!cache.containsKey(id)) {
             TimeZone tz = delegate.getTimeZone(id);
             if (tz != null) {
