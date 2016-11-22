@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.ResourceLoader;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -184,9 +185,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      * {@inheritDoc}
      */
     public final TimeZone getTimeZone(final String id) {
-    	if (id == null) {
-    		return null;
-    	}
+        Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
 
         TimeZone timezone = timezones.get(id);
         if (timezone == null) {

@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.model;
 
+import org.apache.commons.lang3.Validate;
+
 import javax.cache.Cache;
 import javax.cache.Caching;
 import javax.cache.CacheManager;
@@ -47,11 +49,12 @@ public class CachingTimeZoneRegistry implements TimeZoneRegistry {
         cache.removeAll();
     }
     
+    /**
+     * @throws IllegalArgumentException if the specified id is blank
+     */
     @Override
     public TimeZone getTimeZone(final String id) {
-        if (id == null) {
-            throw new IllegalArgumentException("TimeZone ID must not be null");
-        }
+        Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
         if (!cache.containsKey(id)) {
             TimeZone tz = delegate.getTimeZone(id);
             if (tz != null) {
