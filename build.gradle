@@ -74,6 +74,18 @@ dependencies {
             "org.slf4j:slf4j-log4j12:$slf4jVersion"
 }
 
+jar {
+    from(project.rootDir) {
+        include "LICENSE.txt"
+    }
+    
+    manifest {
+        instruction 'Require-Capability', '''osgi.extender;filter:="(osgi.extender=osgi.serviceloader.processor)",
+            osgi.serviceloader;filter:="(osgi.serviceloader=net.fortuna.ical4j.model.*)";cardinality:=multiple
+        '''
+    }
+}
+
 javadoc {
     if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
