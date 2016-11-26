@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
-import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -152,13 +151,6 @@ public class Url extends Property {
      */
     public final void setUri(final URI uri) {
         this.uri = uri;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

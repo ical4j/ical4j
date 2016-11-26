@@ -32,8 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ParameterValidator;
-import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -59,14 +58,16 @@ public class Country extends Property implements Escapable {
      * Default constructor.
      */
     public Country() {
-        super(COUNTRY, PropertyFactoryImpl.getInstance());
+        super(COUNTRY, new ParameterList(), new OneOrLessParameterValidator(Parameter.ABBREV),
+                PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Country(final String aValue) {
-        super(COUNTRY, PropertyFactoryImpl.getInstance());
+        super(COUNTRY, new ParameterList(), new OneOrLessParameterValidator(Parameter.ABBREV),
+                PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -75,24 +76,8 @@ public class Country extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Country(final ParameterList aList, final String aValue) {
-        super(COUNTRY, aList, PropertyFactoryImpl.getInstance());
+        super(COUNTRY, aList, new OneOrLessParameterValidator(Parameter.ABBREV), PropertyFactoryImpl.getInstance());
         setValue(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" abbrev
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ABBREV,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**

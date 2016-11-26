@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -241,13 +240,6 @@ public class Geo extends Property {
      */
     public final void setLongitude(final BigDecimal longitude) {
         this.longitude = longitude;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

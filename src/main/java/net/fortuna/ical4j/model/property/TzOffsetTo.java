@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -123,13 +122,6 @@ public class TzOffsetTo extends Property {
      */
     public final void setOffset(final UtcOffset offset) {
         this.offset = offset;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

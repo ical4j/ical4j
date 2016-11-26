@@ -223,6 +223,15 @@ public abstract class DateProperty extends Property {
      */
     public void validate() throws ValidationException {
 
+        /*
+         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+         * (";" tzidparam) /
+         */
+
+        /*
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
+         */
+
         ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 

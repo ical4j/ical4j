@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -76,16 +75,6 @@ public class ExtendedAddress extends Property implements Escapable {
     public ExtendedAddress(final ParameterList aList, final String aValue) {
         super(EXTENDED_ADDRESS, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**

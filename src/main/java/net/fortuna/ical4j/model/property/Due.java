@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -167,22 +166,6 @@ public class Due extends DateProperty {
     public Due(final ParameterList aList, final Date aDate) {
         super(DUE, aList, PropertyFactoryImpl.getInstance());
         setDate(aDate);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        super.validate();
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
-         * (";" tzidparam) /
-         */
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {
