@@ -32,8 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ParameterValidator;
-import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -58,14 +57,16 @@ public class Comment extends Property implements Escapable {
      * Default constructor.
      */
     public Comment() {
-        super(COMMENT, PropertyFactoryImpl.getInstance());
+        super(COMMENT, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Comment(final String aValue) {
-        super(COMMENT, PropertyFactoryImpl.getInstance());
+        super(COMMENT, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -74,26 +75,9 @@ public class Comment extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Comment(final ParameterList aList, final String aValue) {
-        super(COMMENT, aList, PropertyFactoryImpl.getInstance());
+        super(COMMENT, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
         setValue(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" altrepparam) / (";" languageparam) /
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**
