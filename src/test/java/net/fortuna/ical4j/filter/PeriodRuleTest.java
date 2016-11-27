@@ -120,7 +120,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
      */
     public static TestSuite suite() throws FileNotFoundException, IOException, ParserException {
         CalendarBuilder builder = new CalendarBuilder();
-        Calendar calendar = builder.build(new FileReader("etc/samples/valid/Australian_TV_Melbourne.ics"));
+        Calendar calendar = builder.build(PeriodRuleTest.class.getResourceAsStream("/samples/valid/Australian_TV_Melbourne.ics"));
 
         TestSuite suite = new TestSuite();
 
@@ -170,7 +170,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         }
 
         // Test exclusion of particular dates..
-        Calendar exCal = Calendars.load("etc/samples/valid/friday13.ics");
+        Calendar exCal = Calendars.load(PeriodRuleTest.class.getResource("/samples/valid/friday13.ics"));
         cal = java.util.Calendar.getInstance();
         cal.set(1997, 8, 2, 9, 0, 0);
         DateTime startDt = new DateTime(cal.getTime());
@@ -179,7 +179,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, exCal.getComponents()));
 
         // Test exclusion of particular date patterns..
-        exCal = Calendars.load("etc/samples/valid/friday13-NOT.ics");
+        exCal = Calendars.load(PeriodRuleTest.class.getResource("/samples/valid/friday13-NOT.ics"));
         cal = java.util.Calendar.getInstance();
         cal.set(1997, 8, 2, 9, 0, 0);
         startDt = new DateTime(cal.getTime());
@@ -189,7 +189,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
 
         // Asia/Singapore test..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
-        calendar = Calendars.load("etc/samples/valid/2207678.ics");
+        calendar = Calendars.load(PeriodRuleTest.class.getResource("/samples/valid/2207678.ics"));
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
 
         TimeZone timeZone = TimeZone.getTimeZone("Asia/Singapore");

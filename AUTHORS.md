@@ -2,6 +2,8 @@
  iCal4j - Contributors
 =======================
 
+Please refer to [GitHub](https://github.com/ical4j/ical4j/graphs/contributors) for a full list of contributors to the ical4j project.
+
  Many thanks to the following people for their contributions and feedback:
  
   - Heladito, Darkwave, twinkle, Outmyth, Ralph Schaer, Chris Borrill,

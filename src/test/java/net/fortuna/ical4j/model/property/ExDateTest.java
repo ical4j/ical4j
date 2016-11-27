@@ -76,7 +76,7 @@ public class ExDateTest extends TestCase {
      */
     public void testTimeZones() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
-        Calendar calendar = builder.build(new FileInputStream("etc/samples/valid/EXDATE.ics"));
+        Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE.ics"));
         
         Component event = calendar.getComponent(Component.VEVENT);
         PropertyList exdates = event.getProperties(Property.EXDATE);

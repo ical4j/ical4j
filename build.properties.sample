@@ -1,9 +1,0 @@
-## To override properties in build.xml rename
-## this file to "build.properties" and modify accordingly..
-project.classpath=C:/libs/commons-logging-1.0.4/commons-logging.jar;C:/libs/commons-codec-1.3/commons-codec-1.3.jar;${output.dir}
-
-## Override JAR filename..
-package.file=ical4j-${project.version}.jar
-
-## directory that contains emma.jar and emma_ant.jar
-emma.dir=C:/Tools/emma-2.0.5312/lib

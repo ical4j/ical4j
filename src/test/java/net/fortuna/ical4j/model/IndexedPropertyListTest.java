@@ -59,7 +59,7 @@ public class IndexedPropertyListTest extends TestCase {
      */
     protected void setUp() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
-        calendar = builder.build(new FileReader("etc/samples/valid/incoming.ics"));
+        calendar = builder.build(getClass().getResourceAsStream("/samples/valid/incoming.ics"));
     }
 
     /**

@@ -64,7 +64,7 @@ public class DescriptionTest extends PropertyTest {
     public static TestSuite suite() throws IOException, ParserException {
         TestSuite suite = new TestSuite();
         // Test correct parsing of text with tabs.
-        Calendar calendar = Calendars.load("etc/samples/valid/mansour.ics");
+        Calendar calendar = Calendars.load(DescriptionTest.class.getResource("/samples/valid/mansour.ics"));
         Component event = calendar.getComponent(Component.VEVENT);
         suite.addTest(new DescriptionTest(event
                 .getProperty(Property.DESCRIPTION), "Test\t\ttabs"));

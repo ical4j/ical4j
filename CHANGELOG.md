@@ -2,9 +2,7 @@
  iCal4j - Changes
 ==================
 
- See the changelog report for further details:
-
- 	http://m2.modularity.net.au/projects/ical4j/changelog.html
+See the [changelog report](http://ical4j.github.io/docs/ical4j/release-notes) for further details.
 
 ==
 
