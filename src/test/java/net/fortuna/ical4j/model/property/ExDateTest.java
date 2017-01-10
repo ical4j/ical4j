@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import java.text.ParseException;
-import java.util.Iterator;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,6 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
@@ -85,10 +84,9 @@ public class ExDateTest extends TestCase {
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE.ics"));
         
         Component event = calendar.getComponent(Component.VEVENT);
-        PropertyList exdates = event.getProperties(Property.EXDATE);
-        for (Iterator i = exdates.iterator(); i.hasNext();) {
-            ExDate exdate = (ExDate) i.next();
-            assertNotNull("This EXDATE should have a timezone", exdate.getDates().getTimeZone());
+        List<ExDate> exdates = event.getProperties(Property.EXDATE);
+        for (ExDate exDate : exdates) {            
+            assertNotNull("This EXDATE should have a timezone", exDate.getDates().getTimeZone());
         }
     }
     
@@ -98,10 +96,9 @@ public class ExDateTest extends TestCase {
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
 
         Component event = calendar.getComponent(Component.VEVENT);
-        PropertyList exdates = event.getProperties(Property.EXDATE);
-        for (Iterator<Property> i = exdates.iterator(); i.hasNext();) {
-            ExDate exdate = (ExDate) i.next();
-            for (Date dateEx : exdate.getDates()) {
+        List<ExDate> exdates = event.getProperties(Property.EXDATE);
+        for (ExDate exDate : exdates) {            
+            for (Date dateEx : exDate.getDates()) {
                 DateTime dateTimeEx = (DateTime) dateEx;
                 assertNotNull(dateTimeEx);
                 assertTrue("This exception date should be in UTC", dateTimeEx.isUtc());

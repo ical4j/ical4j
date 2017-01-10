@@ -129,7 +129,7 @@ public class Calendar implements Serializable {
      */
     public static final String END = "END";
 
-    private final PropertyList properties;
+    private final PropertyList<Property> properties;
 
     private final ComponentList<CalendarComponent> components;
 
@@ -139,7 +139,7 @@ public class Calendar implements Serializable {
      * Default constructor.
      */
     public Calendar() {
-        this(new PropertyList(), new ComponentList<CalendarComponent>());
+        this(new PropertyList<Property>(), new ComponentList<CalendarComponent>());
     }
 
     /**
@@ -147,7 +147,7 @@ public class Calendar implements Serializable {
      * @param components a list of components to add to the calendar
      */
     public Calendar(final ComponentList<CalendarComponent> components) {
-        this(new PropertyList(), components);
+        this(new PropertyList<Property>(), components);
     }
 
     /**
@@ -155,7 +155,7 @@ public class Calendar implements Serializable {
      * @param properties a list of initial calendar properties
      * @param components a list of initial calendar components
      */
-    public Calendar(PropertyList properties, ComponentList<CalendarComponent> components) {
+    public Calendar(PropertyList<Property> properties, ComponentList<CalendarComponent> components) {
         this(properties, components, AbstractCalendarValidatorFactory.getInstance().newInstance());
     }
 
@@ -165,7 +165,7 @@ public class Calendar implements Serializable {
      * @param c a list of components
      * @param validator used to ensure the validity of the calendar instance
      */
-    public Calendar(PropertyList p, ComponentList<CalendarComponent> c, Validator<Calendar> validator) {
+    public Calendar(PropertyList<Property> p, ComponentList<CalendarComponent> c, Validator<Calendar> validator) {
         this.properties = p;
         this.components = c;
         this.validator = validator;
@@ -181,7 +181,7 @@ public class Calendar implements Serializable {
     public Calendar(Calendar c) throws ParseException, IOException,
             URISyntaxException {
         
-        this(new PropertyList(c.getProperties()),
+        this(new PropertyList<Property>(c.getProperties()),
         		new ComponentList<CalendarComponent>(c.getComponents()));
     }
 
@@ -231,7 +231,7 @@ public class Calendar implements Serializable {
     /**
      * @return Returns the properties.
      */
-    public final PropertyList getProperties() {
+    public final PropertyList<Property> getProperties() {
         return properties;
     }
 
@@ -240,7 +240,7 @@ public class Calendar implements Serializable {
      * @param name name of properties to retrieve
      * @return a property list containing only properties with the specified name
      */
-    public final PropertyList getProperties(final String name) {
+    public final PropertyList<Property> getProperties(final String name) {
         return getProperties().getProperties(name);
     }
 
