@@ -166,7 +166,7 @@ public abstract class DateProperty extends Property {
      */
     @Override
     public int hashCode() {
-        return getDate().hashCode();
+        return getDate() == null? 0 : getDate().hashCode();
     }
 
     /**
