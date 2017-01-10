@@ -116,6 +116,16 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
     }
 
     /**
+     * Add a property to the list.
+     * @param property the property to add
+     * @return true
+     * @see java.util.List#add(java.lang.Object)
+     */
+    public final boolean add(final Property property) {
+        return super.add(property);
+    }
+
+    /**
      * Remove a property from the list.
      * @param property the property to remove
      * @return true if the list contained the specified property
