@@ -96,7 +96,7 @@ public class ExDateTest extends TestCase {
     public void testShouldPreserveUtcTimezoneForExDate() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
-        
+
         Component event = calendar.getComponent(Component.VEVENT);
         PropertyList exdates = event.getProperties(Property.EXDATE);
         for (Iterator<Property> i = exdates.iterator(); i.hasNext();) {
@@ -104,7 +104,7 @@ public class ExDateTest extends TestCase {
             for (Date dateEx : exdate.getDates()) {
                 DateTime dateTimeEx = (DateTime) dateEx;
                 assertNotNull(dateTimeEx);
-                assertTrue("This exception date should be in UTC",dateTimeEx.isUtc());
+                assertTrue("This exception date should be in UTC", dateTimeEx.isUtc());
             }
         }
     }
