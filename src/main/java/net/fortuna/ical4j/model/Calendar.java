@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.model.rfc5545.RuleManager;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -40,8 +41,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.List;
+import java.util.Set;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -344,5 +348,79 @@ public class Calendar implements Serializable {
     public final int hashCode() {
         return new HashCodeBuilder().append(getProperties()).append(
                 getComponents()).toHashCode();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void conformToRfc5545() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+       
+        conformPropertiesToRfc5545(properties);
+        
+        for(Component component : (List<CalendarComponent>)components){
+            CountableProperties.removeExceededPropertiesForComponent(component);
+            
+            //each component
+            conformComponentToRfc5545(component);
+            
+            //each component property
+            conformPropertiesToRfc5545(component.getProperties());
+            
+            for(java.lang.reflect.Method m : component.getClass().getDeclaredMethods()){
+                if(ComponentList.class.isAssignableFrom(m.getReturnType()) && 
+                   m.getName().startsWith("get")){
+                    List<Component> components = (List<Component>) m.invoke(component);
+                    for(Component c : components){
+                        //each inner component
+                        conformComponentToRfc5545(c);
+                        
+                        //each inner component properties
+                        conformPropertiesToRfc5545(c.getProperties());
+                    }
+                }
+            }
+        }
+    }
+    
+    private static void conformPropertiesToRfc5545(List<Property> properties) {
+        for (Property property : properties) {
+            Set<Rfc5545PropertyRule<Property>> rulesToApply = RuleManager.getSupportedRulesFor(property);
+            for (Rfc5545PropertyRule<Property> rule : rulesToApply) {
+                rule.applyTo(property);
+            }
+        }
+    }
+    
+    private static void conformComponentToRfc5545(Component component){
+        Set<Rfc5545ComponentRule<Component>> rulesToApply = RuleManager.getSupportedRulesFor(component);
+        for(Rfc5545ComponentRule<Component> rule : rulesToApply){
+            rule.applyTo(component);
+        }
+    }
+    
+    private static enum CountableProperties{
+        STATUS(Property.STATUS, 1);
+        private int maxApparitionNumber;
+        private String name;
+        
+        private CountableProperties(String name, int maxApparitionNumber){
+            this.maxApparitionNumber = maxApparitionNumber;
+            this.name = name;
+        }
+        
+        protected void limitApparitionsNumberIn(Component component){
+            PropertyList<? extends Property> propertyList = component.getProperties(name);
+            
+            if(propertyList.size() <= maxApparitionNumber){
+                return;
+            }
+            int toRemove = propertyList.size() - maxApparitionNumber; 
+            for(int i = 0; i < toRemove; i++){
+                component.getProperties().remove(propertyList.get(i));            }
+        }
+        
+        private static void removeExceededPropertiesForComponent(Component component){
+            for(CountableProperties cp: values()){
+                cp.limitApparitionsNumberIn(component);
+            }
+        }
     }
 }
