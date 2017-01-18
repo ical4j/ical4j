@@ -28,6 +28,7 @@
 		<findbugs.skip>true</findbugs.skip>
 		<jacoco.skip>true</jacoco.skip>
 		<pmd.skip>true</pmd.skip>
+		<cpd.skip>true</cpd.skip>
 		<enforcer.skip>true</enforcer.skip>
 		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 		<additionalparam>-Xdoclint:none</additionalparam>
