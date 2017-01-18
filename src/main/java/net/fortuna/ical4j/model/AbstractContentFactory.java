@@ -51,7 +51,7 @@ public abstract class AbstractContentFactory<T> implements Serializable {
 
     private final Map<String, T> extendedFactories;
 
-    private final transient ServiceLoader<T> factoryLoader;
+    protected transient ServiceLoader<T> factoryLoader;
 
     /**
      * Default constructor.
