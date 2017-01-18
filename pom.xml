@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>net.oneandone.maven.poms</groupId>
 		<artifactId>foss-parent</artifactId>
@@ -10,8 +9,8 @@
 	<groupId>net.oneandone.ical4j</groupId>
 	<artifactId>ical4j</artifactId>
 	<name>ical4j</name>
-	<version>2.0.1-SNAPSHOT</version>
-	<description></description>
+	<version>2.0.1</version>
+	<description />
 
 	<properties>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -38,7 +37,7 @@
 	<scm>
 		<developerConnection>scm:git:ssh://git@github.com/1and1/ical4j.git</developerConnection>
 		<connection>scm:git:ssh://git@github.com/1and1/ical4j.git</connection>
-		<tag>HEAD</tag>
+		<tag>ical4j-2.0.1</tag>
 	</scm>
 
 	<build>
