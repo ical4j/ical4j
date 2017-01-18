@@ -7,10 +7,10 @@
 		<version>1.5.6</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.mnode.ical4j</groupId>
+	<groupId>net.oneandone.ical4j</groupId>
 	<artifactId>ical4j</artifactId>
 	<name>ical4j</name>
-	<version>2.0.2-SNAPSHOT</version>
+	<version>2.0.1-SNAPSHOT</version>
 	<description></description>
 
 	<properties>
