@@ -192,14 +192,21 @@ public class DateList implements List<Date>, Serializable {
      * @see List#add(java.lang.Object)
      */
     public final boolean add(final Date date) {
+        if (!this.isUtc() && this.getTimeZone() == null) {
+            /* If list hasn't been initialized yet use defaults from the first added date element */
+            if (date instanceof DateTime) {
+                DateTime dateTime = (DateTime) date;
+                if (dateTime.isUtc()) {
+                    this.setUtc(true);
+                } else {
+                    this.setTimeZone(dateTime.getTimeZone());
+                }
+            }
+        }
         if (date instanceof DateTime) {
             DateTime dateTime = (DateTime) date;
             if (isUtc()) {
                 dateTime.setUtc(true);
-            }
-            // If any of the added dates are UTC consider the entire list as UTC.
-            if (dateTime.isUtc()) {
-                this.utc = true;
             } else {
                 dateTime.setTimeZone(getTimeZone());
             }
