@@ -22,7 +22,7 @@
 		<commons-codec.version>1.9</commons-codec.version>
 		<commons-lang3.version>3.3.2</commons-lang3.version>
 		<commons-io.version>2.4</commons-io.version>
-		
+
 		<!-- Deactivate checkstyle, findbugs, jacoco and pmd -->
 		<checkstyle.skip>true</checkstyle.skip>
 		<findbugs.skip>true</findbugs.skip>
@@ -78,7 +78,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>				
+				<artifactId>maven-compiler-plugin</artifactId>
 				<inherited>true</inherited>
 				<configuration>
 					<encoding>UTF-8</encoding>
@@ -88,8 +88,15 @@
 					<maxmem>2024m</maxmem>
 				</configuration>
 			</plugin>
-
-
+			<plugin>
+				<artifactId>maven-license-plugin</artifactId>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<executions>
+					<execution>
+						<phase>none</phase>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
