@@ -8,6 +8,7 @@
 package net.fortuna.ical4j.model.rfc5545;
 
 import java.util.LinkedHashSet;
+import java.util.ServiceLoader;
 import java.util.Set;
 
 import net.fortuna.ical4j.model.Component;
@@ -32,37 +33,34 @@ public class RuleManager {
     private static final Set<Rfc5545ComponentRule<? extends Component>> COMPONENT_RULES = new LinkedHashSet<Rfc5545ComponentRule<? extends Component>>();
 
     static {
-        register(new VAlarmRule());
-
-        register(new DatePropertyRule());
-
-        register(new DateListPropertyRule());
-
-        register(new VEventRule());
-
-        register(new TzIdRule());
-
-        register(new DTStampRule());
-        
-        register(new AttendeePropertyRule());
+        for (Rfc5545PropertyRule<?> rule : ServiceLoader.load(Rfc5545PropertyRule.class)) {
+            if (rule.getSupportedType() == null) {
+                throw new NullPointerException();
+            }
+            PROPERTY_RULES.add(rule);
+        }
+        for (Rfc5545ComponentRule<?> rule : ServiceLoader.load(Rfc5545ComponentRule.class)) {
+            if (rule.getSupportedType() == null) {
+                throw new NullPointerException();
+            }
+            COMPONENT_RULES.add(rule);
+        }
     }
 
-    private static void register(Rfc5545PropertyRule<? extends Property> rule) {
-        if (rule.getSupportedType() == null) {
-            throw new NullPointerException();
+    public static void applyTo(Property element) {
+        for (Rfc5545PropertyRule<Property> rule : getSupportedRulesFor(element)) {
+            rule.applyTo(element);
         }
-        PROPERTY_RULES.add(rule);
     }
 
-    private static void register(Rfc5545ComponentRule<? extends Component> rule) {
-        if (rule.getSupportedType() == null) {
-            throw new NullPointerException();
+    public static void applyTo(Component element) {
+        for (Rfc5545ComponentRule<Component> rule : getSupportedRulesFor(element)) {
+            rule.applyTo(element);
         }
-        COMPONENT_RULES.add(rule);
     }
 
     @SuppressWarnings("unchecked")
-    public static Set<Rfc5545PropertyRule<Property>> getSupportedRulesFor(Property element) {
+    private static Set<Rfc5545PropertyRule<Property>> getSupportedRulesFor(Property element) {
         if (element == null) {
             throw new NullPointerException();
         }
@@ -76,7 +74,7 @@ public class RuleManager {
     }
 
     @SuppressWarnings("unchecked")
-    public static Set<Rfc5545ComponentRule<Component>> getSupportedRulesFor(Component element) {
+    private static Set<Rfc5545ComponentRule<Component>> getSupportedRulesFor(Component element) {
         if (element == null) {
             throw new NullPointerException();
         }
