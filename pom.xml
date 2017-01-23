@@ -9,7 +9,7 @@
 	<groupId>net.oneandone.ical4j</groupId>
 	<artifactId>ical4j</artifactId>
 	<name>ical4j</name>
-	<version>2.0.2-SNAPSHOT</version>
+	<version>2.0.2</version>
 	<description />
 
 	<properties>
@@ -37,7 +37,7 @@
 	<scm>
 		<developerConnection>scm:git:ssh://git@github.com/1and1/ical4j.git</developerConnection>
 		<connection>scm:git:ssh://git@github.com/1and1/ical4j.git</connection>
-		<tag>HEAD</tag>
+		<tag>ical4j-2.0.2</tag>
 	</scm>
 
 	<build>
