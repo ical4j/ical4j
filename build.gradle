@@ -22,8 +22,8 @@ apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
 apply from: 'gradle/dist.gradle'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
 
 /*
 githubPages {
