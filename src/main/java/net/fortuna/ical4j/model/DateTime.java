@@ -494,9 +494,8 @@ public class DateTime extends Date {
 	 * {@inheritDoc}
 	 */
 	public final String toString() {
-		String b = super.toString() + 'T' +
+		return super.toString() + 'T' +
 				time.toString();
-		return b;
 	}
 
 	/**

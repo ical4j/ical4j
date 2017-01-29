@@ -294,7 +294,7 @@ public class VEvent extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        String b = BEGIN +
+        return BEGIN +
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR +
@@ -304,7 +304,6 @@ public class VEvent extends CalendarComponent {
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR;
-        return b;
     }
 
     /**
