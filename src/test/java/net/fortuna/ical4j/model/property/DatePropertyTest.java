@@ -31,16 +31,17 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -86,6 +87,16 @@ public class DatePropertyTest extends PropertyTest {
         }
     }
 
+    public void testHashValue() throws Exception {
+        Date date = property.getDate();
+        if (date != null) {
+            assertEquals(date.hashCode(), property.hashCode());
+        } else {
+            assertEquals(0, property.hashCode());
+        }
+    }
+
+
     /**
      * @return
      */
@@ -98,11 +109,17 @@ public class DatePropertyTest extends PropertyTest {
         // dtStamp.getParameters().add(new TzId("Australia/Melbourne"));
         // dtStamp.setTimeZone(tzReg.getTimeZone("Australia/Melbourne"));
         suite.addTest(new DatePropertyTest("testCopy", dtStamp));
+        suite.addTest(new DatePropertyTest("testHashValue", dtStamp));
 
         DtStart dtStart = new DtStart(new DateTime());
         // dtStart.getParameters().add(new TzId("Australia/Melbourne"));
         dtStart.setTimeZone(tzReg.getTimeZone("Australia/Melbourne"));
         suite.addTest(new DatePropertyTest("testCopy", dtStart));
+        suite.addTest(new DatePropertyTest("testHashValue", dtStart));
+
+        DtStart dtStartEmpty = new DtStart();
+        suite.addTest(new DatePropertyTest("testCopy", dtStartEmpty));
+        suite.addTest(new DatePropertyTest("testHashValue", dtStartEmpty));
         return suite;
     }
 }
