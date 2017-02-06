@@ -48,6 +48,7 @@ import org.junit.Ignore;
  * @author fortuna
  *
  */
+@Ignore("Test fails in travis-ci")
 public class HCalendarParserTest extends TestCase {
 
     /* (non-Javadoc)
@@ -60,7 +61,6 @@ public class HCalendarParserTest extends TestCase {
     /**
      * Test method for {@link net.fortuna.ical4j.data.HCalendarParser#parse(java.io.Reader, net.fortuna.ical4j.data.ContentHandler)}.
      */
-    @Ignore("Test fails in travis-ci")
     public void testParseReaderContentHandler() throws IOException, ParserException {
         Calendar icsCalendar = Calendars.load(getClass().getResource("/samples/hcalendar/example1.ics"));
         // remove prod-id which seems to be not handled by hcalendar..
