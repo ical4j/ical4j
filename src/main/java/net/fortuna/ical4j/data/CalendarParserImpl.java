@@ -147,8 +147,6 @@ public class CalendarParserImpl implements CalendarParser {
             tokeniser.quoteChar('"');
 
             parseCalendarList(tokeniser, in, handler);
-
-
         } catch (Exception e) {
 
             if (e instanceof IOException) {
@@ -163,7 +161,7 @@ public class CalendarParserImpl implements CalendarParser {
     }
 
     /**
-     * Parses an iCalendar ZCALENDAR list from the specified stream tokeniser.
+     * Parses multiple VCALENDARs from the specified stream tokeniser.
      * 
      * @param tokeniser
      * @param handler
@@ -183,6 +181,7 @@ public class CalendarParserImpl implements CalendarParser {
             ntok = absorbWhitespace(tokeniser, in);
         }
     }
+
     /**
      * Parses an iCalendar property list from the specified stream tokeniser.
      *
@@ -449,6 +448,7 @@ public class CalendarParserImpl implements CalendarParser {
      *
      * @param tokeniser stream tokeniser to perform assertion on
      * @param token     expected token
+     * @return int value of the ttype field of the tokeniser
      * @throws IOException     when unable to read from stream
      * @throws ParserException when next token in the stream does not match the expected token
      */
@@ -471,6 +471,7 @@ public class CalendarParserImpl implements CalendarParser {
      *
      * @param tokeniser
      * @param token
+     * @return int value of the ttype field of the tokeniser
      * @throws IOException
      * @throws ParserException
      */
@@ -483,8 +484,11 @@ public class CalendarParserImpl implements CalendarParser {
      * Asserts that the next token in the stream matches the specified token.
      *
      * @param tokeniser stream tokeniser to perform assertion on
+     * @param in
      * @param token     expected token
-     * @return 
+     * @param ignoreCase
+     * @param isBeginToken
+     * @return int value of the ttype field of the tokeniser
      * @throws IOException     when unable to read from stream
      * @throws ParserException when next token in the stream does not match the expected token
      */
@@ -524,6 +528,7 @@ public class CalendarParserImpl implements CalendarParser {
      * @param tokeniser
      * @param in
      * @param token
+     * @return int value of the ttype field of the tokeniser
      * @throws ParserException
      * @throws IOException
      */
@@ -563,12 +568,14 @@ public class CalendarParserImpl implements CalendarParser {
      * Absorbs extraneous newlines.
      *
      * @param tokeniser
+     * @param in
+     * @return int value of the ttype field of the tokeniser
      * @throws IOException
      */
     private int absorbWhitespace(final StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
         // HACK: absorb extraneous whitespace between components (KOrganizer)..
         int ntok;
-        while ((ntok = nextToken(tokeniser, in)) == StreamTokenizer.TT_EOL) {
+        while ((ntok = nextToken(tokeniser, in, true)) == StreamTokenizer.TT_EOL) {
             if (log.isTraceEnabled()) {
                 log.trace("Absorbing extra whitespace..");
             }
@@ -582,7 +589,7 @@ public class CalendarParserImpl implements CalendarParser {
     /**
      * @param tokeniser
      * @param in
-     * @return
+     * @return int value of the ttype field of the tokeniser
      */
     private int getLineNumber(StreamTokenizer tokeniser, Reader in) {
         int line = tokeniser.lineno();
@@ -598,17 +605,30 @@ public class CalendarParserImpl implements CalendarParser {
     }
 
     /**
+     * 
+     * @param tokeniser
+     * @param in
+     * @return int value of the ttype field of the tokeniser
+     * @throws IOException
+     * @throws ParserException
+     */
+    private int nextToken(StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
+        return nextToken(tokeniser, in, false);
+    }
+
+    /**
      * Reads the next token from the tokeniser.
      * This method throws a ParseException when reading EOF.
      *
      * @param tokeniser
      * @param in
-     * @return
+     * @param ignoreEOF
+     * @return int value of the ttype field of the tokeniser
      * @throws ParseException When reading EOF.
      */
-    private int nextToken(StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
+    private int nextToken(StreamTokenizer tokeniser, Reader in, boolean ignoreEOF) throws IOException, ParserException {
         int token = tokeniser.nextToken();
-        if (token == StreamTokenizer.TT_EOF) {
+        if (!ignoreEOF && token == StreamTokenizer.TT_EOF) {
             throw new ParserException("Unexpected end of file", getLineNumber(tokeniser, in));
         }
         return token;
