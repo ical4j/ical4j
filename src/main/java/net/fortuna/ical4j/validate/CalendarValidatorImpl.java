@@ -21,7 +21,11 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
     protected final List<Class<? extends Property>> calendarProperties = new ArrayList<Class<? extends Property>>();
 
     public CalendarValidatorImpl() {
-        Collections.addAll(calendarProperties, CalScale.class, Method.class, ProdId.class, Version.class);
+        this(CalScale.class, Method.class, ProdId.class, Version.class);
+    }
+
+    public CalendarValidatorImpl(Class<? extends Property>...propertyTypes) {
+        Collections.addAll(calendarProperties, propertyTypes);
     }
 
     @Override

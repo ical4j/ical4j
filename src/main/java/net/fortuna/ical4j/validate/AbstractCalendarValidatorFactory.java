@@ -9,7 +9,7 @@ public abstract class AbstractCalendarValidatorFactory {
 
     private static CalendarValidatorFactory instance;
     static {
-        instance = ServiceLoader.load(CalendarValidatorFactory.class).iterator().next();
+        instance = new CompositeCalendarValidatorFactory(ServiceLoader.load(CalendarValidatorFactory.class));
     }
 
     public static CalendarValidatorFactory getInstance() {
