@@ -148,7 +148,7 @@ public class CalendarBuilder {
 
         this.parser = parser;
         this.tzRegistry = tzRegistry;
-        this.contentHandler = new ContentHandlerImpl(ComponentFactoryImpl.getInstance(),
+        this.contentHandler = new ContentHandlerImpl(new ComponentFactoryImpl(),
                 propertyFactoryRegistry, parameterFactoryRegistry);
     }
 
