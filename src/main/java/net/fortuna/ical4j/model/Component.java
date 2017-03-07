@@ -267,7 +267,7 @@ public abstract class Component implements Serializable {
         // Deep copy properties..
         final PropertyList newprops = new PropertyList(getProperties());
 
-        return ComponentFactoryImpl.getInstance().createComponent(getName(),
+        return new ComponentFactoryImpl().createComponent(getName(),
                 newprops);
     }
 

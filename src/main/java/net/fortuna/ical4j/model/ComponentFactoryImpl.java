@@ -46,20 +46,11 @@ import java.util.ServiceLoader;
  */
 public final class ComponentFactoryImpl extends AbstractContentFactory<ComponentFactory> {
 
-    private static ComponentFactoryImpl instance = new ComponentFactoryImpl();
-
     /**
      * Constructor made private to prevent instantiation.
      */
-    private ComponentFactoryImpl() {
+    public ComponentFactoryImpl() {
         super(ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader()));
-    }
-
-    /**
-     * @return Returns the instance.
-     */
-    public static ComponentFactoryImpl getInstance() {
-        return instance;
     }
 
     @Override
