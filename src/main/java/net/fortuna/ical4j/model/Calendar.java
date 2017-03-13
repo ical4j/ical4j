@@ -198,7 +198,7 @@ public class Calendar implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        String buffer = BEGIN +
+        return BEGIN +
                 ':' +
                 VCALENDAR +
                 Strings.LINE_SEPARATOR +
@@ -208,8 +208,6 @@ public class Calendar implements Serializable {
                 ':' +
                 VCALENDAR +
                 Strings.LINE_SEPARATOR;
-
-        return buffer;
     }
 
     /**

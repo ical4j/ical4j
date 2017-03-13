@@ -48,7 +48,7 @@ import net.fortuna.ical4j.util.Calendars;
  * @author fortuna
  *
  */
-@Ignore("Fails in Travis CI with - java.io.IOException: Pushback buffer overflow. HTML format not really used.")
+@Ignore("Test fails in travis-ci")
 public class HCalendarParserTest extends TestCase {
 
     /* (non-Javadoc)

@@ -149,7 +149,7 @@ public class VAvailability extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        String b = BEGIN +
+        return BEGIN +
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR +
@@ -159,7 +159,6 @@ public class VAvailability extends CalendarComponent {
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR;
-        return b;
     }
 
     /**

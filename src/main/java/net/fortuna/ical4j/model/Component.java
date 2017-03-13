@@ -145,7 +145,7 @@ public abstract class Component implements Serializable {
      * {@inheritDoc}
      */
     public String toString() {
-        String buffer = BEGIN +
+        return BEGIN +
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR +
@@ -154,8 +154,6 @@ public abstract class Component implements Serializable {
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR;
-
-        return buffer;
     }
 
     /**
@@ -270,7 +268,7 @@ public abstract class Component implements Serializable {
         // Deep copy properties..
         final PropertyList<Property> newprops = new PropertyList<Property>(getProperties());
 
-        return ComponentFactoryImpl.getInstance().createComponent(getName(),
+        return new ComponentFactoryImpl().createComponent(getName(),
                 newprops);
     }
 

@@ -133,7 +133,7 @@ public abstract class DateProperty extends Property {
             // ensure timezone is null for VALUE=DATE properties..
             updateTimeZone(null);
             this.date = new Date(value);
-        } else {
+        } else if (value != null && !value.isEmpty()){
             this.date = new DateTime(value, timeZone);
         }
     }
@@ -166,7 +166,7 @@ public abstract class DateProperty extends Property {
      */
     @Override
     public int hashCode() {
-        return getDate() == null? 0 : getDate().hashCode();
+        return getDate() != null ? getDate().hashCode() : 0;
     }
 
     /**
