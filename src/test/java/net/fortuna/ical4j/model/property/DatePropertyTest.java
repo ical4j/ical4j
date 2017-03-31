@@ -32,12 +32,8 @@
 package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyTest;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.TzId;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -120,6 +116,31 @@ public class DatePropertyTest extends PropertyTest {
         DtStart dtStartEmpty = new DtStart();
         suite.addTest(new DatePropertyTest("testCopy", dtStartEmpty));
         suite.addTest(new DatePropertyTest("testHashValue", dtStartEmpty));
+
+        suite.addTest(new DatePropertyTest("testConstructorWithTzId", null));
         return suite;
+    }
+
+
+    public void testConstructorWithTzId() throws ParseException {
+        String ical4jFormatDatetimeString = "20131012T140000";
+        String zoneId = "Asia/Seoul";
+
+        ParameterList parameterList = new ParameterList();
+        parameterList.add(new TzId(zoneId));
+        DtStart byTzId = new DtStart(parameterList, ical4jFormatDatetimeString);
+
+        TimeZoneRegistry tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
+        DateProperty byTimeZone = new DtStart(ical4jFormatDatetimeString, tzReg.getTimeZone(zoneId));
+
+        // expect DateProperty instance has right Value and,
+        assertNotNull("DateProperty has timeZone", byTzId.getTimeZone());
+        assertNotNull("DateProperty has timeZone", byTimeZone.getTimeZone());
+        assertEquals("DateProperty build by same DatetimeString and zoneId, contains same timeZone",
+                byTzId.getTimeZone(), byTimeZone.getTimeZone());
+        assertEquals("DateProperty build by same DatetimeString and zoneId, contains same Date",
+                byTzId.getDate(), byTimeZone.getDate());
+        assertEquals("DateProperty build by same DatetimeString and zoneId, contains same toString result",
+                byTzId.toString(), byTimeZone.toString());
     }
 }
