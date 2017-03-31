@@ -56,6 +56,8 @@ public abstract class DateProperty extends Property {
 
     private static final long serialVersionUID = 3160883132732961321L;
 
+    private static final TimeZoneRegistry tzReg = DefaultTimeZoneRegistryFactory.getInstance().createRegistry();
+
     private Date date;
 
     private TimeZone timeZone;
@@ -66,6 +68,10 @@ public abstract class DateProperty extends Property {
      */
     public DateProperty(final String name, final ParameterList parameters, PropertyFactoryImpl factory) {
         super(name, parameters, factory);
+        Parameter tzId = parameters.getParameter(Parameter.TZID);
+        if (null != tzId) {
+            updateTimeZone(tzReg.getTimeZone(tzId.getValue()));
+        }
     }
 
     /**
