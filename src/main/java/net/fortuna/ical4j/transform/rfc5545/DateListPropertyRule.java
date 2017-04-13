@@ -1,6 +1,5 @@
-package net.fortuna.ical4j.model.rfc5545;
+package net.fortuna.ical4j.transform.rfc5545;
 
-import net.fortuna.ical4j.model.Rfc5545PropertyRule;
 import net.fortuna.ical4j.model.property.DateListProperty;
 
 /**

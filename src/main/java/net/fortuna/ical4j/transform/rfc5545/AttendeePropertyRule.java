@@ -1,12 +1,10 @@
-package net.fortuna.ical4j.model.rfc5545;
+package net.fortuna.ical4j.transform.rfc5545;
+
+import net.fortuna.ical4j.model.property.Attendee;
+import org.apache.commons.lang3.StringUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import org.apache.commons.lang3.StringUtils;
-
-import net.fortuna.ical4j.model.Rfc5545PropertyRule;
-import net.fortuna.ical4j.model.property.Attendee;
 
 public class AttendeePropertyRule implements Rfc5545PropertyRule<Attendee> {
 

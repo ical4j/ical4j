@@ -1,16 +1,15 @@
-package net.fortuna.ical4j.model.rfc5545;
-
-import java.util.Calendar;
-import java.util.List;
+package net.fortuna.ical4j.transform.rfc5545;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.Rfc5545ComponentRule;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.DtStamp;
+
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * 

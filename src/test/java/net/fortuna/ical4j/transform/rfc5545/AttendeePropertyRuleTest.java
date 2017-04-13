@@ -1,13 +1,12 @@
-package net.fortuna.ical4j.model.rfc5545;
-
-import static org.junit.Assert.assertEquals;
-
-import java.net.URISyntaxException;
-
-import org.junit.Test;
+package net.fortuna.ical4j.transform.rfc5545;
 
 import net.fortuna.ical4j.model.parameter.Cn;
 import net.fortuna.ical4j.model.property.Attendee;
+import org.junit.Test;
+
+import java.net.URISyntaxException;
+
+import static org.junit.Assert.assertEquals;
 
 public class AttendeePropertyRuleTest {
 
