@@ -37,18 +37,16 @@ import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.RDate;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.TzId;
-import net.fortuna.ical4j.model.property.TzOffsetFrom;
-import net.fortuna.ical4j.model.property.TzOffsetTo;
-import net.fortuna.ical4j.model.property.TzUrl;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.threeten.bp.*;
+import org.threeten.bp.temporal.TemporalAdjusters;
+import org.threeten.bp.zone.ZoneOffsetTransition;
+import org.threeten.bp.zone.ZoneOffsetTransitionRule;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,24 +55,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
-import java.time.DayOfWeek;
-import java.time.Period;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.temporal.TemporalAdjusters;
-import java.time.zone.ZoneOffsetTransition;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -347,7 +328,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     	}
 		java.util.TimeZone javaTz = java.util.TimeZone.getTimeZone(timezoneId);
 		
-		ZoneId zoneId = javaTz.toZoneId();
+		ZoneId zoneId = ZoneId.of(javaTz.getID(), ZoneId.SHORT_IDS);
 		
 		int rawTimeZoneOffsetInSeconds = javaTz.getRawOffset() / 1000;
 		
@@ -367,14 +348,22 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 	}
     
     private static void addTransitionRules(ZoneId zoneId, int rawTimeZoneOffsetInSeconds, VTimeZone result) {
-		LocalDateTime startDate = zoneId.getRules().getTransitions()
-							.stream()
-							.map(z->{return z.getDateTimeBefore();})
-							.reduce((d1, d2)->{
-								return d1.compareTo(d2) > 0 ? d1 : d2;
-							}).orElse(LocalDateTime.now(zoneId));
-		
-		zoneId.getRules().getTransitionRules().stream().forEach(transitionRule ->{
+        ZoneOffsetTransition zoneOffsetTransition = Collections.min(zoneId.getRules().getTransitions(),
+                new Comparator<ZoneOffsetTransition>() {
+                    @Override
+                    public int compare(ZoneOffsetTransition z1, ZoneOffsetTransition z2) {
+                        return z1.getDateTimeBefore().compareTo(z2.getDateTimeBefore());
+                    }
+                });
+
+        LocalDateTime startDate = null;
+        if (zoneOffsetTransition != null) {
+            startDate = zoneOffsetTransition.getDateTimeBefore();
+        } else {
+            startDate = LocalDateTime.now(zoneId);
+        }
+
+		for (ZoneOffsetTransitionRule transitionRule : zoneId.getRules().getTransitionRules()) {
 			int transitionRuleMonthValue = transitionRule.getMonth().getValue();
 			DayOfWeek transitionRuleDayOfWeek = transitionRule.getDayOfWeek();
 			LocalDateTime ldt = LocalDateTime.now(zoneId)
@@ -387,9 +376,12 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 			
 			do{
 				allDaysOfWeek.add(ldt.getDayOfMonth());
-			}while((ldt = ldt.plus(Period.ofWeeks(1))).getMonth() == month);
+			}while((ldt = ldt.plus(org.threeten.bp.Period.ofWeeks(1))).getMonth() == month);
 			
-			Integer dayOfMonth = Optional.ofNullable(allDaysOfWeek.ceiling(transitionRule.getDayOfMonthIndicator())).orElseGet(()->{return allDaysOfWeek.last();});
+			Integer dayOfMonth = allDaysOfWeek.ceiling(transitionRule.getDayOfMonthIndicator());
+			if (dayOfMonth == null) {
+			    dayOfMonth = allDaysOfWeek.last();
+			}
 			
 			int weekdayIndexInMonth = 0;
 			for(Iterator<Integer> it = allDaysOfWeek.iterator(); it.hasNext() && it.next() != dayOfMonth;){
@@ -420,7 +412,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-		});
+		}
 	}
     
     private static void addTransitions(ZoneId zoneId, VTimeZone result, int rawTimeZoneOffsetInSeconds) throws ParseException {
