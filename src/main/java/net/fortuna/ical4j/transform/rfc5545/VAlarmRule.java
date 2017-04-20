@@ -1,6 +1,5 @@
-package net.fortuna.ical4j.model.rfc5545;
+package net.fortuna.ical4j.transform.rfc5545;
 
-import net.fortuna.ical4j.model.Rfc5545ComponentRule;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.Description;

@@ -1,4 +1,4 @@
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.transform.rfc5545;
 
 /**
  * Incarnation of a RFC5545 rule.

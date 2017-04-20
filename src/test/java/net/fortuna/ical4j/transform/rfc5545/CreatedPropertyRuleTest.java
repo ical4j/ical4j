@@ -1,12 +1,11 @@
-package net.fortuna.ical4j.model.rfc5545;
+package net.fortuna.ical4j.transform.rfc5545;
 
-import static org.junit.Assert.assertEquals;
+import net.fortuna.ical4j.model.property.Created;
+import org.junit.Test;
 
 import java.text.ParseException;
 
-import org.junit.Test;
-
-import net.fortuna.ical4j.model.property.Created;
+import static org.junit.Assert.assertEquals;
 
 public class CreatedPropertyRuleTest {
 
