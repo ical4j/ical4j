@@ -7,16 +7,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
+import net.fortuna.ical4j.model.*;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
 
 /**
  * 
@@ -102,11 +97,11 @@ Internet-Draft              VALARM Extensions                  June 2012
 
    ACKNOWLEDGED:20090604T084500Z
  */
-public class Aknowledged extends UtcProperty{
+public class Acknowledged extends UtcProperty{
 
     private static final long serialVersionUID = 596619479148598528L;
 
-    public Aknowledged() {
+    public Acknowledged() {
         super(ACKNOWLEDGED, PropertyFactoryImpl.getInstance());
     }
 
@@ -114,7 +109,7 @@ public class Aknowledged extends UtcProperty{
      * @param aValue a string representation of a DTSTAMP value
      * @throws ParseException if the specified value is not a valid representation
      */
-    public Aknowledged(final String aValue) throws ParseException {
+    public Acknowledged(final String aValue) throws ParseException {
         this(new ParameterList(), aValue);
     }
     
@@ -123,7 +118,7 @@ public class Aknowledged extends UtcProperty{
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public Aknowledged(final ParameterList aList, final String aValue)
+    public Acknowledged(final ParameterList aList, final String aValue)
             throws ParseException {
         super(ACKNOWLEDGED, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
@@ -132,7 +127,7 @@ public class Aknowledged extends UtcProperty{
     /**
      * @param aDate a date representing a date-time 
      */
-    public Aknowledged(final DateTime aDate) {
+    public Acknowledged(final DateTime aDate) {
         super(ACKNOWLEDGED, PropertyFactoryImpl.getInstance());
         // time must be in UTC..
         aDate.setUtc(true);
@@ -143,7 +138,7 @@ public class Aknowledged extends UtcProperty{
      * @param aList a list of parameters for this component
      * @param aDate a date representing a date-time
      */
-    public Aknowledged(final ParameterList aList, final DateTime aDate) {
+    public Acknowledged(final ParameterList aList, final DateTime aDate) {
         super(ACKNOWLEDGED, aList, PropertyFactoryImpl.getInstance());
         // time must be in UTC..
         aDate.setUtc(true);
@@ -159,11 +154,11 @@ public class Aknowledged extends UtcProperty{
 
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Aknowledged(parameters, value);
+            return new Acknowledged(parameters, value);
         }
 
         public Property createProperty() {
-            return new Aknowledged();
+            return new Acknowledged();
         }
     }
 }

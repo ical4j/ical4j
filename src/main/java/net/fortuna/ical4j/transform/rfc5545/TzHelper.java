@@ -5,15 +5,7 @@
  * 
  * $Id$
  */
-package net.fortuna.ical4j.model.rfc5545;
-
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package net.fortuna.ical4j.transform.rfc5545;
 
 import net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.Parameter;
@@ -21,6 +13,13 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DateProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 /**
  * 

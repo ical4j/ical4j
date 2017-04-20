@@ -5,17 +5,14 @@
  * 
  * $Id$
  */
-package net.fortuna.ical4j.model.rfc5545;
+package net.fortuna.ical4j.transform.rfc5545;
+
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Property;
 
 import java.util.LinkedHashSet;
 import java.util.ServiceLoader;
 import java.util.Set;
-
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.Rfc5545ComponentRule;
-import net.fortuna.ical4j.model.Rfc5545PropertyRule;
-import net.fortuna.ical4j.model.Rfc5545Rule;
 
 /**
  * Manages the rules that can be applied to ICS elements. New rules can be simply added by creating new implementations

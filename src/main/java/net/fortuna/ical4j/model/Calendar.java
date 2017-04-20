@@ -31,26 +31,25 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.transform.rfc5545.RuleManager;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.AbstractCalendarValidatorFactory;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.List;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.Version;
-import net.fortuna.ical4j.model.rfc5545.RuleManager;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.AbstractCalendarValidatorFactory;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
 
 /**
  * $Id$ [Apr 5, 2004]
