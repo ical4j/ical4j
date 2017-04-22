@@ -3,7 +3,11 @@ cache:
     - $HOME/.gradle
     - $HOME/.sonar
 language: java
-jdk: oraclejdk8
+jdk:
+  - oraclejdk8		
+  - oraclejdk7		
+  - openjdk7		
+
 script:
   - ./gradlew check
 deploy:
