@@ -93,12 +93,18 @@ class CalendarParserImplSpec extends Specification {
 	def 'verify parsing empty lines'() {
 		setup:
 		String input = "BEGIN:VCALENDAR\r\n$contentLines\r\nEND:VCALENDAR"
-		CompatibilityHints.setHintEnabled(KEY_RELAXED_UNFOLDING, true)
-		CompatibilityHints.setHintEnabled(KEY_RELAXED_PARSING, true)
+		compatibilityHints.each {
+			CompatibilityHints.setHintEnabled(it, true)
+		}
 
 		expect:
 		Calendar calendar = builder.build(new StringReader(input))
 		assert calendar.components[0].properties.size() == 24
+
+		cleanup:
+		compatibilityHints.each {
+			CompatibilityHints.clearHintEnabled(it)
+		}
 
 		where:
 		contentLines << ['''BEGIN:VEVENT
@@ -142,5 +148,6 @@ DESCRIPTION:REMINDER
 RELATED=START:-PT00H15M00S
 END:VALARM
 END:VEVENT''']
+		compatibilityHints << [[KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]]
 	}
 }
