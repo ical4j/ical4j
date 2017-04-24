@@ -33,6 +33,7 @@ package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -207,6 +208,8 @@ public class CalendarParserImpl implements CalendarParser {
                     componentParser.parse(tokeniser, in, handler);
                 } else if (tokeniser.sval != null) {
                     propertyParser.parse(tokeniser, in, handler);
+                } else if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                    throw new ParserException("Invalid property name", getLineNumber(tokeniser, in));
                 }
                 absorbWhitespace(tokeniser, in);
                 // assertToken(tokeniser, StreamTokenizer.TT_WORD);
