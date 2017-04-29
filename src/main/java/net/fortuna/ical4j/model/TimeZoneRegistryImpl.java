@@ -33,13 +33,20 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.component.Daylight;
+import net.fortuna.ical4j.model.component.Observance;
+import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.property.TzUrl;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.threeten.bp.*;
+import org.threeten.bp.temporal.TemporalAdjusters;
+import org.threeten.bp.zone.ZoneOffsetTransition;
+import org.threeten.bp.zone.ZoneOffsetTransitionRule;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,8 +54,8 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Map;
-import java.util.Properties;
+import java.text.ParseException;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -229,8 +236,9 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     /**
      * Loads an existing VTimeZone from the classpath corresponding to the specified Java timezone.
+     * @throws ParseException 
      */
-    private VTimeZone loadVTimeZone(final String id) throws IOException, ParserException {
+    private VTimeZone loadVTimeZone(final String id) throws IOException, ParserException, ParseException {
         final URL resource = ResourceLoader.getResource(resourcePrefix + id + ".ics");
         if (resource != null) {
             final CalendarBuilder builder = new CalendarBuilder();
@@ -242,7 +250,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             }
             return vTimeZone;
         }
-        return null;
+        return generateTimezoneForId(id);
     }
 
     /**
@@ -286,4 +294,197 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         }
         return vTimeZone;
     }
-}
+    
+
+    
+    private static final Set<String> TIMEZONE_DEFINITIONS = new HashSet<>();
+    
+    private static final String DATE_TIME_TPL = "%1$tY%1$tm%1$tdT%1$tH%1$tM%1$tS";
+    
+    private static final String RRULE_TPL = "FREQ=YEARLY;BYMONTH=%d;BYDAY=%d%s";
+    
+    private static final Standard NO_TRANSITIONS;
+    
+    static {
+        for(String timezoneId : TimeZone.getAvailableIDs() ){
+                TIMEZONE_DEFINITIONS.add(timezoneId);
+        }
+        NO_TRANSITIONS = new Standard();
+                
+                TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(0));
+                TzOffsetTo offsetTo = new TzOffsetTo(new UtcOffset(0));
+                NO_TRANSITIONS.getProperties().add(offsetFrom);
+                NO_TRANSITIONS.getProperties().add(offsetTo);
+                
+                DtStart start = new DtStart();
+                start.setDate(new DateTime(0L));
+                NO_TRANSITIONS.getProperties().add(start);
+                
+    }
+
+    private static VTimeZone generateTimezoneForId(String timezoneId) throws ParseException {
+    	if(!TIMEZONE_DEFINITIONS.contains(timezoneId)){
+    		return null;
+    	}
+		java.util.TimeZone javaTz = java.util.TimeZone.getTimeZone(timezoneId);
+		
+		ZoneId zoneId = ZoneId.of(javaTz.getID(), ZoneId.SHORT_IDS);
+		
+		int rawTimeZoneOffsetInSeconds = javaTz.getRawOffset() / 1000;
+		
+		VTimeZone timezone = new VTimeZone();
+		
+		timezone.getProperties().add(new TzId(timezoneId));
+		
+		addTransitions(zoneId, timezone, rawTimeZoneOffsetInSeconds);
+		
+		addTransitionRules(zoneId, rawTimeZoneOffsetInSeconds, timezone);
+		
+		if(timezone.getObservances() == null || timezone.getObservances().isEmpty()){
+			timezone.getObservances().add(NO_TRANSITIONS);
+		}
+		
+		return timezone;
+	}
+    
+    private static void addTransitionRules(ZoneId zoneId, int rawTimeZoneOffsetInSeconds, VTimeZone result) {
+        ZoneOffsetTransition zoneOffsetTransition = Collections.min(zoneId.getRules().getTransitions(),
+                new Comparator<ZoneOffsetTransition>() {
+                    @Override
+                    public int compare(ZoneOffsetTransition z1, ZoneOffsetTransition z2) {
+                        return z1.getDateTimeBefore().compareTo(z2.getDateTimeBefore());
+                    }
+                });
+
+        LocalDateTime startDate = null;
+        if (zoneOffsetTransition != null) {
+            startDate = zoneOffsetTransition.getDateTimeBefore();
+        } else {
+            startDate = LocalDateTime.now(zoneId);
+        }
+
+		for (ZoneOffsetTransitionRule transitionRule : zoneId.getRules().getTransitionRules()) {
+			int transitionRuleMonthValue = transitionRule.getMonth().getValue();
+			DayOfWeek transitionRuleDayOfWeek = transitionRule.getDayOfWeek();
+			LocalDateTime ldt = LocalDateTime.now(zoneId)
+											.with(TemporalAdjusters.firstInMonth(transitionRuleDayOfWeek))
+											.withMonth(transitionRuleMonthValue)
+											.with(transitionRule.getLocalTime());
+			Month month = ldt.getMonth();
+			
+			TreeSet<Integer> allDaysOfWeek = new TreeSet<>();
+			
+			do{
+				allDaysOfWeek.add(ldt.getDayOfMonth());
+			}while((ldt = ldt.plus(org.threeten.bp.Period.ofWeeks(1))).getMonth() == month);
+			
+			Integer dayOfMonth = allDaysOfWeek.ceiling(transitionRule.getDayOfMonthIndicator());
+			if (dayOfMonth == null) {
+			    dayOfMonth = allDaysOfWeek.last();
+			}
+			
+			int weekdayIndexInMonth = 0;
+			for(Iterator<Integer> it = allDaysOfWeek.iterator(); it.hasNext() && it.next() != dayOfMonth;){
+				weekdayIndexInMonth++;
+			}
+			
+			weekdayIndexInMonth = weekdayIndexInMonth >= 3 ? weekdayIndexInMonth - allDaysOfWeek.size()  : weekdayIndexInMonth;
+			
+			String rruleTemplate = RRULE_TPL;
+			String rruleText = String.format(rruleTemplate,transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
+			
+			try {
+				TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(transitionRule.getOffsetBefore().getTotalSeconds() * 1000L));
+				TzOffsetTo offsetTo = new TzOffsetTo(new UtcOffset(transitionRule.getOffsetAfter().getTotalSeconds() * 1000L));
+				RRule rrule = new RRule(rruleText);
+				
+				Observance observance = (transitionRule.getOffsetAfter().getTotalSeconds() > rawTimeZoneOffsetInSeconds) ? new Daylight() : new Standard();
+
+				observance.getProperties().add(offsetFrom);
+				observance.getProperties().add(offsetTo);
+				observance.getProperties().add(rrule);
+				observance.getProperties().add(new DtStart(String.format(DATE_TIME_TPL, startDate.withMonth(transitionRule.getMonth().getValue())
+																														.withDayOfMonth(transitionRule.getDayOfMonthIndicator())
+																														.with(transitionRule.getDayOfWeek()))));
+				
+				result.getObservances().add(observance);
+				
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+    
+    private static void addTransitions(ZoneId zoneId, VTimeZone result, int rawTimeZoneOffsetInSeconds) throws ParseException {
+		Map<ZoneOffsetKey, Set<ZoneOffsetTransition>> zoneTransitionsByOffsets = new HashMap<>();
+		
+		for(ZoneOffsetTransition zoneTransitionRule : zoneId.getRules().getTransitions()){
+			ZoneOffsetKey offfsetKey = ZoneOffsetKey.of(zoneTransitionRule.getOffsetBefore(), zoneTransitionRule.getOffsetAfter());
+			
+			Set<ZoneOffsetTransition> transitionRulesForOffset = zoneTransitionsByOffsets.get(offfsetKey);
+			if(transitionRulesForOffset == null){
+				transitionRulesForOffset = new HashSet<>(1);
+				zoneTransitionsByOffsets.put(offfsetKey, transitionRulesForOffset);
+			}
+			transitionRulesForOffset.add(zoneTransitionRule);
+		}
+		
+		
+		for(Map.Entry<ZoneOffsetKey, Set<ZoneOffsetTransition>> e : zoneTransitionsByOffsets.entrySet()){
+			
+			Observance observance = (e.getKey().offsetAfter.getTotalSeconds() > rawTimeZoneOffsetInSeconds) ? new Daylight() : new Standard();
+			
+			LocalDateTime start = Collections.min(e.getValue()).getDateTimeBefore();
+			
+			DtStart dtStart = new DtStart(String.format(DATE_TIME_TPL, start));
+			TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(e.getKey().offsetBefore.getTotalSeconds() * 1000L));
+			TzOffsetTo offsetTo = new TzOffsetTo(new UtcOffset(e.getKey().offsetAfter.getTotalSeconds() * 1000L)); 
+			
+			observance.getProperties().add(dtStart);
+			observance.getProperties().add(offsetFrom);
+			observance.getProperties().add(offsetTo);
+			
+			for(ZoneOffsetTransition transition : e.getValue()){
+				RDate rDate = new RDate(new ParameterList(), String.format(DATE_TIME_TPL, transition.getDateTimeBefore()));
+				observance.getProperties().add(rDate);
+			}
+			result.getObservances().add(observance);
+		}
+	}
+    
+    private static class ZoneOffsetKey{
+    	private final ZoneOffset offsetBefore;
+    	private final ZoneOffset offsetAfter;
+    	
+    	private ZoneOffsetKey(ZoneOffset offsetBefore, ZoneOffset offsetAfter){
+    		this.offsetBefore = offsetBefore;
+    		this.offsetAfter = offsetAfter;
+    	}
+    	
+    	@Override
+    	public boolean equals(Object obj) {
+    		if(obj == this){
+    			return true;
+    		}
+    		if(!(obj instanceof ZoneOffsetKey)){
+    			return false;
+    		}
+    		ZoneOffsetKey otherZoneOffsetKey = (ZoneOffsetKey)obj;
+    		return Objects.equals(this.offsetBefore, otherZoneOffsetKey.offsetBefore) && Objects.equals(this.offsetAfter, otherZoneOffsetKey.offsetAfter); 
+    	}
+    	
+    	@Override
+    	public int hashCode() {
+    		int result = 31;
+    		result = result * (this.offsetBefore == null ? 1 : this.offsetBefore.hashCode());
+    		result = result * (this.offsetAfter == null ? 1 : this.offsetAfter.hashCode());
+    		
+    		return result;
+    	}
+    	
+    	static ZoneOffsetKey of (ZoneOffset offsetBefore, ZoneOffset offsetAfter){
+    		return new ZoneOffsetKey(offsetBefore, offsetAfter);
+    	}
+    }
+	
+}	
