@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.property.XProperty;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ServiceLoader;
@@ -115,5 +116,16 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
     private boolean isExperimentalName(final String name) {
         return name.startsWith(Property.EXPERIMENTAL_PREFIX)
                 && name.length() > Property.EXPERIMENTAL_PREFIX.length();
+    }
+    
+    /**
+     * Needed for initializing the transient member after deserializing a <code>Calendar</code>
+     * 
+     * @param in
+     * 
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        this.factoryLoader = ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader());
     }
 }

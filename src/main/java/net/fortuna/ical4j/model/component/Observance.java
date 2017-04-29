@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -109,7 +110,7 @@ public abstract class Observance extends Component {
      * @param name       the name of the time type
      * @param properties a list of properties
      */
-    protected Observance(final String name, final PropertyList properties) {
+    protected Observance(final String name, final PropertyList<Property> properties) {
         super(name, properties);
     }
 
@@ -199,9 +200,8 @@ public abstract class Observance extends Component {
         cacheableOnsets.add(initialOnset);
 
         // check rdates for latest applicable onset..
-        final PropertyList rdates = getProperties(Property.RDATE);
-        for (Property rdate1 : rdates) {
-            final RDate rdate = (RDate) rdate1;
+        final List<RDate> rdates = getProperties(Property.RDATE);
+        for (RDate rdate : rdates) {            
             for (final Date rdateDate : rdate.getDates()) {
                 try {
                     final DateTime rdateOnset = applyOffsetFrom(calculateOnset(rdateDate));
@@ -221,9 +221,8 @@ public abstract class Observance extends Component {
         }
 
         // check recurrence rules for latest applicable onset..
-        final PropertyList rrules = getProperties(Property.RRULE);
-        for (Property rrule1 : rrules) {
-            final RRule rrule = (RRule) rrule1;
+        final List<RRule> rrules = getProperties(Property.RRULE);
+        for (RRule rrule : rrules) {            
             // include future onsets to determine onset period..
             final Calendar cal = Dates.getCalendarInstance(date);
             cal.setTime(date);

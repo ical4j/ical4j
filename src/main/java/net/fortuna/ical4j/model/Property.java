@@ -354,6 +354,11 @@ public abstract class Property extends Content {
      */
     public static final String TEL = "TEL";
 
+    /**
+     *  Acknowledged Property taken from http://tools.ietf.org/html/draft-daboo-valarm-extensions-04
+     */
+    public static final String ACKNOWLEDGED = "ACKNOWLEDGED";
+    
     private final String name;
 
     private final ParameterList parameters;
