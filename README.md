@@ -1,21 +1,21 @@
 # iCal4j - iCalendar parser and object model
 
-[Introduction]: # intro
+[Introduction]: #intro
 
-[Setup]: # setup
-[System requirements]: # system-requirements
-[Release downloads]: # release-downloads
-[Install with Maven]: # install-with-maven
-[Install with Gradle]: # install-with-gradle
+[Setup]: #setup
+[System requirements]: #system-requirements
+[Release downloads]: #release-downloads
+[Install with Maven]: #install-with-maven
+[Install with Gradle]: #install-with-gradle
 
-[Usage]: # usage
+[Usage]: #usage
 
-[Reference]: # reference
-[Relaxed parsing]: # relaxed-parsing
+[Reference]: #reference
+[Relaxed parsing]: #relaxed-parsing
 
-[Limitations]: # limitations
+[Limitations]: #limitations
 
-[Contributing]: # contributing
+[Contributing]: #contributing
 
 #### Table of Contents
 
