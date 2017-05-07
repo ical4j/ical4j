@@ -1,6 +1,42 @@
-[![Build Status](https://drone.io/github.com/ical4j/ical4j/status.png)](https://drone.io/github.com/ical4j/ical4j/latest) [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/ical4j/ical4j?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# iCal4j - iCalendar parser and object model
 
-# iCal4j - Release Notes
+[Introduction]: # intro
+
+[Setup]: # setup
+[System requirements]: # system-requirements
+[Release downloads]: # release-downloads
+[Install with Maven]: # install-with-maven
+[Install with Gradle]: # install-with-gradle
+
+[Usage]: # usage
+
+[Reference]: # reference
+[Relaxed parsing]: # relaxed-parsing
+
+[Limitations]: # limitations
+
+[Contributing]: # contributing
+
+#### Table of Contents
+
+1. [Introduction - What is iCal4j?][Introduction]
+2. [Setup - Download and installation of iCal4j]
+    - [System requirements - What is required to use iCal4j][System requirements]
+    - [Release downloads - Where to get iCal4j][Release downloads]
+    - [Install with Maven][Install with Maven]
+    - [Install with Gradle][Install with Gradle]
+3. [Usage - The iCal4j object model and how to use it][Usage]
+    - [Examples - common usage scenarios][Examples]
+4. [Reference - Specification][Reference]
+    - [Specifications][]
+    - [Compatibility hints][]
+5. [Limitations - CUA compatibility, etc.][Limitations]
+6. [Development - Guide for contributing to the iCalj project][Development]
+    - [Contributing to iCal4j][Contributing]
+    - [Building with Gradle][]
+    - [Redistribution][]
+
+## Introduction
 
  - For a concise description of the goals and directions of iCal4j please
  take a look at the [open issues](https://github.com/ical4j/ical4j/issues).
@@ -14,11 +50,14 @@
  - iCal4j was created with the help of [Open Source](http://opensource.org) software.
 
 
-## System Requirements
+## Setup
 
- - Java 6 or later
+### System requirements
+
+ - Java 7 or later
  
 See [here](https://github.com/ical4j/ical4j/docs/Dependencies.md) for further details.
+
 
 ## Building with Gradle
 
