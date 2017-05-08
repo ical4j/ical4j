@@ -1,6 +1,7 @@
 # iCal4j - iCalendar parser and object model
 
-[Introduction]: #intro
+[Introduction]: #introduction
+[RFC2445]: https://tools.ietf.org/html/rfc2445
 
 [Setup]: #setup
 [System requirements]: #system-requirements
@@ -37,6 +38,11 @@
     - [Redistribution][]
 
 ## Introduction
+
+iCal4j is a Java library used to read and write iCalendar data streams as defined in [RFC2445]. The iCalendar standard
+provides a common data format used to store information about calendar-specific data such as events, appointments, to-do
+lists, etc. All of the popular calendaring tools, such as Lotus Notes, Outlook and Apple's iCal also support the iCalendar
+standard.
 
  - For a concise description of the goals and directions of iCal4j please
  take a look at the [open issues](https://github.com/ical4j/ical4j/issues).
