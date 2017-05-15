@@ -9,9 +9,9 @@ buildscript {
     }
 }
 
-plugins {
-  id "org.sonarqube" version "1.2"
-}
+//plugins {
+//  id "org.sonarqube" version "1.2"
+//}
 
 apply plugin: 'java'
 apply plugin: 'groovy'
