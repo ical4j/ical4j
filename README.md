@@ -35,7 +35,7 @@
 6. [Development - Guide for contributing to the iCalj project][Development]
     - [Contributing to iCal4j][Contributing]
     - [Building with Gradle][]
-    - [Redistribution][]
+    - [Redistribution][Redistribution]
 
 ## Introduction
 
@@ -174,7 +174,15 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
  definitions, etc. without restriction. However when validation is run (automatically
  on output of the calendar) you will be notified if the changes are invalid.
  
+## Development
 
+## Contributing
+
+Open source software is made stronger by the community that supports it. Through participation you not only contribute to the quality of the software, but also gain a deeper insight into the inner workings.
+
+Contributions may be in the form of feature enhancements, bug fixes, test cases, documentation and forum participation. If you have a question, just ask. If you have an answer, write it down.
+
+And if you are somehow constrained from participation, through corporate policy or otherwise, consider financial support. After all, if you are profiting from open source it's only fair to give something back to the community that make it all possible.
 
 ## Redistribution:
 
