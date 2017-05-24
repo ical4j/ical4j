@@ -19,9 +19,9 @@
 [Limitations]: #limitations
 
 [Development]: #development
-[Contributing]: #contributing
 [Building with Gradle]: #building-with-gradle
 [Redistribution]: #redistribution
+[Contributing]: #contributing
 
 #### Table of Contents
 
@@ -35,13 +35,13 @@
     - [Examples - common usage scenarios][Examples]
 4. [Reference - Specification][Reference]
     - [Specifications][]
-    - [Compatibility hints][]
+    - [Compatibility Hints][]
 5. [Configuration options][Configuration]
 6. [Limitations - CUA compatibility, etc.][Limitations]
 7. [Development - Guide for contributing to the iCalj project][Development]
-    - [Contributing to iCal4j][Contributing]
     - [Building with Gradle][Building with Gradle]
     - [Redistribution][Redistribution]
+    - [Contributing to iCal4j][Contributing]
 
 ## Introduction
 
@@ -166,14 +166,6 @@ See [here](https://github.com/ical4j/ical4j/docs/Dependencies.md) for further de
  
 ## Development
 
-### Contributing
-
-Open source software is made stronger by the community that supports it. Through participation you not only contribute to the quality of the software, but also gain a deeper insight into the inner workings.
-
-Contributions may be in the form of feature enhancements, bug fixes, test cases, documentation and forum participation. If you have a question, just ask. If you have an answer, write it down.
-
-And if you are somehow constrained from participation, through corporate policy or otherwise, consider financial support. After all, if you are profiting from open source it's only fair to give something back to the community that make it all possible.
-
 ### Building with Gradle
 
 iCal4j includes the Gradle wrapper for a simpler and more consistent build.
@@ -202,3 +194,11 @@ follow these very simple guidelines:
  in another JAR along with other classes. It may lead to version incompatibilites
  in the future. Rather I would suggest to include the ical4j.jar in your classpath
  as required.
+
+### Contributing
+
+Open source software is made stronger by the community that supports it. Through participation you not only contribute to the quality of the software, but also gain a deeper insight into the inner workings.
+
+Contributions may be in the form of feature enhancements, bug fixes, test cases, documentation and forum participation. If you have a question, just ask. If you have an answer, write it down.
+
+And if you are somehow constrained from participation, through corporate policy or otherwise, consider financial support. After all, if you are profiting from open source it's only fair to give something back to the community that make it all possible.
