@@ -18,7 +18,9 @@
 
 [Limitations]: #limitations
 
+[Development]: #development
 [Contributing]: #contributing
+[Building with Gradle]: #build-with-gradle
 
 #### Table of Contents
 
