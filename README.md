@@ -12,6 +12,8 @@
 [Usage]: #usage
 
 [Reference]: #reference
+
+[Configuration]: #configuration
 [Relaxed parsing]: #relaxed-parsing
 
 [Limitations]: #limitations
@@ -31,10 +33,11 @@
 4. [Reference - Specification][Reference]
     - [Specifications][]
     - [Compatibility hints][]
-5. [Limitations - CUA compatibility, etc.][Limitations]
-6. [Development - Guide for contributing to the iCalj project][Development]
+5. [Configuration options][Configuration]
+6. [Limitations - CUA compatibility, etc.][Limitations]
+7. [Development - Guide for contributing to the iCalj project][Development]
     - [Contributing to iCal4j][Contributing]
-    - [Building with Gradle][]
+    - [Building with Gradle][Building with Gradle]
     - [Redistribution][Redistribution]
 
 ## Introduction
@@ -65,25 +68,9 @@ standard.
 See [here](https://github.com/ical4j/ical4j/docs/Dependencies.md) for further details.
 
 
-## Building with Gradle
-
-iCal4j includes the Gradle wrapper for a simpler and more consistent build.
-
-**Run unit tests**
-
-    ./gradlew clean test
-
-**Build a new release**
-
-    ./gradlew clean test release -Prelease.forceVersion=2.0.0
-
-**Upload release binaries and packages**
-
-    RELEASE_VERSION=2.0.0 ./gradlew uploadArchives uploadDist
-
-
+## Configuration
  
-## Relaxed Parsing
+### Relaxed Parsing
 
  iCal4j now has the capability to "relax" its parsing rules to enable parsing of
  *.ics files that don't properly conform to the iCalendar specification (RFC2445)
@@ -144,7 +131,7 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
  net.fortuna.ical4j.util.CompatibilityHints.
 
 
-## iCal4j and Timezones
+### iCal4j and Timezones
 
  Supporting timezones in an iCalendar implementation can be a complicated process,
  mostly due to the fact that there is not a definitive list of timezone definitions
@@ -176,7 +163,7 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
  
 ## Development
 
-## Contributing
+### Contributing
 
 Open source software is made stronger by the community that supports it. Through participation you not only contribute to the quality of the software, but also gain a deeper insight into the inner workings.
 
@@ -184,7 +171,23 @@ Contributions may be in the form of feature enhancements, bug fixes, test cases,
 
 And if you are somehow constrained from participation, through corporate policy or otherwise, consider financial support. After all, if you are profiting from open source it's only fair to give something back to the community that make it all possible.
 
-## Redistribution:
+### Building with Gradle
+
+iCal4j includes the Gradle wrapper for a simpler and more consistent build.
+
+**Run unit tests**
+
+    ./gradlew clean test
+
+**Build a new release**
+
+    ./gradlew clean test release -Prelease.forceVersion=2.0.0
+
+**Upload release binaries and packages**
+
+    RELEASE_VERSION=2.0.0 ./gradlew uploadArchives uploadDist
+
+### Redistribution
 
 If you intend to use and distribute iCal4j in your own project please
 follow these very simple guidelines:
