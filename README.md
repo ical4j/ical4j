@@ -20,12 +20,13 @@
 
 [Development]: #development
 [Contributing]: #contributing
-[Building with Gradle]: #build-with-gradle
+[Building with Gradle]: #building-with-gradle
+[Redistribution]: #redistribution
 
 #### Table of Contents
 
 1. [Introduction - What is iCal4j?][Introduction]
-2. [Setup - Download and installation of iCal4j]
+2. [Setup - Download and installation of iCal4j][Setup]
     - [System requirements - What is required to use iCal4j][System requirements]
     - [Release downloads - Where to get iCal4j][Release downloads]
     - [Install with Maven][Install with Maven]
