@@ -15,7 +15,9 @@ before_install:
   - docker run -v $(pwd)/src/main/resources/zoneinfo:/zoneinfo -it benfortuna/tzurl rsync -av --delete /usr/local/apache2/htdocs/zoneinfo /
   - docker run -v $(pwd)/src/main/resources/zoneinfo-global:/zoneinfo-global -it benfortuna/tzurl rsync -av --delete /usr/local/apache2/htdocs/zoneinfo-global /
 script:
-  - ./gradlew check
+  - ./gradlew check jacocoTestReport
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: releases
   api_key:

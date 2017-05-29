@@ -75,6 +75,13 @@ dependencies {
             "org.slf4j:slf4j-log4j12:$slf4jVersion"
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
 javadoc {
     if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
@@ -120,36 +127,32 @@ A Java library for reading and writing iCalendar (*.ics) files
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
-
-    // sonatype credentials
-    sonatypeUsername = project.hasProperty('sonatypeUsername') ? project.getProperty('sonatypeUsername') : ''
-    sonatypePassword = project.hasProperty('sonatypePassword') ? project.getProperty('sonatypePassword') : ''
 }
 
 uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
+            // artefact management
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
+                authentication(userName: sonatype_username, password: sonatype_password)
             }
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
+                authentication(userName: sonatype_username, password: sonatype_password)
             }
-
+            // maven project model
             pom.project {
                 name project.name
                 packaging 'jar'
                 description project.description
-                url 'http://ical4j.sourceforge.net'
-
+                url 'http://ical4j.github.io'
+                // source code management
                 scm {
                     url 'https://github.com/ical4j/ical4j'
                     connection 'scm:git@github.com:ical4j/ical4j.git'
                     developerConnection 'scm:git@github.com:ical4j/ical4j.git'
                 }
-
+                // open source license
                 licenses {
                     license {
                         name 'iCal4j - License'
@@ -157,7 +160,7 @@ uploadArchives {
                         distribution 'repo'
                     }
                 }
-
+                // contributors
                 developers {
                     developer {
                         id 'fortuna'
