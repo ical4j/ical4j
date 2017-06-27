@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
   id "org.sonarqube" version "1.2"
+  id "nebula.provided-base" version "3.0.3"
 }
 
 apply plugin: 'java'
@@ -20,6 +21,7 @@ apply plugin: 'maven'
 apply plugin: 'jacoco'
 apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
+apply plugin: 'nebula.optional-base'
 apply from: 'gradle/dist.gradle'
 
 sourceCompatibility = 1.7
@@ -65,9 +67,9 @@ dependencies {
             'commons-codec:commons-codec:1.9',
             'org.apache.commons:commons-lang3:3.3.2',
             'org.apache.commons:commons-collections4:4.0',
-            'org.codehaus.groovy:groovy-all:2.3.2',
-            'biz.aQute.bnd:bndlib:2.3.0',
-            'org.threeten:threetenbp:1.3.3'
+			'org.threeten:threetenbp:1.3.3'
+    compile 'org.codehaus.groovy:groovy-all:2.3.2', optional
+    compile 'biz.aQute.bnd:bndlib:2.3.0', optional
 
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0',
             'commons-io:commons-io:2.4',
@@ -96,6 +98,12 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
     classifier = 'sources'
+}
+
+jar {
+    manifest {
+        instruction 'Import-Package', 'groovy.*;resolution:=optional, *'
+    }
 }
 
 artifacts {
