@@ -51,7 +51,7 @@ import java.net.URISyntaxException;
  *         <p/>
  *         Created on 14/06/2005
  */
-public interface ParameterFactory<T extends Parameter> extends Serializable {
+public interface ParameterFactory<T extends Parameter> extends Serializable, NamedFactory {
 
     /**
      * Returns a parameter instance of the appropriate type with the specified value.
@@ -63,5 +63,6 @@ public interface ParameterFactory<T extends Parameter> extends Serializable {
      */
     T createParameter(String value) throws URISyntaxException;
 
+    @Deprecated
     boolean supports(String name);
 }

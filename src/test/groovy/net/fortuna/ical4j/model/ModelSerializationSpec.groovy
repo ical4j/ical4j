@@ -51,6 +51,12 @@ class ModelSerializationSpec extends Specification {
 
 		expect: 'deserialised object equals test object'
 		assert deserialised == modelObject
+
+		and: 'factories correctly deserialised'
+		if (modelObject instanceof Calendar) {
+			new Calendar(deserialised) == modelObject
+		}
+
 		
 		where:
 		modelObject << [

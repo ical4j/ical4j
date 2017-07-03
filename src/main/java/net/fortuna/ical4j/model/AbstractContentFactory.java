@@ -37,6 +37,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * $Id$
@@ -47,18 +48,26 @@ import java.util.ServiceLoader;
  *
  * @author Ben Fortuna
  */
-public abstract class AbstractContentFactory<T> implements Serializable {
+public abstract class AbstractContentFactory<T extends NamedFactory> implements Serializable {
 
     private final Map<String, T> extendedFactories;
-
-    protected transient ServiceLoader<T> factoryLoader;
+    protected transient Map<String, T> factories;
 
     /**
      * Default constructor.
      */
     public AbstractContentFactory(ServiceLoader<T> factoryLoader) {
         extendedFactories = new HashMap<String, T>();
-        this.factoryLoader = factoryLoader;
+        factories = loadFactories(factoryLoader);
+    }
+
+    protected Map<String, T> loadFactories(ServiceLoader<T> factoryLoader) {
+        ConcurrentHashMap<String, T> result = new ConcurrentHashMap<>();
+
+        for(T factory: factoryLoader) {
+            result.put(factory.getName(), factory);
+        }
+        return result;
     }
 
     /**
@@ -70,21 +79,13 @@ public abstract class AbstractContentFactory<T> implements Serializable {
         extendedFactories.put(key, factory);
     }
 
-    protected abstract boolean factorySupports(T factory, String key);
-
     /**
      * @param key a factory key
      * @return a factory associated with the specified key, giving preference to
      * standard factories
      */
     protected final T getFactory(String key) {
-        T factory = null;
-        for (T candidate : factoryLoader) {
-            if (factorySupports(candidate, key)) {
-                factory = candidate;
-                break;
-            }
-        }
+        T factory = factories.get(key);
         if (factory == null) {
             factory = extendedFactories.get(key);
         }

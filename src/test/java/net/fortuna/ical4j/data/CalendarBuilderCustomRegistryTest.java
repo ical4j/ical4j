@@ -102,6 +102,11 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
                 static final long serialVersionUID = 8871483730211383100L;
 
                 @Override
+                public String getName() {
+                    return SCHEDULE_STATUS;
+                }
+
+                @Override
                 public boolean supports(String name) {
                     return SCHEDULE_STATUS.equals(name);
                 }

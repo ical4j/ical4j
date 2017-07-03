@@ -64,11 +64,6 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
         return instance;
     }
 
-    @Override
-    protected boolean factorySupports(ParameterFactory factory, String key) {
-        return factory.supports(key);
-    }
-
     /**
      * Creates a parameter.
      *
@@ -111,6 +106,6 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
      */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        this.factoryLoader = ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader());
+        this.factories = loadFactories(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()));
     }
 }

@@ -32,8 +32,6 @@
 package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * $Id$
@@ -62,16 +60,21 @@ public abstract class Content implements Serializable {
      */
     public abstract String getValue();
 
-    public static abstract class Factory {
+    public static abstract class Factory implements NamedFactory {
 
-        private final List<String> supportedNames;
+        private final String supportedName;
 
-        public Factory(String... supportedNames) {
-            this.supportedNames = Arrays.asList(supportedNames);
+        public Factory(String supportedName) {
+            this.supportedName = supportedName;
         }
 
+        public String getName() {
+            return supportedName;
+        }
+
+        @Deprecated
         public final boolean supports(String name) {
-            return supportedNames.contains(name);
+            return false;
         }
     }
 }
