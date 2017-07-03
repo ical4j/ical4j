@@ -94,7 +94,7 @@ public class Url extends Property {
      * Default constructor.
      */
     public Url() {
-        super(URL, PropertyFactoryImpl.getInstance());
+        super(URL, new Factory());
     }
 
     /**
@@ -104,7 +104,7 @@ public class Url extends Property {
      */
     public Url(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(URL, aList, PropertyFactoryImpl.getInstance());
+        super(URL, aList, new Factory());
         setValue(aValue);
     }
 
@@ -112,7 +112,7 @@ public class Url extends Property {
      * @param aUri a URI
      */
     public Url(final URI aUri) {
-        super(URL, PropertyFactoryImpl.getInstance());
+        super(URL, new Factory());
         uri = aUri;
     }
 
@@ -121,7 +121,7 @@ public class Url extends Property {
      * @param aUri  a URI
      */
     public Url(final ParameterList aList, final URI aUri) {
-        super(URL, aList, PropertyFactoryImpl.getInstance());
+        super(URL, aList, new Factory());
         uri = aUri;
     }
 

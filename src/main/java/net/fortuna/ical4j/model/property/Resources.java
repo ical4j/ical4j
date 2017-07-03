@@ -58,7 +58,7 @@ public class Resources extends Property {
      */
     public Resources() {
         super(RESOURCES, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         resources = new TextList();
     }
 
@@ -68,7 +68,7 @@ public class Resources extends Property {
      */
     public Resources(final ParameterList aList, final String aValue) {
         super(RESOURCES, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 
@@ -77,7 +77,7 @@ public class Resources extends Property {
      */
     public Resources(final TextList rList) {
         super(RESOURCES, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         resources = rList;
     }
 
@@ -87,7 +87,7 @@ public class Resources extends Property {
      */
     public Resources(final ParameterList aList, final TextList rList) {
         super(RESOURCES, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         resources = rList;
     }
 

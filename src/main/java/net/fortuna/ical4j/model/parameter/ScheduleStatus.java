@@ -53,7 +53,7 @@ public class ScheduleStatus extends Parameter {
      * @param aValue a string scheduling status
      */
     public ScheduleStatus(final String aValue) {
-        super(SCHEDULE_STATUS, ParameterFactoryImpl.getInstance());
+        super(SCHEDULE_STATUS, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

@@ -115,14 +115,14 @@ public class TzId extends Property implements Escapable {
      * Default constructor.
      */
     public TzId() {
-        super(TZID, PropertyFactoryImpl.getInstance());
+        super(TZID, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzId(final String aValue) {
-        super(TZID, PropertyFactoryImpl.getInstance());
+        super(TZID, new Factory());
         setValue(aValue);
     }
 
@@ -131,7 +131,7 @@ public class TzId extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public TzId(final ParameterList aList, final String aValue) {
-        super(TZID, aList, PropertyFactoryImpl.getInstance());
+        super(TZID, aList, new Factory());
         setValue(aValue);
     }
 

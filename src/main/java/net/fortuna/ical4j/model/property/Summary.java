@@ -104,7 +104,7 @@ public class Summary extends Property implements Escapable {
      */
     public Summary() {
         super(SUMMARY, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
     }
 
     /**
@@ -112,7 +112,7 @@ public class Summary extends Property implements Escapable {
      */
     public Summary(final String aValue) {
         super(SUMMARY, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 
@@ -121,7 +121,7 @@ public class Summary extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Summary(final ParameterList aList, final String aValue) {
-        super(SUMMARY, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
+        super(SUMMARY, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE), new Factory());
         setValue(aValue);
     }
 

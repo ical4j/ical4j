@@ -93,7 +93,7 @@ public class Version extends Property {
      * Default constructor.
      */
     public Version() {
-        super(VERSION, PropertyFactoryImpl.getInstance());
+        super(VERSION, new Factory());
     }
 
     /**
@@ -101,7 +101,7 @@ public class Version extends Property {
      * @param aValue a value string for this component
      */
     public Version(final ParameterList aList, final String aValue) {
-        super(VERSION, aList, PropertyFactoryImpl.getInstance());
+        super(VERSION, aList, new Factory());
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
             this.maxVersion = aValue.substring(aValue.indexOf(';'));
@@ -115,7 +115,7 @@ public class Version extends Property {
      * @param maxVersion a string representation of the maximum version
      */
     public Version(final String minVersion, final String maxVersion) {
-        super(VERSION, PropertyFactoryImpl.getInstance());
+        super(VERSION, new Factory());
         this.minVersion = minVersion;
         this.maxVersion = maxVersion;
     }
@@ -127,7 +127,7 @@ public class Version extends Property {
      */
     public Version(final ParameterList aList, final String aVersion1,
                    final String aVersion2) {
-        super(VERSION, aList, PropertyFactoryImpl.getInstance());
+        super(VERSION, aList, new Factory());
         minVersion = aVersion1;
         maxVersion = aVersion2;
     }

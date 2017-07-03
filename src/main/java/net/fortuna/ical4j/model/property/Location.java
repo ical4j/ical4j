@@ -109,7 +109,7 @@ public class Location extends Property implements Escapable {
      */
     public Location() {
         super(LOCATION, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE, Parameter.VVENUE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
     }
 
     /**
@@ -117,7 +117,7 @@ public class Location extends Property implements Escapable {
      */
     public Location(final String aValue) {
         super(LOCATION, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE, Parameter.VVENUE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 
@@ -127,7 +127,7 @@ public class Location extends Property implements Escapable {
      */
     public Location(final ParameterList aList, final String aValue) {
         super(LOCATION, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE, Parameter.VVENUE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 

@@ -83,7 +83,7 @@ public class RequestStatus extends Property {
      */
     public RequestStatus() {
         super(REQUEST_STATUS, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
     }
 
     /**
@@ -91,7 +91,7 @@ public class RequestStatus extends Property {
      * @param aValue a value string for this component
      */
     public RequestStatus(final ParameterList aList, final String aValue) {
-        super(REQUEST_STATUS, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
+        super(REQUEST_STATUS, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), new Factory());
         setValue(aValue);
     }
 
@@ -103,7 +103,7 @@ public class RequestStatus extends Property {
     public RequestStatus(final String aStatusCode, final String aDescription,
                          final String data) {
         super(REQUEST_STATUS, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
@@ -117,7 +117,7 @@ public class RequestStatus extends Property {
      */
     public RequestStatus(final ParameterList aList, final String aStatusCode,
                          final String aDescription, final String data) {
-        super(REQUEST_STATUS, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
+        super(REQUEST_STATUS, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), new Factory());
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;

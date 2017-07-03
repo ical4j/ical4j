@@ -79,8 +79,8 @@ public class AltRepTest extends TestCase {
         catch (URISyntaxException use) {
             // test success.
         }
-        
-        AltRep ar = (AltRep) ParameterFactoryImpl.getInstance().createParameter(Parameter.ALTREP, "mailto:valid@test.com");
+
+        AltRep ar = (AltRep) new AltRep.Factory().createParameter("mailto:valid@test.com");
         
         assertNotNull(ar.getUri());
     }

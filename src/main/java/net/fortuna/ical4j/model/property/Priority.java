@@ -173,7 +173,7 @@ public class Priority extends Property {
      * Default constructor.
      */
     public Priority() {
-        super(PRIORITY, PropertyFactoryImpl.getInstance());
+        super(PRIORITY, new Factory());
         level = UNDEFINED.getLevel();
     }
 
@@ -182,7 +182,7 @@ public class Priority extends Property {
      * @param aValue a value string for this component
      */
     public Priority(final ParameterList aList, final String aValue) {
-        super(PRIORITY, aList, PropertyFactoryImpl.getInstance());
+        super(PRIORITY, aList, new Factory());
         level = Integer.parseInt(aValue);
     }
 
@@ -190,7 +190,7 @@ public class Priority extends Property {
      * @param aLevel an int representation of a priority level
      */
     public Priority(final int aLevel) {
-        super(PRIORITY, PropertyFactoryImpl.getInstance());
+        super(PRIORITY, new Factory());
         level = aLevel;
     }
 
@@ -199,7 +199,7 @@ public class Priority extends Property {
      * @param aLevel an int representation of a priority level
      */
     public Priority(final ParameterList aList, final int aLevel) {
-        super(PRIORITY, aList, PropertyFactoryImpl.getInstance());
+        super(PRIORITY, aList, new Factory());
         level = aLevel;
     }
 

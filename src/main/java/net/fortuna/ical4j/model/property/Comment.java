@@ -58,7 +58,7 @@ public class Comment extends Property implements Escapable {
      */
     public Comment() {
         super(COMMENT, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
     }
 
     /**
@@ -66,7 +66,7 @@ public class Comment extends Property implements Escapable {
      */
     public Comment(final String aValue) {
         super(COMMENT, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 
@@ -76,7 +76,7 @@ public class Comment extends Property implements Escapable {
      */
     public Comment(final ParameterList aList, final String aValue) {
         super(COMMENT, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 

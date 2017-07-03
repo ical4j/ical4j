@@ -58,14 +58,14 @@ public class Tel extends Property implements Escapable {
      * Default constructor.
      */
     public Tel() {
-        super(TEL, new ParameterList(), new OneOrLessParameterValidator(Parameter.TYPE), PropertyFactoryImpl.getInstance());
+        super(TEL, new ParameterList(), new OneOrLessParameterValidator(Parameter.TYPE), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Tel(final String aValue) {
-        super(TEL, new ParameterList(), new OneOrLessParameterValidator(Parameter.TYPE), PropertyFactoryImpl.getInstance());
+        super(TEL, new ParameterList(), new OneOrLessParameterValidator(Parameter.TYPE), new Factory());
         setValue(aValue);
     }
 
@@ -74,7 +74,7 @@ public class Tel extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Tel(final ParameterList aList, final String aValue) {
-        super(TEL, aList, new OneOrLessParameterValidator(Parameter.TYPE), PropertyFactoryImpl.getInstance());
+        super(TEL, aList, new OneOrLessParameterValidator(Parameter.TYPE), new Factory());
         setValue(aValue);
     }
 

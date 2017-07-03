@@ -71,7 +71,7 @@ public class Range extends Parameter {
      * @param aValue a string representation of a recurrence identifier range
      */
     public Range(final String aValue) {
-        super(RANGE, ParameterFactoryImpl.getInstance());
+        super(RANGE, new Factory());
         this.value = Strings.unquote(aValue);
 
         // allow arbitrary ranges for Lotus Notes..

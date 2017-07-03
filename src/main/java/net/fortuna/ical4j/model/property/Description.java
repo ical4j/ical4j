@@ -58,7 +58,7 @@ public class Description extends Property implements Escapable {
      */
     public Description() {
         super(DESCRIPTION, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
     }
 
     /**
@@ -66,7 +66,7 @@ public class Description extends Property implements Escapable {
      */
     public Description(final String aValue) {
         super(DESCRIPTION, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 
@@ -76,7 +76,7 @@ public class Description extends Property implements Escapable {
      */
     public Description(final ParameterList aList, final String aValue) {
         super(DESCRIPTION, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 

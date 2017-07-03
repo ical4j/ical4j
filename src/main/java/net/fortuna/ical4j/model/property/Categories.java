@@ -100,7 +100,7 @@ public class Categories extends Property {
      */
     public Categories() {
         super(CATEGORIES, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         categories = new TextList();
     }
 
@@ -109,7 +109,7 @@ public class Categories extends Property {
      */
     public Categories(final String aValue) {
         super(CATEGORIES, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 
@@ -118,7 +118,7 @@ public class Categories extends Property {
      * @param aValue a value string for this component
      */
     public Categories(final ParameterList aList, final String aValue) {
-        super(CATEGORIES, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
+        super(CATEGORIES, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), new Factory());
         setValue(aValue);
     }
 
@@ -127,7 +127,7 @@ public class Categories extends Property {
      */
     public Categories(final TextList cList) {
         super(CATEGORIES, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         categories = cList;
     }
 
@@ -136,7 +136,7 @@ public class Categories extends Property {
      * @param cList a list of categories
      */
     public Categories(final ParameterList aList, final TextList cList) {
-        super(CATEGORIES, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
+        super(CATEGORIES, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), new Factory());
         categories = cList;
     }
 

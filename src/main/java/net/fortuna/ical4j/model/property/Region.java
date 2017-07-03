@@ -73,7 +73,7 @@ public class Region extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Region(final ParameterList aList, final String aValue) {
-        super(REGION, aList, new OneOrLessParameterValidator(Parameter.ABBREV), PropertyFactoryImpl.getInstance());
+        super(REGION, aList, new OneOrLessParameterValidator(Parameter.ABBREV), new Factory());
         setValue(aValue);
     }
 

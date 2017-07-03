@@ -365,7 +365,7 @@ public abstract class Property extends Content {
 
     private final Validator<Property> validator;
 
-    private final PropertyFactoryImpl factory;
+    private final PropertyFactory factory;
 
     /**
      * Constructor.
@@ -373,7 +373,7 @@ public abstract class Property extends Content {
      * @param aName   property name
      * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, PropertyFactoryImpl factory) {
+    protected Property(final String aName, PropertyFactory factory) {
         this(aName, new ParameterList(), factory);
     }
 
@@ -383,7 +383,7 @@ public abstract class Property extends Content {
      * @param aList a list of parameters
      */
 //    protected Property(final String aName, final ParameterList aList) {
-//        this(aName, aList, PropertyFactoryImpl.getInstance());
+//        this(aName, aList, new Factory());
 //    }
 
     /**
@@ -391,11 +391,11 @@ public abstract class Property extends Content {
      * @param aList   a list of initial parameters
      * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, final ParameterList aList, PropertyFactoryImpl factory) {
+    protected Property(final String aName, final ParameterList aList, PropertyFactory factory) {
         this(aName, aList, new EmptyValidator<Property>(), factory);
     }
 
-    protected Property(final String aName, final ParameterList aList, Validator<Property> validator, PropertyFactoryImpl factory) {
+    protected Property(final String aName, final ParameterList aList, Validator<Property> validator, PropertyFactory factory) {
         this.name = aName;
         this.parameters = aList;
         this.validator = validator;
@@ -538,6 +538,6 @@ public abstract class Property extends Content {
         }
         // Deep copy parameter list..
         final ParameterList params = new ParameterList(getParameters(), false);
-        return factory.createProperty(getName(), params, getValue());
+        return factory.createProperty(params, getValue());
     }
 }

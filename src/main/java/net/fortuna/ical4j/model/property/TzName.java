@@ -57,14 +57,14 @@ public class TzName extends Property implements Escapable {
      * Default constructor.
      */
     public TzName() {
-        super(TZNAME, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
+        super(TZNAME, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzName(final String aValue) {
-        super(TZNAME, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
+        super(TZNAME, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE), new Factory());
         setValue(aValue);
     }
 
@@ -73,7 +73,7 @@ public class TzName extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public TzName(final ParameterList aList, final String aValue) {
-        super(TZNAME, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
+        super(TZNAME, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), new Factory());
         setValue(aValue);
     }
 

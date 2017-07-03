@@ -140,14 +140,14 @@ public class Clazz extends Property {
      * Default constructor.
      */
     public Clazz() {
-        super(CLASS, PropertyFactoryImpl.getInstance());
+        super(CLASS, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Clazz(final String aValue) {
-        super(CLASS, PropertyFactoryImpl.getInstance());
+        super(CLASS, new Factory());
         this.value = aValue;
     }
 
@@ -156,7 +156,7 @@ public class Clazz extends Property {
      * @param aValue a value string for this component
      */
     public Clazz(final ParameterList aList, final String aValue) {
-        super(CLASS, aList, PropertyFactoryImpl.getInstance());
+        super(CLASS, aList, new Factory());
         this.value = aValue;
     }
 

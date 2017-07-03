@@ -56,14 +56,14 @@ public class ProdId extends Property implements Escapable {
      * Default constructor.
      */
     public ProdId() {
-        super(PRODID, PropertyFactoryImpl.getInstance());
+        super(PRODID, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public ProdId(final String aValue) {
-        super(PRODID, PropertyFactoryImpl.getInstance());
+        super(PRODID, new Factory());
         setValue(aValue);
     }
 
@@ -72,7 +72,7 @@ public class ProdId extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public ProdId(final ParameterList aList, final String aValue) {
-        super(PRODID, aList, PropertyFactoryImpl.getInstance());
+        super(PRODID, aList, new Factory());
         setValue(aValue);
     }
 

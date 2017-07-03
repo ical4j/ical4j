@@ -57,14 +57,14 @@ public class ExtendedAddress extends Property implements Escapable {
      * Default constructor.
      */
     public ExtendedAddress() {
-        super(EXTENDED_ADDRESS, PropertyFactoryImpl.getInstance());
+        super(EXTENDED_ADDRESS, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public ExtendedAddress(final String aValue) {
-        super(EXTENDED_ADDRESS, PropertyFactoryImpl.getInstance());
+        super(EXTENDED_ADDRESS, new Factory());
         setValue(aValue);
     }
 
@@ -73,7 +73,7 @@ public class ExtendedAddress extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public ExtendedAddress(final ParameterList aList, final String aValue) {
-        super(EXTENDED_ADDRESS, aList, PropertyFactoryImpl.getInstance());
+        super(EXTENDED_ADDRESS, aList, new Factory());
         setValue(aValue);
     }
 

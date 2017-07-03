@@ -137,7 +137,7 @@ public class Sequence extends Property {
      * Default constructor.
      */
     public Sequence() {
-        super(SEQUENCE, PropertyFactoryImpl.getInstance());
+        super(SEQUENCE, new Factory());
         sequenceNo = 0;
     }
 
@@ -145,7 +145,7 @@ public class Sequence extends Property {
      * @param aValue a value string for this component
      */
     public Sequence(final String aValue) {
-        super(SEQUENCE, PropertyFactoryImpl.getInstance());
+        super(SEQUENCE, new Factory());
         setValue(aValue);
     }
 
@@ -154,7 +154,7 @@ public class Sequence extends Property {
      * @param aValue a value string for this component
      */
     public Sequence(final ParameterList aList, final String aValue) {
-        super(SEQUENCE, aList, PropertyFactoryImpl.getInstance());
+        super(SEQUENCE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -162,7 +162,7 @@ public class Sequence extends Property {
      * @param aSequenceNo a sequence number
      */
     public Sequence(final int aSequenceNo) {
-        super(SEQUENCE, PropertyFactoryImpl.getInstance());
+        super(SEQUENCE, new Factory());
         sequenceNo = aSequenceNo;
     }
 
@@ -171,7 +171,7 @@ public class Sequence extends Property {
      * @param aSequenceNo a sequence number
      */
     public Sequence(final ParameterList aList, final int aSequenceNo) {
-        super(SEQUENCE, aList, PropertyFactoryImpl.getInstance());
+        super(SEQUENCE, aList, new Factory());
         sequenceNo = aSequenceNo;
     }
 

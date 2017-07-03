@@ -56,14 +56,14 @@ public class TzOffsetTo extends Property {
      * Default constructor.
      */
     public TzOffsetTo() {
-        super(TZOFFSETTO, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETTO, new Factory());
     }
 
     /**
      * @param value an offset value
      */
     public TzOffsetTo(String value) {
-        super(TZOFFSETTO, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETTO, new Factory());
         setValue(value);
     }
 
@@ -72,7 +72,7 @@ public class TzOffsetTo extends Property {
      * @param aValue a value string for this component
      */
     public TzOffsetTo(final ParameterList aList, final String aValue) {
-        super(TZOFFSETTO, aList, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETTO, aList, new Factory());
         setValue(aValue);
     }
 
@@ -80,7 +80,7 @@ public class TzOffsetTo extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final UtcOffset anOffset) {
-        super(TZOFFSETTO, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETTO, new Factory());
         offset = anOffset;
     }
 
@@ -89,7 +89,7 @@ public class TzOffsetTo extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final ParameterList aList, final UtcOffset anOffset) {
-        super(TZOFFSETTO, aList, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETTO, aList, new Factory());
         offset = anOffset;
     }
 

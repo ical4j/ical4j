@@ -56,7 +56,7 @@ public class Repeat extends Property {
      * Default constructor.
      */
     public Repeat() {
-        super(REPEAT, PropertyFactoryImpl.getInstance());
+        super(REPEAT, new Factory());
     }
 
     /**
@@ -64,7 +64,7 @@ public class Repeat extends Property {
      * @param aValue a value string for this component
      */
     public Repeat(final ParameterList aList, final String aValue) {
-        super(REPEAT, aList, PropertyFactoryImpl.getInstance());
+        super(REPEAT, aList, new Factory());
         setValue(aValue);
     }
 
@@ -72,7 +72,7 @@ public class Repeat extends Property {
      * @param aCount a repetition count
      */
     public Repeat(final int aCount) {
-        super(REPEAT, PropertyFactoryImpl.getInstance());
+        super(REPEAT, new Factory());
         count = aCount;
     }
 
@@ -81,7 +81,7 @@ public class Repeat extends Property {
      * @param aCount a repetition count
      */
     public Repeat(final ParameterList aList, final int aCount) {
-        super(REPEAT, aList, PropertyFactoryImpl.getInstance());
+        super(REPEAT, aList, new Factory());
         count = aCount;
     }
 

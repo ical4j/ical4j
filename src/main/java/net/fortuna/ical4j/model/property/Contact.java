@@ -58,7 +58,7 @@ public class Contact extends Property implements Escapable {
      */
     public Contact() {
         super(CONTACT, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
     }
 
     /**
@@ -66,7 +66,7 @@ public class Contact extends Property implements Escapable {
      */
     public Contact(final String aValue) {
         super(CONTACT, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 
@@ -76,7 +76,7 @@ public class Contact extends Property implements Escapable {
      */
     public Contact(final ParameterList aList, final String aValue) {
         super(CONTACT, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+                new Factory());
         setValue(aValue);
     }
 
