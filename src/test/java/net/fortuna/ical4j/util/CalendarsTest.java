@@ -40,10 +40,16 @@ import net.fortuna.ical4j.model.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -185,6 +191,25 @@ public class CalendarsTest extends TestCase {
     public void testGetContentType() {
         assertEquals(expectedContentType, Calendars.getContentType(calendar, charset));
     }
+    
+    /**
+     * Ensures that after de-serialization a calendar can still be copied.
+     */
+    public void testShouldSerializeDeserializeCorrectly()
+            throws IOException, ClassNotFoundException, ParseException, URISyntaxException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(this.calendar);
+        oos.flush();
+
+        assertNotNull(baos.toByteArray());
+        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(baos.toByteArray()));
+        Calendar copy = (Calendar) ois.readObject();
+        assertNotNull(copy);
+        assertEquals(copy, this.calendar);
+        Calendar newCopy = new Calendar(copy);
+        assertEquals(newCopy, copy);
+    }
 
     /**
      * @return
@@ -211,7 +236,9 @@ public class CalendarsTest extends TestCase {
         calendar = Calendars.load(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics"));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, Charset.forName("US-ASCII"), "text/calendar; method=PUBLISH; charset=US-ASCII"));
-
+        suite.addTest(new CalendarsTest("testShouldSerializeDeserializeCorrectly",
+                Calendars.load(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")), -1));
+        
         return suite;
     }
 }

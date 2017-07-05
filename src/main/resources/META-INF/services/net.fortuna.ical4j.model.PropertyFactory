@@ -1,4 +1,5 @@
 net.fortuna.ical4j.model.property.Action$Factory
+net.fortuna.ical4j.model.property.Acknowledged$Factory
 net.fortuna.ical4j.model.property.Attach$Factory
 net.fortuna.ical4j.model.property.Attendee$Factory
 net.fortuna.ical4j.model.property.BusyType$Factory

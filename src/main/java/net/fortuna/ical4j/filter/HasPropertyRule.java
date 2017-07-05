@@ -75,7 +75,7 @@ public class HasPropertyRule implements Rule<Component> {
      */
     public final boolean match(final Component component) {
         boolean match = false;
-        final PropertyList properties = component.getProperties(property.getName());
+        final PropertyList<Property> properties = component.getProperties(property.getName());
         for (final Property p : properties) {
             if (matchEquals && property.equals(p)) {
                 match = true;

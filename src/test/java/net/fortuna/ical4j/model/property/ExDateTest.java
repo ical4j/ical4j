@@ -31,16 +31,21 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import junit.framework.TestCase;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
+import java.text.ParseException;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.text.ParseException;
-import java.util.Iterator;
+import junit.framework.TestCase;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 /**
  * $Id$
@@ -79,10 +84,25 @@ public class ExDateTest extends TestCase {
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE.ics"));
         
         Component event = calendar.getComponent(Component.VEVENT);
-        PropertyList exdates = event.getProperties(Property.EXDATE);
-        for (Iterator i = exdates.iterator(); i.hasNext();) {
-            ExDate exdate = (ExDate) i.next();
-            assertNotNull("This EXDATE should have a timezone", exdate.getDates().getTimeZone());
+        List<ExDate> exdates = event.getProperties(Property.EXDATE);
+        for (ExDate exDate : exdates) {            
+            assertNotNull("This EXDATE should have a timezone", exDate.getDates().getTimeZone());
+        }
+    }
+    
+    
+    public void testShouldPreserveUtcTimezoneForExDate() throws Exception {
+        CalendarBuilder builder = new CalendarBuilder();
+        Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
+
+        Component event = calendar.getComponent(Component.VEVENT);
+        List<ExDate> exdates = event.getProperties(Property.EXDATE);
+        for (ExDate exDate : exdates) {            
+            for (Date dateEx : exDate.getDates()) {
+                DateTime dateTimeEx = (DateTime) dateEx;
+                assertNotNull(dateTimeEx);
+                assertTrue("This exception date should be in UTC", dateTimeEx.isUtc());
+            }
         }
     }
     
@@ -93,8 +113,7 @@ public class ExDateTest extends TestCase {
         try {
             new ExDate(new ParameterList(), "20080315");
             fail("Should throw ParseException");
-        }
-        catch (ParseException pe) {
+        } catch (ParseException pe) {
             LOG.trace("Caught exception: " + pe.getMessage());
         }
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);

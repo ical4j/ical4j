@@ -43,6 +43,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.List;
 
 /**
  * $Id$
@@ -109,7 +110,7 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        PropertyList categories = calendar.getComponent(Component.VEVENT)
+        List<Categories> categories = calendar.getComponent(Component.VEVENT)
                 .getProperties(Property.CATEGORIES);
 
         assertEquals(cat1, categories.get(0));
