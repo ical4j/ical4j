@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
   id "org.sonarqube" version "1.2"
+  id "nebula.provided-base" version "3.0.3"
 }
 
 apply plugin: 'java'
@@ -20,6 +21,7 @@ apply plugin: 'maven'
 apply plugin: 'jacoco'
 apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
+apply plugin: 'nebula.optional-base'
 apply from: 'gradle/dist.gradle'
 
 sourceCompatibility = 1.7
@@ -65,9 +67,9 @@ dependencies {
             'commons-codec:commons-codec:1.9',
             'org.apache.commons:commons-lang3:3.3.2',
             'org.apache.commons:commons-collections4:4.0',
-            'org.codehaus.groovy:groovy-all:2.3.2',
-            'biz.aQute.bnd:bndlib:2.3.0',
-            'org.threeten:threetenbp:1.3.3'
+			'org.threeten:threetenbp:1.3.3'
+    compile 'org.codehaus.groovy:groovy-all:2.3.2', optional
+    compile 'biz.aQute.bnd:bndlib:2.3.0', optional
 
     testCompile 'org.spockframework:spock-core:0.7-groovy-2.0',
             'commons-io:commons-io:2.4',
@@ -87,6 +89,13 @@ jar {
     }
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+
 javadoc {
     if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
@@ -101,6 +110,12 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
     classifier = 'sources'
+}
+
+jar {
+    manifest {
+        instruction 'Import-Package', 'groovy.*;resolution:=optional, org.codehaus.groovy*;resolution:=optional, *'
+    }
 }
 
 artifacts {
@@ -132,36 +147,32 @@ A Java library for reading and writing iCalendar (*.ics) files
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
-
-    // sonatype credentials
-    sonatypeUsername = project.hasProperty('sonatypeUsername') ? project.getProperty('sonatypeUsername') : ''
-    sonatypePassword = project.hasProperty('sonatypePassword') ? project.getProperty('sonatypePassword') : ''
 }
 
 uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
+            // artefact management
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
+                authentication(userName: sonatype_username, password: sonatype_password)
             }
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                authentication(userName: sonatypeUsername, password: sonatypePassword)
+                authentication(userName: sonatype_username, password: sonatype_password)
             }
-
+            // maven project model
             pom.project {
                 name project.name
                 packaging 'jar'
                 description project.description
-                url 'http://ical4j.sourceforge.net'
-
+                url 'http://ical4j.github.io'
+                // source code management
                 scm {
                     url 'https://github.com/ical4j/ical4j'
                     connection 'scm:git@github.com:ical4j/ical4j.git'
                     developerConnection 'scm:git@github.com:ical4j/ical4j.git'
                 }
-
+                // open source license
                 licenses {
                     license {
                         name 'iCal4j - License'
@@ -169,7 +180,7 @@ uploadArchives {
                         distribution 'repo'
                     }
                 }
-
+                // contributors
                 developers {
                     developer {
                         id 'fortuna'
