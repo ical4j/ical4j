@@ -37,34 +37,6 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
     RELEASE_VERSION=2.0.0 ./gradlew uploadArchives uploadDist
 
 
-## How to build - Maven2
-
-After installing Maven2 and adding to your path, you need to [modify your local
-profiles](https://github.com/ical4j/ical4j/wiki/Maven2). Then 
-open a command prompt to the location of the iCal4j source and execute the following:
- 
-    $ mvn clean install
-   
-or
-  
-    $ mvn clean install -P modularity-snapshots
- 
- This will build and install iCal4j in your local repository. Build artifacts
- are generated in the 'target' directory.
-
-
-## How to build - Ant
- 
-If you have downloaded the source distribution, you should be able to package a JAR
-file simply by running ant in the root directory. e.g:
- 
-    C:\Libs\iCal4j-2.0-beta1-src\>ant
- 
- If for some reason you would like to override the default build classpath, I would
- suggest creating a "build.properties" file (see the provided sample) in the root directory
- and add overridden properties to this. You can also override properties via Java system
- properties (e.g. -Dproject.classpath="..."). You shouldn't need to modify the "build.xml" at all,
- so if you do find a need let me know and I'll try to rectify this.
  
 ## Relaxed Parsing
 
@@ -158,23 +130,7 @@ file simply by running ant in the root directory. e.g:
  on output of the calendar) you will be notified if the changes are invalid.
  
 
-## Pre-Java 1.4 Compatibility
 
- Choosing Java 1.4 as the minimum required JVM was initially slightly arbitrary, and
- probably based on the fact that most people were using 1.4 as a minimum.
-
- Since then, however, there are two features of 1.4 I can think of that iCal4j requires:
- 	- the URI class;
- 	- and the java.util.regex.* package (used in StringUtils).
-
- If you don't think you will be needing these features in your own code, you may want to
- try compiling iCal4j with JDK 1.4 using the "-target 1.3" option but without specifying
- an alternative "-bootclasspath" option. From what I can tell, this should generate 1.3
- bytecode that you can run on a 1.3 JVM. Note however, that if your code does cause
- iCal4j to load the URI or java.util.regex.* references then it will fail on a 1.3 JVM
- (as these APIs aren't available).
-
- 
 ## Redistribution:
 
 If you intend to use and distribute iCal4j in your own project please

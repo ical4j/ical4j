@@ -133,7 +133,7 @@ public abstract class DateProperty extends Property {
             // ensure timezone is null for VALUE=DATE properties..
             updateTimeZone(null);
             this.date = new Date(value);
-        } else {
+        } else if (value != null && !value.isEmpty()){
             this.date = new DateTime(value, timeZone);
         }
     }
@@ -166,7 +166,7 @@ public abstract class DateProperty extends Property {
      */
     @Override
     public int hashCode() {
-        return getDate().hashCode();
+        return getDate() != null ? getDate().hashCode() : 0;
     }
 
     /**
@@ -222,6 +222,15 @@ public abstract class DateProperty extends Property {
      * {@inheritDoc}
      */
     public void validate() throws ValidationException {
+
+        /*
+         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+         * (";" tzidparam) /
+         */
+
+        /*
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
+         */
 
         ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());

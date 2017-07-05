@@ -354,6 +354,11 @@ public abstract class Property extends Content {
      */
     public static final String TEL = "TEL";
 
+    /**
+     *  Acknowledged Property taken from http://tools.ietf.org/html/draft-daboo-valarm-extensions-04
+     */
+    public static final String ACKNOWLEDGED = "ACKNOWLEDGED";
+    
     private final String name;
 
     private final ParameterList parameters;
@@ -442,6 +447,16 @@ public abstract class Property extends Content {
         buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
+    }
+
+    /**
+     * Indicates whether this property is a calendar property.
+     * 
+     * @return boolean
+     */
+    public boolean isCalendarProperty() {
+        return PRODID.equalsIgnoreCase(getName()) || VERSION.equalsIgnoreCase(getName())
+                || CALSCALE.equalsIgnoreCase(getName()) || METHOD.equalsIgnoreCase(getName());
     }
 
     /**

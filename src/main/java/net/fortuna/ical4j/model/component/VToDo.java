@@ -208,7 +208,7 @@ public class VToDo extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        String buffer = BEGIN +
+        return BEGIN +
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR +
@@ -218,7 +218,6 @@ public class VToDo extends CalendarComponent {
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR;
-        return buffer;
     }
 
     /**

@@ -170,7 +170,7 @@ public class VTimeZone extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        String b = BEGIN +
+        return BEGIN +
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR +
@@ -180,7 +180,6 @@ public class VTimeZone extends CalendarComponent {
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR;
-        return b;
     }
 
     /**

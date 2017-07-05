@@ -1,6 +1,6 @@
 BEGIN:VCALENDAR
 PRODID:-//ACME/DesktopCalendar//EN
-METHOD:PUBLISH
+METHOD:CREATE
 X-LIC-NOTE: #C1. Rescheduled by #I1\ and updated by #I2
 VERSION:2.0
 BEGIN:VEVENT

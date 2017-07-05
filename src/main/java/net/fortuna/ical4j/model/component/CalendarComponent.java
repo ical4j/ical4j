@@ -56,7 +56,7 @@ public abstract class CalendarComponent extends Component {
     /**
      * Validator instance that does nothing.
      */
-    protected static final Validator EMPTY_VALIDATOR = new EmptyValidator();
+    protected static final Validator<CalendarComponent> EMPTY_VALIDATOR = new EmptyValidator<>();
     
     /**
      * @param name component name
@@ -79,7 +79,7 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      */
     public final void validate(Method method) throws ValidationException {
-        final Validator validator = getValidator(method);
+        final Validator<CalendarComponent> validator = getValidator(method);
         if (validator != null) {
             validator.validate(this);
         }
@@ -92,7 +92,7 @@ public abstract class CalendarComponent extends Component {
      * @param method a method to validate on
      * @return a validator for the specified method or null if the method is not supported
      */
-    protected abstract Validator getValidator(Method method);
+    protected abstract Validator<CalendarComponent> getValidator(Method method);
     
     /**
      * Apply validation for METHOD=PUBLISH.

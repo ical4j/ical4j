@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.component.XComponent;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ServiceLoader;
 
 /**
@@ -46,20 +48,11 @@ import java.util.ServiceLoader;
  */
 public final class ComponentFactoryImpl extends AbstractContentFactory<ComponentFactory> {
 
-    private static ComponentFactoryImpl instance = new ComponentFactoryImpl();
-
     /**
      * Constructor made private to prevent instantiation.
      */
-    private ComponentFactoryImpl() {
+    public ComponentFactoryImpl() {
         super(ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader()));
-    }
-
-    /**
-     * @return Returns the instance.
-     */
-    public static ComponentFactoryImpl getInstance() {
-        return instance;
     }
 
     @Override
@@ -145,5 +138,16 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
     protected boolean allowIllegalNames() {
         return CompatibilityHints
                 .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+    }
+    
+    /**
+     * Needed for initializing the transient member after deserializing a <code>Calendar</code>
+     * 
+     * @param in
+     * 
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        this.factoryLoader = ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader());
     }
 }
