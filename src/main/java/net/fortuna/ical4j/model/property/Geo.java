@@ -242,13 +242,6 @@ public class Geo extends Property {
         this.longitude = longitude;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
-    }
-
     public static class Factory extends Content.Factory implements PropertyFactory {
         private static final long serialVersionUID = 1L;
 

@@ -3,27 +3,22 @@
 # iCal4j - Release Notes
 
  - For a concise description of the goals and directions of iCal4j please
- take a look at docs/index.html.
+ take a look at the [open issues](https://github.com/ical4j/ical4j/issues).
 
- - You will find examples of how to use iCal4j at docs/introduction.html
- and throughout the API documentation.
+ - You will find examples of how to use iCal4j in [the wiki](https://github.com/ical4j/ical4j/wiki)
+ and throughout the [API documentation](https://ical4j.github.io/docs/ical4j/api).
 
  - Detailed descriptions of changes included in each release may be found
- in the CHANGELOG.
+ in the [CHANGELOG](https://ical4j.github.io/docs/ical4j/release-notes).
  
- - iCal4j was created with the help of eclipse version 3.2 [http://eclipse.org].
- Note that the project metadata included in the source version of iCal4j may not
- be compatible with prior versions of eclipse.
+ - iCal4j was created with the help of [Open Source](http://opensource.org) software.
 
 
 ## System Requirements
 
- - Java 5 or later
+ - Java 6 or later
  
- - commons-codec
- - commons-lang3
- - slf4j/jcl-over-slf4j
- - junit (for unit testing only)
+See [here](https://github.com/ical4j/ical4j/docs/Dependencies.md) for further details.
 
 ## Building with Gradle
 
@@ -31,43 +26,17 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
 
 **Run unit tests**
 
-`./gradlew clean test`
+    ./gradlew clean test
 
 **Build a new release**
 
-`./gradlew clean test release -PreleaseVersion=2.0.0`
+    ./gradlew clean test release -Prelease.forceVersion=2.0.0
 
 **Upload release binaries and packages**
 
-`RELEASE_VERSION=2.0.0 ./gradlew uploadArchives uploadDist`
+    RELEASE_VERSION=2.0.0 ./gradlew uploadArchives uploadDist
 
 
-## How to build - Maven2
-
- After installing Maven2 and adding to your path, you need to modify your local
- profiles http://wiki.modularity.net.au/ical4j/index.php?title=Maven2. Then 
- open a command prompt to the location of the iCal4j source and execute the following:
- 
-  [iCal4j-2.0-beta1-src] >mvn clean install
-  or
-  [iCal4j-2.0-beta1-src] >mvn clean install -P modularity-snapshots
- 
- This will build and install iCal4j in your local repository. Build artifacts
- are generated in the 'target' directory.
-
-
-## How to build - Ant
- 
- If you have downloaded the source distribution, you should be able to package a JAR
- file simply by running ant in the root directory. e.g:
- 
-   C:\Libs\iCal4j-2.0-beta1-src\>ant
- 
- If for some reason you would like to override the default build classpath, I would
- suggest creating a "build.properties" file (see the provided sample) in the root directory
- and add overridden properties to this. You can also override properties via Java system
- properties (e.g. -Dproject.classpath="..."). You shouldn't need to modify the "build.xml" at all,
- so if you do find a need let me know and I'll try to rectify this.
  
 ## Relaxed Parsing
 
@@ -76,7 +45,7 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
  
  - You can relax iCal4j's unfolding rules by specifying the following system property:
  
-    ical4j.unfolding.relaxed=true
+       ical4j.unfolding.relaxed=true
  
  Note that I believe this problem is not restricted to Mozilla calendaring
  products, but rather may be caused by UNIX/Linux-based applications relying on the
@@ -108,7 +77,7 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
  
  - You may also relax the parsing rules of iCal4j by setting the following system property:
  
-     ical4j.parsing.relaxed=true
+       ical4j.parsing.relaxed=true
  
  This property is intended as a general relaxation of parsing rules to allow for parsing
  otherwise invalid calendar files. Initially enabling this property will allow for the
@@ -119,12 +88,12 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
 
  - Microsoft Outlook also appears to provide quoted TZID parameter values, as follows:
  
-   DTSTART;TZID="Pacific Time (US & Canada),Tijuana":20041011T223000
+       DTSTART;TZID="Pacific Time (US & Canada),Tijuana":20041011T223000
  
  To allow for compatibility with such iCalendar files you should specify the
  following system property:
  
-   ical4j.compatibility.outlook=true
+     ical4j.compatibility.outlook=true
  
  The full set of system properties may be found in
  net.fortuna.ical4j.util.CompatibilityHints.
@@ -161,23 +130,7 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
  on output of the calendar) you will be notified if the changes are invalid.
  
 
-## Pre-Java 1.4 Compatibility
 
- Choosing Java 1.4 as the minimum required JVM was initially slightly arbitrary, and
- probably based on the fact that most people were using 1.4 as a minimum.
-
- Since then, however, there are two features of 1.4 I can think of that iCal4j requires:
- 	- the URI class;
- 	- and the java.util.regex.* package (used in StringUtils).
-
- If you don't think you will be needing these features in your own code, you may want to
- try compiling iCal4j with JDK 1.4 using the "-target 1.3" option but without specifying
- an alternative "-bootclasspath" option. From what I can tell, this should generate 1.3
- bytecode that you can run on a 1.3 JVM. Note however, that if your code does cause
- iCal4j to load the URI or java.util.regex.* references then it will fail on a 1.3 JVM
- (as these APIs aren't available).
-
- 
 ## Redistribution:
 
 If you intend to use and distribute iCal4j in your own project please

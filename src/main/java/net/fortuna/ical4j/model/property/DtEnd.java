@@ -194,22 +194,6 @@ public class DtEnd extends DateProperty {
         setDate(aDate);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        super.validate();
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
-         * (";" tzidparam) /
-         */
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
-    }
-
     public static class Factory extends Content.Factory implements PropertyFactory {
         private static final long serialVersionUID = 1L;
 

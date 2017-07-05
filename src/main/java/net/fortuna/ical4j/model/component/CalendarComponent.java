@@ -33,9 +33,10 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.ValidationException;
-import net.fortuna.ical4j.model.Validator;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.validate.EmptyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 
 /**
  * $Id$
@@ -55,7 +56,7 @@ public abstract class CalendarComponent extends Component {
     /**
      * Validator instance that does nothing.
      */
-    protected static final Validator EMPTY_VALIDATOR = new EmptyValidator();
+    protected static final Validator<CalendarComponent> EMPTY_VALIDATOR = new EmptyValidator<>();
     
     /**
      * @param name component name
@@ -78,9 +79,9 @@ public abstract class CalendarComponent extends Component {
      * @throws ValidationException where the component does not comply with RFC2446
      */
     public final void validate(Method method) throws ValidationException {
-        final Validator validator = getValidator(method);
+        final Validator<CalendarComponent> validator = getValidator(method);
         if (validator != null) {
-            validator.validate();
+            validator.validate(this);
         }
         else {
             throw new ValidationException("Unsupported method: " + method);
@@ -91,7 +92,7 @@ public abstract class CalendarComponent extends Component {
      * @param method a method to validate on
      * @return a validator for the specified method or null if the method is not supported
      */
-    protected abstract Validator getValidator(Method method);
+    protected abstract Validator<CalendarComponent> getValidator(Method method);
     
     /**
      * Apply validation for METHOD=PUBLISH.
@@ -164,14 +165,5 @@ public abstract class CalendarComponent extends Component {
     public final void validateDeclineCounter() throws ValidationException {
         validate(Method.DECLINE_COUNTER);
     }
-    
-    private static class EmptyValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
 
-        public void validate() throws ValidationException {
-            // TODO Auto-generated method stub
-            
-        }
-    }
 }

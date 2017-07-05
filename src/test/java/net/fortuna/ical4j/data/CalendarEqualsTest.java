@@ -31,20 +31,19 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
-
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.util.CompatibilityHints;
-
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 /**
  * $Id: CalendarBuilderTest.java [Apr 5, 2004]
@@ -171,7 +170,7 @@ public class CalendarEqualsTest extends TestCase {
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
         
-        File[] testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        File[] testFiles = new File("src/test/resources/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             suite.addTest(new CalendarEqualsTest((File) testFiles[i], true));
         }

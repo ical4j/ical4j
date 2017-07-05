@@ -34,7 +34,12 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.*;
+import net.fortuna.ical4j.util.DecoderFactory;
+import net.fortuna.ical4j.util.EncoderFactory;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.DecoderException;
@@ -289,7 +294,7 @@ public class Attach extends Property {
         this.binary = null;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Property> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {

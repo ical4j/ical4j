@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -99,7 +99,8 @@ public class Categories extends Property {
      * Default constructor.
      */
     public Categories() {
-        super(CATEGORIES, PropertyFactoryImpl.getInstance());
+        super(CATEGORIES, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
         categories = new TextList();
     }
 
@@ -107,7 +108,8 @@ public class Categories extends Property {
      * @param aValue a value string for this component
      */
     public Categories(final String aValue) {
-        super(CATEGORIES, PropertyFactoryImpl.getInstance());
+        super(CATEGORIES, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -116,7 +118,7 @@ public class Categories extends Property {
      * @param aValue a value string for this component
      */
     public Categories(final ParameterList aList, final String aValue) {
-        super(CATEGORIES, aList, PropertyFactoryImpl.getInstance());
+        super(CATEGORIES, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -124,7 +126,8 @@ public class Categories extends Property {
      * @param cList a list of categories
      */
     public Categories(final TextList cList) {
-        super(CATEGORIES, PropertyFactoryImpl.getInstance());
+        super(CATEGORIES, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
         categories = cList;
     }
 
@@ -133,7 +136,7 @@ public class Categories extends Property {
      * @param cList a list of categories
      */
     public Categories(final ParameterList aList, final TextList cList) {
-        super(CATEGORIES, aList, PropertyFactoryImpl.getInstance());
+        super(CATEGORIES, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
         categories = cList;
     }
 
@@ -142,22 +145,6 @@ public class Categories extends Property {
      */
     public final void setValue(final String aValue) {
         categories = new TextList(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; but MUST NOT occur more than once (";" languageparam ) /
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**

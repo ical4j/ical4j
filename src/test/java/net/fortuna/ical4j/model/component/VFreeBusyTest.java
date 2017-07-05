@@ -41,7 +41,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -184,10 +184,10 @@ public class VFreeBusyTest extends CalendarComponentTest {
      * Class under test for void VFreeBusy(ComponentList)
      */
     public final void testVFreeBusyComponentList2() throws Exception {
-        FileInputStream fin = new FileInputStream("etc/samples/invalid/core.ics");
+        InputStream in = getClass().getResourceAsStream("/samples/invalid/core.ics");
 
         CalendarBuilder builder = new CalendarBuilder();
-        Calendar calendar = builder.build(fin);
+        Calendar calendar = builder.build(in);
 
         DateTime startDate = new DateTime(0);
         DateTime endDate = new DateTime();

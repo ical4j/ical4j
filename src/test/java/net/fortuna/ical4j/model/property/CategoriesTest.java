@@ -31,22 +31,19 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.PropertyTest;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
+import net.fortuna.ical4j.validate.ValidationException;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.List;
 
 /**
  * $Id$
@@ -113,7 +110,7 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        PropertyList categories = calendar.getComponent(Component.VEVENT)
+        List<Categories> categories = calendar.getComponent(Component.VEVENT)
                 .getProperties(Property.CATEGORIES);
 
         assertEquals(cat1, categories.get(0));
@@ -145,7 +142,7 @@ public class CategoriesTest extends PropertyTest {
         suite.addTest(new CategoriesTest(categories, list));
 
         // Test escaping of categories string representation..
-        Calendar calendar = Calendars.load("etc/samples/valid/categories.ics");
+        Calendar calendar = Calendars.load(CategoriesTest.class.getResource("/samples/valid/categories.ics"));
         Categories orig = (Categories) calendar.getComponent(Component.VEVENT)
                 .getProperty(Property.CATEGORIES);
 

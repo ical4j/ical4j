@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -82,7 +82,8 @@ public class RequestStatus extends Property {
      * Default constructor.
      */
     public RequestStatus() {
-        super(REQUEST_STATUS, PropertyFactoryImpl.getInstance());
+        super(REQUEST_STATUS, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
     }
 
     /**
@@ -90,7 +91,7 @@ public class RequestStatus extends Property {
      * @param aValue a value string for this component
      */
     public RequestStatus(final ParameterList aList, final String aValue) {
-        super(REQUEST_STATUS, aList, PropertyFactoryImpl.getInstance());
+        super(REQUEST_STATUS, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -101,7 +102,8 @@ public class RequestStatus extends Property {
      */
     public RequestStatus(final String aStatusCode, final String aDescription,
                          final String data) {
-        super(REQUEST_STATUS, PropertyFactoryImpl.getInstance());
+        super(REQUEST_STATUS, new ParameterList(), new OneOrLessParameterValidator(Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
@@ -115,26 +117,10 @@ public class RequestStatus extends Property {
      */
     public RequestStatus(final ParameterList aList, final String aStatusCode,
                          final String aDescription, final String data) {
-        super(REQUEST_STATUS, aList, PropertyFactoryImpl.getInstance());
+        super(REQUEST_STATUS, aList, new OneOrLessParameterValidator(Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; but MUST NOT occur more than once (";" languageparm) /
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**

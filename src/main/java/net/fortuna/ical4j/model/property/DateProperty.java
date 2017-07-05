@@ -34,8 +34,9 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -132,7 +133,7 @@ public abstract class DateProperty extends Property {
             // ensure timezone is null for VALUE=DATE properties..
             updateTimeZone(null);
             this.date = new Date(value);
-        } else {
+        } else if (value != null && !value.isEmpty()){
             this.date = new DateTime(value, timeZone);
         }
     }
@@ -165,7 +166,7 @@ public abstract class DateProperty extends Property {
      */
     @Override
     public int hashCode() {
-        return getDate().hashCode();
+        return getDate() != null ? getDate().hashCode() : 0;
     }
 
     /**
@@ -221,6 +222,15 @@ public abstract class DateProperty extends Property {
      * {@inheritDoc}
      */
     public void validate() throws ValidationException {
+
+        /*
+         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+         * (";" tzidparam) /
+         */
+
+        /*
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
+         */
 
         ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());

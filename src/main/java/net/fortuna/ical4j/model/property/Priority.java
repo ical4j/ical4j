@@ -231,13 +231,6 @@ public class Priority extends Property {
         this.level = level;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
-    }
-
     public static class Factory extends Content.Factory implements PropertyFactory {
         private static final long serialVersionUID = 1L;
 

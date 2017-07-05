@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -57,14 +57,16 @@ public class Contact extends Property implements Escapable {
      * Default constructor.
      */
     public Contact() {
-        super(CONTACT, PropertyFactoryImpl.getInstance());
+        super(CONTACT, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Contact(final String aValue) {
-        super(CONTACT, PropertyFactoryImpl.getInstance());
+        super(CONTACT, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -73,26 +75,9 @@ public class Contact extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Contact(final ParameterList aList, final String aValue) {
-        super(CONTACT, aList, PropertyFactoryImpl.getInstance());
+        super(CONTACT, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
+                PropertyFactoryImpl.getInstance());
         setValue(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" altrepparam) / (";" languageparam) /
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**

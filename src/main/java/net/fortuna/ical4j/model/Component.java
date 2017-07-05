@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -42,6 +43,7 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -117,7 +119,7 @@ public abstract class Component implements Serializable {
 
     private String name;
 
-    private PropertyList properties;
+    private PropertyList<Property> properties;
 
     /**
      * Constructs a new component containing no properties.
@@ -125,7 +127,7 @@ public abstract class Component implements Serializable {
      * @param s a component name
      */
     protected Component(final String s) {
-        this(s, new PropertyList());
+        this(s, new PropertyList<Property>());
     }
 
     /**
@@ -134,7 +136,7 @@ public abstract class Component implements Serializable {
      * @param s component name
      * @param p a list of properties
      */
-    protected Component(final String s, final PropertyList p) {
+    protected Component(final String s, final PropertyList<Property> p) {
         this.name = s;
         this.properties = p;
     }
@@ -143,7 +145,7 @@ public abstract class Component implements Serializable {
      * {@inheritDoc}
      */
     public String toString() {
-        String buffer = BEGIN +
+        return BEGIN +
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR +
@@ -152,8 +154,6 @@ public abstract class Component implements Serializable {
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR;
-
-        return buffer;
     }
 
     /**
@@ -166,7 +166,7 @@ public abstract class Component implements Serializable {
     /**
      * @return Returns the properties.
      */
-    public final PropertyList getProperties() {
+    public final PropertyList<Property> getProperties() {
         return properties;
     }
 
@@ -176,7 +176,7 @@ public abstract class Component implements Serializable {
      * @param name name of properties to retrieve
      * @return a property list containing only properties with the specified name
      */
-    public final PropertyList getProperties(final String name) {
+    public final <C extends Property> PropertyList<C> getProperties(final String name) {
         return getProperties().getProperties(name);
     }
 
@@ -188,6 +188,21 @@ public abstract class Component implements Serializable {
      */
     public final Property getProperty(final String name) {
         return getProperties().getProperty(name);
+    }
+
+    /**
+     * Convenience method for retrieving a required named property.
+     *
+     * @param name name of the property to retrieve
+     * @return the first matching property in the property list with the specified name
+     * @throws ConstraintViolationException when a property is not found
+     */
+    protected final Property getRequiredProperty(String name) throws ConstraintViolationException {
+        Property p = getProperties().getProperty(name);
+        if (p == null) {
+            throw new ConstraintViolationException(String.format("Missing %s property", name));
+        }
+        return p;
     }
 
     /**
@@ -251,9 +266,9 @@ public abstract class Component implements Serializable {
             URISyntaxException {
 
         // Deep copy properties..
-        final PropertyList newprops = new PropertyList(getProperties());
+        final PropertyList<Property> newprops = new PropertyList<Property>(getProperties());
 
-        return ComponentFactoryImpl.getInstance().createComponent(getName(),
+        return new ComponentFactoryImpl().createComponent(getName(),
                 newprops);
     }
 
@@ -310,10 +325,10 @@ public abstract class Component implements Serializable {
         } else {
             rDuration = duration.getDuration();
         }
-
+        
+        List<RDate> rDates = getProperties(Property.RDATE);
         // add recurrence dates..
-        for (Property property3 : getProperties(Property.RDATE)) {
-            final RDate rdate = (RDate) property3;
+        for (RDate rdate : rDates) {            
             final Value rdateValue = (Value) rdate.getParameter(Parameter.VALUE);
             if (Value.PERIOD.equals(rdateValue)) {
                 for (final Period rdatePeriod : rdate.getPeriods()) {

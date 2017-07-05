@@ -1,68 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
-		<artifactId>mnode-parent</artifactId>
-		<groupId>org.mnode</groupId>
-		<version>1.22</version>
+		<groupId>net.oneandone.maven.poms</groupId>
+		<artifactId>foss-parent</artifactId>
+		<version>1.5.6</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.mnode.ical4j</groupId>
+	<groupId>net.oneandone.ical4j</groupId>
 	<artifactId>ical4j</artifactId>
-	<name>iCal4j</name>
-	<version>2.0-alpha2-SNAPSHOT</version>
-	<description>
-		A Java library for reading and writing iCalendar (*.ics) files
-	</description>
-	<url>http://ical4j.sourceforge.net</url>
+	<name>ical4j</name>
+	<version>2.0.4-SNAPSHOT</version>
+	<description />
 
-    <prerequisites>
-        <maven>2.2.1</maven>
-    </prerequisites>
+	<properties>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Dependencies versions. -->
+		<slf4j.version>1.7.10</slf4j.version>
+		<commons-codec.version>1.9</commons-codec.version>
+		<commons-lang3.version>3.3.2</commons-lang3.version>
+		<commons-io.version>2.4</commons-io.version>
 
-	<issueManagement>
-		<system>SourceForge.net</system>
-		<url>https://sourceforge.net/tracker/?group_id=107024</url>
-	</issueManagement>
-	<inceptionYear>2004</inceptionYear>
-	<licenses>
-		<license>
-            <name>${project.name} - License</name>
-			<url>${project.scm.url}/raw-file/tip/LICENSE</url>
-		</license>
-	</licenses>
+		<!-- Deactivate checkstyle, findbugs, jacoco and pmd -->
+		<checkstyle.skip>true</checkstyle.skip>
+		<findbugs.skip>true</findbugs.skip>
+		<jacoco.skip>true</jacoco.skip>
+		<pmd.skip>true</pmd.skip>
+		<cpd.skip>true</cpd.skip>
+		<enforcer.skip>true</enforcer.skip>
+		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+		<additionalparam>-Xdoclint:none</additionalparam>
+	</properties>
+
 
 	<scm>
-        <connection>scm:git:https://github.com/ical4j/ical4j.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com:ical4j/ical4j.git</developerConnection>
-        <url>https://github.com/ical4j/ical4j</url>
+		<developerConnection>scm:git:ssh://git@github.com/1and1/ical4j.git</developerConnection>
+		<connection>scm:git:ssh://git@github.com/1and1/ical4j.git</connection>
+		<tag>HEAD</tag>
 	</scm>
 
-	<contributors>
-		<contributor>
-			<name>Mike Douglass</name>
-			<organization>
-				Rensselaer Polytechnic Institute
-			</organization>
-			<organizationUrl>http://www.rpi.edu</organizationUrl>
-		</contributor>
-		<contributor>
-			<name>Randy Letness</name>
-			<organization>
-				Open Source Applications Foundation
-			</organization>
-			<organizationUrl>
-				http://www.osafoundation.org
-			</organizationUrl>
-		</contributor>
-		<contributor>
-			<name>Arnaud Quillaud</name>
-			<organization>Oracle Inc.</organization>
-			<organizationUrl>
-                http://www.oracle.com
-            </organizationUrl>
-		</contributor>
-	</contributors>
-    
 	<build>
 		<resources>
 			<resource>
@@ -77,16 +54,19 @@
 			</resource>
 			<resource>
 				<directory>src/main/resources</directory>
-				<includes>
-				    <include>overview.html</include>
-				    <include>net/**</include>
-					<include>META-INF/services/org.codehaus.groovy.runtime.ExtensionModule</include>
-				</includes>
 				<filtering>true</filtering>
+				<includes>
+					<include>overview.html</include>
+					<include>net/**</include>
+					<include>**/*.json</include>
+					<include>**/*.sh</include>
+					<include>META-INF/**</include>
+				</includes>
 			</resource>
 		</resources>
 
 		<plugins>
+
 			<plugin>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
@@ -94,172 +74,65 @@
 						<include>**/*Test.java</include>
 						<include>**/*Spec.java</include>
 					</includes>
-					<excludes>
-						<exclude>**/CalendarOutputterTest.java</exclude>
-					</excludes>
 				</configuration>
 			</plugin>
-			
-            <plugin>
-                <groupId>com.mycila.maven-license-plugin</groupId>
-                <artifactId>maven-license-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>**/*.ics</exclude>
-                        <exclude>**/*.alias</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-              <artifactId>maven-jar-plugin</artifactId>
-              <configuration>
-                <archive>  
-                  <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-                </archive> 
-              </configuration>
-            </plugin>  
-
 			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-bundle-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>bundle-manifest</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>manifest</goal>
-						</goals>
-					</execution>
-				</executions>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<inherited>true</inherited>
 				<configuration>
-					<instructions>
-						<Export-Package>net.fortuna.ical4j.*</Export-Package>
-						<Import-Package>net.fortuna.ical4j.*,org.apache.commons.lang3.*,org.apache.commons.logging,*;resolution:=optional</Import-Package>
-					</instructions>
+					<encoding>UTF-8</encoding>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+					<meminitial>1024m</meminitial>
+					<maxmem>2024m</maxmem>
 				</configuration>
 			</plugin>
-			
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
+				<artifactId>maven-license-plugin</artifactId>
+				<groupId>com.mycila.maven-license-plugin</groupId>
 				<executions>
 					<execution>
-						<id>unpack-shared-resources</id>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<phase>generate-resources</phase>
-						<configuration>
-							<outputDirectory>${project.build.directory}/mnode-tools</outputDirectory>
-							<includeArtifacIds>mnode-tools</includeArtifacIds>
-							<includeGroupIds>${project.parent.groupId}</includeGroupIds>
-							<excludeTransitive>true</excludeTransitive>
-						</configuration>
+						<phase>none</phase>
 					</execution>
 				</executions>
 			</plugin>
-
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/main/assembly/bin-assembly.xml</descriptor>
-						<descriptor>src/main/assembly/src-assembly.xml</descriptor>
-					</descriptors>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id>
-						<phase>site-deploy</phase>
-						<goals>
-							<goal>attached</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-            
-            <!-- http://maven.apache.org/plugins/maven-enforcer-plugin/plugin-info.html -->
-            <plugin>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.2</version>
-                <executions>
-                    <execution>
-                        <id>enforce-sane-versions</id>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requirePluginVersions />
-                                <dependencyConvergence />
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>            
 		</plugins>
-        
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-dependency-plugin</artifactId>
-                    <version>2.1</version>
-                </plugin>        
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.4</version>
-                </plugin>        
-                <plugin>
-                    <artifactId>maven-install-plugin</artifactId>
-                    <version>2.4</version>
-                </plugin>        
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
-                </plugin>        
-                <plugin>
-                    <artifactId>maven-clean-plugin</artifactId>
-                    <version>2.5</version>
-                </plugin>        
-                <plugin>
-                    <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.7</version>
-                </plugin>        
-                <plugin>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.4</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.mycila.maven-license-plugin</groupId>
-                    <artifactId>maven-license-plugin</artifactId>
-                    <version>1.10.b1</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
 	</build>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<scope>test</scope>
-		</dependency>
-
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
-			<version>1.6</version>
+			<version>${commons-codec.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.1</version>
+			<version>${commons-lang3.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.threeten</groupId>
+			<artifactId>threetenbp</artifactId>
+			<version>1.3.3</version>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -268,155 +141,10 @@
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.3</version>
+			<version>${commons-io.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.spockframework</groupId>
-			<artifactId>spock-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.quartz-scheduler</groupId>
-			<artifactId>quartz</artifactId>
-			<version>2.1.5</version>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.ccil.cowan.tagsoup</groupId>
-			<artifactId>tagsoup</artifactId>
-			<version>1.2.1</version>
-			<scope>test</scope>
-		</dependency>
-		
-		<!-- Shared tool resources -->
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>mnode-tools</artifactId>
-            <version>${project.parent.version}</version>
-            <classifier>resources</classifier>
-            <type>zip</type>
-            <scope>provided</scope>
-        </dependency>
 
-        <dependency>
-            <groupId>biz.aQute.bnd</groupId>
-            <artifactId>bndlib</artifactId>
-            <version>2.2.0</version>
-            <scope>provided</scope>
-        </dependency>
+
 	</dependencies>
-
-	<reporting>
-		<plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <overview>
-                        ${project.build.outputDirectory}/overview.html
-                    </overview>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-		<version>${surefire.version}</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${checkstyle.version}</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>${pmd.version}</version>
-                <configuration>
-                    <linkXref>true</linkXref>
-                    <targetJdk>1.5</targetJdk>
-                    <rulesets>
-                        <ruleset>${project.build.directory}/mnode-tools/pmd/mnode_ruleset.xml</ruleset>
-                    </rulesets>
-                </configuration>
-            </plugin>
- 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jdepend-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-            </plugin>
- 
- <!-- XXX: disabled for initial mnode release
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>clirr-maven-plugin</artifactId>
-				<configuration>
-					<minSeverity>info</minSeverity>
-					<comparisonVersion>1.0.1</comparisonVersion>
-				</configuration>
-			</plugin>
- -->
-<!-- XXX: we don't really need to generate a changelog as hgweb has a pretty good one by default
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-changelog-plugin</artifactId>
-				<configuration>
-					<dateFormat>EEE MMM dd hh:mm:ss yyyy Z</dateFormat>
-				</configuration>
-				<reportSets>
-					<reportSet>
-						<id>changelog</id>
-						<!-
-						<configuration>
-							<type>tag</type>
-							<tags>
-								<tag implementation="java.lang.String">
-									ical4j-1_0
-								</tag>
-								<tag implementation="java.lang.String">
-									ical4j-1_0_1
-								</tag>
-							</tags>
-						</configuration>
-						 ->
-						<reports>
-							<report>changelog</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
- -->
-		</plugins>
-	</reporting>
-    
-    <dependencyManagement>
-        <dependencies>
-            <!-- force dependency convergence -->
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-core</artifactId>
-                <version>1.3</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 </project>

@@ -75,7 +75,7 @@ public class SummaryTest extends PropertyTest {
     public static TestSuite suite() throws IOException, ParserException {
     	TestSuite suite = new TestSuite();
     	// Test correct parsing of quoted text..
-        Calendar calendar = Calendars.load("etc/samples/valid/mansour.ics");
+        Calendar calendar = Calendars.load(SummaryTest.class.getResource("/samples/valid/mansour.ics"));
         Component event = calendar.getComponent(Component.VEVENT);
         Summary summary = (Summary) event.getProperty(Property.SUMMARY);
         suite.addTest(new SummaryTest(summary, "A colon with spaces on either side : like that"));

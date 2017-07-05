@@ -35,7 +35,12 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.apache.commons.collections4.Closure;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Arrays;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -112,12 +117,12 @@ public class Available extends Component {
         /*
          * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
          */
-        PropertyValidator.getInstance().assertOne(Property.DTSTART,
-                getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
-                getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID,
-                getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertOne(input, getProperties());
+            }
+        });
 
         /*       If specified, the "DTSTART" and "DTEND" properties in
          *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
@@ -137,16 +142,13 @@ public class Available extends Component {
          *               created / last-mod / recurid / rrule /
          *               summary /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.RRULE,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY,
-                getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.CREATED, Property.LAST_MODIFIED, Property.RECURRENCE_ID,
+                Property.RRULE, Property.SUMMARY), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
+            }
+        });
 
         /*
          ; either a 'dtend' or a 'duration' is required

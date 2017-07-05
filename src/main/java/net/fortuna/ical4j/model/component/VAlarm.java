@@ -33,7 +33,10 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.component.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -193,13 +196,13 @@ public class VAlarm extends CalendarComponent {
 
     private final Map<Action, Validator> actionValidators = new HashMap<Action, Validator>();
     {
-        actionValidators.put(Action.AUDIO, new AudioValidator());
-        actionValidators.put(Action.DISPLAY, new DisplayValidator());
-        actionValidators.put(Action.EMAIL, new EmailValidator());
-        actionValidators.put(Action.PROCEDURE, new ProcedureValidator());
+        actionValidators.put(Action.AUDIO, new VAlarmAudioValidator());
+        actionValidators.put(Action.DISPLAY, new VAlarmDisplayValidator());
+        actionValidators.put(Action.EMAIL, new VAlarmEmailValidator());
+        actionValidators.put(Action.PROCEDURE, new VAlarmProcedureValidator());
     }
     
-    private final Validator itipValidator = new ITIPValidator();
+    private final Validator itipValidator = new VAlarmITIPValidator();
     
     /**
      * Default constructor.
@@ -268,7 +271,7 @@ public class VAlarm extends CalendarComponent {
         
         final Validator actionValidator = actionValidators.get(getAction());
         if (actionValidator != null) {
-            actionValidator.validate();
+            actionValidator.validate(this);
         }
         
         if (recurse) {
@@ -282,122 +285,7 @@ public class VAlarm extends CalendarComponent {
     protected Validator getValidator(Method method) {
         return itipValidator;
     }
-    
-    private class AudioValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
 
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
-            /*
-             * ; the following is optional, ; but MUST NOT occur more than once attach /
-             */
-            PropertyValidator.getInstance().assertOneOrLess(Property.ATTACH, getProperties());
-        }
-    }
-
-    private class DisplayValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
-
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
-            /*
-             * ; the following are all REQUIRED, ; but MUST NOT occur more than once action / description / trigger /
-             */
-            PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
-        }
-    }
-
-    private class EmailValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
-
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
-            /*
-             * ; the following are all REQUIRED, 
-             * ; but MUST NOT occur more than once action / description / trigger / summary 
-             * ; the following is REQUIRED, 
-             * ; and MAY occur more than once attendee / 
-             * ; 'duration' and 'repeat' are both optional, 
-             * ; and MUST NOT occur more than once each, 
-             * ; but if one occurs, so MUST the other duration / repeat / 
-             * ; the following are optional, 
-             * ; and MAY occur more than once attach / x-prop
-             */
-            PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.SUMMARY, getProperties());
-
-            PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, getProperties());
-        }
-    }
-
-    private class ProcedureValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
-
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
-            /*
-             * ; the following are all REQUIRED, 
-             * ; but MUST NOT occur more than once action / attach / trigger / 
-             * ; 'duration' and 'repeat' are both optional, 
-             * ; and MUST NOT occur more than once each, 
-             * ; but if one occurs, so MUST the other duration / repeat / 
-             * ; 'description' is optional, 
-             * ; and MUST NOT occur more than once description / 
-             * ; the following is optional, ; and MAY occur more than once x-prop
-             */
-            PropertyValidator.getInstance().assertOne(Property.ATTACH, getProperties());
-
-            PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
-        }
-    }
-
-    /**
-     * Common validation for all iTIP methods.
-     * 
-     * <pre>
-     * Component/Property  Presence
-     * ------------------- ----------------------------------------------
-     * VALARM              0+
-     *     ACTION          1
-     *     ATTACH          0+
-     *     DESCRIPTION     0 or 1
-     *     DURATION        0 or 1  if present REPEAT MUST be present
-     *     REPEAT          0 or 1  if present DURATION MUST be present
-     *     SUMMARY         0 or 1
-     *     TRIGGER         1
-     *     X-PROPERTY      0+
-     * </pre>
-     */
-    private class ITIPValidator implements Validator {
-        
-		private static final long serialVersionUID = 1L;
-
-        /**
-         * {@inheritDoc}
-         */
-        public void validate() throws ValidationException {
-            PropertyValidator.getInstance().assertOne(Property.ACTION, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.TRIGGER, getProperties());
-            
-            PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT, getProperties());
-            PropertyValidator.getInstance().assertOneOrLess(Property.SUMMARY, getProperties());
-        }
-    }
-    
     /**
      * Returns the mandatory action property.
      * @return the ACTION property or null if not specified

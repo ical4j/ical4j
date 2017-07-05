@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -57,14 +57,16 @@ public class RelatedTo extends Property implements Escapable {
      * Default constructor.
      */
     public RelatedTo() {
-        super(RELATED_TO, PropertyFactoryImpl.getInstance());
+        super(RELATED_TO, new ParameterList(), new OneOrLessParameterValidator(Parameter.RELTYPE),
+                PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public RelatedTo(final String aValue) {
-        super(RELATED_TO, PropertyFactoryImpl.getInstance());
+        super(RELATED_TO, new ParameterList(), new OneOrLessParameterValidator(Parameter.RELTYPE),
+                PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -73,24 +75,8 @@ public class RelatedTo extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public RelatedTo(final ParameterList aList, final String aValue) {
-        super(RELATED_TO, aList, PropertyFactoryImpl.getInstance());
+        super(RELATED_TO, aList, new OneOrLessParameterValidator(Parameter.RELTYPE), PropertyFactoryImpl.getInstance());
         setValue(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; but MUST NOT occur more than once (";" reltypeparam) /
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.RELTYPE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparm)
-         */
     }
 
     /**

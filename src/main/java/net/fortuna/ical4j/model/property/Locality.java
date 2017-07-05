@@ -80,16 +80,6 @@ public class Locality extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
