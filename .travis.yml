@@ -19,21 +19,22 @@ before_install:
   - docker run -v $(pwd)/src/main/resources/zoneinfo:/zoneinfo -it benfortuna/tzurl rsync -av --delete /usr/local/apache2/htdocs/zoneinfo /
   - docker run -v $(pwd)/src/main/resources/zoneinfo-global:/zoneinfo-global -it benfortuna/tzurl rsync -av --delete /usr/local/apache2/htdocs/zoneinfo-global /
 script:
-  - ./gradlew check jacocoTestReport
+  - ./gradlew build jacocoTestReport
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-deploy:
-  provider: releases
-  api_key:
-    secure: DpTp3xxZrKP21I13G8dYY5EBra5tcf9TsF1y9oLRdOSoVvUe0XaOQ+9WPG2RgnuH1DPVj1n2Rr6emAZ84lSzz4H7T8gPYP4pLjmJBGyriGC7N3MTG2FCBn5l6DgTKNLxtfpek/b7nClif6vVTEse/T8/9an/Yszp9bbIZNNwStE=
-  file:
-    - build/distributions/ical4j-$TRAVIS_TAG.zip
-    - build/distributions/ical4j-$TRAVIS_TAG.tgz
-  skip_cleanup: true
-  on:
-    tags: true
-    jdk: openjdk7
-before_deploy: "./gradlew assembleMainDist"
+  - GIT_BRANCH=$TRAVIS_BRANCH etc/scripts/tag-release.sh
+#deploy:
+#  provider: releases
+#  api_key:
+#    secure: DpTp3xxZrKP21I13G8dYY5EBra5tcf9TsF1y9oLRdOSoVvUe0XaOQ+9WPG2RgnuH1DPVj1n2Rr6emAZ84lSzz4H7T8gPYP4pLjmJBGyriGC7N3MTG2FCBn5l6DgTKNLxtfpek/b7nClif6vVTEse/T8/9an/Yszp9bbIZNNwStE=
+#  file:
+#    - build/distributions/ical4j-$TRAVIS_TAG.zip
+#    - build/distributions/ical4j-$TRAVIS_TAG.tgz
+#  skip_cleanup: true
+#  on:
+#    tags: true
+#    jdk: openjdk7
+#before_deploy: "./gradlew assembleMainDist"
 addons:
   hostname: travis-ci
 after_script:
