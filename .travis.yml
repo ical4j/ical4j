@@ -20,7 +20,7 @@ script:
   - ./gradlew build jacocoTestReport
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  - GIT_BRANCH=$TRAVIS_BRANCH etc/scripts/tag-release.sh
+  - etc/scripts/tag-release.sh
 #deploy:
 #  provider: releases
 #  api_key:
