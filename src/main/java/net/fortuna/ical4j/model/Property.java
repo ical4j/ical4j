@@ -450,16 +450,6 @@ public abstract class Property extends Content {
     }
 
     /**
-     * Indicates whether this property is a calendar property.
-     * 
-     * @return boolean
-     */
-    public boolean isCalendarProperty() {
-        return PRODID.equalsIgnoreCase(getName()) || VERSION.equalsIgnoreCase(getName())
-                || CALSCALE.equalsIgnoreCase(getName()) || METHOD.equalsIgnoreCase(getName());
-    }
-
-    /**
      * @return Returns the name.
      */
     public final String getName() {
