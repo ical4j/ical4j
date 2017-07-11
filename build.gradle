@@ -189,6 +189,18 @@ publishing {
     publications {
         mavenArtifacts(MavenPublication) {
             from components.java
+            artifact javadocJar
+            artifact sourcesJar
+            pom.withXml {
+                asNode().appendNode('name', project.name)
+                asNode().appendNode('description', project.description)
+                asNode().appendNode('url', 'http://ical4j.github.io')
+                
+                def scmNode = asNode().appendNode('scm')
+                scmNode.appendNode('url', 'https://github.com/ical4j/ical4j')
+                scmNode.appendNode('connection', 'scm:git@github.com:ical4j/ical4j.git')
+                scmNode.appendNode('developerConnection', 'scm:git@github.com:ical4j/ical4j.git')
+            }
         }
     }
 }
@@ -210,12 +222,12 @@ bintray {
             gpg {
                 sign = isReleaseVersion
             }
-//            mavenCentralSync {
-//                sync = isReleaseVersion
-//                user = 'userToken' //OSS user token: mandatory
-//                password = 'paasword' //OSS user password: mandatory
-//                close = '0' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
-//            }
+            mavenCentralSync {
+                sync = isReleaseVersion
+                user = sonatype_username //OSS user token: mandatory
+                password = sonatype_password //OSS user password: mandatory
+                close = '0' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+            }
         }
     }
 //    configurations = ['archives']
