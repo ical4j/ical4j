@@ -46,7 +46,7 @@ import net.fortuna.ical4j.model.property.Sequence;
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class PublishTransformer extends Transformer {
+public class PublishTransformer implements Transformer<Calendar> {
 
     /**
      * {@inheritDoc}
