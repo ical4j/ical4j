@@ -51,6 +51,8 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.List;
 
+import static net.fortuna.ical4j.model.Calendar.Token.*;
+
 /**
  * $Id$ [Apr 5, 2004]
  *
@@ -122,20 +124,22 @@ public class Calendar implements Serializable {
 
     private static final long serialVersionUID = -1654118204678581940L;
 
-    /**
-     * Begin token.
-     */
-    public static final String BEGIN = "BEGIN";
+    public enum Token {
+        /**
+         * Begin token.
+         */
+        BEGIN,
 
-    /**
-     * Calendar token.
-     */
-    public static final String VCALENDAR = "VCALENDAR";
+        /**
+         * Calendar token.
+         */
+        VCALENDAR,
 
-    /**
-     * End token.
-     */
-    public static final String END = "END";
+        /**
+         * End token.
+         */
+        END;
+    }
 
     private final PropertyList<Property> properties;
 
@@ -197,16 +201,16 @@ public class Calendar implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        return BEGIN +
-                ':' +
-                VCALENDAR +
-                Strings.LINE_SEPARATOR +
-                getProperties() +
-                getComponents() +
-                END +
-                ':' +
-                VCALENDAR +
-                Strings.LINE_SEPARATOR;
+        return new StringBuilder().append(BEGIN)
+                .append(':')
+                .append(VCALENDAR)
+                .append(Strings.LINE_SEPARATOR)
+                .append(getProperties())
+                .append(getComponents())
+                .append(END)
+                .append(':')
+                .append(VCALENDAR)
+                .append(Strings.LINE_SEPARATOR).toString();
     }
 
     /**

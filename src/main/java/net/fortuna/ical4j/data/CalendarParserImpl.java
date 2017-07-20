@@ -42,6 +42,9 @@ import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 
+import static net.fortuna.ical4j.model.Calendar.Token.BEGIN;
+import static net.fortuna.ical4j.model.Calendar.Token.VCALENDAR;
+
 /**
  * <pre>
  * $Id$
@@ -105,7 +108,7 @@ public class CalendarParserImpl implements CalendarParser {
 
         assertToken(tokeniser, in, ':');
 
-        assertToken(tokeniser, in, Calendar.VCALENDAR, true, false);
+        assertToken(tokeniser, in, VCALENDAR, true, false);
 
         assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
 
@@ -122,10 +125,11 @@ public class CalendarParserImpl implements CalendarParser {
 
         assertToken(tokeniser, in, ':');
 
-        assertToken(tokeniser, in, Calendar.VCALENDAR, true, false);
+        assertToken(tokeniser, in, VCALENDAR, true, false);
 
         handler.endCalendar();
     }
+
     /**
      * {@inheritDoc}
      */
@@ -175,7 +179,7 @@ public class CalendarParserImpl implements CalendarParser {
             URISyntaxException, ParserException {
 
         // BEGIN:VCALENDAR
-        int ntok = assertToken(tokeniser, in, Calendar.BEGIN, false, true);
+        int ntok = assertToken(tokeniser, in, BEGIN, false, true);
         while (ntok != StreamTokenizer.TT_EOF) {
             parseCalendar(tokeniser, in, handler);
             ntok = absorbWhitespace(tokeniser, in);
@@ -184,16 +188,18 @@ public class CalendarParserImpl implements CalendarParser {
 
     /**
      * Parses an iCalendar property list from the specified stream tokeniser.
-     *
-     * @param tokeniser
-     * @throws IOException
-     * @throws ParseException
-     * @throws URISyntaxException
-     * @throws URISyntaxException
-     * @throws ParserException
      */
     private class PropertyListParser {
 
+        /**
+         * @param tokeniser
+         * @param in
+         * @param handler
+         * @throws IOException
+         * @throws ParseException
+         * @throws URISyntaxException
+         * @throws ParserException
+         */
         public void parse(final StreamTokenizer tokeniser, Reader in,
                           final ContentHandler handler) throws IOException, ParseException,
                 URISyntaxException, ParserException {
@@ -219,12 +225,6 @@ public class CalendarParserImpl implements CalendarParser {
 
     /**
      * Parses an iCalendar property from the specified stream tokeniser.
-     *
-     * @param tokeniser
-     * @throws IOException
-     * @throws ParserException
-     * @throws URISyntaxException
-     * @throws ParseException
      */
     private class PropertyParser {
 
@@ -232,6 +232,15 @@ public class CalendarParserImpl implements CalendarParser {
 
         private static final String PARSE_EXCEPTION_MESSAGE = "Property [{0}]";
 
+        /**
+         * @param tokeniser
+         * @param in
+         * @param handler
+         * @throws IOException
+         * @throws ParserException
+         * @throws URISyntaxException
+         * @throws ParseException
+         */
         private void parse(final StreamTokenizer tokeniser, Reader in,
                            final ContentHandler handler) throws IOException, ParserException,
                 URISyntaxException, ParseException {
@@ -294,14 +303,17 @@ public class CalendarParserImpl implements CalendarParser {
 
     /**
      * Parses a list of iCalendar parameters by parsing the specified stream tokeniser.
-     *
-     * @param tokeniser
-     * @throws IOException
-     * @throws ParserException
-     * @throws URISyntaxException
      */
     private class ParameterListParser {
 
+        /**
+         * @param tokeniser
+         * @param in
+         * @param handler
+         * @throws IOException
+         * @throws ParserException
+         * @throws URISyntaxException
+         */
         public void parse(final StreamTokenizer tokeniser, Reader in,
                           final ContentHandler handler) throws IOException, ParserException,
                 URISyntaxException {
@@ -312,15 +324,16 @@ public class CalendarParserImpl implements CalendarParser {
         }
     }
 
-    /**
-     * @param tokeniser
-     * @param handler
-     * @throws IOException
-     * @throws ParserException
-     * @throws URISyntaxException
-     */
     private class ParameterParser {
 
+        /**
+         * @param tokeniser
+         * @param in
+         * @param handler
+         * @throws IOException
+         * @throws ParserException
+         * @throws URISyntaxException
+         */
         private void parse(final StreamTokenizer tokeniser, Reader in,
                            final ContentHandler handler) throws IOException, ParserException,
                 URISyntaxException {
@@ -373,15 +386,18 @@ public class CalendarParserImpl implements CalendarParser {
 
     /**
      * Parses an iCalendar component list from the specified stream tokeniser.
-     *
-     * @param tokeniser
-     * @throws IOException
-     * @throws ParseException
-     * @throws URISyntaxException
-     * @throws ParserException
      */
     private class ComponentListParser {
 
+        /**
+         * @param tokeniser
+         * @param in
+         * @param handler
+         * @throws IOException
+         * @throws ParseException
+         * @throws URISyntaxException
+         * @throws ParserException
+         */
         private void parse(final StreamTokenizer tokeniser, Reader in,
                            final ContentHandler handler) throws IOException, ParseException,
                 URISyntaxException, ParserException {
@@ -396,15 +412,18 @@ public class CalendarParserImpl implements CalendarParser {
 
     /**
      * Parses an iCalendar component from the specified stream tokeniser.
-     *
-     * @param tokeniser
-     * @throws IOException
-     * @throws ParseException
-     * @throws URISyntaxException
-     * @throws ParserException
      */
     private class ComponentParser {
 
+        /**
+         * @param tokeniser
+         * @param in
+         * @param handler
+         * @throws IOException
+         * @throws ParseException
+         * @throws URISyntaxException
+         * @throws ParserException
+         */
         private void parse(final StreamTokenizer tokeniser, Reader in,
                            final ContentHandler handler) throws IOException, ParseException,
                 URISyntaxException, ParserException {
@@ -437,7 +456,7 @@ public class CalendarParserImpl implements CalendarParser {
 
             assertToken(tokeniser, in, ':');
 
-            assertToken(tokeniser, in, name);
+            assertToken(tokeniser, in, name, false, false);
 
             assertToken(tokeniser, in, StreamTokenizer.TT_EOL);
 
@@ -477,9 +496,16 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws IOException
      * @throws ParserException
      */
-    private int assertToken(final StreamTokenizer tokeniser, Reader in, final String token)
+    private int assertToken(final StreamTokenizer tokeniser, Reader in, final Calendar.Token token)
             throws IOException, ParserException {
-        return assertToken(tokeniser, in, token, false, false);
+        return assertToken(tokeniser, in, token.toString(), false, false);
+    }
+
+    private int assertToken(final StreamTokenizer tokeniser, Reader in,
+                            final Calendar.Token token, final boolean ignoreCase, final boolean isBeginToken) throws IOException,
+            ParserException {
+
+        return assertToken(tokeniser, in, token.toString(), ignoreCase, isBeginToken);
     }
 
     /**
@@ -495,7 +521,7 @@ public class CalendarParserImpl implements CalendarParser {
      * @throws ParserException when next token in the stream does not match the expected token
      */
     private int assertToken(final StreamTokenizer tokeniser, Reader in,
-            final String token, final boolean ignoreCase, final boolean isBeginToken) throws IOException,
+                            final String token, final boolean ignoreCase, final boolean isBeginToken) throws IOException,
             ParserException {
 
         // ensure next token is a word token..
@@ -510,7 +536,7 @@ public class CalendarParserImpl implements CalendarParser {
         }
 
         if (ignoreCase) {
-            if (!token.equalsIgnoreCase(sval)) {
+            if (!token.toString().equalsIgnoreCase(sval)) {
                 throw new ParserException(MessageFormat.format(UNEXPECTED_TOKEN_MESSAGE, token, sval), getLineNumber(tokeniser, in));
             }
         }
@@ -559,8 +585,8 @@ public class CalendarParserImpl implements CalendarParser {
      */
     private String getSvalIgnoringBom(StreamTokenizer tokeniser, Reader in, String token) throws ParserException, IOException {
         if(tokeniser.sval != null) {
-            if(tokeniser.sval.contains(token)) {
-                return token;
+            if(tokeniser.sval.contains(token.toString())) {
+                return token.toString();
             }
         }
         return tokeniser.sval;
