@@ -70,15 +70,10 @@ public class Filter<T> {
     private int type;
 
     /**
-     * Constructor.
-     *
-     * @param rule a rule that defines this filter
-     * @deprecated Prior implementations of this class did not work as advertised, so
-     * to avoid confusion please use constructors that explicitly specify the desired behaviour
+     * @param rules one or more rules that are applied by this filter
      */
-    @SuppressWarnings("unchecked")
-    public Filter(final Rule<T> rule) {
-        this(new Rule[]{rule}, MATCH_ANY);
+    public Filter(Rule<T>... rules) {
+        this(rules, MATCH_ANY);
     }
 
     /**
@@ -89,7 +84,7 @@ public class Filter<T> {
      * @see Filter#MATCH_ALL
      * @see Filter#MATCH_ANY
      */
-    public Filter(final Rule<T>[] rules, final int type) {
+    public Filter(Rule<T>[] rules, final int type) {
         this.rules = Arrays.asList(rules);
         this.type = type;
     }
