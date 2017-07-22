@@ -44,7 +44,7 @@ import net.fortuna.ical4j.model.PropertyList;
  * matching only on the value of the property.
  * @author Ben Fortuna
  */
-public class HasPropertyRule implements Rule<Component> {
+public class HasPropertyRule<T extends Component> implements Rule<T> {
 
     private Property property;
 
