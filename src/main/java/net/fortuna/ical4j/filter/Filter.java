@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.filter;
 
+import org.apache.commons.collections4.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,14 +66,14 @@ public class Filter<T> {
      */
     public static final int MATCH_ALL = 2;
 
-    private List<Rule<T>> rules;
+    private List<Predicate<T>> rules;
 
     private int type;
 
     /**
      * @param rules one or more rules that are applied by this filter
      */
-    public Filter(Rule<T>... rules) {
+    public Filter(Predicate<T>... rules) {
         this(rules, MATCH_ANY);
     }
 
@@ -84,7 +85,7 @@ public class Filter<T> {
      * @see Filter#MATCH_ALL
      * @see Filter#MATCH_ANY
      */
-    public Filter(Rule<T>[] rules, final int type) {
+    public Filter(Predicate<T>[] rules, final int type) {
         this.rules = Arrays.asList(rules);
         this.type = type;
     }
@@ -122,7 +123,7 @@ public class Filter<T> {
         List<T> temp = new ArrayList<T>();
         for (int n = 0; n < getRules().length; n++) {
             for (final T o : list) {
-                if (getRules()[n].match(o)) {
+                if (getRules()[n].evaluate(o)) {
                     temp.add(o);
                 }
             }
@@ -136,7 +137,7 @@ public class Filter<T> {
         final List<T> matches = new ArrayList<T>();
         for (T o : c) {
             for (int n = 0; n < getRules().length; n++) {
-                if (getRules()[n].match(o)) {
+                if (getRules()[n].evaluate(o)) {
                     matches.add(o);
                     break;
                 }
@@ -168,14 +169,14 @@ public class Filter<T> {
      * @return Returns the rules.
      */
     @SuppressWarnings("unchecked")
-    public final Rule<T>[] getRules() {
-        return rules.toArray(new Rule[rules.size()]);
+    public final Predicate<T>[] getRules() {
+        return rules.toArray(new Predicate[rules.size()]);
     }
 
     /**
      * @param rules The rules to set.
      */
-    public final void setRules(final Rule<T>[] rules) {
+    public final void setRules(final Predicate<T>[] rules) {
         this.rules = Arrays.asList(rules);
     }
 }
