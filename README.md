@@ -24,10 +24,9 @@
 
 [Reference]: #reference
 [Specifications]: #specifications
-[Compatibility Hints]: #compatibility-hints
 
 [Configuration]: #configuration
-[Relaxed parsing]: #relaxed-parsing
+[Compatibility Hints]: #compatibility-hints
 
 [Limitations]: #limitations
 
@@ -48,8 +47,8 @@
     - [Examples - common usage scenarios][Examples]
 4. [Reference - Specification][Reference]
     - [Specifications]
-    - [Compatibility Hints]
 5. [Configuration options][Configuration]
+    - [Compatibility Hints]
 6. [Limitations - CUA compatibility, etc.][Limitations]
 7. [Development - Guide for contributing to the iCalj project][Development]
     - [Building with Gradle]
@@ -125,25 +124,6 @@ is used only to generate version information in the javadoc API documentation.
 * [RFC5546] (Supersedes [RFC2446])
 * [RFC5547] (Supersedes [RFC2447])
 
-### Compatibility Hints
-
-    net.fortuna.ical4j.timezone.date.floating={true|false}
-    
-    ical4j.unfolding.relaxed={true|false}
-    
-    ical4j.parsing.relaxed={true|false}
-    
-    ical4j.validation.relaxed={true|false}
-    
-    ical4j.compatibility.outlook={true|false}
-
-Behaviour:
-
-* Enforces a folding length of 75 characters (by default ical4j will fold at 73 characters)
-* Allows for spaces when parsing a WEEKDAY list
-
-    ical4j.compatibility.notes={true|false}
-
 ## Configuration
 
     net.fortuna.ical4j.parser=net.fortuna.ical4j.data.HCalendarParserFactory
@@ -158,15 +138,25 @@ Behaviour:
 
     net.fortuna.ical4j.recur.maxincrementcount=1000
 
+
+### Compatibility Hints
  
-### Relaxed Parsing
+#### Relaxed Parsing
+    
+    ical4j.parsing.relaxed={true|false}
 
  iCal4j now has the capability to "relax" its parsing rules to enable parsing of
  *.ics files that don't properly conform to the iCalendar specification (RFC2445)
  
- - You can relax iCal4j's unfolding rules by specifying the following system property:
+ This property is intended as a general relaxation of parsing rules to allow for parsing
+ otherwise invalid calendar files. Initially enabling this property will allow for the
+ creation of properties and components with illegal names (e.g. Mozilla Calendar's "X"
+ property). Note that although this will allow for parsing calendars with illegal names,
+ validation will still identify such names as an error in the calendar model.
  
-       ical4j.unfolding.relaxed=true
+ - You can relax iCal4j's unfolding rules by specifying the following system property:
+    
+        ical4j.unfolding.relaxed={true|false}
  
  Note that I believe this problem is not restricted to Mozilla calendaring
  products, but rather may be caused by UNIX/Linux-based applications relying on the
@@ -194,33 +184,15 @@ Behaviour:
  correctly identify LF as a newline on Windows, and CRLF as a newline on UNIX/Linux. The
  API documentation for Java 1.5 says that it does do this, so if you still see problems
  with parsing it could be a bug in the Java implementation.
- 
- 
- - You may also relax the parsing rules of iCal4j by setting the following system property:
- 
-       ical4j.parsing.relaxed=true
- 
- This property is intended as a general relaxation of parsing rules to allow for parsing
- otherwise invalid calendar files. Initially enabling this property will allow for the
- creation of properties and components with illegal names (e.g. Mozilla Calendar's "X"
- property). Note that although this will allow for parsing calendars with illegal names,
- validation will still identify such names as an error in the calendar model.
 
-
- - Microsoft Outlook also appears to provide quoted TZID parameter values, as follows:
- 
-       DTSTART;TZID="Pacific Time (US & Canada),Tijuana":20041011T223000
- 
- To allow for compatibility with such iCalendar files you should specify the
- following system property:
- 
-     ical4j.compatibility.outlook=true
  
  The full set of system properties may be found in
  net.fortuna.ical4j.util.CompatibilityHints.
 
 
-### iCal4j and Timezones
+#### iCal4j and Timezones
+
+    net.fortuna.ical4j.timezone.date.floating={true|false}
 
  Supporting timezones in an iCalendar implementation can be a complicated process,
  mostly due to the fact that there is not a definitive list of timezone definitions
@@ -250,6 +222,28 @@ Behaviour:
  definitions, etc. without restriction. However when validation is run (automatically
  on output of the calendar) you will be notified if the changes are invalid.
 
+#### Validation
+    
+    ical4j.validation.relaxed={true|false}
+
+
+#### Micosoft Outlook compatibility
+    
+    ical4j.compatibility.outlook={true|false}
+
+Behaviour:
+
+* Enforces a folding length of 75 characters (by default ical4j will fold at 73 characters)
+* Allows for spaces when parsing a WEEKDAY list
+
+Microsoft Outlook also appears to provide quoted TZID parameter values, as follows:
+ 
+    DTSTART;TZID="Pacific Time (US & Canada),Tijuana":20041011T223000
+
+#### Lotus Notes compatibility
+
+    ical4j.compatibility.notes={true|false}
+ 
 
 ## Limitations
 
