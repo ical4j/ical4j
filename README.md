@@ -121,9 +121,9 @@ is used only to generate version information in the javadoc API documentation.
 
 ### Specifications
 
-* [RFC5545] (Superscedes [RFC2445])
-* [RFC5546] (Superscedes [RFC2446])
-* [RFC5547] (Superscedes [RFC2447])
+* [RFC5545] (Supersedes [RFC2445])
+* [RFC5546] (Supersedes [RFC2446])
+* [RFC5547] (Supersedes [RFC2447])
 
 ### Compatibility Hints
 
