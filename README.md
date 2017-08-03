@@ -1,7 +1,16 @@
 # iCal4j - iCalendar parser and object model
 
-[Introduction]: #introduction
 [RFC2445]: https://tools.ietf.org/html/rfc2445
+[RFC2446]: https://tools.ietf.org/html/rfc2446
+[RFC2447]: https://tools.ietf.org/html/rfc2447
+
+[RFC5545]: https://tools.ietf.org/html/rfc5545
+[RFC5546]: https://tools.ietf.org/html/rfc5546
+[RFC5547]: https://tools.ietf.org/html/rfc5547
+
+[Bintray Releases]: https://bintray.com/ical4j/maven/ical4j
+
+[Introduction]: #introduction
 
 [Setup]: #setup
 [System requirements]: #system-requirements
@@ -96,6 +105,8 @@ is used only to generate version information in the javadoc API documentation.
 
 ### Release Downloads
 
+* [Bintray Releases]
+
 ### Install with Maven
 
 ### Install with Gradle
@@ -109,6 +120,10 @@ is used only to generate version information in the javadoc API documentation.
 ## Reference
 
 ### Specifications
+
+* [RFC5545] (Superscedes [RFC2445])
+* [RFC5546] (Superscedes [RFC2446])
+* [RFC5547] (Superscedes [RFC2447])
 
 ### Compatibility Hints
 
