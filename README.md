@@ -11,7 +11,11 @@
 
 [Usage]: #usage
 
+[Examples]: #examples
+
 [Reference]: #reference
+[Specifications]: #specifications
+[Compatibility Hints]: #compatibility-hints
 
 [Configuration]: #configuration
 [Relaxed parsing]: #relaxed-parsing
@@ -29,18 +33,18 @@
 2. [Setup - Download and installation of iCal4j][Setup]
     - [System requirements - What is required to use iCal4j][System requirements]
     - [Release downloads - Where to get iCal4j][Release downloads]
-    - [Install with Maven][Install with Maven]
-    - [Install with Gradle][Install with Gradle]
+    - [Install with Maven]
+    - [Install with Gradle]
 3. [Usage - The iCal4j object model and how to use it][Usage]
     - [Examples - common usage scenarios][Examples]
 4. [Reference - Specification][Reference]
-    - [Specifications][]
-    - [Compatibility Hints][]
+    - [Specifications]
+    - [Compatibility Hints]
 5. [Configuration options][Configuration]
 6. [Limitations - CUA compatibility, etc.][Limitations]
 7. [Development - Guide for contributing to the iCalj project][Development]
-    - [Building with Gradle][Building with Gradle]
-    - [Redistribution][Redistribution]
+    - [Building with Gradle]
+    - [Redistribution]
     - [Contributing to iCal4j][Contributing]
 
 ## Introduction
@@ -67,11 +71,78 @@ standard.
 ### System requirements
 
  - Java 7 or later
- 
-See [here](https://github.com/ical4j/ical4j/docs/Dependencies.md) for further details.
 
+### Dependencies
+
+In the interests of portability and compatibility with as many environments as possible, the number of dependent
+libraries for iCal4j is kept to a minimum. The following describes the required (and optional) dependencies and the
+functionality they provide.
+
+* slf4j-api [required] - A logging meta-library with integration to different logging framework implementations. Used in all classes that require logging.
+
+* commons-lang3 [required] - Provides enhancements to the standard Java library, including support for custom `equals()` and `hashcode()`
+implementations. Used in all classes requiring custom equality implementations.
+
+* commons-collections4 [required] - Provides enhancements to the standard Java collections API, including support for closures. Used in `net.fortuna.ical4j.validate.Validator` implementations to reduce the duplication of code in validity checks.
+
+* commons-codec [optional] - Provides support for encoding and decoding binary data in text form. Used in `net.fortuna.ical4j.model.property.Attach`
+ 
+* groovy-all [optional] - The runtime for the Groovy language. Required for library enhancements such as iCalendar object construction using
+the `net.fortuna.ical4j.model.ContentBuilder` DSL. This library is optional for all non-Groovy features of iCal4j.
+
+* bndlib [optional] - A tool for generating OSGi library metadata and packaging OSGi bundles. This library is not a runtime requirement, and
+is used only to generate version information in the javadoc API documentation.
+ 
+
+### Release Downloads
+
+### Install with Maven
+
+### Install with Gradle
+
+
+## Usage
+
+### Examples
+
+
+## Reference
+
+### Specifications
+
+### Compatibility Hints
+
+    net.fortuna.ical4j.timezone.date.floating={true|false}
+    
+    ical4j.unfolding.relaxed={true|false}
+    
+    ical4j.parsing.relaxed={true|false}
+    
+    ical4j.validation.relaxed={true|false}
+    
+    ical4j.compatibility.outlook={true|false}
+
+Behaviour:
+
+* Enforces a folding length of 75 characters (by default ical4j will fold at 73 characters)
+* Allows for spaces when parsing a WEEKDAY list
+
+    ical4j.compatibility.notes={true|false}
 
 ## Configuration
+
+    net.fortuna.ical4j.parser=net.fortuna.ical4j.data.HCalendarParserFactory
+
+    net.fortuna.ical4j.timezone.registry=net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory
+
+    net.fortuna.ical4j.timezone.update.enabled={true|false}
+
+    net.fortuna.ical4j.factory.decoder=net.fortuna.ical4j.util.DefaultDecoderFactory
+
+    net.fortuna.ical4j.factory.encoder=net.fortuna.ical4j.util.DefaultEncoderFactory
+
+    net.fortuna.ical4j.recur.maxincrementcount=1000
+
  
 ### Relaxed Parsing
 
@@ -163,6 +234,11 @@ See [here](https://github.com/ical4j/ical4j/docs/Dependencies.md) for further de
  timezones on Time objects, remove or add TzId parameters, remove or add VTimeZone
  definitions, etc. without restriction. However when validation is run (automatically
  on output of the calendar) you will be notified if the changes are invalid.
+
+
+## Limitations
+
+
  
 ## Development
 
