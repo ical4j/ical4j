@@ -32,6 +32,8 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
@@ -54,6 +56,8 @@ public class Region extends Property implements Escapable {
 
     private String value;
 
+    private final Validator<Property> validator = new OneOrLessParameterValidator(Parameter.ABBREV);
+
     /**
      * Default constructor.
      */
@@ -73,7 +77,7 @@ public class Region extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Region(final ParameterList aList, final String aValue) {
-        super(REGION, aList, new OneOrLessParameterValidator(Parameter.ABBREV), PropertyFactoryImpl.getInstance());
+        super(REGION, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -89,6 +93,11 @@ public class Region extends Property implements Escapable {
      */
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        validator.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {
