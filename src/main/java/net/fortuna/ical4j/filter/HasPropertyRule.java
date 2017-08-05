@@ -45,7 +45,7 @@ import org.apache.commons.collections4.Predicate;
  * matching only on the value of the property.
  * @author Ben Fortuna
  */
-public class HasPropertyRule implements Predicate<Component> {
+public class HasPropertyRule<T extends Component> implements Predicate<T> {
 
     private Property property;
 
