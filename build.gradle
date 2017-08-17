@@ -133,7 +133,7 @@ scmVersion {
     }
     versionCreator 'versionWithBranch'
     branchVersionCreator = [
-        'release/.*': 'simple'
+        'master': 'simple'
     ]
 }
 version = scmVersion.version
