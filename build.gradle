@@ -140,6 +140,10 @@ version = scmVersion.version
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+    // sonatype credentials
+    sonatype_username = project.hasProperty('sonatype_username') ? project.getProperty('sonatype_username') : ''
+    sonatype_password = project.hasProperty('sonatype_password') ? project.getProperty('sonatype_password') : ''
 }
 
 uploadArchives {
