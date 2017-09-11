@@ -32,6 +32,8 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
@@ -53,12 +55,14 @@ public class Resources extends Property {
 
     private TextList resources;
 
+    private final Validator<Property> validator = new OneOrLessParameterValidator(Parameter.ALTREP,
+            Parameter.LANGUAGE);
+
     /**
      * Default constructor.
      */
     public Resources() {
-        super(RESOURCES, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                new Factory());
+        super(RESOURCES, new ParameterList(), new Factory());
         resources = new TextList();
     }
 
@@ -67,8 +71,7 @@ public class Resources extends Property {
      * @param aValue a value string for this component
      */
     public Resources(final ParameterList aList, final String aValue) {
-        super(RESOURCES, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                new Factory());
+        super(RESOURCES, aList, new Factory());
         setValue(aValue);
     }
 
@@ -76,8 +79,7 @@ public class Resources extends Property {
      * @param rList a list of resources
      */
     public Resources(final TextList rList) {
-        super(RESOURCES, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                new Factory());
+        super(RESOURCES, new ParameterList(), new Factory());
         resources = rList;
     }
 
@@ -86,8 +88,7 @@ public class Resources extends Property {
      * @param rList a list of resources
      */
     public Resources(final ParameterList aList, final TextList rList) {
-        super(RESOURCES, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                new Factory());
+        super(RESOURCES, aList, new Factory());
         resources = rList;
     }
 
@@ -110,6 +111,11 @@ public class Resources extends Property {
      */
     public final String getValue() {
         return getResources().toString();
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        validator.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

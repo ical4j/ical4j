@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -259,4 +260,8 @@ public class Geo extends Property {
         }
     }
 
+    @Override
+    public void validate() throws ValidationException {
+
+    }
 }

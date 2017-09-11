@@ -32,6 +32,8 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
@@ -104,20 +106,21 @@ public class Location extends Property implements Escapable {
 
     private String value;
 
+    private final Validator<Property> validator = new OneOrLessParameterValidator(Parameter.ALTREP,
+            Parameter.LANGUAGE, Parameter.VVENUE);
+
     /**
      * Default constructor.
      */
     public Location() {
-        super(LOCATION, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE, Parameter.VVENUE),
-                new Factory());
+        super(LOCATION, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Location(final String aValue) {
-        super(LOCATION, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE, Parameter.VVENUE),
-                new Factory());
+        super(LOCATION, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -126,8 +129,7 @@ public class Location extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Location(final ParameterList aList, final String aValue) {
-        super(LOCATION, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE, Parameter.VVENUE),
-                new Factory());
+        super(LOCATION, aList, new Factory());
         setValue(aValue);
     }
 
@@ -143,6 +145,11 @@ public class Location extends Property implements Escapable {
      */
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        validator.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

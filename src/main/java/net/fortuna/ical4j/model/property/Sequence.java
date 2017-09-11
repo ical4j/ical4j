@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -127,7 +128,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class Sequence extends Property {
+public class Sequence extends Property implements Comparable<Sequence> {
 
     private static final long serialVersionUID = -1606972893204822853L;
 
@@ -194,6 +195,16 @@ public class Sequence extends Property {
      */
     public final String getValue() {
         return String.valueOf(getSequenceNo());
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+
+    }
+
+    @Override
+    public int compareTo(Sequence o) {
+        return Integer.compare(getSequenceNo(), o.getSequenceNo());
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {
