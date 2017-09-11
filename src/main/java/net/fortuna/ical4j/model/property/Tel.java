@@ -32,6 +32,8 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
@@ -54,18 +56,20 @@ public class Tel extends Property implements Escapable {
 
     private String value;
 
+    private final Validator<Property> validator = new OneOrLessParameterValidator(Parameter.TYPE);
+
     /**
      * Default constructor.
      */
     public Tel() {
-        super(TEL, new ParameterList(), new OneOrLessParameterValidator(Parameter.TYPE), PropertyFactoryImpl.getInstance());
+        super(TEL, new ParameterList(), PropertyFactoryImpl.getInstance());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Tel(final String aValue) {
-        super(TEL, new ParameterList(), new OneOrLessParameterValidator(Parameter.TYPE), PropertyFactoryImpl.getInstance());
+        super(TEL, new ParameterList(), PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -74,7 +78,7 @@ public class Tel extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Tel(final ParameterList aList, final String aValue) {
-        super(TEL, aList, new OneOrLessParameterValidator(Parameter.TYPE), PropertyFactoryImpl.getInstance());
+        super(TEL, aList, PropertyFactoryImpl.getInstance());
         setValue(aValue);
     }
 
@@ -90,6 +94,11 @@ public class Tel extends Property implements Escapable {
      */
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        validator.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {
