@@ -300,7 +300,6 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     
     private static final Set<String> TIMEZONE_DEFINITIONS = new HashSet<>();
     
-//    private static final String DATE_TIME_TPL = "%1$tY%1$tm%1$tdT%1$tH%1$tM%1$tS";
     private static final String DATE_TIME_TPL = "yyyyMMdd'T'HHmmss";
 
     private static final String RRULE_TPL = "FREQ=YEARLY;BYMONTH=%d;BYDAY=%d%s";
