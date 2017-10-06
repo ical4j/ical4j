@@ -44,6 +44,7 @@ import net.fortuna.ical4j.util.ResourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.*;
+import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.temporal.TemporalAdjusters;
 import org.threeten.bp.zone.ZoneOffsetTransition;
 import org.threeten.bp.zone.ZoneOffsetTransitionRule;
@@ -299,8 +300,8 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     
     private static final Set<String> TIMEZONE_DEFINITIONS = new HashSet<>();
     
-    private static final String DATE_TIME_TPL = "%1$tY%1$tm%1$tdT%1$tH%1$tM%1$tS";
-    
+    private static final String DATE_TIME_TPL = "yyyyMMdd'T'HHmmss";
+
     private static final String RRULE_TPL = "FREQ=YEARLY;BYMONTH=%d;BYDAY=%d%s";
     
     private static final Standard NO_TRANSITIONS;
@@ -403,9 +404,9 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 				observance.getProperties().add(offsetFrom);
 				observance.getProperties().add(offsetTo);
 				observance.getProperties().add(rrule);
-				observance.getProperties().add(new DtStart(String.format(DATE_TIME_TPL, startDate.withMonth(transitionRule.getMonth().getValue())
-																														.withDayOfMonth(transitionRule.getDayOfMonthIndicator())
-																														.with(transitionRule.getDayOfWeek()))));
+				observance.getProperties().add(new DtStart(startDate.withMonth(transitionRule.getMonth().getValue())
+                                                                                .withDayOfMonth(transitionRule.getDayOfMonthIndicator())
+                                                                                .with(transitionRule.getDayOfWeek()).format(DateTimeFormatter.ofPattern(DATE_TIME_TPL))));
 				
 				result.getObservances().add(observance);
 				
@@ -436,7 +437,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 			
 			LocalDateTime start = Collections.min(e.getValue()).getDateTimeBefore();
 			
-			DtStart dtStart = new DtStart(String.format(DATE_TIME_TPL, start));
+			DtStart dtStart = new DtStart(start.format(DateTimeFormatter.ofPattern(DATE_TIME_TPL)));
 			TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(e.getKey().offsetBefore.getTotalSeconds() * 1000L));
 			TzOffsetTo offsetTo = new TzOffsetTo(new UtcOffset(e.getKey().offsetAfter.getTotalSeconds() * 1000L)); 
 			
@@ -445,7 +446,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 			observance.getProperties().add(offsetTo);
 			
 			for(ZoneOffsetTransition transition : e.getValue()){
-				RDate rDate = new RDate(new ParameterList(), String.format(DATE_TIME_TPL, transition.getDateTimeBefore()));
+				RDate rDate = new RDate(new ParameterList(), transition.getDateTimeBefore().format(DateTimeFormatter.ofPattern(DATE_TIME_TPL)));
 				observance.getProperties().add(rDate);
 			}
 			result.getObservances().add(observance);
