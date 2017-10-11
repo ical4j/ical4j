@@ -130,14 +130,14 @@ public class Transp extends Property {
      * Default constructor.
      */
     public Transp() {
-        super(TRANSP, PropertyFactoryImpl.getInstance());
+        super(TRANSP, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Transp(final String aValue) {
-        super(TRANSP, PropertyFactoryImpl.getInstance());
+        super(TRANSP, new Factory());
         this.value = aValue;
     }
 
@@ -146,7 +146,7 @@ public class Transp extends Property {
      * @param aValue a value string for this component
      */
     public Transp(final ParameterList aList, final String aValue) {
-        super(TRANSP, aList, PropertyFactoryImpl.getInstance());
+        super(TRANSP, aList, new Factory());
         this.value = aValue;
     }
 

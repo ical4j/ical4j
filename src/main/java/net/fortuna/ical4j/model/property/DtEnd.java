@@ -114,7 +114,7 @@ public class DtEnd extends DateProperty {
      * Default constructor. The time value is initialised to the time of instantiation.
      */
     public DtEnd() {
-        super(DTEND, PropertyFactoryImpl.getInstance());
+        super(DTEND, new Factory());
     }
 
     /**
@@ -123,7 +123,7 @@ public class DtEnd extends DateProperty {
      * @param timezone initial timezone
      */
     public DtEnd(TimeZone timezone) {
-        super(DTEND, timezone, PropertyFactoryImpl.getInstance());
+        super(DTEND, timezone, new Factory());
     }
 
     /**
@@ -133,7 +133,7 @@ public class DtEnd extends DateProperty {
      * @throws ParseException where the specified string is not a valid DTEND value representation
      */
     public DtEnd(final String value) throws ParseException {
-        super(DTEND, PropertyFactoryImpl.getInstance());
+        super(DTEND, new Factory());
         setValue(value);
     }
 
@@ -146,7 +146,7 @@ public class DtEnd extends DateProperty {
      *                        representation
      */
     public DtEnd(String value, TimeZone timezone) throws ParseException {
-        super(DTEND, timezone, PropertyFactoryImpl.getInstance());
+        super(DTEND, timezone, new Factory());
         setValue(value);
     }
 
@@ -157,7 +157,7 @@ public class DtEnd extends DateProperty {
      */
     public DtEnd(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(DTEND, aList, PropertyFactoryImpl.getInstance());
+        super(DTEND, aList, new Factory());
         setValue(aValue);
     }
 
@@ -167,7 +167,7 @@ public class DtEnd extends DateProperty {
      * @param aDate a date
      */
     public DtEnd(final Date aDate) {
-        super(DTEND, PropertyFactoryImpl.getInstance());
+        super(DTEND, new Factory());
         setDate(aDate);
     }
 
@@ -178,7 +178,7 @@ public class DtEnd extends DateProperty {
      * @param utc  specifies whether time is UTC
      */
     public DtEnd(final Date time, final boolean utc) {
-        super(DTEND, PropertyFactoryImpl.getInstance());
+        super(DTEND, new Factory());
         setDate(time);
         setUtc(utc);
     }
@@ -190,7 +190,7 @@ public class DtEnd extends DateProperty {
      * @param aDate a date
      */
     public DtEnd(final ParameterList aList, final Date aDate) {
-        super(DTEND, aList, PropertyFactoryImpl.getInstance());
+        super(DTEND, aList, new Factory());
         setDate(aDate);
     }
 

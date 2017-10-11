@@ -202,14 +202,14 @@ public class Status extends Property {
      * Default constructor.
      */
     public Status() {
-        super(STATUS, PropertyFactoryImpl.getInstance());
+        super(STATUS, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Status(final String aValue) {
-        super(STATUS, PropertyFactoryImpl.getInstance());
+        super(STATUS, new Factory());
         this.value = aValue;
     }
 
@@ -218,7 +218,7 @@ public class Status extends Property {
      * @param aValue a value string for this component
      */
     public Status(final ParameterList aList, final String aValue) {
-        super(STATUS, aList, PropertyFactoryImpl.getInstance());
+        super(STATUS, aList, new Factory());
         this.value = aValue;
     }
 

@@ -83,7 +83,7 @@ public class Created extends UtcProperty {
      * Default constructor.
      */
     public Created() {
-        super(CREATED, PropertyFactoryImpl.getInstance());
+        super(CREATED, new Factory());
     }
 
     /**
@@ -91,7 +91,7 @@ public class Created extends UtcProperty {
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
     public Created(final String aValue) throws ParseException {
-        super(CREATED, PropertyFactoryImpl.getInstance());
+        super(CREATED, new Factory());
         setValue(aValue);
     }
 
@@ -102,7 +102,7 @@ public class Created extends UtcProperty {
      */
     public Created(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(CREATED, aList, PropertyFactoryImpl.getInstance());
+        super(CREATED, aList, new Factory());
         setValue(aValue);
     }
 
@@ -110,7 +110,7 @@ public class Created extends UtcProperty {
      * @param aDate a date
      */
     public Created(final DateTime aDate) {
-        super(CREATED, PropertyFactoryImpl.getInstance());
+        super(CREATED, new Factory());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
@@ -121,7 +121,7 @@ public class Created extends UtcProperty {
      * @param aDate a date
      */
     public Created(final ParameterList aList, final DateTime aDate) {
-        super(CREATED, aList, PropertyFactoryImpl.getInstance());
+        super(CREATED, aList, new Factory());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);

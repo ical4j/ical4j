@@ -58,14 +58,14 @@ public class Name extends Property implements Escapable {
      * Default constructor.
      */
     public Name() {
-        super(NAME, PropertyFactoryImpl.getInstance());
+        super(NAME, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Name(final String aValue) {
-        super(NAME, PropertyFactoryImpl.getInstance());
+        super(NAME, new Factory());
         setValue(aValue);
     }
 
@@ -74,7 +74,7 @@ public class Name extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Name(final ParameterList aList, final String aValue) {
-        super(NAME, aList, PropertyFactoryImpl.getInstance());
+        super(NAME, aList, new Factory());
         setValue(aValue);
     }
 

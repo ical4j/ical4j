@@ -61,14 +61,14 @@ public class Country extends Property implements Escapable {
      * Default constructor.
      */
     public Country() {
-        super(COUNTRY, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(COUNTRY, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Country(final String aValue) {
-        super(COUNTRY, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(COUNTRY, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -77,7 +77,7 @@ public class Country extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Country(final ParameterList aList, final String aValue) {
-        super(COUNTRY, aList, PropertyFactoryImpl.getInstance());
+        super(COUNTRY, aList, new Factory());
         setValue(aValue);
     }
 

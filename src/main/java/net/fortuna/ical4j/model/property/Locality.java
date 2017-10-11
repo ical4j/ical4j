@@ -58,14 +58,14 @@ public class Locality extends Property implements Escapable {
      * Default constructor.
      */
     public Locality() {
-        super(LOCALITY, PropertyFactoryImpl.getInstance());
+        super(LOCALITY, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Locality(final String aValue) {
-        super(LOCALITY, PropertyFactoryImpl.getInstance());
+        super(LOCALITY, new Factory());
         setValue(aValue);
     }
 
@@ -74,7 +74,7 @@ public class Locality extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Locality(final ParameterList aList, final String aValue) {
-        super(LOCALITY, aList, PropertyFactoryImpl.getInstance());
+        super(LOCALITY, aList, new Factory());
         setValue(aValue);
     }
 

@@ -61,14 +61,14 @@ public class RelatedTo extends Property implements Escapable {
      * Default constructor.
      */
     public RelatedTo() {
-        super(RELATED_TO, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(RELATED_TO, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public RelatedTo(final String aValue) {
-        super(RELATED_TO, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(RELATED_TO, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -77,7 +77,7 @@ public class RelatedTo extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public RelatedTo(final ParameterList aList, final String aValue) {
-        super(RELATED_TO, aList, PropertyFactoryImpl.getInstance());
+        super(RELATED_TO, aList, new Factory());
         setValue(aValue);
     }
 

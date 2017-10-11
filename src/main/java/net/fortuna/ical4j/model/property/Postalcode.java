@@ -58,14 +58,14 @@ public class Postalcode extends Property implements Escapable {
      * Default constructor.
      */
     public Postalcode() {
-        super(POSTALCODE, PropertyFactoryImpl.getInstance());
+        super(POSTALCODE, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Postalcode(final String aValue) {
-        super(POSTALCODE, PropertyFactoryImpl.getInstance());
+        super(POSTALCODE, new Factory());
         setValue(aValue);
     }
 
@@ -74,7 +74,7 @@ public class Postalcode extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Postalcode(final ParameterList aList, final String aValue) {
-        super(POSTALCODE, aList, PropertyFactoryImpl.getInstance());
+        super(POSTALCODE, aList, new Factory());
         setValue(aValue);
     }
 

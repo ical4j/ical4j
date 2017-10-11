@@ -62,7 +62,7 @@ public class Resources extends Property {
      * Default constructor.
      */
     public Resources() {
-        super(RESOURCES, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(RESOURCES, new ParameterList(), new Factory());
         resources = new TextList();
     }
 
@@ -71,7 +71,7 @@ public class Resources extends Property {
      * @param aValue a value string for this component
      */
     public Resources(final ParameterList aList, final String aValue) {
-        super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
+        super(RESOURCES, aList, new Factory());
         setValue(aValue);
     }
 
@@ -79,7 +79,7 @@ public class Resources extends Property {
      * @param rList a list of resources
      */
     public Resources(final TextList rList) {
-        super(RESOURCES, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(RESOURCES, new ParameterList(), new Factory());
         resources = rList;
     }
 
@@ -88,7 +88,7 @@ public class Resources extends Property {
      * @param rList a list of resources
      */
     public Resources(final ParameterList aList, final TextList rList) {
-        super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
+        super(RESOURCES, aList, new Factory());
         resources = rList;
     }
 

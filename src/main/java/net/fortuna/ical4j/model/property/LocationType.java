@@ -60,7 +60,7 @@ public class LocationType extends Property {
      * Default constructor.
      */
     public LocationType() {
-        super(LOCATION_TYPE, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(LOCATION_TYPE, new ParameterList(), new Factory());
         locationTypes = new LocationTypeList();
     }
 
@@ -68,7 +68,7 @@ public class LocationType extends Property {
      * @param aValue a value string for this component
      */
     public LocationType(final String aValue) {
-        super(LOCATION_TYPE, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(LOCATION_TYPE, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -77,7 +77,7 @@ public class LocationType extends Property {
      * @param aValue a value string for this component
      */
     public LocationType(final ParameterList aList, final String aValue) {
-        super(LOCATION_TYPE, aList, PropertyFactoryImpl.getInstance());
+        super(LOCATION_TYPE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -85,7 +85,7 @@ public class LocationType extends Property {
      * @param cList a list of locationTypes
      */
     public LocationType(final LocationTypeList cList) {
-        super(LOCATION_TYPE, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(LOCATION_TYPE, new ParameterList(), new Factory());
         locationTypes = cList;
     }
 
@@ -94,7 +94,7 @@ public class LocationType extends Property {
      * @param cList a list of locationTypes
      */
     public LocationType(final ParameterList aList, final LocationTypeList cList) {
-        super(LOCATION_TYPE, aList, PropertyFactoryImpl.getInstance());
+        super(LOCATION_TYPE, aList, new Factory());
         locationTypes = cList;
     }
 

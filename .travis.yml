@@ -13,8 +13,8 @@ jdk:
   - openjdk8
 services:
   - docker
-before_install:
-  - etc/scripts/update-zoneinfo.sh
+#before_install:
+#  - etc/scripts/update-zoneinfo.sh
 script:
   - ./gradlew build jacocoTestReport
 after_success:
