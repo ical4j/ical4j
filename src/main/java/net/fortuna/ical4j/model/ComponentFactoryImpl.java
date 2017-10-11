@@ -55,11 +55,6 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
         super(ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader()));
     }
 
-    @Override
-    protected boolean factorySupports(ComponentFactory factory, String key) {
-        return factory.supports(key);
-    }
-
     /**
      * @param name a component name
      * @return a new component instance of the specified type
@@ -148,6 +143,6 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
      */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        this.factoryLoader = ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader());
+        this.factories = loadFactories(ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader()));
     }
 }

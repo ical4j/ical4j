@@ -67,11 +67,6 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
         return instance;
     }
 
-    @Override
-    protected boolean factorySupports(PropertyFactory factory, String key) {
-        return factory.supports(key);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -126,6 +121,6 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
      */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        this.factoryLoader = ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader());
+        this.factories = loadFactories(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()));
     }
 }
