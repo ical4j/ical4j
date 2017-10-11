@@ -61,14 +61,14 @@ public class Contact extends Property implements Escapable {
      * Default constructor.
      */
     public Contact() {
-        super(CONTACT, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(CONTACT, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Contact(final String aValue) {
-        super(CONTACT, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(CONTACT, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -77,7 +77,7 @@ public class Contact extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Contact(final ParameterList aList, final String aValue) {
-        super(CONTACT, aList, PropertyFactoryImpl.getInstance());
+        super(CONTACT, aList, new Factory());
         setValue(aValue);
     }
 

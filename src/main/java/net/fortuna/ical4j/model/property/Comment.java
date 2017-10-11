@@ -61,14 +61,14 @@ public class Comment extends Property implements Escapable {
      * Default constructor.
      */
     public Comment() {
-        super(COMMENT, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(COMMENT, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Comment(final String aValue) {
-        super(COMMENT, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(COMMENT, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -77,7 +77,7 @@ public class Comment extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Comment(final ParameterList aList, final String aValue) {
-        super(COMMENT, aList, PropertyFactoryImpl.getInstance());
+        super(COMMENT, aList, new Factory());
         setValue(aValue);
     }
 

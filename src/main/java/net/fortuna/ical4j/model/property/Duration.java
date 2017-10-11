@@ -97,7 +97,7 @@ public class Duration extends Property {
      * Default constructor.
      */
     public Duration() {
-        super(DURATION, PropertyFactoryImpl.getInstance());
+        super(DURATION, new Factory());
     }
 
     /**
@@ -105,7 +105,7 @@ public class Duration extends Property {
      * @param aValue a value string for this component
      */
     public Duration(final ParameterList aList, final String aValue) {
-        super(DURATION, aList, PropertyFactoryImpl.getInstance());
+        super(DURATION, aList, new Factory());
         setValue(aValue);
     }
 
@@ -113,7 +113,7 @@ public class Duration extends Property {
      * @param duration a duration  value
      */
     public Duration(final Dur duration) {
-        super(DURATION, PropertyFactoryImpl.getInstance());
+        super(DURATION, new Factory());
         this.duration = duration;
     }
 
@@ -122,7 +122,7 @@ public class Duration extends Property {
      * @param duration a duration value
      */
     public Duration(final ParameterList aList, final Dur duration) {
-        super(DURATION, aList, PropertyFactoryImpl.getInstance());
+        super(DURATION, aList, new Factory());
         setDuration(duration);
     }
 
@@ -133,7 +133,7 @@ public class Duration extends Property {
      * @param end   the end time for the duration
      */
     public Duration(final Date start, final Date end) {
-        super(DURATION, PropertyFactoryImpl.getInstance());
+        super(DURATION, new Factory());
         setDuration(new Dur(start, end));
     }
 

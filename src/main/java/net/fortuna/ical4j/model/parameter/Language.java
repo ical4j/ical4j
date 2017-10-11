@@ -56,7 +56,7 @@ public class Language extends Parameter {
      * @param aValue a string representation of a Language
      */
     public Language(final String aValue) {
-        super(LANGUAGE, ParameterFactoryImpl.getInstance());
+        super(LANGUAGE, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

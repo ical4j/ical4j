@@ -152,7 +152,7 @@ public class Trigger extends UtcProperty {
      * Default constructor.
      */
     public Trigger() {
-        super(TRIGGER, PropertyFactoryImpl.getInstance());
+        super(TRIGGER, new Factory());
     }
 
     /**
@@ -160,7 +160,7 @@ public class Trigger extends UtcProperty {
      * @param aValue a value string for this component
      */
     public Trigger(final ParameterList aList, final String aValue) {
-        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
+        super(TRIGGER, aList, new Factory());
         setValue(aValue);
     }
 
@@ -168,7 +168,7 @@ public class Trigger extends UtcProperty {
      * @param duration a duration in milliseconds
      */
     public Trigger(final Dur duration) {
-        super(TRIGGER, PropertyFactoryImpl.getInstance());
+        super(TRIGGER, new Factory());
         setDuration(duration);
     }
 
@@ -177,7 +177,7 @@ public class Trigger extends UtcProperty {
      * @param duration a duration in milliseconds
      */
     public Trigger(final ParameterList aList, final Dur duration) {
-        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
+        super(TRIGGER, aList, new Factory());
         setDuration(duration);
     }
 
@@ -185,7 +185,7 @@ public class Trigger extends UtcProperty {
      * @param dateTime a date representation of a date-time
      */
     public Trigger(final DateTime dateTime) {
-        super(TRIGGER, PropertyFactoryImpl.getInstance());
+        super(TRIGGER, new Factory());
         setDateTime(dateTime);
     }
 
@@ -194,7 +194,7 @@ public class Trigger extends UtcProperty {
      * @param dateTime a date representation of a date-time
      */
     public Trigger(final ParameterList aList, final DateTime dateTime) {
-        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
+        super(TRIGGER, aList, new Factory());
         setDateTime(dateTime);
     }
 

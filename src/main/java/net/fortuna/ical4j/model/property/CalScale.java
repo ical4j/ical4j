@@ -86,14 +86,14 @@ public class CalScale extends Property {
      * Default constructor.
      */
     public CalScale() {
-        super(CALSCALE, PropertyFactoryImpl.getInstance());
+        super(CALSCALE, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public CalScale(final String aValue) {
-        super(CALSCALE, PropertyFactoryImpl.getInstance());
+        super(CALSCALE, new Factory());
         this.value = aValue;
     }
 
@@ -102,7 +102,7 @@ public class CalScale extends Property {
      * @param aValue a value string for this component
      */
     public CalScale(final ParameterList aList, final String aValue) {
-        super(CALSCALE, aList, PropertyFactoryImpl.getInstance());
+        super(CALSCALE, aList, new Factory());
         this.value = aValue;
     }
 

@@ -61,14 +61,14 @@ public class Description extends Property implements Escapable {
      * Default constructor.
      */
     public Description() {
-        super(DESCRIPTION, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(DESCRIPTION, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Description(final String aValue) {
-        super(DESCRIPTION, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(DESCRIPTION, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -77,7 +77,7 @@ public class Description extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Description(final ParameterList aList, final String aValue) {
-        super(DESCRIPTION, aList, PropertyFactoryImpl.getInstance());
+        super(DESCRIPTION, aList, new Factory());
         setValue(aValue);
     }
 

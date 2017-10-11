@@ -100,14 +100,14 @@ public class Action extends Property {
      * Default constructor.
      */
     public Action() {
-        super(ACTION, PropertyFactoryImpl.getInstance());
+        super(ACTION, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Action(final String aValue) {
-        super(ACTION, PropertyFactoryImpl.getInstance());
+        super(ACTION, new Factory());
         this.value = aValue;
     }
 
@@ -116,7 +116,7 @@ public class Action extends Property {
      * @param aValue a value string for this component
      */
     public Action(final ParameterList aList, final String aValue) {
-        super(ACTION, aList, PropertyFactoryImpl.getInstance());
+        super(ACTION, aList, new Factory());
         this.value = aValue;
     }
 

@@ -108,14 +108,14 @@ public class Summary extends Property implements Escapable {
      * Default constructor.
      */
     public Summary() {
-        super(SUMMARY, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(SUMMARY, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Summary(final String aValue) {
-        super(SUMMARY, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(SUMMARY, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -124,7 +124,7 @@ public class Summary extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Summary(final ParameterList aList, final String aValue) {
-        super(SUMMARY, aList, PropertyFactoryImpl.getInstance());
+        super(SUMMARY, aList, new Factory());
         setValue(aValue);
     }
 

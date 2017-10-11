@@ -51,20 +51,11 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
 
     private static final long serialVersionUID = -7174232004486979641L;
 
-    private static PropertyFactoryImpl instance = new PropertyFactoryImpl();
-
     /**
      * Constructor made private to prevent instantiation.
      */
     protected PropertyFactoryImpl() {
         super(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()));
-    }
-
-    /**
-     * @return Returns the instance.
-     */
-    public static PropertyFactoryImpl getInstance() {
-        return instance;
     }
 
     @Override

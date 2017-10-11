@@ -113,14 +113,14 @@ public class Location extends Property implements Escapable {
      * Default constructor.
      */
     public Location() {
-        super(LOCATION, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(LOCATION, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Location(final String aValue) {
-        super(LOCATION, new ParameterList(), PropertyFactoryImpl.getInstance());
+        super(LOCATION, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -129,7 +129,7 @@ public class Location extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Location(final ParameterList aList, final String aValue) {
-        super(LOCATION, aList, PropertyFactoryImpl.getInstance());
+        super(LOCATION, aList, new Factory());
         setValue(aValue);
     }
 

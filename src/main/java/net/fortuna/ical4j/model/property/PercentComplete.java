@@ -57,7 +57,7 @@ public class PercentComplete extends Property {
      * Default constructor.
      */
     public PercentComplete() {
-        super(PERCENT_COMPLETE, PropertyFactoryImpl.getInstance());
+        super(PERCENT_COMPLETE, new Factory());
     }
 
     /**
@@ -65,7 +65,7 @@ public class PercentComplete extends Property {
      * @param aValue a value string for this component
      */
     public PercentComplete(final ParameterList aList, final String aValue) {
-        super(PERCENT_COMPLETE, aList, PropertyFactoryImpl.getInstance());
+        super(PERCENT_COMPLETE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -73,7 +73,7 @@ public class PercentComplete extends Property {
      * @param aPercentage an int representation of a percentage
      */
     public PercentComplete(final int aPercentage) {
-        super(PERCENT_COMPLETE, PropertyFactoryImpl.getInstance());
+        super(PERCENT_COMPLETE, new Factory());
         percentage = aPercentage;
     }
 
@@ -82,7 +82,7 @@ public class PercentComplete extends Property {
      * @param aPercentage an int representation of a percentage
      */
     public PercentComplete(final ParameterList aList, final int aPercentage) {
-        super(PERCENT_COMPLETE, aList, PropertyFactoryImpl.getInstance());
+        super(PERCENT_COMPLETE, aList, new Factory());
         percentage = aPercentage;
     }
 
