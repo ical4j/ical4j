@@ -45,6 +45,6 @@ public class DefaultTimeZoneRegistryFactory extends TimeZoneRegistryFactory {
      * {@inheritDoc}
      */
     public TimeZoneRegistry createRegistry() {
-        return new CachingTimeZoneRegistry(new TimeZoneRegistryImpl());
+        return new TimeZoneRegistryImpl();
     }
 }
