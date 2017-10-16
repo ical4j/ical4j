@@ -74,7 +74,7 @@ dependencies {
         'commons-codec:commons-codec:1.10',
         'org.apache.commons:commons-lang3:3.6',
         'org.apache.commons:commons-collections4:4.1',
-        'org.threeten:threetenbp:1.3.6'
+        'org.threeten:threetenbp:1.3.6', 'javax.cache:cache-api:1.0.0'
 
     compile 'org.codehaus.groovy:groovy-all:2.3.2', optional
 
@@ -84,7 +84,8 @@ dependencies {
         'org.spockframework:spock-core:0.7-groovy-2.0',
         'commons-io:commons-io:2.4',
         'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
-        "org.slf4j:slf4j-log4j12:$slf4jVersion"
+        "org.slf4j:slf4j-log4j12:$slf4jVersion",
+        'org.ehcache:ehcache:3.4.0'
 }
 
 jacocoTestReport {
@@ -203,7 +204,7 @@ publishing {
                 asNode().appendNode('name', project.name)
                 asNode().appendNode('description', project.description)
                 asNode().appendNode('url', 'http://ical4j.github.io')
-                
+
                 def scmNode = asNode().appendNode('scm')
                 scmNode.appendNode('url', 'https://github.com/ical4j/ical4j')
                 scmNode.appendNode('connection', 'scm:git@github.com:ical4j/ical4j.git')
