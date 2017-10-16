@@ -77,7 +77,7 @@ public class UidGenerator {
         b.append(uniqueTimestamp());
         b.append('-');
         b.append(pid);
-        if (hostInfo != null) {
+        if (hostInfo != null && hostInfo.getHostName() != null) {
             b.append('@');
             b.append(hostInfo.getHostName());
         }

@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -78,11 +80,13 @@ public class RequestStatus extends Property {
 
     private String exData;
 
+    private final Validator<Property> validator = new OneOrLessParameterValidator(Parameter.LANGUAGE);
+
     /**
      * Default constructor.
      */
     public RequestStatus() {
-        super(REQUEST_STATUS, PropertyFactoryImpl.getInstance());
+        super(REQUEST_STATUS, new ParameterList(), new Factory());
     }
 
     /**
@@ -90,7 +94,7 @@ public class RequestStatus extends Property {
      * @param aValue a value string for this component
      */
     public RequestStatus(final ParameterList aList, final String aValue) {
-        super(REQUEST_STATUS, aList, PropertyFactoryImpl.getInstance());
+        super(REQUEST_STATUS, aList, new Factory());
         setValue(aValue);
     }
 
@@ -101,7 +105,7 @@ public class RequestStatus extends Property {
      */
     public RequestStatus(final String aStatusCode, final String aDescription,
                          final String data) {
-        super(REQUEST_STATUS, PropertyFactoryImpl.getInstance());
+        super(REQUEST_STATUS, new ParameterList(), new Factory());
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
@@ -115,26 +119,10 @@ public class RequestStatus extends Property {
      */
     public RequestStatus(final ParameterList aList, final String aStatusCode,
                          final String aDescription, final String data) {
-        super(REQUEST_STATUS, aList, PropertyFactoryImpl.getInstance());
+        super(REQUEST_STATUS, aList, new Factory());
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; but MUST NOT occur more than once (";" languageparm) /
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**
@@ -219,6 +207,11 @@ public class RequestStatus extends Property {
      */
     public final void setStatusCode(final String statusCode) {
         this.statusCode = statusCode;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        validator.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

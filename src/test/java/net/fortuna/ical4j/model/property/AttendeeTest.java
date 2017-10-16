@@ -93,7 +93,7 @@ public class AttendeeTest extends TestCase {
 
     public void testRelaxedParsing() throws IOException, ParserException {
         try {
-            Calendars.load("etc/samples/invalid/groupwise.ics");
+            Calendars.load(getClass().getResource("/samples/invalid/groupwise.ics"));
             fail("Should throw URISyntaxException");
         }
         catch (ParserException pe) {
@@ -101,7 +101,7 @@ public class AttendeeTest extends TestCase {
         }
         
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
-        Calendar calendar = Calendars.load("etc/samples/invalid/groupwise.ics");
+        Calendar calendar = Calendars.load(getClass().getResource("/samples/invalid/groupwise.ics"));
         
         Attendee attendee = (Attendee) calendar.getComponent(Component.VEVENT).getProperty(Property.ATTENDEE);
         assertNotNull(attendee.getCalAddress());

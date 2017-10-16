@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 /**
  * $Id$
@@ -53,7 +54,7 @@ public abstract class UtcProperty extends DateProperty {
      * @param name       a property name
      * @param parameters list of parameters
      */
-    public UtcProperty(final String name, final ParameterList parameters, PropertyFactoryImpl factory) {
+    public UtcProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
         super(name, parameters, factory);
         setDate(new DateTime(true));
     }
@@ -61,7 +62,7 @@ public abstract class UtcProperty extends DateProperty {
     /**
      * @param name a property name
      */
-    public UtcProperty(final String name, PropertyFactoryImpl factory) {
+    public UtcProperty(final String name, PropertyFactory factory) {
         super(name, factory);
         setDate(new DateTime(true));
     }

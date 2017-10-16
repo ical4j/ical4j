@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -53,11 +55,12 @@ public class LocationType extends Property {
 
     private LocationTypeList locationTypes;
 
+    private final Validator<Property> validator = new OneOrLessParameterValidator(Parameter.LANGUAGE);
     /**
      * Default constructor.
      */
     public LocationType() {
-        super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
+        super(LOCATION_TYPE, new ParameterList(), new Factory());
         locationTypes = new LocationTypeList();
     }
 
@@ -65,7 +68,7 @@ public class LocationType extends Property {
      * @param aValue a value string for this component
      */
     public LocationType(final String aValue) {
-        super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
+        super(LOCATION_TYPE, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -74,7 +77,7 @@ public class LocationType extends Property {
      * @param aValue a value string for this component
      */
     public LocationType(final ParameterList aList, final String aValue) {
-        super(LOCATION_TYPE, aList, PropertyFactoryImpl.getInstance());
+        super(LOCATION_TYPE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -82,7 +85,7 @@ public class LocationType extends Property {
      * @param cList a list of locationTypes
      */
     public LocationType(final LocationTypeList cList) {
-        super(LOCATION_TYPE, PropertyFactoryImpl.getInstance());
+        super(LOCATION_TYPE, new ParameterList(), new Factory());
         locationTypes = cList;
     }
 
@@ -91,7 +94,7 @@ public class LocationType extends Property {
      * @param cList a list of locationTypes
      */
     public LocationType(final ParameterList aList, final LocationTypeList cList) {
-        super(LOCATION_TYPE, aList, PropertyFactoryImpl.getInstance());
+        super(LOCATION_TYPE, aList, new Factory());
         locationTypes = cList;
     }
 
@@ -100,22 +103,6 @@ public class LocationType extends Property {
      */
     public final void setValue(final String aValue) {
         locationTypes = new LocationTypeList(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; but MUST NOT occur more than once (";" languageparam ) /
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**
@@ -130,6 +117,11 @@ public class LocationType extends Property {
      */
     public final String getValue() {
         return getLocationTypes().toString();
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        validator.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

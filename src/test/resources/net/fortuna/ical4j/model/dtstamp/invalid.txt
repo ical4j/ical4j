@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Salonmeister GmbH//NONSGML v1.0//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:5509bb21a2e63@salonmeister.de
+LOCATION:Schillerstraße 26 - 60313 Frankfurt am Main
+SUMMARY:KP Ochs - Schillerstraße
+DESCRIPTION:Mitarbeiter: Francesco D.\nService: Cut & Go (Herren)\nSalonnummer: +4969 233007\n\nFalls der Termin abgesagt werden muß, bitte im Salon anrufen oder den folgenden Link nutzen: https://salonmeister.de/termin-stornieren?hash=a15e9362434e95436d8520a7dcf30693\n\nDanke für die Buchung. Herzlichst,\nDie Salonmeister
+CLASS:PRIVATE
+DTSTART:20150409T180000
+DTEND:20150409T183000
+DTSTAMP:20150318T185129
+URL;VALUE=URI:https://salonmeister.de/termin-stornieren?hash=a15e9362434e95436d8520a7dcf30693
+END:VEVENT
+END:VCALENDAR

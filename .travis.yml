@@ -1,24 +1,27 @@
+#before_cache:
+#  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+#  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    #- $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+sudo: false
+dist: trusty
 language: java
 jdk:
   - oraclejdk8
-  - oraclejdk7
-  - openjdk7
-before_script:
-  - sudo keytool -import -alias sonar -keystore $JAVA_HOME/jre/lib/security/cacerts -file sonar_cert.pem -storepass changeit -noprompt
+  - openjdk8
+services:
+  - docker
+#before_install:
+#  - etc/scripts/update-zoneinfo.sh
 script:
-  - ./gradlew check sonarqube
+  - ./gradlew build jacocoTestReport
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 deploy:
-  provider: releases
-  api_key:
-    secure: DpTp3xxZrKP21I13G8dYY5EBra5tcf9TsF1y9oLRdOSoVvUe0XaOQ+9WPG2RgnuH1DPVj1n2Rr6emAZ84lSzz4H7T8gPYP4pLjmJBGyriGC7N3MTG2FCBn5l6DgTKNLxtfpek/b7nClif6vVTEse/T8/9an/Yszp9bbIZNNwStE=
-  file:
-    - build/distributions/ical4j-$RELEASE_VERSION.zip
-    - build/distributions/ical4j-$RELEASE_VERSION.tgz
-  skip_cleanup: true
+  provider: script
+  script: ./gradlew -Prelease.customUsername=$GIT_USER -Prelease.customPassword=$GIT_PASSWORD -Prelease.disableChecks -Prelease.pushTagsOnly release bintrayUpload
   on:
-    tags: true
-    jdk: openjdk7
-before_deploy: "./gradlew assembleMainDist"
-sudo: true
-addons:
-  hostname: travis-ci
+    branch: master
+    jdk: oraclejdk8

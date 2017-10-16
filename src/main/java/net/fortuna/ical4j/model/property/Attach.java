@@ -34,7 +34,12 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.*;
+import net.fortuna.ical4j.util.DecoderFactory;
+import net.fortuna.ical4j.util.EncoderFactory;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.DecoderException;
@@ -114,7 +119,7 @@ public class Attach extends Property {
      * Default constructor.
      */
     public Attach() {
-        super(ATTACH, PropertyFactoryImpl.getInstance());
+        super(ATTACH, new Factory());
     }
 
     /**
@@ -125,7 +130,7 @@ public class Attach extends Property {
      */
     public Attach(final ParameterList aList, final String aValue)
             throws IOException, URISyntaxException {
-        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
+        super(ATTACH, aList, new Factory());
         setValue(aValue);
     }
 
@@ -133,7 +138,7 @@ public class Attach extends Property {
      * @param data binary data
      */
     public Attach(final byte[] data) {
-        super(ATTACH, PropertyFactoryImpl.getInstance());
+        super(ATTACH, new Factory());
         // add required parameters..
         getParameters().add(Encoding.BASE64);
         getParameters().add(Value.BINARY);
@@ -145,7 +150,7 @@ public class Attach extends Property {
      * @param data  binary data
      */
     public Attach(final ParameterList aList, final byte[] data) {
-        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
+        super(ATTACH, aList, new Factory());
         this.binary = data;
     }
 
@@ -153,7 +158,7 @@ public class Attach extends Property {
      * @param aUri a URI
      */
     public Attach(final URI aUri) {
-        super(ATTACH, PropertyFactoryImpl.getInstance());
+        super(ATTACH, new Factory());
         this.uri = aUri;
     }
 
@@ -162,7 +167,7 @@ public class Attach extends Property {
      * @param aUri  a URI
      */
     public Attach(final ParameterList aList, final URI aUri) {
-        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
+        super(ATTACH, aList, new Factory());
         this.uri = aUri;
     }
 
@@ -289,7 +294,7 @@ public class Attach extends Property {
         this.binary = null;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Property> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {

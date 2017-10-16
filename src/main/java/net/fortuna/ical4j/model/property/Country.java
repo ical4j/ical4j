@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -54,18 +56,19 @@ public class Country extends Property implements Escapable {
 
     private String value;
 
+    private Validator<Property> validator = new OneOrLessParameterValidator(Parameter.ABBREV);
     /**
      * Default constructor.
      */
     public Country() {
-        super(COUNTRY, PropertyFactoryImpl.getInstance());
+        super(COUNTRY, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Country(final String aValue) {
-        super(COUNTRY, PropertyFactoryImpl.getInstance());
+        super(COUNTRY, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -74,24 +77,8 @@ public class Country extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Country(final ParameterList aList, final String aValue) {
-        super(COUNTRY, aList, PropertyFactoryImpl.getInstance());
+        super(COUNTRY, aList, new Factory());
         setValue(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" abbrev
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ABBREV,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**
@@ -125,4 +112,8 @@ public class Country extends Property implements Escapable {
         }
     }
 
+    @Override
+    public void validate() throws ValidationException {
+        validator.validate(this);
+    }
 }

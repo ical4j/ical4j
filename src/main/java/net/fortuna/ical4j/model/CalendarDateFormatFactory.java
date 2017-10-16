@@ -167,13 +167,7 @@ public final class CalendarDateFormatFactory {
 
             final CalendarDateFormat that = (CalendarDateFormat) o;
 
-            if (lenient != that.lenient) {
-                return false;
-            }
-            if (!pattern.equals(that.pattern)) {
-                return false;
-            }
-            return timeZone.equals(that.timeZone);
+            return lenient == that.lenient && pattern.equals(that.pattern) && timeZone.equals(that.timeZone);
         }
 
         public int hashCode() {

@@ -1,8 +1,0 @@
-bin
-build
-coverage
-coverage.ec
-target
-build.properties
-.settings
-bin-groovy

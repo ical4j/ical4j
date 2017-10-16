@@ -35,7 +35,6 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.ServiceLoader;
 
@@ -52,7 +51,7 @@ public abstract class AbstractContentFactory<T> implements Serializable {
 
     private final Map<String, T> extendedFactories;
 
-    private final transient ServiceLoader<T> factoryLoader;
+    protected transient ServiceLoader<T> factoryLoader;
 
     /**
      * Default constructor.
@@ -80,13 +79,10 @@ public abstract class AbstractContentFactory<T> implements Serializable {
      */
     protected final T getFactory(String key) {
         T factory = null;
-        Iterator<T> it = factoryLoader.iterator();
-        while (it.hasNext()) {
-            factory = it.next();
-            if (factorySupports(factory, key)) {
+        for (T candidate : factoryLoader) {
+            if (factorySupports(candidate, key)) {
+                factory = candidate;
                 break;
-            } else {
-                factory = null;
             }
         }
         if (factory == null) {
@@ -99,7 +95,6 @@ public abstract class AbstractContentFactory<T> implements Serializable {
      * @return true if non-standard names are allowed, otherwise false
      */
     protected boolean allowIllegalNames() {
-        return CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
+        return CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }
 }

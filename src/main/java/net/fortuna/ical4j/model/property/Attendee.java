@@ -32,10 +32,14 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.apache.commons.collections4.Closure;
+import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.Arrays;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -60,7 +64,7 @@ public class Attendee extends Property {
      * Default constructor.
      */
     public Attendee() {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, new Factory());
     }
 
     /**
@@ -68,7 +72,7 @@ public class Attendee extends Property {
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public Attendee(final String aValue) throws URISyntaxException {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, new Factory());
         setValue(aValue);
     }
 
@@ -79,7 +83,7 @@ public class Attendee extends Property {
      */
     public Attendee(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -87,7 +91,7 @@ public class Attendee extends Property {
      * @param aUri a URI
      */
     public Attendee(final URI aUri) {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, new Factory());
         calAddress = aUri;
     }
 
@@ -96,7 +100,7 @@ public class Attendee extends Property {
      * @param aUri  a URI
      */
     public Attendee(final ParameterList aList, final URI aUri) {
-        super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, aList, new Factory());
         calAddress = aUri;
     }
 
@@ -117,28 +121,14 @@ public class Attendee extends Property {
          * roleparam) / (";" partstatparam) / (";" rsvpparam) / (";" deltoparam) / (";" delfromparam) / (";"
          * sentbyparam) / (";"cnparam) / (";" dirparam) / (";" languageparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.CUTYPE,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.MEMBER,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ROLE,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.PARTSTAT,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.RSVP,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(
-                Parameter.DELEGATED_TO, getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(
-                Parameter.DELEGATED_FROM, getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.SENT_BY,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.CN,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.DIR,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
+        CollectionUtils.forAllDo(Arrays.asList(Parameter.CUTYPE, Parameter.MEMBER, Parameter.ROLE, Parameter.PARTSTAT,
+                Parameter.RSVP, Parameter.DELEGATED_TO, Parameter.DELEGATED_FROM, Parameter.SENT_BY, Parameter.CN,
+                Parameter.DIR, Parameter.LANGUAGE), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                ParameterValidator.getInstance().assertOneOrLess(input, getParameters());
+            }
+        });
 
         /* scheduleagent and schedulestatus added for CalDAV scheduling
          */

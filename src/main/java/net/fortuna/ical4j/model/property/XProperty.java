@@ -31,12 +31,13 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Escapable;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
-import net.fortuna.ical4j.model.ValidationException;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationException;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -57,7 +58,7 @@ public class XProperty extends Property implements Escapable {
      * @param name a non-standard property name
      */
     public XProperty(final String name) {
-        super(name, PropertyFactoryImpl.getInstance());
+        super(name, new Factory(name));
     }
 
     /**
@@ -65,7 +66,7 @@ public class XProperty extends Property implements Escapable {
      * @param aValue a property value
      */
     public XProperty(final String aName, final String aValue) {
-        super(aName, PropertyFactoryImpl.getInstance());
+        super(aName, new Factory(aName));
         setValue(aValue);
     }
 
@@ -76,7 +77,7 @@ public class XProperty extends Property implements Escapable {
      */
     public XProperty(final String aName, final ParameterList aList,
             final String aValue) {
-        super(aName, aList, PropertyFactoryImpl.getInstance());
+        super(aName, aList, new Factory(aName));
         setValue(aValue);
     }
 
@@ -107,6 +108,26 @@ public class XProperty extends Property implements Escapable {
                             + getName()
                             + "]. Experimental properties must have the following prefix: "
                             + EXPERIMENTAL_PREFIX);
+        }
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory {
+        private static final long serialVersionUID = 1L;
+
+        private final String name;
+
+        public Factory(String name) {
+            super(name);
+            this.name = name;
+        }
+
+        public Property createProperty(final ParameterList parameters, final String value)
+                throws IOException, URISyntaxException, ParseException {
+            return new XProperty(name, parameters, value);
+        }
+
+        public Property createProperty() {
+            return new XProperty(name);
         }
     }
 }

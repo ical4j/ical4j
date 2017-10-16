@@ -1,0 +1,7 @@
+systemProp.sonar.host.url=https://sonar.mnode.org
+
+sonatype_username=
+sonatype_password=
+
+bintray_user=
+bintray_key=

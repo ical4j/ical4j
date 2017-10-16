@@ -5,3 +5,8 @@
 /.gradle
 zones.h
 zones.tab
+/bin/
+.classpath
+.project
+.settings/
+gradle.properties

@@ -36,6 +36,7 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -75,6 +76,15 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
         for (T c : components) {
             add((T) c.copy());
         }
+    }
+
+    /**
+     * Create  new component list containing the components in the specified list.
+     *
+     * @param components
+     */
+    public ComponentList(List<? extends T> components) {
+        addAll(components);
     }
 
     /**

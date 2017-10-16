@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -94,7 +95,7 @@ public class Url extends Property {
      * Default constructor.
      */
     public Url() {
-        super(URL, PropertyFactoryImpl.getInstance());
+        super(URL, new Factory());
     }
 
     /**
@@ -104,7 +105,7 @@ public class Url extends Property {
      */
     public Url(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(URL, aList, PropertyFactoryImpl.getInstance());
+        super(URL, aList, new Factory());
         setValue(aValue);
     }
 
@@ -112,7 +113,7 @@ public class Url extends Property {
      * @param aUri a URI
      */
     public Url(final URI aUri) {
-        super(URL, PropertyFactoryImpl.getInstance());
+        super(URL, new Factory());
         uri = aUri;
     }
 
@@ -121,7 +122,7 @@ public class Url extends Property {
      * @param aUri  a URI
      */
     public Url(final ParameterList aList, final URI aUri) {
-        super(URL, aList, PropertyFactoryImpl.getInstance());
+        super(URL, aList, new Factory());
         uri = aUri;
     }
 
@@ -153,11 +154,9 @@ public class Url extends Property {
         this.uri = uri;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

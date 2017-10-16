@@ -73,7 +73,7 @@ public class LocationTest extends PropertyTest {
      * @throws ParserException
      */
     public void testQuotedText() throws IOException, ParserException {
-        Calendar calendar = Calendars.load("etc/samples/valid/mansour.ics");
+        Calendar calendar = Calendars.load(getClass().getResource("/samples/valid/mansour.ics"));
         Component event = calendar.getComponent(Component.VEVENT);
         assertEquals("At \"The Terrace\" Complex > Melbourne \"\\,", event.getProperty(Property.LOCATION).getValue());
     }
@@ -86,7 +86,7 @@ public class LocationTest extends PropertyTest {
     public static TestSuite suite() throws IOException, ParserException {
     	TestSuite suite = new TestSuite();
     	//testQuotedText..
-        Calendar calendar = Calendars.load("etc/samples/valid/mansour.ics");
+        Calendar calendar = Calendars.load(LocationTest.class.getResource("/samples/valid/mansour.ics"));
         Component event = calendar.getComponent(Component.VEVENT);
         Location location = (Location) event.getProperty(Property.LOCATION);
         suite.addTest(new LocationTest(location, "At \"The Terrace\" Complex > Melbourne \"\\,"));

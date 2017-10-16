@@ -33,8 +33,9 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.ParameterValidator;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -136,7 +137,7 @@ public class RDate extends DateListProperty {
      * Default constructor.
      */
     public RDate() {
-        super(RDATE, PropertyFactoryImpl.getInstance());
+        super(RDATE, new Factory());
         periods = new PeriodList(false, true);
     }
 
@@ -147,7 +148,7 @@ public class RDate extends DateListProperty {
      */
     public RDate(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(RDATE, aList, PropertyFactoryImpl.getInstance());
+        super(RDATE, aList, new Factory());
         periods = new PeriodList(false, true);
         setValue(aValue);
     }
@@ -158,7 +159,7 @@ public class RDate extends DateListProperty {
      * @param dates a list of dates
      */
     public RDate(final DateList dates) {
-        super(RDATE, dates, PropertyFactoryImpl.getInstance());
+        super(RDATE, dates, new Factory());
         periods = new PeriodList(false, true);
     }
 
@@ -169,7 +170,7 @@ public class RDate extends DateListProperty {
      * @param dates a list of dates
      */
     public RDate(final ParameterList aList, final DateList dates) {
-        super(RDATE, aList, dates, PropertyFactoryImpl.getInstance());
+        super(RDATE, aList, dates, new Factory());
         periods = new PeriodList(false, true);
     }
 
@@ -179,7 +180,7 @@ public class RDate extends DateListProperty {
      * @param periods a list of periods
      */
     public RDate(final PeriodList periods) {
-        super(RDATE, new DateList(true), PropertyFactoryImpl.getInstance());
+        super(RDATE, new DateList(true), new Factory());
         this.periods = periods;
     }
 
@@ -190,7 +191,7 @@ public class RDate extends DateListProperty {
      * @param periods a list of periods
      */
     public RDate(final ParameterList aList, final PeriodList periods) {
-        super(RDATE, aList, new DateList(true), PropertyFactoryImpl.getInstance());
+        super(RDATE, aList, new DateList(true), new Factory());
         this.periods = periods;
     }
 

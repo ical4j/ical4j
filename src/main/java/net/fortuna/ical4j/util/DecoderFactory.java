@@ -31,12 +31,11 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.io.UnsupportedEncodingException;
-
 import net.fortuna.ical4j.model.parameter.Encoding;
-
 import org.apache.commons.codec.BinaryDecoder;
 import org.apache.commons.codec.StringDecoder;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Abstract base class for decoder factory implementations.
@@ -70,7 +69,7 @@ public abstract class DecoderFactory {
     /**
      * @return Returns the instance.
      */
-    public static final DecoderFactory getInstance() {
+    public static DecoderFactory getInstance() {
         return instance;
     }
 

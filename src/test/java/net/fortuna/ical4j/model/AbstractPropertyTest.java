@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

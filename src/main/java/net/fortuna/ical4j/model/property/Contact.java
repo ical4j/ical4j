@@ -32,7 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -53,18 +55,20 @@ public class Contact extends Property implements Escapable {
 
     private String value;
 
+    private Validator<Property> validator = new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE);
+
     /**
      * Default constructor.
      */
     public Contact() {
-        super(CONTACT, PropertyFactoryImpl.getInstance());
+        super(CONTACT, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Contact(final String aValue) {
-        super(CONTACT, PropertyFactoryImpl.getInstance());
+        super(CONTACT, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -73,26 +77,8 @@ public class Contact extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Contact(final ParameterList aList, final String aValue) {
-        super(CONTACT, aList, PropertyFactoryImpl.getInstance());
+        super(CONTACT, aList, new Factory());
         setValue(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" altrepparam) / (";" languageparam) /
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**
@@ -107,6 +93,11 @@ public class Contact extends Property implements Escapable {
      */
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        validator.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

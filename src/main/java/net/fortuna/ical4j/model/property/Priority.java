@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -173,7 +174,7 @@ public class Priority extends Property {
      * Default constructor.
      */
     public Priority() {
-        super(PRIORITY, PropertyFactoryImpl.getInstance());
+        super(PRIORITY, new Factory());
         level = UNDEFINED.getLevel();
     }
 
@@ -182,7 +183,7 @@ public class Priority extends Property {
      * @param aValue a value string for this component
      */
     public Priority(final ParameterList aList, final String aValue) {
-        super(PRIORITY, aList, PropertyFactoryImpl.getInstance());
+        super(PRIORITY, aList, new Factory());
         level = Integer.parseInt(aValue);
     }
 
@@ -190,7 +191,7 @@ public class Priority extends Property {
      * @param aLevel an int representation of a priority level
      */
     public Priority(final int aLevel) {
-        super(PRIORITY, PropertyFactoryImpl.getInstance());
+        super(PRIORITY, new Factory());
         level = aLevel;
     }
 
@@ -199,7 +200,7 @@ public class Priority extends Property {
      * @param aLevel an int representation of a priority level
      */
     public Priority(final ParameterList aList, final int aLevel) {
-        super(PRIORITY, aList, PropertyFactoryImpl.getInstance());
+        super(PRIORITY, aList, new Factory());
         level = aLevel;
     }
 
@@ -231,11 +232,9 @@ public class Priority extends Property {
         this.level = level;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

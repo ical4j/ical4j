@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -85,14 +86,14 @@ public class CalScale extends Property {
      * Default constructor.
      */
     public CalScale() {
-        super(CALSCALE, PropertyFactoryImpl.getInstance());
+        super(CALSCALE, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public CalScale(final String aValue) {
-        super(CALSCALE, PropertyFactoryImpl.getInstance());
+        super(CALSCALE, new Factory());
         this.value = aValue;
     }
 
@@ -101,7 +102,7 @@ public class CalScale extends Property {
      * @param aValue a value string for this component
      */
     public CalScale(final ParameterList aList, final String aValue) {
-        super(CALSCALE, aList, PropertyFactoryImpl.getInstance());
+        super(CALSCALE, aList, new Factory());
         this.value = aValue;
     }
 

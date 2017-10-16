@@ -32,18 +32,24 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.ComponentValidator;
-import net.fortuna.ical4j.util.PropertyValidator;
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.transform.rfc5545.RuleManager;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.AbstractCalendarValidatorFactory;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -131,15 +137,17 @@ public class Calendar implements Serializable {
      */
     public static final String END = "END";
 
-    private PropertyList properties;
+    private final PropertyList<Property> properties;
 
-    private ComponentList<CalendarComponent> components;
+    private final ComponentList<CalendarComponent> components;
+
+    private final Validator<Calendar> validator;
 
     /**
      * Default constructor.
      */
     public Calendar() {
-        this(new PropertyList(), new ComponentList<CalendarComponent>());
+        this(new PropertyList<Property>(), new ComponentList<CalendarComponent>());
     }
 
     /**
@@ -147,17 +155,28 @@ public class Calendar implements Serializable {
      * @param components a list of components to add to the calendar
      */
     public Calendar(final ComponentList<CalendarComponent> components) {
-        this(new PropertyList(), components);
+        this(new PropertyList<Property>(), components);
+    }
+
+    /**
+     * Initialise a Calendar object using the default configured validator.
+     * @param properties a list of initial calendar properties
+     * @param components a list of initial calendar components
+     */
+    public Calendar(PropertyList<Property> properties, ComponentList<CalendarComponent> components) {
+        this(properties, components, AbstractCalendarValidatorFactory.getInstance().newInstance());
     }
 
     /**
      * Constructor.
      * @param p a list of properties
      * @param c a list of components
+     * @param validator used to ensure the validity of the calendar instance
      */
-    public Calendar(final PropertyList p, final ComponentList<CalendarComponent> c) {
+    public Calendar(PropertyList<Property> p, ComponentList<CalendarComponent> c, Validator<Calendar> validator) {
         this.properties = p;
         this.components = c;
+        this.validator = validator;
     }
 
     /**
@@ -170,7 +189,7 @@ public class Calendar implements Serializable {
     public Calendar(Calendar c) throws ParseException, IOException,
             URISyntaxException {
         
-        this(new PropertyList(c.getProperties()),
+        this(new PropertyList<Property>(c.getProperties()),
         		new ComponentList<CalendarComponent>(c.getComponents()));
     }
 
@@ -178,19 +197,16 @@ public class Calendar implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        buffer.append(BEGIN);
-        buffer.append(':');
-        buffer.append(VCALENDAR);
-        buffer.append(Strings.LINE_SEPARATOR);
-        buffer.append(getProperties());
-        buffer.append(getComponents());
-        buffer.append(END);
-        buffer.append(':');
-        buffer.append(VCALENDAR);
-        buffer.append(Strings.LINE_SEPARATOR);
-
-        return buffer.toString();
+        return BEGIN +
+                ':' +
+                VCALENDAR +
+                Strings.LINE_SEPARATOR +
+                getProperties() +
+                getComponents() +
+                END +
+                ':' +
+                VCALENDAR +
+                Strings.LINE_SEPARATOR;
     }
 
     /**
@@ -221,7 +237,7 @@ public class Calendar implements Serializable {
     /**
      * @return Returns the properties.
      */
-    public final PropertyList getProperties() {
+    public final PropertyList<Property> getProperties() {
         return properties;
     }
 
@@ -230,7 +246,7 @@ public class Calendar implements Serializable {
      * @param name name of properties to retrieve
      * @return a property list containing only properties with the specified name
      */
-    public final PropertyList getProperties(final String name) {
+    public final PropertyList<Property> getProperties(final String name) {
         return getProperties().getProperties(name);
     }
 
@@ -257,205 +273,7 @@ public class Calendar implements Serializable {
      * @throws ValidationException where the calendar is not in a valid state
      */
     public void validate(final boolean recurse) throws ValidationException {
-        // 'prodid' and 'version' are both REQUIRED,
-        // but MUST NOT occur more than once
-        PropertyValidator.getInstance().assertOne(Property.PRODID, properties);
-        PropertyValidator.getInstance().assertOne(Property.VERSION, properties);
-
-        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            // require VERSION:2.0 for RFC2445..
-            if (!Version.VERSION_2_0.equals(getProperty(Property.VERSION))) {
-                throw new ValidationException("Unsupported Version: " + getProperty(Property.VERSION).getValue());
-            }
-        }
-        
-        // 'calscale' and 'method' are optional,
-        // but MUST NOT occur more than once
-        PropertyValidator.getInstance().assertOneOrLess(Property.CALSCALE,
-                properties);
-        PropertyValidator.getInstance().assertOneOrLess(Property.METHOD,
-                properties);
-
-        // must contain at least one component
-        if (getComponents().isEmpty()) {
-            throw new ValidationException(
-                    "Calendar must contain at least one component");
-        }
-
-        // validate properties..
-        for (final Property property : getProperties()) {
-            if (!(property instanceof XProperty)
-                    && !property.isCalendarProperty()) {
-                throw new ValidationException("Invalid property: "
-                        + property.getName());
-            }
-        }
-
-//        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            // validate method..
-            final Method method = (Method) getProperty(Property.METHOD);
-            if (Method.PUBLISH.equals(method)) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    
-                    if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-                        ComponentValidator.assertNone(Component.VTODO, getComponents());
-                    }
-                }
-                else if (getComponent(Component.VFREEBUSY) != null) {
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-//                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                    ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-//                else if (getComponent(Component.VJOURNAL) != null) {
-//                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                    ComponentValidator.assertNone(Component.VEVENT, getComponents());
-//                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-//                }
-            }
-            else if (Method.REQUEST.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VFREEBUSY) != null) {
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-//                  ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-            }
-            else if (Method.REPLY.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertOneOrLess(Component.VTIMEZONE, getComponents());
-                    
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VFREEBUSY) != null) {
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertOneOrLess(Component.VTIMEZONE, getComponents());
-                    
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-//                  ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-            }
-            else if (Method.ADD.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-                else if (getComponent(Component.VJOURNAL) != null) {
-                    ComponentValidator.assertOneOrLess(Component.VTIMEZONE, getComponents());
-                    
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-//                  ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-            }
-            else if (Method.CANCEL.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertOneOrLess(Component.VTIMEZONE, getComponents());
-                    
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-                else if (getComponent(Component.VJOURNAL) != null) {
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-//                  ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-            }
-            else if (Method.REFRESH.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
-                }
-            }
-            else if (Method.COUNTER.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertOneOrLess(Component.VTIMEZONE, getComponents());
-                    
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-            }
-            else if (Method.DECLINE_COUNTER.equals(getProperty(Property.METHOD))) {
-                if (getComponent(Component.VEVENT) != null) {
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                    ComponentValidator.assertNone(Component.VTODO, getComponents());
-                    ComponentValidator.assertNone(Component.VTIMEZONE, getComponents());
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                }
-                else if (getComponent(Component.VTODO) != null) {
-                    ComponentValidator.assertNone(Component.VALARM, getComponents());
-                    ComponentValidator.assertNone(Component.VFREEBUSY, getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, getComponents());
-                    ComponentValidator.assertNone(Component.VJOURNAL, getComponents());
-                }
-            }
-//        }
-            
-            // perform ITIP validation on components..
-            if (method != null) {
-                for (CalendarComponent component : getComponents()) {
-                    component.validate(method);
-                }
-            }
-        
+        validator.validate(this);
         if (recurse) {
             validateProperties();
             validateComponents();
@@ -532,5 +350,73 @@ public class Calendar implements Serializable {
     public final int hashCode() {
         return new HashCodeBuilder().append(getProperties()).append(
                 getComponents()).toHashCode();
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void conformToRfc5545() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+       
+        conformPropertiesToRfc5545(properties);
+        
+        for(Component component : (List<CalendarComponent>)components){
+            CountableProperties.removeExceededPropertiesForComponent(component);
+            
+            //each component
+            conformComponentToRfc5545(component);
+            
+            //each component property
+            conformPropertiesToRfc5545(component.getProperties());
+            
+            for(java.lang.reflect.Method m : component.getClass().getDeclaredMethods()){
+                if(ComponentList.class.isAssignableFrom(m.getReturnType()) && 
+                   m.getName().startsWith("get")){
+                    List<Component> components = (List<Component>) m.invoke(component);
+                    for(Component c : components){
+                        //each inner component
+                        conformComponentToRfc5545(c);
+                        
+                        //each inner component properties
+                        conformPropertiesToRfc5545(c.getProperties());
+                    }
+                }
+            }
+        }
+    }
+    
+    private static void conformPropertiesToRfc5545(List<Property> properties) {
+        for (Property property : properties) {
+            RuleManager.applyTo(property);
+        }
+    }
+    
+    private static void conformComponentToRfc5545(Component component){
+        RuleManager.applyTo(component);
+    }
+    
+    private static enum CountableProperties{
+        STATUS(Property.STATUS, 1);
+        private int maxApparitionNumber;
+        private String name;
+        
+        private CountableProperties(String name, int maxApparitionNumber){
+            this.maxApparitionNumber = maxApparitionNumber;
+            this.name = name;
+        }
+        
+        protected void limitApparitionsNumberIn(Component component){
+            PropertyList<? extends Property> propertyList = component.getProperties(name);
+            
+            if(propertyList.size() <= maxApparitionNumber){
+                return;
+            }
+            int toRemove = propertyList.size() - maxApparitionNumber; 
+            for(int i = 0; i < toRemove; i++){
+                component.getProperties().remove(propertyList.get(i));            }
+        }
+        
+        private static void removeExceededPropertiesForComponent(Component component){
+            for(CountableProperties cp: values()){
+                cp.limitApparitionsNumberIn(component);
+            }
+        }
     }
 }

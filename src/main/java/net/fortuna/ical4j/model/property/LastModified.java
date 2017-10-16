@@ -84,7 +84,7 @@ public class LastModified extends UtcProperty {
      * Default constructor.
      */
     public LastModified() {
-        super(LAST_MODIFIED, PropertyFactoryImpl.getInstance());
+        super(LAST_MODIFIED, new Factory());
     }
 
     /**
@@ -102,7 +102,7 @@ public class LastModified extends UtcProperty {
      */
     public LastModified(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(LAST_MODIFIED, aList, PropertyFactoryImpl.getInstance());
+        super(LAST_MODIFIED, aList, new Factory());
         setValue(aValue);
     }
 
@@ -110,7 +110,7 @@ public class LastModified extends UtcProperty {
      * @param aDate a date representation of a date-time value
      */
     public LastModified(final DateTime aDate) {
-        super(LAST_MODIFIED, PropertyFactoryImpl.getInstance());
+        super(LAST_MODIFIED, new Factory());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
@@ -121,7 +121,7 @@ public class LastModified extends UtcProperty {
      * @param aDate a date representation of a date-time value
      */
     public LastModified(final ParameterList aList, final DateTime aDate) {
-        super(LAST_MODIFIED, aList, PropertyFactoryImpl.getInstance());
+        super(LAST_MODIFIED, aList, new Factory());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);

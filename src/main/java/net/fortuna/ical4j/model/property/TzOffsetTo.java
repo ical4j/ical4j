@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -56,14 +57,14 @@ public class TzOffsetTo extends Property {
      * Default constructor.
      */
     public TzOffsetTo() {
-        super(TZOFFSETTO, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETTO, new Factory());
     }
 
     /**
      * @param value an offset value
      */
     public TzOffsetTo(String value) {
-        super(TZOFFSETTO, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETTO, new Factory());
         setValue(value);
     }
 
@@ -72,7 +73,7 @@ public class TzOffsetTo extends Property {
      * @param aValue a value string for this component
      */
     public TzOffsetTo(final ParameterList aList, final String aValue) {
-        super(TZOFFSETTO, aList, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETTO, aList, new Factory());
         setValue(aValue);
     }
 
@@ -80,7 +81,7 @@ public class TzOffsetTo extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final UtcOffset anOffset) {
-        super(TZOFFSETTO, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETTO, new Factory());
         offset = anOffset;
     }
 
@@ -89,7 +90,7 @@ public class TzOffsetTo extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final ParameterList aList, final UtcOffset anOffset) {
-        super(TZOFFSETTO, aList, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETTO, aList, new Factory());
         offset = anOffset;
     }
 
@@ -124,11 +125,9 @@ public class TzOffsetTo extends Property {
         this.offset = offset;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

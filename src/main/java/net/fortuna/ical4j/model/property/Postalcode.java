@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -57,14 +58,14 @@ public class Postalcode extends Property implements Escapable {
      * Default constructor.
      */
     public Postalcode() {
-        super(POSTALCODE, PropertyFactoryImpl.getInstance());
+        super(POSTALCODE, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Postalcode(final String aValue) {
-        super(POSTALCODE, PropertyFactoryImpl.getInstance());
+        super(POSTALCODE, new Factory());
         setValue(aValue);
     }
 
@@ -73,18 +74,8 @@ public class Postalcode extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Postalcode(final ParameterList aList, final String aValue) {
-        super(POSTALCODE, aList, PropertyFactoryImpl.getInstance());
+        super(POSTALCODE, aList, new Factory());
         setValue(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**
@@ -99,6 +90,11 @@ public class Postalcode extends Property implements Escapable {
      */
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Postalcode> {

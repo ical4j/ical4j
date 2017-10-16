@@ -57,7 +57,7 @@ public class Vvenue extends Parameter {
      * @param aValue a string abbreviation
      */
     public Vvenue(final String aValue) {
-        super(VVENUE, ParameterFactoryImpl.getInstance());
+        super(VVENUE, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

@@ -32,7 +32,8 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.util.ParameterValidator;
+import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -132,7 +133,7 @@ public class RecurrenceId extends DateProperty {
      * Default constructor.
      */
     public RecurrenceId() {
-        super(RECURRENCE_ID, PropertyFactoryImpl.getInstance());
+        super(RECURRENCE_ID, new Factory());
         setDate(new DateTime());
     }
 
@@ -142,7 +143,7 @@ public class RecurrenceId extends DateProperty {
      * @param timezone initial timezone
      */
     public RecurrenceId(TimeZone timezone) {
-        super(RECURRENCE_ID, timezone, PropertyFactoryImpl.getInstance());
+        super(RECURRENCE_ID, timezone, new Factory());
     }
 
     /**
@@ -152,7 +153,7 @@ public class RecurrenceId extends DateProperty {
      * @throws ParseException where the specified string is not a valid RECURRENCE_ID value representation
      */
     public RecurrenceId(final String value) throws ParseException {
-        super(RECURRENCE_ID, PropertyFactoryImpl.getInstance());
+        super(RECURRENCE_ID, new Factory());
         setValue(value);
     }
 
@@ -165,7 +166,7 @@ public class RecurrenceId extends DateProperty {
      *                        representation
      */
     public RecurrenceId(String value, TimeZone timezone) throws ParseException {
-        super(RECURRENCE_ID, timezone, PropertyFactoryImpl.getInstance());
+        super(RECURRENCE_ID, timezone, new Factory());
         setValue(value);
     }
 
@@ -176,7 +177,7 @@ public class RecurrenceId extends DateProperty {
      */
     public RecurrenceId(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(RECURRENCE_ID, aList, PropertyFactoryImpl.getInstance());
+        super(RECURRENCE_ID, aList, new Factory());
         setValue(aValue);
     }
 
@@ -186,7 +187,7 @@ public class RecurrenceId extends DateProperty {
      * @param aDate a date representation of a date or date-time
      */
     public RecurrenceId(final Date aDate) {
-        super(RECURRENCE_ID, PropertyFactoryImpl.getInstance());
+        super(RECURRENCE_ID, new Factory());
         setDate(aDate);
     }
 
@@ -197,7 +198,7 @@ public class RecurrenceId extends DateProperty {
      * @param aDate a date representation of a date or date-time
      */
     public RecurrenceId(final ParameterList aList, final Date aDate) {
-        super(RECURRENCE_ID, aList, PropertyFactoryImpl.getInstance());
+        super(RECURRENCE_ID, aList, new Factory());
         setDate(aDate);
     }
 

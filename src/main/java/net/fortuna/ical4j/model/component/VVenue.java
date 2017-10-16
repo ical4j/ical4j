@@ -33,8 +33,14 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.util.PropertyValidator;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
+import org.apache.commons.collections4.Closure;
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Arrays;
 
 /**
  * $Id $ [Apr 5, 2004]
@@ -109,17 +115,15 @@ public class VVenue extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        b.append(BEGIN);
-        b.append(':');
-        b.append(getName());
-        b.append(Strings.LINE_SEPARATOR);
-        b.append(getProperties());
-        b.append(END);
-        b.append(':');
-        b.append(getName());
-        b.append(Strings.LINE_SEPARATOR);
-        return b.toString();
+        return BEGIN +
+                ':' +
+                getName() +
+                Strings.LINE_SEPARATOR +
+                getProperties() +
+                END +
+                ':' +
+                getName() +
+                Strings.LINE_SEPARATOR;
     }
 
     /**
@@ -143,36 +147,14 @@ public class VVenue extends CalendarComponent {
          *                location-type / categories /
          *                dtstamp / created / last-modified
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.NAME,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.STREET_ADDRESS,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.EXTENDED_ADDRESS,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LOCALITY,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.REGION,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.COUNTRY,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.POSTALCODE,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.TZID,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.GEO,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LOCATION_TYPE,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.CATEGORIES,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.DTSTAMP,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.CREATED,
-                getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
-                getProperties());
+        CollectionUtils.forAllDo(Arrays.asList(Property.NAME, Property.DESCRIPTION, Property.STREET_ADDRESS, Property.EXTENDED_ADDRESS,
+                Property.LOCALITY, Property.REGION, Property.COUNTRY, Property.POSTALCODE, Property.TZID, Property.GEO,
+                Property.LOCATION_TYPE, Property.CATEGORIES, Property.DTSTAMP, Property.CREATED, Property.LAST_MODIFIED), new Closure<String>() {
+            @Override
+            public void execute(String input) {
+                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
+            }
+        });
 
         /*
          * ; the following is optional, ; and MAY occur more than once tel / url / x-prop

@@ -62,7 +62,7 @@ public abstract class Content implements Serializable {
      */
     public abstract String getValue();
 
-    public static abstract class Factory {
+    public static abstract class Factory implements Serializable {
 
         private final List<String> supportedNames;
 
