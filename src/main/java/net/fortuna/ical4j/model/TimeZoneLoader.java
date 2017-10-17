@@ -238,7 +238,7 @@ public class TimeZoneLoader {
 
                 result.getObservances().add(observance);
 
-            } catch (Exception e) {
+            } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
         }
