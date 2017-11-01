@@ -61,7 +61,7 @@ public abstract class EncoderFactory {
 			final Class<EncoderFactory> factoryClass = (Class<EncoderFactory>) Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
             instance = factoryClass.newInstance();
         }
-        catch (Exception e) {
+        catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             instance = new DefaultEncoderFactory();
         }
     }

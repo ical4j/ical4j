@@ -64,7 +64,7 @@ public abstract class CalendarParserFactory {
                     Configurator.getProperty(KEY_FACTORY_CLASS));
             instance = factoryClass.newInstance();
         }
-        catch (Exception e) {
+        catch (InstantiationException | ClassNotFoundException | IllegalAccessException e) {
             instance = new DefaultCalendarParserFactory();
         }
     }

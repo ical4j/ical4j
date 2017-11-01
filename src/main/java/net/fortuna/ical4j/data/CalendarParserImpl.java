@@ -147,7 +147,7 @@ public class CalendarParserImpl implements CalendarParser {
             tokeniser.quoteChar('"');
 
             parseCalendarList(tokeniser, in, handler);
-        } catch (Exception e) {
+        } catch (IOException | ParseException | URISyntaxException | RuntimeException e) {
 
             if (e instanceof IOException) {
                 throw (IOException) e;

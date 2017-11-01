@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -115,14 +116,14 @@ public class TzId extends Property implements Escapable {
      * Default constructor.
      */
     public TzId() {
-        super(TZID, PropertyFactoryImpl.getInstance());
+        super(TZID, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzId(final String aValue) {
-        super(TZID, PropertyFactoryImpl.getInstance());
+        super(TZID, new Factory());
         setValue(aValue);
     }
 
@@ -131,7 +132,7 @@ public class TzId extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public TzId(final ParameterList aList, final String aValue) {
-        super(TZID, aList, PropertyFactoryImpl.getInstance());
+        super(TZID, aList, new Factory());
         setValue(aValue);
     }
 
@@ -147,6 +148,11 @@ public class TzId extends Property implements Escapable {
      */
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

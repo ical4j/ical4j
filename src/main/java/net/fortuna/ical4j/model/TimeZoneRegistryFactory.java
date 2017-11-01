@@ -59,7 +59,7 @@ public abstract class TimeZoneRegistryFactory {
 			final Class<? extends TimeZoneRegistryFactory> factoryClass = (Class<? extends TimeZoneRegistryFactory>) Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
             instance = factoryClass.newInstance();
         }
-        catch (Exception e) {
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             instance = new DefaultTimeZoneRegistryFactory();
         }
     }

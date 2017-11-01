@@ -153,7 +153,7 @@ public class Value extends Parameter {
      * @param aValue a string representation of a value data type
      */
     public Value(final String aValue) {
-        super(VALUE, ParameterFactoryImpl.getInstance());
+        super(VALUE, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

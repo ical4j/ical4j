@@ -57,7 +57,7 @@ public class TzId extends Parameter implements Escapable {
      * @param aValue a string representation of a time zone identifier
      */
     public TzId(final String aValue) {
-        super(TZID, ParameterFactoryImpl.getInstance());
+        super(TZID, new Factory());
         // parameter values may be quoted if they contain characters in the
         // set [:;,]..
         this.value = Strings.unquote(aValue);

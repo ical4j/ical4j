@@ -2,14 +2,13 @@ buildscript {
     repositories {
         mavenCentral()
     }
-
     dependencies {
-        classpath group: 'pl.allegro.tech.build', name: 'axion-release-plugin', version: '1.7.1'
         classpath 'org.hidetake:gradle-ssh-plugin:1.1.3'
     }
 }
 
 plugins {
+    id 'pl.allegro.tech.build.axion-release' version '1.8.1'
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.7.3"
 }
@@ -35,7 +34,7 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 ext {
-    slf4jVersion = '1.7.10'
+    slf4jVersion = '1.7.25'
 }
 
 /*
@@ -71,10 +70,10 @@ repositories {
 
 dependencies {
     api "org.slf4j:slf4j-api:$slf4jVersion",
-            'commons-codec:commons-codec:1.9',
-            'org.apache.commons:commons-lang3:3.3.2',
-            'org.apache.commons:commons-collections4:4.0',
-			'org.threeten:threetenbp:1.3.3',
+            'commons-codec:commons-codec:1.10',
+            'org.apache.commons:commons-lang3:3.6',
+            'org.apache.commons:commons-collections4:4.1',
+			'org.threeten:threetenbp:1.3.6', 'javax.cache:cache-api:1.0.0',
             'com.squareup.dagger:dagger:1.2.5'
     compile 'org.codehaus.groovy:groovy-all:2.3.2', optional
 
@@ -84,7 +83,8 @@ dependencies {
         'org.spockframework:spock-core:0.7-groovy-2.0',
         'commons-io:commons-io:2.4',
         'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
-        "org.slf4j:slf4j-log4j12:$slf4jVersion"
+        "org.slf4j:slf4j-log4j12:$slf4jVersion",
+        'org.ehcache:ehcache:3.4.0'
 }
 
 jacocoTestReport {
@@ -133,13 +133,21 @@ scmVersion {
     }
     versionCreator 'versionWithBranch'
     branchVersionCreator = [
-        'release/.*': 'simple'
+        'master': 'simple'
     ]
 }
 version = scmVersion.version
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+    // sonatype credentials
+    sonatype_username = project.hasProperty('sonatype_username') ? project.getProperty('sonatype_username') : ''
+    sonatype_password = project.hasProperty('sonatype_password') ? project.getProperty('sonatype_password') : ''
+
+    // bintray credentials
+    bintray_user = project.hasProperty('bintray_user') ? project.getProperty('bintray_user') : ''
+    bintray_key = project.hasProperty('bintray_key') ? project.getProperty('bintray_key') : ''
 }
 
 uploadArchives {
@@ -200,6 +208,15 @@ publishing {
                 scmNode.appendNode('url', 'https://github.com/ical4j/ical4j')
                 scmNode.appendNode('connection', 'scm:git@github.com:ical4j/ical4j.git')
                 scmNode.appendNode('developerConnection', 'scm:git@github.com:ical4j/ical4j.git')
+
+                def licenseNode = asNode().appendNode('licenses').appendNode('license')
+                licenseNode.appendNode('name', 'iCal4j - License')
+                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE')
+                licenseNode.appendNode('distribution', 'repo')
+
+                def developerNode = asNode().appendNode('developers').appendNode('developer')
+                developerNode.appendNode('id', 'fortuna')
+                developerNode.appendNode('name', 'Ben Fortuna')
             }
         }
     }
@@ -226,7 +243,7 @@ bintray {
                 sync = isReleaseVersion
                 user = sonatype_username //OSS user token: mandatory
                 password = sonatype_password //OSS user password: mandatory
-                close = '0' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
+//                close = '0' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
             }
         }
     }

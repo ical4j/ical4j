@@ -61,7 +61,7 @@ public abstract class DecoderFactory {
 			final Class<DecoderFactory> factoryClass = (Class<DecoderFactory>) Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
             instance = factoryClass.newInstance();
         }
-        catch (Exception e) {
+        catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             instance = new DefaultDecoderFactory();
         }
     }

@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -121,14 +122,14 @@ public class Method extends Property {
      * Default constructor.
      */
     public Method() {
-        super(METHOD, PropertyFactoryImpl.getInstance());
+        super(METHOD, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Method(final String aValue) {
-        super(METHOD, PropertyFactoryImpl.getInstance());
+        super(METHOD, new Factory());
         this.value = aValue;
     }
 
@@ -137,7 +138,7 @@ public class Method extends Property {
      * @param aValue a value string for this component
      */
     public Method(final ParameterList aList, final String aValue) {
-        super(METHOD, aList, PropertyFactoryImpl.getInstance());
+        super(METHOD, aList, new Factory());
         this.value = aValue;
     }
 
@@ -153,6 +154,11 @@ public class Method extends Property {
      */
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

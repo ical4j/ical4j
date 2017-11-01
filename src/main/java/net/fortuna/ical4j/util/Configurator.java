@@ -31,9 +31,11 @@
  */
 package net.fortuna.ical4j.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -55,7 +57,7 @@ public final class Configurator {
     static {
         try {
             CONFIG.load(ResourceLoader.getResourceAsStream("ical4j.properties"));
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOG.info("ical4j.properties not found.");
         }
     }
@@ -75,6 +77,6 @@ public final class Configurator {
         if (property == null) {
             property = System.getProperty(key);
         }
-        return property;
+        return StringUtils.defaultString(property);
     }
 }
