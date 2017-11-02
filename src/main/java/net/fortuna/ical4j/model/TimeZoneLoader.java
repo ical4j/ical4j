@@ -39,7 +39,7 @@ public class TimeZoneLoader {
     private static final String UPDATE_PROXY_HOST = "net.fortuna.ical4j.timezone.update.proxy.host";
     private static final String UPDATE_PROXY_PORT = "net.fortuna.ical4j.timezone.update.proxy.port";
 
-    private static final String TZ_CACHE_IMPL = "net.fortuna.ical4j.timezone.cacheimpl";
+    private static final String TZ_CACHE_IMPL = "net.fortuna.ical4j.timezone.cache.impl";
 
     private static Proxy proxy = null;
     private static final Set<String> TIMEZONE_DEFINITIONS = new HashSet<String>();
