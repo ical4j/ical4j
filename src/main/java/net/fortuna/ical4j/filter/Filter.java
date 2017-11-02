@@ -104,7 +104,7 @@ public class Filter<T> {
             Collection<T> filtered;
             try {
                 filtered = c.getClass().newInstance();
-            } catch (Exception e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 filtered = new ArrayList<T>();
             }
 

@@ -8,7 +8,9 @@ import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Configurator;
+import net.fortuna.ical4j.util.JCacheTimeZoneCache;
 import net.fortuna.ical4j.util.ResourceLoader;
+import net.fortuna.ical4j.util.TimeZoneCache;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.*;
@@ -18,10 +20,6 @@ import org.threeten.bp.temporal.TemporalAdjusters;
 import org.threeten.bp.zone.ZoneOffsetTransition;
 import org.threeten.bp.zone.ZoneOffsetTransitionRule;
 
-import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.MutableConfiguration;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -40,6 +38,8 @@ public class TimeZoneLoader {
     private static final String UPDATE_PROXY_TYPE = "net.fortuna.ical4j.timezone.update.proxy.type";
     private static final String UPDATE_PROXY_HOST = "net.fortuna.ical4j.timezone.update.proxy.host";
     private static final String UPDATE_PROXY_PORT = "net.fortuna.ical4j.timezone.update.proxy.port";
+
+    private static final String TZ_CACHE_IMPL = "net.fortuna.ical4j.timezone.cache.impl";
 
     private static Proxy proxy = null;
     private static final Set<String> TIMEZONE_DEFINITIONS = new HashSet<String>();
@@ -63,10 +63,10 @@ public class TimeZoneLoader {
 
         // Proxy configuration..
         try {
-            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED))) {
-                final Proxy.Type type = Proxy.Type.valueOf(Configurator.getProperty(UPDATE_PROXY_TYPE));
-                final String proxyHost = Configurator.getProperty(UPDATE_PROXY_HOST);
-                final int proxyPort = Integer.parseInt(Configurator.getProperty(UPDATE_PROXY_PORT));
+            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false"))) {
+                final Proxy.Type type = Configurator.getEnumProperty(Proxy.Type.class, UPDATE_PROXY_TYPE).orElse(Proxy.Type.DIRECT);
+                final String proxyHost = Configurator.getProperty(UPDATE_PROXY_HOST).orElse("");
+                final int proxyPort = Configurator.getIntProperty(UPDATE_PROXY_PORT).orElse(-1);
                 proxy = new Proxy(type, new InetSocketAddress(proxyHost, proxyPort));
             }
         }
@@ -77,13 +77,13 @@ public class TimeZoneLoader {
     }
 
     private final String resourcePrefix;
-    private final Cache<String, VTimeZone> cache;
+    private final TimeZoneCache cache;
 
     public TimeZoneLoader(String resourcePrefix) {
         this(resourcePrefix, cacheInit());
     }
 
-    public TimeZoneLoader(String resourcePrefix, Cache<String, VTimeZone> cache) {
+    public TimeZoneLoader(String resourcePrefix, TimeZoneCache cache) {
         this.resourcePrefix = resourcePrefix;
         this.cache = cache;
     }
@@ -95,14 +95,14 @@ public class TimeZoneLoader {
      */
     public VTimeZone loadVTimeZone(String id) throws IOException, ParserException, ParseException {
         Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
-        if (!cache.containsKey(id)) {
+        if (!cache.containsId(id)) {
             final URL resource = ResourceLoader.getResource(resourcePrefix + id + ".ics");
             if (resource != null) {
                 final CalendarBuilder builder = new CalendarBuilder();
                 final Calendar calendar = builder.build(resource.openStream());
                 final VTimeZone vTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
                 // load any available updates for the timezone.. can be explicility disabled via configuration
-                if (!"false".equals(Configurator.getProperty(UPDATE_ENABLED))) {
+                if (!"false".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("true"))) {
                     return updateDefinition(vTimeZone);
                 }
                 if (vTimeZone != null) {
@@ -112,7 +112,7 @@ public class TimeZoneLoader {
                 return generateTimezoneForId(id);
             }
         }
-        return cache.get(id);
+        return cache.getTimezone(id);
     }
 
     /**
@@ -122,16 +122,13 @@ public class TimeZoneLoader {
     private VTimeZone updateDefinition(VTimeZone vTimeZone) throws IOException, ParserException {
         final TzUrl tzUrl = vTimeZone.getTimeZoneUrl();
         if (tzUrl != null) {
-            final String connectTimeoutProperty = Configurator.getProperty(UPDATE_CONNECT_TIMEOUT);
-            final String readTimeoutProperty = Configurator.getProperty(UPDATE_READ_TIMEOUT);
-
-            final int connectTimeout = connectTimeoutProperty != null ? Integer.parseInt(connectTimeoutProperty) : 0;
-            final int readTimeout = readTimeoutProperty != null ? Integer.parseInt(readTimeoutProperty) : 0;
+            final int connectTimeout = Configurator.getIntProperty(UPDATE_CONNECT_TIMEOUT).orElse(0);
+            final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(0);
 
             URLConnection connection;
             URL url = tzUrl.getUri().toURL();
 
-            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED)) && proxy != null) {
+            if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
                 connection = url.openConnection(proxy);
             } else {
                 connection = url.openConnection();
@@ -238,7 +235,7 @@ public class TimeZoneLoader {
 
                 result.getObservances().add(observance);
 
-            } catch (Exception e) {
+            } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -281,20 +278,9 @@ public class TimeZoneLoader {
         }
     }
 
-    private static Cache cacheInit() {
-        CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
-        Cache cache = cacheManager.getCache("ical4j.timezones", String.class, VTimeZone.class);
-        if (cache == null) {
-            synchronized (TimeZoneLoader.class) {
-                cache = cacheManager.getCache("ical4j.timezones", String.class, VTimeZone.class);
-                if (cache == null) {
-                    MutableConfiguration<String, VTimeZone> cacheConfig = new MutableConfiguration<>();
-                    cacheConfig.setTypes(String.class, VTimeZone.class);
-                    cache = cacheManager.createCache("ical4j.timezones", cacheConfig);
-                }
-            }
-        }
-        return cache;
+    private static TimeZoneCache cacheInit() {
+        net.fortuna.ical4j.util.Optional<TimeZoneCache> property = Configurator.getObjectProperty(TZ_CACHE_IMPL);
+        return property.orElse(new JCacheTimeZoneCache());
     }
 
     private static class ZoneOffsetKey {

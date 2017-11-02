@@ -34,6 +34,7 @@ package net.fortuna.ical4j.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -55,7 +56,7 @@ public final class Configurator {
     static {
         try {
             CONFIG.load(ResourceLoader.getResourceAsStream("ical4j.properties"));
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOG.info("ical4j.properties not found.");
         }
     }
@@ -70,11 +71,54 @@ public final class Configurator {
      * @param key a compatibility hint key
      * @return true if the specified compatibility hint is enabled, otherwise false
      */
-    public static String getProperty(final String key) {
+    public static Optional<String> getProperty(final String key) {
         String property = CONFIG.getProperty(key);
         if (property == null) {
             property = System.getProperty(key);
         }
-        return property;
+        return Optional.ofNullable(property);
+    }
+
+    public static Optional<Integer> getIntProperty(final String key) {
+        Optional<String> property = getProperty(key);
+        if (property.isPresent()) {
+            try {
+                int intValue = Integer.parseInt(property.get());
+                return Optional.of(intValue);
+            } catch (NumberFormatException nfe) {
+                LOG.info(String.format("Invalid configuration value: %s", key), nfe);
+                return Optional.empty();
+            }
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public static <T extends Enum<T>> Optional<T> getEnumProperty(Class<T> clazz, String key) {
+        Optional<String> property = getProperty(key);
+        if (property.isPresent()) {
+            try {
+                return Optional.of(Enum.valueOf(clazz, property.get()));
+            } catch (IllegalArgumentException iae) {
+                LOG.info(String.format("Invalid configuration value: %s", key), iae);
+                return Optional.empty();
+            }
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    public static <T> Optional<T> getObjectProperty(String key) {
+        Optional<String> property = getProperty(key);
+        if (property.isPresent()) {
+            try {
+                return Optional.of((T) Class.forName(property.get()).newInstance());
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                LOG.info(String.format("Invalid configuration value: %s", key), e);
+                return Optional.empty();
+            }
+        } else {
+            return Optional.empty();
+        }
     }
 }
