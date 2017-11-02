@@ -130,12 +130,7 @@ public class Recur implements Serializable {
     private static int maxIncrementCount;
 
     static {
-        final String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
-        if (value != null && value.length() > 0) {
-            maxIncrementCount = Integer.parseInt(value);
-        } else {
-            maxIncrementCount = 1000;
-        }
+        maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1000);
     }
 
     private transient Logger log = LoggerFactory.getLogger(Recur.class);
