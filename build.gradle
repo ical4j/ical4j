@@ -73,8 +73,9 @@ dependencies {
             'commons-codec:commons-codec:1.10',
             'org.apache.commons:commons-lang3:3.6',
             'org.apache.commons:commons-collections4:4.1',
-			'org.threeten:threetenbp:1.3.6', 'javax.cache:cache-api:1.0.0',
-            'com.squareup.dagger:dagger:1.2.5'
+			'org.threeten:threetenbp:1.3.6'
+    
+    compile 'javax.cache:cache-api:1.0.0', optional
     compile 'org.codehaus.groovy:groovy-all:2.3.2', optional
 
     compileOnly 'biz.aQute.bnd:bndlib:2.3.0'
