@@ -76,7 +76,7 @@ public final class Configurator {
         if (property == null) {
             property = System.getProperty(key);
         }
-        return Optional.of(property);
+        return Optional.ofNullable(property);
     }
 
     public static Optional<Integer> getIntProperty(final String key) {

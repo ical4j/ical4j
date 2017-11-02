@@ -35,6 +35,10 @@ public class Optional<T> {
         return new Optional<>(value);
     }
 
+    public static <T> Optional<T> ofNullable(T value) {
+        return value != null ? new Optional<>(value) : Optional.<T>empty();
+    }
+
     public static <T> Optional<T> empty() {
         return (Optional<T>) EMPTY;
     }
