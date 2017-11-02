@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.Configurator;
+import net.fortuna.ical4j.util.Optional;
 
 /**
  * $Id$
@@ -54,14 +55,8 @@ public abstract class TimeZoneRegistryFactory {
 
     private static TimeZoneRegistryFactory instance;
     static {
-        try {
-            @SuppressWarnings("unchecked")
-			final Class<? extends TimeZoneRegistryFactory> factoryClass = (Class<? extends TimeZoneRegistryFactory>) Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
-            instance = factoryClass.newInstance();
-        }
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-            instance = new DefaultTimeZoneRegistryFactory();
-        }
+        Optional<TimeZoneRegistryFactory> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
+        instance = property.orElse(new DefaultTimeZoneRegistryFactory());
     }
     
     /**
