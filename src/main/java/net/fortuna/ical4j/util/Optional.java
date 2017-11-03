@@ -27,6 +27,10 @@ public class Optional<T> {
         return value != null ? value : other;
     }
 
+    public T orElseGet(Supplier<T> other) {
+        return value != null ? value : other.get();
+    }
+
     public boolean isPresent() {
         return value != null;
     }
