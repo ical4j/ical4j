@@ -90,7 +90,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
         try {
             aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias");
         	ALIASES.load(aliasInputStream);
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
         			"Error loading custom timezone aliases: " + e.getMessage());
         } finally {
