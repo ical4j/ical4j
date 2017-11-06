@@ -76,7 +76,7 @@ public class Rsvp extends Parameter {
      * @param aValue a boolean value
      */
     public Rsvp(final Boolean aValue) {
-        super(RSVP, ParameterFactoryImpl.getInstance());
+        super(RSVP, new Factory());
         this.rsvp = aValue;
     }
 

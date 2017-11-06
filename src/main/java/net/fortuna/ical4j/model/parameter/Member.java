@@ -61,7 +61,7 @@ public class Member extends Parameter {
      * @param aList a list of groups
      */
     public Member(final AddressList aList) {
-        super(MEMBER, ParameterFactoryImpl.getInstance());
+        super(MEMBER, new Factory());
         groups = aList;
     }
 

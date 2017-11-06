@@ -102,7 +102,7 @@ public class Acknowledged extends UtcProperty{
     private static final long serialVersionUID = 596619479148598528L;
 
     public Acknowledged() {
-        super(ACKNOWLEDGED, PropertyFactoryImpl.getInstance());
+        super(ACKNOWLEDGED, new Factory());
     }
 
     /**
@@ -120,7 +120,7 @@ public class Acknowledged extends UtcProperty{
      */
     public Acknowledged(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(ACKNOWLEDGED, aList, PropertyFactoryImpl.getInstance());
+        super(ACKNOWLEDGED, aList, new Factory());
         setValue(aValue);
     }
 
@@ -128,7 +128,7 @@ public class Acknowledged extends UtcProperty{
      * @param aDate a date representing a date-time 
      */
     public Acknowledged(final DateTime aDate) {
-        super(ACKNOWLEDGED, PropertyFactoryImpl.getInstance());
+        super(ACKNOWLEDGED, new Factory());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
@@ -139,7 +139,7 @@ public class Acknowledged extends UtcProperty{
      * @param aDate a date representing a date-time
      */
     public Acknowledged(final ParameterList aList, final DateTime aDate) {
-        super(ACKNOWLEDGED, aList, PropertyFactoryImpl.getInstance());
+        super(ACKNOWLEDGED, aList, new Factory());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);

@@ -61,7 +61,7 @@ public class DelegatedFrom extends Parameter {
      * @param aList a list of addresses
      */
     public DelegatedFrom(final AddressList aList) {
-        super(DELEGATED_FROM, ParameterFactoryImpl.getInstance());
+        super(DELEGATED_FROM, new Factory());
         delegators = aList;
     }
 

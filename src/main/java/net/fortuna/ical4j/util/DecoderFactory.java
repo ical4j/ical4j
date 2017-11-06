@@ -56,14 +56,8 @@ public abstract class DecoderFactory {
 
     private static DecoderFactory instance;
     static {
-        try {
-            @SuppressWarnings("unchecked")
-			final Class<DecoderFactory> factoryClass = (Class<DecoderFactory>) Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
-            instance = factoryClass.newInstance();
-        }
-        catch (Exception e) {
-            instance = new DefaultDecoderFactory();
-        }
+        Optional<DecoderFactory> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
+        instance = property.orElse(new DefaultDecoderFactory());
     }
     
     /**

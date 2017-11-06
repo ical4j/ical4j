@@ -85,7 +85,7 @@ public class FbType extends Parameter {
      * @param aValue a string representation of a format type
      */
     public FbType(final String aValue) {
-        super(FBTYPE, ParameterFactoryImpl.getInstance());
+        super(FBTYPE, new Factory());
 
         this.value = Strings.unquote(aValue);
     }

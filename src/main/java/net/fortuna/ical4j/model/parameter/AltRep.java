@@ -66,7 +66,7 @@ public class AltRep extends Parameter {
      * @param aUri a URI representing an alternate text representation
      */
     public AltRep(final URI aUri) {
-        super(ALTREP, ParameterFactoryImpl.getInstance());
+        super(ALTREP, new Factory());
         this.uri = aUri;
     }
 

@@ -83,7 +83,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class DtStamp extends UtcProperty {
+public class DtStamp extends UtcProperty implements Comparable<DtStamp> {
 
     private static final long serialVersionUID = 7581197869433744070L;
 
@@ -91,7 +91,7 @@ public class DtStamp extends UtcProperty {
      * Default constructor. Initialises the dateTime value to the time of instantiation.
      */
     public DtStamp() {
-        super(DTSTAMP, PropertyFactoryImpl.getInstance());
+        super(DTSTAMP, new Factory());
     }
 
     /**
@@ -109,7 +109,7 @@ public class DtStamp extends UtcProperty {
      */
     public DtStamp(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(DTSTAMP, aList, PropertyFactoryImpl.getInstance());
+        super(DTSTAMP, aList, new Factory());
         setValue(aValue);
     }
 
@@ -117,7 +117,7 @@ public class DtStamp extends UtcProperty {
      * @param aDate a date representing a date-time
      */
     public DtStamp(final DateTime aDate) {
-        super(DTSTAMP, PropertyFactoryImpl.getInstance());
+        super(DTSTAMP, new Factory());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
@@ -128,10 +128,15 @@ public class DtStamp extends UtcProperty {
      * @param aDate a date representing a date-time
      */
     public DtStamp(final ParameterList aList, final DateTime aDate) {
-        super(DTSTAMP, aList, PropertyFactoryImpl.getInstance());
+        super(DTSTAMP, aList, new Factory());
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
+    }
+
+    @Override
+    public int compareTo(DtStamp o) {
+        return getDate().compareTo(o.getDate());
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {
