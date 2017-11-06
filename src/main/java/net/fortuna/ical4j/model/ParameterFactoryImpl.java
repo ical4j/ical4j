@@ -51,17 +51,8 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
 
     private static final long serialVersionUID = -4034423507432249165L;
 
-    private static ParameterFactoryImpl instance = new ParameterFactoryImpl();
-
     protected ParameterFactoryImpl() {
         super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()));
-    }
-
-    /**
-     * @return Returns the instance.
-     */
-    public static ParameterFactoryImpl getInstance() {
-        return instance;
     }
 
     @Override

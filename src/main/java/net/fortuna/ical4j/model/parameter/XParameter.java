@@ -31,9 +31,13 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
+import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
+
+import java.net.URISyntaxException;
 
 /**
  * $Id$ [15/06/2004]
@@ -52,7 +56,7 @@ public class XParameter extends Parameter {
      * @param aValue parameter value
      */
     public XParameter(final String aName, final String aValue) {
-        super(aName, ParameterFactoryImpl.getInstance());
+        super(aName, new Factory(aName));
         this.value = Strings.unquote(aValue);
     }
 
@@ -61,5 +65,20 @@ public class XParameter extends Parameter {
      */
     public final String getValue() {
         return value;
+    }
+
+    public static class Factory extends Content.Factory implements ParameterFactory {
+        private static final long serialVersionUID = 1L;
+        private final String name;
+
+        public Factory(String name) {
+            super(name);
+            this.name = name;
+        }
+
+        public Parameter createParameter(final String value)
+                throws URISyntaxException {
+            return new XParameter(name, value);
+        }
     }
 }

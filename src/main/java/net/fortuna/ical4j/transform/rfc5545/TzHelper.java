@@ -52,7 +52,7 @@ class TzHelper {
                 MS_TIMEZONE_NAMES.put(displayNameAndMsTzId[0], standardTzId);
                 MS_TIMEZONE_IDS.put(displayNameAndMsTzId[1], standardTzId);
             }
-        } catch (Exception e) { // avoid NoClassDefFoundError
+        } catch (RuntimeException e) { // avoid NoClassDefFoundError
             LOG.error("Could not load MS timezones", e);
             throw new RuntimeException("Unable to load resource file " + MS_TIMEZONES_FILE, e);
         } finally {

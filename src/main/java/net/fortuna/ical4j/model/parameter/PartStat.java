@@ -105,7 +105,7 @@ public class PartStat extends Parameter {
      * @param aValue a string representation of a participation status
      */
     public PartStat(final String aValue) {
-        super(PARTSTAT, ParameterFactoryImpl.getInstance());
+        super(PARTSTAT, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

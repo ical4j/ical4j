@@ -1,41 +1,27 @@
-before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+#before_cache:
+#  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+#  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    - $HOME/.gradle/caches/
+    #- $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
-    - $HOME/.sonar
+sudo: false
+dist: trusty
 language: java
 jdk:
-  - oraclejdk8		
-  - openjdk8		
-dist: trusty
-sudo: required
+  - oraclejdk8
+  - openjdk8
 services:
   - docker
-before_install:
-  - etc/scripts/update-zoneinfo.sh
+#before_install:
+#  - etc/scripts/update-zoneinfo.sh
 script:
   - ./gradlew build jacocoTestReport
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-#deploy:
-#  provider: releases
-#  api_key:
-#    secure: DpTp3xxZrKP21I13G8dYY5EBra5tcf9TsF1y9oLRdOSoVvUe0XaOQ+9WPG2RgnuH1DPVj1n2Rr6emAZ84lSzz4H7T8gPYP4pLjmJBGyriGC7N3MTG2FCBn5l6DgTKNLxtfpek/b7nClif6vVTEse/T8/9an/Yszp9bbIZNNwStE=
-#  file:
-#    - build/distributions/ical4j-$TRAVIS_TAG.zip
-#    - build/distributions/ical4j-$TRAVIS_TAG.tgz
-#  skip_cleanup: true
-#  on:
-#    tags: true
-#    jdk: openjdk7
-#before_deploy: "./gradlew assembleMainDist"
-addons:
-  hostname: travis-ci
-after_script:
-  - etc/scripts/tag-release.sh
-  - sudo keytool -import -alias sonar -keystore $JAVA_HOME/jre/lib/security/cacerts -file sonar_cert.pem -storepass changeit -noprompt
-  # Check if commit is not a pull request, if git repo is official, and if branch is master. If checks pass, run Sonar reports
-  - "[[ $TRAVIS_PULL_REQUEST == false ]] && [[ $TRAVIS_REPO_SLUG == ical4j/ical4j ]] && [[ $TRAVIS_BRANCH == master ]] && ./gradlew sonarqube"
+deploy:
+  provider: script
+  script: ./gradlew -q -Prelease.customUsername=$GIT_USER -Prelease.customPassword=$GIT_PASSWORD -Prelease.disableChecks -Prelease.pushTagsOnly release && ./gradlew bintrayUpload
+  on:
+    branch: master
+    jdk: oraclejdk8

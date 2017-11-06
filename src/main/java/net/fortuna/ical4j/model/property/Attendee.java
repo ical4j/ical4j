@@ -64,7 +64,7 @@ public class Attendee extends Property {
      * Default constructor.
      */
     public Attendee() {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, new Factory());
     }
 
     /**
@@ -72,7 +72,7 @@ public class Attendee extends Property {
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public Attendee(final String aValue) throws URISyntaxException {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, new Factory());
         setValue(aValue);
     }
 
@@ -83,7 +83,7 @@ public class Attendee extends Property {
      */
     public Attendee(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -91,7 +91,7 @@ public class Attendee extends Property {
      * @param aUri a URI
      */
     public Attendee(final URI aUri) {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, new Factory());
         calAddress = aUri;
     }
 
@@ -100,7 +100,7 @@ public class Attendee extends Property {
      * @param aUri  a URI
      */
     public Attendee(final ParameterList aList, final URI aUri) {
-        super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, aList, new Factory());
         calAddress = aUri;
     }
 

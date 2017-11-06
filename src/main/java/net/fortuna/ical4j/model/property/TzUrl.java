@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -94,7 +95,7 @@ public class TzUrl extends Property {
      * Default constructor.
      */
     public TzUrl() {
-        super(TZURL, PropertyFactoryImpl.getInstance());
+        super(TZURL, new Factory());
     }
 
     /**
@@ -104,7 +105,7 @@ public class TzUrl extends Property {
      */
     public TzUrl(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(TZURL, aList, PropertyFactoryImpl.getInstance());
+        super(TZURL, aList, new Factory());
         setValue(aValue);
     }
 
@@ -112,7 +113,7 @@ public class TzUrl extends Property {
      * @param aUri a URI
      */
     public TzUrl(final URI aUri) {
-        super(TZURL, PropertyFactoryImpl.getInstance());
+        super(TZURL, new Factory());
         uri = aUri;
     }
 
@@ -121,7 +122,7 @@ public class TzUrl extends Property {
      * @param aUri  a URI
      */
     public TzUrl(final ParameterList aList, final URI aUri) {
-        super(TZURL, aList, PropertyFactoryImpl.getInstance());
+        super(TZURL, aList, new Factory());
         uri = aUri;
     }
 
@@ -151,6 +152,11 @@ public class TzUrl extends Property {
      */
     public final void setUri(final URI uri) {
         this.uri = uri;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

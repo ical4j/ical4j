@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -141,7 +142,7 @@ public class Geo extends Property {
      * Default constructor.
      */
     public Geo() {
-        super(GEO, PropertyFactoryImpl.getInstance());
+        super(GEO, new Factory());
         latitude = BigDecimal.valueOf(0);
         longitude = BigDecimal.valueOf(0);
     }
@@ -152,7 +153,7 @@ public class Geo extends Property {
      * @param value a geo value
      */
     public Geo(final String value) {
-        super(GEO, PropertyFactoryImpl.getInstance());
+        super(GEO, new Factory());
         setValue(value);
     }
 
@@ -161,7 +162,7 @@ public class Geo extends Property {
      * @param aValue a value string for this component
      */
     public Geo(final ParameterList aList, final String aValue) {
-        super(GEO, aList, PropertyFactoryImpl.getInstance());
+        super(GEO, aList, new Factory());
         setValue(aValue);
     }
 
@@ -170,7 +171,7 @@ public class Geo extends Property {
      * @param longitude a longitudinal value
      */
     public Geo(final BigDecimal latitude, final BigDecimal longitude) {
-        super(GEO, PropertyFactoryImpl.getInstance());
+        super(GEO, new Factory());
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -182,7 +183,7 @@ public class Geo extends Property {
      */
     public Geo(final ParameterList aList, final BigDecimal latitude,
                final BigDecimal longitude) {
-        super(GEO, aList, PropertyFactoryImpl.getInstance());
+        super(GEO, aList, new Factory());
         this.latitude = latitude;
         this.longitude = longitude;
     }
@@ -259,4 +260,8 @@ public class Geo extends Property {
         }
     }
 
+    @Override
+    public void validate() throws ValidationException {
+
+    }
 }

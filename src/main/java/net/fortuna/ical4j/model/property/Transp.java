@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -129,14 +130,14 @@ public class Transp extends Property {
      * Default constructor.
      */
     public Transp() {
-        super(TRANSP, PropertyFactoryImpl.getInstance());
+        super(TRANSP, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Transp(final String aValue) {
-        super(TRANSP, PropertyFactoryImpl.getInstance());
+        super(TRANSP, new Factory());
         this.value = aValue;
     }
 
@@ -145,7 +146,7 @@ public class Transp extends Property {
      * @param aValue a value string for this component
      */
     public Transp(final ParameterList aList, final String aValue) {
-        super(TRANSP, aList, PropertyFactoryImpl.getInstance());
+        super(TRANSP, aList, new Factory());
         this.value = aValue;
     }
 
@@ -161,6 +162,11 @@ public class Transp extends Property {
      */
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

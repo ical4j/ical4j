@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -56,7 +57,7 @@ public class Repeat extends Property {
      * Default constructor.
      */
     public Repeat() {
-        super(REPEAT, PropertyFactoryImpl.getInstance());
+        super(REPEAT, new Factory());
     }
 
     /**
@@ -64,7 +65,7 @@ public class Repeat extends Property {
      * @param aValue a value string for this component
      */
     public Repeat(final ParameterList aList, final String aValue) {
-        super(REPEAT, aList, PropertyFactoryImpl.getInstance());
+        super(REPEAT, aList, new Factory());
         setValue(aValue);
     }
 
@@ -72,7 +73,7 @@ public class Repeat extends Property {
      * @param aCount a repetition count
      */
     public Repeat(final int aCount) {
-        super(REPEAT, PropertyFactoryImpl.getInstance());
+        super(REPEAT, new Factory());
         count = aCount;
     }
 
@@ -81,7 +82,7 @@ public class Repeat extends Property {
      * @param aCount a repetition count
      */
     public Repeat(final ParameterList aList, final int aCount) {
-        super(REPEAT, aList, PropertyFactoryImpl.getInstance());
+        super(REPEAT, aList, new Factory());
         count = aCount;
     }
 
@@ -111,6 +112,11 @@ public class Repeat extends Property {
      */
     public final void setCount(final int count) {
         this.count = count;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

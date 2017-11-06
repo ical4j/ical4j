@@ -255,7 +255,7 @@ public final class CalendarDateFormatFactory {
                         year, month, day, hour, minute, second).getTime();
                 pos.setIndex(15);
                 return d;
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 return null;
             }
         }
@@ -306,7 +306,7 @@ public final class CalendarDateFormatFactory {
                 final Date d = makeCalendar(isLenient(), getTimeZone(), year, month, day).getTime();
                 pos.setIndex(8);
                 return d;
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 return null;
             }
         }
@@ -375,7 +375,7 @@ public final class CalendarDateFormatFactory {
                 final Date d = makeCalendar(isLenient(), getTimeZone(), 1970, 0, 1, hour, minute, second).getTime();
                 pos.setIndex(6);
                 return d;
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 return null;
             }
         }

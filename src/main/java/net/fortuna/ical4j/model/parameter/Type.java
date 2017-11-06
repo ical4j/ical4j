@@ -56,7 +56,7 @@ public class Type extends Parameter {
      * @param aValue a string abbreviation
      */
     public Type(final String aValue) {
-        super(TYPE, ParameterFactoryImpl.getInstance());
+        super(TYPE, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

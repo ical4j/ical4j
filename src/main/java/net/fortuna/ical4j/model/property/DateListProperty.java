@@ -63,7 +63,7 @@ public abstract class DateListProperty extends Property {
     /**
      * @param name the property name
      */
-    public DateListProperty(final String name, PropertyFactoryImpl factory) {
+    public DateListProperty(final String name, PropertyFactory factory) {
         this(name, new DateList(Value.DATE_TIME), factory);
     }
 
@@ -71,7 +71,7 @@ public abstract class DateListProperty extends Property {
      * @param name       the property name
      * @param parameters property parameters
      */
-    public DateListProperty(final String name, final ParameterList parameters, PropertyFactoryImpl factory) {
+    public DateListProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
         super(name, parameters, factory);
     }
 
@@ -79,7 +79,7 @@ public abstract class DateListProperty extends Property {
      * @param name  the property name
      * @param dates a list of initial dates for the property
      */
-    public DateListProperty(final String name, final DateList dates, PropertyFactoryImpl factory) {
+    public DateListProperty(final String name, final DateList dates, PropertyFactory factory) {
         this(name, new ParameterList(), dates, factory);
     }
 
@@ -89,7 +89,7 @@ public abstract class DateListProperty extends Property {
      * @param dates      a list of initial dates for the property
      */
     public DateListProperty(final String name, final ParameterList parameters, final DateList dates,
-                            PropertyFactoryImpl factory) {
+                            PropertyFactory factory) {
         super(name, parameters, factory);
         this.dates = dates;
         if (dates != null && !Value.DATE_TIME.equals(dates.getType())) {
