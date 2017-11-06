@@ -141,7 +141,7 @@ public class Organizer extends Property {
      * Default constructor.
      */
     public Organizer() {
-        super(ORGANIZER, PropertyFactoryImpl.getInstance());
+        super(ORGANIZER, new Factory());
     }
 
     /**
@@ -151,7 +151,7 @@ public class Organizer extends Property {
      * @throws URISyntaxException where the specified value is not a valid URI
      */
     public Organizer(String value) throws URISyntaxException {
-        super(ORGANIZER, PropertyFactoryImpl.getInstance());
+        super(ORGANIZER, new Factory());
         setValue(value);
     }
 
@@ -162,7 +162,7 @@ public class Organizer extends Property {
      */
     public Organizer(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
+        super(ORGANIZER, aList, new Factory());
         setValue(aValue);
     }
 
@@ -170,7 +170,7 @@ public class Organizer extends Property {
      * @param aUri a URI representation of a calendar address
      */
     public Organizer(final URI aUri) {
-        super(ORGANIZER, PropertyFactoryImpl.getInstance());
+        super(ORGANIZER, new Factory());
         calAddress = aUri;
     }
 
@@ -179,7 +179,7 @@ public class Organizer extends Property {
      * @param aUri  a URI representation of a calendar address
      */
     public Organizer(final ParameterList aList, final URI aUri) {
-        super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
+        super(ORGANIZER, aList, new Factory());
         calAddress = aUri;
     }
 

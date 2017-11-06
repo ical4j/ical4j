@@ -130,12 +130,7 @@ public class Recur implements Serializable {
     private static int maxIncrementCount;
 
     static {
-        final String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
-        if (value != null && value.length() > 0) {
-            maxIncrementCount = Integer.parseInt(value);
-        } else {
-            maxIncrementCount = 1000;
-        }
+        maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1000);
     }
 
     private transient Logger log = LoggerFactory.getLogger(Recur.class);
@@ -583,15 +578,18 @@ public class Recur implements Serializable {
                 dates.setTimeZone(((DateTime) seed).getTimeZone());
             }
         }
-        final Calendar cal = getCalendarInstance(seed, true);
+        Calendar cal = getCalendarInstance(seed, true);
 
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
         if (getCount() < 1) {
-            final Calendar seededCal = (Calendar) cal.clone();
+            Calendar seededCal = (Calendar) cal.clone();
             while (seededCal.getTime().before(periodStart)) {
                 cal.setTime(seededCal.getTime());
-                increment(seededCal);
+                seededCal = smartIncrement(seededCal);
+                if (seededCal == null) {
+                    return dates;
+                }
             }
         }
 
@@ -654,7 +652,10 @@ public class Recur implements Serializable {
                     break;
                 }
             }
-            increment(cal);
+            cal = smartIncrement(cal);
+            if (cal == null) {
+                break;
+            }
         }
         // sort final list..
         Collections.sort(dates);
@@ -753,6 +754,28 @@ public class Recur implements Serializable {
         // initialise interval..
         final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
         cal.add(calIncField, calInterval);
+    }
+
+    private Calendar smartIncrement(final Calendar cal) {
+        // initialise interval..
+        Calendar result = null;
+        final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
+        int multiplier = 1;
+        if (calIncField == 2 || calIncField == 1) {
+            Calendar seededCal;
+            do {
+                seededCal = (Calendar) cal.clone();
+                seededCal.add(calIncField, calInterval * multiplier);
+                multiplier++;
+            } while (seededCal.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH) || multiplier > 12);
+            if (multiplier <= 12) {
+                result = (Calendar) seededCal.clone();
+            }
+        } else {
+            result = (Calendar) cal.clone();
+            result.add(calIncField, calInterval);
+        }
+        return result;
     }
 
     /**

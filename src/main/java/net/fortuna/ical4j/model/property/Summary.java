@@ -32,6 +32,8 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
@@ -99,20 +101,21 @@ public class Summary extends Property implements Escapable {
 
     private String value;
 
+    private final Validator<Property> validator = new OneOrLessParameterValidator(Parameter.ALTREP,
+            Parameter.LANGUAGE);
+
     /**
      * Default constructor.
      */
     public Summary() {
-        super(SUMMARY, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+        super(SUMMARY, new ParameterList(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Summary(final String aValue) {
-        super(SUMMARY, new ParameterList(), new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE),
-                PropertyFactoryImpl.getInstance());
+        super(SUMMARY, new ParameterList(), new Factory());
         setValue(aValue);
     }
 
@@ -121,7 +124,7 @@ public class Summary extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Summary(final ParameterList aList, final String aValue) {
-        super(SUMMARY, aList, new OneOrLessParameterValidator(Parameter.ALTREP, Parameter.LANGUAGE), PropertyFactoryImpl.getInstance());
+        super(SUMMARY, aList, new Factory());
         setValue(aValue);
     }
 
@@ -137,6 +140,11 @@ public class Summary extends Property implements Escapable {
      */
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        validator.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

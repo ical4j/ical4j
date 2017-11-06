@@ -31,8 +31,16 @@
  */
 package net.fortuna.ical4j.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,21 +48,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.model.property.Version;
-import net.fortuna.ical4j.validate.ValidationException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Created on 16/03/2005
@@ -272,7 +267,7 @@ public class CalendarTest {
         try {
             Calendar actual = buildCalendar(calendarName);
             actual.conformToRfc5545();
-        } catch (Exception e) {
+        } catch (IllegalAccessException | InvocationTargetException | IOException | ParserException e) {
             e.printStackTrace();
             fail("RFC transformation failed for " + calendarName);
         }

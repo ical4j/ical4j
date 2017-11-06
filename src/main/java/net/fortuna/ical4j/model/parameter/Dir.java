@@ -66,7 +66,7 @@ public class Dir extends Parameter {
      * @param aUri a URI representing a directory entry reference
      */
     public Dir(final URI aUri) {
-        super(DIR, ParameterFactoryImpl.getInstance());
+        super(DIR, new Factory());
         this.uri = aUri;
     }
 

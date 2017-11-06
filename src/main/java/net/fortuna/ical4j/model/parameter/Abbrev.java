@@ -57,7 +57,7 @@ public class Abbrev extends Parameter {
      * @param aValue a string abbreviation
      */
     public Abbrev(final String aValue) {
-        super(ABBREV, ParameterFactoryImpl.getInstance());
+        super(ABBREV, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

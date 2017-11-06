@@ -66,7 +66,7 @@ public class SentBy extends Parameter {
      * @param aUri a URI representing a sent by
      */
     public SentBy(final URI aUri) {
-        super(SENT_BY, ParameterFactoryImpl.getInstance());
+        super(SENT_BY, new Factory());
         this.address = aUri;
     }
 

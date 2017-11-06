@@ -185,13 +185,13 @@ public abstract class Parameter extends Content {
 
     private String name;
 
-    private final ParameterFactoryImpl factory;
+    private final ParameterFactory factory;
 
     /**
      * @param aName   the parameter identifier
      * @param factory the factory used to create the parameter
      */
-    public Parameter(final String aName, ParameterFactoryImpl factory) {
+    public Parameter(final String aName, ParameterFactory factory) {
         this.name = aName;
         this.factory = factory;
     }
@@ -259,6 +259,6 @@ public abstract class Parameter extends Content {
         if (factory == null) {
             throw new UnsupportedOperationException("No factory specified");
         }
-        return factory.createParameter(getName(), getValue());
+        return factory.createParameter(getValue());
     }
 }
