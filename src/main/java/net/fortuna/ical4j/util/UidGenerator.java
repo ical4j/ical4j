@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.util;
 
+import java.net.SocketException;
+
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.property.Uid;
-
-import java.net.SocketException;
 
 /**
  * $Id$
@@ -48,7 +48,7 @@ public class UidGenerator {
 
     private final String pid;
 
-    private final HostInfo hostInfo;
+    private final String hostName;
 
     private static long lastMillis;
 
@@ -65,7 +65,7 @@ public class UidGenerator {
      * @param pid a unique process identifier for the host machine
      */
     public UidGenerator(HostInfo hostInfo, String pid) {
-        this.hostInfo = hostInfo;
+        this.hostName = hostInfo == null ? null : hostInfo.getHostName();
         this.pid = pid;
     }
 
@@ -77,9 +77,9 @@ public class UidGenerator {
         b.append(uniqueTimestamp());
         b.append('-');
         b.append(pid);
-        if (hostInfo != null && hostInfo.getHostName() != null) {
+        if (hostName != null) {
             b.append('@');
-            b.append(hostInfo.getHostName());
+            b.append(hostName);
         }
         return new Uid(b.toString());
     }
