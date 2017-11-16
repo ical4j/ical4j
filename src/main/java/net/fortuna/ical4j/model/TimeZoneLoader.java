@@ -171,13 +171,17 @@ public class TimeZoneLoader {
     }
 
     private static void addTransitionRules(ZoneId zoneId, int rawTimeZoneOffsetInSeconds, VTimeZone result) {
-        ZoneOffsetTransition zoneOffsetTransition = Collections.min(zoneId.getRules().getTransitions(),
-                new Comparator<ZoneOffsetTransition>() {
-                    @Override
-                    public int compare(ZoneOffsetTransition z1, ZoneOffsetTransition z2) {
-                        return z1.getDateTimeBefore().compareTo(z2.getDateTimeBefore());
-                    }
-                });
+        ZoneOffsetTransition zoneOffsetTransition = null;
+
+        if (!zoneId.getRules().getTransitions().isEmpty()) {
+            Collections.min(zoneId.getRules().getTransitions(),
+                    new Comparator<ZoneOffsetTransition>() {
+                        @Override
+                        public int compare(ZoneOffsetTransition z1, ZoneOffsetTransition z2) {
+                            return z1.getDateTimeBefore().compareTo(z2.getDateTimeBefore());
+                        }
+                    });
+        }
 
         LocalDateTime startDate = null;
         if (zoneOffsetTransition != null) {
