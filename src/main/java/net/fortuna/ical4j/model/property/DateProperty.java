@@ -66,7 +66,7 @@ public abstract class DateProperty extends Property {
      * @param name       the property name
      * @param parameters a list of initial parameters
      */
-    public DateProperty(final String name, final ParameterList parameters, PropertyFactoryImpl factory) {
+    public DateProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
         super(name, parameters, factory);
         Parameter tzId = parameters.getParameter(Parameter.TZID);
         if (null != tzId) {
@@ -77,7 +77,7 @@ public abstract class DateProperty extends Property {
     /**
      * @param name the property name
      */
-    public DateProperty(final String name, PropertyFactoryImpl factory) {
+    public DateProperty(final String name, PropertyFactory factory) {
         super(name, factory);
     }
 
@@ -87,7 +87,7 @@ public abstract class DateProperty extends Property {
      * @param name     property name
      * @param timezone initial timezone
      */
-    public DateProperty(final String name, TimeZone timezone, PropertyFactoryImpl factory) {
+    public DateProperty(final String name, TimeZone timezone, PropertyFactory factory) {
         super(name, factory);
         updateTimeZone(timezone);
     }

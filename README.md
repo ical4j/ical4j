@@ -1,6 +1,66 @@
-[![Build Status](https://drone.io/github.com/ical4j/ical4j/status.png)](https://drone.io/github.com/ical4j/ical4j/latest) [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/ical4j/ical4j?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# iCal4j - iCalendar parser and object model
 
-# iCal4j - Release Notes
+[RFC2445]: https://tools.ietf.org/html/rfc2445
+[RFC2446]: https://tools.ietf.org/html/rfc2446
+[RFC2447]: https://tools.ietf.org/html/rfc2447
+
+[RFC5545]: https://tools.ietf.org/html/rfc5545
+[RFC5546]: https://tools.ietf.org/html/rfc5546
+[RFC5547]: https://tools.ietf.org/html/rfc5547
+
+[Bintray Releases]: https://bintray.com/ical4j/maven/ical4j
+
+[Introduction]: #introduction
+
+[Setup]: #setup
+[System requirements]: #system-requirements
+[Release downloads]: #release-downloads
+[Install with Maven]: #install-with-maven
+[Install with Gradle]: #install-with-gradle
+
+[Usage]: #usage
+
+[Examples]: #examples
+
+[Reference]: #reference
+[Specifications]: #specifications
+
+[Configuration]: #configuration
+[Compatibility Hints]: #compatibility-hints
+
+[Limitations]: #limitations
+
+[Development]: #development
+[Building with Gradle]: #building-with-gradle
+[Redistribution]: #redistribution
+[Contributing]: #contributing
+
+#### Table of Contents
+
+1. [Introduction - What is iCal4j?][Introduction]
+2. [Setup - Download and installation of iCal4j][Setup]
+    - [System requirements - What is required to use iCal4j][System requirements]
+    - [Release downloads - Where to get iCal4j][Release downloads]
+    - [Install with Maven]
+    - [Install with Gradle]
+3. [Usage - The iCal4j object model and how to use it][Usage]
+    - [Examples - common usage scenarios][Examples]
+4. [Reference - Specification][Reference]
+    - [Specifications]
+5. [Configuration options][Configuration]
+    - [Compatibility Hints]
+6. [Limitations - CUA compatibility, etc.][Limitations]
+7. [Development - Guide for contributing to the iCalj project][Development]
+    - [Building with Gradle]
+    - [Redistribution]
+    - [Contributing to iCal4j][Contributing]
+
+## Introduction
+
+iCal4j is a Java library used to read and write iCalendar data streams as defined in [RFC2445]. The iCalendar standard
+provides a common data format used to store information about calendar-specific data such as events, appointments, to-do
+lists, etc. All of the popular calendaring tools, such as Lotus Notes, Outlook and Apple's iCal also support the iCalendar
+standard.
 
  - For a concise description of the goals and directions of iCal4j please
  take a look at the [open issues](https://github.com/ical4j/ical4j/issues).
@@ -14,38 +74,93 @@
  - iCal4j was created with the help of [Open Source](http://opensource.org) software.
 
 
-## System Requirements
+## Setup
 
- - Java 6 or later
+### System requirements
+
+ - Java 7 or later
+
+### Dependencies
+
+In the interests of portability and compatibility with as many environments as possible, the number of dependent
+libraries for iCal4j is kept to a minimum. The following describes the required (and optional) dependencies and the
+functionality they provide.
+
+* slf4j-api [required] - A logging meta-library with integration to different logging framework implementations. Used in all classes that require logging.
+
+* commons-lang3 [required] - Provides enhancements to the standard Java library, including support for custom `equals()` and `hashcode()`
+implementations. Used in all classes requiring custom equality implementations.
+
+* commons-collections4 [required] - Provides enhancements to the standard Java collections API, including support for closures. Used in `net.fortuna.ical4j.validate.Validator` implementations to reduce the duplication of code in validity checks.
+
+* javax.cache.cache-api [required] - Supports caching timzeone definitions.
+
+* commons-codec [optional] - Provides support for encoding and decoding binary data in text form. Used in `net.fortuna.ical4j.model.property.Attach`
  
-See [here](https://github.com/ical4j/ical4j/docs/Dependencies.md) for further details.
+* groovy-all [optional] - The runtime for the Groovy language. Required for library enhancements such as iCalendar object construction using
+the `net.fortuna.ical4j.model.ContentBuilder` DSL. This library is optional for all non-Groovy features of iCal4j.
 
-## Building with Gradle
-
-iCal4j includes the Gradle wrapper for a simpler and more consistent build.
-
-**Run unit tests**
-
-    ./gradlew clean test
-
-**Build a new release**
-
-    ./gradlew clean test release -Prelease.forceVersion=2.0.0
-
-**Upload release binaries and packages**
-
-    RELEASE_VERSION=2.0.0 ./gradlew uploadArchives uploadDist
-
-
+* bndlib [optional] - A tool for generating OSGi library metadata and packaging OSGi bundles. This library is not a runtime requirement, and
+is used only to generate version information in the javadoc API documentation.
  
-## Relaxed Parsing
+
+### Release Downloads
+
+* [Bintray Releases]
+
+### Install with Maven
+
+### Install with Gradle
+
+
+## Usage
+
+### Examples
+
+
+## Reference
+
+### Specifications
+
+* [RFC5545] (Supersedes [RFC2445])
+* [RFC5546] (Supersedes [RFC2446])
+* [RFC5547] (Supersedes [RFC2447])
+
+## Configuration
+
+    net.fortuna.ical4j.parser=net.fortuna.ical4j.data.HCalendarParserFactory
+
+    net.fortuna.ical4j.timezone.registry=net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory
+
+    net.fortuna.ical4j.timezone.update.enabled={true|false}
+
+    net.fortuna.ical4j.factory.decoder=net.fortuna.ical4j.util.DefaultDecoderFactory
+
+    net.fortuna.ical4j.factory.encoder=net.fortuna.ical4j.util.DefaultEncoderFactory
+
+    net.fortuna.ical4j.recur.maxincrementcount=1000
+    
+    net.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache
+
+
+### Compatibility Hints
+ 
+#### Relaxed Parsing
+    
+    ical4j.parsing.relaxed={true|false}
 
  iCal4j now has the capability to "relax" its parsing rules to enable parsing of
  *.ics files that don't properly conform to the iCalendar specification (RFC2445)
  
- - You can relax iCal4j's unfolding rules by specifying the following system property:
+ This property is intended as a general relaxation of parsing rules to allow for parsing
+ otherwise invalid calendar files. Initially enabling this property will allow for the
+ creation of properties and components with illegal names (e.g. Mozilla Calendar's "X"
+ property). Note that although this will allow for parsing calendars with illegal names,
+ validation will still identify such names as an error in the calendar model.
  
-       ical4j.unfolding.relaxed=true
+ - You can relax iCal4j's unfolding rules by specifying the following system property:
+    
+        ical4j.unfolding.relaxed={true|false}
  
  Note that I believe this problem is not restricted to Mozilla calendaring
  products, but rather may be caused by UNIX/Linux-based applications relying on the
@@ -73,33 +188,15 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
  correctly identify LF as a newline on Windows, and CRLF as a newline on UNIX/Linux. The
  API documentation for Java 1.5 says that it does do this, so if you still see problems
  with parsing it could be a bug in the Java implementation.
- 
- 
- - You may also relax the parsing rules of iCal4j by setting the following system property:
- 
-       ical4j.parsing.relaxed=true
- 
- This property is intended as a general relaxation of parsing rules to allow for parsing
- otherwise invalid calendar files. Initially enabling this property will allow for the
- creation of properties and components with illegal names (e.g. Mozilla Calendar's "X"
- property). Note that although this will allow for parsing calendars with illegal names,
- validation will still identify such names as an error in the calendar model.
 
-
- - Microsoft Outlook also appears to provide quoted TZID parameter values, as follows:
- 
-       DTSTART;TZID="Pacific Time (US & Canada),Tijuana":20041011T223000
- 
- To allow for compatibility with such iCalendar files you should specify the
- following system property:
- 
-     ical4j.compatibility.outlook=true
  
  The full set of system properties may be found in
  net.fortuna.ical4j.util.CompatibilityHints.
 
 
-## iCal4j and Timezones
+#### iCal4j and Timezones
+
+    net.fortuna.ical4j.timezone.date.floating={true|false}
 
  Supporting timezones in an iCalendar implementation can be a complicated process,
  mostly due to the fact that there is not a definitive list of timezone definitions
@@ -128,10 +225,53 @@ iCal4j includes the Gradle wrapper for a simpler and more consistent build.
  timezones on Time objects, remove or add TzId parameters, remove or add VTimeZone
  definitions, etc. without restriction. However when validation is run (automatically
  on output of the calendar) you will be notified if the changes are invalid.
+
+#### Validation
+    
+    ical4j.validation.relaxed={true|false}
+
+
+#### Micosoft Outlook compatibility
+    
+    ical4j.compatibility.outlook={true|false}
+
+Behaviour:
+
+* Enforces a folding length of 75 characters (by default ical4j will fold at 73 characters)
+* Allows for spaces when parsing a WEEKDAY list
+
+Microsoft Outlook also appears to provide quoted TZID parameter values, as follows:
+ 
+    DTSTART;TZID="Pacific Time (US & Canada),Tijuana":20041011T223000
+
+#### Lotus Notes compatibility
+
+    ical4j.compatibility.notes={true|false}
  
 
+## Limitations
 
-## Redistribution:
+
+ 
+## Development
+
+### Building with Gradle
+
+iCal4j includes the Gradle wrapper for a simpler and more consistent build.
+
+**Run unit tests**
+
+    ./gradlew clean test
+
+**Build a new release**
+
+    ./gradlew clean test release -Prelease.forceVersion=2.0.0
+
+**Upload release binaries and packages**
+
+    RELEASE_VERSION=2.0.0 ./gradlew uploadArchives uploadDist
+
+### Redistribution
 
 If you intend to use and distribute iCal4j in your own project please
 follow these very simple guidelines:
@@ -143,3 +283,11 @@ follow these very simple guidelines:
  in another JAR along with other classes. It may lead to version incompatibilites
  in the future. Rather I would suggest to include the ical4j.jar in your classpath
  as required.
+
+### Contributing
+
+Open source software is made stronger by the community that supports it. Through participation you not only contribute to the quality of the software, but also gain a deeper insight into the inner workings.
+
+Contributions may be in the form of feature enhancements, bug fixes, test cases, documentation and forum participation. If you have a question, just ask. If you have an answer, write it down.
+
+And if you are somehow constrained from participation, through corporate policy or otherwise, consider financial support. After all, if you are profiting from open source it's only fair to give something back to the community that make it all possible.

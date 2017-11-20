@@ -186,8 +186,8 @@ public abstract class Component implements Serializable {
      * @param name name of the property to retrieve
      * @return the first matching property in the property list with the specified name
      */
-    public final Property getProperty(final String name) {
-        return getProperties().getProperty(name);
+    public final <T extends Property> T getProperty(final String name) {
+        return (T) getProperties().getProperty(name);
     }
 
     /**

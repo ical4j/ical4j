@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.util.Configurator;
+import net.fortuna.ical4j.util.Optional;
 
 /**
  * <pre>
@@ -58,15 +59,8 @@ public abstract class CalendarParserFactory {
 
     private static CalendarParserFactory instance;
     static {
-        try {
-            @SuppressWarnings("unchecked")
-			final Class<CalendarParserFactory> factoryClass = (Class<CalendarParserFactory>) Class.forName(
-                    Configurator.getProperty(KEY_FACTORY_CLASS));
-            instance = factoryClass.newInstance();
-        }
-        catch (Exception e) {
-            instance = new DefaultCalendarParserFactory();
-        }
+        Optional<CalendarParserFactory> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
+        instance = property.orElse(new DefaultCalendarParserFactory());
     }
 
     /**

@@ -53,7 +53,7 @@ public class ParameterFactoryImplTest extends TestCase {
      * @throws Exception
      */
     public void testCreateParameter() throws Exception {
-        Parameter p = ParameterFactoryImpl.getInstance().createParameter(
+        Parameter p = new ParameterFactoryImpl().createParameter(
                 Parameter.ALTREP, "Test");
         assertNotNull(p);
         log.info(p.toString());
@@ -63,7 +63,7 @@ public class ParameterFactoryImplTest extends TestCase {
      * @throws Exception
      */
     public void testCreateExperimentalParameter() throws Exception {
-        Parameter p = ParameterFactoryImpl.getInstance().createParameter(
+        Parameter p = new ParameterFactoryImpl().createParameter(
                 "X-my-param", "Test");
         assertNotNull(p);
         log.info(p.toString());
@@ -74,7 +74,7 @@ public class ParameterFactoryImplTest extends TestCase {
      */
     public void testInvalidParameter() throws Exception {
         try {
-            ParameterFactoryImpl.getInstance().createParameter("my-param",
+            new ParameterFactoryImpl().createParameter("my-param",
                     "Test");
             fail("Should throw an IllegalArgumentException");
         } catch (IllegalArgumentException iae) {
@@ -88,7 +88,7 @@ public class ParameterFactoryImplTest extends TestCase {
     public void testRelaxedParsing() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
 
-        ParameterFactoryImpl.getInstance().createParameter("VVENUE", "My Place");
+        new ParameterFactoryImpl().createParameter("VVENUE", "My Place");
 
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }

@@ -77,7 +77,7 @@ public class RelType extends Parameter {
      * @param aValue a string representation of a relationship type
      */
     public RelType(final String aValue) {
-        super(RELTYPE, ParameterFactoryImpl.getInstance());
+        super(RELTYPE, new Factory());
         this.value = Strings.unquote(aValue);
     }
 
