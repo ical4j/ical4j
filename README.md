@@ -139,6 +139,8 @@ is used only to generate version information in the javadoc API documentation.
     net.fortuna.ical4j.factory.encoder=net.fortuna.ical4j.util.DefaultEncoderFactory
 
     net.fortuna.ical4j.recur.maxincrementcount=1000
+    
+    net.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache
 
 
 ### Compatibility Hints
