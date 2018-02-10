@@ -32,11 +32,11 @@
 package net.fortuna.ical4j.transform;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Sequence;
+import net.fortuna.ical4j.transform.property.MethodUpdate;
+import net.fortuna.ical4j.transform.property.SequenceIncrement;
 
 /**
  * $Id$
@@ -54,32 +54,16 @@ public class PublishTransformer implements Transformer<Calendar> {
     public final Calendar transform(final Calendar calendar) {
         PropertyList calProps = calendar.getProperties();
 
-        Property method = calProps.getProperty(Property.METHOD);
+        MethodUpdate methodUpdate = new MethodUpdate(Method.PUBLISH);
+        methodUpdate.transform(calendar);
 
-        if (method != null) {
-            calProps.remove(method);
-        }
-
-        calProps.add(Method.PUBLISH);
+        SequenceIncrement sequenceIncrement = new SequenceIncrement();
 
         // if a calendar component has already been published previously
         // update the sequence number..
-        for (Component component : calendar.getComponents()) {
-            PropertyList compProps = component.getProperties();
-
-            Sequence sequence = (Sequence) compProps
-                    .getProperty(Property.SEQUENCE);
-
-            if (sequence == null) {
-                compProps.add(new Sequence(0));
-            }
-            else {
-                compProps.remove(sequence);
-                compProps.add(new Sequence(sequence.getSequenceNo() + 1));
-            }
+        for (CalendarComponent component : calendar.getComponents()) {
+            sequenceIncrement.transform(component);
         }
-
         return calendar;
     }
-
 }

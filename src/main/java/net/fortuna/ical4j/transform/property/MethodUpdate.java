@@ -11,21 +11,21 @@ import net.fortuna.ical4j.transform.Transformer;
  */
 public class MethodUpdate implements Transformer<Calendar> {
 
-    private final Method method;
+    private final Method newMethod;
 
     public MethodUpdate(Method method) {
-        this.method = method;
+        this.newMethod = method;
     }
 
     @Override
-    public Calendar transform(Calendar object) throws Exception {
+    public Calendar transform(Calendar object) {
         PropertyList calProps = object.getProperties();
 
-        Property method = calProps.getProperty(Property.METHOD);
-        if (method != null) {
-            calProps.remove(method);
+        Property oldMethod = calProps.getProperty(Property.METHOD);
+        if (oldMethod != null) {
+            calProps.remove(oldMethod);
         }
-        calProps.add(Method.PUBLISH);
+        calProps.add(this.newMethod);
 
         return object;
     }
