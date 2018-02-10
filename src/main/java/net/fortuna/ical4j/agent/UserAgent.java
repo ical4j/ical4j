@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.agent;
 
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.property.Method;
 
 /**
  * Created by fortuna on 19/07/2017.
@@ -86,5 +85,5 @@ public interface UserAgent {
      *
      * @return
      */
-    Method getMethod();
+//    Method getMethod();
 }
