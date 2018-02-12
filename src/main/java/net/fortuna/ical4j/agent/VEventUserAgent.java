@@ -17,8 +17,8 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     }
 
     @Override
-    public Calendar request(VEvent component) {
-        return null;
+    public Calendar request(VEvent... component) {
+        return wrap(Method.REQUEST, component);
     }
 
     @Override

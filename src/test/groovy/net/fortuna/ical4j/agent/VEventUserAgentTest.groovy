@@ -40,6 +40,31 @@ class VEventUserAgentTest extends Specification {
     }
 
     def "Request"() {
+        given: 'multiple vevent instances'
+        def vevent = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20090810', parameters: parameters { value 'DATE' }
+            action 'DISPLAY'
+            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        }
+
+        def vevent2 = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20090811', parameters: parameters { value 'DATE' }
+            action 'DISPLAY'
+            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        }
+
+        when: 'the events are published'
+        def calendar = userAgent.request(vevent, vevent2)
+
+        then: 'the calendar object contains method = REQUEST'
+        calendar.getProperty(Property.METHOD) == Method.REQUEST
+
+        and: 'the sequence property is present on all components'
+        calendar.components.each { it.getProperty(Property.SEQUENCE) }
     }
 
     def "Reply"() {

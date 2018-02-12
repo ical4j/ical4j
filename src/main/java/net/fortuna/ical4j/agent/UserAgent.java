@@ -91,7 +91,7 @@ public interface UserAgent<T extends CalendarComponent> {
 
     Calendar publish(T... component);
 
-    Calendar request(T component);
+    Calendar request(T... component);
 
     Calendar reply(T component);
 

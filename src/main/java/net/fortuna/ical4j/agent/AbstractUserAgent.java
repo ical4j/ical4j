@@ -5,6 +5,7 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.transform.PublishTransformer;
+import net.fortuna.ical4j.transform.RequestTransformer;
 import net.fortuna.ical4j.util.Calendars;
 
 /**
@@ -15,11 +16,13 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
     private final Property role;
 
     private final PublishTransformer publishTransformer;
+    private final RequestTransformer requestTransformer;
 
     public AbstractUserAgent(Property role) {
         this.role = role;
 
         publishTransformer = new PublishTransformer();
+        requestTransformer = new RequestTransformer();
     }
 
     @Override
@@ -31,6 +34,8 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
         Calendar calendar = Calendars.wrap(component);
         if (Method.PUBLISH.equals(method)) {
             calendar = publishTransformer.transform(calendar);
+        } else if (Method.REQUEST.equals(method)) {
+            calendar = requestTransformer.transform(calendar);
         }
         return calendar;
     }

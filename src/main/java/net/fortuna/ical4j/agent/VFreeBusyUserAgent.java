@@ -17,7 +17,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
     }
 
     @Override
-    public Calendar request(VFreeBusy component) {
+    public Calendar request(VFreeBusy... component) {
         return null;
     }
 

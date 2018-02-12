@@ -17,7 +17,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
     }
 
     @Override
-    public Calendar request(VJournal component) {
+    public Calendar request(VJournal... component) {
         throw new UnsupportedOperationException();
     }
 

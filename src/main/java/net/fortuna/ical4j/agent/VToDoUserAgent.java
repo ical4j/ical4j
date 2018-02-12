@@ -17,7 +17,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
     }
 
     @Override
-    public Calendar request(VToDo component) {
+    public Calendar request(VToDo... component) {
         return null;
     }
 
