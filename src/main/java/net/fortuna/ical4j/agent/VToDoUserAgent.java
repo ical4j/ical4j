@@ -2,52 +2,52 @@ package net.fortuna.ical4j.agent;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Method;
 
-public class VEventUserAgent extends AbstractUserAgent<VEvent> {
+public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
 
-    public VEventUserAgent(Property role) {
+    public VToDoUserAgent(Property role) {
         super(role);
     }
 
     @Override
-    public Calendar publish(VEvent... component) {
+    public Calendar publish(VToDo... component) {
         return wrap(Method.PUBLISH, component);
     }
 
     @Override
-    public Calendar request(VEvent component) {
+    public Calendar request(VToDo component) {
         return null;
     }
 
     @Override
-    public Calendar reply(VEvent component) {
+    public Calendar reply(VToDo component) {
         return null;
     }
 
     @Override
-    public Calendar add(VEvent component) {
+    public Calendar add(VToDo component) {
         return null;
     }
 
     @Override
-    public Calendar cancel(VEvent component) {
+    public Calendar cancel(VToDo component) {
         return null;
     }
 
     @Override
-    public Calendar refresh(VEvent component) {
+    public Calendar refresh(VToDo component) {
         return null;
     }
 
     @Override
-    public Calendar counter(VEvent component) {
+    public Calendar counter(VToDo component) {
         return null;
     }
 
     @Override
-    public Calendar declineCounter(VEvent component) {
+    public Calendar declineCounter(VToDo component) {
         return null;
     }
 }

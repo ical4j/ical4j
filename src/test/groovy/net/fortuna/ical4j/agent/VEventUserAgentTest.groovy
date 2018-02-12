@@ -12,7 +12,7 @@ class VEventUserAgentTest extends Specification {
     ContentBuilder builder = []
 
     def "Publish"() {
-        given: 'a vevent instance'
+        given: 'multiple vevent instances'
         def vevent = builder.vevent {
             uid '1'
             dtstamp()
@@ -21,8 +21,16 @@ class VEventUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'the event is published'
-        def calendar = userAgent.publish(vevent)
+        def vevent2 = builder.vevent {
+            uid '2'
+            dtstamp()
+            dtstart '20090811', parameters: parameters { value 'DATE' }
+            action 'DISPLAY'
+            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        }
+
+        when: 'the events are published'
+        def calendar = userAgent.publish(vevent, vevent2)
 
         then: 'the calendar object contains method = PUBLISH'
         calendar.getProperty(Property.METHOD) == Method.PUBLISH

@@ -89,7 +89,7 @@ public interface UserAgent<T extends CalendarComponent> {
      */
 //    Method getMethod();
 
-    Calendar publish(T component);
+    Calendar publish(T... component);
 
     Calendar request(T component);
 

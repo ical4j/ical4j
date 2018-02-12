@@ -27,7 +27,7 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
         return role;
     }
 
-    protected Calendar wrap(T component, Method method) {
+    protected Calendar wrap(Method method, T... component) {
         Calendar calendar = Calendars.wrap(component);
         if (Method.PUBLISH.equals(method)) {
             calendar = publishTransformer.transform(calendar);
