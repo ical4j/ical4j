@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.transform;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
@@ -43,10 +44,10 @@ import net.fortuna.ical4j.transform.property.SequenceIncrement;
  *
  * Created: 26/09/2004
  *
- * Transforms a calendar for publishing.
+ * Transforms a calendar for METHOD=REQUEST.
  * @author benfortuna
  */
-public class PublishTransformer implements Transformer<Calendar> {
+public class RequestTransformer implements Transformer<Calendar> {
 
     /**
      * {@inheritDoc}
@@ -54,14 +55,21 @@ public class PublishTransformer implements Transformer<Calendar> {
     public final Calendar transform(final Calendar calendar) {
         PropertyList calProps = calendar.getProperties();
 
-        MethodUpdate methodUpdate = new MethodUpdate(Method.PUBLISH);
+        MethodUpdate methodUpdate = new MethodUpdate(Method.REQUEST);
         methodUpdate.transform(calendar);
 
         SequenceIncrement sequenceIncrement = new SequenceIncrement();
 
+        Property uid = null;
+
         // if a calendar component has already been published previously
         // update the sequence number..
         for (CalendarComponent component : calendar.getComponents()) {
+            if (uid == null) {
+                uid = component.getProperty(Property.UID);
+            } else if (!uid.equals(component.getProperty(Property.UID))) {
+                throw new IllegalArgumentException("All components must share the same non-null UID");
+            }
             sequenceIncrement.transform(component);
         }
         return calendar;

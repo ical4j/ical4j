@@ -118,9 +118,11 @@ public final class Calendars {
      * @param component the component to wrap with a calendar
      * @return a calendar containing the specified component
      */
-    public static Calendar wrap(final CalendarComponent component) {
+    public static Calendar wrap(final CalendarComponent... component) {
         final ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
-        components.add(component);
+        for (CalendarComponent c : component) {
+            components.add(c);
+        }
         return new Calendar(components);
     }
     

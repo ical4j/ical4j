@@ -1,12 +1,13 @@
 package net.fortuna.ical4j.agent;
 
+import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 
 /**
  * Created by fortuna on 19/07/2017.
  */
-public interface UserAgent {
+public interface UserAgent<T extends CalendarComponent> {
 
     /**
      * Identify the role of the user agent instance. Can be {@link net.fortuna.ical4j.model.property.Organizer},
@@ -86,5 +87,21 @@ public interface UserAgent {
      *
      * @return
      */
-    Method getMethod();
+//    Method getMethod();
+
+    Calendar publish(T... component);
+
+    Calendar request(T... component);
+
+    Calendar reply(T component);
+
+    Calendar add(T component);
+
+    Calendar cancel(T component);
+
+    Calendar refresh(T component);
+
+    Calendar counter(T component);
+
+    Calendar declineCounter(T component);
 }
