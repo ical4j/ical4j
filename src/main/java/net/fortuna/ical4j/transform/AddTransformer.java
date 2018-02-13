@@ -31,21 +31,35 @@
  */
 package net.fortuna.ical4j.transform;
 
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.transform.property.MethodUpdate;
+import net.fortuna.ical4j.transform.property.SequenceIncrement;
+
 /**
  * $Id$
  *
- * Created: 23/09/2004
+ * Created: 26/09/2004
  *
- * Base class of calendar transformations.
+ * Transforms a calendar for adding a recurrence.
  * @author benfortuna
  */
-public interface Transformer<T> {
+public class AddTransformer implements Transformer<Calendar> {
 
     /**
-     * Transforms the specified calendar object according to the implementation of this method. By definition this method will
-     * NOT modify the existing instance and will return an appropriately transformed copy.
-     * @param object a calendar object to transform
-     * @return a transformed calendar object
+     * {@inheritDoc}
      */
-    public abstract T transform(final T object);
+    public final Calendar transform(final Calendar calendar) {
+        MethodUpdate methodUpdate = new MethodUpdate(Method.ADD);
+        methodUpdate.transform(calendar);
+
+        SequenceIncrement sequenceIncrement = new SequenceIncrement();
+        // if a calendar component has already been published previously
+        // update the sequence number..
+        for (CalendarComponent component : calendar.getComponents()) {
+            sequenceIncrement.transform(component);
+        }
+        return calendar;
+    }
 }
