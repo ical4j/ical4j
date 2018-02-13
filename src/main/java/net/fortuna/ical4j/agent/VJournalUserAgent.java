@@ -22,7 +22,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
     }
 
     @Override
-    public Calendar reply(VJournal component) {
+    public Calendar reply(VJournal... component) {
         throw new UnsupportedOperationException();
     }
 
@@ -32,7 +32,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
     }
 
     @Override
-    public Calendar cancel(VJournal component) {
+    public Calendar cancel(VJournal... component) {
         return null;
     }
 
@@ -47,7 +47,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
     }
 
     @Override
-    public Calendar declineCounter(VJournal component) {
+    public Calendar declineCounter(VJournal... component) {
         throw new UnsupportedOperationException();
     }
 }

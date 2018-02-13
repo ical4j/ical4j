@@ -22,7 +22,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
     }
 
     @Override
-    public Calendar reply(VFreeBusy component) {
+    public Calendar reply(VFreeBusy... component) {
         return null;
     }
 
@@ -32,7 +32,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
     }
 
     @Override
-    public Calendar cancel(VFreeBusy component) {
+    public Calendar cancel(VFreeBusy... component) {
         throw new UnsupportedOperationException();
     }
 
@@ -47,7 +47,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
     }
 
     @Override
-    public Calendar declineCounter(VFreeBusy component) {
+    public Calendar declineCounter(VFreeBusy... component) {
         throw new UnsupportedOperationException();
     }
 }

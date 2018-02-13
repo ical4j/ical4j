@@ -93,15 +93,15 @@ public interface UserAgent<T extends CalendarComponent> {
 
     Calendar request(T... component);
 
-    Calendar reply(T component);
+    Calendar reply(T... component);
 
     Calendar add(T component);
 
-    Calendar cancel(T component);
+    Calendar cancel(T... component);
 
     Calendar refresh(T component);
 
     Calendar counter(T component);
 
-    Calendar declineCounter(T component);
+    Calendar declineCounter(T... component);
 }

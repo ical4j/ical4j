@@ -22,7 +22,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
     }
 
     @Override
-    public Calendar reply(VToDo component) {
+    public Calendar reply(VToDo... component) {
         return null;
     }
 
@@ -32,7 +32,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
     }
 
     @Override
-    public Calendar cancel(VToDo component) {
+    public Calendar cancel(VToDo... component) {
         return null;
     }
 
@@ -47,7 +47,7 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
     }
 
     @Override
-    public Calendar declineCounter(VToDo component) {
+    public Calendar declineCounter(VToDo... component) {
         return null;
     }
 }
