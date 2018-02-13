@@ -39,5 +39,4 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
         }
         return calendar;
     }
-
 }

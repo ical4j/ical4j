@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.transform;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.transform.property.MethodUpdate;
@@ -52,13 +51,10 @@ public class PublishTransformer implements Transformer<Calendar> {
      * {@inheritDoc}
      */
     public final Calendar transform(final Calendar calendar) {
-        PropertyList calProps = calendar.getProperties();
-
         MethodUpdate methodUpdate = new MethodUpdate(Method.PUBLISH);
         methodUpdate.transform(calendar);
 
         SequenceIncrement sequenceIncrement = new SequenceIncrement();
-
         // if a calendar component has already been published previously
         // update the sequence number..
         for (CalendarComponent component : calendar.getComponents()) {
