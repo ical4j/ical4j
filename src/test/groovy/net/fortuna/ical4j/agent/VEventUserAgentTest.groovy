@@ -68,20 +68,50 @@ class VEventUserAgentTest extends Specification {
     }
 
     def "Reply"() {
+        given: 'an event request'
+
+        when: 'a reply is generated'
+
+        then: 'the calendar object contains method = REPLY'
     }
 
     def "Add"() {
+        given: 'an event'
+
+        when: 'an event recurrence is added'
+
+        then: 'the calendar object contains method = ADD'
     }
 
     def "Cancel"() {
+        given: 'an event'
+
+        when: 'an event recurrence is cancelled'
+
+        then: 'the calendar object contains method = CANCEL'
     }
 
     def "Refresh"() {
+        given: 'an event'
+
+        when: 'an event refresh is generated'
+
+        then: 'the calendar object contains method = REFRESH'
     }
 
     def "Counter"() {
+        given: 'an event request'
+
+        when: 'an event counter is generated'
+
+        then: 'the calendar object contains method = COUNTER'
     }
 
     def "DeclineCounter"() {
+        given: 'an event counter'
+
+        when: 'an event decline-counter is generated'
+
+        then: 'the calendar object contains method = DECLINECOUNTER'
     }
 }
