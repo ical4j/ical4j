@@ -18,36 +18,36 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
 
     @Override
     public Calendar request(VToDo... component) {
-        return null;
+        return wrap(Method.REQUEST, component);
     }
 
     @Override
     public Calendar reply(VToDo... component) {
-        return null;
+        return wrap(Method.REPLY, component);
     }
 
     @Override
     public Calendar add(VToDo component) {
-        return null;
+        return wrap(Method.ADD, component);
     }
 
     @Override
     public Calendar cancel(VToDo... component) {
-        return null;
+        return wrap(Method.CANCEL, component);
     }
 
     @Override
     public Calendar refresh(VToDo component) {
-        return null;
+        return wrap(Method.REFRESH, component);
     }
 
     @Override
     public Calendar counter(VToDo component) {
-        return null;
+        return wrap(Method.COUNTER, component);
     }
 
     @Override
     public Calendar declineCounter(VToDo... component) {
-        return null;
+        return wrap(Method.DECLINE_COUNTER, component);
     }
 }

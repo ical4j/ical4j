@@ -18,36 +18,36 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
 
     @Override
     public Calendar request(VJournal... component) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Method [REQUEST] not supported by VJOURNAL");
     }
 
     @Override
     public Calendar reply(VJournal... component) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Method [REPLY] not supported by VJOURNAL");
     }
 
     @Override
     public Calendar add(VJournal component) {
-        return null;
+        return wrap(Method.ADD, component);
     }
 
     @Override
     public Calendar cancel(VJournal... component) {
-        return null;
+        return wrap(Method.CANCEL, component);
     }
 
     @Override
     public Calendar refresh(VJournal component) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Method [REFRESH] not supported by VJOURNAL");
     }
 
     @Override
     public Calendar counter(VJournal component) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Method [COUNTER] not supported by VJOURNAL");
     }
 
     @Override
     public Calendar declineCounter(VJournal... component) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("Method [DECLINECOUNTER] not supported by VJOURNAL");
     }
 }
