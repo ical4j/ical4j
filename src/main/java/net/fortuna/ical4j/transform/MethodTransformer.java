@@ -33,7 +33,6 @@ package net.fortuna.ical4j.transform;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.transform.property.MethodUpdate;
@@ -44,34 +43,46 @@ import net.fortuna.ical4j.transform.property.SequenceIncrement;
  *
  * Created: 26/09/2004
  *
- * Transforms a calendar for METHOD=REQUEST.
+ * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class RequestTransformer implements Transformer<Calendar> {
+public class MethodTransformer implements Transformer<Calendar> {
 
-    /**
-     * {@inheritDoc}
-     */
-    public final Calendar transform(final Calendar calendar) {
-        PropertyList calProps = calendar.getProperties();
+    private final Method method;
 
-        MethodUpdate methodUpdate = new MethodUpdate(Method.REQUEST);
-        methodUpdate.transform(calendar);
+    private final boolean incrementSequence;
 
-        SequenceIncrement sequenceIncrement = new SequenceIncrement();
+    private final boolean sameUid;
 
-        Property uid = null;
+    public MethodTransformer(Method method) {
+        this(method, false, false);
+    }
 
-        // if a calendar component has already been published previously
-        // update the sequence number..
-        for (CalendarComponent component : calendar.getComponents()) {
-            if (uid == null) {
-                uid = component.getProperty(Property.UID);
-            } else if (!uid.equals(component.getProperty(Property.UID))) {
-                throw new IllegalArgumentException("All components must share the same non-null UID");
+    public MethodTransformer(Method method, boolean incrementSequence, boolean sameUid) {
+        this.method = method;
+        this.incrementSequence = incrementSequence;
+        this.sameUid = sameUid;
+    }
+
+    @Override
+    public final Calendar transform(Calendar object) {
+        MethodUpdate methodUpdate = new MethodUpdate(method);
+        methodUpdate.transform(object);
+
+        if (incrementSequence) {
+            SequenceIncrement sequenceIncrement = new SequenceIncrement();
+            // if a calendar component has already been published previously
+            // update the sequence number..
+            Property uid = null;
+            for (CalendarComponent component : object.getComponents()) {
+                if (uid == null) {
+                    uid = component.getProperty(Property.UID);
+                } else if (sameUid && !uid.equals(component.getProperty(Property.UID))) {
+                    throw new IllegalArgumentException("All components must share the same non-null UID");
+                }
+                sequenceIncrement.transform(component);
             }
-            sequenceIncrement.transform(component);
         }
-        return calendar;
+        return object;
     }
 }

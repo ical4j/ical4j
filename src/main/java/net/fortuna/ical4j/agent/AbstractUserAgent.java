@@ -4,7 +4,8 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.transform.*;
+import net.fortuna.ical4j.transform.MethodTransformer;
+import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.util.Calendars;
 
 /**
@@ -22,10 +23,10 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
     public AbstractUserAgent(Property role) {
         this.role = role;
 
-        publishTransformer = new PublishTransformer();
-        requestTransformer = new RequestTransformer();
-        addTransformer = new AddTransformer();
-        cancelTransformer = new CancelTransformer();
+        publishTransformer = new MethodTransformer(Method.PUBLISH, true, false);
+        requestTransformer = new MethodTransformer(Method.REQUEST, true, true);
+        addTransformer = new MethodTransformer(Method.ADD, true, false);
+        cancelTransformer = new MethodTransformer(Method.CANCEL, true, false);
     }
 
     @Override
