@@ -69,49 +69,103 @@ class VEventUserAgentTest extends Specification {
 
     def "Reply"() {
         given: 'an event request'
+        def vevent = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20090810', parameters: parameters { value 'DATE' }
+            action 'DISPLAY'
+            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        }
 
         when: 'a reply is generated'
+        def calendar = userAgent.reply(vevent)
 
         then: 'the calendar object contains method = REPLY'
+        calendar.getProperty(Property.METHOD) == Method.REPLY
     }
 
     def "Add"() {
         given: 'an event'
+        def vevent = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20090810', parameters: parameters { value 'DATE' }
+            action 'DISPLAY'
+            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        }
 
         when: 'an event recurrence is added'
+        def calendar = userAgent.add(vevent)
 
         then: 'the calendar object contains method = ADD'
+        calendar.getProperty(Property.METHOD) == Method.ADD
     }
 
     def "Cancel"() {
         given: 'an event'
+        def vevent = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20090810', parameters: parameters { value 'DATE' }
+            action 'DISPLAY'
+            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        }
 
         when: 'an event recurrence is cancelled'
+        def calendar = userAgent.cancel(vevent)
 
         then: 'the calendar object contains method = CANCEL'
+        calendar.getProperty(Property.METHOD) == Method.CANCEL
     }
 
     def "Refresh"() {
         given: 'an event'
+        def vevent = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20090810', parameters: parameters { value 'DATE' }
+            action 'DISPLAY'
+            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        }
 
         when: 'an event refresh is generated'
+        def calendar = userAgent.refresh(vevent)
 
         then: 'the calendar object contains method = REFRESH'
+        calendar.getProperty(Property.METHOD) == Method.REFRESH
     }
 
     def "Counter"() {
         given: 'an event request'
+        def vevent = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20090810', parameters: parameters { value 'DATE' }
+            action 'DISPLAY'
+            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        }
 
         when: 'an event counter is generated'
+        def calendar = userAgent.counter(vevent)
 
         then: 'the calendar object contains method = COUNTER'
+        calendar.getProperty(Property.METHOD) == Method.COUNTER
     }
 
     def "DeclineCounter"() {
         given: 'an event counter'
+        def vevent = builder.vevent {
+            uid '1'
+            dtstamp()
+            dtstart '20090810', parameters: parameters { value 'DATE' }
+            action 'DISPLAY'
+            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        }
 
         when: 'an event decline-counter is generated'
+        def calendar = userAgent.declineCounter(vevent)
 
         then: 'the calendar object contains method = DECLINECOUNTER'
+        calendar.getProperty(Property.METHOD) == Method.DECLINE_COUNTER
     }
 }

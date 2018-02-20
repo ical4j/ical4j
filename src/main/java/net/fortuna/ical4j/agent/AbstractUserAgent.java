@@ -8,6 +8,9 @@ import net.fortuna.ical4j.transform.MethodTransformer;
 import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.util.Calendars;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by fortuna on 19/07/2017.
  */
@@ -15,18 +18,19 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     private final Property role;
 
-    private final Transformer<Calendar> publishTransformer;
-    private final Transformer<Calendar> requestTransformer;
-    private final Transformer<Calendar> addTransformer;
-    private final Transformer<Calendar> cancelTransformer;
+    private final Map<Method, Transformer<Calendar>> transformers;
 
     public AbstractUserAgent(Property role) {
         this.role = role;
-
-        publishTransformer = new MethodTransformer(Method.PUBLISH, true, false);
-        requestTransformer = new MethodTransformer(Method.REQUEST, true, true);
-        addTransformer = new MethodTransformer(Method.ADD, true, false);
-        cancelTransformer = new MethodTransformer(Method.CANCEL, true, false);
+        transformers = new HashMap<>();
+        transformers.put(Method.PUBLISH, new MethodTransformer(Method.PUBLISH, true, false));
+        transformers.put(Method.REQUEST, new MethodTransformer(Method.REQUEST, true, true));
+        transformers.put(Method.ADD, new MethodTransformer(Method.ADD, true, false));
+        transformers.put(Method.CANCEL, new MethodTransformer(Method.CANCEL, true, false));
+        transformers.put(Method.REPLY, new MethodTransformer(Method.REPLY, true, false));
+        transformers.put(Method.REFRESH, new MethodTransformer(Method.REFRESH, true, false));
+        transformers.put(Method.COUNTER, new MethodTransformer(Method.COUNTER, true, false));
+        transformers.put(Method.DECLINE_COUNTER, new MethodTransformer(Method.DECLINE_COUNTER, true, false));
     }
 
     @Override
@@ -36,15 +40,8 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     protected Calendar wrap(Method method, T... component) {
         Calendar calendar = Calendars.wrap(component);
-        if (Method.PUBLISH.equals(method)) {
-            calendar = publishTransformer.transform(calendar);
-        } else if (Method.REQUEST.equals(method)) {
-            calendar = requestTransformer.transform(calendar);
-        } else if (Method.ADD.equals(method)) {
-            calendar = addTransformer.transform(calendar);
-        } else if (Method.CANCEL.equals(method)) {
-            calendar = cancelTransformer.transform(calendar);
-        }
+        Transformer<Calendar> transformer = transformers.get(method);
+        transformer.transform(calendar);
         return calendar;
     }
 }
