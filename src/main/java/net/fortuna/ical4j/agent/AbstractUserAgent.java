@@ -27,10 +27,10 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
         transformers.put(Method.REQUEST, new MethodTransformer(Method.REQUEST, true, true));
         transformers.put(Method.ADD, new MethodTransformer(Method.ADD, true, false));
         transformers.put(Method.CANCEL, new MethodTransformer(Method.CANCEL, true, false));
-        transformers.put(Method.REPLY, new MethodTransformer(Method.REPLY, true, false));
-        transformers.put(Method.REFRESH, new MethodTransformer(Method.REFRESH, true, false));
-        transformers.put(Method.COUNTER, new MethodTransformer(Method.COUNTER, true, false));
-        transformers.put(Method.DECLINE_COUNTER, new MethodTransformer(Method.DECLINE_COUNTER, true, false));
+        transformers.put(Method.REPLY, new MethodTransformer(Method.REPLY, false, false));
+        transformers.put(Method.REFRESH, new MethodTransformer(Method.REFRESH, false, false));
+        transformers.put(Method.COUNTER, new MethodTransformer(Method.COUNTER, false, false));
+        transformers.put(Method.DECLINE_COUNTER, new MethodTransformer(Method.DECLINE_COUNTER, false, false));
     }
 
     @Override

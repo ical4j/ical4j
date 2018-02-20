@@ -29,7 +29,7 @@ class VJournalUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'the events are published'
+        when: 'the journals are published'
         def calendar = userAgent.publish(vjournal, vjournal2)
 
         then: 'the calendar object contains method = PUBLISH'
@@ -57,7 +57,7 @@ class VJournalUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'the events are published'
+        when: 'the journals are published'
         def calendar = userAgent.request(vjournal, vjournal2)
 
         then: 'an exception is thrown'
@@ -65,7 +65,7 @@ class VJournalUserAgentTest extends Specification {
     }
 
     def "Reply"() {
-        given: 'an event request'
+        given: 'a journal request'
         def vjournal = builder.vjournal {
             uid '1'
             dtstamp()
@@ -82,7 +82,7 @@ class VJournalUserAgentTest extends Specification {
     }
 
     def "Add"() {
-        given: 'an event'
+        given: 'a journal'
         def vjournal = builder.vjournal {
             uid '1'
             dtstamp()
@@ -91,7 +91,7 @@ class VJournalUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event recurrence is added'
+        when: 'a journal recurrence is added'
         def calendar = userAgent.add(vjournal)
 
         then: 'the calendar object contains method = ADD'
@@ -99,7 +99,7 @@ class VJournalUserAgentTest extends Specification {
     }
 
     def "Cancel"() {
-        given: 'an event'
+        given: 'a journal'
         def vjournal = builder.vjournal {
             uid '1'
             dtstamp()
@@ -108,7 +108,7 @@ class VJournalUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event recurrence is cancelled'
+        when: 'a journal recurrence is cancelled'
         def calendar = userAgent.cancel(vjournal)
 
         then: 'the calendar object contains method = CANCEL'
@@ -116,7 +116,7 @@ class VJournalUserAgentTest extends Specification {
     }
 
     def "Refresh"() {
-        given: 'an event'
+        given: 'a journal'
         def vjournal = builder.vjournal {
             uid '1'
             dtstamp()
@@ -125,7 +125,7 @@ class VJournalUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event refresh is generated'
+        when: 'a journal refresh is generated'
         def calendar = userAgent.refresh(vjournal)
 
         then: 'an exception is thrown'
@@ -133,7 +133,7 @@ class VJournalUserAgentTest extends Specification {
     }
 
     def "Counter"() {
-        given: 'an event request'
+        given: 'a journal request'
         def vjournal = builder.vjournal {
             uid '1'
             dtstamp()
@@ -142,7 +142,7 @@ class VJournalUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event counter is generated'
+        when: 'a journal counter is generated'
         def calendar = userAgent.counter(vjournal)
 
         then: 'an exception is thrown'
@@ -150,7 +150,7 @@ class VJournalUserAgentTest extends Specification {
     }
 
     def "DeclineCounter"() {
-        given: 'an event counter'
+        given: 'a journal counter'
         def vjournal = builder.vjournal {
             uid '1'
             dtstamp()
@@ -159,7 +159,7 @@ class VJournalUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event decline-counter is generated'
+        when: 'a journal decline-counter is generated'
         def calendar = userAgent.declineCounter(vjournal)
 
         then: 'an exception is thrown'

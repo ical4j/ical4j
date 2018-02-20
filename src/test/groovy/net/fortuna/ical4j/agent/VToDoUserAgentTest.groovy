@@ -85,7 +85,7 @@ class VToDoUserAgentTest extends Specification {
     }
 
     def "Add"() {
-        given: 'an event'
+        given: 'a todo'
         def vtodo = builder.vtodo {
             uid '1'
             dtstamp()
@@ -94,7 +94,7 @@ class VToDoUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event recurrence is added'
+        when: 'a todo recurrence is added'
         def calendar = userAgent.add(vtodo)
 
         then: 'the calendar object contains method = ADD'
@@ -102,7 +102,7 @@ class VToDoUserAgentTest extends Specification {
     }
 
     def "Cancel"() {
-        given: 'an event'
+        given: 'a todo'
         def vtodo = builder.vtodo {
             uid '1'
             dtstamp()
@@ -111,7 +111,7 @@ class VToDoUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event recurrence is cancelled'
+        when: 'a todo recurrence is cancelled'
         def calendar = userAgent.cancel(vtodo)
 
         then: 'the calendar object contains method = CANCEL'
@@ -119,7 +119,7 @@ class VToDoUserAgentTest extends Specification {
     }
 
     def "Refresh"() {
-        given: 'an event'
+        given: 'a todo'
         def vtodo = builder.vtodo {
             uid '1'
             dtstamp()
@@ -128,7 +128,7 @@ class VToDoUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event refresh is generated'
+        when: 'a todo refresh is generated'
         def calendar = userAgent.refresh(vtodo)
 
         then: 'the calendar object contains method = REFRESH'
@@ -136,7 +136,7 @@ class VToDoUserAgentTest extends Specification {
     }
 
     def "Counter"() {
-        given: 'an event request'
+        given: 'a todo request'
         def vtodo = builder.vtodo {
             uid '1'
             dtstamp()
@@ -145,7 +145,7 @@ class VToDoUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event counter is generated'
+        when: 'a todo counter is generated'
         def calendar = userAgent.counter(vtodo)
 
         then: 'the calendar object contains method = COUNTER'
@@ -153,7 +153,7 @@ class VToDoUserAgentTest extends Specification {
     }
 
     def "DeclineCounter"() {
-        given: 'an event counter'
+        given: 'a todo counter'
         def vtodo = builder.vtodo {
             uid '1'
             dtstamp()
@@ -162,7 +162,7 @@ class VToDoUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event decline-counter is generated'
+        when: 'a todo decline-counter is generated'
         def calendar = userAgent.declineCounter(vtodo)
 
         then: 'the calendar object contains method = DECLINECOUNTER'

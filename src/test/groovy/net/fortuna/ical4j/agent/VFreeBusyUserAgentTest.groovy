@@ -29,7 +29,7 @@ class VFreeBusyUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'the events are published'
+        when: 'the freebusys are published'
         def calendar = userAgent.publish(vfreeBusy, vfreeBusy2)
 
         then: 'the calendar object contains method = PUBLISH'
@@ -57,7 +57,7 @@ class VFreeBusyUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'the events are published'
+        when: 'the freebusys are published'
         def calendar = userAgent.request(vfreeBusy, vfreeBusy2)
 
         then: 'the calendar object contains method = REQUEST'
@@ -68,7 +68,7 @@ class VFreeBusyUserAgentTest extends Specification {
     }
 
     def "Reply"() {
-        given: 'an event request'
+        given: 'a freebusy request'
         def vfreeBusy = builder.vfreebusy {
             uid '1'
             dtstamp()
@@ -85,7 +85,7 @@ class VFreeBusyUserAgentTest extends Specification {
     }
 
     def "Add"() {
-        given: 'an event'
+        given: 'a freebusy'
         def vfreeBusy = builder.vfreebusy {
             uid '1'
             dtstamp()
@@ -94,7 +94,7 @@ class VFreeBusyUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event recurrence is added'
+        when: 'a freebusy recurrence is added'
         def calendar = userAgent.add(vfreeBusy)
 
         then: 'an exception is thrown'
@@ -102,7 +102,7 @@ class VFreeBusyUserAgentTest extends Specification {
     }
 
     def "Cancel"() {
-        given: 'an event'
+        given: 'a freebusy'
         def vfreeBusy = builder.vfreebusy {
             uid '1'
             dtstamp()
@@ -111,7 +111,7 @@ class VFreeBusyUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event recurrence is cancelled'
+        when: 'a freebusy recurrence is cancelled'
         def calendar = userAgent.cancel(vfreeBusy)
 
         then: 'an exception is thrown'
@@ -119,7 +119,7 @@ class VFreeBusyUserAgentTest extends Specification {
     }
 
     def "Refresh"() {
-        given: 'an event'
+        given: 'a freebusy'
         def vfreeBusy = builder.vfreebusy {
             uid '1'
             dtstamp()
@@ -128,7 +128,7 @@ class VFreeBusyUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event refresh is generated'
+        when: 'a freebusy refresh is generated'
         def calendar = userAgent.refresh(vfreeBusy)
 
         then: 'an exception is thrown'
@@ -136,7 +136,7 @@ class VFreeBusyUserAgentTest extends Specification {
     }
 
     def "Counter"() {
-        given: 'an event request'
+        given: 'a freebusy request'
         def vfreeBusy = builder.vfreebusy {
             uid '1'
             dtstamp()
@@ -145,7 +145,7 @@ class VFreeBusyUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event counter is generated'
+        when: 'a freebusy counter is generated'
         def calendar = userAgent.counter(vfreeBusy)
 
         then: 'an exception is thrown'
@@ -153,7 +153,7 @@ class VFreeBusyUserAgentTest extends Specification {
     }
 
     def "DeclineCounter"() {
-        given: 'an event counter'
+        given: 'a freebusy counter'
         def vfreeBusy = builder.vfreebusy {
             uid '1'
             dtstamp()
@@ -162,7 +162,7 @@ class VFreeBusyUserAgentTest extends Specification {
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
 
-        when: 'an event decline-counter is generated'
+        when: 'a freebusy decline-counter is generated'
         def calendar = userAgent.declineCounter(vfreeBusy)
 
         then: 'an exception is thrown'
