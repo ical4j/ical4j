@@ -10,3 +10,4 @@ zones.tab
 .project
 .settings/
 gradle.properties
+out/
