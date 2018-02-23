@@ -19,7 +19,7 @@ public class MethodUpdate implements Transformer<Calendar> {
 
     @Override
     public Calendar transform(Calendar object) {
-        PropertyList calProps = object.getProperties();
+        PropertyList<Property> calProps = object.getProperties();
 
         Property oldMethod = calProps.getProperty(Property.METHOD);
         if (oldMethod != null) {

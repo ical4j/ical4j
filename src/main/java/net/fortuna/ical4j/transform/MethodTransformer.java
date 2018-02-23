@@ -37,6 +37,9 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.transform.property.MethodUpdate;
 import net.fortuna.ical4j.transform.property.SequenceIncrement;
+import net.fortuna.ical4j.transform.property.UidUpdate;
+import net.fortuna.ical4j.util.SimpleHostInfo;
+import net.fortuna.ical4j.util.UidGenerator;
 
 /**
  * $Id$
@@ -70,11 +73,13 @@ public class MethodTransformer implements Transformer<Calendar> {
         methodUpdate.transform(object);
 
         if (incrementSequence) {
+            UidUpdate uidUpdate = new UidUpdate(new UidGenerator(new SimpleHostInfo("host"), "1"));
             SequenceIncrement sequenceIncrement = new SequenceIncrement();
             // if a calendar component has already been published previously
             // update the sequence number..
             Property uid = null;
             for (CalendarComponent component : object.getComponents()) {
+                uidUpdate.transform(component);
                 if (uid == null) {
                     uid = component.getProperty(Property.UID);
                 } else if (sameUid && !uid.equals(component.getProperty(Property.UID))) {
