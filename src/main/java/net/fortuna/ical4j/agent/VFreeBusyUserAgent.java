@@ -1,14 +1,15 @@
 package net.fortuna.ical4j.agent;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.util.UidGenerator;
 
 public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
 
-    public VFreeBusyUserAgent(Property role) {
-        super(role);
+    public VFreeBusyUserAgent(Organizer organizer, UidGenerator uidGenerator) {
+        super(organizer, uidGenerator);
     }
 
     /**

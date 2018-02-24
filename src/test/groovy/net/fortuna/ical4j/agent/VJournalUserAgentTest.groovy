@@ -3,11 +3,16 @@ package net.fortuna.ical4j.agent
 import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.property.Method
+import net.fortuna.ical4j.model.property.Organizer
+import net.fortuna.ical4j.util.SimpleHostInfo
+import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
 
 class VJournalUserAgentTest extends Specification {
+    UidGenerator uidGenerator = [new SimpleHostInfo('host'), '1']
+    Organizer organizer = []
 
-    VJournalUserAgent userAgent = []
+    VJournalUserAgent userAgent = [organizer, uidGenerator]
 
     ContentBuilder builder = []
 

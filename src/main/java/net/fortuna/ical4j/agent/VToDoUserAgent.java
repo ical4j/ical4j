@@ -1,14 +1,15 @@
 package net.fortuna.ical4j.agent;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.util.UidGenerator;
 
 public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
 
-    public VToDoUserAgent(Property role) {
-        super(role);
+    public VToDoUserAgent(Organizer organizer, UidGenerator uidGenerator) {
+        super(organizer, uidGenerator);
     }
 
     @Override

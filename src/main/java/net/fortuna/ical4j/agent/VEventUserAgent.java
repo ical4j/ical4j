@@ -1,14 +1,15 @@
 package net.fortuna.ical4j.agent;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.util.UidGenerator;
 
 public class VEventUserAgent extends AbstractUserAgent<VEvent> {
 
-    public VEventUserAgent(Property role) {
-        super(role);
+    public VEventUserAgent(Organizer organizer, UidGenerator uidGenerator) {
+        super(organizer, uidGenerator);
     }
 
     /**

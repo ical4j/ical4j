@@ -1,4 +1,4 @@
-package net.fortuna.ical4j.transform.property;
+package net.fortuna.ical4j.transform.command;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;

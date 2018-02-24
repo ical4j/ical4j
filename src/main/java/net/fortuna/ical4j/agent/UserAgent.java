@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.agent;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 
 /**
@@ -35,7 +34,7 @@ public interface UserAgent<T extends CalendarComponent> {
      * 
      * @return
      */
-    Property getRole();
+//    Property getRole();
 
     /**
      * Identifies the iTiP method employed by the user agent instance.
