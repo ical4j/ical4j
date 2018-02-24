@@ -38,17 +38,13 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.Calendars;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.TimeZones;
-import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.util.*;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
@@ -572,7 +568,7 @@ public class VEventTest extends CalendarComponentTest {
      * @throws ParserException
      */
     public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException, ParserException {
-        UidGenerator uidGenerator = new UidGenerator("1");
+        UidGenerator uidGenerator = new RandomUidGenerator();
 
         Calendar weekday9AM = getCalendarInstance();
         weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
@@ -686,7 +682,7 @@ public class VEventTest extends CalendarComponentTest {
         suite.addTest(new VEventTest("testGetConsumedTimeMonthly", monthlyWeekdayEvents));
 
         //test event validation..
-        UidGenerator ug = new UidGenerator("1");
+        UidGenerator ug = new RandomUidGenerator();
         Uid uid = ug.generateUid();
 
         DtStart start = new DtStart(new Date());
