@@ -4,12 +4,12 @@ import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.property.Method
 import net.fortuna.ical4j.model.property.Organizer
-import net.fortuna.ical4j.util.SimpleHostInfo
+import net.fortuna.ical4j.util.RandomUidGenerator
 import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
 
 class VToDoUserAgentTest extends Specification {
-    UidGenerator uidGenerator = [new SimpleHostInfo('host'), '1']
+    UidGenerator uidGenerator = new RandomUidGenerator()
     Organizer organizer = []
 
     VToDoUserAgent userAgent = [organizer, uidGenerator]
