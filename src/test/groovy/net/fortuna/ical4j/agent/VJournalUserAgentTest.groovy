@@ -19,7 +19,6 @@ class VJournalUserAgentTest extends Specification {
     def "Publish"() {
         given: 'multiple vjournal instances'
         def vjournal = builder.vjournal {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -27,7 +26,6 @@ class VJournalUserAgentTest extends Specification {
         }
 
         def vjournal2 = builder.vjournal {
-            uid '2'
             dtstamp()
             dtstart '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -72,7 +70,6 @@ class VJournalUserAgentTest extends Specification {
     def "Reply"() {
         given: 'a journal request'
         def vjournal = builder.vjournal {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -89,7 +86,6 @@ class VJournalUserAgentTest extends Specification {
     def "Add"() {
         given: 'a journal'
         def vjournal = builder.vjournal {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -106,7 +102,6 @@ class VJournalUserAgentTest extends Specification {
     def "Cancel"() {
         given: 'a journal'
         def vjournal = builder.vjournal {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -123,7 +118,6 @@ class VJournalUserAgentTest extends Specification {
     def "Refresh"() {
         given: 'a journal'
         def vjournal = builder.vjournal {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -140,7 +134,6 @@ class VJournalUserAgentTest extends Specification {
     def "Counter"() {
         given: 'a journal request'
         def vjournal = builder.vjournal {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -157,7 +150,6 @@ class VJournalUserAgentTest extends Specification {
     def "DeclineCounter"() {
         given: 'a journal counter'
         def vjournal = builder.vjournal {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'

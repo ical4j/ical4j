@@ -20,7 +20,6 @@ class VEventUserAgentTest extends Specification {
     def "Publish"() {
         given: 'multiple vevent instances'
         def vevent = builder.vevent {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -28,7 +27,6 @@ class VEventUserAgentTest extends Specification {
         }
 
         def vevent2 = builder.vevent {
-            uid '2'
             dtstamp()
             dtstart '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -76,7 +74,6 @@ class VEventUserAgentTest extends Specification {
     def "Reply"() {
         given: 'an event request'
         def vevent = builder.vevent {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -93,7 +90,6 @@ class VEventUserAgentTest extends Specification {
     def "Add"() {
         given: 'an event'
         def vevent = builder.vevent {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -110,7 +106,6 @@ class VEventUserAgentTest extends Specification {
     def "Cancel"() {
         given: 'an event'
         def vevent = builder.vevent {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -127,7 +122,6 @@ class VEventUserAgentTest extends Specification {
     def "Refresh"() {
         given: 'an event'
         def vevent = builder.vevent {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -144,7 +138,6 @@ class VEventUserAgentTest extends Specification {
     def "Counter"() {
         given: 'an event request'
         def vevent = builder.vevent {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -161,7 +154,6 @@ class VEventUserAgentTest extends Specification {
     def "DeclineCounter"() {
         given: 'an event counter'
         def vevent = builder.vevent {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'

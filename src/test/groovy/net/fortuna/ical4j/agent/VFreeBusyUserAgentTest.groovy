@@ -19,7 +19,6 @@ class VFreeBusyUserAgentTest extends Specification {
     def "Publish"() {
         given: 'multiple vfreeBusy instances'
         def vfreeBusy = builder.vfreebusy {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -27,7 +26,6 @@ class VFreeBusyUserAgentTest extends Specification {
         }
 
         def vfreeBusy2 = builder.vfreebusy {
-            uid '2'
             dtstamp()
             dtstart '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -75,7 +73,6 @@ class VFreeBusyUserAgentTest extends Specification {
     def "Reply"() {
         given: 'a freebusy request'
         def vfreeBusy = builder.vfreebusy {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -92,7 +89,6 @@ class VFreeBusyUserAgentTest extends Specification {
     def "Add"() {
         given: 'a freebusy'
         def vfreeBusy = builder.vfreebusy {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -109,7 +105,6 @@ class VFreeBusyUserAgentTest extends Specification {
     def "Cancel"() {
         given: 'a freebusy'
         def vfreeBusy = builder.vfreebusy {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -126,7 +121,6 @@ class VFreeBusyUserAgentTest extends Specification {
     def "Refresh"() {
         given: 'a freebusy'
         def vfreeBusy = builder.vfreebusy {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -143,7 +137,6 @@ class VFreeBusyUserAgentTest extends Specification {
     def "Counter"() {
         given: 'a freebusy request'
         def vfreeBusy = builder.vfreebusy {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -160,7 +153,6 @@ class VFreeBusyUserAgentTest extends Specification {
     def "DeclineCounter"() {
         given: 'a freebusy counter'
         def vfreeBusy = builder.vfreebusy {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'

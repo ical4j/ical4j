@@ -19,7 +19,6 @@ class VToDoUserAgentTest extends Specification {
     def "Publish"() {
         given: 'multiple vtodo instances'
         def vtodo = builder.vtodo {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -27,7 +26,6 @@ class VToDoUserAgentTest extends Specification {
         }
 
         def vtodo2 = builder.vtodo {
-            uid '2'
             dtstamp()
             dtstart '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -75,7 +73,6 @@ class VToDoUserAgentTest extends Specification {
     def "Reply"() {
         given: 'an event request'
         def vtodo = builder.vtodo {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -92,7 +89,6 @@ class VToDoUserAgentTest extends Specification {
     def "Add"() {
         given: 'a todo'
         def vtodo = builder.vtodo {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -109,7 +105,6 @@ class VToDoUserAgentTest extends Specification {
     def "Cancel"() {
         given: 'a todo'
         def vtodo = builder.vtodo {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -126,7 +121,6 @@ class VToDoUserAgentTest extends Specification {
     def "Refresh"() {
         given: 'a todo'
         def vtodo = builder.vtodo {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -143,7 +137,6 @@ class VToDoUserAgentTest extends Specification {
     def "Counter"() {
         given: 'a todo request'
         def vtodo = builder.vtodo {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
@@ -160,7 +153,6 @@ class VToDoUserAgentTest extends Specification {
     def "DeclineCounter"() {
         given: 'a todo counter'
         def vtodo = builder.vtodo {
-            uid '1'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
