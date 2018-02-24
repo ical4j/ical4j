@@ -44,8 +44,8 @@ import net.fortuna.ical4j.util.UidGenerator;
  */
 public class ReplyTransformer extends AbstractMethodTransformer {
 
-    public ReplyTransformer(UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.REPLY, uidGenerator, false, incrementSequence);
+    public ReplyTransformer(UidGenerator uidGenerator) {
+        super(Method.REPLY, uidGenerator, true, false);
     }
 
 }

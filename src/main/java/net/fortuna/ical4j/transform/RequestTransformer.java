@@ -51,7 +51,7 @@ public class RequestTransformer extends AbstractMethodTransformer {
     private final OrganizerUpdate organizerUpdate;
 
     public RequestTransformer(Organizer organizer, UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.REQUEST, uidGenerator, false, incrementSequence);
+        super(Method.REQUEST, uidGenerator, true, incrementSequence);
         this.organizerUpdate = new OrganizerUpdate(organizer);
     }
 

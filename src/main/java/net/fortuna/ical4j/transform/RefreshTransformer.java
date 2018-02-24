@@ -44,8 +44,8 @@ import net.fortuna.ical4j.util.UidGenerator;
  */
 public class RefreshTransformer extends AbstractMethodTransformer {
 
-    public RefreshTransformer(UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.REFRESH, uidGenerator, false, incrementSequence);
+    public RefreshTransformer(UidGenerator uidGenerator) {
+        super(Method.REFRESH, uidGenerator, true, false);
     }
 
 }

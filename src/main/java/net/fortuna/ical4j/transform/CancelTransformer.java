@@ -44,8 +44,8 @@ import net.fortuna.ical4j.util.UidGenerator;
  */
 public class CancelTransformer extends AbstractMethodTransformer {
 
-    public CancelTransformer(UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.CANCEL, uidGenerator, false, incrementSequence);
+    public CancelTransformer(UidGenerator uidGenerator) {
+        super(Method.CANCEL, uidGenerator, true, true);
     }
 
 }

@@ -44,8 +44,8 @@ import net.fortuna.ical4j.util.UidGenerator;
  */
 public class AddTransformer extends AbstractMethodTransformer {
 
-    public AddTransformer(UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.ADD, uidGenerator, false, incrementSequence);
+    public AddTransformer(UidGenerator uidGenerator) {
+        super(Method.ADD, uidGenerator, true, true);
     }
 
 }

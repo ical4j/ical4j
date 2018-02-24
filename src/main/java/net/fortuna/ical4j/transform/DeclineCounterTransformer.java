@@ -44,8 +44,8 @@ import net.fortuna.ical4j.util.UidGenerator;
  */
 public class DeclineCounterTransformer extends AbstractMethodTransformer {
 
-    public DeclineCounterTransformer(UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.DECLINE_COUNTER, uidGenerator, false, incrementSequence);
+    public DeclineCounterTransformer(UidGenerator uidGenerator) {
+        super(Method.DECLINE_COUNTER, uidGenerator, true, false);
     }
 
 }

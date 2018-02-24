@@ -32,17 +32,18 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
         MethodUpdate methodUpdate = new MethodUpdate(method);
         methodUpdate.transform(object);
 
-        if (incrementSequence) {
+        Property uid = null;
+        for (CalendarComponent component : object.getComponents()) {
+            uidUpdate.transform(component);
+            if (uid == null) {
+                uid = component.getProperty(Property.UID);
+            } else if (sameUid && !uid.equals(component.getProperty(Property.UID))) {
+                throw new IllegalArgumentException("All components must share the same non-null UID");
+            }
+
             // if a calendar component has already been published previously
             // update the sequence number..
-            Property uid = null;
-            for (CalendarComponent component : object.getComponents()) {
-                uidUpdate.transform(component);
-                if (uid == null) {
-                    uid = component.getProperty(Property.UID);
-                } else if (sameUid && !uid.equals(component.getProperty(Property.UID))) {
-                    throw new IllegalArgumentException("All components must share the same non-null UID");
-                }
+            if (incrementSequence) {
                 sequenceIncrement.transform(component);
             }
         }
