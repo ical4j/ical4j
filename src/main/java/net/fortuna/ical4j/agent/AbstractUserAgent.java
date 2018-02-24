@@ -35,6 +35,10 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     protected Calendar wrap(Method method, T... component) {
         Calendar calendar = Calendars.wrap(component);
+        return transform(method, calendar);
+    }
+
+    protected Calendar transform(Method method, Calendar calendar) {
         Transformer<Calendar> transformer = transformers.get(method);
         transformer.transform(calendar);
         return calendar;

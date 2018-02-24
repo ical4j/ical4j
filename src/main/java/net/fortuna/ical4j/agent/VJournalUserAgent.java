@@ -23,7 +23,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
     }
 
     @Override
-    public Calendar reply(VJournal... component) {
+    public Calendar reply(Calendar request) {
         throw new UnsupportedOperationException("Method [REPLY] not supported by VJOURNAL");
     }
 
@@ -43,12 +43,12 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
     }
 
     @Override
-    public Calendar counter(VJournal component) {
+    public Calendar counter(Calendar request) {
         throw new UnsupportedOperationException("Method [COUNTER] not supported by VJOURNAL");
     }
 
     @Override
-    public Calendar declineCounter(VJournal... component) {
+    public Calendar declineCounter(Calendar counter) {
         throw new UnsupportedOperationException("Method [DECLINECOUNTER] not supported by VJOURNAL");
     }
 }

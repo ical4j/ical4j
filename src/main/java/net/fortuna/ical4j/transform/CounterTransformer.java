@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.transform;
 
+import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.UidGenerator;
 
@@ -48,4 +49,11 @@ public class CounterTransformer extends AbstractMethodTransformer {
         super(Method.COUNTER, uidGenerator, true, false);
     }
 
+    @Override
+    public Calendar transform(Calendar object) {
+        if (!Method.REQUEST.equals(object.getMethod())) {
+            throw new IllegalArgumentException("Expecting REQUEST method in source");
+        }
+        return super.transform(object);
+    }
 }

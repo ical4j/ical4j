@@ -48,8 +48,8 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
     }
 
     @Override
-    public Calendar reply(VFreeBusy... component) {
-        return wrap(Method.REPLY, component);
+    public Calendar reply(Calendar request) {
+        return transform(Method.REPLY, request);
     }
 
     @Override
@@ -68,12 +68,12 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
     }
 
     @Override
-    public Calendar counter(VFreeBusy component) {
+    public Calendar counter(Calendar request) {
         throw new UnsupportedOperationException("Method [COUNTER] not supported by VFREEBUSY");
     }
 
     @Override
-    public Calendar declineCounter(VFreeBusy... component) {
+    public Calendar declineCounter(Calendar counter) {
         throw new UnsupportedOperationException("Method [DECLINECOUNTER] not supported by VFREEBUSY");
     }
 }

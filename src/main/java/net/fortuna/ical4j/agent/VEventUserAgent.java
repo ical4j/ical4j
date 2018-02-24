@@ -126,12 +126,12 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     request.  If property changes are desired, the "COUNTER" message must
      *     be used.
      *
-     * @param component
+     * @param request
      * @return
      */
     @Override
-    public Calendar reply(VEvent... component) {
-        return wrap(Method.REPLY, component);
+    public Calendar reply(Calendar request) {
+        return transform(Method.REPLY, request);
     }
 
     /**
@@ -241,12 +241,12 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     SHOULD send a "REQUEST" message to all "Attendees" affected by any
      *     change triggered by an accepted "COUNTER".
      *
-     * @param component
+     * @param request
      * @return
      */
     @Override
-    public Calendar counter(VEvent component) {
-        return wrap(Method.COUNTER, component);
+    public Calendar counter(Calendar request) {
+        return transform(Method.COUNTER, request);
     }
 
     /**
@@ -259,11 +259,11 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     "Organizer".
      *
      *
-     * @param component
+     * @param counter
      * @return
      */
     @Override
-    public Calendar declineCounter(VEvent... component) {
-        return wrap(Method.DECLINE_COUNTER, component);
+    public Calendar declineCounter(Calendar counter) {
+        return transform(Method.DECLINE_COUNTER, counter);
     }
 }

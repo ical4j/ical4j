@@ -92,7 +92,7 @@ public interface UserAgent<T extends CalendarComponent> {
 
     Calendar request(T... component);
 
-    Calendar reply(T... component);
+    Calendar reply(Calendar request);
 
     Calendar add(T component);
 
@@ -100,7 +100,7 @@ public interface UserAgent<T extends CalendarComponent> {
 
     Calendar refresh(T component);
 
-    Calendar counter(T component);
+    Calendar counter(Calendar request);
 
-    Calendar declineCounter(T... component);
+    Calendar declineCounter(Calendar counter);
 }

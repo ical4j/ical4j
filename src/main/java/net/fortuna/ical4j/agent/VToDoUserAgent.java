@@ -23,8 +23,8 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
     }
 
     @Override
-    public Calendar reply(VToDo... component) {
-        return wrap(Method.REPLY, component);
+    public Calendar reply(Calendar request) {
+        return transform(Method.REPLY, request);
     }
 
     @Override
@@ -43,12 +43,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
     }
 
     @Override
-    public Calendar counter(VToDo component) {
-        return wrap(Method.COUNTER, component);
+    public Calendar counter(Calendar request) {
+        return transform(Method.COUNTER, request);
     }
 
     @Override
-    public Calendar declineCounter(VToDo... component) {
-        return wrap(Method.DECLINE_COUNTER, component);
+    public Calendar declineCounter(Calendar counter) {
+        return transform(Method.DECLINE_COUNTER, counter);
     }
 }
