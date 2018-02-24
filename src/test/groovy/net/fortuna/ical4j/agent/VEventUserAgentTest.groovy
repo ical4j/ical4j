@@ -73,15 +73,18 @@ class VEventUserAgentTest extends Specification {
 
     def "Reply"() {
         given: 'an event request'
-        def vevent = builder.vevent {
-            dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
-            action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        def request = builder.calendar {
+            method(Method.REQUEST)
+            vevent {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
         }
 
         when: 'a reply is generated'
-        def calendar = userAgent.reply(vevent)
+        def calendar = userAgent.reply(request)
 
         then: 'the calendar object contains method = REPLY'
         calendar.getProperty(Property.METHOD) == Method.REPLY
@@ -136,16 +139,18 @@ class VEventUserAgentTest extends Specification {
     }
 
     def "Counter"() {
-        given: 'an event request'
-        def vevent = builder.vevent {
-            dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
-            action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        def request = builder.calendar {
+            method(Method.REQUEST)
+            vevent {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
         }
 
         when: 'an event counter is generated'
-        def calendar = userAgent.counter(vevent)
+        def calendar = userAgent.counter(request)
 
         then: 'the calendar object contains method = COUNTER'
         calendar.getProperty(Property.METHOD) == Method.COUNTER
@@ -153,15 +158,18 @@ class VEventUserAgentTest extends Specification {
 
     def "DeclineCounter"() {
         given: 'an event counter'
-        def vevent = builder.vevent {
-            dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
-            action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        def counter = builder.calendar {
+            method(Method.COUNTER)
+            vevent {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
         }
 
         when: 'an event decline-counter is generated'
-        def calendar = userAgent.declineCounter(vevent)
+        def calendar = userAgent.declineCounter(counter)
 
         then: 'the calendar object contains method = DECLINECOUNTER'
         calendar.getProperty(Property.METHOD) == Method.DECLINE_COUNTER

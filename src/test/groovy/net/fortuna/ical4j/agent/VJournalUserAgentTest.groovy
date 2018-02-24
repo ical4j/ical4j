@@ -43,7 +43,7 @@ class VJournalUserAgentTest extends Specification {
     }
 
     def "Request"() {
-        given: 'multiple vjournal instances'
+        given: 'a request'
         def vjournal = builder.vjournal {
             uid '1'
             dtstamp()
@@ -69,15 +69,18 @@ class VJournalUserAgentTest extends Specification {
 
     def "Reply"() {
         given: 'a journal request'
-        def vjournal = builder.vjournal {
-            dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
-            action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        def request = builder.calendar {
+            method(Method.REQUEST)
+            vjournal {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
         }
 
         when: 'a reply is generated'
-        def calendar = userAgent.reply(vjournal)
+        def calendar = userAgent.reply(request)
 
         then: 'an exception is thrown'
         thrown(UnsupportedOperationException)
@@ -133,15 +136,18 @@ class VJournalUserAgentTest extends Specification {
 
     def "Counter"() {
         given: 'a journal request'
-        def vjournal = builder.vjournal {
-            dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
-            action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        def request = builder.calendar {
+            method(Method.REQUEST)
+            vjournal {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
         }
 
         when: 'a journal counter is generated'
-        def calendar = userAgent.counter(vjournal)
+        def calendar = userAgent.counter(request)
 
         then: 'an exception is thrown'
         thrown(UnsupportedOperationException)
@@ -149,15 +155,18 @@ class VJournalUserAgentTest extends Specification {
 
     def "DeclineCounter"() {
         given: 'a journal counter'
-        def vjournal = builder.vjournal {
-            dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
-            action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        def counter = builder.calendar {
+            method(Method.COUNTER)
+            vjournal {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
         }
 
         when: 'a journal decline-counter is generated'
-        def calendar = userAgent.declineCounter(vjournal)
+        def calendar = userAgent.declineCounter(counter)
 
         then: 'an exception is thrown'
         thrown(UnsupportedOperationException)

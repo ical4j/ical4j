@@ -72,15 +72,18 @@ class VFreeBusyUserAgentTest extends Specification {
 
     def "Reply"() {
         given: 'a freebusy request'
-        def vfreeBusy = builder.vfreebusy {
-            dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
-            action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        def request = builder.calendar {
+            method(Method.REQUEST)
+            vfreebusy {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
         }
 
         when: 'a reply is generated'
-        def calendar = userAgent.reply(vfreeBusy)
+        def calendar = userAgent.reply(request)
 
         then: 'the calendar object contains method = REPLY'
         calendar.getProperty(Property.METHOD) == Method.REPLY
@@ -136,15 +139,18 @@ class VFreeBusyUserAgentTest extends Specification {
 
     def "Counter"() {
         given: 'a freebusy request'
-        def vfreeBusy = builder.vfreebusy {
-            dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
-            action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        def request = builder.calendar {
+            method(Method.REQUEST)
+            vfreebusy {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
         }
 
         when: 'a freebusy counter is generated'
-        def calendar = userAgent.counter(vfreeBusy)
+        def calendar = userAgent.counter(request)
 
         then: 'an exception is thrown'
         thrown(UnsupportedOperationException)
@@ -152,15 +158,18 @@ class VFreeBusyUserAgentTest extends Specification {
 
     def "DeclineCounter"() {
         given: 'a freebusy counter'
-        def vfreeBusy = builder.vfreebusy {
-            dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
-            action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+        def counter = builder.calendar {
+            method(Method.COUNTER)
+            vfreebusy {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
         }
 
         when: 'a freebusy decline-counter is generated'
-        def calendar = userAgent.declineCounter(vfreeBusy)
+        def calendar = userAgent.declineCounter(counter)
 
         then: 'an exception is thrown'
         thrown(UnsupportedOperationException)
