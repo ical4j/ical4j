@@ -23,6 +23,11 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
     }
 
     @Override
+    public Calendar delegate(Calendar request) {
+        throw new UnsupportedOperationException("REQUEST delegation not supported by VJOURNAL");
+    }
+
+    @Override
     public Calendar reply(Calendar request) {
         throw new UnsupportedOperationException("Method [REPLY] not supported by VJOURNAL");
     }

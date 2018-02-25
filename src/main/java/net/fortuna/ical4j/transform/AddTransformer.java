@@ -31,7 +31,11 @@
  */
 package net.fortuna.ical4j.transform;
 
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.transform.command.OrganizerUpdate;
 import net.fortuna.ical4j.util.UidGenerator;
 
 /**
@@ -44,8 +48,18 @@ import net.fortuna.ical4j.util.UidGenerator;
  */
 public class AddTransformer extends AbstractMethodTransformer {
 
-    public AddTransformer(UidGenerator uidGenerator) {
+    private final OrganizerUpdate organizerUpdate;
+
+    public AddTransformer(Organizer organizer, UidGenerator uidGenerator) {
         super(Method.ADD, uidGenerator, true, true);
+        this.organizerUpdate = new OrganizerUpdate(organizer);
     }
 
+    @Override
+    public Calendar transform(Calendar object) {
+        for (CalendarComponent component : object.getComponents()) {
+            organizerUpdate.transform(component);
+        }
+        return super.transform(object);
+    }
 }

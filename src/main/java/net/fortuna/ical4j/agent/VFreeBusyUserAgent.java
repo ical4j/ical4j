@@ -48,6 +48,11 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
     }
 
     @Override
+    public Calendar delegate(Calendar request) {
+        throw new UnsupportedOperationException("REQUEST delegation not supported by VFREEBUSY");
+    }
+
+    @Override
     public Calendar reply(Calendar request) {
         return transform(Method.REPLY, request);
     }

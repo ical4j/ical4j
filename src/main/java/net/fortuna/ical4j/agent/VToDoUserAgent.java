@@ -4,12 +4,16 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.transform.RequestTransformer;
 import net.fortuna.ical4j.util.UidGenerator;
 
 public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
 
+    private final RequestTransformer delegateTransformer;
+
     public VToDoUserAgent(Organizer organizer, UidGenerator uidGenerator) {
         super(organizer, uidGenerator);
+        delegateTransformer = new RequestTransformer(uidGenerator);
     }
 
     @Override
@@ -20,6 +24,11 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
     @Override
     public Calendar request(VToDo... component) {
         return wrap(Method.REQUEST, component);
+    }
+
+    @Override
+    public Calendar delegate(Calendar request) {
+        return delegateTransformer.transform(request);
     }
 
     @Override

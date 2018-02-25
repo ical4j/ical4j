@@ -92,6 +92,45 @@ public interface UserAgent<T extends CalendarComponent> {
 
     Calendar request(T... component);
 
+    /**
+     * 3.2.2.3.  Delegating an Event to Another CU
+     *
+     *     Some calendar and scheduling systems allow "Attendees" to delegate
+     *     their presence at an event to another "Calendar User". iTIP supports
+     *     this concept using the following workflow.  Any "Attendee" may
+     *     delegate their right to participate in a calendar "VEVENT" to another
+     *     CU.  The implication is that the delegate participates in lieu of the
+     *     original "Attendee", NOT in addition to the "Attendee".  The
+     *     delegator MUST notify the "Organizer" of this action using the steps
+     *     outlined below.  Implementations may support or restrict delegation
+     *     as they see fit.  For instance, some implementations may restrict a
+     *     delegate from delegating a "REQUEST" to another CU.
+     *
+     *     The "Delegator" of an event forwards the existing "REQUEST" to the
+     *     "Delegate".  The "REQUEST" method MUST include an "ATTENDEE" property
+     *     with the calendar address of the "Delegate".  The "Delegator" MUST
+     *     also send a "REPLY" method to the "Organizer" with the "Delegator's"
+     *     "ATTENDEE" property "PARTSTAT" parameter value set to "DELEGATED".
+     *     In addition, the "DELEGATED-TO" parameter MUST be included with the
+     *     calendar address of the "Delegate".  Also, a new "ATTENDEE" property
+     *     for the "Delegate" MUST be included and must specify the calendar
+     *     user address set in the "DELEGATED-TO" parameter, as above.
+     *
+     *     In response to the request, the "Delegate" MUST send a "REPLY" method
+     *     to the "Organizer", and optionally to the "Delegator".  The "REPLY"
+     *     method SHOULD include the "ATTENDEE" property with the "DELEGATED-
+     *     FROM" parameter value of the "Delegator's" calendar address.
+     *
+     *     The "Delegator" may continue to receive updates to the event even
+     *     though they will not be attending.  This is accomplished by the
+     *     "Delegator" setting their "role" attribute to "NON-PARTICIPANT" in
+     *     the "REPLY" to the "Organizer".
+     *
+     * @param request
+     * @return
+     */
+    Calendar delegate(Calendar request);
+
     Calendar reply(Calendar request);
 
     Calendar add(T component);

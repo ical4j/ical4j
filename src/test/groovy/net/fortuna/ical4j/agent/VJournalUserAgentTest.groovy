@@ -67,6 +67,25 @@ class VJournalUserAgentTest extends Specification {
         thrown(UnsupportedOperationException)
     }
 
+    def "Delegate"() {
+        given: 'a request'
+        def request = builder.calendar {
+            method(Method.REQUEST)
+            vjournal {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
+        }
+
+        when: 'the journal request is delegated'
+        def calendar = userAgent.delegate(request)
+
+        then: 'an exception is thrown'
+        thrown(UnsupportedOperationException)
+    }
+
     def "Reply"() {
         given: 'a journal request'
         def request = builder.calendar {

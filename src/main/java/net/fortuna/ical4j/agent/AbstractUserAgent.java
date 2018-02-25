@@ -24,13 +24,13 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
         this.uidGenerator = uidGenerator;
         transformers = new HashMap<>();
         transformers.put(Method.PUBLISH, new PublishTransformer(organizer, uidGenerator,true));
-        transformers.put(Method.REQUEST, new RequestTransformer(organizer, uidGenerator,true));
-        transformers.put(Method.ADD, new AddTransformer(uidGenerator));
-        transformers.put(Method.CANCEL, new CancelTransformer(uidGenerator));
+        transformers.put(Method.REQUEST, new RequestTransformer(organizer, uidGenerator));
+        transformers.put(Method.ADD, new AddTransformer(organizer, uidGenerator));
+        transformers.put(Method.CANCEL, new CancelTransformer(organizer, uidGenerator));
         transformers.put(Method.REPLY, new ReplyTransformer(uidGenerator));
         transformers.put(Method.REFRESH, new RefreshTransformer(uidGenerator));
         transformers.put(Method.COUNTER, new CounterTransformer(uidGenerator));
-        transformers.put(Method.DECLINE_COUNTER, new DeclineCounterTransformer(uidGenerator));
+        transformers.put(Method.DECLINE_COUNTER, new DeclineCounterTransformer(organizer, uidGenerator));
     }
 
     protected Calendar wrap(Method method, T... component) {

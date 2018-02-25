@@ -4,12 +4,16 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.transform.RequestTransformer;
 import net.fortuna.ical4j.util.UidGenerator;
 
 public class VEventUserAgent extends AbstractUserAgent<VEvent> {
 
+    private final RequestTransformer delegateTransformer;
+
     public VEventUserAgent(Organizer organizer, UidGenerator uidGenerator) {
         super(organizer, uidGenerator);
+        delegateTransformer = new RequestTransformer(uidGenerator);
     }
 
     /**
@@ -85,6 +89,11 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     @Override
     public Calendar request(VEvent... component) {
         return wrap(Method.REQUEST, component);
+    }
+
+    @Override
+    public Calendar delegate(Calendar request) {
+        return delegateTransformer.transform(request);
     }
 
     /**

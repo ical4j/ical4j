@@ -70,6 +70,25 @@ class VFreeBusyUserAgentTest extends Specification {
         calendar.components.each { it.getProperty(Property.SEQUENCE) }
     }
 
+    def "Delegate"() {
+        given: 'a freebusy request'
+        def request = builder.calendar {
+            method(Method.REQUEST)
+            vfreebusy {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
+        }
+
+        when: 'a freebusy delegate is generated'
+        def calendar = userAgent.delegate(request)
+
+        then: 'an exception is thrown'
+        thrown(UnsupportedOperationException)
+    }
+
     def "Reply"() {
         given: 'a freebusy request'
         def request = builder.calendar {

@@ -70,6 +70,25 @@ class VToDoUserAgentTest extends Specification {
         calendar.components.each { it.getProperty(Property.SEQUENCE) }
     }
 
+    def "Delegate"() {
+        given: 'a todo request'
+        def request = builder.calendar {
+            method(Method.REQUEST)
+            vtodo {
+                dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                action 'DISPLAY'
+                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            }
+        }
+
+        when: 'the request is delegated'
+        def calendar = userAgent.delegate(request)
+
+        then: 'the calendar object contains method = REQUEST'
+        calendar.getProperty(Property.METHOD) == Method.REQUEST
+    }
+
     def "Reply"() {
         given: 'an event request'
         def request = builder.calendar {
