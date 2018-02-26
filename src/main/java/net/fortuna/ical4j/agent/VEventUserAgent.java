@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.transform.RequestTransformer;
 import net.fortuna.ical4j.util.UidGenerator;
 
@@ -11,8 +12,8 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
 
     private final RequestTransformer delegateTransformer;
 
-    public VEventUserAgent(Organizer organizer, UidGenerator uidGenerator) {
-        super(organizer, uidGenerator);
+    public VEventUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
+        super(prodId, organizer, uidGenerator);
         delegateTransformer = new RequestTransformer(uidGenerator);
     }
 
@@ -34,7 +35,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar publish(VEvent... component) {
-        return wrap(Method.PUBLISH, component);
+        Calendar published = wrap(Method.PUBLISH, component);
+        published.validate();
+        return published;
     }
 
     /**
@@ -88,12 +91,16 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar request(VEvent... component) {
-        return wrap(Method.REQUEST, component);
+        Calendar request = wrap(Method.REQUEST, component);
+        request.validate();
+        return request;
     }
 
     @Override
     public Calendar delegate(Calendar request) {
-        return delegateTransformer.transform(request);
+        Calendar delegated = delegateTransformer.transform(request);
+        delegated.validate();
+        return delegated;
     }
 
     /**
@@ -140,7 +147,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar reply(Calendar request) {
-        return transform(Method.REPLY, request);
+        Calendar reply = transform(Method.REPLY, request);
+        reply.validate();
+        return reply;
     }
 
     /**
@@ -167,7 +176,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar add(VEvent component) {
-        return wrap(Method.ADD, component);
+        Calendar add = wrap(Method.ADD, component);
+        add.validate();
+        return add;
     }
 
     /**
@@ -209,7 +220,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar cancel(VEvent... component) {
-        return wrap(Method.CANCEL, component);
+        Calendar cancel = wrap(Method.CANCEL, component);
+        cancel.validate();
+        return cancel;
     }
 
     /**
@@ -228,7 +241,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar refresh(VEvent component) {
-        return wrap(Method.REFRESH, component);
+        Calendar refresh = wrap(Method.REFRESH, component);
+        refresh.validate();
+        return refresh;
     }
 
     /**
@@ -255,7 +270,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar counter(Calendar request) {
-        return transform(Method.COUNTER, request);
+        Calendar counter = transform(Method.COUNTER, request);
+        counter.validate();
+        return counter;
     }
 
     /**
@@ -273,6 +290,8 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar declineCounter(Calendar counter) {
-        return transform(Method.DECLINE_COUNTER, counter);
+        Calendar declineCounter = transform(Method.DECLINE_COUNTER, counter);
+        declineCounter.validate();
+        return declineCounter;
     }
 }

@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.transform.RequestTransformer;
 import net.fortuna.ical4j.util.UidGenerator;
 
@@ -11,53 +12,71 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
 
     private final RequestTransformer delegateTransformer;
 
-    public VToDoUserAgent(Organizer organizer, UidGenerator uidGenerator) {
-        super(organizer, uidGenerator);
+    public VToDoUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
+        super(prodId, organizer, uidGenerator);
         delegateTransformer = new RequestTransformer(uidGenerator);
     }
 
     @Override
     public Calendar publish(VToDo... component) {
-        return wrap(Method.PUBLISH, component);
+        Calendar published = wrap(Method.PUBLISH, component);
+        published.validate();
+        return published;
     }
 
     @Override
     public Calendar request(VToDo... component) {
-        return wrap(Method.REQUEST, component);
+        Calendar request = wrap(Method.REQUEST, component);
+        request.validate();
+        return request;
     }
 
     @Override
     public Calendar delegate(Calendar request) {
-        return delegateTransformer.transform(request);
+        Calendar delegated = delegateTransformer.transform(request);
+        delegated.validate();
+        return delegated;
     }
 
     @Override
     public Calendar reply(Calendar request) {
-        return transform(Method.REPLY, request);
+        Calendar reply = transform(Method.REPLY, request);
+        reply.validate();
+        return reply;
     }
 
     @Override
     public Calendar add(VToDo component) {
-        return wrap(Method.ADD, component);
+        Calendar add = wrap(Method.ADD, component);
+        add.validate();
+        return add;
     }
 
     @Override
     public Calendar cancel(VToDo... component) {
-        return wrap(Method.CANCEL, component);
+        Calendar cancel = wrap(Method.CANCEL, component);
+        cancel.validate();
+        return cancel;
     }
 
     @Override
     public Calendar refresh(VToDo component) {
-        return wrap(Method.REFRESH, component);
+        Calendar refresh = wrap(Method.REFRESH, component);
+        refresh.validate();
+        return refresh;
     }
 
     @Override
     public Calendar counter(Calendar request) {
-        return transform(Method.COUNTER, request);
+        Calendar counter = transform(Method.COUNTER, request);
+        counter.validate();
+        return counter;
     }
 
     @Override
     public Calendar declineCounter(Calendar counter) {
-        return transform(Method.DECLINE_COUNTER, counter);
+        Calendar declineCounter = transform(Method.DECLINE_COUNTER, counter);
+        declineCounter.validate();
+        return declineCounter;
     }
 }

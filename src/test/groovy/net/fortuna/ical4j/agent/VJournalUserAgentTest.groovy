@@ -4,15 +4,18 @@ import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.property.Method
 import net.fortuna.ical4j.model.property.Organizer
+import net.fortuna.ical4j.model.property.ProdId
 import net.fortuna.ical4j.util.RandomUidGenerator
 import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
 
 class VJournalUserAgentTest extends Specification {
+
+    ProdId prodId = ['-//Ben Fortuna//iCal4j 2.0//EN']
     UidGenerator uidGenerator = new RandomUidGenerator()
     Organizer organizer = []
 
-    VJournalUserAgent userAgent = [organizer, uidGenerator]
+    VJournalUserAgent userAgent = [prodId, organizer, uidGenerator]
 
     ContentBuilder builder = []
 
@@ -20,6 +23,7 @@ class VJournalUserAgentTest extends Specification {
         given: 'multiple vjournal instances'
         def vjournal = builder.vjournal {
             dtstamp()
+            description 'Journal entry 1'
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
@@ -27,6 +31,7 @@ class VJournalUserAgentTest extends Specification {
 
         def vjournal2 = builder.vjournal {
             dtstamp()
+            description 'Journal entry 2'
             dtstart '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
@@ -109,6 +114,7 @@ class VJournalUserAgentTest extends Specification {
         given: 'a journal'
         def vjournal = builder.vjournal {
             dtstamp()
+            description 'Journal entry 1'
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }

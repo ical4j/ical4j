@@ -2,17 +2,18 @@ package net.fortuna.ical4j.agent
 
 import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Property
-import net.fortuna.ical4j.model.property.Method
-import net.fortuna.ical4j.model.property.Organizer
+import net.fortuna.ical4j.model.property.*
 import net.fortuna.ical4j.util.RandomUidGenerator
 import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
 
 class VToDoUserAgentTest extends Specification {
-    UidGenerator uidGenerator = new RandomUidGenerator()
-    Organizer organizer = []
 
-    VToDoUserAgent userAgent = [organizer, uidGenerator]
+    ProdId prodId = ['-//Ben Fortuna//iCal4j 2.0//EN']
+    UidGenerator uidGenerator = new RandomUidGenerator()
+    Organizer org = []
+
+    VToDoUserAgent userAgent = [prodId, org, uidGenerator]
 
     ContentBuilder builder = []
 
@@ -23,6 +24,8 @@ class VToDoUserAgentTest extends Specification {
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            summary 'Task 1'
+            priority(Priority.HIGH)
         }
 
         def vtodo2 = builder.vtodo {
@@ -30,6 +33,8 @@ class VToDoUserAgentTest extends Specification {
             dtstart '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            summary 'Task 2'
+            priority(Priority.LOW)
         }
 
         when: 'the events are published'
@@ -50,6 +55,9 @@ class VToDoUserAgentTest extends Specification {
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            attendee 'mailto:org@example.com'
+            summary 'Task 1'
+            priority(Priority.HIGH)
         }
 
         def vtodo2 = builder.vtodo {
@@ -58,6 +66,9 @@ class VToDoUserAgentTest extends Specification {
             dtstart '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            attendee 'mailto:org@example.com'
+            summary 'Task 2'
+            priority(Priority.LOW)
         }
 
         when: 'the events are published'
@@ -73,12 +84,18 @@ class VToDoUserAgentTest extends Specification {
     def "Delegate"() {
         given: 'a todo request'
         def request = builder.calendar {
+            prodid(prodId)
+            version(Version.VERSION_2_0)
             method(Method.REQUEST)
             vtodo {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+                attendee 'mailto:org@example.com'
+                organizer 'mailto:org@example.com'
+                summary 'Task 1'
+                priority(Priority.HIGH)
             }
         }
 
@@ -92,12 +109,16 @@ class VToDoUserAgentTest extends Specification {
     def "Reply"() {
         given: 'an event request'
         def request = builder.calendar {
+            prodid(prodId)
+            version(Version.VERSION_2_0)
             method(Method.REQUEST)
             vtodo {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+                attendee 'mailto:org@example.com'
+                organizer 'mailto:org@example.com'
             }
         }
 
@@ -115,6 +136,8 @@ class VToDoUserAgentTest extends Specification {
             dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            summary 'Task 1'
+            priority(Priority.HIGH)
         }
 
         when: 'a todo recurrence is added'
@@ -144,9 +167,8 @@ class VToDoUserAgentTest extends Specification {
         given: 'a todo'
         def vtodo = builder.vtodo {
             dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            attendee 'mailto:org@example.com'
         }
 
         when: 'a todo refresh is generated'
@@ -159,12 +181,18 @@ class VToDoUserAgentTest extends Specification {
     def "Counter"() {
         given: 'a todo request'
         def request = builder.calendar {
+            prodid(prodId)
+            version(Version.VERSION_2_0)
             method(Method.REQUEST)
             vtodo {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+                attendee 'mailto:org@example.com'
+                organizer 'mailto:org@example.com'
+                summary 'Task 1'
+                priority(Priority.HIGH)
             }
         }
 
@@ -178,12 +206,16 @@ class VToDoUserAgentTest extends Specification {
     def "DeclineCounter"() {
         given: 'a todo counter'
         def counter = builder.calendar {
+            prodid(prodId)
+            version(Version.VERSION_2_0)
             method(Method.COUNTER)
             vtodo {
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+                attendee 'mailto:org@example.com'
+                sequence '0'
             }
         }
 

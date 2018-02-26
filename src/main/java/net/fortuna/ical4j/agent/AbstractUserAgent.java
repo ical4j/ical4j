@@ -4,6 +4,8 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.transform.*;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.UidGenerator;
@@ -16,11 +18,14 @@ import java.util.Map;
  */
 public abstract class AbstractUserAgent<T extends CalendarComponent> implements UserAgent<T> {
 
+    private final ProdId prodId;
+
     private final UidGenerator uidGenerator;
 
     private final Map<Method, Transformer<Calendar>> transformers;
 
-    public AbstractUserAgent(Organizer organizer, UidGenerator uidGenerator) {
+    public AbstractUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
+        this.prodId = prodId;
         this.uidGenerator = uidGenerator;
         transformers = new HashMap<>();
         transformers.put(Method.PUBLISH, new PublishTransformer(organizer, uidGenerator,true));
@@ -35,6 +40,8 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     protected Calendar wrap(Method method, T... component) {
         Calendar calendar = Calendars.wrap(component);
+        calendar.getProperties().add(prodId);
+        calendar.getProperties().add(Version.VERSION_2_0);
         return transform(method, calendar);
     }
 
@@ -42,5 +49,9 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
         Transformer<Calendar> transformer = transformers.get(method);
         transformer.transform(calendar);
         return calendar;
+    }
+
+    public ProdId getProdId() {
+        return prodId;
     }
 }
