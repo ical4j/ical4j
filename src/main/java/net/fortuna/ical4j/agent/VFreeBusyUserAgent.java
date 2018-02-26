@@ -36,8 +36,6 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      *     the busy time information and the date and time interval over which
      *     the busy time information covers.
      * </pre>
-     *
-     * @param component
      */
     @Override
     public Calendar publish(VFreeBusy... component) {
@@ -64,8 +62,6 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      *     exception message SHOULD be returned in a "REPLY" method, but no busy
      *     time data need be returned.
      * </pre>
-     *
-     * @param component
      */
     @Override
     public Calendar request(VFreeBusy... component) {
@@ -95,8 +91,6 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      *     "REQUEST" method.  Depending on the "REQUEST-STATUS" value, no busy
      *     time information may be returned.
      * </pre>
-     *
-     * @param request
      */
     @Override
     public Calendar reply(Calendar request) {

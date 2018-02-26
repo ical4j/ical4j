@@ -31,9 +31,6 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     or cancel (with a "CANCEL" method) a previously published "VEVENT"
      *     calendar component.
      * </pre>
-     *
-     * @param component
-     * @return
      */
     @Override
     public Calendar publish(VEvent... component) {
@@ -89,9 +86,6 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     instance-specific information.  In this case, multiple "VEVENT"
      *     components are needed to express the entire series.
      * </pre>
-     *
-     * @param component
-     * @return
      */
     @Override
     public Calendar request(VEvent... component) {
@@ -147,9 +141,6 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     request.  If property changes are desired, the "COUNTER" message must
      *     be used.
      * </pre>
-     *
-     * @param request
-     * @return
      */
     @Override
     public Calendar reply(Calendar request) {
@@ -178,9 +169,6 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     in the "ADD" message as if it were referenced via an "RDATE" in the
      *     main component.
      * </pre>
-     *
-     * @param component
-     * @return
      */
     @Override
     public Calendar add(VEvent component) {
@@ -224,9 +212,6 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     When a "VEVENT" is cancelled, the "SEQUENCE" property value MUST be
      *     incremented as described in Section 2.1.4.
      * </pre>
-     *
-     * @param component
-     * @return
      */
     @Override
     public Calendar cancel(VEvent... component) {
@@ -247,9 +232,6 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     corresponding to the associated event.  The "Organizer" responds with
      *     the latest description and version of the event.
      * </pre>
-     *
-     * @param component
-     * @return
      */
     @Override
     public Calendar refresh(VEvent component) {
@@ -278,9 +260,6 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     SHOULD send a "REQUEST" message to all "Attendees" affected by any
      *     change triggered by an accepted "COUNTER".
      * </pre>
-     *
-     * @param request
-     * @return
      */
     @Override
     public Calendar counter(Calendar request) {
@@ -299,9 +278,6 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     message to the "Attendee" that sent the "COUNTER" method to the
      *     "Organizer".
      * </pre>
-     *
-     * @param counter
-     * @return
      */
     @Override
     public Calendar declineCounter(Calendar counter) {

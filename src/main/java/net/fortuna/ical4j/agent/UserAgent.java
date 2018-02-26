@@ -6,6 +6,7 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 /**
  * Created by fortuna on 19/07/2017.
  *
+ * <pre>
  *    +----------------+--------------------------------------------------+
  *    | Method         | Description                                      |
  *    +----------------+--------------------------------------------------+
@@ -47,7 +48,7 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
  *    | DECLINECOUNTER | Used by the Organizer to decline the proposed    |
  *    |                | counter proposal.                                |
  *    +----------------+--------------------------------------------------+
- *
+ * </pre>
  */
 public interface UserAgent<T extends CalendarComponent> {
 
@@ -59,6 +60,12 @@ public interface UserAgent<T extends CalendarComponent> {
      */
     Calendar publish(T... component);
 
+    /**
+     * Request attendance to one or more calendar components.
+     *
+     * @param component one or more component objects
+     * @return a calendar object validated to conform to iTIP method REQUEST
+     */
     Calendar request(T... component);
 
     /**
@@ -103,9 +110,10 @@ public interface UserAgent<T extends CalendarComponent> {
     Calendar delegate(Calendar request);
 
     /**
+     * Reply to a calendar request.
      *
-     * @param request
-     * @return
+     * @param request a calendar request
+     * @return a calendar object validated to conform to iTIP method REPLY
      */
     Calendar reply(Calendar request);
 

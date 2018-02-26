@@ -25,8 +25,6 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      *     MAY subsequently update (with another "PUBLISH" method) or cancel
      *     (with a "CANCEL" method) a previously published journal entry.
      * </pre>
-     *
-     * @param component one or more component objects
      */
     @Override
     public Calendar publish(VJournal... component) {
@@ -80,8 +78,6 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      *     in the "ADD" message as if it were referenced via an "RDATE" in the
      *     main component.  There is no response to the "Organizer".
      * </pre>
-     *
-     * @param component a calendar component to add
      */
     @Override
     public Calendar add(VJournal component) {
@@ -120,8 +116,6 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      *     When a "VJOURNAL" is cancelled, the "SEQUENCE" property value MUST be
      *     incremented as described in Section 2.1.4.
      * </pre>
-     *
-     * @param component one or more component objects
      */
     @Override
     public Calendar cancel(VJournal... component) {
