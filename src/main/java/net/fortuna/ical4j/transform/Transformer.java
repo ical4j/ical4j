@@ -42,8 +42,8 @@ package net.fortuna.ical4j.transform;
 public interface Transformer<T> {
 
     /**
-     * Transforms the specified calendar object according to the implementation of this method. By definition this method will
-     * NOT modify the existing instance and will return an appropriately transformed copy.
+     * Transforms the specified calendar object according to the implementation of this method.
+     *
      * @param object a calendar object to transform
      * @return a transformed calendar object
      */
