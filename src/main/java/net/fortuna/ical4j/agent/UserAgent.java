@@ -62,6 +62,7 @@ public interface UserAgent<T extends CalendarComponent> {
     Calendar request(T... component);
 
     /**
+     * <pre>
      * 3.2.2.3.  Delegating an Event to Another CU
      *
      *     Some calendar and scheduling systems allow "Attendees" to delegate
@@ -94,6 +95,7 @@ public interface UserAgent<T extends CalendarComponent> {
      *     though they will not be attending.  This is accomplished by the
      *     "Delegator" setting their "role" attribute to "NON-PARTICIPANT" in
      *     the "REPLY" to the "Organizer".
+     * </pre>
      *
      * @param request a calendar implement the iTIP REQUEST method
      * @return a calendar delegating the request via an iTIP REQUEST method

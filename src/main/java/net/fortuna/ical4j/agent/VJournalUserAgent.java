@@ -14,6 +14,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
     }
 
     /**
+     * <pre>
      * 3.5.1.  PUBLISH
      *
      *     The "PUBLISH" method in a "VJOURNAL" calendar component has no
@@ -23,9 +24,9 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      *     an arbitrary journal entry as an iCalendar object.  The "Organizer"
      *     MAY subsequently update (with another "PUBLISH" method) or cancel
      *     (with a "CANCEL" method) a previously published journal entry.
+     * </pre>
      *
      * @param component one or more component objects
-     * @return
      */
     @Override
     public Calendar publish(VJournal... component) {
@@ -62,6 +63,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
     }
 
     /**
+     * <pre>
      * 3.5.2.  ADD
      *
      *     The "ADD" method allows the "Organizer" to add one or more new
@@ -77,9 +79,9 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      *     When handling an "ADD" message, the "Attendee" treats each component
      *     in the "ADD" message as if it were referenced via an "RDATE" in the
      *     main component.  There is no response to the "Organizer".
+     * </pre>
      *
      * @param component a calendar component to add
-     * @return
      */
     @Override
     public Calendar add(VJournal component) {
@@ -89,6 +91,7 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
     }
 
     /**
+     * <pre>
      * 3.5.3.  CANCEL
      *
      *     The "CANCEL" method in a "VJOURNAL" calendar component is used to
@@ -116,9 +119,9 @@ public class VJournalUserAgent extends AbstractUserAgent<VJournal> {
      *
      *     When a "VJOURNAL" is cancelled, the "SEQUENCE" property value MUST be
      *     incremented as described in Section 2.1.4.
+     * </pre>
      *
      * @param component one or more component objects
-     * @return
      */
     @Override
     public Calendar cancel(VJournal... component) {

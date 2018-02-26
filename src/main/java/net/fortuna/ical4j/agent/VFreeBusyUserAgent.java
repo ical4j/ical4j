@@ -14,6 +14,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
     }
 
     /**
+     * <pre>
      * 3.3.1.  PUBLISH
      *
      *     The "PUBLISH" method in a "VFREEBUSY" calendar component is used to
@@ -34,9 +35,9 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      *     "DTSTART", and "DTEND" properties in order to specify the source of
      *     the busy time information and the date and time interval over which
      *     the busy time information covers.
+     * </pre>
      *
      * @param component
-     * @return
      */
     @Override
     public Calendar publish(VFreeBusy... component) {
@@ -46,6 +47,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
     }
 
     /**
+     * <pre>
      * 3.3.2.  REQUEST
      *
      *     The "REQUEST" method in a "VFREEBUSY" calendar component is used to
@@ -61,9 +63,9 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      *     busy time request on the recipient's calendar system, then an
      *     exception message SHOULD be returned in a "REPLY" method, but no busy
      *     time data need be returned.
+     * </pre>
      *
      * @param component
-     * @return
      */
     @Override
     public Calendar request(VFreeBusy... component) {
@@ -82,6 +84,7 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
     }
 
     /**
+     * <pre>
      * 3.3.3.  REPLY
      *
      *     The "REPLY" method in a "VFREEBUSY" calendar component is used to
@@ -91,9 +94,9 @@ public class VFreeBusyUserAgent extends AbstractUserAgent<VFreeBusy> {
      *     The "REPLY" method may also be used to respond to an unsuccessful
      *     "REQUEST" method.  Depending on the "REQUEST-STATUS" value, no busy
      *     time information may be returned.
+     * </pre>
      *
      * @param request
-     * @return
      */
     @Override
     public Calendar reply(Calendar request) {

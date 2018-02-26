@@ -18,6 +18,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     }
 
     /**
+     * <pre>
      * 3.2.1.  PUBLISH
      *
      *     The "PUBLISH" method in a "VEVENT" calendar component is an
@@ -29,6 +30,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     another "PUBLISH" method), add instances to (with an "ADD" method),
      *     or cancel (with a "CANCEL" method) a previously published "VEVENT"
      *     calendar component.
+     * </pre>
      *
      * @param component
      * @return
@@ -41,6 +43,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     }
 
     /**
+     * <pre>
      * 3.2.2.  REQUEST
      *
      *     The "REQUEST" method in a "VEVENT" component provides the following
@@ -85,7 +88,8 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     "UID" property.  That is, a series of recurring events may have
      *     instance-specific information.  In this case, multiple "VEVENT"
      *     components are needed to express the entire series.
-     *     
+     * </pre>
+     *
      * @param component
      * @return
      */
@@ -104,6 +108,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     }
 
     /**
+     * <pre>
      * 3.2.3.  REPLY
      *
      *     The "REPLY" method in a "VEVENT" calendar component is used to
@@ -141,6 +146,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     "0+" or "0 or 1") MUST NOT be changed from those of the original
      *     request.  If property changes are desired, the "COUNTER" message must
      *     be used.
+     * </pre>
      *
      * @param request
      * @return
@@ -153,6 +159,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     }
 
     /**
+     * <pre>
      * 3.2.4.  ADD
      *
      *     The "ADD" method allows the "Organizer" to add one or more new
@@ -170,6 +177,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     When handling an "ADD" message, the "Attendee" treats each component
      *     in the "ADD" message as if it were referenced via an "RDATE" in the
      *     main component.
+     * </pre>
      *
      * @param component
      * @return
@@ -182,6 +190,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     }
 
     /**
+     * <pre>
      * 3.2.5.  CANCEL
      *
      *     The "CANCEL" method in a "VEVENT" calendar component is used to send
@@ -214,6 +223,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *
      *     When a "VEVENT" is cancelled, the "SEQUENCE" property value MUST be
      *     incremented as described in Section 2.1.4.
+     * </pre>
      *
      * @param component
      * @return
@@ -226,6 +236,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     }
 
     /**
+     * <pre>
      * 3.2.6.  REFRESH
      *
      *     The "REFRESH" method in a "VEVENT" calendar component is used by
@@ -235,6 +246,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     event may be requested by specifying the "RECURRENCE-ID" property
      *     corresponding to the associated event.  The "Organizer" responds with
      *     the latest description and version of the event.
+     * </pre>
      *
      * @param component
      * @return
@@ -247,6 +259,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     }
 
     /**
+     * <pre>
      * 3.2.7.  COUNTER
      *
      *     The "COUNTER" method for a "VEVENT" calendar component is used by an
@@ -264,6 +277,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     Section 3.2.2.1, "Rescheduling an Event".  The "Organizer's" CUA
      *     SHOULD send a "REQUEST" message to all "Attendees" affected by any
      *     change triggered by an accepted "COUNTER".
+     * </pre>
      *
      * @param request
      * @return
@@ -276,6 +290,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
     }
 
     /**
+     * <pre>
      * 3.2.8.  DECLINECOUNTER
      *
      *     The "DECLINECOUNTER" method in a "VEVENT" calendar component is used
@@ -283,7 +298,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      *     by an "Attendee".  The "Organizer" must send the "DECLINECOUNTER"
      *     message to the "Attendee" that sent the "COUNTER" method to the
      *     "Organizer".
-     *
+     * </pre>
      *
      * @param counter
      * @return

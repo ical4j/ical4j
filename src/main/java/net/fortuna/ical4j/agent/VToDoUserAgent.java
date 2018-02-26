@@ -17,6 +17,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
         delegateTransformer = new RequestTransformer(uidGenerator);
     }
 
+    /**
+     * <pre></pre>
+     *
+     * @param component one or more component objects
+     * @return
+     */
     @Override
     public Calendar publish(VToDo... component) {
         Calendar published = wrap(Method.PUBLISH, component);
@@ -24,6 +30,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
         return published;
     }
 
+    /**
+     * <pre></pre>
+     *
+     * @param component
+     * @return
+     */
     @Override
     public Calendar request(VToDo... component) {
         Calendar request = wrap(Method.REQUEST, component);
@@ -38,6 +50,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
         return delegated;
     }
 
+    /**
+     * <pre></pre>
+     *
+     * @param request
+     * @return
+     */
     @Override
     public Calendar reply(Calendar request) {
         Calendar reply = transform(Method.REPLY, request);
@@ -45,6 +63,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
         return reply;
     }
 
+    /**
+     * <pre></pre>
+     *
+     * @param component a calendar component to add
+     * @return
+     */
     @Override
     public Calendar add(VToDo component) {
         Calendar add = wrap(Method.ADD, component);
@@ -52,6 +76,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
         return add;
     }
 
+    /**
+     * <pre></pre>
+     *
+     * @param component one or more component objects
+     * @return
+     */
     @Override
     public Calendar cancel(VToDo... component) {
         Calendar cancel = wrap(Method.CANCEL, component);
@@ -59,6 +89,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
         return cancel;
     }
 
+    /**
+     * <pre></pre>
+     *
+     * @param component a calendar component to refresh
+     * @return
+     */
     @Override
     public Calendar refresh(VToDo component) {
         Calendar refresh = wrap(Method.REFRESH, component);
@@ -66,6 +102,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
         return refresh;
     }
 
+    /**
+     * <pre></pre>
+     *
+     * @param request a calendar request to counter
+     * @return
+     */
     @Override
     public Calendar counter(Calendar request) {
         Calendar counter = transform(Method.COUNTER, request);
@@ -73,6 +115,12 @@ public class VToDoUserAgent extends AbstractUserAgent<VToDo> {
         return counter;
     }
 
+    /**
+     * <pre></pre>
+     *
+     * @param counter a counter to a request
+     * @return
+     */
     @Override
     public Calendar declineCounter(Calendar counter) {
         Calendar declineCounter = transform(Method.DECLINE_COUNTER, counter);
