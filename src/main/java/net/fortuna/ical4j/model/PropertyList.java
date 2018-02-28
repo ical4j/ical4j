@@ -94,10 +94,10 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      * @param aName name of property to return
      * @return a property or null if no matching property found
      */
-    public final T getProperty(final String aName) {
+    public final <R> R getProperty(final String aName) {
         for (final T p : this) {
             if (p.getName().equalsIgnoreCase(aName)) {
-                return p;
+                return (R) p;
             }
         }
         return null;

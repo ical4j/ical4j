@@ -46,12 +46,12 @@ import net.fortuna.ical4j.util.UidGenerator;
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class PublishTransformer extends AbstractMethodTransformer {
+public class AddTransformer extends AbstractMethodTransformer {
 
     private final OrganizerUpdate organizerUpdate;
 
-    public PublishTransformer(Organizer organizer, UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.PUBLISH, uidGenerator, false, incrementSequence);
+    public AddTransformer(Organizer organizer, UidGenerator uidGenerator) {
+        super(Method.ADD, uidGenerator, true, true);
         this.organizerUpdate = new OrganizerUpdate(organizer);
     }
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, Ben Fortuna
+ * Copyright (c) 2017, Ben Fortuna
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,37 +29,10 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.transform;
-
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Organizer;
-import net.fortuna.ical4j.transform.command.OrganizerUpdate;
-import net.fortuna.ical4j.util.UidGenerator;
-
 /**
- * $Id$
- *
- * Created: 26/09/2004
- *
- * Transforms a calendar for publishing.
- * @author benfortuna
+ * Contains types providing RFC2445 input, output and parsing functionality.
  */
-public class PublishTransformer extends AbstractMethodTransformer {
+@Version("1.0.0")
+package net.fortuna.ical4j.agent;
 
-    private final OrganizerUpdate organizerUpdate;
-
-    public PublishTransformer(Organizer organizer, UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.PUBLISH, uidGenerator, false, incrementSequence);
-        this.organizerUpdate = new OrganizerUpdate(organizer);
-    }
-
-    @Override
-    public Calendar transform(Calendar object) {
-        for (CalendarComponent component : object.getComponents()) {
-            organizerUpdate.transform(component);
-        }
-        return super.transform(object);
-    }
-}
+import aQute.bnd.annotation.Version;

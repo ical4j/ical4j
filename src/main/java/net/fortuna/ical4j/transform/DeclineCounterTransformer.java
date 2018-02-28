@@ -46,17 +46,20 @@ import net.fortuna.ical4j.util.UidGenerator;
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class PublishTransformer extends AbstractMethodTransformer {
+public class DeclineCounterTransformer extends AbstractMethodTransformer {
 
     private final OrganizerUpdate organizerUpdate;
 
-    public PublishTransformer(Organizer organizer, UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.PUBLISH, uidGenerator, false, incrementSequence);
+    public DeclineCounterTransformer(Organizer organizer, UidGenerator uidGenerator) {
+        super(Method.DECLINE_COUNTER, uidGenerator, true, false);
         this.organizerUpdate = new OrganizerUpdate(organizer);
     }
 
     @Override
     public Calendar transform(Calendar object) {
+        if (!Method.COUNTER.equals(object.getMethod())) {
+            throw new IllegalArgumentException("Expecting COUNTER method in source");
+        }
         for (CalendarComponent component : object.getComponents()) {
             organizerUpdate.transform(component);
         }

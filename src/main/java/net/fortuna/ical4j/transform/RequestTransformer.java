@@ -46,19 +46,37 @@ import net.fortuna.ical4j.util.UidGenerator;
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class PublishTransformer extends AbstractMethodTransformer {
+public class RequestTransformer extends AbstractMethodTransformer {
 
     private final OrganizerUpdate organizerUpdate;
 
-    public PublishTransformer(Organizer organizer, UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.PUBLISH, uidGenerator, false, incrementSequence);
+    /**
+     * Support delegating mode by not specifying an organizer.
+     *
+     * @param uidGenerator
+     */
+    public RequestTransformer(UidGenerator uidGenerator) {
+        super(Method.REQUEST, uidGenerator, true, false);
+        this.organizerUpdate = null;
+    }
+
+    /**
+     * If organizer is not specified, delegation mode is assumed.
+     *
+     * @param organizer
+     * @param uidGenerator
+     */
+    public RequestTransformer(Organizer organizer, UidGenerator uidGenerator) {
+        super(Method.REQUEST, uidGenerator, true, true);
         this.organizerUpdate = new OrganizerUpdate(organizer);
     }
 
     @Override
     public Calendar transform(Calendar object) {
-        for (CalendarComponent component : object.getComponents()) {
-            organizerUpdate.transform(component);
+        if (organizerUpdate != null) {
+            for (CalendarComponent component : object.getComponents()) {
+                organizerUpdate.transform(component);
+            }
         }
         return super.transform(object);
     }

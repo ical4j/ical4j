@@ -32,10 +32,7 @@
 package net.fortuna.ical4j.transform;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Organizer;
-import net.fortuna.ical4j.transform.command.OrganizerUpdate;
 import net.fortuna.ical4j.util.UidGenerator;
 
 /**
@@ -46,19 +43,16 @@ import net.fortuna.ical4j.util.UidGenerator;
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class PublishTransformer extends AbstractMethodTransformer {
+public class CounterTransformer extends AbstractMethodTransformer {
 
-    private final OrganizerUpdate organizerUpdate;
-
-    public PublishTransformer(Organizer organizer, UidGenerator uidGenerator, boolean incrementSequence) {
-        super(Method.PUBLISH, uidGenerator, false, incrementSequence);
-        this.organizerUpdate = new OrganizerUpdate(organizer);
+    public CounterTransformer(UidGenerator uidGenerator) {
+        super(Method.COUNTER, uidGenerator, true, false);
     }
 
     @Override
     public Calendar transform(Calendar object) {
-        for (CalendarComponent component : object.getComponents()) {
-            organizerUpdate.transform(component);
+        if (!Method.REQUEST.equals(object.getMethod())) {
+            throw new IllegalArgumentException("Expecting REQUEST method in source");
         }
         return super.transform(object);
     }
