@@ -31,10 +31,6 @@
  */
 package net.fortuna.ical4j.transform;
 
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.util.Calendars;
-
 /**
  * $Id$
  *
@@ -43,22 +39,13 @@ import net.fortuna.ical4j.util.Calendars;
  * Base class of calendar transformations.
  * @author benfortuna
  */
-public abstract class Transformer {
+public interface Transformer<T> {
 
     /**
-     * Transforms the specified calendar according to the implementation of this method. By definition this method will
-     * modify the existing calendar instance and return it for convenience.
-     * @param calendar a calendar to transform
-     * @return a transformed calendar
+     * Transforms the specified calendar object according to the implementation of this method.
+     *
+     * @param object a calendar object to transform
+     * @return a transformed calendar object
      */
-    public abstract Calendar transform(final Calendar calendar);
-
-    /**
-     * Transforms the specified component according to the transformer implementation.
-     * @param component a component to transform
-     * @return a calendar containing the transformed component
-     */
-    public final Calendar transform(final CalendarComponent component) {
-        return transform(Calendars.wrap(component));
-    }
+    public abstract T transform(final T object);
 }

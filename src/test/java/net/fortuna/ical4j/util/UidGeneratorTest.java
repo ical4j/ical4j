@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.property.Uid;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$
@@ -54,11 +54,11 @@ public class UidGeneratorTest extends TestCase {
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
-        generator = new UidGenerator("1");
+        generator = new FixedUidGenerator("1");
     }
     
     /**
-     * Test method for {@link net.fortuna.ical4j.util.UidGenerator#generateUid()}.
+     * Test method for {@link UidGenerator#generateUid()}.
      */
     public void testGenerateUid() throws InterruptedException {
         final List<Uid> uids = new ArrayList<Uid>();
