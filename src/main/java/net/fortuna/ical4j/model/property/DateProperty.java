@@ -180,7 +180,9 @@ public abstract class DateProperty extends Property {
     private void updateTimeZone(final TimeZone timezone) {
         this.timeZone = timezone;
         if (timezone != null) {
-            if (getDate() != null && !(getDate() instanceof DateTime)) {
+			TimeZone fetchedTimeZone = TimeZoneRegistryFactory.getInstance().createRegistry().getTimeZone( timezone.getID() );
+			this.timeZone = fetchedTimeZone == null ? timezone : fetchedTimeZone;
+			if (getDate() != null && !(getDate() instanceof DateTime)) {
                 throw new UnsupportedOperationException(
                         "TimeZone is not applicable to current value");
             }
