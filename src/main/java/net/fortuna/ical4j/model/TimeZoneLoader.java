@@ -7,7 +7,10 @@ import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.*;
+import net.fortuna.ical4j.util.Configurator;
+import net.fortuna.ical4j.util.JCacheTimeZoneCache;
+import net.fortuna.ical4j.util.ResourceLoader;
+import net.fortuna.ical4j.util.TimeZoneCache;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +28,7 @@ import java.time.zone.ZoneOffsetTransition;
 import java.time.zone.ZoneOffsetTransitionRule;
 import java.util.*;
 import java.util.TimeZone;
+import java.util.function.Supplier;
 
 public class TimeZoneLoader {
 
@@ -280,7 +284,7 @@ public class TimeZoneLoader {
     }
 
     private static TimeZoneCache cacheInit() {
-        net.fortuna.ical4j.util.Optional<TimeZoneCache> property = Configurator.getObjectProperty(TZ_CACHE_IMPL);
+        Optional<TimeZoneCache> property = Configurator.getObjectProperty(TZ_CACHE_IMPL);
         return property.orElseGet(new Supplier<TimeZoneCache>() {
             @Override
             public TimeZoneCache get() {

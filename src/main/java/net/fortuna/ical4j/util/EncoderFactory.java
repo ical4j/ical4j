@@ -36,6 +36,7 @@ import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.StringEncoder;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 /**
  * Abstract base class for encoder factory implementations.

@@ -32,7 +32,8 @@
 package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.util.Configurator;
-import net.fortuna.ical4j.util.Optional;
+
+import java.util.Optional;
 
 /**
  * <pre>
