@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 
 /**
  * Created on 13/02/2005
@@ -487,12 +486,11 @@ public class PeriodListTest extends TestCase {
         }
         
         log.info("Timezone test - period list: [" + list + "]");
-        
-        for (Iterator<Period> i = list.iterator(); i.hasNext();) {
-            Period p = i.next();
+
+        list.forEach(p -> {
             assertTrue(p.getStart().isUtc());
             assertTrue(p.getEnd().isUtc());
-        }
+        });
     }
     
     /**

@@ -48,7 +48,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * for constant properties that you don't want modified.
  * @author Ben Fortuna
  */
-public class ParameterList implements Serializable {
+public class ParameterList implements Serializable, Iterable<Parameter> {
 
     private static final long serialVersionUID = -1913059830016450169L;
 
@@ -81,14 +81,16 @@ public class ParameterList implements Serializable {
      * @param unmodifiable indicates whether the list should be mutable
      * @throws URISyntaxException where a parameter in the list specifies an invalid URI value
      */
-    public ParameterList(final ParameterList list, final boolean unmodifiable)
-            throws URISyntaxException {
+    public ParameterList(final ParameterList list, final boolean unmodifiable) {
     	
         final List<Parameter> parameterList = new CopyOnWriteArrayList<Parameter>();
-        for (final Iterator<Parameter> i = list.iterator(); i.hasNext();) {
-            final Parameter parameter = i.next();
-            parameterList.add(parameter.copy());
-        }
+        list.forEach(parameter -> {
+            try {
+                parameterList.add(parameter.copy());
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
+        });
         if (unmodifiable) {
             parameters = Collections.unmodifiableList(parameterList);
         }
