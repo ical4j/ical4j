@@ -6,8 +6,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.Predicate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,12 +51,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
         // validate properties..
         for (final Property property : target.getProperties()) {
-            boolean isCalendarProperty = CollectionUtils.find(calendarProperties, new Predicate<Class<? extends Property>>() {
-                @Override
-                public boolean evaluate(Class<? extends Property> object) {
-                    return object.isInstance(property);
-                }
-            }) != null;
+            boolean isCalendarProperty = calendarProperties.stream().filter(calProp -> calProp.isInstance(property)) != null;
 
             if (!(property instanceof XProperty) && !isCalendarProperty) {
                 throw new ValidationException("Invalid property: " + property.getName());
