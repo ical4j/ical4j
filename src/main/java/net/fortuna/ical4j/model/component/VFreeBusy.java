@@ -46,7 +46,6 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -389,12 +388,10 @@ public class VFreeBusy extends CalendarComponent {
             final DateRange range = new DateRange(start, end);
             // periods must be in UTC time for freebusy..
             periods.setUtc(true);
-            for (final Iterator<Period> i = periods.iterator(); i.hasNext();) {
+            periods.removeIf(period -> {
                 // check if period outside bounds..
-                if (!range.intersects(i.next())) {
-                    i.remove();
-                }
-            }
+                return !range.intersects(period);
+            });
             return new FreeBusy(periods);
         }
     }

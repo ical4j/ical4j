@@ -42,7 +42,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -391,14 +390,11 @@ public abstract class Component implements Serializable {
         // subtract exception dates..
         for (Property property1 : getProperties(Property.EXDATE)) {
             final ExDate exdate = (ExDate) property1;
-            for (final Iterator<Period> j = recurrenceSet.iterator(); j.hasNext(); ) {
-                final Period recurrence = j.next();
+            recurrenceSet.removeIf(recurrence -> {
                 // for DATE-TIME instances check for DATE-based exclusions also..
-                if (exdate.getDates().contains(recurrence.getStart())
-                        || exdate.getDates().contains(new Date(recurrence.getStart()))) {
-                    j.remove();
-                }
-            }
+                return exdate.getDates().contains(recurrence.getStart())
+                        || exdate.getDates().contains(new Date(recurrence.getStart()));
+            });
         }
 
         // subtract exception rules..
@@ -406,14 +402,11 @@ public abstract class Component implements Serializable {
             final ExRule exrule = (ExRule) property;
             final DateList exruleDates = exrule.getRecur().getDates(start.getDate(),
                     period, startValue);
-            for (final Iterator<Period> j = recurrenceSet.iterator(); j.hasNext(); ) {
-                final Period recurrence = j.next();
+            recurrenceSet.removeIf(recurrence -> {
                 // for DATE-TIME instances check for DATE-based exclusions also..
-                if (exruleDates.contains(recurrence.getStart())
-                        || exruleDates.contains(new Date(recurrence.getStart()))) {
-                    j.remove();
-                }
-            }
+                return exruleDates.contains(recurrence.getStart())
+                        || exruleDates.contains(new Date(recurrence.getStart()));
+            });
         }
 
         return recurrenceSet;
