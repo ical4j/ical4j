@@ -36,14 +36,12 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.Arrays;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Arrays;
 
 /**
  * $Id$
@@ -121,13 +119,10 @@ public class Attendee extends Property {
          * roleparam) / (";" partstatparam) / (";" rsvpparam) / (";" deltoparam) / (";" delfromparam) / (";"
          * sentbyparam) / (";"cnparam) / (";" dirparam) / (";" languageparam) /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Parameter.CUTYPE, Parameter.MEMBER, Parameter.ROLE, Parameter.PARTSTAT,
+        Arrays.asList(Parameter.CUTYPE, Parameter.MEMBER, Parameter.ROLE, Parameter.PARTSTAT,
                 Parameter.RSVP, Parameter.DELEGATED_TO, Parameter.DELEGATED_FROM, Parameter.SENT_BY, Parameter.CN,
-                Parameter.DIR, Parameter.LANGUAGE), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                ParameterValidator.getInstance().assertOneOrLess(input, getParameters());
-            }
+                Parameter.DIR, Parameter.LANGUAGE).forEach(parameter -> {
+            ParameterValidator.getInstance().assertOneOrLess(parameter, getParameters());
         });
 
         /* scheduleagent and schedulestatus added for CalDAV scheduling

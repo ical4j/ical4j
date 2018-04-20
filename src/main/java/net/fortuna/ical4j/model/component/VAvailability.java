@@ -41,8 +41,6 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 
@@ -181,11 +179,8 @@ public class VAvailability extends CalendarComponent {
         /*
          * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOne(input, getProperties());
-            }
+        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(parameter -> {
+            PropertyValidator.getInstance().assertOne(parameter, getProperties());
         });
 
         /*       If specified, the "DTSTART" and "DTEND" properties in
@@ -227,12 +222,9 @@ public class VAvailability extends CalendarComponent {
          *                  busytype / created / last-mod /
          *                  organizer / seq / summary / url /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.BUSYTYPE, Property.CREATED, Property.LAST_MODIFIED,
-                Property.ORGANIZER, Property.SEQUENCE, Property.SUMMARY, Property.URL), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
-            }
+        Arrays.asList(Property.BUSYTYPE, Property.CREATED, Property.LAST_MODIFIED,
+                Property.ORGANIZER, Property.SEQUENCE, Property.SUMMARY, Property.URL).forEach(property -> {
+            PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
         });
 
         /*

@@ -7,8 +7,6 @@ import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 
@@ -77,22 +75,16 @@ public class VEventCancelValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public final void validate(final VEvent target) throws ValidationException {
-        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER, Property.SEQUENCE,
-                Property.UID), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOne(input, target.getProperties());
-            }
+        Arrays.asList(Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER, Property.SEQUENCE,
+                Property.UID).forEach(property -> {
+            PropertyValidator.getInstance().assertOne(property, target.getProperties());
         });
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
+        Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTEND, Property.DTSTART, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,
                 Property.PRIORITY, Property.RECURRENCE_ID, Property.RESOURCES, Property.STATUS, Property.SUMMARY,
-                Property.TRANSP, Property.URL), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, target.getProperties());
-            }
+                Property.TRANSP, Property.URL).forEach(property -> {
+            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
         });
 
         PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());

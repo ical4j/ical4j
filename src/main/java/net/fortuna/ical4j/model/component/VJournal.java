@@ -40,8 +40,6 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VJournalAddValidator;
 import net.fortuna.ical4j.validate.component.VJournalCancelValidator;
 import net.fortuna.ical4j.validate.component.VJournalPublishValidator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -176,13 +174,10 @@ public class VJournal extends CalendarComponent {
          * ; the following are optional, ; but MUST NOT occur more than once class / created / description / dtstart /
          * dtstamp / last-mod / organizer / recurid / seq / status / summary / uid / url /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION, Property.DTSTART,
+        Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION, Property.DTSTART,
                 Property.DTSTAMP, Property.LAST_MODIFIED, Property.ORGANIZER, Property.RECURRENCE_ID, Property.SEQUENCE,
-                Property.STATUS, Property.SUMMARY, Property.UID, Property.URL), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
-            }
+                Property.STATUS, Property.SUMMARY, Property.UID, Property.URL).forEach(property -> {
+            PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
         });
 
         final Status status = (Status) getProperty(Property.STATUS);

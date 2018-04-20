@@ -36,14 +36,12 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.Arrays;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Arrays;
 
 /**
  * $Id$
@@ -192,12 +190,9 @@ public class Organizer extends Property {
          * ; the following are optional, ; but MUST NOT occur more than once (";" cnparam) / (";" dirparam) / (";"
          * sentbyparam) / (";" languageparam) /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Parameter.CN, Parameter.DIR, Parameter.SENT_BY,
-                Parameter.LANGUAGE), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                ParameterValidator.getInstance().assertOneOrLess(input, getParameters());
-            }
+        Arrays.asList(Parameter.CN, Parameter.DIR, Parameter.SENT_BY,
+                Parameter.LANGUAGE).forEach(parameter -> {
+            ParameterValidator.getInstance().assertOneOrLess(parameter, getParameters());
         });
 
         /* schedulestatus added for CalDAV scheduling

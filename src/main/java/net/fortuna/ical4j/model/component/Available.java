@@ -37,8 +37,6 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 
@@ -117,11 +115,8 @@ public class Available extends Component {
         /*
          * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOne(input, getProperties());
-            }
+        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(property -> {
+            PropertyValidator.getInstance().assertOne(property, getProperties());
         });
 
         /*       If specified, the "DTSTART" and "DTEND" properties in
@@ -142,12 +137,9 @@ public class Available extends Component {
          *               created / last-mod / recurid / rrule /
          *               summary /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.CREATED, Property.LAST_MODIFIED, Property.RECURRENCE_ID,
-                Property.RRULE, Property.SUMMARY), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
-            }
+        Arrays.asList(Property.CREATED, Property.LAST_MODIFIED, Property.RECURRENCE_ID,
+                Property.RRULE, Property.SUMMARY).forEach(property -> {
+            PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
         });
 
         /*

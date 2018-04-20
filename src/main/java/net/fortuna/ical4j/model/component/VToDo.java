@@ -39,8 +39,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.*;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -252,14 +250,11 @@ public class VToDo extends CalendarComponent {
          * dtstamp / dtstart / geo / last-mod / location / organizer / percent / priority / recurid / seq / status /
          * summary / uid / url /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.CLASS, Property.COMPLETED, Property.CREATED, Property.DESCRIPTION,
+        Arrays.asList(Property.CLASS, Property.COMPLETED, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTAMP, Property.DTSTART, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER,
                 Property.PERCENT_COMPLETE, Property.PRIORITY, Property.RECURRENCE_ID, Property.SEQUENCE, Property.STATUS,
-                Property.SUMMARY, Property.UID, Property.URL), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
-            }
+                Property.SUMMARY, Property.UID, Property.URL).forEach(property -> {
+            PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
         });
 
         final Status status = (Status) getProperty(Property.STATUS);

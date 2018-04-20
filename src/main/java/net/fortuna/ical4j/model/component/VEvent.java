@@ -41,8 +41,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.*;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -345,14 +343,11 @@ public class VEvent extends CalendarComponent {
          * geo / last-mod / location / organizer / priority / dtstamp / seq / status / summary / transp / uid / url /
          * recurid /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION,
+        Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTART, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER,
                 Property.PRIORITY, Property.DTSTAMP, Property.SEQUENCE, Property.STATUS, Property.SUMMARY,
-                Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
-            }
+                Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID).forEach(property -> {
+            PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
         });
 
         final Status status = (Status) getProperty(Property.STATUS);
