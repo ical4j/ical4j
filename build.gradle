@@ -35,6 +35,7 @@ targetCompatibility = 1.8
 
 ext {
     slf4jVersion = '1.7.25'
+    groovyVersion = '2.4.15'
 }
 
 /*
@@ -75,12 +76,12 @@ dependencies {
             'org.apache.commons:commons-collections4:4.1'
     
     compile 'javax.cache:cache-api:1.0.0', optional
-    compile 'org.codehaus.groovy:groovy-all:2.3.2', optional
+    compile "org.codehaus.groovy:groovy-all:$groovyVersion", optional
 
     compileOnly 'biz.aQute.bnd:bndlib:2.3.0'
 
-    testImplementation 'org.codehaus.groovy:groovy-all:2.3.2',
-        'org.spockframework:spock-core:0.7-groovy-2.0',
+    testImplementation "org.codehaus.groovy:groovy-all:$groovyVersion",
+        'org.spockframework:spock-core:1.1-groovy-2.4',
         'commons-io:commons-io:2.4',
         'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
         "org.slf4j:slf4j-log4j12:$slf4jVersion",
