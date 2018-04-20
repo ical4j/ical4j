@@ -49,7 +49,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Defines a list of iCalendar addresses.
  * @author Ben Fortuna
  */
-public class AddressList implements Serializable {
+public class AddressList implements Serializable, Iterable<URI> {
 
     private static final long serialVersionUID = 81383256078213569L;
 

@@ -38,6 +38,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -46,7 +47,7 @@ import java.util.*;
  * defaults to DATE-TIME instances.
  * @author Ben Fortuna
  */
-public class DateList implements List<Date>, Serializable {
+public class DateList implements List<Date>, Serializable, Iterable<Date> {
 
 	private static final long serialVersionUID = -3700862452550012357L;
 
@@ -167,20 +168,7 @@ public class DateList implements List<Date>, Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<Date> i = iterator(); i.hasNext();) {
-            /*
-             * if (type != null && Value.DATE.equals(type)) {
-             * b.append(DateFormat.getInstance().format((Date) i.next())); }
-             * else { b.append(DateTimeFormat.getInstance().format((Date)
-             * i.next(), isUtc())); }
-             */
-            b.append(i.next());
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+        return stream().map(x -> x.toString()).collect(Collectors.joining(","));
     }
 
     /**

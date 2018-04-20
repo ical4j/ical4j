@@ -37,6 +37,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -108,14 +109,7 @@ public class PeriodList implements Set<Period>, Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<Period> i = iterator(); i.hasNext();) {
-            b.append(i.next().toString());
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+        return stream().map(x -> x.toString()).collect(Collectors.joining(","));
     }
 
     /**

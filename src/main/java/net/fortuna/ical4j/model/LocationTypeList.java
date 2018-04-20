@@ -44,7 +44,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * 
  * @author Ben Fortuna
  */
-public class LocationTypeList implements Serializable {
+public class LocationTypeList implements Serializable, Iterable<String> {
 
     private static final long serialVersionUID = -9181735547604179160L;
 
