@@ -10,12 +10,6 @@ import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.*;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.LoggerFactory;
-import org.threeten.bp.*;
-import org.threeten.bp.Period;
-import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.temporal.TemporalAdjusters;
-import org.threeten.bp.zone.ZoneOffsetTransition;
-import org.threeten.bp.zone.ZoneOffsetTransitionRule;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -23,6 +17,12 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
+import java.time.*;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.time.zone.ZoneOffsetTransition;
+import java.time.zone.ZoneOffsetTransitionRule;
 import java.util.*;
 import java.util.TimeZone;
 
