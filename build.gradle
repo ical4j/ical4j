@@ -132,10 +132,10 @@ scmVersion {
     tag {
         prefix = 'ical4j'
         branchPrefix = [
-            'ical4j-1.x-maintenance' : 'ical4j-jdk14'
+            'ical4j-1.x-maintenance' : 'jdk14_ical4j'
         ]
         branchPrefix = [
-            'ical4j-2.x-maintenance' : 'ical4j-jdk7'
+            'ical4j-2.x-maintenance' : 'jdk7_ical4j'
         ]
     }
     versionCreator 'versionWithBranch'
