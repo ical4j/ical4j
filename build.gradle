@@ -131,10 +131,22 @@ signing {
 scmVersion {
     tag {
         prefix = 'ical4j'
+        branchPrefix = [
+            'ical4j-1.x-maintenance' : 'ical4j-jdk14'
+        ]
+        branchPrefix = [
+            'ical4j-2.x-maintenance' : 'ical4j-jdk7'
+        ]
     }
     versionCreator 'versionWithBranch'
     branchVersionCreator = [
         'master': 'simple'
+    ]
+    branchVersionCreator = [
+        'ical4j-1.x-maintenance': 'simple'
+    ]
+    branchVersionCreator = [
+        'ical4j-2.x-maintenance': 'simple'
     ]
 }
 version = scmVersion.version
