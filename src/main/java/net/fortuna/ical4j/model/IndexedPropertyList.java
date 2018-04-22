@@ -95,7 +95,7 @@ public class IndexedPropertyList {
     public Property getProperty(final String paramValue) {
         final PropertyList<Property> properties = getProperties(paramValue);
         if (!properties.isEmpty()) {
-            return (Property) properties.iterator().next();
+            return properties.iterator().next();
         }
         return null;
     }

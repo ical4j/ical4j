@@ -150,7 +150,7 @@ public final class Calendars {
                 continue;
             }
             
-            final Uid uid = (Uid) c.getProperty(Property.UID);
+            final Uid uid = c.getProperty(Property.UID);
             
             Calendar uidCal = calendars.get(uid);
             if (uidCal == null) {

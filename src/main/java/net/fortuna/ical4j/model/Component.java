@@ -291,12 +291,12 @@ public abstract class Component implements Serializable {
 
         final PeriodList recurrenceSet = new PeriodList();
 
-        final DtStart start = (DtStart) getProperty(Property.DTSTART);
-        DateProperty end = (DateProperty) getProperty(Property.DTEND);
+        final DtStart start = getProperty(Property.DTSTART);
+        DateProperty end = getProperty(Property.DTEND);
         if (end == null) {
-            end = (DateProperty) getProperty(Property.DUE);
+            end = getProperty(Property.DUE);
         }
-        Duration duration = (Duration) getProperty(Property.DURATION);
+        Duration duration = getProperty(Property.DURATION);
 
         // if no start date specified return empty list..
         if (start == null) {

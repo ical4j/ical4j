@@ -47,5 +47,5 @@ public interface Transformer<T> {
      * @param object a calendar object to transform
      * @return a transformed calendar object
      */
-    public abstract T transform(final T object);
+    T transform(final T object);
 }

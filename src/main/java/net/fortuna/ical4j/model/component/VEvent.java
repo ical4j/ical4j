@@ -350,7 +350,7 @@ public class VEvent extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
         });
 
-        final Status status = (Status) getProperty(Property.STATUS);
+        final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
                 && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
                 && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
@@ -380,8 +380,8 @@ public class VEvent extends CalendarComponent {
              * anniversary type of "VEVENT" can span more than one date (i.e, "DTEND" property value is set to a
              * calendar date after the "DTSTART" property value).
              */
-            final DtStart start = (DtStart) getProperty(Property.DTSTART);
-            final DtEnd end = (DtEnd) getProperty(Property.DTEND);
+            final DtStart start = getProperty(Property.DTSTART);
+            final DtEnd end = getProperty(Property.DTEND);
 
             if (start != null) {
                 final Parameter startValue = start.getParameter(Parameter.VALUE);
@@ -626,7 +626,7 @@ public class VEvent extends CalendarComponent {
      * @return The end for this VEVENT.
      */
     public final DtEnd getEndDate(final boolean deriveFromDuration) {
-        DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
+        DtEnd dtEnd = getProperty(Property.DTEND);
         // No DTEND? No problem, we'll use the DURATION.
         if (dtEnd == null && deriveFromDuration && getStartDate() != null) {
             final DtStart dtStart = getStartDate();

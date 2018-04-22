@@ -357,7 +357,7 @@ public class Calendar implements Serializable {
        
         conformPropertiesToRfc5545(properties);
         
-        for(Component component : (List<CalendarComponent>)components){
+        for(Component component : components){
             CountableProperties.removeExceededPropertiesForComponent(component);
             
             //each component
@@ -392,12 +392,12 @@ public class Calendar implements Serializable {
         RuleManager.applyTo(component);
     }
     
-    private static enum CountableProperties{
+    private enum CountableProperties{
         STATUS(Property.STATUS, 1);
         private int maxApparitionNumber;
         private String name;
         
-        private CountableProperties(String name, int maxApparitionNumber){
+        CountableProperties(String name, int maxApparitionNumber){
             this.maxApparitionNumber = maxApparitionNumber;
             this.name = name;
         }

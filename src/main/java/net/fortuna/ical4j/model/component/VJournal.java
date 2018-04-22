@@ -180,7 +180,7 @@ public class VJournal extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
         });
 
-        final Status status = (Status) getProperty(Property.STATUS);
+        final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
                 && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
                 && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {

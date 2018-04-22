@@ -257,7 +257,7 @@ public class VToDo extends CalendarComponent {
             PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
         });
 
-        final Status status = (Status) getProperty(Property.STATUS);
+        final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
                 && !Status.VTODO_COMPLETED.getValue().equals(status.getValue())
                 && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())

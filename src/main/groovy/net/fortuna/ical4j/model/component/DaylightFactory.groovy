@@ -31,22 +31,22 @@
  */
 package net.fortuna.ical4j.model.component
 
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.PropertyList
 
 /**
  * @author fortuna
  *
  */
-public class DaylightFactory extends AbstractComponentFactory{
+class DaylightFactory extends AbstractComponentFactory{
 
 
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          Daylight daylight
          if (FactoryBuilderSupport.checkValueIsType(value, name, Daylight.class)) {
              daylight = (Daylight) value
          }
          else {
-             daylight = super.newInstance(builder, name, value, attributes);
+             daylight = super.newInstance(builder, name, value, attributes)
          }
          return daylight
      }

@@ -303,11 +303,11 @@ public class VFreeBusy extends CalendarComponent {
     public VFreeBusy(final VFreeBusy request, final ComponentList<CalendarComponent> components) {
         this();
         
-        final DtStart start = (DtStart) request.getProperty(Property.DTSTART);
+        final DtStart start = request.getProperty(Property.DTSTART);
         
-        final DtEnd end = (DtEnd) request.getProperty(Property.DTEND);
+        final DtEnd end = request.getProperty(Property.DTEND);
         
-        final Duration duration = (Duration) request.getProperty(Property.DURATION);
+        final Duration duration = request.getProperty(Property.DURATION);
         
         // 4.8.2.4 Date/Time Start:
         //
@@ -518,7 +518,7 @@ public class VFreeBusy extends CalendarComponent {
         });
 
         // DtEnd value must be later in time that DtStart..
-        final DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
+        final DtStart dtStart = getProperty(Property.DTSTART);
         
         // 4.8.2.4 Date/Time Start:
         //
@@ -529,7 +529,7 @@ public class VFreeBusy extends CalendarComponent {
             throw new ValidationException("DTSTART must be specified in UTC time");
         }
         
-        final DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
+        final DtEnd dtEnd = getProperty(Property.DTEND);
         
         // 4.8.2.2 Date/Time End
         //

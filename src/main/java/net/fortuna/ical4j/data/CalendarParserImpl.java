@@ -554,10 +554,8 @@ public class CalendarParserImpl implements CalendarParser {
      * @param in
      * @param token
      * @return
-     * @throws ParserException
-     * @throws IOException
      */
-    private String getSvalIgnoringBom(StreamTokenizer tokeniser, Reader in, String token) throws ParserException, IOException {
+    private String getSvalIgnoringBom(StreamTokenizer tokeniser, Reader in, String token) {
         if(tokeniser.sval != null) {
             if(tokeniser.sval.contains(token)) {
                 return token;

@@ -160,7 +160,7 @@ public class Attendee extends Property {
     /**
      * {@inheritDoc}
      */
-    public final Property copy() throws IOException, URISyntaxException, ParseException {
+    public final Property copy() {
         // URI are immutable
         return new Attendee(new ParameterList(getParameters(), false), calAddress);
     }
