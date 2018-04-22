@@ -213,8 +213,7 @@ public class TimeZoneLoader {
 
             weekdayIndexInMonth = weekdayIndexInMonth >= 3 ? weekdayIndexInMonth - allDaysOfWeek.size() : weekdayIndexInMonth;
 
-            String rruleTemplate = RRULE_TPL;
-            String rruleText = String.format(rruleTemplate, transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
+            String rruleText = String.format(RRULE_TPL, transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
 
             try {
                 TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(transitionRule.getOffsetBefore().getTotalSeconds() * 1000L));

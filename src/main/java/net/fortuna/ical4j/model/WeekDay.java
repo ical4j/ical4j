@@ -32,11 +32,11 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.Numbers;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * $Id$
@@ -284,7 +284,7 @@ public class WeekDay implements Serializable {
             return false;
         }
         final WeekDay wd = (WeekDay) arg0;
-        return ObjectUtils.equals(wd.getDay(), getDay())
+        return Objects.equals(wd.getDay(), getDay())
             && wd.getOffset() == getOffset();
     }
     

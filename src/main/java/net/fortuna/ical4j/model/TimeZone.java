@@ -135,7 +135,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     public final boolean inDaylightTime(final Date date) {
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
-        return (observance != null && observance instanceof Daylight);
+        return (observance instanceof Daylight);
     }
 
     /**

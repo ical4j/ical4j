@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
@@ -39,6 +38,7 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -216,7 +216,7 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof ParameterList) {
             final ParameterList p = (ParameterList) arg0;
-            return ObjectUtils.equals(parameters, p.parameters);
+            return Objects.equals(parameters, p.parameters);
         }
         return super.equals(arg0);
     }

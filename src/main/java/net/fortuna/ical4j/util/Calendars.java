@@ -171,7 +171,7 @@ public final class Calendars {
             }
             uidCal.getComponents().add(c);
         }
-        return calendars.values().toArray(new Calendar[calendars.values().size()]);
+        return calendars.values().toArray(new Calendar[0]);
     }
     
     /**

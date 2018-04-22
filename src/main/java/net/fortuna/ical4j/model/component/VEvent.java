@@ -41,7 +41,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.*;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
@@ -50,6 +49,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -670,7 +670,7 @@ public class VEvent extends CalendarComponent {
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VEvent) {
             return super.equals(arg0)
-                    && ObjectUtils.equals(alarms, ((VEvent) arg0).getAlarms());
+                    && Objects.equals(alarms, ((VEvent) arg0).getAlarms());
         }
         return super.equals(arg0);
     }
