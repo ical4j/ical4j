@@ -73,6 +73,7 @@ public class Filter<T> {
     /**
      * @param rules one or more rules that are applied by this filter
      */
+    @SafeVarargs
     public Filter(Predicate<T>... rules) {
         this(rules, MATCH_ANY);
     }

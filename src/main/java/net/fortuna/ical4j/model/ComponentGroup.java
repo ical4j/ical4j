@@ -19,10 +19,6 @@ public class ComponentGroup<T extends Component> {
 
     private final ComponentList<T> components;
 
-    private final Uid uid;
-
-    private final RecurrenceId recurrenceId;
-
     private final Filter<T> componentFilter;
 
     public ComponentGroup(ComponentList<T> components, Uid uid) {
@@ -31,8 +27,6 @@ public class ComponentGroup<T extends Component> {
 
     public ComponentGroup(ComponentList<T> components, Uid uid, RecurrenceId recurrenceId) {
         this.components = components;
-        this.uid = uid;
-        this.recurrenceId = recurrenceId;
 
         Predicate<T> componentPredicate;
         if (recurrenceId != null) {
