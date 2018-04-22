@@ -7,8 +7,6 @@ import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 
@@ -73,25 +71,18 @@ public class VEventRefreshValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VEvent target) throws ValidationException {
-        CollectionUtils.forAllDo(Arrays.asList(Property.ATTENDEE, Property.DTSTAMP, Property.ORGANIZER, Property.UID),
-                new Closure<String>() {
-                    @Override
-                    public void execute(String input) {
-                        PropertyValidator.getInstance().assertOne(input, target.getProperties());
-                    }
-                });
+        Arrays.asList(Property.ATTENDEE, Property.DTSTAMP, Property.ORGANIZER, Property.UID).forEach(property -> {
+            PropertyValidator.getInstance().assertOne(property, target.getProperties());
+        });
 
         PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, target.getProperties());
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.ATTACH, Property.CATEGORIES, Property.CLASS, Property.CONTACT,
+        Arrays.asList(Property.ATTACH, Property.CATEGORIES, Property.CLASS, Property.CONTACT,
                 Property.CREATED, Property.DESCRIPTION, Property.DTEND, Property.DTSTART, Property.DURATION, Property.EXDATE,
                 Property.EXRULE, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.PRIORITY, Property.RDATE,
                 Property.RELATED_TO, Property.REQUEST_STATUS, Property.RESOURCES, Property.RRULE, Property.SEQUENCE,
-                Property.STATUS, Property.SUMMARY, Property.TRANSP, Property.URL), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertNone(input, target.getProperties());
-            }
+                Property.STATUS, Property.SUMMARY, Property.TRANSP, Property.URL).forEach(property -> {
+            PropertyValidator.getInstance().assertNone(property, target.getProperties());
         });
 
         ComponentValidator.assertNone(Component.VALARM, target.getAlarms());

@@ -5,8 +5,6 @@ import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 
@@ -35,19 +33,12 @@ public class VAlarmITIPValidator implements Validator<VAlarm> {
      * {@inheritDoc}
      */
     public void validate(final VAlarm target) throws ValidationException {
-        CollectionUtils.forAllDo(Arrays.asList(Property.ACTION, Property.TRIGGER), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOne(input, target.getProperties());
-            }
+        Arrays.asList(Property.ACTION, Property.TRIGGER).forEach(property -> {
+            PropertyValidator.getInstance().assertOne(property, target.getProperties());
         });
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.DESCRIPTION, Property.DURATION, Property.REPEAT, Property.SUMMARY),
-                new Closure<String>() {
-                    @Override
-                    public void execute(String input) {
-                        PropertyValidator.getInstance().assertOneOrLess(input, target.getProperties());
-                    }
-                });
+        Arrays.asList(Property.DESCRIPTION, Property.DURATION, Property.REPEAT, Property.SUMMARY).forEach(property -> {
+            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
+        });
     }
 }

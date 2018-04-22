@@ -8,8 +8,6 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 
@@ -79,31 +77,22 @@ public class VEventCounterValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VEvent target) throws ValidationException {
-        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTAMP, Property.DTSTART), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOne(input, target.getProperties());
-            }
+        Arrays.asList(Property.DTSTAMP, Property.DTSTART).forEach(property -> {
+            PropertyValidator.getInstance().assertOne(property, target.getProperties());
         });
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
         }
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.SEQUENCE, Property.SUMMARY, Property.UID), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOne(input, target.getProperties());
-            }
+        Arrays.asList(Property.SEQUENCE, Property.SUMMARY, Property.UID).forEach(property -> {
+            PropertyValidator.getInstance().assertOne(property, target.getProperties());
         });
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
+        Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTEND, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.PRIORITY,
-                Property.RECURRENCE_ID, Property.RESOURCES, Property.STATUS, Property.TRANSP, Property.URL), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, target.getProperties());
-            }
+                Property.RECURRENCE_ID, Property.RESOURCES, Property.STATUS, Property.TRANSP, Property.URL).forEach(property -> {
+            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
         });
 
         for (final VAlarm alarm : target.getAlarms()) {

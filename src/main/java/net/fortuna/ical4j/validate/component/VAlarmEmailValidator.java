@@ -5,8 +5,6 @@ import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 
@@ -32,11 +30,8 @@ public class VAlarmEmailValidator implements Validator<VAlarm> {
          * ; the following are optional,
          * ; and MAY occur more than once attach / x-prop
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.DESCRIPTION, Property.SUMMARY), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOne(input, target.getProperties());
-            }
+        Arrays.asList(Property.DESCRIPTION, Property.SUMMARY).forEach(property -> {
+            PropertyValidator.getInstance().assertOne(property, target.getProperties());
         });
 
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, target.getProperties());
