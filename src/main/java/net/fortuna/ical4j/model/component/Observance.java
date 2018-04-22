@@ -159,12 +159,7 @@ public abstract class Observance extends Component {
             try {
                 DtStart dtStart = (DtStart) getRequiredProperty(Property.DTSTART);
                 initialOnset = applyOffsetFrom(calculateOnset(dtStart.getDate()));
-            } catch (ParseException e) {
-                Logger log = LoggerFactory.getLogger(Observance.class);
-                log.error("Unexpected error calculating initial onset", e);
-                // XXX: is this correct?
-                return null;
-            } catch (ConstraintViolationException e) {
+            } catch (ParseException | ConstraintViolationException e) {
                 Logger log = LoggerFactory.getLogger(Observance.class);
                 log.error("Unexpected error calculating initial onset", e);
                 // XXX: is this correct?

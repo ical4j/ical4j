@@ -59,7 +59,7 @@ public class AddressList implements Serializable, Iterable<URI> {
      * Default constructor.
      */
     public AddressList() {
-        addresses = new CopyOnWriteArrayList<URI>();
+        addresses = new CopyOnWriteArrayList<>();
     }
 
     /**
@@ -68,7 +68,7 @@ public class AddressList implements Serializable, Iterable<URI> {
      * @throws URISyntaxException where the specified string is not a valid representation
      */
     public AddressList(final String aValue) throws URISyntaxException {
-        addresses = new CopyOnWriteArrayList<URI>();
+        addresses = new CopyOnWriteArrayList<>();
         final StringTokenizer t = new StringTokenizer(aValue, ",");
         while (t.hasMoreTokens()) {
 

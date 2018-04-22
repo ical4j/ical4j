@@ -161,8 +161,8 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
      * @return true if successfully added to this list
      */
     public final boolean replace(final Parameter parameter) {
-        for (final Iterator<Parameter> i = getParameters(parameter.getName()).iterator(); i.hasNext();) {
-            remove(i.next());
+        for (Parameter parameter1 : getParameters(parameter.getName())) {
+            remove(parameter1);
         }
         return add(parameter);
     }

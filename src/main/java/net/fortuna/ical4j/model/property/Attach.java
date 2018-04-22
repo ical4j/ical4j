@@ -264,12 +264,9 @@ public class Attach extends Property {
                         .createBinaryEncoder(
                                 (Encoding) getParameter(Parameter.ENCODING));
                 return new String(encoder.encode(getBinary()));
-            } catch (UnsupportedEncodingException uee) {
+            } catch (UnsupportedEncodingException | EncoderException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
-            } catch (EncoderException ee) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error encoding binary data", ee);
             }
         }
         return null;
