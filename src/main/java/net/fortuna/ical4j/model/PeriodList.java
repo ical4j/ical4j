@@ -216,9 +216,7 @@ public class PeriodList implements Set<Period>, Serializable {
         if (periods != null) {
             final PeriodList newList = new PeriodList();
             newList.addAll(this);
-            for (final Period p : periods) {
-                newList.add(p);
-            }
+            newList.addAll(periods);
             return newList.normalise();
         }
         return this;

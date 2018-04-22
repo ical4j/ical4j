@@ -49,9 +49,7 @@ public class TimeZoneLoader {
     private static final Standard NO_TRANSITIONS;
 
     static {
-        for(String timezoneId : net.fortuna.ical4j.model.TimeZone.getAvailableIDs() ){
-            TIMEZONE_DEFINITIONS.add(timezoneId);
-        }
+        TIMEZONE_DEFINITIONS.addAll(Arrays.asList(net.fortuna.ical4j.model.TimeZone.getAvailableIDs()));
 
         NO_TRANSITIONS = new Standard();
         TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(0));
