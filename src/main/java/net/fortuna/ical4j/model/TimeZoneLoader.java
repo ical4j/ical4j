@@ -1,30 +1,52 @@
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.component.Daylight;
-import net.fortuna.ical4j.model.component.Observance;
-import net.fortuna.ical4j.model.component.Standard;
-import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.*;
-import org.apache.commons.lang3.Validate;
-import org.slf4j.LoggerFactory;
-import org.threeten.bp.*;
-import org.threeten.bp.Period;
-import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.temporal.TemporalAdjusters;
-import org.threeten.bp.zone.ZoneOffsetTransition;
-import org.threeten.bp.zone.ZoneOffsetTransitionRule;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
-import java.util.*;
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.time.zone.ZoneOffsetTransition;
+import java.time.zone.ZoneOffsetTransitionRule;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.TreeSet;
+
+import org.apache.commons.lang3.Validate;
+import org.slf4j.LoggerFactory;
+
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.component.Daylight;
+import net.fortuna.ical4j.model.component.Observance;
+import net.fortuna.ical4j.model.component.Standard;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.RDate;
+import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.TzId;
+import net.fortuna.ical4j.model.property.TzOffsetFrom;
+import net.fortuna.ical4j.model.property.TzOffsetTo;
+import net.fortuna.ical4j.model.property.TzUrl;
+import net.fortuna.ical4j.util.Configurator;
+import net.fortuna.ical4j.util.JCacheTimeZoneCache;
+import net.fortuna.ical4j.util.ResourceLoader;
+import net.fortuna.ical4j.util.Supplier;
+import net.fortuna.ical4j.util.TimeZoneCache;
 
 public class TimeZoneLoader {
 
@@ -203,7 +225,7 @@ public class TimeZoneLoader {
 
             do {
                 allDaysOfWeek.add(ldt.getDayOfMonth());
-            } while ((ldt = ldt.plus(Period.ofWeeks(1))).getMonth() == month);
+            } while ((ldt = ldt.plusDays(7)).getMonth() == month);
 
             Integer dayOfMonth = allDaysOfWeek.ceiling(transitionRule.getDayOfMonthIndicator());
             if (dayOfMonth == null) {
