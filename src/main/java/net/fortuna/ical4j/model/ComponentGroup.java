@@ -60,7 +60,7 @@ public class ComponentGroup<T extends Component> {
      */
     public T getLatestRevision() {
         ComponentList<T> revisions = getRevisions();
-        Collections.sort(revisions, new ComponentSequenceComparator());
+        revisions.sort(new ComponentSequenceComparator());
         Collections.reverse(revisions);
         return revisions.iterator().next();
     }

@@ -109,7 +109,7 @@ public class PeriodList implements Set<Period>, Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        return stream().map(x -> x.toString()).collect(Collectors.joining(","));
+        return stream().map(Period::toString).collect(Collectors.joining(","));
     }
 
     /**

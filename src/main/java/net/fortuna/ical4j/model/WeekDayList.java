@@ -86,6 +86,6 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        return stream().map(x -> x.toString()).collect(Collectors.joining(","));
+        return stream().map(WeekDay::toString).collect(Collectors.joining(","));
     }
 }

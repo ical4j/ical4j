@@ -82,9 +82,7 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      */
     public final String toString() {
         final StringBuilder sb = new StringBuilder();
-        forEach(t -> {
-            sb.append(t.toString());
-        });
+        forEach(t -> sb.append(t.toString()));
         return sb.toString();
     }
 

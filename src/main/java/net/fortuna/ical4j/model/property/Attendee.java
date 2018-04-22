@@ -121,9 +121,7 @@ public class Attendee extends Property {
          */
         Arrays.asList(Parameter.CUTYPE, Parameter.MEMBER, Parameter.ROLE, Parameter.PARTSTAT,
                 Parameter.RSVP, Parameter.DELEGATED_TO, Parameter.DELEGATED_FROM, Parameter.SENT_BY, Parameter.CN,
-                Parameter.DIR, Parameter.LANGUAGE).forEach(parameter -> {
-            ParameterValidator.getInstance().assertOneOrLess(parameter, getParameters());
-        });
+                Parameter.DIR, Parameter.LANGUAGE).forEach(parameter -> ParameterValidator.getInstance().assertOneOrLess(parameter, getParameters()));
 
         /* scheduleagent and schedulestatus added for CalDAV scheduling
          */

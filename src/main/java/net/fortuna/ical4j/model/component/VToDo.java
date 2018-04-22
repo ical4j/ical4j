@@ -253,9 +253,7 @@ public class VToDo extends CalendarComponent {
         Arrays.asList(Property.CLASS, Property.COMPLETED, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTAMP, Property.DTSTART, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER,
                 Property.PERCENT_COMPLETE, Property.PRIORITY, Property.RECURRENCE_ID, Property.SEQUENCE, Property.STATUS,
-                Property.SUMMARY, Property.UID, Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
-        });
+                Property.SUMMARY, Property.UID, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
 
         final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())

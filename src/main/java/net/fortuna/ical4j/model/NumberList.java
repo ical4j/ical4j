@@ -120,6 +120,6 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        return stream().map(x -> x.toString()).collect(Collectors.joining(","));
+        return stream().map(Object::toString).collect(Collectors.joining(","));
     }
 }

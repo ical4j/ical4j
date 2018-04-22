@@ -115,9 +115,7 @@ public class Available extends Component {
         /*
          * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
          */
-        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(property -> {
-            PropertyValidator.getInstance().assertOne(property, getProperties());
-        });
+        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, getProperties()));
 
         /*       If specified, the "DTSTART" and "DTEND" properties in
          *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
@@ -138,9 +136,7 @@ public class Available extends Component {
          *               summary /
          */
         Arrays.asList(Property.CREATED, Property.LAST_MODIFIED, Property.RECURRENCE_ID,
-                Property.RRULE, Property.SUMMARY).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
-        });
+                Property.RRULE, Property.SUMMARY).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
 
         /*
          ; either a 'dtend' or a 'duration' is required

@@ -56,16 +56,14 @@ public class IndexedPropertyList {
      */
     public IndexedPropertyList(final PropertyList<Property> list, final String parameterName) {
         final Map<String, PropertyList<Property>> indexedProperties = new HashMap<String, PropertyList<Property>>();
-        list.forEach(property -> {
-            property.getParameters(parameterName).forEach(parameter -> {
-                PropertyList<Property> properties = indexedProperties.get(parameter.getValue());
-                if (properties == null) {
-                    properties = new PropertyList<Property>();
-                    indexedProperties.put(parameter.getValue(), properties);
-                }
-                properties.add(property);
-            });
-        });
+        list.forEach(property -> property.getParameters(parameterName).forEach(parameter -> {
+            PropertyList<Property> properties = indexedProperties.get(parameter.getValue());
+            if (properties == null) {
+                properties = new PropertyList<Property>();
+                indexedProperties.put(parameter.getValue(), properties);
+            }
+            properties.add(property);
+        }));
         this.index = Collections.unmodifiableMap(indexedProperties);
     }
     

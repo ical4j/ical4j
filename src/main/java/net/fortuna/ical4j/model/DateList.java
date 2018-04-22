@@ -168,7 +168,7 @@ public class DateList implements List<Date>, Serializable, Iterable<Date> {
      * {@inheritDoc}
      */
     public final String toString() {
-        return stream().map(x -> x.toString()).collect(Collectors.joining(","));
+        return stream().map(Iso8601::toString).collect(Collectors.joining(","));
     }
 
     /**

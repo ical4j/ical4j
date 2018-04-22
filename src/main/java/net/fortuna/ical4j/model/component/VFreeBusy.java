@@ -500,9 +500,7 @@ public class VFreeBusy extends CalendarComponent {
          * dtstamp / organizer / uid / url /
          */
         Arrays.asList(Property.CONTACT, Property.DTSTART, Property.DTEND, Property.DURATION,
-                Property.DTSTAMP, Property.ORGANIZER, Property.UID, Property.URL).forEach(parameter -> {
-            PropertyValidator.getInstance().assertOneOrLess(parameter, getProperties());
-        });
+                Property.DTSTAMP, Property.ORGANIZER, Property.UID, Property.URL).forEach(parameter -> PropertyValidator.getInstance().assertOneOrLess(parameter, getProperties()));
 
         /*
          * ; the following are optional, ; and MAY occur more than once attendee / comment / freebusy / rstatus / x-prop
@@ -513,9 +511,7 @@ public class VFreeBusy extends CalendarComponent {
          * calendar component. Any recurring events are resolved into their individual busy time periods using the
          * "FREEBUSY" property.
          */
-        Arrays.asList(Property.RRULE, Property.EXRULE, Property.RDATE, Property.EXDATE).forEach(property -> {
-            PropertyValidator.getInstance().assertNone(property, getProperties());
-        });
+        Arrays.asList(Property.RRULE, Property.EXRULE, Property.RDATE, Property.EXDATE).forEach(property -> PropertyValidator.getInstance().assertNone(property, getProperties()));
 
         // DtEnd value must be later in time that DtStart..
         final DtStart dtStart = getProperty(Property.DTSTART);

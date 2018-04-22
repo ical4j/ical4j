@@ -176,9 +176,7 @@ public class VJournal extends CalendarComponent {
          */
         Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION, Property.DTSTART,
                 Property.DTSTAMP, Property.LAST_MODIFIED, Property.ORGANIZER, Property.RECURRENCE_ID, Property.SEQUENCE,
-                Property.STATUS, Property.SUMMARY, Property.UID, Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
-        });
+                Property.STATUS, Property.SUMMARY, Property.UID, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
 
         final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())

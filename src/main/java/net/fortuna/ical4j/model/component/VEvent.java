@@ -346,9 +346,7 @@ public class VEvent extends CalendarComponent {
         Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTART, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER,
                 Property.PRIORITY, Property.DTSTAMP, Property.SEQUENCE, Property.STATUS, Property.SUMMARY,
-                Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, getProperties());
-        });
+                Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
 
         final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())

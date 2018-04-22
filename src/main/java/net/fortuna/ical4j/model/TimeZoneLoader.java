@@ -28,7 +28,6 @@ import java.time.zone.ZoneOffsetTransition;
 import java.time.zone.ZoneOffsetTransitionRule;
 import java.util.*;
 import java.util.TimeZone;
-import java.util.function.Supplier;
 
 public class TimeZoneLoader {
 
@@ -177,12 +176,7 @@ public class TimeZoneLoader {
 
         if (!zoneId.getRules().getTransitions().isEmpty()) {
             Collections.min(zoneId.getRules().getTransitions(),
-                    new Comparator<ZoneOffsetTransition>() {
-                        @Override
-                        public int compare(ZoneOffsetTransition z1, ZoneOffsetTransition z2) {
-                            return z1.getDateTimeBefore().compareTo(z2.getDateTimeBefore());
-                        }
-                    });
+                    Comparator.comparing(ZoneOffsetTransition::getDateTimeBefore));
         }
 
         LocalDateTime startDate = null;
@@ -250,11 +244,7 @@ public class TimeZoneLoader {
         for (ZoneOffsetTransition zoneTransitionRule : zoneId.getRules().getTransitions()) {
             ZoneOffsetKey offfsetKey = ZoneOffsetKey.of(zoneTransitionRule.getOffsetBefore(), zoneTransitionRule.getOffsetAfter());
 
-            Set<ZoneOffsetTransition> transitionRulesForOffset = zoneTransitionsByOffsets.get(offfsetKey);
-            if (transitionRulesForOffset == null) {
-                transitionRulesForOffset = new HashSet<ZoneOffsetTransition>(1);
-                zoneTransitionsByOffsets.put(offfsetKey, transitionRulesForOffset);
-            }
+            Set<ZoneOffsetTransition> transitionRulesForOffset = zoneTransitionsByOffsets.computeIfAbsent(offfsetKey, k -> new HashSet<ZoneOffsetTransition>(1));
             transitionRulesForOffset.add(zoneTransitionRule);
         }
 
@@ -283,12 +273,7 @@ public class TimeZoneLoader {
 
     private static TimeZoneCache cacheInit() {
         Optional<TimeZoneCache> property = Configurator.getObjectProperty(TZ_CACHE_IMPL);
-        return property.orElseGet(new Supplier<TimeZoneCache>() {
-            @Override
-            public TimeZoneCache get() {
-                return new JCacheTimeZoneCache();
-            }
-        });
+        return property.orElseGet(JCacheTimeZoneCache::new);
     }
 
     private static class ZoneOffsetKey {
