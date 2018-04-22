@@ -87,9 +87,7 @@ public class VToDoPublishValidator implements Validator<VToDo> {
         Arrays.asList(Property.DTSTART, Property.SEQUENCE, Property.CATEGORIES, Property.CLASS,
                 Property.CREATED, Property.DESCRIPTION, Property.DUE, Property.DURATION, Property.GEO, Property.LAST_MODIFIED,
                 Property.LOCATION, Property.PERCENT_COMPLETE, Property.RECURRENCE_ID, Property.RESOURCES, Property.STATUS,
-                Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
-        });
+                Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
         PropertyValidator.getInstance().assertNone(Property.ATTENDEE, target.getProperties());
         PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());

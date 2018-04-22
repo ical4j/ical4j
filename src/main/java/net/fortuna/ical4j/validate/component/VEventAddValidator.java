@@ -70,19 +70,13 @@ public class VEventAddValidator implements Validator<VEvent> {
 
     public void validate(final VEvent target) throws ValidationException {
         Arrays.asList(Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER, Property.SEQUENCE,
-                Property.SUMMARY, Property.UID).forEach(property -> {
-            PropertyValidator.getInstance().assertOne(property, target.getProperties());
-        });
+                Property.SUMMARY, Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTEND, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.PRIORITY,
-                Property.RESOURCES, Property.STATUS, Property.TRANSP, Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
-        });
+                Property.RESOURCES, Property.STATUS, Property.TRANSP, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
-        Arrays.asList(Property.RECURRENCE_ID, Property.REQUEST_STATUS).forEach(property -> {
-            PropertyValidator.getInstance().assertNone(property, target.getProperties());
-        });
+        Arrays.asList(Property.RECURRENCE_ID, Property.REQUEST_STATUS).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
 
         for (final VAlarm alarm : target.getAlarms()) {
             alarm.validate(Method.ADD);

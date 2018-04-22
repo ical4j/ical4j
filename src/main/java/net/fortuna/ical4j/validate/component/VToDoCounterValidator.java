@@ -82,9 +82,7 @@ public class VToDoCounterValidator implements Validator<VToDo> {
         Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTART, Property.DUE, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,
                 Property.PERCENT_COMPLETE, Property.RECURRENCE_ID, Property.RESOURCES, Property.RRULE, Property.SEQUENCE,
-                Property.STATUS, Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
-        });
+                Property.STATUS, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
         for (final VAlarm alarm : target.getAlarms()) {
             alarm.validate(Method.COUNTER);

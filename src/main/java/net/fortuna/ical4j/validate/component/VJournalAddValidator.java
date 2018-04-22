@@ -58,14 +58,10 @@ public class VJournalAddValidator implements Validator<VJournal> {
 
     public void validate(final VJournal target) throws ValidationException {
         Arrays.asList(Property.DESCRIPTION, Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER,
-                Property.SEQUENCE, Property.UID).forEach(property -> {
-            PropertyValidator.getInstance().assertOne(property, target.getProperties());
-        });
+                Property.SEQUENCE, Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.LAST_MODIFIED,
-                Property.STATUS, Property.SUMMARY, Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
-        });
+                Property.STATUS, Property.SUMMARY, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
         PropertyValidator.getInstance().assertNone(Property.ATTENDEE, target.getProperties());
         PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, target.getProperties());

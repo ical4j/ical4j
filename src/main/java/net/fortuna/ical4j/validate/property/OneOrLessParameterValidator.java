@@ -21,8 +21,6 @@ public class OneOrLessParameterValidator implements Validator<Property> {
 
     @Override
     public void validate(final Property target) throws ValidationException {
-        parameters.forEach(parameter -> {
-            ParameterValidator.getInstance().assertOneOrLess(parameter, target.getParameters());
-        });
+        parameters.forEach(parameter -> ParameterValidator.getInstance().assertOneOrLess(parameter, target.getParameters()));
     }
 }

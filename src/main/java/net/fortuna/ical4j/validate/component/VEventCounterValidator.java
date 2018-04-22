@@ -77,23 +77,17 @@ public class VEventCounterValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VEvent target) throws ValidationException {
-        Arrays.asList(Property.DTSTAMP, Property.DTSTART).forEach(property -> {
-            PropertyValidator.getInstance().assertOne(property, target.getProperties());
-        });
+        Arrays.asList(Property.DTSTAMP, Property.DTSTART).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
         }
 
-        Arrays.asList(Property.SEQUENCE, Property.SUMMARY, Property.UID).forEach(property -> {
-            PropertyValidator.getInstance().assertOne(property, target.getProperties());
-        });
+        Arrays.asList(Property.SEQUENCE, Property.SUMMARY, Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTEND, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.PRIORITY,
-                Property.RECURRENCE_ID, Property.RESOURCES, Property.STATUS, Property.TRANSP, Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
-        });
+                Property.RECURRENCE_ID, Property.RESOURCES, Property.STATUS, Property.TRANSP, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
         for (final VAlarm alarm : target.getAlarms()) {
             alarm.validate(Method.COUNTER);

@@ -49,13 +49,9 @@ public class VFreeBusyRequestValidator implements Validator<VFreeBusy> {
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, target.getProperties());
 
         Arrays.asList(Property.DTEND, Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER,
-                Property.UID).forEach(property -> {
-            PropertyValidator.getInstance().assertOne(property, target.getProperties());
-        });
+                Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         Arrays.asList(Property.FREEBUSY, Property.DURATION, Property.REQUEST_STATUS,
-                Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertNone(property, target.getProperties());
-        });
+                Property.URL).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
     }
 }

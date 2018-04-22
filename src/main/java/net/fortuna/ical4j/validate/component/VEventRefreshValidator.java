@@ -71,9 +71,7 @@ public class VEventRefreshValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VEvent target) throws ValidationException {
-        Arrays.asList(Property.ATTENDEE, Property.DTSTAMP, Property.ORGANIZER, Property.UID).forEach(property -> {
-            PropertyValidator.getInstance().assertOne(property, target.getProperties());
-        });
+        Arrays.asList(Property.ATTENDEE, Property.DTSTAMP, Property.ORGANIZER, Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, target.getProperties());
 
@@ -81,9 +79,7 @@ public class VEventRefreshValidator implements Validator<VEvent> {
                 Property.CREATED, Property.DESCRIPTION, Property.DTEND, Property.DTSTART, Property.DURATION, Property.EXDATE,
                 Property.EXRULE, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.PRIORITY, Property.RDATE,
                 Property.RELATED_TO, Property.REQUEST_STATUS, Property.RESOURCES, Property.RRULE, Property.SEQUENCE,
-                Property.STATUS, Property.SUMMARY, Property.TRANSP, Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertNone(property, target.getProperties());
-        });
+                Property.STATUS, Property.SUMMARY, Property.TRANSP, Property.URL).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
 
         ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
     }

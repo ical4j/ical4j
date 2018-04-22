@@ -67,9 +67,7 @@ public class VJournalCancelValidator implements Validator<VJournal> {
 
         Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTART, Property.LAST_MODIFIED, Property.RECURRENCE_ID, Property.STATUS, Property.SUMMARY,
-                Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
-        });
+                Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
         PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());
     }

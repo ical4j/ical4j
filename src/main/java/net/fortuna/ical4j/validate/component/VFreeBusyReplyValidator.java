@@ -52,14 +52,10 @@ public class VFreeBusyReplyValidator implements Validator<VFreeBusy> {
         // FREEBUSY is 1+ in RFC2446 but 0+ in Calsify
 
         Arrays.asList(Property.ATTENDEE, Property.DTSTAMP, Property.DTEND, Property.DTSTART,
-                Property.ORGANIZER, Property.UID).forEach(property -> {
-            PropertyValidator.getInstance().assertOne(property, target.getProperties());
-        });
+                Property.ORGANIZER, Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         PropertyValidator.getInstance().assertOneOrLess(Property.URL, target.getProperties());
 
-        Arrays.asList(Property.DURATION, Property.SEQUENCE).forEach(property -> {
-            PropertyValidator.getInstance().assertNone(property, target.getProperties());
-        });
+        Arrays.asList(Property.DURATION, Property.SEQUENCE).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
     }
 }

@@ -33,12 +33,8 @@ public class VAlarmITIPValidator implements Validator<VAlarm> {
      * {@inheritDoc}
      */
     public void validate(final VAlarm target) throws ValidationException {
-        Arrays.asList(Property.ACTION, Property.TRIGGER).forEach(property -> {
-            PropertyValidator.getInstance().assertOne(property, target.getProperties());
-        });
+        Arrays.asList(Property.ACTION, Property.TRIGGER).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        Arrays.asList(Property.DESCRIPTION, Property.DURATION, Property.REPEAT, Property.SUMMARY).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
-        });
+        Arrays.asList(Property.DESCRIPTION, Property.DURATION, Property.REPEAT, Property.SUMMARY).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
     }
 }

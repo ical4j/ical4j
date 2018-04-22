@@ -78,9 +78,7 @@ public class VToDoReplyValidator implements Validator<VToDo> {
         Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTART, Property.DUE, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,
                 Property.PERCENT_COMPLETE, Property.PRIORITY, Property.RESOURCES, Property.RECURRENCE_ID, Property.SEQUENCE,
-                Property.STATUS, Property.SUMMARY, Property.URL).forEach(property -> {
-            PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties());
-        });
+                Property.STATUS, Property.SUMMARY, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
         ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
     }

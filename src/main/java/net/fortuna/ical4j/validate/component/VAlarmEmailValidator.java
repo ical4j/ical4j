@@ -30,9 +30,7 @@ public class VAlarmEmailValidator implements Validator<VAlarm> {
          * ; the following are optional,
          * ; and MAY occur more than once attach / x-prop
          */
-        Arrays.asList(Property.DESCRIPTION, Property.SUMMARY).forEach(property -> {
-            PropertyValidator.getInstance().assertOne(property, target.getProperties());
-        });
+        Arrays.asList(Property.DESCRIPTION, Property.SUMMARY).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, target.getProperties());
     }
