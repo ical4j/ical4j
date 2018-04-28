@@ -470,7 +470,7 @@ public abstract class Property extends Content {
      * @param name name of the parameter to retrieve
      * @return the first parameter from the parameter list with the specified name
      */
-    public final Parameter getParameter(final String name) {
+    public final <T extends Parameter> T getParameter(final String name) {
         return getParameters().getParameter(name);
     }
 

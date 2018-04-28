@@ -291,7 +291,7 @@ public class VAlarm extends CalendarComponent {
      * @return the ACTION property or null if not specified
      */
     public final Action getAction() {
-        return (Action) getProperty(Property.ACTION);
+        return getProperty(Property.ACTION);
     }
 
     /**
@@ -299,7 +299,7 @@ public class VAlarm extends CalendarComponent {
      * @return the TRIGGER property or null if not specified
      */
     public final Trigger getTrigger() {
-        return (Trigger) getProperty(Property.TRIGGER);
+        return getProperty(Property.TRIGGER);
     }
 
     /**
@@ -307,7 +307,7 @@ public class VAlarm extends CalendarComponent {
      * @return the DURATION property or null if not specified
      */
     public final Duration getDuration() {
-        return (Duration) getProperty(Property.DURATION);
+        return getProperty(Property.DURATION);
     }
 
     /**
@@ -315,7 +315,7 @@ public class VAlarm extends CalendarComponent {
      * @return the REPEAT property or null if not specified
      */
     public final Repeat getRepeat() {
-        return (Repeat) getProperty(Property.REPEAT);
+        return getProperty(Property.REPEAT);
     }
 
     /**
@@ -323,7 +323,7 @@ public class VAlarm extends CalendarComponent {
      * @return the ATTACH property or null if not specified
      */
     public final Attach getAttachment() {
-        return (Attach) getProperty(Property.ATTACH);
+        return getProperty(Property.ATTACH);
     }
 
     /**
@@ -331,7 +331,7 @@ public class VAlarm extends CalendarComponent {
      * @return the DESCRIPTION property or null if not specified
      */
     public final Description getDescription() {
-        return (Description) getProperty(Property.DESCRIPTION);
+        return getProperty(Property.DESCRIPTION);
     }
 
     /**
@@ -339,7 +339,7 @@ public class VAlarm extends CalendarComponent {
      * @return the SUMMARY property or null if not specified
      */
     public final Summary getSummary() {
-        return (Summary) getProperty(Property.SUMMARY);
+        return getProperty(Property.SUMMARY);
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {

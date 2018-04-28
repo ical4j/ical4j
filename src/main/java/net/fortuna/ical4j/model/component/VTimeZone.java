@@ -263,21 +263,21 @@ public class VTimeZone extends CalendarComponent {
      * @return the mandatory timezone identifier property
      */
     public final TzId getTimeZoneId() {
-        return (TzId) getProperty(Property.TZID);
+        return getProperty(Property.TZID);
     }
 
     /**
      * @return the optional last-modified property
      */
     public final LastModified getLastModified() {
-        return (LastModified) getProperty(Property.LAST_MODIFIED);
+        return getProperty(Property.LAST_MODIFIED);
     }
 
     /**
      * @return the optional timezone url property
      */
     public final TzUrl getTimeZoneUrl() {
-        return (TzUrl) getProperty(Property.TZURL);
+        return getProperty(Property.TZURL);
     }
 
     /**

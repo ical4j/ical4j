@@ -116,10 +116,10 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
      * @param aName name of the parameter
      * @return the first matching parameter or null if no matching parameters
      */
-    public final Parameter getParameter(final String aName) {
+    public final <T extends Parameter> T getParameter(final String aName) {
         for (final Parameter p : parameters) {
             if (aName.equalsIgnoreCase(p.getName())) {
-                return p;
+                return (T) p;
             }
         }
         return null;

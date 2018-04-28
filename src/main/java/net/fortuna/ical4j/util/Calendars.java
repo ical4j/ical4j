@@ -205,7 +205,7 @@ public final class Calendars {
     public static String getContentType(Calendar calendar, Charset charset) {
         final StringBuilder b = new StringBuilder("text/calendar");
         
-        final Method method = (Method) calendar.getProperty(Property.METHOD);
+        final Method method = calendar.getProperty(Property.METHOD);
         if (method != null) {
             b.append("; method=");
             b.append(method.getValue());

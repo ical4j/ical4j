@@ -559,49 +559,49 @@ public class VFreeBusy extends CalendarComponent {
      * @return the CONTACT property or null if not specified
      */
     public final Contact getContact() {
-        return (Contact) getProperty(Property.CONTACT);
+        return getProperty(Property.CONTACT);
     }
 
     /**
      * @return the DTSTART propery or null if not specified
      */
     public final DtStart getStartDate() {
-        return (DtStart) getProperty(Property.DTSTART);
+        return getProperty(Property.DTSTART);
     }
 
     /**
      * @return the DTEND property or null if not specified
      */
     public final DtEnd getEndDate() {
-        return (DtEnd) getProperty(Property.DTEND);
+        return getProperty(Property.DTEND);
     }
 
     /**
      * @return the DURATION property or null if not specified
      */
     public final Duration getDuration() {
-        return (Duration) getProperty(Property.DURATION);
+        return getProperty(Property.DURATION);
     }
 
     /**
      * @return the DTSTAMP property or null if not specified
      */
     public final DtStamp getDateStamp() {
-        return (DtStamp) getProperty(Property.DTSTAMP);
+        return getProperty(Property.DTSTAMP);
     }
 
     /**
      * @return the ORGANIZER property or null if not specified
      */
     public final Organizer getOrganizer() {
-        return (Organizer) getProperty(Property.ORGANIZER);
+        return getProperty(Property.ORGANIZER);
     }
 
     /**
      * @return the URL property or null if not specified
      */
     public final Url getUrl() {
-        return (Url) getProperty(Property.URL);
+        return getProperty(Property.URL);
     }
 
     /**
@@ -609,7 +609,7 @@ public class VFreeBusy extends CalendarComponent {
      * @return a Uid instance, or null if no UID property exists
      */
     public final Uid getUid() {
-        return (Uid) getProperty(Property.UID);
+        return getProperty(Property.UID);
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VFreeBusy> {

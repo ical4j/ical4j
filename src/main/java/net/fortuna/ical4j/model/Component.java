@@ -303,7 +303,7 @@ public abstract class Component implements Serializable {
             return recurrenceSet;
         }
 
-        final Value startValue = (Value) start.getParameter(Parameter.VALUE);
+        final Value startValue = start.getParameter(Parameter.VALUE);
 
         // initialise timezone..
 //        if (startValue == null || Value.DATE_TIME.equals(startValue)) {

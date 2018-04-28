@@ -207,21 +207,21 @@ public class VJournal extends CalendarComponent {
      * @return the optional access classification property for a journal entry
      */
     public final Clazz getClassification() {
-        return (Clazz) getProperty(Property.CLASS);
+        return getProperty(Property.CLASS);
     }
 
     /**
      * @return the optional creation-time property for a journal entry
      */
     public final Created getCreated() {
-        return (Created) getProperty(Property.CREATED);
+        return getProperty(Property.CREATED);
     }
 
     /**
      * @return the optional description property for a journal entry
      */
     public final Description getDescription() {
-        return (Description) getProperty(Property.DESCRIPTION);
+        return getProperty(Property.DESCRIPTION);
     }
 
     /**
@@ -229,63 +229,63 @@ public class VJournal extends CalendarComponent {
      * @return The DtStart object representation of the start Date
      */
     public final DtStart getStartDate() {
-        return (DtStart) getProperty(Property.DTSTART);
+        return getProperty(Property.DTSTART);
     }
 
     /**
      * @return the optional last-modified property for a journal entry
      */
     public final LastModified getLastModified() {
-        return (LastModified) getProperty(Property.LAST_MODIFIED);
+        return getProperty(Property.LAST_MODIFIED);
     }
 
     /**
      * @return the optional organizer property for a journal entry
      */
     public final Organizer getOrganizer() {
-        return (Organizer) getProperty(Property.ORGANIZER);
+        return getProperty(Property.ORGANIZER);
     }
 
     /**
      * @return the optional date-stamp property
      */
     public final DtStamp getDateStamp() {
-        return (DtStamp) getProperty(Property.DTSTAMP);
+        return getProperty(Property.DTSTAMP);
     }
 
     /**
      * @return the optional sequence number property for a journal entry
      */
     public final Sequence getSequence() {
-        return (Sequence) getProperty(Property.SEQUENCE);
+        return getProperty(Property.SEQUENCE);
     }
 
     /**
      * @return the optional status property for a journal entry
      */
     public final Status getStatus() {
-        return (Status) getProperty(Property.STATUS);
+        return getProperty(Property.STATUS);
     }
 
     /**
      * @return the optional summary property for a journal entry
      */
     public final Summary getSummary() {
-        return (Summary) getProperty(Property.SUMMARY);
+        return getProperty(Property.SUMMARY);
     }
 
     /**
      * @return the optional URL property for a journal entry
      */
     public final Url getUrl() {
-        return (Url) getProperty(Property.URL);
+        return getProperty(Property.URL);
     }
 
     /**
      * @return the optional recurrence identifier property for a journal entry
      */
     public final RecurrenceId getRecurrenceId() {
-        return (RecurrenceId) getProperty(Property.RECURRENCE_ID);
+        return getProperty(Property.RECURRENCE_ID);
     }
 
     /**
@@ -293,7 +293,7 @@ public class VJournal extends CalendarComponent {
      * @return a Uid instance, or null if no UID property exists
      */
     public final Uid getUid() {
-        return (Uid) getProperty(Property.UID);
+        return getProperty(Property.UID);
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VJournal> {

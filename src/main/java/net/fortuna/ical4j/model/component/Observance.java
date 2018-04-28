@@ -275,7 +275,7 @@ public abstract class Observance extends Component {
      * @return the DTSTART property or null if not specified
      */
     public final DtStart getStartDate() {
-        return (DtStart) getProperty(Property.DTSTART);
+        return getProperty(Property.DTSTART);
     }
 
     /**
@@ -284,7 +284,7 @@ public abstract class Observance extends Component {
      * @return the TZOFFSETFROM property or null if not specified
      */
     public final TzOffsetFrom getOffsetFrom() {
-        return (TzOffsetFrom) getProperty(Property.TZOFFSETFROM);
+        return getProperty(Property.TZOFFSETFROM);
     }
 
     /**
@@ -293,7 +293,7 @@ public abstract class Observance extends Component {
      * @return the TZOFFSETTO property or null if not specified
      */
     public final TzOffsetTo getOffsetTo() {
-        return (TzOffsetTo) getProperty(Property.TZOFFSETTO);
+        return getProperty(Property.TZOFFSETTO);
     }
 
     //    private Date calculateOnset(DateProperty dateProperty) {

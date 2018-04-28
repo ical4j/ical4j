@@ -298,28 +298,28 @@ public class VToDo extends CalendarComponent {
      * @return the optional access classification property
      */
     public final Clazz getClassification() {
-        return (Clazz) getProperty(Property.CLASS);
+        return getProperty(Property.CLASS);
     }
 
     /**
      * @return the optional date completed property
      */
     public final Completed getDateCompleted() {
-        return (Completed) getProperty(Property.COMPLETED);
+        return getProperty(Property.COMPLETED);
     }
 
     /**
      * @return the optional creation-time property
      */
     public final Created getCreated() {
-        return (Created) getProperty(Property.CREATED);
+        return getProperty(Property.CREATED);
     }
 
     /**
      * @return the optional description property
      */
     public final Description getDescription() {
-        return (Description) getProperty(Property.DESCRIPTION);
+        return getProperty(Property.DESCRIPTION);
     }
 
     /**
@@ -327,105 +327,105 @@ public class VToDo extends CalendarComponent {
      * @return The DtStart object representation of the start Date
      */
     public final DtStart getStartDate() {
-        return (DtStart) getProperty(Property.DTSTART);
+        return getProperty(Property.DTSTART);
     }
 
     /**
      * @return the optional geographic position property
      */
     public final Geo getGeographicPos() {
-        return (Geo) getProperty(Property.GEO);
+        return getProperty(Property.GEO);
     }
 
     /**
      * @return the optional last-modified property
      */
     public final LastModified getLastModified() {
-        return (LastModified) getProperty(Property.LAST_MODIFIED);
+        return getProperty(Property.LAST_MODIFIED);
     }
 
     /**
      * @return the optional location property
      */
     public final Location getLocation() {
-        return (Location) getProperty(Property.LOCATION);
+        return getProperty(Property.LOCATION);
     }
 
     /**
      * @return the optional organizer property
      */
     public final Organizer getOrganizer() {
-        return (Organizer) getProperty(Property.ORGANIZER);
+        return getProperty(Property.ORGANIZER);
     }
 
     /**
      * @return the optional percentage complete property
      */
     public final PercentComplete getPercentComplete() {
-        return (PercentComplete) getProperty(Property.PERCENT_COMPLETE);
+        return getProperty(Property.PERCENT_COMPLETE);
     }
 
     /**
      * @return the optional priority property
      */
     public final Priority getPriority() {
-        return (Priority) getProperty(Property.PRIORITY);
+        return getProperty(Property.PRIORITY);
     }
 
     /**
      * @return the optional date-stamp property
      */
     public final DtStamp getDateStamp() {
-        return (DtStamp) getProperty(Property.DTSTAMP);
+        return getProperty(Property.DTSTAMP);
     }
 
     /**
      * @return the optional sequence number property
      */
     public final Sequence getSequence() {
-        return (Sequence) getProperty(Property.SEQUENCE);
+        return getProperty(Property.SEQUENCE);
     }
 
     /**
      * @return the optional status property
      */
     public final Status getStatus() {
-        return (Status) getProperty(Property.STATUS);
+        return getProperty(Property.STATUS);
     }
 
     /**
      * @return the optional summary property
      */
     public final Summary getSummary() {
-        return (Summary) getProperty(Property.SUMMARY);
+        return getProperty(Property.SUMMARY);
     }
 
     /**
      * @return the optional URL property
      */
     public final Url getUrl() {
-        return (Url) getProperty(Property.URL);
+        return getProperty(Property.URL);
     }
 
     /**
      * @return the optional recurrence identifier property
      */
     public final RecurrenceId getRecurrenceId() {
-        return (RecurrenceId) getProperty(Property.RECURRENCE_ID);
+        return getProperty(Property.RECURRENCE_ID);
     }
 
     /**
      * @return the optional Duration property
      */
     public final Duration getDuration() {
-        return (Duration) getProperty(Property.DURATION);
+        return getProperty(Property.DURATION);
     }
 
     /**
      * @return the optional due property
      */
     public final Due getDue() {
-        return (Due) getProperty(Property.DUE);
+        return getProperty(Property.DUE);
     }
 
     /**
@@ -433,7 +433,7 @@ public class VToDo extends CalendarComponent {
      * @return a Uid instance, or null if no UID property exists
      */
     public final Uid getUid() {
-        return (Uid) getProperty(Property.UID);
+        return getProperty(Property.UID);
     }
 
     /**
