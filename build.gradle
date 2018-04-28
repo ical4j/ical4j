@@ -91,7 +91,8 @@ dependencies {
 jacocoTestReport {
     reports {
         xml.enabled true
-        html.enabled false
+        html.enabled project.hasProperty('jacoco_htmlReport') \
+                && 'true' == project.property('jacoco_htmlReport')
     }
 }
 
