@@ -161,7 +161,7 @@ public final class Calendars {
             }
             
             for (final Property p : c.getProperties()) {
-                final TzId tzid = (TzId) p.getParameter(Parameter.TZID);
+                final TzId tzid = p.getParameter(Parameter.TZID);
                 if (tzid != null) {
                     final VTimeZone timezone = timezones.getComponent(tzid.getValue());
                     if (!uidCal.getComponents().contains(timezone)) {

@@ -60,7 +60,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
 //        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
         // validate method..
-        final Method method = (Method) target.getProperty(Property.METHOD);
+        final Method method = target.getProperty(Property.METHOD);
         if (Method.PUBLISH.equals(method)) {
             if (target.getComponent(Component.VEVENT) != null) {
                 ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());

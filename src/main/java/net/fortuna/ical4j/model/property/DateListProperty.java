@@ -108,7 +108,7 @@ public abstract class DateListProperty extends Property {
      * {@inheritDoc}
      */
     public void setValue(final String aValue) throws ParseException {
-        dates = new DateList(aValue, (Value) getParameter(Parameter.VALUE),
+        dates = new DateList(aValue, getParameter(Parameter.VALUE),
                 timeZone);
     }
 

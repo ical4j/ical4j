@@ -423,7 +423,7 @@ public abstract class Property extends Content {
         buffer.append(':');
         boolean needsEscape = false;
         if (this instanceof XProperty) {
-            Value valParam = (Value) getParameter(Parameter.VALUE);
+            Value valParam = getParameter(Parameter.VALUE);
             if (valParam == null || valParam.equals(Value.TEXT)) {
                 needsEscape = true;
             }

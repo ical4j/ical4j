@@ -125,11 +125,10 @@ public class Attach extends Property {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws IOException        when there is an error reading the binary stream
      * @throws URISyntaxException where the specified string is not a valid uri
      */
     public Attach(final ParameterList aList, final String aValue)
-            throws IOException, URISyntaxException {
+            throws URISyntaxException {
         super(ATTACH, aList, new Factory());
         setValue(aValue);
     }
@@ -235,7 +234,7 @@ public class Attach extends Property {
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(
-                                (Encoding) getParameter(Parameter.ENCODING));
+                                getParameter(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
@@ -262,7 +261,7 @@ public class Attach extends Property {
             try {
                 final BinaryEncoder encoder = EncoderFactory.getInstance()
                         .createBinaryEncoder(
-                                (Encoding) getParameter(Parameter.ENCODING));
+                                getParameter(Parameter.ENCODING));
                 return new String(encoder.encode(getBinary()));
             } catch (UnsupportedEncodingException | EncoderException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);

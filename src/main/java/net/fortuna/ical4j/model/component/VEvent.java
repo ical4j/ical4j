@@ -640,7 +640,7 @@ public class VEvent extends CalendarComponent {
             }
 
             dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration()
-                    .getTime(dtStart.getDate()), (Value) dtStart
+                    .getTime(dtStart.getDate()), dtStart
                     .getParameter(Parameter.VALUE)));
             if (dtStart.isUtc()) {
                 dtEnd.setUtc(true);

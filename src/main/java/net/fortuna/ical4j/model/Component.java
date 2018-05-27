@@ -328,7 +328,7 @@ public abstract class Component implements Serializable {
         List<RDate> rDates = getProperties(Property.RDATE);
         // add recurrence dates..
         for (RDate rdate : rDates) {            
-            final Value rdateValue = (Value) rdate.getParameter(Parameter.VALUE);
+            final Value rdateValue = rdate.getParameter(Parameter.VALUE);
             if (Value.PERIOD.equals(rdateValue)) {
                 for (final Period rdatePeriod : rdate.getPeriods()) {
                     if (period.intersects(rdatePeriod)) {
