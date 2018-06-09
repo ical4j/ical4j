@@ -243,7 +243,7 @@ public abstract class DateProperty extends Property {
                     getParameters());
         }
 
-        final Value value = (Value) getParameter(Parameter.VALUE);
+        final Value value = getParameter(Parameter.VALUE);
 
         if (getDate() instanceof DateTime) {
 

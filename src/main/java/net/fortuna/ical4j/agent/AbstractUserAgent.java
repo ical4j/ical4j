@@ -20,13 +20,10 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     private final ProdId prodId;
 
-    private final UidGenerator uidGenerator;
-
     private final Map<Method, Transformer<Calendar>> transformers;
 
     public AbstractUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
         this.prodId = prodId;
-        this.uidGenerator = uidGenerator;
         transformers = new HashMap<>();
         transformers.put(Method.PUBLISH, new PublishTransformer(organizer, uidGenerator,true));
         transformers.put(Method.REQUEST, new RequestTransformer(organizer, uidGenerator));
@@ -38,7 +35,8 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
         transformers.put(Method.DECLINE_COUNTER, new DeclineCounterTransformer(organizer, uidGenerator));
     }
 
-    protected Calendar wrap(Method method, T... component) {
+    @SafeVarargs
+    protected final Calendar wrap(Method method, T... component) {
         Calendar calendar = Calendars.wrap(component);
         calendar.getProperties().add(prodId);
         calendar.getProperties().add(Version.VERSION_2_0);

@@ -35,8 +35,8 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [29-May-2004]
@@ -86,13 +86,6 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<WeekDay> i = iterator(); i.hasNext();) {
-            b.append(i.next());
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+        return stream().map(WeekDay::toString).collect(Collectors.joining(","));
     }
 }

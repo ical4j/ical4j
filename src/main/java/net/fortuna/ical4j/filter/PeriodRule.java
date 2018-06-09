@@ -34,7 +34,8 @@ package net.fortuna.ical4j.filter;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
-import org.apache.commons.collections4.Predicate;
+
+import java.util.function.Predicate;
 
 /**
  * $Id$
@@ -59,7 +60,7 @@ public class PeriodRule<T extends Component> implements Predicate<T> {
     /**
      * {@inheritDoc}
      */
-    public final boolean evaluate(final Component component) {
+    public final boolean test(final Component component) {
 
         /*
         DtStart start = (DtStart) component.getProperty(Property.DTSTART);

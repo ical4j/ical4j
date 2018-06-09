@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
@@ -39,6 +38,7 @@ import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -48,7 +48,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * for constant properties that you don't want modified.
  * @author Ben Fortuna
  */
-public class ParameterList implements Serializable {
+public class ParameterList implements Serializable, Iterable<Parameter> {
 
     private static final long serialVersionUID = -1913059830016450169L;
 
@@ -81,14 +81,16 @@ public class ParameterList implements Serializable {
      * @param unmodifiable indicates whether the list should be mutable
      * @throws URISyntaxException where a parameter in the list specifies an invalid URI value
      */
-    public ParameterList(final ParameterList list, final boolean unmodifiable)
-            throws URISyntaxException {
+    public ParameterList(final ParameterList list, final boolean unmodifiable) {
     	
         final List<Parameter> parameterList = new CopyOnWriteArrayList<Parameter>();
-        for (final Iterator<Parameter> i = list.iterator(); i.hasNext();) {
-            final Parameter parameter = i.next();
-            parameterList.add(parameter.copy());
-        }
+        list.forEach(parameter -> {
+            try {
+                parameterList.add(parameter.copy());
+            } catch (URISyntaxException e) {
+                throw new IllegalArgumentException(e);
+            }
+        });
         if (unmodifiable) {
             parameters = Collections.unmodifiableList(parameterList);
         }
@@ -114,10 +116,10 @@ public class ParameterList implements Serializable {
      * @param aName name of the parameter
      * @return the first matching parameter or null if no matching parameters
      */
-    public final Parameter getParameter(final String aName) {
+    public final <T extends Parameter> T getParameter(final String aName) {
         for (final Parameter p : parameters) {
             if (aName.equalsIgnoreCase(p.getName())) {
-                return p;
+                return (T) p;
             }
         }
         return null;
@@ -159,8 +161,8 @@ public class ParameterList implements Serializable {
      * @return true if successfully added to this list
      */
     public final boolean replace(final Parameter parameter) {
-        for (final Iterator<Parameter> i = getParameters(parameter.getName()).iterator(); i.hasNext();) {
-            remove(i.next());
+        for (Parameter parameter1 : getParameters(parameter.getName())) {
+            remove(parameter1);
         }
         return add(parameter);
     }
@@ -214,7 +216,7 @@ public class ParameterList implements Serializable {
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof ParameterList) {
             final ParameterList p = (ParameterList) arg0;
-            return ObjectUtils.equals(parameters, p.parameters);
+            return Objects.equals(parameters, p.parameters);
         }
         return super.equals(arg0);
     }

@@ -96,12 +96,8 @@ public class CalendarOutputter extends AbstractOutputter {
             calendar.validate();
         }
 
-        final FoldingWriter writer = new FoldingWriter(out, foldLength);
-        try {
+        try (FoldingWriter writer = new FoldingWriter(out, foldLength)) {
             writer.write(calendar.toString());
-        }
-        finally {
-            writer.close();
         }
     }
 }
