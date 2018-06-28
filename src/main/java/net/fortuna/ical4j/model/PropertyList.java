@@ -36,7 +36,6 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -83,9 +82,7 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      */
     public final String toString() {
         final StringBuilder sb = new StringBuilder();
-        for (final Iterator<T> i = iterator(); i.hasNext();) {
-            sb.append(i.next().toString());
-        }
+        forEach(t -> sb.append(t.toString()));
         return sb.toString();
     }
 

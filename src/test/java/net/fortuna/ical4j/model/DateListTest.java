@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.ParseException;
-
-import net.fortuna.ical4j.model.parameter.Value;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.parameter.Value;
+
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -87,6 +87,7 @@ public class DateListTest extends TestCase {
         suite.addTest(new DateListTest(new DateList(), 0));
         suite.addTest(new DateListTest(new Date().toString(), Value.DATE, 1));
         suite.addTest(new DateListTest(new DateTime().toString(), Value.DATE_TIME, 1));
+        suite.addTest(new DateListTest(new DateTime(123).toString() + "," + new DateTime(999).toString(), Value.DATE_TIME, 2));
         return suite;
     }
 }

@@ -7,15 +7,12 @@ import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.*;
+import net.fortuna.ical4j.util.Configurator;
+import net.fortuna.ical4j.util.JCacheTimeZoneCache;
+import net.fortuna.ical4j.util.ResourceLoader;
+import net.fortuna.ical4j.util.TimeZoneCache;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.LoggerFactory;
-import org.threeten.bp.*;
-import org.threeten.bp.Period;
-import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.temporal.TemporalAdjusters;
-import org.threeten.bp.zone.ZoneOffsetTransition;
-import org.threeten.bp.zone.ZoneOffsetTransitionRule;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -23,6 +20,12 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
+import java.time.*;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.time.zone.ZoneOffsetTransition;
+import java.time.zone.ZoneOffsetTransitionRule;
 import java.util.*;
 import java.util.TimeZone;
 
@@ -45,9 +48,7 @@ public class TimeZoneLoader {
     private static final Standard NO_TRANSITIONS;
 
     static {
-        for(String timezoneId : net.fortuna.ical4j.model.TimeZone.getAvailableIDs() ){
-            TIMEZONE_DEFINITIONS.add(timezoneId);
-        }
+        TIMEZONE_DEFINITIONS.addAll(Arrays.asList(net.fortuna.ical4j.model.TimeZone.getAvailableIDs()));
 
         NO_TRANSITIONS = new Standard();
         TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(0));
@@ -175,12 +176,7 @@ public class TimeZoneLoader {
 
         if (!zoneId.getRules().getTransitions().isEmpty()) {
             Collections.min(zoneId.getRules().getTransitions(),
-                    new Comparator<ZoneOffsetTransition>() {
-                        @Override
-                        public int compare(ZoneOffsetTransition z1, ZoneOffsetTransition z2) {
-                            return z1.getDateTimeBefore().compareTo(z2.getDateTimeBefore());
-                        }
-                    });
+                    Comparator.comparing(ZoneOffsetTransition::getDateTimeBefore));
         }
 
         LocalDateTime startDate = null;
@@ -217,8 +213,7 @@ public class TimeZoneLoader {
 
             weekdayIndexInMonth = weekdayIndexInMonth >= 3 ? weekdayIndexInMonth - allDaysOfWeek.size() : weekdayIndexInMonth;
 
-            String rruleTemplate = RRULE_TPL;
-            String rruleText = String.format(rruleTemplate, transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
+            String rruleText = String.format(RRULE_TPL, transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
 
             try {
                 TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(transitionRule.getOffsetBefore().getTotalSeconds() * 1000L));
@@ -248,11 +243,7 @@ public class TimeZoneLoader {
         for (ZoneOffsetTransition zoneTransitionRule : zoneId.getRules().getTransitions()) {
             ZoneOffsetKey offfsetKey = ZoneOffsetKey.of(zoneTransitionRule.getOffsetBefore(), zoneTransitionRule.getOffsetAfter());
 
-            Set<ZoneOffsetTransition> transitionRulesForOffset = zoneTransitionsByOffsets.get(offfsetKey);
-            if (transitionRulesForOffset == null) {
-                transitionRulesForOffset = new HashSet<ZoneOffsetTransition>(1);
-                zoneTransitionsByOffsets.put(offfsetKey, transitionRulesForOffset);
-            }
+            Set<ZoneOffsetTransition> transitionRulesForOffset = zoneTransitionsByOffsets.computeIfAbsent(offfsetKey, k -> new HashSet<ZoneOffsetTransition>(1));
             transitionRulesForOffset.add(zoneTransitionRule);
         }
 
@@ -280,13 +271,8 @@ public class TimeZoneLoader {
     }
 
     private static TimeZoneCache cacheInit() {
-        net.fortuna.ical4j.util.Optional<TimeZoneCache> property = Configurator.getObjectProperty(TZ_CACHE_IMPL);
-        return property.orElseGet(new Supplier<TimeZoneCache>() {
-            @Override
-            public TimeZoneCache get() {
-                return new JCacheTimeZoneCache();
-            }
-        });
+        Optional<TimeZoneCache> property = Configurator.getObjectProperty(TZ_CACHE_IMPL);
+        return property.orElseGet(JCacheTimeZoneCache::new);
     }
 
     private static class ZoneOffsetKey {

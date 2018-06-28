@@ -125,11 +125,10 @@ public class Attach extends Property {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws IOException        when there is an error reading the binary stream
      * @throws URISyntaxException where the specified string is not a valid uri
      */
     public Attach(final ParameterList aList, final String aValue)
-            throws IOException, URISyntaxException {
+            throws URISyntaxException {
         super(ATTACH, aList, new Factory());
         setValue(aValue);
     }
@@ -223,10 +222,9 @@ public class Attach extends Property {
      * location to binary data and is stored as such.
      *
      * @param aValue a string encoded binary or URI value
-     * @throws IOException        where binary data cannot be decoded
      * @throws URISyntaxException where the specified value is not a valid URI
      */
-    public final void setValue(final String aValue) throws IOException,
+    public final void setValue(final String aValue) throws
             URISyntaxException {
 
         // determine if ATTACH is a URI or an embedded
@@ -236,7 +234,7 @@ public class Attach extends Property {
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(
-                                (Encoding) getParameter(Parameter.ENCODING));
+                                getParameter(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
@@ -263,14 +261,11 @@ public class Attach extends Property {
             try {
                 final BinaryEncoder encoder = EncoderFactory.getInstance()
                         .createBinaryEncoder(
-                                (Encoding) getParameter(Parameter.ENCODING));
+                                getParameter(Parameter.ENCODING));
                 return new String(encoder.encode(getBinary()));
-            } catch (UnsupportedEncodingException uee) {
+            } catch (UnsupportedEncodingException | EncoderException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
-            } catch (EncoderException ee) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error encoding binary data", ee);
             }
         }
         return null;

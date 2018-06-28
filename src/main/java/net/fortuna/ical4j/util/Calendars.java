@@ -44,6 +44,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -119,10 +120,7 @@ public final class Calendars {
      * @return a calendar containing the specified component
      */
     public static Calendar wrap(final CalendarComponent... component) {
-        final ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
-        for (CalendarComponent c : component) {
-            components.add(c);
-        }
+        final ComponentList<CalendarComponent> components = new ComponentList<>(Arrays.asList(component));
         return new Calendar(components);
     }
     
@@ -150,7 +148,7 @@ public final class Calendars {
                 continue;
             }
             
-            final Uid uid = (Uid) c.getProperty(Property.UID);
+            final Uid uid = c.getProperty(Property.UID);
             
             Calendar uidCal = calendars.get(uid);
             if (uidCal == null) {
@@ -163,7 +161,7 @@ public final class Calendars {
             }
             
             for (final Property p : c.getProperties()) {
-                final TzId tzid = (TzId) p.getParameter(Parameter.TZID);
+                final TzId tzid = p.getParameter(Parameter.TZID);
                 if (tzid != null) {
                     final VTimeZone timezone = timezones.getComponent(tzid.getValue());
                     if (!uidCal.getComponents().contains(timezone)) {
@@ -173,7 +171,7 @@ public final class Calendars {
             }
             uidCal.getComponents().add(c);
         }
-        return calendars.values().toArray(new Calendar[calendars.values().size()]);
+        return calendars.values().toArray(new Calendar[0]);
     }
     
     /**
@@ -207,7 +205,7 @@ public final class Calendars {
     public static String getContentType(Calendar calendar, Charset charset) {
         final StringBuilder b = new StringBuilder("text/calendar");
         
-        final Method method = (Method) calendar.getProperty(Property.METHOD);
+        final Method method = calendar.getProperty(Property.METHOD);
         if (method != null) {
             b.append("; method=");
             b.append(method.getValue());

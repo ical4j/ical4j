@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.filter;
 
-import org.apache.commons.collections4.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * $Id$
@@ -73,6 +73,7 @@ public class Filter<T> {
     /**
      * @param rules one or more rules that are applied by this filter
      */
+    @SafeVarargs
     public Filter(Predicate<T>... rules) {
         this(rules, MATCH_ANY);
     }
@@ -123,7 +124,7 @@ public class Filter<T> {
         List<T> temp = new ArrayList<T>();
         for (int n = 0; n < getRules().length; n++) {
             for (final T o : list) {
-                if (getRules()[n].evaluate(o)) {
+                if (getRules()[n].test(o)) {
                     temp.add(o);
                 }
             }
@@ -137,7 +138,7 @@ public class Filter<T> {
         final List<T> matches = new ArrayList<T>();
         for (T o : c) {
             for (int n = 0; n < getRules().length; n++) {
-                if (getRules()[n].evaluate(o)) {
+                if (getRules()[n].test(o)) {
                     matches.add(o);
                     break;
                 }
@@ -170,7 +171,7 @@ public class Filter<T> {
      */
     @SuppressWarnings("unchecked")
     public final Predicate<T>[] getRules() {
-        return rules.toArray(new Predicate[rules.size()]);
+        return rules.toArray(new Predicate[0]);
     }
 
     /**

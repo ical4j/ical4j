@@ -34,7 +34,8 @@ package net.fortuna.ical4j.filter;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
-import org.apache.commons.collections4.Predicate;
+
+import java.util.function.Predicate;
 
 /**
  * $Id$
@@ -74,7 +75,7 @@ public class HasPropertyRule<T extends Component> implements Predicate<T> {
     /**
      * {@inheritDoc}
      */
-    public final boolean evaluate(final Component component) {
+    public final boolean test(final Component component) {
         boolean match = false;
         final PropertyList<Property> properties = component.getProperties(property.getName());
         for (final Property p : properties) {

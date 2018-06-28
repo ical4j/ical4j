@@ -360,6 +360,6 @@ public class Period extends DateRange implements Comparable<Period> {
      */
     public final int hashCode() {
         return new HashCodeBuilder().append(getStart())
-            .append((duration == null) ? (Object) getEnd() : duration).toHashCode();
+            .append((duration == null) ? getEnd() : duration).toHashCode();
     }
 }

@@ -31,8 +31,7 @@
  */
 package net.fortuna.ical4j.model.component
 
-import groovy.util.FactoryBuilderSupport;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.PropertyList
 
 /**
  * @author fortuna
@@ -47,7 +46,7 @@ class VTimeZoneFactory extends AbstractComponentFactory{
              timeZone = (VTimeZone) value
          }
          else {
-             timeZone = super.newInstance(builder, name, value, attributes);
+             timeZone = super.newInstance(builder, name, value, attributes)
          }
          return timeZone
      }

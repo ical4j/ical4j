@@ -255,10 +255,10 @@ public abstract class Parameter extends Content {
      * @return new parameter
      * @throws URISyntaxException where an invalid URI is encountered
      */
-    public Parameter copy() throws URISyntaxException {
+    public <T extends Parameter> T copy() throws URISyntaxException {
         if (factory == null) {
             throw new UnsupportedOperationException("No factory specified");
         }
-        return factory.createParameter(getValue());
+        return (T) factory.createParameter(getValue());
     }
 }
