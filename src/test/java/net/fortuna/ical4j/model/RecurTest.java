@@ -42,7 +42,8 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 /**
@@ -243,12 +244,11 @@ public class RecurTest extends TestCase {
         } else {
             cal = Calendar.getInstance();
         }
-         
-        for (Iterator<Date> i = dates.iterator(); i.hasNext();) {
-            Date recurrence = i.next();
-            cal.setTime(recurrence);
+
+        dates.forEach(date -> {
+            cal.setTime(date);
             assertEquals(expectedCalendarValue, cal.get(calendarField));
-        }
+        });
     }
 
     /**
@@ -278,10 +278,9 @@ public class RecurTest extends TestCase {
      */
     public void testGetDatesTimeZone() {
         DateList dates = recur.getDates(periodStart, periodEnd, value);
-        for (Iterator i = dates.iterator(); i.hasNext();) {
-            DateTime recurrence = (DateTime) i.next();
-            assertEquals(expectedTimeZone, recurrence.getTimeZone());
-        }
+        dates.forEach(date -> {
+            assertEquals(expectedTimeZone, ((DateTime) date).getTimeZone());
+        });
     }
     
     /**

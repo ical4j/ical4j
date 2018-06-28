@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -57,18 +56,14 @@ public class IndexedPropertyList {
      */
     public IndexedPropertyList(final PropertyList<Property> list, final String parameterName) {
         final Map<String, PropertyList<Property>> indexedProperties = new HashMap<String, PropertyList<Property>>();
-        for (final Iterator<Property> i = list.iterator(); i.hasNext();) {
-            final Property property = (Property) i.next();
-            for (final Iterator<Parameter> j = property.getParameters(parameterName).iterator(); j.hasNext();) {
-                final Parameter parameter = (Parameter) j.next();
-                PropertyList<Property> properties = indexedProperties.get(parameter.getValue());
-                if (properties == null) {
-                    properties = new PropertyList<Property>();
-                    indexedProperties.put(parameter.getValue(), properties);
-                }
-                properties.add(property);
+        list.forEach(property -> property.getParameters(parameterName).forEach(parameter -> {
+            PropertyList<Property> properties = indexedProperties.get(parameter.getValue());
+            if (properties == null) {
+                properties = new PropertyList<Property>();
+                indexedProperties.put(parameter.getValue(), properties);
             }
-        }
+            properties.add(property);
+        }));
         this.index = Collections.unmodifiableMap(indexedProperties);
     }
     
@@ -98,7 +93,7 @@ public class IndexedPropertyList {
     public Property getProperty(final String paramValue) {
         final PropertyList<Property> properties = getProperties(paramValue);
         if (!properties.isEmpty()) {
-            return (Property) properties.iterator().next();
+            return properties.iterator().next();
         }
         return null;
     }

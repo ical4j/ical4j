@@ -58,7 +58,7 @@ public abstract class AbstractContentFactory<T> implements Serializable {
      * Default constructor.
      */
     public AbstractContentFactory(ServiceLoader<T> factoryLoader) {
-        extendedFactories = new HashMap<String, T>();
+        extendedFactories = new HashMap<>();
         this.factoryLoader = factoryLoader;
     }
 

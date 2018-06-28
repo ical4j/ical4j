@@ -151,7 +151,20 @@ class DateTimeSpec extends Specification {
 	   dateTimeString		| timezone
 	   '20110327T010000'	| tzRegistry.getTimeZone('Europe/London')
    }
-   
+
+   @Unroll
+   def 'verify parse success for valid dates: #dateTimeString'() {
+	   when:
+	   def dt = new DateTime(dateTimeString, timezone)
+
+	   then:
+	   dt as String == dateTimeString
+
+	   where:
+	   dateTimeString		| timezone
+	   '20180319T061500'	| tzRegistry.getTimeZone('Europe/Dublin')
+   }
+
    def 'test conversion of UTC date-time to local time'() {
 	   setup: 'Override default timezone for test consistency'
 	   def originalTimezone = TimeZone.default

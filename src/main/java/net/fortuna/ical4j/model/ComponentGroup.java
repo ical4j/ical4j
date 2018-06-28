@@ -4,10 +4,9 @@ import net.fortuna.ical4j.filter.Filter;
 import net.fortuna.ical4j.filter.HasPropertyRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Uid;
-import org.apache.commons.collections4.Predicate;
-import org.apache.commons.collections4.PredicateUtils;
 
 import java.util.Collections;
+import java.util.function.Predicate;
 
 /**
  * Support for operations applicable to a group of components. Typically this class is used to manage
@@ -20,10 +19,6 @@ public class ComponentGroup<T extends Component> {
 
     private final ComponentList<T> components;
 
-    private final Uid uid;
-
-    private final RecurrenceId recurrenceId;
-
     private final Filter<T> componentFilter;
 
     public ComponentGroup(ComponentList<T> components, Uid uid) {
@@ -32,13 +27,10 @@ public class ComponentGroup<T extends Component> {
 
     public ComponentGroup(ComponentList<T> components, Uid uid, RecurrenceId recurrenceId) {
         this.components = components;
-        this.uid = uid;
-        this.recurrenceId = recurrenceId;
 
         Predicate<T> componentPredicate;
         if (recurrenceId != null) {
-            componentPredicate = PredicateUtils.andPredicate(new HasPropertyRule<T>(uid),
-                    new HasPropertyRule<T>(recurrenceId));
+            componentPredicate = new HasPropertyRule<T>(uid).and(new HasPropertyRule<T>(recurrenceId));
         } else {
             componentPredicate = new HasPropertyRule<T>(uid);
         }
@@ -62,7 +54,7 @@ public class ComponentGroup<T extends Component> {
      */
     public T getLatestRevision() {
         ComponentList<T> revisions = getRevisions();
-        Collections.sort(revisions, new ComponentSequenceComparator());
+        revisions.sort(new ComponentSequenceComparator());
         Collections.reverse(revisions);
         return revisions.iterator().next();
     }

@@ -49,7 +49,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.Iterator;
 
 /**
  * $Id: VEventTest.java [28/09/2004]
@@ -402,16 +401,14 @@ public class VEventTest extends CalendarComponentTest {
         endCal.setTime(start);
         endCal.add(Calendar.WEEK_OF_YEAR, 4);
 //        Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
-        for (Iterator<CalendarComponent> i = calendar.getComponents().iterator(); i.hasNext(); ) {
-            Component c = i.next();
+        calendar.getComponents().forEach(calendarComponent -> {
+            if (calendarComponent instanceof VEvent) {
+                PeriodList consumed = ((VEvent) calendarComponent).getConsumedTime(start, new Date(endCal.getTime().getTime()));
 
-            if (c instanceof VEvent) {
-                PeriodList consumed = ((VEvent) c).getConsumedTime(start, new Date(endCal.getTime().getTime()));
-
-                log.debug("Event [" + c + "]");
+                log.debug("Event [" + calendarComponent + "]");
                 log.debug("Consumed time [" + consumed + "]");
             }
-        }
+        });
     }
 
     public final void testGetConsumedTime3() throws Exception {
@@ -758,15 +755,13 @@ public class VEventTest extends CalendarComponentTest {
             log.info("Sample [" + testFiles[i] + "]");
             net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFiles[i]);
             if (Method.PUBLISH.equals(calendar.getProperty(Property.METHOD))) {
-                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext(); ) {
-                    VEvent event1 = (VEvent) it.next();
-                    suite.addTest(new VEventTest("testPublishValidation", event1));
-                }
+                calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
+                    suite.addTest(new VEventTest("testPublishValidation", (VEvent) calendarComponent));
+                });
             } else if (Method.REQUEST.equals(calendar.getProperty(Property.METHOD))) {
-                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext(); ) {
-                    VEvent event1 = (VEvent) it.next();
-                    suite.addTest(new VEventTest("testRequestValidation", event1));
-                }
+                calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
+                    suite.addTest(new VEventTest("testRequestValidation", (VEvent) calendarComponent));
+                });
             }
         }
 

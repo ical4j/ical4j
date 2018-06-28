@@ -35,7 +35,7 @@ class HasPropertyRuleTest extends Specification {
         }
 
         expect: 'a property rule matches when applied'
-        rule.evaluate(event)
+        rule.test(event)
 
         where:
         rule << [new HasPropertyRule<VEvent>(organiser), new HasPropertyRule<VEvent>(attendee)]

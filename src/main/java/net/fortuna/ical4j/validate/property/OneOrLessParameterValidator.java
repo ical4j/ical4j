@@ -4,8 +4,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,11 +21,6 @@ public class OneOrLessParameterValidator implements Validator<Property> {
 
     @Override
     public void validate(final Property target) throws ValidationException {
-        CollectionUtils.forAllDo(parameters, new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                ParameterValidator.getInstance().assertOneOrLess(input, target.getParameters());
-            }
-        });
+        parameters.forEach(parameter -> ParameterValidator.getInstance().assertOneOrLess(parameter, target.getParameters()));
     }
 }

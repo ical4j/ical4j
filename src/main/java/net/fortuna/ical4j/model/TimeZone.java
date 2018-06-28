@@ -64,7 +64,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     public TimeZone(final VTimeZone vTimeZone) {
         this.vTimeZone = vTimeZone;
-        final TzId tzId = (TzId) vTimeZone.getProperty(Property.TZID);
+        final TzId tzId = vTimeZone.getProperty(Property.TZID);
         setID(tzId.getValue());
         this.rawOffset = getRawOffset(vTimeZone);
     }
@@ -95,7 +95,7 @@ public class TimeZone extends java.util.TimeZone {
 
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));
         if (observance != null) {
-            final TzOffsetTo offset = (TzOffsetTo) observance.getProperty(Property.TZOFFSETTO);
+            final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);
             return (int) offset.getOffset().getOffset();
         }
         return 0;
@@ -107,7 +107,7 @@ public class TimeZone extends java.util.TimeZone {
     public int getOffset(long date) {
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
         if (observance != null) {
-            final TzOffsetTo offset = (TzOffsetTo) observance.getProperty(Property.TZOFFSETTO);
+            final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);
             if (offset.getOffset().getOffset() < getRawOffset()) {
                 return getRawOffset();
             } else {
@@ -135,7 +135,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     public final boolean inDaylightTime(final Date date) {
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
-        return (observance != null && observance instanceof Daylight);
+        return (observance instanceof Daylight);
     }
 
     /**
@@ -190,7 +190,7 @@ public class TimeZone extends java.util.TimeZone {
             latestSeasonalTime = seasonalTimes.get(0);
         }
         if (latestSeasonalTime != null) {
-            final TzOffsetTo offsetTo = (TzOffsetTo) latestSeasonalTime.getProperty(Property.TZOFFSETTO);
+            final TzOffsetTo offsetTo = latestSeasonalTime.getProperty(Property.TZOFFSETTO);
             if (offsetTo != null) {
                 return (int) offsetTo.getOffset().getOffset();
             }
