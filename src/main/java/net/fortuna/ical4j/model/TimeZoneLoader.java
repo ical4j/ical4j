@@ -272,7 +272,7 @@ public class TimeZoneLoader {
 
     private static TimeZoneCache cacheInit() {
         Optional<TimeZoneCache> property = Configurator.getObjectProperty(TZ_CACHE_IMPL);
-        return property.orElseGet(JCacheTimeZoneCache::new);
+        return property.orElseGet(() -> new JCacheTimeZoneCache());
     }
 
     private static class ZoneOffsetKey {
