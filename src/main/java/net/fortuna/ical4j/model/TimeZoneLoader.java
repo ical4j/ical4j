@@ -8,7 +8,6 @@ import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Configurator;
-import net.fortuna.ical4j.util.JCacheTimeZoneCache;
 import net.fortuna.ical4j.util.ResourceLoader;
 import net.fortuna.ical4j.util.TimeZoneCache;
 import org.apache.commons.lang3.Validate;
@@ -40,6 +39,8 @@ public class TimeZoneLoader {
     private static final String UPDATE_PROXY_PORT = "net.fortuna.ical4j.timezone.update.proxy.port";
 
     private static final String TZ_CACHE_IMPL = "net.fortuna.ical4j.timezone.cache.impl";
+
+    private static final String DEFAULT_TZ_CACHE_IMPL = "net.fortuna.ical4j.util.JCacheTimeZoneCache";
 
     private static Proxy proxy = null;
     private static final Set<String> TIMEZONE_DEFINITIONS = new HashSet<String>();
@@ -272,7 +273,13 @@ public class TimeZoneLoader {
 
     private static TimeZoneCache cacheInit() {
         Optional<TimeZoneCache> property = Configurator.getObjectProperty(TZ_CACHE_IMPL);
-        return property.orElseGet(() -> new JCacheTimeZoneCache());
+        return property.orElseGet(() -> {
+            try {
+                return (TimeZoneCache) Class.forName(DEFAULT_TZ_CACHE_IMPL).newInstance();
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private static class ZoneOffsetKey {
