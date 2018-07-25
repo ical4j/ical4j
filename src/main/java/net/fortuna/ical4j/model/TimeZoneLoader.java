@@ -11,13 +11,13 @@ import net.fortuna.ical4j.util.*;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.*;
-import org.threeten.bp.Period;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.temporal.TemporalAdjusters;
 import org.threeten.bp.zone.ZoneOffsetTransition;
 import org.threeten.bp.zone.ZoneOffsetTransitionRule;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
@@ -95,15 +95,17 @@ public class TimeZoneLoader {
         if (!cache.containsId(id)) {
             final URL resource = ResourceLoader.getResource(resourcePrefix + id + ".ics");
             if (resource != null) {
-                final CalendarBuilder builder = new CalendarBuilder();
-                final Calendar calendar = builder.build(resource.openStream());
-                final VTimeZone vTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
-                // load any available updates for the timezone.. can be explicility disabled via configuration
-                if (!"false".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("true"))) {
-                    return updateDefinition(vTimeZone);
-                }
-                if (vTimeZone != null) {
-                    cache.putIfAbsent(id, vTimeZone);
+                try (InputStream in = resource.openStream()) {
+                    final CalendarBuilder builder = new CalendarBuilder();
+                    final Calendar calendar = builder.build(in);
+                    final VTimeZone vTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
+                    // load any available updates for the timezone.. can be explicility disabled via configuration
+                    if (!"false".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("true"))) {
+                        return updateDefinition(vTimeZone);
+                    }
+                    if (vTimeZone != null) {
+                        cache.putIfAbsent(id, vTimeZone);
+                    }
                 }
             } else {
                 return generateTimezoneForId(id);
