@@ -7,7 +7,10 @@ import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.Standard;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.*;
+import net.fortuna.ical4j.util.Configurator;
+import net.fortuna.ical4j.util.ResourceLoader;
+import net.fortuna.ical4j.util.Supplier;
+import net.fortuna.ical4j.util.TimeZoneCache;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.LoggerFactory;
 import org.threeten.bp.*;
@@ -38,6 +41,10 @@ public class TimeZoneLoader {
     private static final String UPDATE_PROXY_PORT = "net.fortuna.ical4j.timezone.update.proxy.port";
 
     private static final String TZ_CACHE_IMPL = "net.fortuna.ical4j.timezone.cache.impl";
+
+    private static final String DEFAULT_TZ_CACHE_IMPL = "net.fortuna.ical4j.util.JCacheTimeZoneCache";
+
+    private static final String MESSAGE_MISSING_DEFAULT_TZ_CACHE_IMPL = "Error loading default cache implementation. Please ensure the JCache API dependency is included in the classpath, or override the cache implementation (e.g. via configuration: net.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache)";
 
     private static Proxy proxy = null;
     private static final Set<String> TIMEZONE_DEFINITIONS = new HashSet<String>();
@@ -287,7 +294,11 @@ public class TimeZoneLoader {
         return property.orElseGet(new Supplier<TimeZoneCache>() {
             @Override
             public TimeZoneCache get() {
-                return new JCacheTimeZoneCache();
+                try {
+                    return (TimeZoneCache) Class.forName(DEFAULT_TZ_CACHE_IMPL).newInstance();
+                } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | NoClassDefFoundError e) {
+                    throw new RuntimeException(MESSAGE_MISSING_DEFAULT_TZ_CACHE_IMPL, e);
+                }
             }
         });
     }
