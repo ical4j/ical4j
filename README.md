@@ -78,7 +78,8 @@ standard.
 
 ### System requirements
 
- - Java 7 or later
+ - Version 3.x - Java 8 or later
+ - Version 2.x - Java 7 or later
 
 ### Dependencies
 
