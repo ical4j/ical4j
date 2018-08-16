@@ -294,6 +294,7 @@ public class Attach extends Property {
         this.binary = null;
     }
 
+    @PropertyFactory.Service
     public static class Factory extends Content.Factory implements PropertyFactory<Property> {
         private static final long serialVersionUID = 1L;
 

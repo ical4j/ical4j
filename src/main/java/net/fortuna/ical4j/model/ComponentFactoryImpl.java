@@ -33,10 +33,10 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.XComponent;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.java.sezpoz.Index;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.util.ServiceLoader;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -52,7 +52,7 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
      * Constructor made private to prevent instantiation.
      */
     public ComponentFactoryImpl() {
-        super(ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader()));
+        super(ComponentFactory.Service.class, ComponentFactory.class);
     }
 
     @Override
@@ -148,6 +148,6 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
      */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        this.factoryLoader = ServiceLoader.load(ComponentFactory.class, ComponentFactory.class.getClassLoader());
+        this.factoryLoader = Index.load(ComponentFactory.Service.class, ComponentFactory.class);
     }
 }

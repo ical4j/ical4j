@@ -342,6 +342,7 @@ public class VAlarm extends CalendarComponent {
         return (Summary) getProperty(Property.SUMMARY);
     }
 
+    @ComponentFactory.Service
     public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {
 
         public Factory() {

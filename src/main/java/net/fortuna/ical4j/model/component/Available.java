@@ -182,6 +182,7 @@ public class Available extends Component {
         }
     }
 
+    @ComponentFactory.Service
     public static class Factory extends Content.Factory implements ComponentFactory<Available> {
 
         public Factory() {

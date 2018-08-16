@@ -77,6 +77,7 @@ dependencies {
     
     compile 'javax.cache:cache-api:1.0.0', optional
     compile 'org.codehaus.groovy:groovy-all:2.3.2', optional
+    compile 'net.java.sezpoz:sezpoz:1.13'
 
     compileOnly 'biz.aQute.bnd:bndlib:2.3.0'
 

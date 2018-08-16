@@ -86,6 +86,7 @@ public class Daylight extends Observance {
         super(DAYLIGHT, properties);
     }
 
+    @ComponentFactory.Service
     public static class Factory extends Content.Factory implements ComponentFactory<Daylight> {
 
         public Factory() {
