@@ -6,11 +6,13 @@ cache:
     #- $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 sudo: false
-dist: trusty
+dist: precise
 language: java
 jdk:
   - oraclejdk8
   - openjdk8
+  - oraclejdk7
+  - openjdk7
 services:
   - docker
 #before_install:
