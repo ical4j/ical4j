@@ -6,7 +6,6 @@ cache:
     #- $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 sudo: false
-dist: precise
 language: java
 jdk:
   - oraclejdk8
