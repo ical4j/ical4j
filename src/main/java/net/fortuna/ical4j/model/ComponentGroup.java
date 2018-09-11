@@ -12,7 +12,20 @@ import java.util.Collections;
 /**
  * Support for operations applicable to a group of components. Typically this class is used to manage
  * component revisions (whereby each revision is a separate component), and the resulting ouput of
- * such group functins.
+ * such group functions.
+ *
+ * Example - Find latest revision of an event:
+ *
+ * <pre>
+ *     Calendar calendar = ...
+ *     String uidString = ...
+ *
+ *     ComponentGroup<VEvent> group = new ComponentGroup(
+ *          calendar.getComponents(Component.VEVENT),
+ *          new Uid(uidString));
+ *
+ *     return group.getLatestRevision();
+ * </pre>
  *
  * Created by fortuna on 20/07/2017.
  */
