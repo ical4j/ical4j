@@ -644,6 +644,8 @@ public class VEvent extends CalendarComponent {
                     .getParameter(Parameter.VALUE)));
             if (dtStart.isUtc()) {
                 dtEnd.setUtc(true);
+            } else {
+                dtEnd.setTimeZone(dtStart.getTimeZone());
             }
         }
         return dtEnd;
