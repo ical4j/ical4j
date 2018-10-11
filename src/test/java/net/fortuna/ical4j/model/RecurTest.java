@@ -516,7 +516,18 @@ public class RecurTest extends TestCase {
 
         log.debug(dateList.toString());
     }
-    
+
+    public void testGetDailyByMonth() throws ParseException {
+        Date seed = new Date("20181010");
+        Date start = new Date("20181011");
+        Date end = new Date("20181231");
+        String rule = "FREQ=DAILY;INTERVAL=14;WKST=MO;BYMONTH=10,12";
+        Recur recur = new Recur(rule);
+        DateList dates = recur.getDates(seed, start, end, Value.DATE);
+
+        log.debug(dates.toString());
+    }
+
     /**
      * 
      */
@@ -832,13 +843,22 @@ public class RecurTest extends TestCase {
         recur = new Recur("FREQ=DAILY;COUNT=3;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         suite.addTest(new RecurTest(recur, new DateTime("20131215T000000Z"),
                 new DateTime("20131215T000000Z"), new DateTime("20180101T120000Z"), Value.DATE_TIME, 3));
-        
+
+        recur = new Recur("FREQ=DAILY;INTERVAL=14;WKST=MO;BYMONTH=10,12");
+        suite.addTest(new RecurTest(recur, new Date("20181010"),
+                new Date("20181011"), new Date("20181231"), Value.DATE, 3));
+
+        recur = new Recur("FREQ=DAILY;INTERVAL=22;WKST=MO;BYMONTH=10,11,12");
+        suite.addTest(new RecurTest(recur, new Date("20181010"),
+                new Date("20181011"), new Date("20181231"), Value.DATE, 3));
+
         // rrule with bymonth and count. Should return correct number of occurrences near the end of its perioud.
         recur = new Recur("FREQ=MONTHLY;COUNT=3;INTERVAL=1;BYMONTH=1,9,10,12;BYMONTHDAY=12");
         suite.addTest(new RecurTest(recur, new DateTime("20150917T000000Z"),
                 new DateTime("20160101T000000Z"), new DateTime("20160201T000000Z"), Value.DATE, 1));
         suite.addTest(new RecurTest(recur, new DateTime("20150917T000000Z"),
                 new DateTime("20160201T000000Z"), new DateTime("20160301T000000Z"), Value.DATE, 0));
+
 
         // rrule with bymonth, byday and bysetpos. Issue #39
         recur = new Recur("FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYMONTH=2,3,9,10;BYMONTHDAY=28,29,30,31;BYSETPOS=-1");

@@ -886,9 +886,26 @@ public class Recur implements Serializable {
             final Calendar freqEnd = getCalendarInstance(date, true);
             increment(freqEnd);
             for (final Integer month : getMonthList()) {
+
+
+
+                if(monthlyDates.contains(date)) {
+                    continue;
+                }
+
+                if("DAILY".equals(this.frequency)) {
+                    final Calendar preRoll = getCalendarInstance(date, true);
+                    preRoll.roll(Calendar.MONTH, (month - 1) - cal.get(Calendar.MONTH));
+
+                    if (preRoll.before(cal)) {
+                        continue;
+                    }
+                }
+
                 // Java months are zero-based..
-//                cal.set(Calendar.MONTH, month.intValue() - 1);
+                // cal.set(Calendar.MONTH, month.intValue() - 1);
                 cal.roll(Calendar.MONTH, (month - 1) - cal.get(Calendar.MONTH));
+                
                 if (cal.after(freqEnd)) {
                     break; // Do not break out of the FREQ-defined boundary
                 }

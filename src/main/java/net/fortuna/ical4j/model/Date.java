@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -196,5 +197,15 @@ public class Date extends Iso8601 {
         final DateFormat parseFormat = new SimpleDateFormat(pattern);
         parseFormat.setTimeZone(TimeZones.getDateTimeZone());
         setTime(parseFormat.parse(value).getTime());
+    }
+
+    public boolean equals(final Object arg0) {
+        // TODO: what about compareTo, before, after, etc.?
+
+        if (arg0 instanceof Date) {
+            return new EqualsBuilder().append(getTime(), ((Date) arg0).getTime())
+                    .isEquals();
+        }
+        return super.equals(arg0);
     }
 }
