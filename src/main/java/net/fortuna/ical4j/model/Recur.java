@@ -887,8 +887,6 @@ public class Recur implements Serializable {
             increment(freqEnd);
             for (final Integer month : getMonthList()) {
 
-
-
                 if(monthlyDates.contains(date)) {
                     continue;
                 }
