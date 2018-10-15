@@ -473,6 +473,18 @@ public class VEventTest extends CalendarComponentTest {
     }
 
     /**
+     * A test to confirm that the end date is calculated correctly
+     * from a given start date and duration, even when timezone is specified.
+     */
+    public final void testEventEndDateWithTimeZone() throws ParseException {
+        TimeZone timezone = new TimeZoneRegistryImpl().getTimeZone("Asia/Seoul");
+        DateTime startDateTime = new DateTime("20181003T130000", timezone);
+        log.info("Start date: " + startDateTime);
+        VEvent event = new VEvent(startDateTime, new Dur(0, 1, 0, 0), "1 hour event");
+        assertEquals(new DateTime("20181003T140000", timezone), event.getEndDate().getDate());
+    }
+
+    /**
      * Test to ensure that EXDATE properties are correctly applied.
      *
      * @throws ParseException
