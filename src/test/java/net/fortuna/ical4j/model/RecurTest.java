@@ -852,6 +852,14 @@ public class RecurTest extends TestCase {
         suite.addTest(new RecurTest(recur, new Date("20181010"),
                 new Date("20181011"), new Date("20181231"), Value.DATE, 3));
 
+        recur = new Recur("FREQ=WEEKLY;INTERVAL=4;WKST=MO;BYMONTH=10,11,12");
+        suite.addTest(new RecurTest(recur, new Date("20181001"),
+                new Date("20181001"), new Date("20181231"), Value.DATE, 4));
+
+        recur = new Recur("FREQ=WEEKLY;INTERVAL=4;WKST=MO;BYMONTH=10,12");
+        suite.addTest(new RecurTest(recur, new Date("20181001"),
+                new Date("20181001"), new Date("20181231"), Value.DATE, 3));
+
         // rrule with bymonth and count. Should return correct number of occurrences near the end of its perioud.
         recur = new Recur("FREQ=MONTHLY;COUNT=3;INTERVAL=1;BYMONTH=1,9,10,12;BYMONTHDAY=12");
         suite.addTest(new RecurTest(recur, new DateTime("20150917T000000Z"),

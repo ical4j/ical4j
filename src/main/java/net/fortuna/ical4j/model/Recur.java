@@ -891,7 +891,7 @@ public class Recur implements Serializable {
                     continue;
                 }
 
-                if("DAILY".equals(this.frequency)) {
+                if("DAILY".equals(this.frequency) || "WEEKLY".equals(this.frequency)) {
                     final Calendar preRoll = getCalendarInstance(date, true);
                     preRoll.roll(Calendar.MONTH, (month - 1) - cal.get(Calendar.MONTH));
 
