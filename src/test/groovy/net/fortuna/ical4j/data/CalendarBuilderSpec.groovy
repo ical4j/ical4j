@@ -29,4 +29,24 @@ class CalendarBuilderSpec extends Specification {
         then: 'the result is as expected'
         calendar as String == cal2.replaceAll('\n', '\r\n')
     }
+
+    def 'test looping IcsParse'() {
+        given: 'malformed calendar data'
+        String badIcs =
+                "BEGIN:VCALENDAR\r\n" +
+                        "BEGIN:VEVENT\r\n" +
+                        "DTSTART:20180915T130000\r\n" +
+                        "DTEND:20180918T120000\r\n" +
+                        "LOCATION:somewhere\r\n" +
+                        "SUMMARY:Reservation 1234\r\n";
+
+        and: 'relaxed parsing is enabled'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
+
+        when: 'attempting to parse'
+        new CalendarBuilder().build(new ByteArrayInputStream(badIcs.getBytes("utf-8")));
+
+        then: 'expect thrown exception'
+        thrown(ParserException)
+    }
 }
