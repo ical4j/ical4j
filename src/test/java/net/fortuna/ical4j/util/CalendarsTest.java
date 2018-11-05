@@ -40,15 +40,11 @@ import net.fortuna.ical4j.model.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.NoSuchFileException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -137,7 +133,7 @@ public class CalendarsTest extends TestCase {
         try {
             Calendars.load(path);
             fail("Should throw FileNotFoundException");
-        } catch (FileNotFoundException fnfe) {
+        } catch (NoSuchFileException fnfe) {
             LOG.info("Caught exception: " + fnfe.getMessage());
         }
     }
