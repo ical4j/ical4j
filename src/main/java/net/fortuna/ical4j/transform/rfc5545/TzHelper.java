@@ -11,12 +11,9 @@ import net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.property.DateProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -56,52 +53,9 @@ class TzHelper {
         }
     }
 
-    static void correctTzParameterFrom(Property property) {
-        if (property.getParameter(Parameter.TZID) != null) {
-            String newTimezoneId = getCorrectedTimezoneFromTzParameter(property);
-            correctTzParameter(property, newTimezoneId);
-        }
-    }
-
-    static void correctTzParameterFrom(DateProperty property) {
-        if (property.getValue() != null && property.getValue().endsWith("Z")) {
-            property.getParameters().removeAll(Parameter.TZID);
-            return;
-        }
-        if (property.getParameter(Parameter.TZID) != null) {
-            String newTimezone = getCorrectedTimezoneFromTzParameter(property);
-            String value = property.getValue();
-            correctTzParameter(property, newTimezone);
-            if (newTimezone != null) {
-                property.setTimeZone(TIMEZONE_REGISTRY.getTimeZone(newTimezone));
-                try {
-                    property.setValue(value);
-                } catch (ParseException e) {
-                    LOG.warn("Failed to reset property value", e);
-                }
-            } else {
-                property.setUtc(true);
-            }
-        }
-    }
-
-    private static void correctTzParameter(Property property, String newTimezoneId) {
-        property.getParameters().removeAll(Parameter.TZID);
-        if (newTimezoneId != null) {
-            property.getParameters().add(new TzId(newTimezoneId));
-        }
-    }
-
     private static String getCorrectedTimezoneFromTzParameter(Property property) {
         String tzIdValue = property.getParameter(Parameter.TZID).getValue();
         return getCorrectedTimeZoneIdFrom(tzIdValue);
-    }
-
-    static void correctTzValueOf(net.fortuna.ical4j.model.property.TzId tzProperty) {
-        String validTimezone = getCorrectedTimeZoneIdFrom(tzProperty.getValue());
-        if (validTimezone != null) {
-            tzProperty.setValue(validTimezone);
-        }
     }
 
     /**

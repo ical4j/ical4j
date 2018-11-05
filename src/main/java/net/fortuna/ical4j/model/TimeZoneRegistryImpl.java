@@ -42,8 +42,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -66,42 +68,28 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
 
     private static final Map<String, TimeZone> DEFAULT_TIMEZONES = new ConcurrentHashMap<String, TimeZone>();
 
-    private static final Properties ALIASES = new Properties();
+    private static final List<TimeZoneAlias> ALIASES = new ArrayList<>();
 
     static {
-        InputStream aliasInputStream = null;
-        try {
-            aliasInputStream = ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias");
-            ALIASES.load(aliasInputStream);
+        try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.alias")) {
+            ALIASES.addAll(TimeZoneAlias.loadAliases(aliasInputStream));
         } catch (IOException ioe) {
             LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
                     "Error loading timezone aliases: " + ioe.getMessage());
-        } finally {
-            if (aliasInputStream != null) {
-                try {
-                    aliasInputStream.close();
-                } catch (IOException e) {
-                    LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
-                            "Error closing resource stream: " + e.getMessage());
-                }
-            }
         }
 
-        try {
-            aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias");
-        	ALIASES.load(aliasInputStream);
-        } catch (IOException | NullPointerException e) {
-            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).debug(
-        			"Error loading custom timezone aliases: " + e.getMessage());
-        } finally {
-            if (aliasInputStream != null) {
-                try {
-                    aliasInputStream.close();
-                } catch (IOException e) {
-                    LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
-                            "Error closing resource stream: " + e.getMessage());
-                }
-            }
+        try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream("tz.alias")) {
+            ALIASES.addAll(TimeZoneAlias.loadAliases(aliasInputStream));
+        } catch (IOException ioe) {
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                    "Error loading timezone aliases: " + ioe.getMessage());
+        }
+
+        try (InputStream aliasInputStream = ResourceLoader.getResourceAsStream("net/fortuna/ical4j/transform/rfc5545/msTimezones")) {
+            ALIASES.addAll(TimeZoneAlias.loadAliases(aliasInputStream));
+        } catch (IOException ioe) {
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).warn(
+                    "Error loading timezone aliases: " + ioe.getMessage());
         }
     }
 
@@ -169,9 +157,9 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             timezone = DEFAULT_TIMEZONES.get(id);
             if (timezone == null) {
                 // if timezone not found with identifier, try loading an alias..
-                final String alias = ALIASES.getProperty(id);
-                if (alias != null) {
-                    return getTimeZone(alias);
+                final Optional<String> alias = TimeZoneAlias.getTimeZoneIdFromAlias(ALIASES, id);
+                if (alias.isPresent()) {
+                    return getTimeZone(alias.get());
                 } else {
                     synchronized (DEFAULT_TIMEZONES) {
                         // check again as it may be loaded now..

@@ -69,6 +69,7 @@ class TimeZoneSpec extends Specification {
 		alias	| actual
 		'CET'	| 'Europe/Berlin'
 		'CEST'	| 'Europe/Berlin'
+		'W. Europe Standard Time'	| 'Etc/GMT+1'
 	}
 
     @Unroll
