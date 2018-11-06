@@ -11,6 +11,7 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.8.1'
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.7.3"
+    id "net.ltgt.errorprone" version "0.0.16"
 }
 
 apply plugin: 'java'
@@ -75,8 +76,8 @@ dependencies {
             'org.apache.commons:commons-lang3:3.6',
             'org.apache.commons:commons-collections4:4.1'
     
-    compile 'javax.cache:cache-api:1.0.0', optional
-    compile "org.codehaus.groovy:groovy-all:$groovyVersion", optional
+    implementation 'javax.cache:cache-api:1.0.0', optional
+    implementation "org.codehaus.groovy:groovy-all:$groovyVersion", optional
 
     compileOnly 'biz.aQute.bnd:bndlib:2.3.0'
 
