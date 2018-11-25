@@ -119,18 +119,17 @@ public class Attach extends Property {
      * Default constructor.
      */
     public Attach() {
-        super(ATTACH, PropertyFactoryImpl.getInstance());
+        super(ATTACH, new Factory());
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws IOException        when there is an error reading the binary stream
      * @throws URISyntaxException where the specified string is not a valid uri
      */
     public Attach(final ParameterList aList, final String aValue)
-            throws IOException, URISyntaxException {
-        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
+            throws URISyntaxException {
+        super(ATTACH, aList, new Factory());
         setValue(aValue);
     }
 
@@ -138,7 +137,7 @@ public class Attach extends Property {
      * @param data binary data
      */
     public Attach(final byte[] data) {
-        super(ATTACH, PropertyFactoryImpl.getInstance());
+        super(ATTACH, new Factory());
         // add required parameters..
         getParameters().add(Encoding.BASE64);
         getParameters().add(Value.BINARY);
@@ -150,7 +149,7 @@ public class Attach extends Property {
      * @param data  binary data
      */
     public Attach(final ParameterList aList, final byte[] data) {
-        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
+        super(ATTACH, aList, new Factory());
         this.binary = data;
     }
 
@@ -158,7 +157,7 @@ public class Attach extends Property {
      * @param aUri a URI
      */
     public Attach(final URI aUri) {
-        super(ATTACH, PropertyFactoryImpl.getInstance());
+        super(ATTACH, new Factory());
         this.uri = aUri;
     }
 
@@ -167,7 +166,7 @@ public class Attach extends Property {
      * @param aUri  a URI
      */
     public Attach(final ParameterList aList, final URI aUri) {
-        super(ATTACH, aList, PropertyFactoryImpl.getInstance());
+        super(ATTACH, aList, new Factory());
         this.uri = aUri;
     }
 
@@ -223,10 +222,9 @@ public class Attach extends Property {
      * location to binary data and is stored as such.
      *
      * @param aValue a string encoded binary or URI value
-     * @throws IOException        where binary data cannot be decoded
      * @throws URISyntaxException where the specified value is not a valid URI
      */
-    public final void setValue(final String aValue) throws IOException,
+    public final void setValue(final String aValue) throws
             URISyntaxException {
 
         // determine if ATTACH is a URI or an embedded
@@ -236,7 +234,7 @@ public class Attach extends Property {
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()
                         .createBinaryDecoder(
-                                (Encoding) getParameter(Parameter.ENCODING));
+                                getParameter(Parameter.ENCODING));
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
@@ -263,14 +261,11 @@ public class Attach extends Property {
             try {
                 final BinaryEncoder encoder = EncoderFactory.getInstance()
                         .createBinaryEncoder(
-                                (Encoding) getParameter(Parameter.ENCODING));
+                                getParameter(Parameter.ENCODING));
                 return new String(encoder.encode(getBinary()));
-            } catch (UnsupportedEncodingException uee) {
+            } catch (UnsupportedEncodingException | EncoderException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
                 log.error("Error encoding binary data", uee);
-            } catch (EncoderException ee) {
-                Logger log = LoggerFactory.getLogger(Attach.class);
-                log.error("Error encoding binary data", ee);
             }
         }
         return null;
@@ -294,7 +289,7 @@ public class Attach extends Property {
         this.binary = null;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Property> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {

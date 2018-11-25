@@ -31,12 +31,13 @@
  */
 package net.fortuna.ical4j.data
 
-import static net.fortuna.ical4j.util.CompatibilityHints.*
-
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.util.Calendars
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
+
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_PARSING
+import static net.fortuna.ical4j.util.CompatibilityHints.KEY_RELAXED_UNFOLDING
 
 class CalendarParserImplSpec extends Specification {
 	
@@ -76,7 +77,7 @@ class CalendarParserImplSpec extends Specification {
 		}
 		
 		expect:
-		Calendar calendar = Calendars.load(filename)
+		Calendar calendar = Calendars.load(CalendarParserImplSpec.getResource(resource))
 		
 		cleanup:
 		compatibilityHints.each {
@@ -84,8 +85,69 @@ class CalendarParserImplSpec extends Specification {
 		}
 
 		where:
-		filename							| compatibilityHints
-		'etc/samples/valid/bhav23-1.ics'	| []
-		'etc/samples/invalid/bhav23-2.ics'	| [KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]
+		resource							| compatibilityHints
+		'/samples/valid/bhav23-1.ics'	| []
+		'/samples/invalid/bhav23-2.ics'	| [KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]
+	}
+
+	def 'verify parsing empty lines'() {
+		setup:
+		String input = "BEGIN:VCALENDAR\r\n$contentLines\r\nEND:VCALENDAR"
+		compatibilityHints.each {
+			CompatibilityHints.setHintEnabled(it, true)
+		}
+
+		expect:
+		Calendar calendar = builder.build(new StringReader(input))
+		assert calendar.components[0].properties.size() == 24
+
+		cleanup:
+		compatibilityHints.each {
+			CompatibilityHints.clearHintEnabled(it)
+		}
+
+		where:
+		contentLines << ['''BEGIN:VEVENT
+CLASS:
+CREATED:20121015T070600Z
+DTSTART:20121018T020000Z
+LAST-MODIFIED:20140815T175058Z
+LOCATION:somewhere
+ORGANIZER;CN=somesystem:mailto:foo@bar.com
+PRIORITY:5
+DTSTAMP:20121015T070600Z
+SEQUENCE:1
+STATUS:CONFIRMED
+SUMMARY:Scrum Gathering
+\tTest Automation
+TRANSP:TRANSPARENT
+UID:a5f13918-e1a8-4035-ac92-44a412315b00
+DTEND:20121018T040000Z
+ATTENDEE;CN=foo@bar.com;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTI
+\tCIPANT;RSVP=TRUE:mailto:foo@bar.com;
+X-ALT-DESC;FMTTYPE=text/html:<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//E
+\tN">\\n<HTML>\\n<HEAD>\\n<META NAME="Generator" CONTENT="MS Exchange Server "v
+\tersion 08.00.0681.000">\\n<TITLE></TITLE>\\n</HEAD>\\n<BODY>\\n<!-- Converted
+\tfrom text/rtf format -->\\n\\n<P DIR=LTR ALIGN=JUSTIFY><SPAN LANG="en-us"><F
+\tONT FACE="Times New Roman"><p><img border="0" alt="" src="http://example.com" />
+:
+:
+:
+X-MICROSOFT-CDO-BUSYSTATUS:FREE
+X-MICROSOFT-CDO-INSTTYPE:0
+X-MICROSOFT-CDO-INTENDEDSTATUS:BUSY
+X-MICROSOFT-CDO-ALLDAYEVENT:FALSE
+X-MICROSOFT-CDO-IMPORTANCE:1
+X-MS-OLK-CONFTYPE:0
+X-MICROSOFT-CDO-ATTENDEE-CRITICAL-CHANGE:20121015T070600Z
+X-MICROSOFT-CDO-OWNER-CRITICAL-CHANGE:20121015T070600Z
+BEGIN:VALARM
+ACTION:DISPLAY
+TRIGGER;VALUE=DURATION:-PT15M
+DESCRIPTION:REMINDER
+RELATED=START:-PT00H15M00S
+END:VALARM
+END:VEVENT''']
+		compatibilityHints << [[KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]]
 	}
 }

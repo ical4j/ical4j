@@ -40,7 +40,7 @@ remotes {
     }
 }
 
-task uploadDist(dependsOn: 'assembleMainDist') << {
+task uploadDist(dependsOn: 'assembleDist') doLast {
     ssh.run {
         session(remotes.sourceforge_shell_create) {
             execute "create"

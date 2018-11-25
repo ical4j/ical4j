@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.property.XProperty;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ServiceLoader;
@@ -50,20 +51,11 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
 
     private static final long serialVersionUID = -7174232004486979641L;
 
-    private static PropertyFactoryImpl instance = new PropertyFactoryImpl();
-
     /**
      * Constructor made private to prevent instantiation.
      */
     protected PropertyFactoryImpl() {
         super(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()));
-    }
-
-    /**
-     * @return Returns the instance.
-     */
-    public static PropertyFactoryImpl getInstance() {
-        return instance;
     }
 
     @Override
@@ -115,5 +107,16 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
     private boolean isExperimentalName(final String name) {
         return name.startsWith(Property.EXPERIMENTAL_PREFIX)
                 && name.length() > Property.EXPERIMENTAL_PREFIX.length();
+    }
+    
+    /**
+     * Needed for initializing the transient member after deserializing a <code>Calendar</code>
+     * 
+     * @param in
+     * 
+     */
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        this.factoryLoader = ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader());
     }
 }

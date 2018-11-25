@@ -64,14 +64,14 @@ public abstract class DateProperty extends Property {
      * @param name       the property name
      * @param parameters a list of initial parameters
      */
-    public DateProperty(final String name, final ParameterList parameters, PropertyFactoryImpl factory) {
+    public DateProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
         super(name, parameters, factory);
     }
 
     /**
      * @param name the property name
      */
-    public DateProperty(final String name, PropertyFactoryImpl factory) {
+    public DateProperty(final String name, PropertyFactory factory) {
         super(name, factory);
     }
 
@@ -81,7 +81,7 @@ public abstract class DateProperty extends Property {
      * @param name     property name
      * @param timezone initial timezone
      */
-    public DateProperty(final String name, TimeZone timezone, PropertyFactoryImpl factory) {
+    public DateProperty(final String name, TimeZone timezone, PropertyFactory factory) {
         super(name, factory);
         updateTimeZone(timezone);
     }
@@ -133,7 +133,7 @@ public abstract class DateProperty extends Property {
             // ensure timezone is null for VALUE=DATE properties..
             updateTimeZone(null);
             this.date = new Date(value);
-        } else {
+        } else if (value != null && !value.isEmpty()){
             this.date = new DateTime(value, timeZone);
         }
     }
@@ -166,7 +166,7 @@ public abstract class DateProperty extends Property {
      */
     @Override
     public int hashCode() {
-        return getDate().hashCode();
+        return getDate() != null ? getDate().hashCode() : 0;
     }
 
     /**
@@ -223,6 +223,15 @@ public abstract class DateProperty extends Property {
      */
     public void validate() throws ValidationException {
 
+        /*
+         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
+         * (";" tzidparam) /
+         */
+
+        /*
+         * ; the following is optional, ; and MAY occur more than once (";" xparam)
+         */
+
         ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
@@ -234,7 +243,7 @@ public abstract class DateProperty extends Property {
                     getParameters());
         }
 
-        final Value value = (Value) getParameter(Parameter.VALUE);
+        final Value value = getParameter(Parameter.VALUE);
 
         if (getDate() instanceof DateTime) {
 

@@ -122,14 +122,14 @@ public class Method extends Property {
      * Default constructor.
      */
     public Method() {
-        super(METHOD, PropertyFactoryImpl.getInstance());
+        super(METHOD, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Method(final String aValue) {
-        super(METHOD, PropertyFactoryImpl.getInstance());
+        super(METHOD, new Factory());
         this.value = aValue;
     }
 
@@ -138,7 +138,7 @@ public class Method extends Property {
      * @param aValue a value string for this component
      */
     public Method(final ParameterList aList, final String aValue) {
-        super(METHOD, aList, PropertyFactoryImpl.getInstance());
+        super(METHOD, aList, new Factory());
         this.value = aValue;
     }
 
@@ -156,11 +156,9 @@ public class Method extends Property {
         return value;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

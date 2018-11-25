@@ -240,7 +240,7 @@ public class HCalendarParser implements CalendarParser {
 
     private static Element findElement(XPathExpression expr, Object context) throws ParserException {
         Node n = findNode(expr, context);
-        if (n == null || (!(n instanceof Element)))
+        if ((!(n instanceof Element)))
             return null;
         return (Element) n;
     }
@@ -284,7 +284,8 @@ public class HCalendarParser implements CalendarParser {
         handler.startProperty(Property.VERSION);
         try {
             handler.propertyValue(Version.VERSION_2_0.getValue());
-        } catch (Exception e) {
+        } catch (IOException | ParseException | URISyntaxException e) {
+            LOG.warn("Caught exception", e);
         }
         handler.endProperty(Property.VERSION);
 
@@ -416,7 +417,8 @@ public class HCalendarParser implements CalendarParser {
                 if (!(date instanceof DateTime))
                     try {
                         handler.parameter(Parameter.VALUE, Value.DATE.getValue());
-                    } catch (Exception e) {
+                    } catch (URISyntaxException e) {
+                        LOG.warn("Caught exception", e);
                     }
             } catch (ParseException e) {
                 throw new ParserException("Malformed date value for element '" + className + "'", -1, e);
@@ -428,7 +430,8 @@ public class HCalendarParser implements CalendarParser {
             if (!StringUtils.isBlank(lang))
                 try {
                     handler.parameter(Parameter.LANGUAGE, lang);
-                } catch (Exception e) {
+                } catch (URISyntaxException e) {
+                    LOG.warn("Caught exception", e);
                 }
         }
 
@@ -491,14 +494,16 @@ public class HCalendarParser implements CalendarParser {
                 // don't check it if we find -
                 if (original.indexOf('-') == -1)
                     return new Date(original);
-            } catch (Exception e) {
+            } catch (ParseException e) {
+                LOG.warn("Caught exception", e);
             }
             return new Date(HCAL_DATE_FORMAT.parse(original));
         }
 
         try {
             return new DateTime(original);
-        } catch (Exception e) {
+        } catch (ParseException e) {
+            LOG.warn("Caught exception", e);
         }
 
         // the date-time value can represent its time zone in a few different

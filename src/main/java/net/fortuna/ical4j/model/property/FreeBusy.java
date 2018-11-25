@@ -114,7 +114,7 @@ public class FreeBusy extends Property {
      * Default constructor.
      */
     public FreeBusy() {
-        super(FREEBUSY, PropertyFactoryImpl.getInstance());
+        super(FREEBUSY, new Factory());
         periods = new PeriodList();
     }
 
@@ -123,7 +123,7 @@ public class FreeBusy extends Property {
      * @throws ParseException where the specified string is not a valid freebusy value
      */
     public FreeBusy(final String aValue) throws ParseException {
-        super(FREEBUSY, PropertyFactoryImpl.getInstance());
+        super(FREEBUSY, new Factory());
         setValue(aValue);
     }
 
@@ -134,7 +134,7 @@ public class FreeBusy extends Property {
      */
     public FreeBusy(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(FREEBUSY, aList, PropertyFactoryImpl.getInstance());
+        super(FREEBUSY, aList, new Factory());
         setValue(aValue);
     }
 
@@ -142,7 +142,7 @@ public class FreeBusy extends Property {
      * @param pList a list of periods
      */
     public FreeBusy(final PeriodList pList) {
-        super(FREEBUSY, PropertyFactoryImpl.getInstance());
+        super(FREEBUSY, new Factory());
         if (!pList.isUtc()) {
             throw new IllegalArgumentException("Periods must be in UTC format");
         }
@@ -154,7 +154,7 @@ public class FreeBusy extends Property {
      * @param pList a list of periods
      */
     public FreeBusy(final ParameterList aList, final PeriodList pList) {
-        super(FREEBUSY, aList, PropertyFactoryImpl.getInstance());
+        super(FREEBUSY, aList, new Factory());
         if (!pList.isUtc()) {
             throw new IllegalArgumentException("Periods must be in UTC format");
         }

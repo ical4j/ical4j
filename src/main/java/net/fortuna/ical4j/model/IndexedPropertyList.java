@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -46,28 +45,25 @@ import java.util.Map;
  */
 public class IndexedPropertyList {
 
-    private static final PropertyList EMPTY_LIST = new PropertyList();
+    private static final PropertyList<Property> EMPTY_LIST = new PropertyList<Property>();
     
-    private Map<String, PropertyList> index;
+    private Map<String, PropertyList<Property>> index;
     
     /**
      * Creates a new instance indexed on the parameters with the specified name.
      * @param list a list of properties
      * @param parameterName the name of parameters on which to index
      */
-    public IndexedPropertyList(final PropertyList list, final String parameterName) {
-        final Map<String, PropertyList> indexedProperties = new HashMap<String, PropertyList>();
-        for (final Property property : list) {
-            for (final Iterator<Parameter> j = property.getParameters(parameterName).iterator(); j.hasNext();) {
-                final Parameter parameter = j.next();
-                PropertyList properties = indexedProperties.get(parameter.getValue());
-                if (properties == null) {
-                    properties = new PropertyList();
-                    indexedProperties.put(parameter.getValue(), properties);
-                }
-                properties.add(property);
+    public IndexedPropertyList(final PropertyList<Property> list, final String parameterName) {
+        final Map<String, PropertyList<Property>> indexedProperties = new HashMap<String, PropertyList<Property>>();
+        list.forEach(property -> property.getParameters(parameterName).forEach(parameter -> {
+            PropertyList<Property> properties = indexedProperties.get(parameter.getValue());
+            if (properties == null) {
+                properties = new PropertyList<Property>();
+                indexedProperties.put(parameter.getValue(), properties);
             }
-        }
+            properties.add(property);
+        }));
         this.index = Collections.unmodifiableMap(indexedProperties);
     }
     
@@ -78,8 +74,8 @@ public class IndexedPropertyList {
      * returned properties
      * @return a property list
      */
-    public PropertyList getProperties(final String paramValue) {
-        PropertyList properties = index.get(paramValue);
+    public PropertyList<Property> getProperties(final String paramValue) {
+        PropertyList<Property> properties = index.get(paramValue);
         if (properties == null) {
             properties = EMPTY_LIST;
         }
@@ -95,9 +91,9 @@ public class IndexedPropertyList {
      * with the specified value
      */
     public Property getProperty(final String paramValue) {
-        final PropertyList properties = getProperties(paramValue);
+        final PropertyList<Property> properties = getProperties(paramValue);
         if (!properties.isEmpty()) {
-            return properties.get(0);
+            return properties.iterator().next();
         }
         return null;
     }

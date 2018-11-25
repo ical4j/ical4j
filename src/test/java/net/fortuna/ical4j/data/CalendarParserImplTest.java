@@ -39,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * $Id$
@@ -53,17 +54,17 @@ public class CalendarParserImplTest extends TestCase {
 
     private static final Logger LOG = LoggerFactory.getLogger(CalendarParserImplTest.class);
 
-    private String filename;
+    private URL resource;
 
     private int expectedErrorLineNo;
 
     /**
-     * @param filename
+     * @param resouces a calendar resource
      * @param expectedErrorLineNo
      */
-    public CalendarParserImplTest(String filename, int expectedErrorLineNo) {
-        super("testParseException");
-        this.filename = filename;
+    public CalendarParserImplTest(String resourceString, int expectedErrorLineNo) {
+        super("testParserException");
+        this.resource = getClass().getResource(resourceString);
         this.expectedErrorLineNo = expectedErrorLineNo;
     }
 
@@ -88,10 +89,10 @@ public class CalendarParserImplTest extends TestCase {
      *
      * @throws IOException
      */
-    public void testParseException() throws IOException {
+    public void testParserException() throws IOException {
         try {
-            Calendars.load(filename);
-            fail("Should throw ParserException: [" + filename + "]");
+            Calendars.load(resource);
+            fail("Should throw ParserException: [" + resource + "]");
         } catch (ParserException pe) {
             LOG.info(pe.getMessage());
             assertEquals(expectedErrorLineNo, pe.getLineNo());
@@ -106,7 +107,7 @@ public class CalendarParserImplTest extends TestCase {
      * Overridden to return the current iCalendar file under test.
      */
     public final String getName() {
-        return super.getName() + " [" + filename + "]";
+        return super.getName() + " [" + resource + "]";
     }
 
     /**
@@ -114,20 +115,20 @@ public class CalendarParserImplTest extends TestCase {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/google_aus_holidays.ics", 11));
-        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/13-MoonPhase.ics", 215));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/google_aus_holidays.ics", 11));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/13-MoonPhase.ics", 215));
 
         // CalendarParserImpl thinks this error happened on line 24, but you can
         // see that invalid property "X" starts on line 23, and ends there.
-//        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/CalendarDataFile.ics", 23));
-        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/CalendarDataFile.ics", 24));
+//        suite.addTest(new CalendarParserImplTest("samples/invalid/CalendarDataFile.ics", 23));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/CalendarDataFile.ics", 24));
 
-        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/overlaps.ics", 1));
-        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/phpicalendar_sample.ics", 93));
-        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/schedule-unstable.ics", 196));
-        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/smallcluster.ics", 2));
-        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/twinkle.ics", 67));
-        suite.addTest(new CalendarParserImplTest("etc/samples/invalid/zidestoreical4jbomb.ics", 10));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/overlaps.ics", 1));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/phpicalendar_sample.ics", 93));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/schedule-unstable.ics", 196));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/smallcluster.ics", 2));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/twinkle.ics", 67));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/zidestoreical4jbomb.ics", 10));
         return suite;
     }
 }

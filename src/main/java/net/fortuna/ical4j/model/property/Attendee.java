@@ -36,14 +36,12 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.Arrays;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Arrays;
 
 /**
  * $Id$
@@ -64,7 +62,7 @@ public class Attendee extends Property {
      * Default constructor.
      */
     public Attendee() {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, new Factory());
     }
 
     /**
@@ -72,7 +70,7 @@ public class Attendee extends Property {
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
     public Attendee(final String aValue) throws URISyntaxException {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, new Factory());
         setValue(aValue);
     }
 
@@ -83,7 +81,7 @@ public class Attendee extends Property {
      */
     public Attendee(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -91,7 +89,7 @@ public class Attendee extends Property {
      * @param aUri a URI
      */
     public Attendee(final URI aUri) {
-        super(ATTENDEE, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, new Factory());
         calAddress = aUri;
     }
 
@@ -100,7 +98,7 @@ public class Attendee extends Property {
      * @param aUri  a URI
      */
     public Attendee(final ParameterList aList, final URI aUri) {
-        super(ATTENDEE, aList, PropertyFactoryImpl.getInstance());
+        super(ATTENDEE, aList, new Factory());
         calAddress = aUri;
     }
 
@@ -121,14 +119,9 @@ public class Attendee extends Property {
          * roleparam) / (";" partstatparam) / (";" rsvpparam) / (";" deltoparam) / (";" delfromparam) / (";"
          * sentbyparam) / (";"cnparam) / (";" dirparam) / (";" languageparam) /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Parameter.CUTYPE, Parameter.MEMBER, Parameter.ROLE, Parameter.PARTSTAT,
+        Arrays.asList(Parameter.CUTYPE, Parameter.MEMBER, Parameter.ROLE, Parameter.PARTSTAT,
                 Parameter.RSVP, Parameter.DELEGATED_TO, Parameter.DELEGATED_FROM, Parameter.SENT_BY, Parameter.CN,
-                Parameter.DIR, Parameter.LANGUAGE), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                ParameterValidator.getInstance().assertOneOrLess(input, getParameters());
-            }
-        });
+                Parameter.DIR, Parameter.LANGUAGE).forEach(parameter -> ParameterValidator.getInstance().assertOneOrLess(parameter, getParameters()));
 
         /* scheduleagent and schedulestatus added for CalDAV scheduling
          */
@@ -165,7 +158,7 @@ public class Attendee extends Property {
     /**
      * {@inheritDoc}
      */
-    public final Property copy() throws IOException, URISyntaxException, ParseException {
+    public final Property copy() {
         // URI are immutable
         return new Attendee(new ParameterList(getParameters(), false), calAddress);
     }

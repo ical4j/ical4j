@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model.component
 
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.PropertyList
 
 /**
  * @author fortuna
@@ -46,7 +46,7 @@ class StandardFactory extends AbstractComponentFactory{
              standard = (Standard) value
          }
          else {
-             standard = super.newInstance(builder, name, value, attributes);
+             standard = super.newInstance(builder, name, value, attributes)
          }
          return standard
      }

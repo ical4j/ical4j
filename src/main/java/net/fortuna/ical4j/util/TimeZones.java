@@ -94,7 +94,7 @@ public final class TimeZones {
      * @return the timezone used for date instances
      */
     public static TimeZone getDateTimeZone() {
-    	if ("true".equals(Configurator.getProperty("net.fortuna.ical4j.timezone.date.floating"))) {
+    	if ("true".equals(Configurator.getProperty("net.fortuna.ical4j.timezone.date.floating").orElse("false"))) {
     		return TimeZone.getDefault();
     	}
     	return getUtcTimeZone();

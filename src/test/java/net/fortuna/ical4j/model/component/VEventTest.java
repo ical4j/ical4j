@@ -38,21 +38,17 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.Calendars;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.TimeZones;
-import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.util.*;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.Iterator;
 
 /**
  * $Id: VEventTest.java [28/09/2004]
@@ -144,14 +140,14 @@ public class VEventTest extends CalendarComponentTest {
      * @param filename
      * @return
      */
-    private net.fortuna.ical4j.model.Calendar loadCalendar(String filename)
+    private net.fortuna.ical4j.model.Calendar loadCalendar(String resourceString)
             throws IOException, ParserException, ValidationException {
 
         net.fortuna.ical4j.model.Calendar calendar = Calendars.load(
-                filename);
+                getClass().getResource(resourceString));
         calendar.validate();
 
-        log.info("File: " + filename);
+        log.info("Resource: " + resourceString);
 
         if (log.isDebugEnabled()) {
             log.debug("Calendar:\n=========\n" + calendar.toString());
@@ -396,31 +392,29 @@ public class VEventTest extends CalendarComponentTest {
 
 
     public final void testGetConsumedTime2() throws Exception {
-        String filename = "etc/samples/valid/derryn.ics";
+        String resource = "/samples/valid/derryn.ics";
 
-        net.fortuna.ical4j.model.Calendar calendar = loadCalendar(filename);
+        net.fortuna.ical4j.model.Calendar calendar = loadCalendar(resource);
 
         Date start = new Date();
         Calendar endCal = getCalendarInstance();
         endCal.setTime(start);
         endCal.add(Calendar.WEEK_OF_YEAR, 4);
 //        Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
-        for (Iterator<CalendarComponent> i = calendar.getComponents().iterator(); i.hasNext(); ) {
-            Component c = i.next();
+        calendar.getComponents().forEach(calendarComponent -> {
+            if (calendarComponent instanceof VEvent) {
+                PeriodList consumed = ((VEvent) calendarComponent).getConsumedTime(start, new Date(endCal.getTime().getTime()));
 
-            if (c instanceof VEvent) {
-                PeriodList consumed = ((VEvent) c).getConsumedTime(start, new Date(endCal.getTime().getTime()));
-
-                log.debug("Event [" + c + "]");
+                log.debug("Event [" + calendarComponent + "]");
                 log.debug("Consumed time [" + consumed + "]");
             }
-        }
+        });
     }
 
     public final void testGetConsumedTime3() throws Exception {
-        String filename = "etc/samples/valid/calconnect10.ics";
+        String resource = "/samples/valid/calconnect10.ics";
 
-        net.fortuna.ical4j.model.Calendar calendar = loadCalendar(filename);
+        net.fortuna.ical4j.model.Calendar calendar = loadCalendar(resource);
 
         VEvent vev = (VEvent) calendar.getComponent(Component.VEVENT);
 
@@ -479,6 +473,18 @@ public class VEventTest extends CalendarComponentTest {
     }
 
     /**
+     * A test to confirm that the end date is calculated correctly
+     * from a given start date and duration, even when timezone is specified.
+     */
+    public final void testEventEndDateWithTimeZone() throws ParseException {
+        TimeZone timezone = new TimeZoneRegistryImpl().getTimeZone("Asia/Seoul");
+        DateTime startDateTime = new DateTime("20181003T130000", timezone);
+        log.info("Start date: " + startDateTime);
+        VEvent event = new VEvent(startDateTime, new Dur(0, 1, 0, 0), "1 hour event");
+        assertEquals(new DateTime("20181003T140000", timezone), event.getEndDate().getDate());
+    }
+
+    /**
      * Test to ensure that EXDATE properties are correctly applied.
      *
      * @throws ParseException
@@ -510,8 +516,8 @@ public class VEventTest extends CalendarComponentTest {
      * @throws ParseException
      */
     public void testGetConsumedTimeWithExDate2() throws IOException, ParserException {
-        FileInputStream fin = new FileInputStream("etc/samples/valid/friday13.ics");
-        net.fortuna.ical4j.model.Calendar calendar = new CalendarBuilder().build(fin);
+        InputStream in = getClass().getResourceAsStream("/samples/valid/friday13.ics");
+        net.fortuna.ical4j.model.Calendar calendar = new CalendarBuilder().build(in);
 
         VEvent event = (VEvent) calendar.getComponent(Component.VEVENT);
 
@@ -571,7 +577,7 @@ public class VEventTest extends CalendarComponentTest {
      * @throws ParserException
      */
     public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException, ParserException {
-        UidGenerator uidGenerator = new UidGenerator("1");
+        UidGenerator uidGenerator = new RandomUidGenerator();
 
         Calendar weekday9AM = getCalendarInstance();
         weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
@@ -685,7 +691,7 @@ public class VEventTest extends CalendarComponentTest {
         suite.addTest(new VEventTest("testGetConsumedTimeMonthly", monthlyWeekdayEvents));
 
         //test event validation..
-        UidGenerator ug = new UidGenerator("1");
+        UidGenerator ug = new RandomUidGenerator();
         Uid uid = ug.generateUid();
 
         DtStart start = new DtStart(new Date());
@@ -756,20 +762,18 @@ public class VEventTest extends CalendarComponentTest {
 
         // test iTIP validation..
 //        File[] testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
-        File[] testFiles = new File[]{new File("etc/samples/valid/calconnect.ics"), new File("etc/samples/valid/calconnect10.ics")};
+        URL[] testFiles = new URL[]{VEventTest.class.getResource("/samples/valid/calconnect.ics"), VEventTest.class.getResource("/samples/valid/calconnect10.ics")};
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
-            net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFiles[i].getPath());
+            net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFiles[i]);
             if (Method.PUBLISH.equals(calendar.getProperty(Property.METHOD))) {
-                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext(); ) {
-                    VEvent event1 = (VEvent) it.next();
-                    suite.addTest(new VEventTest("testPublishValidation", event1));
-                }
+                calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
+                    suite.addTest(new VEventTest("testPublishValidation", (VEvent) calendarComponent));
+                });
             } else if (Method.REQUEST.equals(calendar.getProperty(Property.METHOD))) {
-                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext(); ) {
-                    VEvent event1 = (VEvent) it.next();
-                    suite.addTest(new VEventTest("testRequestValidation", event1));
-                }
+                calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
+                    suite.addTest(new VEventTest("testRequestValidation", (VEvent) calendarComponent));
+                });
             }
         }
 

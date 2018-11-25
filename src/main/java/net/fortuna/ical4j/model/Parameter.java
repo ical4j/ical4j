@@ -185,13 +185,13 @@ public abstract class Parameter extends Content {
 
     private String name;
 
-    private final ParameterFactoryImpl factory;
+    private final ParameterFactory factory;
 
     /**
      * @param aName   the parameter identifier
      * @param factory the factory used to create the parameter
      */
-    public Parameter(final String aName, ParameterFactoryImpl factory) {
+    public Parameter(final String aName, ParameterFactory factory) {
         this.name = aName;
         this.factory = factory;
     }
@@ -255,10 +255,10 @@ public abstract class Parameter extends Content {
      * @return new parameter
      * @throws URISyntaxException where an invalid URI is encountered
      */
-    public Parameter copy() throws URISyntaxException {
+    public <T extends Parameter> T copy() throws URISyntaxException {
         if (factory == null) {
             throw new UnsupportedOperationException("No factory specified");
         }
-        return factory.createParameter(getName(), getValue());
+        return (T) factory.createParameter(getValue());
     }
 }

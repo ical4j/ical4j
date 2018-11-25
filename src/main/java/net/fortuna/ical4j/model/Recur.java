@@ -130,12 +130,7 @@ public class Recur implements Serializable {
     private static int maxIncrementCount;
 
     static {
-        final String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
-        if (value != null && value.length() > 0) {
-            maxIncrementCount = Integer.parseInt(value);
-        } else {
-            maxIncrementCount = 1000;
-        }
+        maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1000);
     }
 
     private transient Logger log = LoggerFactory.getLogger(Recur.class);
@@ -583,15 +578,19 @@ public class Recur implements Serializable {
                 dates.setTimeZone(((DateTime) seed).getTimeZone());
             }
         }
-        final Calendar cal = getCalendarInstance(seed, true);
-
+        Calendar cal = getCalendarInstance(seed, true);
+        final Calendar rootSeed = (Calendar)cal.clone();
+        
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
         if (getCount() < 1) {
-            final Calendar seededCal = (Calendar) cal.clone();
+            Calendar seededCal = (Calendar) cal.clone();
             while (seededCal.getTime().before(periodStart)) {
                 cal.setTime(seededCal.getTime());
-                increment(seededCal);
+                seededCal = smartIncrement(seededCal);
+                if (seededCal == null) {
+                    return dates;
+                }
             }
         }
 
@@ -626,7 +625,11 @@ public class Recur implements Serializable {
                 }
             }
 
-            final DateList candidates = getCandidates(candidateSeed, value);
+            // rootSeed = date used for the seed for the RRule at the
+            //            start of the first period.
+            // candidateSeed = date used for the start of 
+            //                 the current period.
+            final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
                 // sort candidates for identifying when UNTIL date is exceeded..
@@ -654,7 +657,10 @@ public class Recur implements Serializable {
                     break;
                 }
             }
-            increment(cal);
+            cal = smartIncrement(cal);
+            if (cal == null) {
+                break;
+            }
         }
         // sort final list..
         Collections.sort(dates);
@@ -675,6 +681,7 @@ public class Recur implements Serializable {
     public final Date getNextDate(final Date seed, final Date startDate) {
 
         final Calendar cal = getCalendarInstance(seed, true);
+        final Calendar rootSeed = (Calendar)cal.clone();
 
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
@@ -710,7 +717,7 @@ public class Recur implements Serializable {
                 }
             }
 
-            final DateList candidates = getCandidates(candidateSeed, value);
+            final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
                 // sort candidates for identifying when UNTIL date is exceeded..
@@ -755,6 +762,28 @@ public class Recur implements Serializable {
         cal.add(calIncField, calInterval);
     }
 
+    private Calendar smartIncrement(final Calendar cal) {
+        // initialise interval..
+        Calendar result = null;
+        final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
+        int multiplier = 1;
+        if (calIncField == 2 || calIncField == 1) {
+            Calendar seededCal;
+            do {
+                seededCal = (Calendar) cal.clone();
+                seededCal.add(calIncField, calInterval * multiplier);
+                multiplier++;
+            } while (seededCal.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH) || multiplier > 12);
+            if (multiplier <= 12) {
+                result = (Calendar) seededCal.clone();
+            }
+        } else {
+            result = (Calendar) cal.clone();
+            result.add(calIncField, calInterval);
+        }
+        return result;
+    }
+
     /**
      * Returns a list of possible dates generated from the applicable BY* rules, using the specified date as a seed.
      *
@@ -762,7 +791,7 @@ public class Recur implements Serializable {
      * @param value the type of date list to return
      * @return a DateList
      */
-    private DateList getCandidates(final Date date, final Value value) {
+    private DateList getCandidates(final Calendar rootSeed, final Date date, final Value value) {
         DateList dates = new DateList(value);
         if (date instanceof DateTime) {
             if (((DateTime) date).isUtc()) {
@@ -777,7 +806,7 @@ public class Recur implements Serializable {
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYMONTH processing: " + dates);
         }
-        dates = getWeekNoVariants(dates);
+        dates = getWeekNoVariants(rootSeed, dates);
         // debugging..
         if (log.isDebugEnabled()) {
             log.debug("Dates after BYWEEKNO processing: " + dates);
@@ -879,18 +908,41 @@ public class Recur implements Serializable {
      * Applies BYWEEKNO rules specified in this Recur instance to the specified date list. If no BYWEEKNO rules are
      * specified the date list is returned unmodified.
      *
+     * @param rootSeed the seed date supplied to the initial calculation.
      * @param dates
      * @return
      */
-    private DateList getWeekNoVariants(final DateList dates) {
+    private DateList getWeekNoVariants(final Calendar rootSeed, final DateList dates) {
         if (getWeekNoList().isEmpty()) {
             return dates;
         }
+        final int initDayOfWeek = rootSeed.get(Calendar.DAY_OF_WEEK);
         final DateList weekNoDates = getDateListInstance(dates);
         for (final Date date : dates) {
-            final Calendar cal = getCalendarInstance(date, true);
+            final Calendar initCal = getCalendarInstance(date, true);
+            final int numWeeksInYear = initCal.getActualMaximum(Calendar.WEEK_OF_YEAR);
+
             for (final Integer weekNo : getWeekNoList()) {
-                cal.set(Calendar.WEEK_OF_YEAR, Dates.getAbsWeekNo(cal.getTime(), weekNo));
+                if (weekNo == 0 || weekNo < -Dates.MAX_WEEKS_PER_YEAR || weekNo > Dates.MAX_WEEKS_PER_YEAR) {
+                    if (log.isTraceEnabled()) {
+                        log.trace("Invalid week of year: " + weekNo);
+                    }
+                    continue;
+                }
+                final Calendar cal = (Calendar)initCal.clone();
+                if (weekNo > 0) {
+                    if (numWeeksInYear < weekNo) {
+                        continue;
+                    }
+                    cal.set(Calendar.WEEK_OF_YEAR, weekNo);
+                } else {
+                    if (numWeeksInYear < -weekNo) {
+                        continue;
+                    }
+                    cal.set(Calendar.WEEK_OF_YEAR, numWeeksInYear);
+                    cal.add(Calendar.WEEK_OF_YEAR, weekNo + 1);
+                }
+                cal.set(Calendar.DAY_OF_WEEK, initDayOfWeek);
                 weekNoDates.add(Dates.getInstance(cal.getTime(), weekNoDates.getType()));
             }
         }
@@ -910,10 +962,28 @@ public class Recur implements Serializable {
         }
         final DateList yearDayDates = getDateListInstance(dates);
         for (final Date date : dates) {
-            final Calendar cal = getCalendarInstance(date, true);
-            for (final Integer yearDay : getYearDayList()) {
-                cal.set(Calendar.DAY_OF_YEAR, Dates.getAbsYearDay(cal.getTime(), yearDay));
-                yearDayDates.add(Dates.getInstance(cal.getTime(), yearDayDates.getType()));
+            final Calendar cal = getCalendarInstance(date, false);
+            for (final int yearDay : getYearDayList()) {
+                if (yearDay == 0 || yearDay < -Dates.MAX_DAYS_PER_YEAR || yearDay > Dates.MAX_DAYS_PER_YEAR) {
+                    if (log.isTraceEnabled()) {
+                        log.trace("Invalid day of year: " + yearDay);
+                    }
+                    continue;
+                }
+            	final int numDaysInYear = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
+                if (yearDay > 0) {
+                	if (numDaysInYear < yearDay) {
+                		continue;
+                	}
+               		cal.set(Calendar.DAY_OF_YEAR, yearDay);
+                } else {
+                	if (numDaysInYear < -yearDay) {
+                		continue;
+                	}
+                	cal.set(Calendar.DAY_OF_YEAR, numDaysInYear);
+                	cal.add(Calendar.DAY_OF_YEAR, yearDay + 1);
+                }
+           		yearDayDates.add(Dates.getInstance(cal.getTime(), yearDayDates.getType()));
             }
         }
         return yearDayDates;
@@ -933,16 +1003,27 @@ public class Recur implements Serializable {
         final DateList monthDayDates = getDateListInstance(dates);
         for (final Date date : dates) {
             final Calendar cal = getCalendarInstance(date, false);
-            for (final Integer monthDay : getMonthDayList()) {
-                try {
-                    cal.set(Calendar.DAY_OF_MONTH, Dates.getAbsMonthDay(cal.getTime(), monthDay));
-                    monthDayDates.add(Dates.getInstance(cal.getTime(), monthDayDates.getType()));
-                } catch (IllegalArgumentException iae) {
+            for (final int monthDay : getMonthDayList()) {
+                if (monthDay == 0 || monthDay < -Dates.MAX_DAYS_PER_MONTH || monthDay > Dates.MAX_DAYS_PER_MONTH) {
                     if (log.isTraceEnabled()) {
-                        log.trace("Invalid day of month: " + Dates.getAbsMonthDay(cal
-                                .getTime(), monthDay));
+                        log.trace("Invalid day of month: " + monthDay);
                     }
+                    continue;
                 }
+                final int numDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+                if (monthDay > 0) {
+                    if (numDaysInMonth < monthDay) {
+                        continue;
+                    }
+                    cal.set(Calendar.DAY_OF_MONTH, monthDay);
+                } else {
+                    if (numDaysInMonth < -monthDay) {
+                        continue;
+                    }
+                    cal.set(Calendar.DAY_OF_MONTH, numDaysInMonth);
+                    cal.add(Calendar.DAY_OF_MONTH, monthDay + 1);
+                }
+                monthDayDates.add(Dates.getInstance(cal.getTime(), monthDayDates.getType()));
             }
         }
         return monthDayDates;

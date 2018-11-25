@@ -141,14 +141,14 @@ public class Clazz extends Property {
      * Default constructor.
      */
     public Clazz() {
-        super(CLASS, PropertyFactoryImpl.getInstance());
+        super(CLASS, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Clazz(final String aValue) {
-        super(CLASS, PropertyFactoryImpl.getInstance());
+        super(CLASS, new Factory());
         this.value = aValue;
     }
 
@@ -157,7 +157,7 @@ public class Clazz extends Property {
      * @param aValue a value string for this component
      */
     public Clazz(final ParameterList aList, final String aValue) {
-        super(CLASS, aList, PropertyFactoryImpl.getInstance());
+        super(CLASS, aList, new Factory());
         this.value = aValue;
     }
 
@@ -173,13 +173,6 @@ public class Clazz extends Property {
      */
     public final String getValue() {
         return value;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {
@@ -199,4 +192,8 @@ public class Clazz extends Property {
         }
     }
 
+    @Override
+    public void validate() throws ValidationException {
+
+    }
 }

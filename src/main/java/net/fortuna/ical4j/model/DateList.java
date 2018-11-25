@@ -38,6 +38,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -46,7 +47,7 @@ import java.util.*;
  * defaults to DATE-TIME instances.
  * @author Ben Fortuna
  */
-public class DateList implements List<Date>, Serializable {
+public class DateList implements List<Date>, Serializable, Iterable<Date> {
 
 	private static final long serialVersionUID = -3700862452550012357L;
 
@@ -167,39 +168,37 @@ public class DateList implements List<Date>, Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<Date> i = iterator(); i.hasNext();) {
-            /*
-             * if (type != null && Value.DATE.equals(type)) {
-             * b.append(DateFormat.getInstance().format((Date) i.next())); }
-             * else { b.append(DateTimeFormat.getInstance().format((Date)
-             * i.next(), isUtc())); }
-             */
-            b.append(i.next());
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+        return stream().map(Iso8601::toString).collect(Collectors.joining(","));
     }
 
     /**
-     * Add a date to the list. The date will be updated to reflect the
-     * timezone of this list.
-     * @param date the date to add
+     * Add a date to the list. The date will be updated to reflect the timezone of this list.
+     * 
+     * @param date
+     *            the date to add
      * @return true
      * @see List#add(java.lang.Object)
      */
     public final boolean add(final Date date) {
-        if (date instanceof DateTime) {
-            if (isUtc()) {
-                ((DateTime) date).setUtc(true);
-            }
-            else {
-                ((DateTime) date).setTimeZone(getTimeZone());
+        if (!this.isUtc() && this.getTimeZone() == null) {
+            /* If list hasn't been initialized yet use defaults from the first added date element */
+            if (date instanceof DateTime) {
+                DateTime dateTime = (DateTime) date;
+                if (dateTime.isUtc()) {
+                    this.setUtc(true);
+                } else {
+                    this.setTimeZone(dateTime.getTimeZone());
+                }
             }
         }
-        else if (!Value.DATE.equals(getType())) {
+        if (date instanceof DateTime) {
+            DateTime dateTime = (DateTime) date;
+            if (isUtc()) {
+                dateTime.setUtc(true);
+            } else {
+                dateTime.setTimeZone(getTimeZone());
+            }
+        } else if (!Value.DATE.equals(getType())) {
             final DateTime dateTime = new DateTime(date);
             dateTime.setTimeZone(getTimeZone());
             return dates.add(dateTime);
@@ -278,94 +277,117 @@ public class DateList implements List<Date>, Serializable {
         return timeZone;
     }
 
-	public final void add(int arg0, Date arg1) {
+	@Override
+    public final void add(int arg0, Date arg1) {
 		dates.add(arg0, arg1);
 	}
 
+    @Override
 	public final boolean addAll(Collection<? extends Date> arg0) {
 		return dates.addAll(arg0);
 	}
 
+    @Override
 	public final boolean addAll(int arg0, Collection<? extends Date> arg1) {
 		return dates.addAll(arg0, arg1);
 	}
 
+    @Override
 	public final void clear() {
 		dates.clear();
 	}
 
+    @Override
 	public final boolean contains(Object o) {
 		return dates.contains(o);
 	}
 
+    @Override
 	public final boolean containsAll(Collection<?> arg0) {
 		return dates.containsAll(arg0);
 	}
 
+    @Override
 	public final Date get(int index) {
 		return dates.get(index);
 	}
 
+    @Override
 	public final int indexOf(Object o) {
 		return dates.indexOf(o);
 	}
 
+    @Override
 	public final boolean isEmpty() {
 		return dates.isEmpty();
 	}
 
+    @Override
 	public final Iterator<Date> iterator() {
 		return dates.iterator();
 	}
 
+    @Override
 	public final int lastIndexOf(Object o) {
 		return dates.lastIndexOf(o);
 	}
 
+    @Override
 	public final ListIterator<Date> listIterator() {
 		return dates.listIterator();
 	}
 
+    @Override
 	public final ListIterator<Date> listIterator(int index) {
 		return dates.listIterator(index);
 	}
 
+    @Override
 	public final Date remove(int index) {
 		return dates.remove(index);
 	}
 
+    @Override
 	public final boolean remove(Object o) {
 		return dates.remove(o);
 	}
 
+    @Override
 	public final boolean removeAll(Collection<?> arg0) {
 		return dates.removeAll(arg0);
 	}
 
+    @Override
 	public final boolean retainAll(Collection<?> arg0) {
 		return dates.retainAll(arg0);
 	}
 
+    @Override
 	public final Date set(int arg0, Date arg1) {
 		return dates.set(arg0, arg1);
 	}
 
+    @Override
 	public final int size() {
 		return dates.size();
 	}
 
+    @Override
 	public final List<Date> subList(int fromIndex, int toIndex) {
 		return dates.subList(fromIndex, toIndex);
 	}
 
+    @Override
 	public final Object[] toArray() {
 		return dates.toArray();
 	}
 
+    @Override
 	public final <T> T[] toArray(T[] arg0) {
 		return dates.toArray(arg0);
 	}
-	
+
+    @Override
 	public final boolean equals(Object obj) {
 		if (!getClass().isAssignableFrom(obj.getClass())) {
 			return false;
@@ -377,7 +399,8 @@ public class DateList implements List<Date>, Serializable {
 			.append(utc, utc)
 			.isEquals();
 	}
-	
+
+    @Override
 	public final int hashCode() {
 		return new HashCodeBuilder().append(dates)
 			.append(type)
@@ -386,4 +409,3 @@ public class DateList implements List<Date>, Serializable {
 			.toHashCode();
 	}
 }
-

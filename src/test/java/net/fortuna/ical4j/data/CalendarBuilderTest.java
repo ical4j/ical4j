@@ -119,10 +119,8 @@ public class CalendarBuilderTest extends TestCase {
             Calendar calendar = builder.build(fin);
             calendar.validate();
             fail("Should throw ParserException or ValidationException");
-        } catch (ValidationException ve) {
-            log.trace("Caught exception: [" + filename + "," + ve.getMessage() + "]");
-        } catch (ParserException ve) {
-            log.trace("Caught exception: [" + filename + "," + ve.getMessage() + "]");
+        } catch (ValidationException | ParserException e) {
+            log.trace("Caught exception: [" + filename + "," + e.getMessage() + "]");
         }
     }
     
@@ -148,19 +146,15 @@ public class CalendarBuilderTest extends TestCase {
 
         File[] testFiles = null;
 
-        // single test..
-//        suite.addTest(new CalendarBuilderTest("testBuildValid",
-//                new File("etc/samples/valid/oracle.ics").getPath()));
-
         // valid tests..
-        testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        testFiles = new File("src/test/resources/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarBuilderTest("testBuildValid", testFiles[i].getPath()));
         }
 
         // invalid tests..
-        testFiles = new File("etc/samples/invalid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        testFiles = new File("src/test/resources/samples/invalid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarBuilderTest("testBuildInvalid", testFiles[i].getPath()));

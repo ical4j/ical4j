@@ -97,7 +97,7 @@ class RDateSpec extends Specification {
 		rdate.periods.timeZone == tz
 		
 		where:
-		tzId << ['Australia/Melbourne', null]
+		tzId << ['Australia/Melbourne']
 	}
 	
 	def 'should set timezone for internal date list'() {
@@ -112,6 +112,6 @@ class RDateSpec extends Specification {
 		rdate.dates.timeZone == tz
 		
 		where:
-		tzId << ['Australia/Melbourne', null]
+		tzId << ['Australia/Melbourne']
 	}
 }

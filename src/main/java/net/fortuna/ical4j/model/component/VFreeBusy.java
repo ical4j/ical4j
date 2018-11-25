@@ -41,12 +41,9 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VFreeBusyPublishValidator;
 import net.fortuna.ical4j.validate.component.VFreeBusyReplyValidator;
 import net.fortuna.ical4j.validate.component.VFreeBusyRequestValidator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -306,11 +303,11 @@ public class VFreeBusy extends CalendarComponent {
     public VFreeBusy(final VFreeBusy request, final ComponentList<CalendarComponent> components) {
         this();
         
-        final DtStart start = (DtStart) request.getProperty(Property.DTSTART);
+        final DtStart start = request.getProperty(Property.DTSTART);
         
-        final DtEnd end = (DtEnd) request.getProperty(Property.DTEND);
+        final DtEnd end = request.getProperty(Property.DTEND);
         
-        final Duration duration = (Duration) request.getProperty(Property.DURATION);
+        final Duration duration = request.getProperty(Property.DURATION);
         
         // 4.8.2.4 Date/Time Start:
         //
@@ -389,12 +386,10 @@ public class VFreeBusy extends CalendarComponent {
             final DateRange range = new DateRange(start, end);
             // periods must be in UTC time for freebusy..
             periods.setUtc(true);
-            for (final Iterator<Period> i = periods.iterator(); i.hasNext();) {
+            periods.removeIf(period -> {
                 // check if period outside bounds..
-                if (!range.intersects(i.next())) {
-                    i.remove();
-                }
-            }
+                return !range.intersects(period);
+            });
             return new FreeBusy(periods);
         }
     }
@@ -504,13 +499,8 @@ public class VFreeBusy extends CalendarComponent {
          * ; the following are optional, ; but MUST NOT occur more than once contact / dtstart / dtend / duration /
          * dtstamp / organizer / uid / url /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.CONTACT, Property.DTSTART, Property.DTEND, Property.DURATION,
-                Property.DTSTAMP, Property.ORGANIZER, Property.UID, Property.URL), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
-            }
-        });
+        Arrays.asList(Property.CONTACT, Property.DTSTART, Property.DTEND, Property.DURATION,
+                Property.DTSTAMP, Property.ORGANIZER, Property.UID, Property.URL).forEach(parameter -> PropertyValidator.getInstance().assertOneOrLess(parameter, getProperties()));
 
         /*
          * ; the following are optional, ; and MAY occur more than once attendee / comment / freebusy / rstatus / x-prop
@@ -521,15 +511,10 @@ public class VFreeBusy extends CalendarComponent {
          * calendar component. Any recurring events are resolved into their individual busy time periods using the
          * "FREEBUSY" property.
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.RRULE, Property.EXRULE, Property.RDATE, Property.EXDATE), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertNone(input, getProperties());
-            }
-        });
+        Arrays.asList(Property.RRULE, Property.EXRULE, Property.RDATE, Property.EXDATE).forEach(property -> PropertyValidator.getInstance().assertNone(property, getProperties()));
 
         // DtEnd value must be later in time that DtStart..
-        final DtStart dtStart = (DtStart) getProperty(Property.DTSTART);
+        final DtStart dtStart = getProperty(Property.DTSTART);
         
         // 4.8.2.4 Date/Time Start:
         //
@@ -540,7 +525,7 @@ public class VFreeBusy extends CalendarComponent {
             throw new ValidationException("DTSTART must be specified in UTC time");
         }
         
-        final DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
+        final DtEnd dtEnd = getProperty(Property.DTEND);
         
         // 4.8.2.2 Date/Time End
         //
@@ -574,49 +559,49 @@ public class VFreeBusy extends CalendarComponent {
      * @return the CONTACT property or null if not specified
      */
     public final Contact getContact() {
-        return (Contact) getProperty(Property.CONTACT);
+        return getProperty(Property.CONTACT);
     }
 
     /**
      * @return the DTSTART propery or null if not specified
      */
     public final DtStart getStartDate() {
-        return (DtStart) getProperty(Property.DTSTART);
+        return getProperty(Property.DTSTART);
     }
 
     /**
      * @return the DTEND property or null if not specified
      */
     public final DtEnd getEndDate() {
-        return (DtEnd) getProperty(Property.DTEND);
+        return getProperty(Property.DTEND);
     }
 
     /**
      * @return the DURATION property or null if not specified
      */
     public final Duration getDuration() {
-        return (Duration) getProperty(Property.DURATION);
+        return getProperty(Property.DURATION);
     }
 
     /**
      * @return the DTSTAMP property or null if not specified
      */
     public final DtStamp getDateStamp() {
-        return (DtStamp) getProperty(Property.DTSTAMP);
+        return getProperty(Property.DTSTAMP);
     }
 
     /**
      * @return the ORGANIZER property or null if not specified
      */
     public final Organizer getOrganizer() {
-        return (Organizer) getProperty(Property.ORGANIZER);
+        return getProperty(Property.ORGANIZER);
     }
 
     /**
      * @return the URL property or null if not specified
      */
     public final Url getUrl() {
-        return (Url) getProperty(Property.URL);
+        return getProperty(Property.URL);
     }
 
     /**
@@ -624,7 +609,7 @@ public class VFreeBusy extends CalendarComponent {
      * @return a Uid instance, or null if no UID property exists
      */
     public final Uid getUid() {
-        return (Uid) getProperty(Property.UID);
+        return getProperty(Property.UID);
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VFreeBusy> {

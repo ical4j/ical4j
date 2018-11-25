@@ -57,7 +57,7 @@ public class ExRule extends Property {
      * Default constructor.
      */
     public ExRule() {
-        super(EXRULE, PropertyFactoryImpl.getInstance());
+        super(EXRULE, new Factory());
         recur = new Recur(Recur.DAILY, 1);
     }
 
@@ -69,7 +69,7 @@ public class ExRule extends Property {
      */
     public ExRule(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(EXRULE, aList, PropertyFactoryImpl.getInstance());
+        super(EXRULE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -77,7 +77,7 @@ public class ExRule extends Property {
      * @param aRecur a recurrence
      */
     public ExRule(final Recur aRecur) {
-        super(EXRULE, PropertyFactoryImpl.getInstance());
+        super(EXRULE, new Factory());
         recur = aRecur;
     }
 
@@ -86,7 +86,7 @@ public class ExRule extends Property {
      * @param aRecur a recurrence
      */
     public ExRule(final ParameterList aList, final Recur aRecur) {
-        super(EXRULE, aList, PropertyFactoryImpl.getInstance());
+        super(EXRULE, aList, new Factory());
         recur = aRecur;
     }
 
@@ -118,11 +118,9 @@ public class ExRule extends Property {
         this.recur = recur;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

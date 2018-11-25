@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -99,7 +98,7 @@ public class Due extends DateProperty {
      * Default constructor. The time value is initialised to the time of instantiation.
      */
     public Due() {
-        super(DUE, PropertyFactoryImpl.getInstance());
+        super(DUE, new Factory());
         // defaults to UTC time..
         setDate(new DateTime(true));
     }
@@ -110,7 +109,7 @@ public class Due extends DateProperty {
      * @param timezone initial timezone
      */
     public Due(TimeZone timezone) {
-        super(DUE, timezone, PropertyFactoryImpl.getInstance());
+        super(DUE, timezone, new Factory());
     }
 
     /**
@@ -120,7 +119,7 @@ public class Due extends DateProperty {
      * @throws ParseException where the specified string is not a valid DUE value representation
      */
     public Due(final String value) throws ParseException {
-        super(DUE, PropertyFactoryImpl.getInstance());
+        super(DUE, new Factory());
         setValue(value);
     }
 
@@ -133,7 +132,7 @@ public class Due extends DateProperty {
      *                        representation
      */
     public Due(String value, TimeZone timezone) throws ParseException {
-        super(DUE, timezone, PropertyFactoryImpl.getInstance());
+        super(DUE, timezone, new Factory());
         setValue(value);
     }
 
@@ -144,7 +143,7 @@ public class Due extends DateProperty {
      */
     public Due(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(DUE, aList, PropertyFactoryImpl.getInstance());
+        super(DUE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -154,7 +153,7 @@ public class Due extends DateProperty {
      * @param aDate a date
      */
     public Due(final Date aDate) {
-        super(DUE, PropertyFactoryImpl.getInstance());
+        super(DUE, new Factory());
         setDate(aDate);
     }
 
@@ -165,24 +164,8 @@ public class Due extends DateProperty {
      * @param aDate a date
      */
     public Due(final ParameterList aList, final Date aDate) {
-        super(DUE, aList, PropertyFactoryImpl.getInstance());
+        super(DUE, aList, new Factory());
         setDate(aDate);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        super.validate();
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
-         * (";" tzidparam) /
-         */
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

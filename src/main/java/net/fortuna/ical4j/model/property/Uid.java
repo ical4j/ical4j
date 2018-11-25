@@ -124,14 +124,14 @@ public class Uid extends Property implements Escapable {
      * Default constructor.
      */
     public Uid() {
-        super(UID, PropertyFactoryImpl.getInstance());
+        super(UID, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Uid(final String aValue) {
-        super(UID, PropertyFactoryImpl.getInstance());
+        super(UID, new Factory());
         setValue(aValue);
     }
 
@@ -140,7 +140,7 @@ public class Uid extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Uid(final ParameterList aList, final String aValue) {
-        super(UID, aList, PropertyFactoryImpl.getInstance());
+        super(UID, aList, new Factory());
         setValue(aValue);
     }
 
@@ -158,11 +158,9 @@ public class Uid extends Property implements Escapable {
         return value;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

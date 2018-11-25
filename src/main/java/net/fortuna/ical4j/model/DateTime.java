@@ -39,6 +39,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -494,9 +495,8 @@ public class DateTime extends Date {
 	 * {@inheritDoc}
 	 */
 	public final String toString() {
-		String b = super.toString() + 'T' +
+		return super.toString() + 'T' +
 				time.toString();
-		return b;
 	}
 
 	/**
@@ -519,9 +519,20 @@ public class DateTime extends Date {
 		return super.hashCode();
 	}
 
+	/**
+	 * This cache class is a workaround for DateFormat not being threadsafe.
+	 * We maintain map from Thread to DateFormat instance so that the instances
+	 * are not shared between threads (effectively a ThreadLocal).
+	 * TODO: once the project targets Java 8+, the new date utilities are
+	 * thread-safe and we should remove this code.
+	 */
 	private static class DateFormatCache {
 
-		private final Map<Thread, DateFormat> threadMap = new WeakHashMap<Thread, DateFormat>();
+		/**
+		 * This map needs to keep weak references (to avoid memory leaks - see r1.37)
+		 * and be thread-safe (since it may be concurrently modified in get() below).
+		 */
+		private final Map<Thread, DateFormat> threadMap = Collections.synchronizedMap(new WeakHashMap<Thread, DateFormat>());
 
 		private final DateFormat templateFormat;
 

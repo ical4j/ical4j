@@ -32,8 +32,9 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.Validator;
+import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -54,11 +55,14 @@ public class Resources extends Property {
 
     private TextList resources;
 
+    private final Validator<Property> validator = new OneOrLessParameterValidator(Parameter.ALTREP,
+            Parameter.LANGUAGE);
+
     /**
      * Default constructor.
      */
     public Resources() {
-        super(RESOURCES, PropertyFactoryImpl.getInstance());
+        super(RESOURCES, new ParameterList(), new Factory());
         resources = new TextList();
     }
 
@@ -67,7 +71,7 @@ public class Resources extends Property {
      * @param aValue a value string for this component
      */
     public Resources(final ParameterList aList, final String aValue) {
-        super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
+        super(RESOURCES, aList, new Factory());
         setValue(aValue);
     }
 
@@ -75,7 +79,7 @@ public class Resources extends Property {
      * @param rList a list of resources
      */
     public Resources(final TextList rList) {
-        super(RESOURCES, PropertyFactoryImpl.getInstance());
+        super(RESOURCES, new ParameterList(), new Factory());
         resources = rList;
     }
 
@@ -84,26 +88,8 @@ public class Resources extends Property {
      * @param rList a list of resources
      */
     public Resources(final ParameterList aList, final TextList rList) {
-        super(RESOURCES, aList, PropertyFactoryImpl.getInstance());
+        super(RESOURCES, aList, new Factory());
         resources = rList;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-
-        /*
-         * ; the following are optional, ; but MUST NOT occur more than once (";" altrepparam) / (";" languageparam) /
-         */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.ALTREP,
-                getParameters());
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.LANGUAGE,
-                getParameters());
-
-        /*
-         * ; the following is optional, ; and MAY occur more than once (";" xparam)
-         */
     }
 
     /**
@@ -125,6 +111,11 @@ public class Resources extends Property {
      */
     public final String getValue() {
         return getResources().toString();
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        validator.validate(this);
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

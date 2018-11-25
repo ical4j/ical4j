@@ -43,7 +43,7 @@ import java.util.ArrayList;
  * Defines a list of iCalendar properties.
  * @author Ben Fortuna
  */
-public class PropertyList extends ArrayList<Property> implements Serializable {
+public class PropertyList<T extends Property> extends ArrayList<T> implements Serializable {
 
     private static final long serialVersionUID = -8875923766224921031L;
 
@@ -68,10 +68,12 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @throws IOException where property data cannot be read
      * @throws URISyntaxException where a property contains an invalid URI
      */
-    public PropertyList(PropertyList properties) throws ParseException, IOException, URISyntaxException {
+    
+    @SuppressWarnings("unchecked")
+    public PropertyList(PropertyList<? extends T> properties) throws ParseException, IOException, URISyntaxException {
         super();
-        for (Property p : properties) {
-            add(p.copy());
+        for ( T p: properties) {
+            add((T)p.copy());
         }
     }
 
@@ -79,11 +81,9 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        for (Property property : this) {
-            buffer.append(property.toString());
-        }
-        return buffer.toString();
+        final StringBuilder sb = new StringBuilder();
+        forEach(t -> sb.append(t.toString()));
+        return sb.toString();
     }
 
     /**
@@ -91,10 +91,10 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @param aName name of property to return
      * @return a property or null if no matching property found
      */
-    public final Property getProperty(final String aName) {
-        for (final Property p : this) {
+    public final <R> R getProperty(final String aName) {
+        for (final T p : this) {
             if (p.getName().equalsIgnoreCase(aName)) {
-                return p;
+                return (R) p;
             }
         }
         return null;
@@ -105,14 +105,25 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @param name name of properties to return
      * @return a property list
      */
-    public final PropertyList getProperties(final String name) {
-        final PropertyList list = new PropertyList();
-        for (final Property p : this) {
+    @SuppressWarnings("unchecked")
+    public final <C extends T> PropertyList<C> getProperties(final String name) {
+        final PropertyList<C> list = new PropertyList<C>();
+        for (final T p : this) {
             if (p.getName().equalsIgnoreCase(name)) {
-                list.add(p);
+                list.add((C) p);
             }
         }
         return list;
+    }
+
+    /**
+     * Add a property to the list.
+     * @param property the property to add
+     * @return true
+     * @see java.util.List#add(java.lang.Object)
+     */
+    public final boolean add(final T property) {
+        return super.add(property);
     }
 
     /**
@@ -122,6 +133,6 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @see java.util.List#remove(java.lang.Object)
      */
     public final boolean remove(final Property property) {
-        return remove((Object) property);
+        return super.remove(property);
     }
 }

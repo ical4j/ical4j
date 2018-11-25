@@ -43,6 +43,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.List;
 
 /**
  * $Id$
@@ -109,7 +110,7 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        PropertyList categories = calendar.getComponent(Component.VEVENT)
+        List<Categories> categories = calendar.getComponent(Component.VEVENT)
                 .getProperties(Property.CATEGORIES);
 
         assertEquals(cat1, categories.get(0));
@@ -141,7 +142,7 @@ public class CategoriesTest extends PropertyTest {
         suite.addTest(new CategoriesTest(categories, list));
 
         // Test escaping of categories string representation..
-        Calendar calendar = Calendars.load("etc/samples/valid/categories.ics");
+        Calendar calendar = Calendars.load(CategoriesTest.class.getResource("/samples/valid/categories.ics"));
         Categories orig = (Categories) calendar.getComponent(Component.VEVENT)
                 .getProperty(Property.CATEGORIES);
 

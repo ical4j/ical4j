@@ -148,7 +148,7 @@ public class CalendarBuilder {
 
         this.parser = parser;
         this.tzRegistry = tzRegistry;
-        this.contentHandler = new ContentHandlerImpl(ComponentFactoryImpl.getInstance(),
+        this.contentHandler = new ContentHandlerImpl(new ComponentFactoryImpl(),
                 propertyFactoryRegistry, parameterFactoryRegistry);
     }
 
@@ -398,10 +398,7 @@ public class CalendarBuilder {
                 // Reset value
                 try {
                     property.setValue(strDate);
-                } catch (ParseException e) {
-                    // shouldn't happen as its already been parsed
-                    throw new CalendarException(e);
-                } catch (URISyntaxException e) {
+                } catch (ParseException | URISyntaxException e) {
                     // shouldn't happen as its already been parsed
                     throw new CalendarException(e);
                 }

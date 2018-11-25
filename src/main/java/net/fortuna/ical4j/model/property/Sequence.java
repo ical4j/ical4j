@@ -128,7 +128,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class Sequence extends Property {
+public class Sequence extends Property implements Comparable<Sequence> {
 
     private static final long serialVersionUID = -1606972893204822853L;
 
@@ -138,7 +138,7 @@ public class Sequence extends Property {
      * Default constructor.
      */
     public Sequence() {
-        super(SEQUENCE, PropertyFactoryImpl.getInstance());
+        super(SEQUENCE, new Factory());
         sequenceNo = 0;
     }
 
@@ -146,7 +146,7 @@ public class Sequence extends Property {
      * @param aValue a value string for this component
      */
     public Sequence(final String aValue) {
-        super(SEQUENCE, PropertyFactoryImpl.getInstance());
+        super(SEQUENCE, new Factory());
         setValue(aValue);
     }
 
@@ -155,7 +155,7 @@ public class Sequence extends Property {
      * @param aValue a value string for this component
      */
     public Sequence(final ParameterList aList, final String aValue) {
-        super(SEQUENCE, aList, PropertyFactoryImpl.getInstance());
+        super(SEQUENCE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -163,7 +163,7 @@ public class Sequence extends Property {
      * @param aSequenceNo a sequence number
      */
     public Sequence(final int aSequenceNo) {
-        super(SEQUENCE, PropertyFactoryImpl.getInstance());
+        super(SEQUENCE, new Factory());
         sequenceNo = aSequenceNo;
     }
 
@@ -172,7 +172,7 @@ public class Sequence extends Property {
      * @param aSequenceNo a sequence number
      */
     public Sequence(final ParameterList aList, final int aSequenceNo) {
-        super(SEQUENCE, aList, PropertyFactoryImpl.getInstance());
+        super(SEQUENCE, aList, new Factory());
         sequenceNo = aSequenceNo;
     }
 
@@ -197,11 +197,14 @@ public class Sequence extends Property {
         return String.valueOf(getSequenceNo());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    @Override
+    public void validate() throws ValidationException {
+
+    }
+
+    @Override
+    public int compareTo(Sequence o) {
+        return Integer.compare(getSequenceNo(), o.getSequenceNo());
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

@@ -41,9 +41,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.*;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
@@ -52,6 +49,7 @@ import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -294,7 +292,7 @@ public class VEvent extends CalendarComponent {
      * {@inheritDoc}
      */
     public final String toString() {
-        String b = BEGIN +
+        return BEGIN +
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR +
@@ -304,7 +302,6 @@ public class VEvent extends CalendarComponent {
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR;
-        return b;
     }
 
     /**
@@ -346,17 +343,12 @@ public class VEvent extends CalendarComponent {
          * geo / last-mod / location / organizer / priority / dtstamp / seq / status / summary / transp / uid / url /
          * recurid /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION,
+        Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTART, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER,
                 Property.PRIORITY, Property.DTSTAMP, Property.SEQUENCE, Property.STATUS, Property.SUMMARY,
-                Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
-            }
-        });
+                Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
 
-        final Status status = (Status) getProperty(Property.STATUS);
+        final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
                 && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
                 && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
@@ -386,8 +378,8 @@ public class VEvent extends CalendarComponent {
              * anniversary type of "VEVENT" can span more than one date (i.e, "DTEND" property value is set to a
              * calendar date after the "DTSTART" property value).
              */
-            final DtStart start = (DtStart) getProperty(Property.DTSTART);
-            final DtEnd end = (DtEnd) getProperty(Property.DTEND);
+            final DtStart start = getProperty(Property.DTSTART);
+            final DtEnd end = getProperty(Property.DTEND);
 
             if (start != null) {
                 final Parameter startValue = start.getParameter(Parameter.VALUE);
@@ -506,21 +498,21 @@ public class VEvent extends CalendarComponent {
      * @return the optional access classification property for an event
      */
     public final Clazz getClassification() {
-        return (Clazz) getProperty(Property.CLASS);
+        return getProperty(Property.CLASS);
     }
 
     /**
      * @return the optional creation-time property for an event
      */
     public final Created getCreated() {
-        return (Created) getProperty(Property.CREATED);
+        return getProperty(Property.CREATED);
     }
 
     /**
      * @return the optional description property for an event
      */
     public final Description getDescription() {
-        return (Description) getProperty(Property.DESCRIPTION);
+        return getProperty(Property.DESCRIPTION);
     }
 
     /**
@@ -528,91 +520,91 @@ public class VEvent extends CalendarComponent {
      * @return The DtStart object representation of the start Date
      */
     public final DtStart getStartDate() {
-        return (DtStart) getProperty(Property.DTSTART);
+        return getProperty(Property.DTSTART);
     }
 
     /**
      * @return the optional geographic position property for an event
      */
     public final Geo getGeographicPos() {
-        return (Geo) getProperty(Property.GEO);
+        return getProperty(Property.GEO);
     }
 
     /**
      * @return the optional last-modified property for an event
      */
     public final LastModified getLastModified() {
-        return (LastModified) getProperty(Property.LAST_MODIFIED);
+        return getProperty(Property.LAST_MODIFIED);
     }
 
     /**
      * @return the optional location property for an event
      */
     public final Location getLocation() {
-        return (Location) getProperty(Property.LOCATION);
+        return getProperty(Property.LOCATION);
     }
 
     /**
      * @return the optional organizer property for an event
      */
     public final Organizer getOrganizer() {
-        return (Organizer) getProperty(Property.ORGANIZER);
+        return getProperty(Property.ORGANIZER);
     }
 
     /**
      * @return the optional priority property for an event
      */
     public final Priority getPriority() {
-        return (Priority) getProperty(Property.PRIORITY);
+        return getProperty(Property.PRIORITY);
     }
 
     /**
      * @return the optional date-stamp property
      */
     public final DtStamp getDateStamp() {
-        return (DtStamp) getProperty(Property.DTSTAMP);
+        return getProperty(Property.DTSTAMP);
     }
 
     /**
      * @return the optional sequence number property for an event
      */
     public final Sequence getSequence() {
-        return (Sequence) getProperty(Property.SEQUENCE);
+        return getProperty(Property.SEQUENCE);
     }
 
     /**
      * @return the optional status property for an event
      */
     public final Status getStatus() {
-        return (Status) getProperty(Property.STATUS);
+        return getProperty(Property.STATUS);
     }
 
     /**
      * @return the optional summary property for an event
      */
     public final Summary getSummary() {
-        return (Summary) getProperty(Property.SUMMARY);
+        return getProperty(Property.SUMMARY);
     }
 
     /**
      * @return the optional time transparency property for an event
      */
     public final Transp getTransparency() {
-        return (Transp) getProperty(Property.TRANSP);
+        return getProperty(Property.TRANSP);
     }
 
     /**
      * @return the optional URL property for an event
      */
     public final Url getUrl() {
-        return (Url) getProperty(Property.URL);
+        return getProperty(Property.URL);
     }
 
     /**
      * @return the optional recurrence identifier property for an event
      */
     public final RecurrenceId getRecurrenceId() {
-        return (RecurrenceId) getProperty(Property.RECURRENCE_ID);
+        return getProperty(Property.RECURRENCE_ID);
     }
 
     /**
@@ -632,7 +624,7 @@ public class VEvent extends CalendarComponent {
      * @return The end for this VEVENT.
      */
     public final DtEnd getEndDate(final boolean deriveFromDuration) {
-        DtEnd dtEnd = (DtEnd) getProperty(Property.DTEND);
+        DtEnd dtEnd = getProperty(Property.DTEND);
         // No DTEND? No problem, we'll use the DURATION.
         if (dtEnd == null && deriveFromDuration && getStartDate() != null) {
             final DtStart dtStart = getStartDate();
@@ -648,10 +640,12 @@ public class VEvent extends CalendarComponent {
             }
 
             dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration()
-                    .getTime(dtStart.getDate()), (Value) dtStart
+                    .getTime(dtStart.getDate()), dtStart
                     .getParameter(Parameter.VALUE)));
             if (dtStart.isUtc()) {
                 dtEnd.setUtc(true);
+            } else {
+                dtEnd.setTimeZone(dtStart.getTimeZone());
             }
         }
         return dtEnd;
@@ -661,7 +655,7 @@ public class VEvent extends CalendarComponent {
      * @return the optional Duration property
      */
     public final Duration getDuration() {
-        return (Duration) getProperty(Property.DURATION);
+        return getProperty(Property.DURATION);
     }
 
     /**
@@ -669,7 +663,7 @@ public class VEvent extends CalendarComponent {
      * @return a Uid instance, or null if no UID property exists
      */
     public final Uid getUid() {
-        return (Uid) getProperty(Property.UID);
+        return getProperty(Property.UID);
     }
 
     /**
@@ -678,7 +672,7 @@ public class VEvent extends CalendarComponent {
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VEvent) {
             return super.equals(arg0)
-                    && ObjectUtils.equals(alarms, ((VEvent) arg0).getAlarms());
+                    && Objects.equals(alarms, ((VEvent) arg0).getAlarms());
         }
         return super.equals(arg0);
     }

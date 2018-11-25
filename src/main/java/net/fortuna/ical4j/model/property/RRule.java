@@ -57,7 +57,7 @@ public class RRule extends Property {
      * Default constructor.
      */
     public RRule() {
-        super(RRULE, PropertyFactoryImpl.getInstance());
+        super(RRULE, new Factory());
         recur = new Recur(Recur.DAILY, 1);
     }
 
@@ -66,7 +66,7 @@ public class RRule extends Property {
      * @throws ParseException where the specified string is not a valid rule
      */
     public RRule(String value) throws ParseException {
-        super(RRULE, PropertyFactoryImpl.getInstance());
+        super(RRULE, new Factory());
         setValue(value);
     }
 
@@ -78,7 +78,7 @@ public class RRule extends Property {
      */
     public RRule(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(RRULE, aList, PropertyFactoryImpl.getInstance());
+        super(RRULE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -86,7 +86,7 @@ public class RRule extends Property {
      * @param aRecur a recurrence value
      */
     public RRule(final Recur aRecur) {
-        super(RRULE, PropertyFactoryImpl.getInstance());
+        super(RRULE, new Factory());
         recur = aRecur;
     }
 
@@ -95,7 +95,7 @@ public class RRule extends Property {
      * @param aRecur a recurrence value
      */
     public RRule(final ParameterList aList, final Recur aRecur) {
-        super(RRULE, aList, PropertyFactoryImpl.getInstance());
+        super(RRULE, aList, new Factory());
         recur = aRecur;
     }
 
@@ -120,11 +120,9 @@ public class RRule extends Property {
         return getRecur().toString();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

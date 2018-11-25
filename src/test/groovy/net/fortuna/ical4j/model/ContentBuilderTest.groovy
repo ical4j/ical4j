@@ -31,10 +31,9 @@
  */
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.property.Version
 import net.fortuna.ical4j.model.component.VFreeBusy
-import net.fortuna.ical4j.util.UidGenerator
-import net.fortuna.ical4j.util.SimpleHostInfo
+import net.fortuna.ical4j.model.property.Version
+import net.fortuna.ical4j.util.RandomUidGenerator
 
 /**
  * $Id$
@@ -111,7 +110,7 @@ public class ContentBuilderTest extends GroovyTestCase {
         assert uid.value == '1'
         println(uid)
         
-        uid = new UidGenerator(new SimpleHostInfo('example.com'), '1').generateUid()
+        uid = new RandomUidGenerator().generateUid()
         assert uid == new ContentBuilder().uid(uid)
         println(uid)
     }

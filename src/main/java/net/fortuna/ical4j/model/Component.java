@@ -42,7 +42,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -118,7 +118,7 @@ public abstract class Component implements Serializable {
 
     private String name;
 
-    private PropertyList properties;
+    private PropertyList<Property> properties;
 
     /**
      * Constructs a new component containing no properties.
@@ -126,7 +126,7 @@ public abstract class Component implements Serializable {
      * @param s a component name
      */
     protected Component(final String s) {
-        this(s, new PropertyList());
+        this(s, new PropertyList<Property>());
     }
 
     /**
@@ -135,7 +135,7 @@ public abstract class Component implements Serializable {
      * @param s component name
      * @param p a list of properties
      */
-    protected Component(final String s, final PropertyList p) {
+    protected Component(final String s, final PropertyList<Property> p) {
         this.name = s;
         this.properties = p;
     }
@@ -144,7 +144,7 @@ public abstract class Component implements Serializable {
      * {@inheritDoc}
      */
     public String toString() {
-        String buffer = BEGIN +
+        return BEGIN +
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR +
@@ -153,8 +153,6 @@ public abstract class Component implements Serializable {
                 ':' +
                 getName() +
                 Strings.LINE_SEPARATOR;
-
-        return buffer;
     }
 
     /**
@@ -167,7 +165,7 @@ public abstract class Component implements Serializable {
     /**
      * @return Returns the properties.
      */
-    public final PropertyList getProperties() {
+    public final PropertyList<Property> getProperties() {
         return properties;
     }
 
@@ -177,7 +175,7 @@ public abstract class Component implements Serializable {
      * @param name name of properties to retrieve
      * @return a property list containing only properties with the specified name
      */
-    public final PropertyList getProperties(final String name) {
+    public final <C extends Property> PropertyList<C> getProperties(final String name) {
         return getProperties().getProperties(name);
     }
 
@@ -187,8 +185,8 @@ public abstract class Component implements Serializable {
      * @param name name of the property to retrieve
      * @return the first matching property in the property list with the specified name
      */
-    public final Property getProperty(final String name) {
-        return getProperties().getProperty(name);
+    public final <T extends Property> T getProperty(final String name) {
+        return (T) getProperties().getProperty(name);
     }
 
     /**
@@ -267,9 +265,9 @@ public abstract class Component implements Serializable {
             URISyntaxException {
 
         // Deep copy properties..
-        final PropertyList newprops = new PropertyList(getProperties());
+        final PropertyList<Property> newprops = new PropertyList<Property>(getProperties());
 
-        return ComponentFactoryImpl.getInstance().createComponent(getName(),
+        return new ComponentFactoryImpl().createComponent(getName(),
                 newprops);
     }
 
@@ -293,19 +291,19 @@ public abstract class Component implements Serializable {
 
         final PeriodList recurrenceSet = new PeriodList();
 
-        final DtStart start = (DtStart) getProperty(Property.DTSTART);
-        DateProperty end = (DateProperty) getProperty(Property.DTEND);
+        final DtStart start = getProperty(Property.DTSTART);
+        DateProperty end = getProperty(Property.DTEND);
         if (end == null) {
-            end = (DateProperty) getProperty(Property.DUE);
+            end = getProperty(Property.DUE);
         }
-        Duration duration = (Duration) getProperty(Property.DURATION);
+        Duration duration = getProperty(Property.DURATION);
 
         // if no start date specified return empty list..
         if (start == null) {
             return recurrenceSet;
         }
 
-        final Value startValue = (Value) start.getParameter(Parameter.VALUE);
+        final Value startValue = start.getParameter(Parameter.VALUE);
 
         // initialise timezone..
 //        if (startValue == null || Value.DATE_TIME.equals(startValue)) {
@@ -326,11 +324,11 @@ public abstract class Component implements Serializable {
         } else {
             rDuration = duration.getDuration();
         }
-
+        
+        List<RDate> rDates = getProperties(Property.RDATE);
         // add recurrence dates..
-        for (Property property3 : getProperties(Property.RDATE)) {
-            final RDate rdate = (RDate) property3;
-            final Value rdateValue = (Value) rdate.getParameter(Parameter.VALUE);
+        for (RDate rdate : rDates) {            
+            final Value rdateValue = rdate.getParameter(Parameter.VALUE);
             if (Value.PERIOD.equals(rdateValue)) {
                 for (final Period rdatePeriod : rdate.getPeriods()) {
                     if (period.intersects(rdatePeriod)) {
@@ -392,14 +390,11 @@ public abstract class Component implements Serializable {
         // subtract exception dates..
         for (Property property1 : getProperties(Property.EXDATE)) {
             final ExDate exdate = (ExDate) property1;
-            for (final Iterator<Period> j = recurrenceSet.iterator(); j.hasNext(); ) {
-                final Period recurrence = j.next();
+            recurrenceSet.removeIf(recurrence -> {
                 // for DATE-TIME instances check for DATE-based exclusions also..
-                if (exdate.getDates().contains(recurrence.getStart())
-                        || exdate.getDates().contains(new Date(recurrence.getStart()))) {
-                    j.remove();
-                }
-            }
+                return exdate.getDates().contains(recurrence.getStart())
+                        || exdate.getDates().contains(new Date(recurrence.getStart()));
+            });
         }
 
         // subtract exception rules..
@@ -407,14 +402,11 @@ public abstract class Component implements Serializable {
             final ExRule exrule = (ExRule) property;
             final DateList exruleDates = exrule.getRecur().getDates(start.getDate(),
                     period, startValue);
-            for (final Iterator<Period> j = recurrenceSet.iterator(); j.hasNext(); ) {
-                final Period recurrence = j.next();
+            recurrenceSet.removeIf(recurrence -> {
                 // for DATE-TIME instances check for DATE-based exclusions also..
-                if (exruleDates.contains(recurrence.getStart())
-                        || exruleDates.contains(new Date(recurrence.getStart()))) {
-                    j.remove();
-                }
-            }
+                return exruleDates.contains(recurrence.getStart())
+                        || exruleDates.contains(new Date(recurrence.getStart()));
+            });
         }
 
         return recurrenceSet;

@@ -57,14 +57,14 @@ public class TzOffsetFrom extends Property {
      * Default constructor.
      */
     public TzOffsetFrom() {
-        super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETFROM, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzOffsetFrom(final String aValue) {
-        super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETFROM, new Factory());
         setValue(aValue);
     }
 
@@ -73,7 +73,7 @@ public class TzOffsetFrom extends Property {
      * @param aValue a value string for this component
      */
     public TzOffsetFrom(final ParameterList aList, final String aValue) {
-        super(TZOFFSETFROM, aList, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETFROM, aList, new Factory());
         setValue(aValue);
     }
 
@@ -81,7 +81,7 @@ public class TzOffsetFrom extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetFrom(final UtcOffset anOffset) {
-        super(TZOFFSETFROM, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETFROM, new Factory());
         offset = anOffset;
     }
 
@@ -90,7 +90,7 @@ public class TzOffsetFrom extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetFrom(final ParameterList aList, final UtcOffset anOffset) {
-        super(TZOFFSETFROM, aList, PropertyFactoryImpl.getInstance());
+        super(TZOFFSETFROM, aList, new Factory());
         offset = anOffset;
     }
 
@@ -125,11 +125,9 @@ public class TzOffsetFrom extends Property {
         this.offset = offset;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.parameter.CuType;
+import net.fortuna.ical4j.util.CompatibilityHints;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,8 +60,17 @@ public class IndexedPropertyListTest extends TestCase {
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
+        CompatibilityHints.setHintEnabled(
+                CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
         CalendarBuilder builder = new CalendarBuilder();
-        calendar = builder.build(new FileReader("etc/samples/valid/incoming.ics"));
+        calendar = builder.build(getClass().getResourceAsStream("/samples/valid/incoming.ics"));
+    }
+
+    /* (non-Javadoc)
+     * @see junit.framework.TestCase#tearDown()
+     */
+    protected final void tearDown() throws Exception {
+        CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
     }
 
     /**

@@ -109,14 +109,14 @@ public class BusyType extends Property {
      * Default constructor.
      */
     public BusyType() {
-        super(BUSYTYPE, PropertyFactoryImpl.getInstance());
+        super(BUSYTYPE, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public BusyType(final String aValue) {
-        super(BUSYTYPE, PropertyFactoryImpl.getInstance());
+        super(BUSYTYPE, new Factory());
         this.value = aValue;
     }
 
@@ -125,7 +125,7 @@ public class BusyType extends Property {
      * @param aValue a value string for this component
      */
     public BusyType(final ParameterList aList, final String aValue) {
-        super(BUSYTYPE, aList, PropertyFactoryImpl.getInstance());
+        super(BUSYTYPE, aList, new Factory());
         this.value = aValue;
     }
 
@@ -143,11 +143,9 @@ public class BusyType extends Property {
         return value;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final void validate() throws ValidationException {
-        // TODO: Auto-generated method stub
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<BusyType> {
