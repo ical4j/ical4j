@@ -7,6 +7,8 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.Arrays;
+
 /**
  * Common validation for all iTIP methods.
  *
@@ -51,9 +53,8 @@ public class VTimeZoneITIPValidator implements Validator<VTimeZone> {
      */
     public void validate(VTimeZone target) throws ValidationException {
         for (final Observance observance : target.getObservances()) {
-            PropertyValidator.getInstance().assertOne(Property.DTSTART, observance.getProperties());
-            PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM, observance.getProperties());
-            PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO, observance.getProperties());
+            Arrays.asList(Property.DTSTART, Property.TZOFFSETFROM, Property.TZOFFSETTO).forEach(
+                    property -> PropertyValidator.getInstance().assertOne(property, observance.getProperties()));
 
             PropertyValidator.getInstance().assertOneOrLess(Property.TZNAME, observance.getProperties());
         }

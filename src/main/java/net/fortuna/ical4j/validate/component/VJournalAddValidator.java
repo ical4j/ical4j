@@ -63,7 +63,7 @@ public class VJournalAddValidator implements Validator<VJournal> {
         Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.LAST_MODIFIED,
                 Property.STATUS, Property.SUMMARY, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
-        PropertyValidator.getInstance().assertNone(Property.ATTENDEE, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, target.getProperties());
+        Arrays.asList(Property.ATTENDEE, Property.RECURRENCE_ID).forEach(
+                property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
     }
 }

@@ -73,10 +73,8 @@ public class VToDoCancelValidator implements Validator<VToDo> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VToDo target) throws ValidationException {
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.SEQUENCE, target.getProperties());
+        Arrays.asList(Property.UID, Property.DTSTAMP, Property.ORGANIZER, Property.SEQUENCE).forEach(
+                property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTART, Property.DUE, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,

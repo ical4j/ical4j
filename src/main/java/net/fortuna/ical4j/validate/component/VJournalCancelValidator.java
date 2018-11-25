@@ -60,10 +60,8 @@ public class VJournalCancelValidator implements Validator<VJournal> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VJournal target) throws ValidationException {
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.SEQUENCE, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+        Arrays.asList(Property.DTSTAMP, Property.ORGANIZER, Property.SEQUENCE, Property.UID).forEach(
+                property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTART, Property.LAST_MODIFIED, Property.RECURRENCE_ID, Property.STATUS, Property.SUMMARY,
