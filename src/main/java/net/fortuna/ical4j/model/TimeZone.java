@@ -96,7 +96,7 @@ public class TimeZone extends java.util.TimeZone {
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));
         if (observance != null) {
             final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);
-            return (int) offset.getOffset().getOffset();
+            return (int) (offset.getOffset().getTotalSeconds() * 1000L);
         }
         return 0;
     }
@@ -108,10 +108,10 @@ public class TimeZone extends java.util.TimeZone {
         final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
         if (observance != null) {
             final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);
-            if (offset.getOffset().getOffset() < getRawOffset()) {
+            if ((offset.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
                 return getRawOffset();
             } else {
-                return (int) offset.getOffset().getOffset();
+                return (int) (offset.getOffset().getTotalSeconds() * 1000L);
             }
         }
         return 0;
@@ -192,7 +192,7 @@ public class TimeZone extends java.util.TimeZone {
         if (latestSeasonalTime != null) {
             final TzOffsetTo offsetTo = latestSeasonalTime.getProperty(Property.TZOFFSETTO);
             if (offsetTo != null) {
-                return (int) offsetTo.getOffset().getOffset();
+                return (int) (offsetTo.getOffset().getTotalSeconds() * 1000L);
             }
         }
         return 0;

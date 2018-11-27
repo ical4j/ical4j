@@ -47,6 +47,7 @@ import java.text.NumberFormat;
  *
  * @author Ben Fortuna
  */
+@Deprecated
 public class UtcOffset implements Serializable {
 
     private static final long serialVersionUID = 5883111996721531728L;
