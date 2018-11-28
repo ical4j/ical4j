@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.DateTime
-import net.fortuna.ical4j.model.Dur
 import spock.lang.Specification
 
 class TriggerSpec extends Specification {
@@ -43,7 +42,7 @@ class TriggerSpec extends Specification {
 		
 		where:
 		value							| expectedValue
-        new Dur(0) | 'P0D'
+        java.time.Period.ZERO | 'P0D'
 		new DateTime('20110131T012647Z')| '20110131T012647Z'
 	}
 

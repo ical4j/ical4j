@@ -102,7 +102,8 @@ public class CalendarTest {
         calEnd.setTime(calStart.getTime());
         calEnd.add(java.util.Calendar.YEAR, 1);
 
-        VEvent week1UserA = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 1 - User A");
+        VEvent week1UserA = new VEvent(new Date(calStart.getTime().getTime()),
+                java.time.Duration.ofHours(8), "Week 1 - User A");
         week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
@@ -120,7 +121,8 @@ public class CalendarTest {
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
 
-        VEvent week2UserB = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 2 - User B");
+        VEvent week2UserB = new VEvent(new Date(calStart.getTime().getTime()),
+                java.time.Duration.ofHours(8), "Week 2 - User B");
         week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
@@ -138,7 +140,8 @@ public class CalendarTest {
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
 
-        VEvent week3UserC = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 3 - User C");
+        VEvent week3UserC = new VEvent(new Date(calStart.getTime().getTime()),
+                java.time.Duration.ofHours(8), "Week 3 - User C");
         week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
@@ -172,7 +175,8 @@ public class CalendarTest {
         calEnd.setTime(calStart.getTime());
         calEnd.add(java.util.Calendar.YEAR, 1);
 
-        week1UserA = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 1 - User A");
+        week1UserA = new VEvent(new Date(calStart.getTime().getTime()),
+                java.time.Duration.ofHours(8), "Week 1 - User A");
         week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
@@ -190,7 +194,8 @@ public class CalendarTest {
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
 
-        week2UserB = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 2 - User B");
+        week2UserB = new VEvent(new Date(calStart.getTime().getTime()),
+                java.time.Duration.ofHours(8), "Week 2 - User B");
         week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
@@ -208,7 +213,8 @@ public class CalendarTest {
         calStart.add(java.util.Calendar.WEEK_OF_YEAR, 1);
         calEnd.add(java.util.Calendar.WEEK_OF_YEAR, 1);
 
-        week3UserC = new VEvent(new Date(calStart.getTime().getTime()), new Dur(0, 8, 0, 0), "Week 3 - User C");
+        week3UserC = new VEvent(new Date(calStart.getTime().getTime()),
+                java.time.Duration.ofHours(8), "Week 3 - User C");
         week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 

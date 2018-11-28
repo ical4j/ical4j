@@ -38,6 +38,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.*;
 
+import java.time.temporal.TemporalAmount;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -232,7 +233,7 @@ public class VAlarm extends CalendarComponent {
      * Constructs a new VALARM instance that will trigger at the specified time relative to the event/todo component.
      * @param trigger a duration of time relative to the parent component that the alarm will trigger at
      */
-    public VAlarm(final Dur trigger) {
+    public VAlarm(final TemporalAmount trigger) {
         this();
         getProperties().add(new Trigger(trigger));
     }

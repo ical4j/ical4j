@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
 
 /**
@@ -315,12 +316,12 @@ public abstract class Component implements Serializable {
 
         // if an explicit event duration is not specified, derive a value for recurring
         // periods from the end date..
-        Dur rDuration;
+        TemporalAmount rDuration;
         // if no end or duration specified, end date equals start date..
         if (end == null && duration == null) {
-            rDuration = new Dur(start.getDate(), start.getDate());
+            rDuration = java.time.Duration.ZERO;
         } else if (duration == null) {
-            rDuration = new Dur(start.getDate(), end.getDate());
+            rDuration = TemporalAmountAdapter.fromDateRange(start.getDate(), end.getDate()).getDuration();
         } else {
             rDuration = duration.getDuration();
         }
@@ -353,8 +354,7 @@ public abstract class Component implements Serializable {
         // allow for recurrence rules that start prior to the specified period
         // but still intersect with it..
         final DateTime startMinusDuration = new DateTime(period.getStart());
-        startMinusDuration.setTime(rDuration.negate().getTime(
-                period.getStart()).getTime());
+        startMinusDuration.setTime(Date.from(period.getStart().toInstant().minus(rDuration)).getTime());
 
         // add recurrence rules..
         for (Property property2 : getProperties(Property.RRULE)) {

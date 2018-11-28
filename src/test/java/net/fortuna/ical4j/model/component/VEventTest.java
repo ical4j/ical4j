@@ -222,7 +222,8 @@ public class VEventTest extends CalendarComponentTest {
         cal.set(java.util.Calendar.HOUR_OF_DAY, 9);
         cal.set(java.util.Calendar.MINUTE, 30);
 
-        VEvent meeting = new VEvent(new DateTime(cal.getTime().getTime()), new Dur(0, 1, 0, 0), "Progress Meeting");
+        VEvent meeting = new VEvent(new DateTime(cal.getTime().getTime()),
+                java.time.Duration.ofHours(1), "Progress Meeting");
 
         // add timezone information..
         meeting.getProperty(Property.DTSTART).getParameters().add(tzParam);
@@ -465,7 +466,8 @@ public class VEventTest extends CalendarComponentTest {
         Calendar cal = getCalendarInstance();
         Date startDate = new Date(cal.getTime());
         log.info("Start date: " + startDate);
-        VEvent event = new VEvent(startDate, new Dur(3, 0, 0, 0), "3 day event");
+        VEvent event = new VEvent(startDate,
+                java.time.Duration.ofDays(3), "3 day event");
         Date endDate = event.getEndDate().getDate();
         log.info("End date: " + endDate);
         cal.add(Calendar.DAY_OF_YEAR, 3);
@@ -480,7 +482,8 @@ public class VEventTest extends CalendarComponentTest {
         TimeZone timezone = new TimeZoneRegistryImpl().getTimeZone("Asia/Seoul");
         DateTime startDateTime = new DateTime("20181003T130000", timezone);
         log.info("Start date: " + startDateTime);
-        VEvent event = new VEvent(startDateTime, new Dur(0, 1, 0, 0), "1 hour event");
+        VEvent event = new VEvent(startDateTime,
+                java.time.Duration.ofHours(1), "1 hour event");
         assertEquals(new DateTime("20181003T140000", timezone), event.getEndDate().getDate());
     }
 
@@ -492,8 +495,7 @@ public class VEventTest extends CalendarComponentTest {
     public void testGetConsumedTimeWithExDate() throws ParseException {
 
         VEvent event1 = new VEvent(new DateTime("20050103T080000"),
-                new Dur(0, 0, 15, 0),
-                "Event 1");
+                java.time.Duration.ofMinutes(15), "Event 1");
 
         Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         RRule rRule = new RRule(rRuleRecur);

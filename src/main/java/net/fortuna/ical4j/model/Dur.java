@@ -71,6 +71,8 @@ import java.util.StringTokenizer;
  * </pre>
  *
  * @author Ben Fortuna
+ *
+ * @deprecated Replaced by {@link java.time.temporal.TemporalAmount} implementations such as {@link java.time.Duration} and {@link Period} in Java 8.
  */
 @Deprecated
 public class Dur implements Comparable<Dur>, Serializable {
