@@ -35,6 +35,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.text.ParseException;
+import java.time.temporal.TemporalAmount;
 import java.util.Date;
 
 /**
@@ -52,7 +53,7 @@ public class Period extends DateRange implements Comparable<Period> {
     
     private static final long serialVersionUID = 7321090422911676490L;
 
-    private Dur duration;
+    private TemporalAmountAdapter duration;
 
     /**
      * Constructor.
@@ -97,9 +98,9 @@ public class Period extends DateRange implements Comparable<Period> {
      * @param duration
      *            the duration of the period
      */
-    public Period(final DateTime start, final Dur duration) {
-        super(start, new DateTime(duration.getTime(start)));
-        this.duration = duration;
+    public Period(final DateTime start, final TemporalAmount duration) {
+        super(start, new DateTime(Date.from(start.toInstant().plus(duration))));
+        this.duration = new TemporalAmountAdapter(duration);
         normalise();
     }
 
@@ -114,8 +115,8 @@ public class Period extends DateRange implements Comparable<Period> {
         }
         catch (ParseException e) {
             if (resolve) {
-                final Dur duration = parseDuration(value);
-                end = new DateTime(duration.getTime(parseStartDate(value)));
+                final TemporalAmount duration = parseDuration(value).getDuration();
+                end = new DateTime(Date.from(parseStartDate(value).toInstant().plus(duration)));
             }
             else {
                 throw e;
@@ -124,8 +125,9 @@ public class Period extends DateRange implements Comparable<Period> {
         return end;
     }
     
-    private static Dur parseDuration(String value) {
-        return new Dur(value.substring(value.indexOf('/') + 1));
+    private static TemporalAmountAdapter parseDuration(String value) {
+        String durationString = value.substring(value.indexOf('/') + 1);
+        return TemporalAmountAdapter.parse(durationString);
     }
     
     private void normalise() {
@@ -144,11 +146,11 @@ public class Period extends DateRange implements Comparable<Period> {
      * 
      * @return the duration of this period in milliseconds.
      */
-    public final Dur getDuration() {
+    public final TemporalAmount getDuration() {
         if (duration == null) {
-            return new Dur(getStart(), getEnd());
+            return TemporalAmountAdapter.fromDateRange(getStart(), getEnd()).getDuration();
         }
-        return duration;
+        return duration.getDuration();
     }
 
     /**
@@ -336,7 +338,7 @@ public class Period extends DateRange implements Comparable<Period> {
             }
         }
         // ..or durations
-        return getDuration().compareTo(arg0.getDuration());
+        return new TemporalAmountComparator().compare(getDuration(), arg0.getDuration());
     }
 
     /**
