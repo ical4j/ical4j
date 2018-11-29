@@ -20,14 +20,14 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.ParseException;
-import java.time.*;
 import java.time.Period;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.time.zone.ZoneOffsetTransition;
 import java.time.zone.ZoneOffsetTransitionRule;
-import java.util.*;
 import java.util.TimeZone;
+import java.util.*;
 
 public class TimeZoneLoader {
 
@@ -55,8 +55,8 @@ public class TimeZoneLoader {
         TIMEZONE_DEFINITIONS.addAll(Arrays.asList(net.fortuna.ical4j.model.TimeZone.getAvailableIDs()));
 
         NO_TRANSITIONS = new Standard();
-        TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(0));
-        TzOffsetTo offsetTo = new TzOffsetTo(new UtcOffset(0));
+        TzOffsetFrom offsetFrom = new TzOffsetFrom(ZoneOffset.UTC);
+        TzOffsetTo offsetTo = new TzOffsetTo(ZoneOffset.UTC);
         NO_TRANSITIONS.getProperties().add(offsetFrom);
         NO_TRANSITIONS.getProperties().add(offsetTo);
         DtStart start = new DtStart();
@@ -222,8 +222,8 @@ public class TimeZoneLoader {
             String rruleText = String.format(RRULE_TPL, transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
 
             try {
-                TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(transitionRule.getOffsetBefore().getTotalSeconds() * 1000L));
-                TzOffsetTo offsetTo = new TzOffsetTo(new UtcOffset(transitionRule.getOffsetAfter().getTotalSeconds() * 1000L));
+                TzOffsetFrom offsetFrom = new TzOffsetFrom(transitionRule.getOffsetBefore());
+                TzOffsetTo offsetTo = new TzOffsetTo(transitionRule.getOffsetAfter());
                 RRule rrule = new RRule(rruleText);
 
                 Observance observance = (transitionRule.getOffsetAfter().getTotalSeconds() > rawTimeZoneOffsetInSeconds) ? new Daylight() : new Standard();
@@ -261,8 +261,8 @@ public class TimeZoneLoader {
             LocalDateTime start = Collections.min(e.getValue()).getDateTimeBefore();
 
             DtStart dtStart = new DtStart(start.format(DateTimeFormatter.ofPattern(DATE_TIME_TPL)));
-            TzOffsetFrom offsetFrom = new TzOffsetFrom(new UtcOffset(e.getKey().offsetBefore.getTotalSeconds() * 1000L));
-            TzOffsetTo offsetTo = new TzOffsetTo(new UtcOffset(e.getKey().offsetAfter.getTotalSeconds() * 1000L));
+            TzOffsetFrom offsetFrom = new TzOffsetFrom(e.getKey().offsetBefore);
+            TzOffsetTo offsetTo = new TzOffsetTo(e.getKey().offsetAfter);
 
             observance.getProperties().add(dtStart);
             observance.getProperties().add(offsetFrom);

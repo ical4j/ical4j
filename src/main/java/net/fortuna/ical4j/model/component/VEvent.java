@@ -46,6 +46,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.temporal.TemporalAmount;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -273,7 +274,7 @@ public class VEvent extends CalendarComponent {
      * @param duration the duration of the new event
      * @param summary the event summary
      */
-    public VEvent(final Date start, final Dur duration, final String summary) {
+    public VEvent(final Date start, final TemporalAmount duration, final String summary) {
         this();
         getProperties().add(new DtStart(start));
         getProperties().add(new Duration(duration));
@@ -633,15 +634,14 @@ public class VEvent extends CalendarComponent {
                 vEventDuration = getDuration();
             } else if (dtStart.getDate() instanceof DateTime) {
                 // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
-                vEventDuration = new Duration(new Dur(0, 0, 0, 0));
+                vEventDuration = new Duration(java.time.Duration.ZERO);
             } else {
                 // If "DTSTART" is a DATE, then the event's duration is one day (see: RFC 5545, 3.6.1 Event Component)
-                vEventDuration = new Duration(new Dur(1, 0, 0, 0));
+                vEventDuration = new Duration(java.time.Duration.ofDays(1));
             }
 
-            dtEnd = new DtEnd(Dates.getInstance(vEventDuration.getDuration()
-                    .getTime(dtStart.getDate()), dtStart
-                    .getParameter(Parameter.VALUE)));
+            dtEnd = new DtEnd(Dates.getInstance(Date.from(dtStart.getDate().toInstant().plus(vEventDuration.getDuration())),
+                    dtStart.getParameter(Parameter.VALUE)));
             if (dtStart.isUtc()) {
                 dtEnd.setUtc(true);
             } else {

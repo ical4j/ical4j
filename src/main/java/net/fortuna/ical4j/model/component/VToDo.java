@@ -44,6 +44,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.temporal.TemporalAmount;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -187,7 +188,7 @@ public class VToDo extends CalendarComponent {
      * @param duration the duration of the new todo
      * @param summary the todo summary
      */
-    public VToDo(final Date start, final Dur duration, final String summary) {
+    public VToDo(final Date start, final TemporalAmount duration, final String summary) {
         this();
         getProperties().add(new DtStart(start));
         getProperties().add(new Duration(duration));

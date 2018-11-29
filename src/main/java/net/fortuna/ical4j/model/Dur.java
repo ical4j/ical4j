@@ -47,20 +47,20 @@ import java.util.StringTokenizer;
  *
  * Represents a duration of time in iCalendar. Note that according to RFC2445 durations represented in weeks are
  * mutually exclusive of other duration fields.
- * 
+ *
  * <pre>
  *  4.3.6   Duration
- *  
+ *
  *     Value Name: DURATION
- *  
+ *
  *     Purpose: This value type is used to identify properties that contain
  *     a duration of time.
- *  
+ *
  *     Formal Definition: The value type is defined by the following
  *     notation:
- *  
+ *
  *       dur-value  = ([&quot;+&quot;] / &quot;-&quot;) &quot;P&quot; (dur-date / dur-time / dur-week)
- *  
+ *
  *       dur-date   = dur-day [dur-time]
  *       dur-time   = &quot;T&quot; (dur-hour / dur-minute / dur-second)
  *       dur-week   = 1*DIGIT &quot;W&quot;
@@ -69,9 +69,12 @@ import java.util.StringTokenizer;
  *       dur-second = 1*DIGIT &quot;S&quot;
  *       dur-day    = 1*DIGIT &quot;D&quot;
  * </pre>
- * 
+ *
  * @author Ben Fortuna
+ *
+ * @deprecated Replaced by {@link java.time.temporal.TemporalAmount} implementations such as {@link java.time.Duration} and {@link Period} in Java 8.
  */
+@Deprecated
 public class Dur implements Comparable<Dur>, Serializable {
 
     private static final long serialVersionUID = 5013232281547134583L;
@@ -173,16 +176,16 @@ public class Dur implements Comparable<Dur>, Serializable {
 
         if (!(days >= 0 && hours >= 0 && minutes >= 0 && seconds >= 0)
                 && !(days <= 0 && hours <= 0 && minutes <= 0 && seconds <= 0)) {
-            
+
             throw new IllegalArgumentException("Invalid duration representation");
         }
-        
+
         this.weeks = 0;
         this.days = Math.abs(days);
         this.hours = Math.abs(hours);
         this.minutes = Math.abs(minutes);
         this.seconds = Math.abs(seconds);
-        
+
         this.negative = days < 0 || hours < 0 || minutes < 0 || seconds < 0;
     }
 
@@ -193,10 +196,10 @@ public class Dur implements Comparable<Dur>, Serializable {
      * @param date2 the second date of the duration
      */
     public Dur(final Date date1, final Date date2) {
-        
+
         Date start;
         Date end;
-        
+
         // Negative range? (start occurs after end)
         negative = date1.compareTo(date2) > 0;
         if (negative) {
@@ -309,7 +312,7 @@ public class Dur implements Comparable<Dur>, Serializable {
         negated.negative = !negative;
         return negated;
     }
-    
+
     /**
      * Add two durations. Durations may only be added if they are both positive
      * or both negative durations.
@@ -319,11 +322,11 @@ public class Dur implements Comparable<Dur>, Serializable {
     public final Dur add(final Dur duration) {
         if ((!isNegative() && duration.isNegative())
                 || (isNegative() && !duration.isNegative())) {
-            
+
             throw new IllegalArgumentException(
                     "Cannot add a negative and a positive duration");
         }
-        
+
         Dur sum;
         if (weeks > 0 && duration.weeks > 0) {
             sum = new Dur(weeks + duration.weeks);
@@ -333,7 +336,7 @@ public class Dur implements Comparable<Dur>, Serializable {
             int hourSum = hours;
             int minuteSum = minutes;
             int secondSum = seconds;
-            
+
             if ((secondSum + duration.seconds) / SECONDS_PER_MINUTE > 0) {
                 minuteSum += (secondSum + duration.seconds) / SECONDS_PER_MINUTE;
                 secondSum = (secondSum + duration.seconds) % SECONDS_PER_MINUTE;
@@ -341,7 +344,7 @@ public class Dur implements Comparable<Dur>, Serializable {
             else {
                 secondSum += duration.seconds;
             }
-            
+
             if ((minuteSum + duration.minutes) / MINUTES_PER_HOUR > 0) {
                 hourSum += (minuteSum + duration.minutes) / MINUTES_PER_HOUR;
                 minuteSum = (minuteSum + duration.minutes) % MINUTES_PER_HOUR;
@@ -349,7 +352,7 @@ public class Dur implements Comparable<Dur>, Serializable {
             else {
                 minuteSum += duration.minutes;
             }
-            
+
             if ((hourSum + duration.hours) / HOURS_PER_DAY > 0) {
                 daySum += (hourSum + duration.hours) / HOURS_PER_DAY;
                 hourSum = (hourSum + duration.hours) % HOURS_PER_DAY;
@@ -357,16 +360,16 @@ public class Dur implements Comparable<Dur>, Serializable {
             else {
                 hourSum += duration.hours;
             }
-            
+
             daySum += (duration.weeks > 0) ? duration.weeks * DAYS_PER_WEEK
                     + duration.days : duration.days;
-            
+
             sum = new Dur(daySum, hourSum, minuteSum, secondSum);
         }
         sum.negative = negative;
         return sum;
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -459,7 +462,7 @@ public class Dur implements Comparable<Dur>, Serializable {
         }
         return super.equals(obj);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -467,7 +470,7 @@ public class Dur implements Comparable<Dur>, Serializable {
         return new HashCodeBuilder().append(weeks).append(days).append(
                 hours).append(minutes).append(seconds).append(negative).toHashCode();
     }
-    
+
     /**
      * @return Returns the days.
      */
