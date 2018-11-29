@@ -42,6 +42,7 @@ import net.fortuna.ical4j.validate.component.VFreeBusyPublishValidator;
 import net.fortuna.ical4j.validate.component.VFreeBusyReplyValidator;
 import net.fortuna.ical4j.validate.component.VFreeBusyRequestValidator;
 
+import java.time.temporal.TemporalAmount;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -267,7 +268,7 @@ public class VFreeBusy extends CalendarComponent {
      * @param end the ending boundary for the VFreeBusy
      * @param duration the length of the period being requested
      */
-    public VFreeBusy(final DateTime start, final DateTime end, final Dur duration) {
+    public VFreeBusy(final DateTime start, final DateTime end, final TemporalAmount duration) {
         this();
         
         // 4.8.2.4 Date/Time Start:
@@ -406,7 +407,7 @@ public class VFreeBusy extends CalendarComponent {
         
         private DateTime end;
         
-        private Dur duration;
+        private TemporalAmount duration;
         
         private ComponentList<CalendarComponent> components;
         
@@ -420,7 +421,7 @@ public class VFreeBusy extends CalendarComponent {
             return this;
         }
         
-        private FreeTimeBuilder duration(Dur duration) {
+        private FreeTimeBuilder duration(TemporalAmount duration) {
             this.duration = duration;
             return this;
         }
@@ -446,7 +447,7 @@ public class VFreeBusy extends CalendarComponent {
                     
                     // calculate duration between this period start and last period end..
                     final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
-                    if (freeDuration.getDuration().compareTo(duration) >= 0) {
+                    if (new TemporalAmountComparator().compare(freeDuration.getDuration(), duration) >= 0) {
                         fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
                     }
                 }

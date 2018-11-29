@@ -22,7 +22,7 @@ ACTION:DISPLAY
 TRIGGER:-PT2880M
 DESCRIPTION:TP for Act ID XXXXX -- Vx.x Not important : Stream -- Task ID
 SUMMARY:TP for Act ID XXXXX -- Vx.x Not important : Stream -- Task ID
-DURATION:3
+DURATION:P3D
 REPEAT:3
 END:VALARM
 END:VEVENT

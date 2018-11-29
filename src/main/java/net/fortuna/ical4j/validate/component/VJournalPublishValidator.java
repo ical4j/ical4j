@@ -61,11 +61,8 @@ public class VJournalPublishValidator implements Validator<VJournal> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VJournal target) throws ValidationException {
-        PropertyValidator.getInstance().assertOne(Property.DESCRIPTION, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTART, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+        Arrays.asList(Property.DESCRIPTION, Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER, Property.UID).forEach(
+                property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.LAST_MODIFIED,
                 Property.RECURRENCE_ID, Property.SEQUENCE, Property.STATUS, Property.SUMMARY, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));

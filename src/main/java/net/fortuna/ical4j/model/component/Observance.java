@@ -322,7 +322,7 @@ public abstract class Observance extends Component {
 
     private DateTime applyOffsetFrom(DateTime orig) {
         DateTime withOffset = new DateTime(true);
-        withOffset.setTime(orig.getTime() - getOffsetFrom().getOffset().getOffset());
+        withOffset.setTime(orig.getTime() - (getOffsetFrom().getOffset().getTotalSeconds() * 1000L));
         return withOffset;
     }
 }

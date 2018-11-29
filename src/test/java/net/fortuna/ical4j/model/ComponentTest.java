@@ -152,7 +152,8 @@ public class ComponentTest extends TestCase {
             public void validate(boolean recurse) throws ValidationException {
             }
         };
-        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime(), new Dur(1, 0, 0, 0)), new PeriodList()));
+        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime(),
+                java.time.Duration.ofDays(1)), new PeriodList()));
         
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
@@ -171,7 +172,8 @@ public class ComponentTest extends TestCase {
         expectedPeriods.add(new Period("20080605T100000Z/PT2H"));
         expectedPeriods.add(new Period("20080606T100000Z/PT2H"));
         expectedPeriods.add(new Period("20080607T100000Z/PT2H"));
-        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"), new Dur(7, 0, 0, 0)), expectedPeriods));
+        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"),
+                java.time.Duration.ofDays(7)), expectedPeriods));
 
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
@@ -188,7 +190,8 @@ public class ComponentTest extends TestCase {
         expectedPeriods.add(new Period("20080615T000000Z/P1D"));
         expectedPeriods.add(new Period("20080622T000000Z/P1D"));
         expectedPeriods.add(new Period("20080629T000000Z/P1D"));
-        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"), new Dur(6)), expectedPeriods));
+        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"),
+                java.time.Period.ofWeeks(6)), expectedPeriods));
         return suite;
     }
 }

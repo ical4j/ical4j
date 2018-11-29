@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.component;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
@@ -75,7 +74,7 @@ public class AvailableTest extends ComponentTest {
         a.getProperties().add(g.generateUid());
         a.getProperties().add(new DtStart(new DateTime()));
         a.getProperties().add(new DtStamp());
-        a.getProperties().add(new Duration(new Dur(1)));
+        a.getProperties().add(new Duration(java.time.Period.ofWeeks(1)));
         suite.addTest(new AvailableTest("testValidation", a));
         return suite;
     }

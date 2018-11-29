@@ -40,10 +40,11 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Uid;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -72,9 +73,7 @@ public final class Calendars {
      * @throws ParserException occurs when the data in the specified file is invalid
      */
     public static Calendar load(final String filename) throws IOException, ParserException {
-        final FileInputStream fin = new FileInputStream(filename);
-        final CalendarBuilder builder = new CalendarBuilder();
-        return builder.build(fin);
+        return new CalendarBuilder().build(Files.newInputStream(Paths.get(filename)));
     }
 
     /**

@@ -76,12 +76,8 @@ public class VToDoRequestValidator implements Validator<VToDo> {
     public void validate(final VToDo target) throws ValidationException {
         PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, target.getProperties());
 
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.DTSTART, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.PRIORITY, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.SUMMARY, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+        Arrays.asList(Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER, Property.PRIORITY, Property.SUMMARY, Property.UID).forEach(
+                property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         Arrays.asList(Property.SEQUENCE, Property.CATEGORIES, Property.CLASS, Property.CREATED,
                 Property.DESCRIPTION, Property.DUE, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,

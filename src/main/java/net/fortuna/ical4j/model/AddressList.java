@@ -123,6 +123,7 @@ public class AddressList implements Serializable, Iterable<URI> {
      * @return an iterator
      * @see List#iterator()
      */
+    @Override
     public final Iterator<URI> iterator() {
         return addresses.iterator();
     }

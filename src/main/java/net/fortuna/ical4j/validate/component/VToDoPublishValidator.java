@@ -76,12 +76,12 @@ public class VToDoPublishValidator implements Validator<VToDo> {
         PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
-            PropertyValidator.getInstance().assertOne(Property.PRIORITY, target.getProperties());
+            Arrays.asList(Property.ORGANIZER, Property.PRIORITY).forEach(
+                    property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
         }
 
-        PropertyValidator.getInstance().assertOne(Property.SUMMARY, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+        Arrays.asList(Property.SUMMARY, Property.UID).forEach(
+                property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         // DTSTART: RFC2446 conflicts with RCF2445..
         Arrays.asList(Property.DTSTART, Property.SEQUENCE, Property.CATEGORIES, Property.CLASS,
@@ -89,8 +89,8 @@ public class VToDoPublishValidator implements Validator<VToDo> {
                 Property.LOCATION, Property.PERCENT_COMPLETE, Property.RECURRENCE_ID, Property.RESOURCES, Property.STATUS,
                 Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
-        PropertyValidator.getInstance().assertNone(Property.ATTENDEE, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());
+        Arrays.asList(Property.ATTENDEE, Property.REQUEST_STATUS).forEach(
+                property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
 
         for (final VAlarm alarm : target.getAlarms()) {
             alarm.validate(Method.PUBLISH);
