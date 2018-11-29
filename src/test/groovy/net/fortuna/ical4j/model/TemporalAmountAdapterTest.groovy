@@ -29,6 +29,8 @@ class TemporalAmountAdapterTest extends Specification {
         where:
         duration       | expectedTemporalAmount
         new Dur(1, 2, 3, 4)  | Duration.ofDays(1).plusHours(2).plusMinutes(3).plusSeconds(4)
+        new Dur('PT-8H')  | Duration.ofHours(-8)
         new Dur(5)  | java.time.Period.ofWeeks(5)
+        new Dur(-9)  | java.time.Period.ofWeeks(-9)
     }
 }

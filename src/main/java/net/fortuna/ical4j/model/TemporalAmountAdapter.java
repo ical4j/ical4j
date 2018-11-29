@@ -77,11 +77,19 @@ public class TemporalAmountAdapter {
 
     public static TemporalAmount from(Dur duration) {
         if (duration.getWeeks() > 0) {
-            return Period.ofWeeks(duration.getWeeks());
+            Period p = Period.ofWeeks(duration.getWeeks());
+            if (duration.isNegative()) {
+                p = p.negated();
+            }
+            return p;
         }
-        return Duration.ofDays(duration.getDays())
+        Duration d = Duration.ofDays(duration.getDays())
                 .plusHours(duration.getHours())
                 .plusMinutes(duration.getMinutes())
                 .plusSeconds(duration.getSeconds());
+        if (duration.isNegative()) {
+            d = d.negated();
+        }
+        return d;
     }
 }
