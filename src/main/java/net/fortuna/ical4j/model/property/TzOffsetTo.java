@@ -52,8 +52,6 @@ public class TzOffsetTo extends Property {
 
     private static final long serialVersionUID = 8213874575051177732L;
 
-    private static final ZoneOffsetFactory ZONEOFFSET_FACTORY = new ZoneOffsetFactory();
-
     private ZoneOffsetAdapter offset;
 
     /**
@@ -84,7 +82,7 @@ public class TzOffsetTo extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final UtcOffset anOffset) {
-        this(ZONEOFFSET_FACTORY.create(anOffset));
+        this(ZoneOffsetAdapter.from(anOffset));
     }
 
     /**
@@ -100,7 +98,7 @@ public class TzOffsetTo extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final ParameterList aList, final UtcOffset anOffset) {
-        this(aList, ZONEOFFSET_FACTORY.create(anOffset));
+        this(aList, ZoneOffsetAdapter.from(anOffset));
     }
 
     /**

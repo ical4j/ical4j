@@ -168,9 +168,24 @@ public class Trigger extends UtcProperty {
     /**
      * @param duration a duration in milliseconds
      */
+    public Trigger(final Dur duration) {
+        this(TemporalAmountAdapter.from(duration));
+    }
+
+    /**
+     * @param duration a duration in milliseconds
+     */
     public Trigger(final TemporalAmount duration) {
         super(TRIGGER, new Factory());
         setDuration(duration);
+    }
+
+    /**
+     * @param aList    a list of parameters for this component
+     * @param duration a duration in milliseconds
+     */
+    public Trigger(final ParameterList aList, final Dur duration) {
+        this(aList, TemporalAmountAdapter.from(duration));
     }
 
     /**

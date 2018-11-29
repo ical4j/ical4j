@@ -92,6 +92,18 @@ public class Period extends DateRange implements Comparable<Period> {
 
     /**
      * Constructs a new period with the specified start date and duration.
+     *
+     * @param start
+     *            the start date of the period
+     * @param duration
+     *            the duration of the period
+     */
+    public Period(final DateTime start, final Dur duration) {
+        this(start, TemporalAmountAdapter.from(duration));
+    }
+
+    /**
+     * Constructs a new period with the specified start date and duration.
      * 
      * @param start
      *            the start date of the period

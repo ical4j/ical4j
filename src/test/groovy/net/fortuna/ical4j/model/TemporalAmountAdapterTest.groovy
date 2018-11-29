@@ -21,4 +21,14 @@ class TemporalAmountAdapterTest extends Specification {
         java.time.Period.ofYears(1) | "P52W"
         java.time.Period.ofMonths(6) | "P24W"
     }
+
+    def 'verify temporalamount creation'() {
+        expect:
+        TemporalAmountAdapter.from(duration) == expectedTemporalAmount
+
+        where:
+        duration       | expectedTemporalAmount
+        new Dur(1, 2, 3, 4)  | Duration.ofDays(1).plusHours(2).plusMinutes(3).plusSeconds(4)
+        new Dur(5)  | java.time.Period.ofWeeks(5)
+    }
 }

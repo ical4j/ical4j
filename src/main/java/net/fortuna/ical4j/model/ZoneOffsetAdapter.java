@@ -36,4 +36,12 @@ public class ZoneOffsetAdapter implements Serializable {
         }
         return retVal;
     }
+
+    /**
+     * @param utcOffset
+     * @return a zoneoffset representing the specified utcoffset
+     */
+    public static ZoneOffset from(UtcOffset utcOffset) {
+        return ZoneOffset.of(utcOffset.toString());
+    }
 }

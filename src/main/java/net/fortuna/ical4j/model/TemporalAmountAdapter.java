@@ -74,4 +74,14 @@ public class TemporalAmountAdapter {
         }
         return new TemporalAmountAdapter(duration);
     }
+
+    public static TemporalAmount from(Dur duration) {
+        if (duration.getWeeks() > 0) {
+            return Period.ofWeeks(duration.getWeeks());
+        }
+        return Duration.ofDays(duration.getDays())
+                .plusHours(duration.getHours())
+                .plusMinutes(duration.getMinutes())
+                .plusSeconds(duration.getSeconds());
+    }
 }
