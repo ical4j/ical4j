@@ -78,6 +78,7 @@ dependencies {
     
     implementation 'javax.cache:cache-api:1.0.0', optional
     implementation "org.codehaus.groovy:groovy-all:$groovyVersion", optional
+    implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion", optional
 
     compileOnly 'biz.aQute.bnd:bndlib:2.3.0'
 
