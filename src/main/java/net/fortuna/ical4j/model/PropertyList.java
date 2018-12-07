@@ -36,6 +36,7 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -81,9 +82,7 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder sb = new StringBuilder();
-        forEach(t -> sb.append(t.toString()));
-        return sb.toString();
+        return stream().map(Property::toString).collect(Collectors.joining(""));
     }
 
     /**
