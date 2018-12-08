@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -83,7 +84,7 @@ public class RecurTest extends TestCase {
     
     private String recurrenceString;
     
-    private String expectedFrequency;
+    private Frequency expectedFrequency;
     
     private int expectedInterval;
     
@@ -182,7 +183,7 @@ public class RecurTest extends TestCase {
      * @param expectedInterval
      * @param expectedDayList
      */
-    public RecurTest(String recurrenceString, String expectedFrequency, int expectedInterval, WeekDayList expectedDayList) {
+    public RecurTest(String recurrenceString, Frequency expectedFrequency, int expectedInterval, WeekDayList expectedDayList) {
         super("testRecurrenceString");
         this.recurrenceString = recurrenceString;
         this.expectedFrequency = expectedFrequency;
@@ -781,7 +782,7 @@ public class RecurTest extends TestCase {
         WeekDayList expectedDayList = new WeekDayList();
         expectedDayList.add(new WeekDay(WeekDay.MO, 3));
         
-        suite.addTest(new RecurTest(recurString, Recur.MONTHLY, 2, expectedDayList));
+        suite.addTest(new RecurTest(recurString, Frequency.MONTHLY, 2, expectedDayList));
 
         // testCountMonthsWith31Days..
         recur = new Recur("FREQ=MONTHLY;BYMONTHDAY=31");
