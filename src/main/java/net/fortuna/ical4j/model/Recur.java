@@ -769,11 +769,17 @@ public class Recur implements Serializable {
         int multiplier = 1;
         if (calIncField == 2 || calIncField == 1) {
             Calendar seededCal;
+            // increment up to 12 times to check for next valid occurence.
+            // as this loop only increments monthly or yearly,
+            // a monthly occurence will be found in (0,12] increments
+            // and a valid yearly recurrence will be found within (0,4]
+            // (ex. recurrence on February 29 on a leap year will find the next occurrence on the next leap year).
+            // if none found in these, return null.
             do {
                 seededCal = (Calendar) cal.clone();
                 seededCal.add(calIncField, calInterval * multiplier);
                 multiplier++;
-            } while (seededCal.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH) || multiplier > 12);
+            } while (seededCal.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH) && multiplier <= 12);
             if (multiplier <= 12) {
                 result = (Calendar) seededCal.clone();
             }
