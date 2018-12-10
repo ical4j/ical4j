@@ -851,6 +851,11 @@ public class RecurTest extends TestCase {
         suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
                 new DateTime("20200229T000000"), new DateTime("20210228T000000")));
 
+        // test hitting limit when getting invalid next recurrence
+        recur = new Recur("FREQ=MONTHLY;BYMONTH=2;BYMONTHDAY=30;INTERVAL=1");
+        suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
+                new DateTime("20200229T000000"), null));
+
         return suite;
     }
 }
