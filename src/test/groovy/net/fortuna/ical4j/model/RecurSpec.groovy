@@ -272,8 +272,8 @@ class RecurSpec extends Specification {
 	
 	def 'verify no-args constructor has no side-effects'() {
 		expect:
-		new Recur(frequency: Recur.WEEKLY) as String == 'FREQ=WEEKLY'
-		new Recur(frequency: Recur.MONTHLY, interval: 3) as String == 'FREQ=MONTHLY;INTERVAL=3'
+		new Recur(frequency: Recur.Frequency.WEEKLY) as String == 'FREQ=WEEKLY'
+		new Recur(frequency: Recur.Frequency.MONTHLY, interval: 3) as String == 'FREQ=MONTHLY;INTERVAL=3'
 	}
 	
 	def 'verify behaviour when parsing unexpected rule parts'() {

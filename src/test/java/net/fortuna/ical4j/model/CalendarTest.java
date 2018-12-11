@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -48,6 +49,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
+import static net.fortuna.ical4j.model.WeekDay.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
@@ -107,14 +109,10 @@ public class CalendarTest {
         week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
-        Recur week1UserARecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
-        week1UserARecur.setInterval(3);
-        week1UserARecur.getDayList().add(WeekDay.MO);
-        week1UserARecur.getDayList().add(WeekDay.TU);
-        week1UserARecur.getDayList().add(WeekDay.WE);
-        week1UserARecur.getDayList().add(WeekDay.TH);
-        week1UserARecur.getDayList().add(WeekDay.FR);
-        week1UserARecur.getHourList().add(new Integer(9));
+        Recur week1UserARecur = new Recur.Builder().frequency(Frequency.WEEKLY)
+                .until(new Date(calEnd.getTime().getTime()))
+                .interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
+                .hourList(new NumberList("9")).build();
         week1UserA.getProperties().add(new RRule(week1UserARecur));
         week1UserA.getProperties().add(new Uid("000001@modularity.net.au"));
 
@@ -126,14 +124,9 @@ public class CalendarTest {
         week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
-        Recur week2UserBRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
-        week2UserBRecur.setInterval(3);
-        week2UserBRecur.getDayList().add(WeekDay.MO);
-        week2UserBRecur.getDayList().add(WeekDay.TU);
-        week2UserBRecur.getDayList().add(WeekDay.WE);
-        week2UserBRecur.getDayList().add(WeekDay.TH);
-        week2UserBRecur.getDayList().add(WeekDay.FR);
-        week2UserBRecur.getHourList().add(new Integer(9));
+        Recur week2UserBRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
+                .until(new Date(calEnd.getTime().getTime())).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
+                .hourList(new NumberList("9")).build();
         week2UserB.getProperties().add(new RRule(week2UserBRecur));
         week2UserB.getProperties().add(new Uid("000002@modularity.net.au"));
 
@@ -145,14 +138,9 @@ public class CalendarTest {
         week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
-        Recur week3UserCRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
-        week3UserCRecur.setInterval(3);
-        week3UserCRecur.getDayList().add(WeekDay.MO);
-        week3UserCRecur.getDayList().add(WeekDay.TU);
-        week3UserCRecur.getDayList().add(WeekDay.WE);
-        week3UserCRecur.getDayList().add(WeekDay.TH);
-        week3UserCRecur.getDayList().add(WeekDay.FR);
-        week3UserCRecur.getHourList().add(new Integer(9));
+        Recur week3UserCRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
+                .until(new Date(calEnd.getTime().getTime())).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
+                .hourList(new NumberList("9")).build();
         week3UserC.getProperties().add(new RRule(week3UserCRecur));
         week3UserC.getProperties().add(new Uid("000003@modularity.net.au"));
 
@@ -180,14 +168,10 @@ public class CalendarTest {
         week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
-        week1UserARecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
-        week1UserARecur.setInterval(3);
-        week1UserARecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
-        week1UserARecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
-        week1UserARecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
-        week1UserARecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
-        week1UserARecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
-        week1UserARecur.getHourList().add(new Integer(9));
+        week1UserARecur = new Recur.Builder().frequency(Frequency.WEEKLY)
+                .until(new Date(calEnd.getTime().getTime())).interval(3)
+                .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
+                .hourList(new NumberList("9")).build();
         week1UserA.getProperties().add(new RRule(week1UserARecur));
         week1UserA.getProperties().add(new Uid("000001@modularity.net.au"));
 
@@ -199,14 +183,10 @@ public class CalendarTest {
         week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
-        week2UserBRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
-        week2UserBRecur.setInterval(3);
-        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
-        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
-        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
-        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
-        week2UserBRecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
-        week2UserBRecur.getHourList().add(new Integer(9));
+        week2UserBRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
+                .until(new Date(calEnd.getTime().getTime())).interval(3)
+                .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
+                .hourList(new NumberList("9")).build();
         week2UserB.getProperties().add(new RRule(week2UserBRecur));
         week2UserB.getProperties().add(new Uid("000002@modularity.net.au"));
 
@@ -218,14 +198,10 @@ public class CalendarTest {
         week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
         week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
 
-        week3UserCRecur = new Recur(Recur.WEEKLY, new Date(calEnd.getTime().getTime()));
-        week3UserCRecur.setInterval(3);
-        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.MO, 0));
-        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.TU, 0));
-        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.WE, 0));
-        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.TH, 0));
-        week3UserCRecur.getDayList().add(new WeekDay(WeekDay.FR, 0));
-        week3UserCRecur.getHourList().add(new Integer(9));
+        week3UserCRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
+                .until(new Date(calEnd.getTime().getTime())).interval(3)
+                .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
+                .hourList(new NumberList("9")).build();
         week3UserC.getProperties().add(new RRule(week3UserCRecur));
         week3UserC.getProperties().add(new Uid("000003@modularity.net.au"));
 

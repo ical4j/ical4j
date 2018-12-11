@@ -199,6 +199,7 @@ public class Recur implements Serializable {
     private Recur() {
         // default week start is Monday per RFC5545
         calendarWeekStartDay = Calendar.MONDAY;
+        initTransformers();
     }
 
     /**
@@ -320,31 +321,49 @@ public class Recur implements Serializable {
         transformers = new HashMap<>();
         if (secondList != null) {
             transformers.put(BYSECOND, new BySecondRule(secondList, Optional.ofNullable(weekStartDay)));
+        } else {
+            secondList = new NumberList(0, 59, false);
         }
         if (minuteList != null) {
             transformers.put(BYMINUTE, new ByMinuteRule(minuteList, Optional.ofNullable(weekStartDay)));
+        } else {
+            minuteList = new NumberList(0, 59, false);
         }
         if (hourList != null) {
             transformers.put(BYHOUR, new ByHourRule(hourList, Optional.ofNullable(weekStartDay)));
+        } else {
+            hourList = new NumberList(0, 23, false);
         }
         if (monthDayList != null) {
             transformers.put(BYMONTHDAY, new ByMonthDayRule(monthDayList, Optional.ofNullable(weekStartDay)));
+        } else {
+            monthDayList = new NumberList(1, 31, true);
         }
         if (yearDayList != null) {
             transformers.put(BYYEARDAY, new ByYearDayRule(yearDayList, Optional.ofNullable(weekStartDay)));
+        } else {
+            yearDayList = new NumberList(1, 366, true);
         }
         if (weekNoList != null) {
             transformers.put(BYWEEKNO, new ByWeekNoRule(weekNoList, Optional.ofNullable(weekStartDay)));
+        } else {
+            weekNoList = new NumberList(1, 53, true);
         }
         if (monthList != null) {
             transformers.put(BYMONTH, new ByMonthRule(monthList, Optional.ofNullable(interval),
                     Optional.ofNullable(weekStartDay)));
+        } else {
+            monthList = new NumberList(1, 12, false);
         }
         if (dayList != null) {
             transformers.put(BYDAY, new ByDayRule(dayList, deriveFilterType(), Optional.ofNullable(weekStartDay)));
+        } else {
+            dayList = new WeekDayList();
         }
         if (setPosList != null) {
             transformers.put(BYSETPOS, new BySetPosRule(setPosList));
+        } else {
+            setPosList = new NumberList(1, 366, true);
         }
     }
 
@@ -363,110 +382,92 @@ public class Recur implements Serializable {
     }
 
     /**
+     * Accessor for the configured BYDAY list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the dayList.
-     * @deprecated will be removed in a future version to support immutable pattern.
      */
-    @Deprecated
     public final WeekDayList getDayList() {
-        if (dayList == null) {
-            dayList = new WeekDayList();
-        }
         return dayList;
     }
 
     /**
+     * Accessor for the configured BYHOUR list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the hourList.
-     * @deprecated will be removed in a future version to support immutable pattern.
      */
-    @Deprecated
     public final NumberList getHourList() {
-        if (hourList == null) {
-            hourList = new NumberList(0, 23, false);
-        }
         return hourList;
     }
 
     /**
+     * Accessor for the configured BYMINUTE list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the minuteList.
-     * @deprecated will be removed in a future version to support immutable pattern.
      */
-    @Deprecated
     public final NumberList getMinuteList() {
-        if (minuteList == null) {
-            minuteList = new NumberList(0, 59, false);
-        }
         return minuteList;
     }
 
     /**
+     * Accessor for the configured BYMONTHDAY list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the monthDayList.
-     * @deprecated will be removed in a future version to support immutable pattern.
      */
-    @Deprecated
     public final NumberList getMonthDayList() {
-        if (monthDayList == null) {
-            monthDayList = new NumberList(1, 31, true);
-        }
         return monthDayList;
     }
 
     /**
+     * Accessor for the configured BYMONTH list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the monthList.
-     * @deprecated will be removed in a future version to support immutable pattern.
      */
-    @Deprecated
     public final NumberList getMonthList() {
-        if (monthList == null) {
-            monthList = new NumberList(1, 12, false);
-        }
         return monthList;
     }
 
     /**
+     * Accessor for the configured BYSECOND list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the secondList.
-     * @deprecated will be removed in a future version to support immutable pattern.
      */
-    @Deprecated
     public final NumberList getSecondList() {
-        if (secondList == null) {
-            secondList = new NumberList(0, 59, false);
-        }
         return secondList;
     }
 
     /**
+     * Accessor for the configured BYSETPOS list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the setPosList.
-     * @deprecated will be removed in a future version to support immutable pattern.
      */
-    @Deprecated
     public final NumberList getSetPosList() {
-        if (setPosList == null) {
-            setPosList = new NumberList(1, 366, true);
-        }
         return setPosList;
     }
 
     /**
+     * Accessor for the configured BYWEEKNO list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the weekNoList.
-     * @deprecated will be removed in a future version to support immutable pattern.
      */
-    @Deprecated
     public final NumberList getWeekNoList() {
-        if (weekNoList == null) {
-            weekNoList = new NumberList(1, 53, true);
-        }
         return weekNoList;
     }
 
     /**
+     * Accessor for the configured BYYEARDAY list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the yearDayList.
-     * @deprecated will be removed in a future version to support immutable pattern.
      */
-    @Deprecated
     public final NumberList getYearDayList() {
-        if (yearDayList == null) {
-            yearDayList = new NumberList(1, 366, true);
-        }
         return yearDayList;
     }
 
@@ -514,6 +515,7 @@ public class Recur implements Serializable {
 
     /**
      * @param weekStartDay The weekStartDay to set.
+     * @deprecated will be removed in a future version to support immutable pattern.
      */
     @Deprecated
     public final void setWeekStartDay(final WeekDay.Day weekStartDay) {
@@ -557,55 +559,55 @@ public class Recur implements Serializable {
             b.append('=');
             b.append(interval);
         }
-        if (!getMonthList().isEmpty()) {
+        if (!monthList.isEmpty()) {
             b.append(';');
             b.append(BYMONTH);
             b.append('=');
             b.append(monthList);
         }
-        if (!getWeekNoList().isEmpty()) {
+        if (!weekNoList.isEmpty()) {
             b.append(';');
             b.append(BYWEEKNO);
             b.append('=');
             b.append(weekNoList);
         }
-        if (!getYearDayList().isEmpty()) {
+        if (!yearDayList.isEmpty()) {
             b.append(';');
             b.append(BYYEARDAY);
             b.append('=');
             b.append(yearDayList);
         }
-        if (!getMonthDayList().isEmpty()) {
+        if (!monthDayList.isEmpty()) {
             b.append(';');
             b.append(BYMONTHDAY);
             b.append('=');
             b.append(monthDayList);
         }
-        if (!getDayList().isEmpty()) {
+        if (!dayList.isEmpty()) {
             b.append(';');
             b.append(BYDAY);
             b.append('=');
             b.append(dayList);
         }
-        if (!getHourList().isEmpty()) {
+        if (!hourList.isEmpty()) {
             b.append(';');
             b.append(BYHOUR);
             b.append('=');
             b.append(hourList);
         }
-        if (!getMinuteList().isEmpty()) {
+        if (!minuteList.isEmpty()) {
             b.append(';');
             b.append(BYMINUTE);
             b.append('=');
             b.append(minuteList);
         }
-        if (!getSecondList().isEmpty()) {
+        if (!secondList.isEmpty()) {
             b.append(';');
             b.append(BYSECOND);
             b.append('=');
             b.append(secondList);
         }
-        if (!getSetPosList().isEmpty()) {
+        if (!setPosList.isEmpty()) {
             b.append(';');
             b.append(BYSETPOS);
             b.append('=');
@@ -917,6 +919,7 @@ public class Recur implements Serializable {
                 log.debug("Dates after BYMONTH processing: " + dates);
             }
         }
+
         if (transformers.get(BYWEEKNO) != null) {
             dates = transformers.get(BYWEEKNO).transform(dates);
             // debugging..
@@ -924,37 +927,44 @@ public class Recur implements Serializable {
                 log.debug("Dates after BYWEEKNO processing: " + dates);
             }
         }
+
         if (transformers.get(BYYEARDAY) != null) {
             dates = transformers.get(BYYEARDAY).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYYEARDAY processing: " + dates);
             }
-        } else {
-            // TODO: apply implicit BYYEARDAY derived from start date
         }
+
         if (transformers.get(BYMONTHDAY) != null) {
             dates = transformers.get(BYMONTHDAY).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTHDAY processing: " + dates);
             }
-        } else {
-            // TODO: apply implicit BYMONTHDAY derived from start date
+        } else if (frequency == Frequency.MONTHLY || (frequency == Frequency.YEARLY && yearDayList.isEmpty()
+                && weekNoList.isEmpty() && dayList.isEmpty())) {
+
+            NumberList implicitMonthDayList = new NumberList();
+            implicitMonthDayList.add(rootSeed.get(Calendar.DAY_OF_MONTH));
+            ByMonthDayRule implicitRule = new ByMonthDayRule(implicitMonthDayList, Optional.ofNullable(weekStartDay));
+            dates = implicitRule.transform(dates);
         }
+
         if (transformers.get(BYDAY) != null) {
             dates = transformers.get(BYDAY).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYDAY processing: " + dates);
             }
-        } else if (frequency == Frequency.WEEKLY
-                || (transformers.containsKey(BYWEEKNO) && !transformers.containsKey(BYMONTHDAY))) {
+        } else if (frequency == Frequency.WEEKLY || (frequency == Frequency.YEARLY && yearDayList.isEmpty()
+                && !weekNoList.isEmpty() && monthDayList.isEmpty())) {
 
             ByDayRule implicitRule = new ByDayRule(new WeekDayList(WeekDay.getWeekDay(rootSeed)),
                     deriveFilterType(),  Optional.ofNullable(weekStartDay));
             dates = implicitRule.transform(dates);
         }
+
         if (transformers.get(BYHOUR) != null) {
             dates = transformers.get(BYHOUR).transform(dates);
             // debugging..
@@ -962,6 +972,7 @@ public class Recur implements Serializable {
                 log.debug("Dates after BYHOUR processing: " + dates);
             }
         }
+
         if (transformers.get(BYMINUTE) != null) {
             dates = transformers.get(BYMINUTE).transform(dates);
             // debugging..
@@ -969,6 +980,7 @@ public class Recur implements Serializable {
                 log.debug("Dates after BYMINUTE processing: " + dates);
             }
         }
+
         if (transformers.get(BYSECOND) != null) {
             dates = transformers.get(BYSECOND).transform(dates);
             // debugging..
@@ -976,6 +988,7 @@ public class Recur implements Serializable {
                 log.debug("Dates after BYSECOND processing: " + dates);
             }
         }
+
         if (transformers.get(BYSETPOS) != null) {
             dates = transformers.get(BYSETPOS).transform(dates);
             // debugging..
