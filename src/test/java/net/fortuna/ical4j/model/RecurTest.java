@@ -857,6 +857,16 @@ public class RecurTest extends TestCase {
         suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
                 new DateTime("20200229T000000"), null));
 
+        // test hitting leap year appropriately
+        recur = new Recur("FREQ=YEARLY;BYMONTHDAY=29;INTERVAL=1");
+        suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
+                new DateTime("20200229T000000"), new DateTime("20240229T000000")));
+
+        // test correct hit on first incrementation
+        recur = new Recur("FREQ=YEARLY;INTERVAL=4");
+        suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
+                new DateTime("20200229T000000"), new DateTime("20240229T000000")));
+
         return suite;
     }
 }
