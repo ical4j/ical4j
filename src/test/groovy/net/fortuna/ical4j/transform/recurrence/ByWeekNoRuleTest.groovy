@@ -9,7 +9,7 @@ import spock.lang.Specification
 class ByWeekNoRuleTest extends Specification {
 
     def 'verify transformations by week number'() {
-        given: 'a byweekno rule'
+        given: 'a BYWEEKNO rule'
         ByWeekNoRule rule = [new NumberList(byWeekNoPart)]
 
         and: 'a list of dates'
