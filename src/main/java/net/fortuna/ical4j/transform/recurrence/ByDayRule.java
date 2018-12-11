@@ -60,19 +60,6 @@ public class ByDayRule extends AbstractRecurrenceRule {
             dayList.forEach(day -> filtered.addAll(getOffsetDates(transformed.stream().filter(d ->
                 getCalendarInstance(d, true).get(Calendar.DAY_OF_WEEK) == WeekDay.getCalendarDay(day))
                 .collect(Collectors.toCollection(() -> Dates.getDateListInstance(weekDayDates))), day.getOffset())));
-
-//            for (final WeekDay weekDay : dayList) {
-//                // if BYYEARDAY or BYMONTHDAY is specified filter existing
-//                // list..
-//                if (!getYearDayList().isEmpty() || !getMonthDayList().isEmpty()) {
-//                    final Calendar cal = getCalendarInstance(date, true);
-//                    if (weekDay.equals(WeekDay.getWeekDay(cal))) {
-//                        weekDayDates.add(date);
-//                    }
-//                } else {
-//                    weekDayDates.addAll(getAbsWeekDays(date, dates.getType(), weekDay));
-//                }
-//            }
             weekDayDates.addAll(filtered);
         }
         return weekDayDates;
@@ -170,71 +157,6 @@ public class ByDayRule extends AbstractRecurrenceRule {
             return retVal;
         }
     }
-
-    /**
-     * Returns a list of applicable dates corresponding to the specified week day in accordance with the frequency
-     * specified by this recurrence rule.
-     *
-     * @param date
-     * @param weekDay
-     * @return
-     */
-//    private List<Date> getAbsWeekDays(final Date date, final Value type, final WeekDay weekDay) {
-//        final Calendar cal = getCalendarInstance(date, true);
-//        final DateList days = new DateList(type);
-//        if (date instanceof DateTime) {
-//            if (((DateTime) date).isUtc()) {
-//                days.setUtc(true);
-//            } else {
-//                days.setTimeZone(((DateTime) date).getTimeZone());
-//            }
-//        }
-//        final int calDay = WeekDay.getCalendarDay(weekDay);
-//        if (calDay == -1) {
-//            // a matching weekday cannot be identified..
-//            return days;
-//        }
-//        if (Frequency.DAILY.equals(frequency)) {
-//            if (cal.get(Calendar.DAY_OF_WEEK) == calDay) {
-//                days.add(Dates.getInstance(cal.getTime(), type));
-//            }
-//        } else if (Frequency.WEEKLY.equals(frequency) || !getWeekNoList().isEmpty()) {
-//            final int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
-//            // construct a list of possible week days..
-//            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-//            while (cal.get(Calendar.DAY_OF_WEEK) != calDay) {
-//                cal.add(Calendar.DAY_OF_WEEK, 1);
-//            }
-////            final int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
-//            if (cal.get(Calendar.WEEK_OF_YEAR) == weekNo) {
-//                days.add(Dates.getInstance(cal.getTime(), type));
-////                cal.add(Calendar.DAY_OF_WEEK, Dates.DAYS_PER_WEEK);
-//            }
-//        } else if (Frequency.MONTHLY.equals(frequency) || !getMonthList().isEmpty()) {
-//            final int month = cal.get(Calendar.MONTH);
-//            // construct a list of possible month days..
-//            cal.set(Calendar.DAY_OF_MONTH, 1);
-//            while (cal.get(Calendar.DAY_OF_WEEK) != calDay) {
-//                cal.add(Calendar.DAY_OF_MONTH, 1);
-//            }
-//            while (cal.get(Calendar.MONTH) == month) {
-//                days.add(Dates.getInstance(cal.getTime(), type));
-//                cal.add(Calendar.DAY_OF_MONTH, Dates.DAYS_PER_WEEK);
-//            }
-//        } else if (Frequency.YEARLY.equals(frequency)) {
-//            final int year = cal.get(Calendar.YEAR);
-//            // construct a list of possible year days..
-//            cal.set(Calendar.DAY_OF_YEAR, 1);
-//            while (cal.get(Calendar.DAY_OF_WEEK) != calDay) {
-//                cal.add(Calendar.DAY_OF_YEAR, 1);
-//            }
-//            while (cal.get(Calendar.YEAR) == year) {
-//                days.add(Dates.getInstance(cal.getTime(), type));
-//                cal.add(Calendar.DAY_OF_YEAR, Dates.DAYS_PER_WEEK);
-//            }
-//        }
-//        return getOffsetDates(days, weekDay.getOffset());
-//    }
 
     /**
      * Returns a single-element sublist containing the element of <code>list</code> at <code>offset</code>. Valid

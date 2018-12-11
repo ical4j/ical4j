@@ -33,11 +33,8 @@ public class ByWeekNoRule extends AbstractRecurrenceRule {
         if (weekNoList.isEmpty()) {
             return dates;
         }
-        // XXX: Need to find a way to provide day of week to apply to candidates
-//        final int initDayOfWeek = rootSeed.get(Calendar.DAY_OF_WEEK);
         final DateList weekNoDates = Dates.getDateListInstance(dates);
         Calendar initCal = getCalendarInstance(dates.get(0), true);
-//        int initDayOfWeek = initCal.get(Calendar.DAY_OF_WEEK);
         for (final Date date : dates) {
             final int numWeeksInYear = initCal.getActualMaximum(Calendar.WEEK_OF_YEAR);
             for (final Integer weekNo : weekNoList) {
@@ -60,7 +57,6 @@ public class ByWeekNoRule extends AbstractRecurrenceRule {
                     cal.set(Calendar.WEEK_OF_YEAR, numWeeksInYear);
                     cal.add(Calendar.WEEK_OF_YEAR, weekNo + 1);
                 }
-//                cal.set(Calendar.DAY_OF_WEEK, initDayOfWeek);
                 weekNoDates.add(Dates.getInstance(cal.getTime(), weekNoDates.getType()));
             }
         }
