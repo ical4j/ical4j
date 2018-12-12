@@ -12,3 +12,4 @@ zones.tab
 gradle.properties
 out/
 /deploy.key
+.DS_Store
