@@ -542,7 +542,7 @@ public class RecurTest extends TestCase {
         Recur recur = new Recur(Recur.DAILY, 10);
         recur.setInterval(2);
         log.debug(recur.toString());
-        
+
         Calendar cal = Calendar.getInstance();
         Date start = new Date(cal.getTime().getTime());
         cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
@@ -840,7 +840,7 @@ public class RecurTest extends TestCase {
         // feb 29 2020 monthly with only valid month by february should return feb 28 2021
         recur = new Recur("FREQ=MONTHLY;BYMONTH=2;INTERVAL=1");
         suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
-                new DateTime("20200229T000000"), new DateTime("20210228T000000")));
+                new DateTime("20200229T000000"), new DateTime("20240229T000000")));
 
         // test hitting limit when getting invalid next recurrence
         recur = new Recur("FREQ=MONTHLY;BYMONTH=2;BYMONTHDAY=30;INTERVAL=1");
