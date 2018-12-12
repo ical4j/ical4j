@@ -37,6 +37,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -91,11 +92,7 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        for (final T c : this) {
-            buffer.append(c.toString());
-        }
-        return buffer.toString();
+        return stream().map(Component::toString).collect(Collectors.joining(""));
     }
 
     /**

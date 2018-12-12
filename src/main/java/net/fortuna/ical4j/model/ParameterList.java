@@ -40,6 +40,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -103,12 +104,11 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        for (final Parameter parameter : parameters) {
-            buffer.append(';');
-            buffer.append(parameter.toString());
+        if (!parameters.isEmpty()) {
+            return parameters.stream().map(Parameter::toString)
+                    .collect(Collectors.joining(";", ";", ""));
         }
-        return buffer.toString();
+        return "";
     }
 
     /**
