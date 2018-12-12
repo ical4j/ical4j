@@ -11,3 +11,4 @@ zones.tab
 .settings/
 gradle.properties
 out/
+/deploy.key
