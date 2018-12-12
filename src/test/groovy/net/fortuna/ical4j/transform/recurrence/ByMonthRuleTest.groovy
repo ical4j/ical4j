@@ -23,6 +23,6 @@ class ByMonthRuleTest extends Specification {
         where:
         byMonthPart     | dates                                | valueType   | expectedResult
         '1,2'         | [new Date('20150103')]          | Value.DATE  | [new Date('20150103'), new Date('20150203')]
-        '2'         | [new DateTime("20200229T000000")] | Value.DATE_TIME| [new DateTime("20210228T000000")]
+        '2'         | [new DateTime("20200229T000000")] | Value.DATE_TIME| [new DateTime("20200229T000000")]
     }
 }
