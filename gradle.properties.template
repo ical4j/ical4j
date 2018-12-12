@@ -5,3 +5,5 @@ sonatype_password=
 
 bintray_user=
 bintray_key=
+
+jacoco_htmlReport = true

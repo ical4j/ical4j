@@ -35,6 +35,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -54,8 +56,8 @@ public final class Configurator {
     private static final Properties CONFIG = new Properties();
 
     static {
-        try {
-            CONFIG.load(ResourceLoader.getResourceAsStream("ical4j.properties"));
+        try (InputStream in = ResourceLoader.getResourceAsStream("ical4j.properties")) {
+            CONFIG.load(in);
         } catch (IOException | NullPointerException e) {
             LOG.info("ical4j.properties not found.");
         }

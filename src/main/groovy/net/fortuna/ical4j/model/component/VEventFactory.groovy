@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.component
 
-import groovy.util.FactoryBuilderSupport
 import net.fortuna.ical4j.model.PropertyList
 
 /**
@@ -47,7 +46,7 @@ class VEventFactory extends AbstractComponentFactory{
              event = (VEvent) value
          }
          else {
-             event = super.newInstance(builder, name, value, attributes);
+             event = super.newInstance(builder, name, value, attributes)
          }
          return event
      }

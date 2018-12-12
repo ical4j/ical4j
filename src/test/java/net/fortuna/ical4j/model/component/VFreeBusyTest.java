@@ -41,8 +41,8 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
@@ -163,7 +163,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         VEvent event = new VEvent();
         event.getProperties().add(new DtStart(startDate));
         // event.getProperties().add(new DtEnd(new Date()));
-        event.getProperties().add(new Duration(new Dur(0, 1, 0, 0)));
+        event.getProperties().add(new Duration(java.time.Duration.ofHours(1)));
         components.add(event);
 
         VEvent event2 = new VEvent();
@@ -203,8 +203,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
 
         // request all free time between 1970 and now of duration 2 hours or
         // more..
-        VFreeBusy requestFree = new VFreeBusy(startDate, endDate, new Dur(0, 2,
-                0, 0));
+        VFreeBusy requestFree = new VFreeBusy(startDate, endDate,
+                java.time.Duration.ofHours(2));
 
         VFreeBusy fb2 = new VFreeBusy(requestFree, calendar.getComponents());
 
@@ -222,7 +222,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
 //        cal.setTime(eventStart);
 //        cal.add(java.util.Calendar.HOUR_OF_DAY, 1);
 
-        VEvent event = new VEvent(eventStart, new Dur(0, 1, 0, 0),
+        VEvent event = new VEvent(eventStart, java.time.Duration.ofHours(1),
                 "Progress Meeting");
         // VEvent event = new VEvent(startDate, cal.getTime(), "Progress
         // Meeting");
@@ -267,7 +267,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         VEvent event = new VEvent();
         event.getProperties().add(new DtStart(startDate));
         // event.getProperties().add(new DtEnd(new Date()));
-        event.getProperties().add(new Duration(new Dur(0, 1, 0, 0)));
+        event.getProperties().add(new Duration(java.time.Duration.ofHours(1)));
         components.add(event);
 
         VEvent event2 = new VEvent();
@@ -275,8 +275,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
         event2.getProperties().add(new DtEnd(endDate));
         components.add(event2);
 
-        VFreeBusy request = new VFreeBusy(startDate, endDate, new Dur(0, 1, 0,
-                0));
+        VFreeBusy request = new VFreeBusy(startDate, endDate,
+                java.time.Duration.ofHours(1));
 
         VFreeBusy fb = new VFreeBusy(request, components);
 
@@ -297,7 +297,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
                 new Date(end.getTime().getTime()), "DATE END INCLUDED");
 
         VEvent duration = new VEvent(new Date(start.getTime().getTime()),
-                new Dur(0, 1, 0, 0), "DURATION");
+                java.time.Duration.ofHours(1), "DURATION");
 
         freeBusyTest.getComponents().add(dteEnd);
         freeBusyTest.getComponents().add(duration);
@@ -308,7 +308,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
         VFreeBusy getBusy = new VFreeBusy(new DateTime(dtstart.getTime()),
                 new DateTime(dtend.getTime()));
         VFreeBusy requestFree = new VFreeBusy(new DateTime(dtstart.getTime()),
-                new DateTime(dtend.getTime()), new Dur(0, 0, 30, 0));
+                new DateTime(dtend.getTime()),
+                java.time.Duration.ofMinutes(30));
 
         log.debug("GET BUSY: \n" + getBusy.toString());
         log.debug("REQUEST FREE: \n" + requestFree.toString());
@@ -402,7 +403,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         replyFb.getProperties().add(new Uid("12"));
         suite.addTest(new VFreeBusyTest("testReplyValidation", replyFb));
         VFreeBusy invalDurFb = (VFreeBusy) replyFb.copy();
-        invalDurFb.getProperties().add(new Duration(new Dur("PT1H")));
+        invalDurFb.getProperties().add(new Duration(java.time.Duration.parse("PT1H")));
         suite.addTest(new VFreeBusyTest("testReplyValidationException", invalDurFb));
         VFreeBusy invalSeqFb = (VFreeBusy) replyFb.copy();
         invalSeqFb.getProperties().add(new Sequence("12"));
@@ -413,13 +414,15 @@ public class VFreeBusyTest extends CalendarComponentTest {
         // consume any time in the specified range. Correct behaviour should see the
         // return of a VFreeBusy specifying the entire range as free.
         ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
-        VEvent event1 = new VEvent(new DateTime("20050101T080000"), new Dur(0, 0, 15, 0), "Consultation 1");
+        VEvent event1 = new VEvent(new DateTime("20050101T080000"),
+                java.time.Duration.ofMinutes(15), "Consultation 1");
         components.add(event1);
 
         DateTime start = new DateTime("20050103T000000");
         DateTime end = new DateTime("20050104T000000");
 
-        VFreeBusy requestFree = new VFreeBusy(start, end, new Dur(0, 0, 5, 0));
+        VFreeBusy requestFree = new VFreeBusy(start, end,
+                java.time.Duration.ofMinutes(5));
         // free/busy type should be FREE..
         suite.addTest(new VFreeBusyTest("testFbType", requestFree, components, FbType.FREE));
 
@@ -433,14 +436,15 @@ public class VFreeBusyTest extends CalendarComponentTest {
 
         //testBusyTime..
         components = new ComponentList<CalendarComponent>();
-        event1 = new VEvent(new DateTime("20050103T080000Z"), new Dur(0, 5, 0, 0), "Event 1");
+        event1 = new VEvent(new DateTime("20050103T080000Z"),
+                java.time.Duration.ofHours(5), "Event 1");
         Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         RRule rRule = new RRule(rRuleRecur);
         event1.getProperties().add(rRule);
         components.add(event1);
 
         start = new DateTime("20050104T1100000Z");
-        Period period = new Period(start, new Dur(0, 0, 30, 0));
+        Period period = new Period(start, java.time.Duration.ofMinutes(30));
 
         VFreeBusy request = new VFreeBusy(period.getStart(), period.getEnd());
         // FBTYPE is optional - defaults to BUSY..
@@ -448,7 +452,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
 
         periods = new PeriodList();
-        periods.add(new Period(new DateTime("20050104T0800000Z"), new Dur("PT5H")));
+        periods.add(new Period(new DateTime("20050104T0800000Z"), java.time.Duration.parse("PT5H")));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
 
         // TODO: further work needed to "splice" events based on the amount
@@ -456,7 +460,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
 //        assertEquals(new DateTime("20050104T1100000Z"), busy1.getStart());
 //        assertEquals("PT30M", busy1.getDuration().toString());
 
-        request = new VFreeBusy(period.getStart(), period.getEnd(), new Dur(0));
+        request = new VFreeBusy(period.getStart(), period.getEnd(), java.time.Period.ZERO);
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
 
         // anniversary-style events don't consume time..
@@ -470,12 +474,12 @@ public class VFreeBusyTest extends CalendarComponentTest {
         request = new VFreeBusy(start, end);
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
 
-        request = new VFreeBusy(start, end, new Dur(0, 0, 15, 0));
+        request = new VFreeBusy(start, end, java.time.Duration.ofMinutes(15));
         suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.FREE));
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
 
         periods = new PeriodList();
-        periods.add(new Period(start, new Dur(0, 0, 30, 0)));
+        periods.add(new Period(start, java.time.Duration.ofMinutes(30)));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
 
         //some components are not in range
@@ -489,7 +493,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         dts.getParameters().add(tzP);
         VEvent e = new VEvent();
         e.getProperties().add(dts);
-        e.getProperties().add(new Duration(new Dur("PT1H")));
+        e.getProperties().add(new Duration(java.time.Duration.parse("PT1H")));
         e.getProperties().add(new RRule("FREQ=DAILY"));
         components.add(e);
         period = new Period(new DateTime("20130124T1100000Z"), new DateTime("20130125T1100000Z"));

@@ -78,7 +78,8 @@ standard.
 
 ### System requirements
 
- - Java 7 or later
+ - Version 3.x - Java 8 or later
+ - Version 2.x - Java 7 or later
 
 ### Dependencies
 
@@ -93,7 +94,8 @@ implementations. Used in all classes requiring custom equality implementations.
 
 * commons-collections4 [required] - Provides enhancements to the standard Java collections API, including support for closures. Used in `net.fortuna.ical4j.validate.Validator` implementations to reduce the duplication of code in validity checks.
 
-* javax.cache.cache-api [required] - Supports caching timzeone definitions.
+* javax.cache.cache-api [optional*] - Supports caching timzeone definitions. * NOTE: when not included you must set
+a value for the `net.fortuna.ical4j.timezone.cache.impl` configuration
 
 * commons-codec [optional] - Provides support for encoding and decoding binary data in text form. Used in `net.fortuna.ical4j.model.property.Attach`
  

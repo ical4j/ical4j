@@ -47,7 +47,7 @@ import java.util.regex.Pattern;
  * Defines a list of iCalendar text elements.
  * @author Ben Fortuna
  */
-public class TextList implements Serializable {
+public class TextList implements Serializable, Iterable<String> {
 
 	private static final long serialVersionUID = -417427815871330636L;
 	

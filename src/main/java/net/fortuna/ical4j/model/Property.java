@@ -423,7 +423,7 @@ public abstract class Property extends Content {
         buffer.append(':');
         boolean needsEscape = false;
         if (this instanceof XProperty) {
-            Value valParam = (Value) getParameter(Parameter.VALUE);
+            Value valParam = getParameter(Parameter.VALUE);
             if (valParam == null || valParam.equals(Value.TEXT)) {
                 needsEscape = true;
             }
@@ -470,7 +470,7 @@ public abstract class Property extends Content {
      * @param name name of the parameter to retrieve
      * @return the first parameter from the parameter list with the specified name
      */
-    public final Parameter getParameter(final String name) {
+    public final <T extends Parameter> T getParameter(final String name) {
         return getParameters().getParameter(name);
     }
 

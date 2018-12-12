@@ -33,7 +33,8 @@ package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
-import net.fortuna.ical4j.model.UtcOffset;
+
+import java.time.ZoneOffset;
 
 /**
  * $Id$
@@ -65,7 +66,7 @@ public class TzOffsetFromTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        TzOffsetFrom offset = new TzOffsetFrom(new UtcOffset("+1000"));
+        TzOffsetFrom offset = new TzOffsetFrom(ZoneOffset.of("+1000"));
         suite.addTest(new TzOffsetFromTest(offset, "+1000"));
         suite.addTest(new TzOffsetFromTest("testValidation", offset));
         suite.addTest(new TzOffsetFromTest("testEquals", offset));

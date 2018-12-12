@@ -37,6 +37,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.ZoneOffset;
 
 /**
  * $Id$
@@ -51,7 +52,7 @@ public class TzOffsetTo extends Property {
 
     private static final long serialVersionUID = 8213874575051177732L;
 
-    private UtcOffset offset;
+    private ZoneOffsetAdapter offset;
 
     /**
      * Default constructor.
@@ -81,8 +82,15 @@ public class TzOffsetTo extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final UtcOffset anOffset) {
+        this(ZoneOffsetAdapter.from(anOffset));
+    }
+
+    /**
+     * @param anOffset a timezone offset in milliseconds
+     */
+    public TzOffsetTo(final ZoneOffset anOffset) {
         super(TZOFFSETTO, new Factory());
-        offset = anOffset;
+        offset = new ZoneOffsetAdapter(anOffset);
     }
 
     /**
@@ -90,22 +98,30 @@ public class TzOffsetTo extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetTo(final ParameterList aList, final UtcOffset anOffset) {
+        this(aList, ZoneOffsetAdapter.from(anOffset));
+    }
+
+    /**
+     * @param aList    a list of parameters for this component
+     * @param anOffset a timezone offset in milliseconds
+     */
+    public TzOffsetTo(final ParameterList aList, final ZoneOffset anOffset) {
         super(TZOFFSETTO, aList, new Factory());
-        offset = anOffset;
+        offset = new ZoneOffsetAdapter(anOffset);
     }
 
     /**
      * @return Returns the offset.
      */
-    public final UtcOffset getOffset() {
-        return offset;
+    public final ZoneOffset getOffset() {
+        return offset.getOffset();
     }
 
     /**
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        offset = new UtcOffset(aValue);
+        offset = new ZoneOffsetAdapter(ZoneOffset.of(aValue));
     }
 
     /**
@@ -121,8 +137,8 @@ public class TzOffsetTo extends Property {
     /**
      * @param offset The offset to set.
      */
-    public final void setOffset(final UtcOffset offset) {
-        this.offset = offset;
+    public final void setOffset(final ZoneOffset offset) {
+        this.offset = new ZoneOffsetAdapter(offset);
     }
 
     @Override

@@ -45,7 +45,7 @@ abstract class AbstractParameterFactory extends AbstractFactory {
      * {@inheritDoc}
      */
     boolean isLeaf() {
-        return true;
+        return true
     }
 }
 
