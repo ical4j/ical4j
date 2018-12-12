@@ -835,7 +835,28 @@ public class RecurTest extends TestCase {
         recur = new Recur("FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYMONTH=2,3,9,10;BYMONTHDAY=28,29,30,31;BYSETPOS=-1");
         suite.addTest(new RecurTest(recur, new DateTime("20150701T000000"),
                 new DateTime("20150701T000000"), new DateTime("20150930T000000")));
-      
+
+        // test getting valid recurrence at tip of smart increment
+        // feb 29 2020 monthly with only valid month by february should return feb 28 2021
+        recur = new Recur("FREQ=MONTHLY;BYMONTH=2;INTERVAL=1");
+        suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
+                new DateTime("20200229T000000"), new DateTime("20210228T000000")));
+
+        // test hitting limit when getting invalid next recurrence
+        recur = new Recur("FREQ=MONTHLY;BYMONTH=2;BYMONTHDAY=30;INTERVAL=1");
+        suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
+                new DateTime("20200229T000000"), null));
+
+        // test hitting leap year appropriately
+        recur = new Recur("FREQ=YEARLY;BYMONTHDAY=29;INTERVAL=1");
+        suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
+                new DateTime("20200229T000000"), new DateTime("20240229T000000")));
+
+        // test correct hit on first incrementation
+        recur = new Recur("FREQ=YEARLY;INTERVAL=4");
+        suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
+                new DateTime("20200229T000000"), new DateTime("20240229T000000")));
+
         return suite;
     }
 }
