@@ -36,6 +36,8 @@ import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import static net.fortuna.ical4j.model.WeekDay.*
+
 class RecurSpec extends Specification {
 
 	def setupSpec() {
@@ -270,8 +272,8 @@ class RecurSpec extends Specification {
 	
 	def 'verify no-args constructor has no side-effects'() {
 		expect:
-		new Recur(frequency: Recur.WEEKLY) as String == 'FREQ=WEEKLY'
-		new Recur(frequency: Recur.MONTHLY, interval: 3) as String == 'FREQ=MONTHLY;INTERVAL=3'
+		new Recur(frequency: Recur.Frequency.WEEKLY) as String == 'FREQ=WEEKLY'
+		new Recur(frequency: Recur.Frequency.MONTHLY, interval: 3) as String == 'FREQ=MONTHLY;INTERVAL=3'
 	}
 	
 	def 'verify behaviour when parsing unexpected rule parts'() {
@@ -303,5 +305,20 @@ class RecurSpec extends Specification {
 		where:
 		rule							| parsedString
 		'FREQ=WEEKLY;BYDAY=;INTERVAL=1'	| 'FREQ=WEEKLY;INTERVAL=1'
+	}
+
+	def 'test recur rule builder'() {
+		given: 'a rule builder'
+		Recur.Builder builder = []
+
+		when: 'populated'
+		Date until = new Date('20050307');
+
+		Recur recurDaily = builder.frequency(Recur.Frequency.DAILY).until(until)
+				.dayList(new WeekDayList(MO, TU, WE, TH, FR))
+				.interval(1).weekStartDay(MO.getDay()).build();
+
+		then: 'result is as expected'
+		recurDaily as String == "FREQ=DAILY;WKST=MO;UNTIL=20050307;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR"
 	}
 }

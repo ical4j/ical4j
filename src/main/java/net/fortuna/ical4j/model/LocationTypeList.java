@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * $Id LocationTypeList.java $ [23-Apr-2004]
@@ -76,14 +77,7 @@ public class LocationTypeList implements Serializable, Iterable<String> {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<String> i = locationTypes.iterator(); i.hasNext();) {
-            b.append(i.next());
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+        return locationTypes.stream().collect(Collectors.joining(","));
     }
 
     /**
