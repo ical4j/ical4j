@@ -53,19 +53,31 @@ class RecurSpec extends Specification {
 	def 'verify recurrence rule: #rule'() {
 		setup: 'parse recurrence rule'
 		def recur = new Recur(rule)
-		def startDate = new Date(start)
-		def endDate = new Date(end)
+		def startDate
+		def endDate
 		def expectedDates = []
-		expected.each {
-			expectedDates << new DateTime(it)
+		if (valueType == Value.DATE) {
+			startDate = new Date(start)
+			endDate = new Date(end)
+			expected.each {
+				expectedDates << new Date(it)
+			}
+		} else {
+			startDate = new DateTime(start)
+			endDate = new DateTime(end)
+			expected.each {
+				expectedDates << new DateTime(it)
+			}
 		}
 
 		expect:
-		recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+		recur.getDates(startDate, endDate, valueType) == expectedDates
 		
 		where:
-		rule					| start			| end			| expected
-		'FREQ=WEEKLY;BYDAY=MO'	| '20110101'	| '20110201'	| ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000']
+		rule					| valueType | start			| end			| expected
+		'FREQ=WEEKLY;BYDAY=MO'	| Value.DATE_TIME	| '20110101T000000'	| '20110201T000000'	| ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000']
+		'FREQ=DAILY;INTERVAL=14;WKST=MO;BYMONTH=10,12'	| Value.DATE | '20181011'	| '20181231'	| ['20181011', '20181025', '20181206', '20181220']
+		'FREQ=WEEKLY;BYDAY=MO,TH,FR,SA,SU;BYHOUR=11;BYMINUTE=5'	| Value.DATE_TIME	| '20160325T110500'	| '20160329T121000'	| ['20160325T110500', '20160326T110500', '20160327T110500', '20160328T110500']
 	}
 
     @Unroll
