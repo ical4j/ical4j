@@ -8,7 +8,10 @@ import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Dates;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -41,28 +44,25 @@ public class ByMonthRule extends AbstractDateExpansionRule {
             if (frequency == Frequency.YEARLY) {
                 monthlyDates.addAll(new ExpansionFilter(monthlyDates.getType()).apply(date));
             } else {
-                monthlyDates.addAll(new LimitFilter(monthlyDates.getType()).apply(date));
+                Optional<Date> limit = new LimitFilter().apply(date);
+                if (limit.isPresent()) {
+                    monthlyDates.add(limit.get());
+                }
             }
         }
         return monthlyDates;
     }
 
-    private class LimitFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public LimitFilter(Value type) {
-            this.type = type;
-        }
+    private class LimitFilter implements Function<Date, Optional<Date>> {
 
         @Override
-        public List<Date> apply(Date date) {
+        public Optional<Date> apply(Date date) {
             final Calendar cal = getCalendarInstance(date, true);
             // Java months are zero-based..
             if (monthList.contains(cal.get(Calendar.MONTH) + 1)) {
-                return Arrays.asList(date);
+                return Optional.of(date);
             }
-            return Collections.emptyList();
+            return Optional.empty();
         }
     }
 

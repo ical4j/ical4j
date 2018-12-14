@@ -8,7 +8,10 @@ import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Dates;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 /**
@@ -40,7 +43,10 @@ public class BySecondRule extends AbstractDateExpansionRule {
         final DateList secondlyDates = Dates.getDateListInstance(dates);
         for (final Date date : dates) {
             if (frequency == Frequency.SECONDLY) {
-                secondlyDates.addAll(new LimitFilter(secondlyDates.getType()).apply(date));
+                Optional<Date> limit = new LimitFilter().apply(date);
+                if (limit.isPresent()) {
+                    secondlyDates.add(limit.get());
+                }
             } else {
                 secondlyDates.addAll(new ExpansionFilter(secondlyDates.getType()).apply(date));
             }
@@ -48,21 +54,15 @@ public class BySecondRule extends AbstractDateExpansionRule {
         return secondlyDates;
     }
 
-    private class LimitFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public LimitFilter(Value type) {
-            this.type = type;
-        }
+    private class LimitFilter implements Function<Date, Optional<Date>> {
 
         @Override
-        public List<Date> apply(Date date) {
+        public Optional<Date> apply(Date date) {
             final Calendar cal = getCalendarInstance(date, true);
             if (secondList.contains(cal.get(Calendar.SECOND))) {
-                return Arrays.asList(date);
+                return Optional.of(date);
             }
-            return Collections.emptyList();
+            return Optional.empty();
         }
     }
 

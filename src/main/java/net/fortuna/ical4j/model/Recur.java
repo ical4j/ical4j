@@ -335,12 +335,12 @@ public class Recur implements Serializable {
             hourList = new NumberList(0, 23, false);
         }
         if (monthDayList != null) {
-            transformers.put(BYMONTHDAY, new ByMonthDayRule(monthDayList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYMONTHDAY, new ByMonthDayRule(monthDayList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             monthDayList = new NumberList(1, 31, true);
         }
         if (yearDayList != null) {
-            transformers.put(BYYEARDAY, new ByYearDayRule(yearDayList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYYEARDAY, new ByYearDayRule(yearDayList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             yearDayList = new NumberList(1, 366, true);
         }
@@ -953,7 +953,7 @@ public class Recur implements Serializable {
 
             NumberList implicitMonthDayList = new NumberList();
             implicitMonthDayList.add(rootSeed.get(Calendar.DAY_OF_MONTH));
-            ByMonthDayRule implicitRule = new ByMonthDayRule(implicitMonthDayList, Optional.ofNullable(weekStartDay));
+            ByMonthDayRule implicitRule = new ByMonthDayRule(implicitMonthDayList, frequency, Optional.ofNullable(weekStartDay));
             dates = implicitRule.transform(dates);
         }
 

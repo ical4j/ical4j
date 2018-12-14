@@ -44,27 +44,24 @@ public class ByHourRule extends AbstractDateExpansionRule {
             if (EnumSet.of(DAILY, WEEKLY, MONTHLY, YEARLY).contains(frequency)) {
                 hourlyDates.addAll(new ExpansionFilter(hourlyDates.getType()).apply(date));
             } else {
-                hourlyDates.addAll(new LimitFilter(hourlyDates.getType()).apply(date));
+                Optional<Date> limit = new LimitFilter().apply(date);
+                if (limit.isPresent()) {
+                    hourlyDates.add(limit.get());
+                }
             }
         }
         return hourlyDates;
     }
 
-    private class LimitFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public LimitFilter(Value type) {
-            this.type = type;
-        }
+    private class LimitFilter implements Function<Date, Optional<Date>> {
 
         @Override
-        public List<Date> apply(Date date) {
+        public Optional<Date> apply(Date date) {
             final Calendar cal = getCalendarInstance(date, true);
             if (hourList.contains(cal.get(Calendar.HOUR_OF_DAY))) {
-                return Arrays.asList(date);
+                return Optional.of(date);
             }
-            return Collections.emptyList();
+            return Optional.empty();
         }
     }
 
