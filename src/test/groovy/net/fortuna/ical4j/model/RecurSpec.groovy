@@ -105,6 +105,11 @@ class RecurSpec extends Specification {
 																																							 '20170113T003000Z',
 																																							 '20170120T003000Z',
 																																							 '20170127T003000Z']
+		'FREQ=WEEKLY;WKST=MO;BYDAY=SU;BYHOUR=0;BYMINUTE=0'	| Value.DATE_TIME	| '20181020T000000'	| '20181120T000000'	| ['20181021T000000',
+																																			'20181028T000000',
+																																			'20181104T000000',
+																																			'20181111T000000',
+																																			'20181118T000000']
 	}
 
     @Unroll
