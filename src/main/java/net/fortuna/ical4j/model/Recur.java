@@ -713,17 +713,14 @@ public class Recur implements Serializable {
 
             if (getUntil() != null && candidate != null
                     && candidate.after(getUntil())) {
-
                 break;
             }
             if (periodEnd != null && candidate != null
                     && candidate.after(periodEnd)) {
-
                 break;
             }
             if (getCount() >= 1
                     && (dates.size() + invalidCandidates.size()) >= getCount()) {
-
                 break;
             }
 
@@ -751,13 +748,15 @@ public class Recur implements Serializable {
                     if (!candidate.before(seed)) {
                         // candidates exclusive of periodEnd..
                         if (candidate.before(periodStart)
-                                || !candidate.before(periodEnd)) {
+                                || candidate.after(periodEnd)) {
                             invalidCandidates.add(candidate);
                         } else if (getCount() >= 1
                                 && (dates.size() + invalidCandidates.size()) >= getCount()) {
                             break;
-                        } else if (!(getUntil() != null
-                                && candidate.after(getUntil()))) {
+                        } else if (getUntil() instanceof Date
+                                && candidate.compareTo(getUntil()) < 1) {
+                            dates.add(candidate);
+                        } else if (!candidate.before(periodStart) && candidate.before(periodEnd)) {
                             dates.add(candidate);
                         }
                     }
