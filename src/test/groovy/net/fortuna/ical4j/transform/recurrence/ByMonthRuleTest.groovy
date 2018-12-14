@@ -14,7 +14,7 @@ class ByMonthRuleTest extends Specification {
 
     def 'verify transformations by month'() {
         given: 'a bymonth rule'
-        ByMonthRule rule = [new NumberList(byMonthPart), Optional.empty()]
+        ByMonthRule rule = [new NumberList(byMonthPart), frequency]
 
         and: 'a list of dates'
         DateList dateList = [valueType]
@@ -24,8 +24,10 @@ class ByMonthRuleTest extends Specification {
         rule.transform(dateList) == expectedResult
 
         where:
-        byMonthPart     | dates                                | valueType   | expectedResult
-        '1,2'         | [new Date('20150103')]          | Value.DATE  | [new Date('20150103'), new Date('20150203')]
-        '2'         | [new DateTime("20200229T000000")] | Value.DATE_TIME| [new DateTime("20200229T000000")]
+        byMonthPart     | frequency     | dates                             | valueType       | expectedResult
+        '1,2'         | YEARLY | [new Date('20150103')]            | Value.DATE      | [new Date('20150103'), new Date('20150203')]
+        '2'         | YEARLY | [new DateTime("20200229T000000")] | Value.DATE_TIME | [new DateTime("20200229T000000")]
+        '10,12'         | YEARLY | [new Date("20181010")]            | Value.DATE      | [new Date("20181010"), new Date("20181210")]
+        '10,12'         | DAILY | [new Date("20181010"), new Date("20181110"), new Date("20181210")]            | Value.DATE      | [new Date("20181010"), new Date("20181210")]
     }
 }
