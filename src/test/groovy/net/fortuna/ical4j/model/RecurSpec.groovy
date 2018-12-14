@@ -78,6 +78,33 @@ class RecurSpec extends Specification {
 		'FREQ=WEEKLY;BYDAY=MO'	| Value.DATE_TIME	| '20110101T000000'	| '20110201T000000'	| ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000']
 		'FREQ=DAILY;INTERVAL=14;WKST=MO;BYMONTH=10,12'	| Value.DATE | '20181011'	| '20181231'	| ['20181011', '20181025', '20181206', '20181220']
 		'FREQ=WEEKLY;BYDAY=MO,TH,FR,SA,SU;BYHOUR=11;BYMINUTE=5'	| Value.DATE_TIME	| '20160325T110500'	| '20160329T121000'	| ['20160325T110500', '20160326T110500', '20160327T110500', '20160328T110500']
+		'FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;WKST=MO;UNTIL=20170127T003000Z'	| Value.DATE_TIME	| '20160727T0030000Z'	| '20170127T003000Z'	| ['20160729T003000Z',
+																																							 '20160805T003000Z',
+																																							 '20160812T003000Z',
+																																							 '20160819T003000Z',
+																																							 '20160826T003000Z',
+																																							 '20160902T003000Z',
+																																							 '20160909T003000Z',
+																																							 '20160916T003000Z',
+																																							 '20160923T003000Z',
+																																							 '20160930T003000Z',
+																																							 '20161007T003000Z',
+																																							 '20161014T003000Z',
+																																							 '20161021T003000Z',
+																																							 '20161028T003000Z',
+																																							 '20161104T003000Z',
+																																							 '20161111T003000Z',
+																																							 '20161118T003000Z',
+																																							 '20161125T003000Z',
+																																							 '20161202T003000Z',
+																																							 '20161209T003000Z',
+																																							 '20161216T003000Z',
+																																							 '20161223T003000Z',
+																																							 '20161230T003000Z',
+																																							 '20170106T003000Z',
+																																							 '20170113T003000Z',
+																																							 '20170120T003000Z',
+																																							 '20170127T003000Z']
 	}
 
     @Unroll
@@ -343,6 +370,6 @@ class RecurSpec extends Specification {
 
 		where:
 		rule	| seed	| start	| expectedDate
-		'FREQ=MONTHLY;COUNT=100;INTERVAL=1'	| new DateTime('20180329T025959')	| new DateTime('20170729T030000')	| new DateTime('20180329T030000')
+		'FREQ=MONTHLY;COUNT=100;INTERVAL=1'	| new DateTime('20180329T025959')	| new DateTime('20170729T030000')	| new DateTime('20180329T025959')
 	}
 }
