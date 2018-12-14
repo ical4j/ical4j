@@ -7,6 +7,9 @@ import net.fortuna.ical4j.model.NumberList
 import net.fortuna.ical4j.model.parameter.Value
 import spock.lang.Specification
 
+import static net.fortuna.ical4j.model.Recur.Frequency.DAILY
+import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY
+
 class ByMonthRuleTest extends Specification {
 
     def 'verify transformations by month'() {

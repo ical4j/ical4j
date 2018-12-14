@@ -320,17 +320,17 @@ public class Recur implements Serializable {
     private void initTransformers() {
         transformers = new HashMap<>();
         if (secondList != null) {
-            transformers.put(BYSECOND, new BySecondRule(secondList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYSECOND, new BySecondRule(secondList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             secondList = new NumberList(0, 59, false);
         }
         if (minuteList != null) {
-            transformers.put(BYMINUTE, new ByMinuteRule(minuteList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYMINUTE, new ByMinuteRule(minuteList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             minuteList = new NumberList(0, 59, false);
         }
         if (hourList != null) {
-            transformers.put(BYHOUR, new ByHourRule(hourList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYHOUR, new ByHourRule(hourList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             hourList = new NumberList(0, 23, false);
         }
@@ -350,7 +350,7 @@ public class Recur implements Serializable {
             weekNoList = new NumberList(1, 53, true);
         }
         if (monthList != null) {
-            transformers.put(BYMONTH, new ByMonthRule(monthList, Optional.ofNullable(interval),
+            transformers.put(BYMONTH, new ByMonthRule(monthList, frequency,
                     Optional.ofNullable(weekStartDay)));
         } else {
             monthList = new NumberList(1, 12, false);

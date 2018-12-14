@@ -13,7 +13,7 @@ import java.util.Optional;
  * Applies BYMONTHDAY rules specified in this Recur instance to the specified date list. If no BYMONTHDAY rules are
  * specified the date list is returned unmodified.
  */
-public class ByMonthDayRule extends AbstractRecurrenceRule {
+public class ByMonthDayRule extends AbstractDateExpansionRule {
 
     private transient Logger log = LoggerFactory.getLogger(ByMonthDayRule.class);
 

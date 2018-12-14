@@ -13,7 +13,7 @@ import java.util.Optional;
  * Applies BYYEARDAY rules specified in this Recur instance to the specified date list. If no BYYEARDAY rules are
  * specified the date list is returned unmodified.
  */
-public class ByYearDayRule extends AbstractRecurrenceRule {
+public class ByYearDayRule extends AbstractDateExpansionRule {
 
     private transient Logger log = LoggerFactory.getLogger(ByYearDayRule.class);
 

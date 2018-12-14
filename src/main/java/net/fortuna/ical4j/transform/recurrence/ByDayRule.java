@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * Applies BYDAY rules specified in this Recur instance to the specified date list. If no BYDAY rules are specified
  * the date list is returned unmodified.
  */
-public class ByDayRule extends AbstractRecurrenceRule {
+public class ByDayRule extends AbstractDateExpansionRule {
 
     public enum FilterType {
         Daily, Weekly, Monthly, Yearly;
