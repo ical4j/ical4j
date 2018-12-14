@@ -41,9 +41,9 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public abstract class AbstractPropertyFactory extends AbstractFactory {
+abstract class AbstractPropertyFactory extends AbstractFactory {
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         ParameterList parameters = attributes.remove('parameters')
         if (parameters == null) {
             parameters = new ParameterList()
@@ -57,9 +57,9 @@ public abstract class AbstractPropertyFactory extends AbstractFactory {
         }
     }
 
-    protected abstract Object newInstance(ParameterList parameters, String value);
-    
-    public void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+    protected abstract Object newInstance(ParameterList parameters, String value)
+
+    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof Parameter) {
             parent.parameters.add(child)
         }

@@ -31,22 +31,22 @@
  */
 package net.fortuna.ical4j.model.component
 
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.PropertyList
 
 /**
  * @author fortuna
  *
  */
-public class VFreeBusyFactory extends AbstractComponentFactory{
+class VFreeBusyFactory extends AbstractComponentFactory{
 
 
-     public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
          VFreeBusy freeBusy
          if (FactoryBuilderSupport.checkValueIsType(value, name, VFreeBusy.class)) {
              freeBusy = (VFreeBusy) value
          }
          else {
-             freeBusy = super.newInstance(builder, name, value, attributes);
+             freeBusy = super.newInstance(builder, name, value, attributes)
          }
          return freeBusy
      }

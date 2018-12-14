@@ -57,7 +57,7 @@ public class ExDate extends DateListProperty {
      * Default constructor.
      */
     public ExDate() {
-        super(EXDATE, PropertyFactoryImpl.getInstance());
+        super(EXDATE, new Factory());
     }
 
     /**
@@ -67,7 +67,7 @@ public class ExDate extends DateListProperty {
      */
     public ExDate(final ParameterList aList, final String aValue)
             throws ParseException {
-        super(EXDATE, aList, PropertyFactoryImpl.getInstance());
+        super(EXDATE, aList, new Factory());
         setValue(aValue);
     }
 
@@ -75,7 +75,7 @@ public class ExDate extends DateListProperty {
      * @param dList a list of dates
      */
     public ExDate(final DateList dList) {
-        super(EXDATE, dList, PropertyFactoryImpl.getInstance());
+        super(EXDATE, dList, new Factory());
     }
 
     /**
@@ -83,7 +83,7 @@ public class ExDate extends DateListProperty {
      * @param dList a list of dates
      */
     public ExDate(final ParameterList aList, final DateList dList) {
-        super(EXDATE, aList, dList, PropertyFactoryImpl.getInstance());
+        super(EXDATE, aList, dList, new Factory());
     }
 
     /**

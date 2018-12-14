@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -85,10 +84,10 @@ public class TriggerTest extends PropertyTest {
         log.info(trigger.toString());
 
 //        trigger.setValue(DurationFormat.getInstance().format(5000));
-        trigger.setValue(new Dur(0, 0, 0, 5).toString());
+        trigger.setValue(java.time.Duration.ofSeconds(5).toString());
         
 //        log.info(DurationFormat.getInstance().format(5000));
-        log.info(new Dur(0, 0, 0, 5).toString());
+        log.info(java.time.Duration.ofSeconds(5).toString());
         log.info(trigger.toString());
     }
 
@@ -122,7 +121,7 @@ public class TriggerTest extends PropertyTest {
         Trigger trigger = new Trigger();
     	suite.addTest(new TriggerTest("testSetValue", trigger));
 
-    	trigger = new Trigger(new Dur(1, 0, 0, 0));
+    	trigger = new Trigger(java.time.Duration.ofDays(1));
     	suite.addTest(new TriggerTest("testTriggerDuration", trigger));
         
     	trigger = new Trigger(new DateTime(new Date()));

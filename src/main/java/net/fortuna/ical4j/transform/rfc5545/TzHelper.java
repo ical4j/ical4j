@@ -42,9 +42,7 @@ class TzHelper {
     }
 
     private static void initMsTimezones() {
-        Scanner scanner = null;
-        try {
-            scanner = new Scanner(TzHelper.class.getResourceAsStream(MS_TIMEZONES_FILE));
+        try (Scanner scanner = new Scanner(TzHelper.class.getResourceAsStream(MS_TIMEZONES_FILE))) {
             while (scanner.hasNext()) {
                 String[] arr = scanner.nextLine().split("=");
                 String standardTzId = arr[1];
@@ -52,13 +50,9 @@ class TzHelper {
                 MS_TIMEZONE_NAMES.put(displayNameAndMsTzId[0], standardTzId);
                 MS_TIMEZONE_IDS.put(displayNameAndMsTzId[1], standardTzId);
             }
-        } catch (Exception e) { // avoid NoClassDefFoundError
+        } catch (RuntimeException e) { // avoid NoClassDefFoundError
             LOG.error("Could not load MS timezones", e);
             throw new RuntimeException("Unable to load resource file " + MS_TIMEZONES_FILE, e);
-        } finally {
-            if (scanner != null) {
-                scanner.close();
-            }
         }
     }
 

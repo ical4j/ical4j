@@ -31,11 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.PropertyTest;
+
+import java.text.ParseException;
 
 /**
  * Created: [24/11/2008]
@@ -66,7 +65,7 @@ public class DurationTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        Duration duration = new Duration(new Dur(1));
+        Duration duration = new Duration(java.time.Period.ofWeeks(1));
         suite.addTest(new DurationTest(duration, "P1W"));
         suite.addTest(new DurationTest("testValidation", duration));
         suite.addTest(new DurationTest("testEquals", duration));

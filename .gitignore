@@ -9,3 +9,5 @@ zones.tab
 .classpath
 .project
 .settings/
+gradle.properties
+out/

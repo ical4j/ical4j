@@ -454,11 +454,11 @@ public class PeriodTest extends TestCase {
         Calendar cal = Calendar.getInstance();
         DateTime start = new DateTime(cal.getTime());
         assertTrue(new Period(start, start).isEmpty());
-        assertTrue(new Period(start, new Dur(0)).isEmpty());
+        assertTrue(new Period(start, java.time.Period.ZERO).isEmpty());
         
         cal.add(Calendar.SECOND, 1);
         assertFalse(new Period(start, new DateTime(cal.getTime())).isEmpty());
-        assertFalse(new Period(start, new Dur(0, 0, 0, 1)).isEmpty());
+        assertFalse(new Period(start, java.time.Duration.ofSeconds(1)).isEmpty());
     }
     
     /**
@@ -617,11 +617,11 @@ public class PeriodTest extends TestCase {
         
         TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         DateTime start = new DateTime("20081115T163800", registry.getTimeZone("Australia/Melbourne"));
-        suite.addTest(new PeriodTest("testGetEndTimeZone", new Period(start, new Dur(1)), registry.getTimeZone("Australia/Melbourne")));
+        suite.addTest(new PeriodTest("testGetEndTimeZone", new Period(start, java.time.Period.ofWeeks(1)), registry.getTimeZone("Australia/Melbourne")));
         
         start = new DateTime(start);
         start.setUtc(true);
-        suite.addTest(new PeriodTest("testGetEndIsUtc", new Period(start, new Dur(1)), true));
+        suite.addTest(new PeriodTest("testGetEndIsUtc", new Period(start, java.time.Period.ofWeeks(1)), true));
         
         // other tests..
         suite.addTest(new PeriodTest("testTimezone"));

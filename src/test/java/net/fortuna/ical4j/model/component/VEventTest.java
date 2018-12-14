@@ -35,25 +35,23 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.Calendars;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.TimeZones;
-import net.fortuna.ical4j.util.UidGenerator;
+import net.fortuna.ical4j.util.*;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.Iterator;
+
+import static net.fortuna.ical4j.model.WeekDay.*;
 
 /**
  * $Id: VEventTest.java [28/09/2004]
@@ -227,7 +225,8 @@ public class VEventTest extends CalendarComponentTest {
         cal.set(java.util.Calendar.HOUR_OF_DAY, 9);
         cal.set(java.util.Calendar.MINUTE, 30);
 
-        VEvent meeting = new VEvent(new DateTime(cal.getTime().getTime()), new Dur(0, 1, 0, 0), "Progress Meeting");
+        VEvent meeting = new VEvent(new DateTime(cal.getTime().getTime()),
+                java.time.Duration.ofHours(1), "Progress Meeting");
 
         // add timezone information..
         meeting.getProperty(Property.DTSTART).getParameters().add(tzParam);
@@ -406,16 +405,14 @@ public class VEventTest extends CalendarComponentTest {
         endCal.setTime(start);
         endCal.add(Calendar.WEEK_OF_YEAR, 4);
 //        Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
-        for (Iterator<CalendarComponent> i = calendar.getComponents().iterator(); i.hasNext(); ) {
-            Component c = i.next();
+        calendar.getComponents().forEach(calendarComponent -> {
+            if (calendarComponent instanceof VEvent) {
+                PeriodList consumed = ((VEvent) calendarComponent).getConsumedTime(start, new Date(endCal.getTime().getTime()));
 
-            if (c instanceof VEvent) {
-                PeriodList consumed = ((VEvent) c).getConsumedTime(start, new Date(endCal.getTime().getTime()));
-
-                log.debug("Event [" + c + "]");
+                log.debug("Event [" + calendarComponent + "]");
                 log.debug("Consumed time [" + consumed + "]");
             }
-        }
+        });
     }
 
     public final void testGetConsumedTime3() throws Exception {
@@ -438,9 +435,8 @@ public class VEventTest extends CalendarComponentTest {
      * Test COUNT rules.
      */
     public void testGetConsumedTimeByCount() {
-        Recur recur = new Recur(Recur.WEEKLY, 3);
-        recur.setInterval(1);
-        recur.getDayList().add(WeekDay.SU);
+        Recur recur = new Recur.Builder().frequency(Frequency.WEEKLY).count(3)
+            .interval(1).dayList(new WeekDayList(SU)).build();
         log.info(recur.toString());
 
         Calendar cal = getCalendarInstance();
@@ -472,11 +468,25 @@ public class VEventTest extends CalendarComponentTest {
         Calendar cal = getCalendarInstance();
         Date startDate = new Date(cal.getTime());
         log.info("Start date: " + startDate);
-        VEvent event = new VEvent(startDate, new Dur(3, 0, 0, 0), "3 day event");
+        VEvent event = new VEvent(startDate,
+                java.time.Duration.ofDays(3), "3 day event");
         Date endDate = event.getEndDate().getDate();
         log.info("End date: " + endDate);
         cal.add(Calendar.DAY_OF_YEAR, 3);
         assertEquals(new Date(cal.getTime()), endDate);
+    }
+
+    /**
+     * A test to confirm that the end date is calculated correctly
+     * from a given start date and duration, even when timezone is specified.
+     */
+    public final void testEventEndDateWithTimeZone() throws ParseException {
+        TimeZone timezone = new TimeZoneRegistryImpl().getTimeZone("Asia/Seoul");
+        DateTime startDateTime = new DateTime("20181003T130000", timezone);
+        log.info("Start date: " + startDateTime);
+        VEvent event = new VEvent(startDateTime,
+                java.time.Duration.ofHours(1), "1 hour event");
+        assertEquals(new DateTime("20181003T140000", timezone), event.getEndDate().getDate());
     }
 
     /**
@@ -487,8 +497,7 @@ public class VEventTest extends CalendarComponentTest {
     public void testGetConsumedTimeWithExDate() throws ParseException {
 
         VEvent event1 = new VEvent(new DateTime("20050103T080000"),
-                new Dur(0, 0, 15, 0),
-                "Event 1");
+                java.time.Duration.ofMinutes(15), "Event 1");
 
         Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         RRule rRule = new RRule(rRuleRecur);
@@ -572,7 +581,7 @@ public class VEventTest extends CalendarComponentTest {
      * @throws ParserException
      */
     public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException, ParserException {
-        UidGenerator uidGenerator = new UidGenerator("1");
+        UidGenerator uidGenerator = new RandomUidGenerator();
 
         Calendar weekday9AM = getCalendarInstance();
         weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
@@ -589,36 +598,21 @@ public class VEventTest extends CalendarComponentTest {
         Date until = new Date(untilCal.getTime().getTime());
 
         // 9:00AM to 5:00PM Rule using weekly
-        Recur recurWeekly = new Recur(Recur.WEEKLY, until);
-        recurWeekly.getDayList().add(WeekDay.MO);
-        recurWeekly.getDayList().add(WeekDay.TU);
-        recurWeekly.getDayList().add(WeekDay.WE);
-        recurWeekly.getDayList().add(WeekDay.TH);
-        recurWeekly.getDayList().add(WeekDay.FR);
-        recurWeekly.setInterval(1);
-        recurWeekly.setWeekStartDay(WeekDay.MO.getDay());
+        Recur recurWeekly = new Recur.Builder().frequency(Frequency.WEEKLY).until(until)
+            .dayList(new WeekDayList(MO, TU, WE, TH, FR))
+            .interval(1).weekStartDay(MO.getDay()).build();
         RRule rruleWeekly = new RRule(recurWeekly);
 
         // 9:00AM to 5:00PM Rule using daily frequency
-        Recur recurDaily = new Recur(Recur.DAILY, until);
-        recurDaily.getDayList().add(WeekDay.MO);
-        recurDaily.getDayList().add(WeekDay.TU);
-        recurDaily.getDayList().add(WeekDay.WE);
-        recurDaily.getDayList().add(WeekDay.TH);
-        recurDaily.getDayList().add(WeekDay.FR);
-        recurDaily.setInterval(1);
-        recurDaily.setWeekStartDay(WeekDay.MO.getDay());
+        Recur recurDaily = new Recur.Builder().frequency(Frequency.DAILY).until(until)
+            .dayList(new WeekDayList(MO, TU, WE, TH, FR))
+            .interval(1).weekStartDay(MO.getDay()).build();
         RRule rruleDaily = new RRule(recurDaily);
 
         // 9:00AM to 5:00PM Rule using monthly frequency
-        Recur recurMonthly = new Recur(Recur.MONTHLY, until);
-        recurMonthly.getDayList().add(WeekDay.MO);
-        recurMonthly.getDayList().add(WeekDay.TU);
-        recurMonthly.getDayList().add(WeekDay.WE);
-        recurMonthly.getDayList().add(WeekDay.TH);
-        recurMonthly.getDayList().add(WeekDay.FR);
-        recurMonthly.setInterval(1);
-        recurMonthly.setWeekStartDay(WeekDay.MO.getDay());
+        Recur recurMonthly = new Recur.Builder().frequency(Frequency.MONTHLY).until(until)
+            .dayList(new WeekDayList(MO, TU, WE, TH, FR))
+            .interval(1).weekStartDay(MO.getDay()).build();
         RRule rruleMonthly = new RRule(recurMonthly);
 
         Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
@@ -686,7 +680,7 @@ public class VEventTest extends CalendarComponentTest {
         suite.addTest(new VEventTest("testGetConsumedTimeMonthly", monthlyWeekdayEvents));
 
         //test event validation..
-        UidGenerator ug = new UidGenerator("1");
+        UidGenerator ug = new RandomUidGenerator();
         Uid uid = ug.generateUid();
 
         DtStart start = new DtStart(new Date());
@@ -762,15 +756,13 @@ public class VEventTest extends CalendarComponentTest {
             log.info("Sample [" + testFiles[i] + "]");
             net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFiles[i]);
             if (Method.PUBLISH.equals(calendar.getProperty(Property.METHOD))) {
-                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext(); ) {
-                    VEvent event1 = (VEvent) it.next();
-                    suite.addTest(new VEventTest("testPublishValidation", event1));
-                }
+                calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
+                    suite.addTest(new VEventTest("testPublishValidation", (VEvent) calendarComponent));
+                });
             } else if (Method.REQUEST.equals(calendar.getProperty(Property.METHOD))) {
-                for (Iterator it = calendar.getComponents(Component.VEVENT).iterator(); it.hasNext(); ) {
-                    VEvent event1 = (VEvent) it.next();
-                    suite.addTest(new VEventTest("testRequestValidation", event1));
-                }
+                calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
+                    suite.addTest(new VEventTest("testRequestValidation", (VEvent) calendarComponent));
+                });
             }
         }
 

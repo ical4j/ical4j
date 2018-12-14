@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -57,14 +58,14 @@ public class Name extends Property implements Escapable {
      * Default constructor.
      */
     public Name() {
-        super(NAME, PropertyFactoryImpl.getInstance());
+        super(NAME, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Name(final String aValue) {
-        super(NAME, PropertyFactoryImpl.getInstance());
+        super(NAME, new Factory());
         setValue(aValue);
     }
 
@@ -73,7 +74,7 @@ public class Name extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Name(final ParameterList aList, final String aValue) {
-        super(NAME, aList, PropertyFactoryImpl.getInstance());
+        super(NAME, aList, new Factory());
         setValue(aValue);
     }
 
@@ -89,6 +90,11 @@ public class Name extends Property implements Escapable {
      */
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

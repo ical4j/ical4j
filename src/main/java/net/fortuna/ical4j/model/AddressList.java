@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -49,7 +50,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Defines a list of iCalendar addresses.
  * @author Ben Fortuna
  */
-public class AddressList implements Serializable {
+public class AddressList implements Serializable, Iterable<URI> {
 
     private static final long serialVersionUID = 81383256078213569L;
 
@@ -59,7 +60,7 @@ public class AddressList implements Serializable {
      * Default constructor.
      */
     public AddressList() {
-        addresses = new CopyOnWriteArrayList<URI>();
+        addresses = new CopyOnWriteArrayList<>();
     }
 
     /**
@@ -68,7 +69,7 @@ public class AddressList implements Serializable {
      * @throws URISyntaxException where the specified string is not a valid representation
      */
     public AddressList(final String aValue) throws URISyntaxException {
-        addresses = new CopyOnWriteArrayList<URI>();
+        addresses = new CopyOnWriteArrayList<>();
         final StringTokenizer t = new StringTokenizer(aValue, ",");
         while (t.hasMoreTokens()) {
 
@@ -91,14 +92,8 @@ public class AddressList implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<URI> i = addresses.iterator(); i.hasNext();) {
-            b.append(Strings.quote(Uris.decode(Strings.valueOf(i.next()))));
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+        return addresses.stream().map(a -> Strings.quote(Uris.decode(Strings.valueOf(a))))
+                .collect(Collectors.joining(","));
     }
 
     /**
@@ -123,6 +118,7 @@ public class AddressList implements Serializable {
      * @return an iterator
      * @see List#iterator()
      */
+    @Override
     public final Iterator<URI> iterator() {
         return addresses.iterator();
     }

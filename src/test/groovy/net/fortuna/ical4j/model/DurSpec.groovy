@@ -55,7 +55,7 @@ class DurSpec extends Specification {
 		
 		where:
 		duration	| start				| expectedEnd
-		'1D'		| '20110326T110000'	| '20110327T110000'
+        'P1D' | '20110326T110000' | '20110327T110000'
 	}
 
     @Unroll
@@ -69,7 +69,7 @@ class DurSpec extends Specification {
 		
 		where:
 		duration	| timezone					| start				| expectedEnd
-		'1D'		| 'America/Los_Angeles'		| '20110326T110000'	| '20110327T110000'
+        'P1D' | 'America/Los_Angeles' | '20110326T110000' | '20110327T110000'
 	}
 
     @Unroll
@@ -90,7 +90,7 @@ class DurSpec extends Specification {
 
 		where:
 		duration	| timezone					| start				| expectedEnd
-		'1D'		| 'America/Los_Angeles'		| '20110326T110000'	| '20110327T110000'
+        'P1D' | 'America/Los_Angeles' | '20110326T110000' | '20110327T110000'
 	}
 
     @Unroll
@@ -100,8 +100,8 @@ class DurSpec extends Specification {
 		
 		where:
 		duration	| start				| expectedEnd
-		'1D'		| '20110312'		| '20110313'
-		'1D'		| '20110313'		| '20110314'
+        'P1D' | '20110312' | '20110313'
+        'P1D' | '20110313' | '20110314'
 	}
 
     @Unroll
@@ -118,17 +118,17 @@ class DurSpec extends Specification {
 
 		where:
 		duration	| start				| expectedEnd
-		'1D'		| '20110312'		| '20110313'
-		'1D'		| '20110313'		| '20110314'
+        'P1D' | '20110312' | '20110313'
+        'P1D' | '20110313' | '20110314'
 	}
 	
 	def 'extension module test: plus'() {
 		expect:
-		new Dur('1D') + new Dur('1D') == new Dur('2D')
+        new Dur('P1D') + new Dur('P1D') == new Dur('P2D')
 	}
 	
 	def 'extension module test: negative'() {
 		expect:
-		- new Dur('1D') == new Dur('-1D')
+        -new Dur('P1D') == new Dur('-P1D')
 	}
 }

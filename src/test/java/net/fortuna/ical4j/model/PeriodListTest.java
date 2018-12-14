@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 
 /**
  * Created on 13/02/2005
@@ -405,10 +404,10 @@ public class PeriodListTest extends TestCase {
         cal.set(Calendar.DAY_OF_MONTH, 25);
         periods.add(new Period(new DateTime(), new DateTime(cal.getTime()
                 .getTime())));
-        periods.add(new Period(new DateTime(cal.getTime().getTime()), new Dur(
-                0, 2, 0, 0)));
-        periods.add(new Period(new DateTime(), new Dur(0, 2, 0, 0)));
-        periods.add(new Period(new DateTime(), new Dur(0, 1, 0, 0)));
+        periods.add(new Period(new DateTime(cal.getTime().getTime()),
+                java.time.Duration.ofHours(2)));
+        periods.add(new Period(new DateTime(), java.time.Duration.ofHours(2)));
+        periods.add(new Period(new DateTime(), java.time.Duration.ofHours(1)));
 
         // log.info("Unsorted list: " + periods);
 
@@ -487,12 +486,11 @@ public class PeriodListTest extends TestCase {
         }
         
         log.info("Timezone test - period list: [" + list + "]");
-        
-        for (Iterator<Period> i = list.iterator(); i.hasNext();) {
-            Period p = i.next();
+
+        list.forEach(p -> {
             assertTrue(p.getStart().isUtc());
             assertTrue(p.getEnd().isUtc());
-        }
+        });
     }
     
     /**

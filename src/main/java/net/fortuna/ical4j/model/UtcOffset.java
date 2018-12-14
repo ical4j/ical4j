@@ -46,7 +46,10 @@ import java.text.NumberFormat;
  * Represents a timezone offset from UTC time.
  *
  * @author Ben Fortuna
+ *
+ * @deprecated Replaced by {@link java.time.ZoneOffset} in Java 8.
  */
+@Deprecated
 public class UtcOffset implements Serializable {
 
     private static final long serialVersionUID = 5883111996721531728L;

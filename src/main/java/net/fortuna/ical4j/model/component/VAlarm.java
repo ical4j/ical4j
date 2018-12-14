@@ -38,6 +38,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.*;
 
+import java.time.temporal.TemporalAmount;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -232,7 +233,7 @@ public class VAlarm extends CalendarComponent {
      * Constructs a new VALARM instance that will trigger at the specified time relative to the event/todo component.
      * @param trigger a duration of time relative to the parent component that the alarm will trigger at
      */
-    public VAlarm(final Dur trigger) {
+    public VAlarm(final TemporalAmount trigger) {
         this();
         getProperties().add(new Trigger(trigger));
     }
@@ -291,7 +292,7 @@ public class VAlarm extends CalendarComponent {
      * @return the ACTION property or null if not specified
      */
     public final Action getAction() {
-        return (Action) getProperty(Property.ACTION);
+        return getProperty(Property.ACTION);
     }
 
     /**
@@ -299,7 +300,7 @@ public class VAlarm extends CalendarComponent {
      * @return the TRIGGER property or null if not specified
      */
     public final Trigger getTrigger() {
-        return (Trigger) getProperty(Property.TRIGGER);
+        return getProperty(Property.TRIGGER);
     }
 
     /**
@@ -307,7 +308,7 @@ public class VAlarm extends CalendarComponent {
      * @return the DURATION property or null if not specified
      */
     public final Duration getDuration() {
-        return (Duration) getProperty(Property.DURATION);
+        return getProperty(Property.DURATION);
     }
 
     /**
@@ -315,7 +316,7 @@ public class VAlarm extends CalendarComponent {
      * @return the REPEAT property or null if not specified
      */
     public final Repeat getRepeat() {
-        return (Repeat) getProperty(Property.REPEAT);
+        return getProperty(Property.REPEAT);
     }
 
     /**
@@ -323,7 +324,7 @@ public class VAlarm extends CalendarComponent {
      * @return the ATTACH property or null if not specified
      */
     public final Attach getAttachment() {
-        return (Attach) getProperty(Property.ATTACH);
+        return getProperty(Property.ATTACH);
     }
 
     /**
@@ -331,7 +332,7 @@ public class VAlarm extends CalendarComponent {
      * @return the DESCRIPTION property or null if not specified
      */
     public final Description getDescription() {
-        return (Description) getProperty(Property.DESCRIPTION);
+        return getProperty(Property.DESCRIPTION);
     }
 
     /**
@@ -339,7 +340,7 @@ public class VAlarm extends CalendarComponent {
      * @return the SUMMARY property or null if not specified
      */
     public final Summary getSummary() {
-        return (Summary) getProperty(Property.SUMMARY);
+        return getProperty(Property.SUMMARY);
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {

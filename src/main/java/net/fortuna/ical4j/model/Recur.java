@@ -32,6 +32,9 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.transform.Transformer;
+import net.fortuna.ical4j.transform.recurrence.*;
+import net.fortuna.ical4j.transform.recurrence.ByDayRule.FilterType;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.Dates;
@@ -41,8 +44,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.*;
 import java.util.Calendar;
+import java.util.*;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -84,39 +87,57 @@ public class Recur implements Serializable {
 
     private static final String WKST = "WKST";
 
+    public enum Frequency {
+        SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY;
+    }
+
     /**
      * Second frequency resolution.
+     * @deprecated use {@link Frequency} instead.
      */
+    @Deprecated
     public static final String SECONDLY = "SECONDLY";
 
     /**
      * Minute frequency resolution.
+     * @deprecated use {@link Frequency} instead.
      */
+    @Deprecated
     public static final String MINUTELY = "MINUTELY";
 
     /**
      * Hour frequency resolution.
+     * @deprecated use {@link Frequency} instead.
      */
+    @Deprecated
     public static final String HOURLY = "HOURLY";
 
     /**
      * Day frequency resolution.
+     * @deprecated use {@link Frequency} instead.
      */
+    @Deprecated
     public static final String DAILY = "DAILY";
 
     /**
      * Week frequency resolution.
+     * @deprecated use {@link Frequency} instead.
      */
+    @Deprecated
     public static final String WEEKLY = "WEEKLY";
 
     /**
      * Month frequency resolution.
+     * @deprecated use {@link Frequency} instead.
      */
+    @Deprecated
     public static final String MONTHLY = "MONTHLY";
 
     /**
      * Year frequency resolution.
+     * @deprecated use {@link Frequency} instead.
      */
+    @Deprecated
     public static final String YEARLY = "YEARLY";
 
     /**
@@ -130,23 +151,18 @@ public class Recur implements Serializable {
     private static int maxIncrementCount;
 
     static {
-        final String value = Configurator.getProperty(KEY_MAX_INCREMENT_COUNT);
-        if (value != null && value.length() > 0) {
-            maxIncrementCount = Integer.parseInt(value);
-        } else {
-            maxIncrementCount = 1000;
-        }
+        maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1000);
     }
 
     private transient Logger log = LoggerFactory.getLogger(Recur.class);
 
-    private String frequency;
+    private Frequency frequency;
 
     private Date until;
 
-    private int count = -1;
+    private Integer count;
 
-    private int interval = -1;
+    private Integer interval;
 
     private NumberList secondList;
 
@@ -166,6 +182,8 @@ public class Recur implements Serializable {
 
     private NumberList setPosList;
 
+    private Map<String, Transformer<DateList>> transformers;
+
     private WeekDay.Day weekStartDay;
 
     private int calendarWeekStartDay;
@@ -178,9 +196,10 @@ public class Recur implements Serializable {
     /**
      * Default constructor.
      */
-    public Recur() {
+    private Recur() {
         // default week start is Monday per RFC5545
         calendarWeekStartDay = Calendar.MONDAY;
+        initTransformers();
     }
 
     /**
@@ -197,7 +216,7 @@ public class Recur implements Serializable {
         while (tokens.hasNext()) {
             final String token = tokens.next();
             if (FREQ.equals(token)) {
-                frequency = nextToken(tokens, token);
+                frequency = Frequency.valueOf(nextToken(tokens, token));
             } else if (UNTIL.equals(token)) {
                 final String untilString = nextToken(tokens, token);
                 if (untilString != null && untilString.contains("T")) {
@@ -243,6 +262,7 @@ public class Recur implements Serializable {
             }
         }
         validateFrequency();
+        initTransformers();
     }
 
     private String nextToken(Iterator<String> tokens, String lastToken) {
@@ -257,113 +277,197 @@ public class Recur implements Serializable {
      * @param frequency a recurrence frequency string
      * @param until     maximum recurrence date
      */
+    @Deprecated
     public Recur(final String frequency, final Date until) {
+        this(Frequency.valueOf(frequency), until);
+    }
+
+    /**
+     * @param frequency a recurrence frequency string
+     * @param until     maximum recurrence date
+     */
+    public Recur(final Frequency frequency, final Date until) {
         // default week start is Monday per RFC5545
         calendarWeekStartDay = Calendar.MONDAY;
         this.frequency = frequency;
         this.until = until;
         validateFrequency();
+        initTransformers();
     }
 
     /**
      * @param frequency a recurrence frequency string
      * @param count     maximum recurrence count
      */
+    @Deprecated
     public Recur(final String frequency, final int count) {
+        this(Frequency.valueOf(frequency), count);
+    }
+
+    /**
+     * @param frequency a recurrence frequency string
+     * @param count     maximum recurrence count
+     */
+    public Recur(final Frequency frequency, final int count) {
         // default week start is Monday per RFC5545
         calendarWeekStartDay = Calendar.MONDAY;
         this.frequency = frequency;
         this.count = count;
         validateFrequency();
+        initTransformers();
+    }
+
+    private void initTransformers() {
+        transformers = new HashMap<>();
+        if (secondList != null) {
+            transformers.put(BYSECOND, new BySecondRule(secondList, Optional.ofNullable(weekStartDay)));
+        } else {
+            secondList = new NumberList(0, 59, false);
+        }
+        if (minuteList != null) {
+            transformers.put(BYMINUTE, new ByMinuteRule(minuteList, Optional.ofNullable(weekStartDay)));
+        } else {
+            minuteList = new NumberList(0, 59, false);
+        }
+        if (hourList != null) {
+            transformers.put(BYHOUR, new ByHourRule(hourList, Optional.ofNullable(weekStartDay)));
+        } else {
+            hourList = new NumberList(0, 23, false);
+        }
+        if (monthDayList != null) {
+            transformers.put(BYMONTHDAY, new ByMonthDayRule(monthDayList, Optional.ofNullable(weekStartDay)));
+        } else {
+            monthDayList = new NumberList(1, 31, true);
+        }
+        if (yearDayList != null) {
+            transformers.put(BYYEARDAY, new ByYearDayRule(yearDayList, Optional.ofNullable(weekStartDay)));
+        } else {
+            yearDayList = new NumberList(1, 366, true);
+        }
+        if (weekNoList != null) {
+            transformers.put(BYWEEKNO, new ByWeekNoRule(weekNoList, Optional.ofNullable(weekStartDay)));
+        } else {
+            weekNoList = new NumberList(1, 53, true);
+        }
+        if (monthList != null) {
+            transformers.put(BYMONTH, new ByMonthRule(monthList, Optional.ofNullable(interval),
+                    Optional.ofNullable(weekStartDay)));
+        } else {
+            monthList = new NumberList(1, 12, false);
+        }
+        if (dayList != null) {
+            transformers.put(BYDAY, new ByDayRule(dayList, deriveFilterType(), Optional.ofNullable(weekStartDay)));
+        } else {
+            dayList = new WeekDayList();
+        }
+        if (setPosList != null) {
+            transformers.put(BYSETPOS, new BySetPosRule(setPosList));
+        } else {
+            setPosList = new NumberList(1, 366, true);
+        }
+    }
+
+    private FilterType deriveFilterType() {
+        FilterType filterType = null;
+        if (frequency == Frequency.DAILY || !getYearDayList().isEmpty() || !getMonthDayList().isEmpty()) {
+            filterType = FilterType.Daily;
+        } else if (frequency == Frequency.WEEKLY || !getWeekNoList().isEmpty()) {
+            filterType = FilterType.Weekly;
+        } else if (frequency == Frequency.MONTHLY || !getMonthList().isEmpty()) {
+            filterType = FilterType.Monthly;
+        } else if (frequency == Frequency.YEARLY) {
+            filterType = FilterType.Yearly;
+        }
+        return filterType;
     }
 
     /**
+     * Accessor for the configured BYDAY list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the dayList.
      */
     public final WeekDayList getDayList() {
-        if (dayList == null) {
-            dayList = new WeekDayList();
-        }
         return dayList;
     }
 
     /**
+     * Accessor for the configured BYHOUR list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the hourList.
      */
     public final NumberList getHourList() {
-        if (hourList == null) {
-            hourList = new NumberList(0, 23, false);
-        }
         return hourList;
     }
 
     /**
+     * Accessor for the configured BYMINUTE list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the minuteList.
      */
     public final NumberList getMinuteList() {
-        if (minuteList == null) {
-            minuteList = new NumberList(0, 59, false);
-        }
         return minuteList;
     }
 
     /**
+     * Accessor for the configured BYMONTHDAY list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the monthDayList.
      */
     public final NumberList getMonthDayList() {
-        if (monthDayList == null) {
-            monthDayList = new NumberList(1, 31, true);
-        }
         return monthDayList;
     }
 
     /**
+     * Accessor for the configured BYMONTH list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the monthList.
      */
     public final NumberList getMonthList() {
-        if (monthList == null) {
-            monthList = new NumberList(1, 12, false);
-        }
         return monthList;
     }
 
     /**
+     * Accessor for the configured BYSECOND list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the secondList.
      */
     public final NumberList getSecondList() {
-        if (secondList == null) {
-            secondList = new NumberList(0, 59, false);
-        }
         return secondList;
     }
 
     /**
+     * Accessor for the configured BYSETPOS list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the setPosList.
      */
     public final NumberList getSetPosList() {
-        if (setPosList == null) {
-            setPosList = new NumberList(1, 366, true);
-        }
         return setPosList;
     }
 
     /**
+     * Accessor for the configured BYWEEKNO list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the weekNoList.
      */
     public final NumberList getWeekNoList() {
-        if (weekNoList == null) {
-            weekNoList = new NumberList(1, 53, true);
-        }
         return weekNoList;
     }
 
     /**
+     * Accessor for the configured BYYEARDAY list.
+     * NOTE: Any changes to the returned list will have no effect on the recurrence rule processing.
+     *
      * @return Returns the yearDayList.
      */
     public final NumberList getYearDayList() {
-        if (yearDayList == null) {
-            yearDayList = new NumberList(1, 366, true);
-        }
         return yearDayList;
     }
 
@@ -371,7 +475,7 @@ public class Recur implements Serializable {
      * @return Returns the count or -1 if the rule does not have a count.
      */
     public final int getCount() {
-        return count;
+        return Optional.ofNullable(count).orElse(-1);
     }
 
     /**
@@ -384,7 +488,7 @@ public class Recur implements Serializable {
     /**
      * @return Returns the frequency.
      */
-    public final String getFrequency() {
+    public final Frequency getFrequency() {
         return frequency;
     }
 
@@ -392,7 +496,7 @@ public class Recur implements Serializable {
      * @return Returns the interval or -1 if the rule does not have an interval defined.
      */
     public final int getInterval() {
-        return interval;
+        return Optional.ofNullable(interval).orElse(-1);
     }
 
     /**
@@ -411,7 +515,9 @@ public class Recur implements Serializable {
 
     /**
      * @param weekStartDay The weekStartDay to set.
+     * @deprecated will be removed in a future version to support immutable pattern.
      */
+    @Deprecated
     public final void setWeekStartDay(final WeekDay.Day weekStartDay) {
         this.weekStartDay = weekStartDay;
         if (weekStartDay != null) {
@@ -441,67 +547,67 @@ public class Recur implements Serializable {
             // Note: date-time representations should always be in UTC time.
             b.append(until);
         }
-        if (count >= 1) {
+        if (count != null) {
             b.append(';');
             b.append(COUNT);
             b.append('=');
             b.append(count);
         }
-        if (interval >= 1) {
+        if (interval != null) {
             b.append(';');
             b.append(INTERVAL);
             b.append('=');
             b.append(interval);
         }
-        if (!getMonthList().isEmpty()) {
+        if (!monthList.isEmpty()) {
             b.append(';');
             b.append(BYMONTH);
             b.append('=');
             b.append(monthList);
         }
-        if (!getWeekNoList().isEmpty()) {
+        if (!weekNoList.isEmpty()) {
             b.append(';');
             b.append(BYWEEKNO);
             b.append('=');
             b.append(weekNoList);
         }
-        if (!getYearDayList().isEmpty()) {
+        if (!yearDayList.isEmpty()) {
             b.append(';');
             b.append(BYYEARDAY);
             b.append('=');
             b.append(yearDayList);
         }
-        if (!getMonthDayList().isEmpty()) {
+        if (!monthDayList.isEmpty()) {
             b.append(';');
             b.append(BYMONTHDAY);
             b.append('=');
             b.append(monthDayList);
         }
-        if (!getDayList().isEmpty()) {
+        if (!dayList.isEmpty()) {
             b.append(';');
             b.append(BYDAY);
             b.append('=');
             b.append(dayList);
         }
-        if (!getHourList().isEmpty()) {
+        if (!hourList.isEmpty()) {
             b.append(';');
             b.append(BYHOUR);
             b.append('=');
             b.append(hourList);
         }
-        if (!getMinuteList().isEmpty()) {
+        if (!minuteList.isEmpty()) {
             b.append(';');
             b.append(BYMINUTE);
             b.append('=');
             b.append(minuteList);
         }
-        if (!getSecondList().isEmpty()) {
+        if (!secondList.isEmpty()) {
             b.append(';');
             b.append(BYSECOND);
             b.append('=');
             b.append(secondList);
         }
-        if (!getSetPosList().isEmpty()) {
+        if (!setPosList.isEmpty()) {
             b.append(';');
             b.append(BYSETPOS);
             b.append('=');
@@ -583,15 +689,19 @@ public class Recur implements Serializable {
                 dates.setTimeZone(((DateTime) seed).getTimeZone());
             }
         }
-        final Calendar cal = getCalendarInstance(seed, true);
-
+        Calendar cal = getCalendarInstance(seed, true);
+        final Calendar rootSeed = (Calendar)cal.clone();
+        
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
-        if (getCount() < 1) {
-            final Calendar seededCal = (Calendar) cal.clone();
+        if (count == null) {
+            Calendar seededCal = (Calendar) cal.clone();
             while (seededCal.getTime().before(periodStart)) {
                 cal.setTime(seededCal.getTime());
-                increment(seededCal);
+                seededCal = smartIncrement(seededCal);
+                if (seededCal == null) {
+                    return dates;
+                }
             }
         }
 
@@ -623,7 +733,11 @@ public class Recur implements Serializable {
                 }
             }
 
-            final DateList candidates = getCandidates(candidateSeed, value);
+            // rootSeed = date used for the seed for the RRule at the
+            //            start of the first period.
+            // candidateSeed = date used for the start of 
+            //                 the current period.
+            final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
                 // sort candidates for identifying when UNTIL date is exceeded..
@@ -653,7 +767,10 @@ public class Recur implements Serializable {
                     break;
                 }
             }
-            increment(cal);
+            cal = smartIncrement(cal);
+            if (cal == null) {
+                break;
+            }
         }
         // sort final list..
         Collections.sort(dates);
@@ -674,10 +791,11 @@ public class Recur implements Serializable {
     public final Date getNextDate(final Date seed, final Date startDate) {
 
         final Calendar cal = getCalendarInstance(seed, true);
+        final Calendar rootSeed = (Calendar)cal.clone();
 
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
-        if (getCount() < 1) {
+        if (count == null) {
             final Calendar seededCal = (Calendar) cal.clone();
             while (seededCal.getTime().before(startDate)) {
                 cal.setTime(seededCal.getTime());
@@ -709,7 +827,7 @@ public class Recur implements Serializable {
                 }
             }
 
-            final DateList candidates = getCandidates(candidateSeed, value);
+            final DateList candidates = getCandidates(rootSeed, candidateSeed, value);
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
                 // sort candidates for identifying when UNTIL date is exceeded..
@@ -754,6 +872,34 @@ public class Recur implements Serializable {
         cal.add(calIncField, calInterval);
     }
 
+    private Calendar smartIncrement(final Calendar cal) {
+        // initialise interval..
+        Calendar result = null;
+        final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
+        int multiplier = 1;
+        if (calIncField == 2 || calIncField == 1) {
+            Calendar seededCal;
+            // increment up to 12 times to check for next valid occurence.
+            // as this loop only increments monthly or yearly,
+            // a monthly occurence will be found in (0,12] increments
+            // and a valid yearly recurrence will be found within (0,4]
+            // (ex. recurrence on February 29 on a leap year will find the next occurrence on the next leap year).
+            // if none found in these, return null.
+            do {
+                seededCal = (Calendar) cal.clone();
+                seededCal.add(calIncField, calInterval * multiplier);
+                multiplier++;
+            } while (seededCal.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH) && multiplier <= 12);
+            if (multiplier <= 12) {
+                result = (Calendar) seededCal.clone();
+            }
+        } else {
+            result = (Calendar) cal.clone();
+            result.add(calIncField, calInterval);
+        }
+        return result;
+    }
+
     /**
      * Returns a list of possible dates generated from the applicable BY* rules, using the specified date as a seed.
      *
@@ -761,7 +907,7 @@ public class Recur implements Serializable {
      * @param value the type of date list to return
      * @return a DateList
      */
-    private DateList getCandidates(final Date date, final Value value) {
+    private DateList getCandidates(final Calendar rootSeed, final Date date, final Value value) {
         DateList dates = new DateList(value);
         if (date instanceof DateTime) {
             if (((DateTime) date).isUtc()) {
@@ -771,382 +917,110 @@ public class Recur implements Serializable {
             }
         }
         dates.add(date);
-        dates = getMonthVariants(dates);
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYMONTH processing: " + dates);
+        if (transformers.get(BYMONTH) != null) {
+            dates = transformers.get(BYMONTH).transform(dates);
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Dates after BYMONTH processing: " + dates);
+            }
         }
-        dates = getWeekNoVariants(dates);
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYWEEKNO processing: " + dates);
+
+        if (transformers.get(BYWEEKNO) != null) {
+            dates = transformers.get(BYWEEKNO).transform(dates);
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Dates after BYWEEKNO processing: " + dates);
+            }
         }
-        dates = getYearDayVariants(dates);
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYYEARDAY processing: " + dates);
+
+        if (transformers.get(BYYEARDAY) != null) {
+            dates = transformers.get(BYYEARDAY).transform(dates);
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Dates after BYYEARDAY processing: " + dates);
+            }
         }
-        dates = getMonthDayVariants(dates);
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYMONTHDAY processing: " + dates);
+
+        if (transformers.get(BYMONTHDAY) != null) {
+            dates = transformers.get(BYMONTHDAY).transform(dates);
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Dates after BYMONTHDAY processing: " + dates);
+            }
+        } else if (frequency == Frequency.MONTHLY || (frequency == Frequency.YEARLY && yearDayList.isEmpty()
+                && weekNoList.isEmpty() && dayList.isEmpty())) {
+
+            NumberList implicitMonthDayList = new NumberList();
+            implicitMonthDayList.add(rootSeed.get(Calendar.DAY_OF_MONTH));
+            ByMonthDayRule implicitRule = new ByMonthDayRule(implicitMonthDayList, Optional.ofNullable(weekStartDay));
+            dates = implicitRule.transform(dates);
         }
-        dates = getDayVariants(dates);
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYDAY processing: " + dates);
+
+        if (transformers.get(BYDAY) != null) {
+            dates = transformers.get(BYDAY).transform(dates);
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Dates after BYDAY processing: " + dates);
+            }
+        } else if (frequency == Frequency.WEEKLY || (frequency == Frequency.YEARLY && yearDayList.isEmpty()
+                && !weekNoList.isEmpty() && monthDayList.isEmpty())) {
+
+            ByDayRule implicitRule = new ByDayRule(new WeekDayList(WeekDay.getWeekDay(rootSeed)),
+                    deriveFilterType(),  Optional.ofNullable(weekStartDay));
+            dates = implicitRule.transform(dates);
         }
-        dates = getHourVariants(dates);
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYHOUR processing: " + dates);
+
+        if (transformers.get(BYHOUR) != null) {
+            dates = transformers.get(BYHOUR).transform(dates);
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Dates after BYHOUR processing: " + dates);
+            }
         }
-        dates = getMinuteVariants(dates);
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYMINUTE processing: " + dates);
+
+        if (transformers.get(BYMINUTE) != null) {
+            dates = transformers.get(BYMINUTE).transform(dates);
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Dates after BYMINUTE processing: " + dates);
+            }
         }
-        dates = getSecondVariants(dates);
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after BYSECOND processing: " + dates);
+
+        if (transformers.get(BYSECOND) != null) {
+            dates = transformers.get(BYSECOND).transform(dates);
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Dates after BYSECOND processing: " + dates);
+            }
         }
-        dates = applySetPosRules(dates);
-        // debugging..
-        if (log.isDebugEnabled()) {
-            log.debug("Dates after SETPOS processing: " + dates);
+
+        if (transformers.get(BYSETPOS) != null) {
+            dates = transformers.get(BYSETPOS).transform(dates);
+            // debugging..
+            if (log.isDebugEnabled()) {
+                log.debug("Dates after SETPOS processing: " + dates);
+            }
         }
         return dates;
     }
 
-    /**
-     * Applies BYSETPOS rules to <code>dates</code>. Valid positions are from 1 to the size of the date list. Invalid
-     * positions are ignored.
-     *
-     * @param dates
-     */
-    private DateList applySetPosRules(final DateList dates) {
-        // return if no SETPOS rules specified..
-        if (getSetPosList().isEmpty()) {
-            return dates;
-        }
-        // sort the list before processing..
-        Collections.sort(dates);
-        final DateList setPosDates = getDateListInstance(dates);
-        final int size = dates.size();
-        for (final Integer setPos : getSetPosList()) {
-            final int pos = setPos;
-            if (pos > 0 && pos <= size) {
-                setPosDates.add(dates.get(pos - 1));
-            } else if (pos < 0 && pos >= -size) {
-                setPosDates.add(dates.get(size + pos));
-            }
-        }
-        return setPosDates;
-    }
-
-    /**
-     * Applies BYMONTH rules specified in this Recur instance to the specified date list. If no BYMONTH rules are
-     * specified the date list is returned unmodified.
-     *
-     * @param dates
-     * @return
-     */
-    private DateList getMonthVariants(final DateList dates) {
-        if (getMonthList().isEmpty()) {
-            return dates;
-        }
-        final DateList monthlyDates = getDateListInstance(dates);
-        for (final Date date : dates) {
-            final Calendar cal = getCalendarInstance(date, true);
-            final Calendar freqEnd = getCalendarInstance(date, true);
-            increment(freqEnd);
-            for (final Integer month : getMonthList()) {
-                // Java months are zero-based..
-//                cal.set(Calendar.MONTH, month.intValue() - 1);
-                cal.roll(Calendar.MONTH, (month - 1) - cal.get(Calendar.MONTH));
-                if (cal.after(freqEnd)) {
-                    break; // Do not break out of the FREQ-defined boundary
-                }
-                monthlyDates.add(Dates.getInstance(cal.getTime(), monthlyDates.getType()));
-            }
-        }
-        return monthlyDates;
-    }
-
-    /**
-     * Applies BYWEEKNO rules specified in this Recur instance to the specified date list. If no BYWEEKNO rules are
-     * specified the date list is returned unmodified.
-     *
-     * @param dates
-     * @return
-     */
-    private DateList getWeekNoVariants(final DateList dates) {
-        if (getWeekNoList().isEmpty()) {
-            return dates;
-        }
-        final DateList weekNoDates = getDateListInstance(dates);
-        for (final Date date : dates) {
-            final Calendar cal = getCalendarInstance(date, true);
-            for (final Integer weekNo : getWeekNoList()) {
-                cal.set(Calendar.WEEK_OF_YEAR, Dates.getAbsWeekNo(cal.getTime(), weekNo));
-                weekNoDates.add(Dates.getInstance(cal.getTime(), weekNoDates.getType()));
-            }
-        }
-        return weekNoDates;
-    }
-
-    /**
-     * Applies BYYEARDAY rules specified in this Recur instance to the specified date list. If no BYYEARDAY rules are
-     * specified the date list is returned unmodified.
-     *
-     * @param dates
-     * @return
-     */
-    private DateList getYearDayVariants(final DateList dates) {
-        if (getYearDayList().isEmpty()) {
-            return dates;
-        }
-        final DateList yearDayDates = getDateListInstance(dates);
-        for (final Date date : dates) {
-            final Calendar cal = getCalendarInstance(date, true);
-            for (final Integer yearDay : getYearDayList()) {
-                cal.set(Calendar.DAY_OF_YEAR, Dates.getAbsYearDay(cal.getTime(), yearDay));
-                yearDayDates.add(Dates.getInstance(cal.getTime(), yearDayDates.getType()));
-            }
-        }
-        return yearDayDates;
-    }
-
-    /**
-     * Applies BYMONTHDAY rules specified in this Recur instance to the specified date list. If no BYMONTHDAY rules are
-     * specified the date list is returned unmodified.
-     *
-     * @param dates
-     * @return
-     */
-    private DateList getMonthDayVariants(final DateList dates) {
-        if (getMonthDayList().isEmpty()) {
-            return dates;
-        }
-        final DateList monthDayDates = getDateListInstance(dates);
-        for (final Date date : dates) {
-            final Calendar cal = getCalendarInstance(date, false);
-            for (final Integer monthDay : getMonthDayList()) {
-                try {
-                    cal.set(Calendar.DAY_OF_MONTH, Dates.getAbsMonthDay(cal.getTime(), monthDay));
-                    monthDayDates.add(Dates.getInstance(cal.getTime(), monthDayDates.getType()));
-                } catch (IllegalArgumentException iae) {
-                    if (log.isTraceEnabled()) {
-                        log.trace("Invalid day of month: " + Dates.getAbsMonthDay(cal
-                                .getTime(), monthDay));
-                    }
-                }
-            }
-        }
-        return monthDayDates;
-    }
-
-    /**
-     * Applies BYDAY rules specified in this Recur instance to the specified date list. If no BYDAY rules are specified
-     * the date list is returned unmodified.
-     *
-     * @param dates
-     * @return
-     */
-    private DateList getDayVariants(final DateList dates) {
-        if (getDayList().isEmpty()) {
-            return dates;
-        }
-        final DateList weekDayDates = getDateListInstance(dates);
-        for (final Date date : dates) {
-            for (final WeekDay weekDay : getDayList()) {
-                // if BYYEARDAY or BYMONTHDAY is specified filter existing
-                // list..
-                if (!getYearDayList().isEmpty() || !getMonthDayList().isEmpty()) {
-                    final Calendar cal = getCalendarInstance(date, true);
-                    if (weekDay.equals(WeekDay.getWeekDay(cal))) {
-                        weekDayDates.add(date);
-                    }
-                } else {
-                    weekDayDates.addAll(getAbsWeekDays(date, dates.getType(), weekDay));
-                }
-            }
-        }
-        return weekDayDates;
-    }
-
-    /**
-     * Returns a list of applicable dates corresponding to the specified week day in accordance with the frequency
-     * specified by this recurrence rule.
-     *
-     * @param date
-     * @param weekDay
-     * @return
-     */
-    private List<Date> getAbsWeekDays(final Date date, final Value type, final WeekDay weekDay) {
-        final Calendar cal = getCalendarInstance(date, true);
-        final DateList days = new DateList(type);
-        if (date instanceof DateTime) {
-            if (((DateTime) date).isUtc()) {
-                days.setUtc(true);
-            } else {
-                days.setTimeZone(((DateTime) date).getTimeZone());
-            }
-        }
-        final int calDay = WeekDay.getCalendarDay(weekDay);
-        if (calDay == -1) {
-            // a matching weekday cannot be identified..
-            return days;
-        }
-        if (DAILY.equals(getFrequency())) {
-            if (cal.get(Calendar.DAY_OF_WEEK) == calDay) {
-                days.add(Dates.getInstance(cal.getTime(), type));
-            }
-        } else if (WEEKLY.equals(getFrequency()) || !getWeekNoList().isEmpty()) {
-            final int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
-            // construct a list of possible week days..
-            cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-            while (cal.get(Calendar.DAY_OF_WEEK) != calDay) {
-                cal.add(Calendar.DAY_OF_WEEK, 1);
-            }
-//            final int weekNo = cal.get(Calendar.WEEK_OF_YEAR);
-            if (cal.get(Calendar.WEEK_OF_YEAR) == weekNo) {
-                days.add(Dates.getInstance(cal.getTime(), type));
-//                cal.add(Calendar.DAY_OF_WEEK, Dates.DAYS_PER_WEEK);
-            }
-        } else if (MONTHLY.equals(getFrequency()) || !getMonthList().isEmpty()) {
-            final int month = cal.get(Calendar.MONTH);
-            // construct a list of possible month days..
-            cal.set(Calendar.DAY_OF_MONTH, 1);
-            while (cal.get(Calendar.DAY_OF_WEEK) != calDay) {
-                cal.add(Calendar.DAY_OF_MONTH, 1);
-            }
-            while (cal.get(Calendar.MONTH) == month) {
-                days.add(Dates.getInstance(cal.getTime(), type));
-                cal.add(Calendar.DAY_OF_MONTH, Dates.DAYS_PER_WEEK);
-            }
-        } else if (YEARLY.equals(getFrequency())) {
-            final int year = cal.get(Calendar.YEAR);
-            // construct a list of possible year days..
-            cal.set(Calendar.DAY_OF_YEAR, 1);
-            while (cal.get(Calendar.DAY_OF_WEEK) != calDay) {
-                cal.add(Calendar.DAY_OF_YEAR, 1);
-            }
-            while (cal.get(Calendar.YEAR) == year) {
-                days.add(Dates.getInstance(cal.getTime(), type));
-                cal.add(Calendar.DAY_OF_YEAR, Dates.DAYS_PER_WEEK);
-            }
-        }
-        return getOffsetDates(days, weekDay.getOffset());
-    }
-
-    /**
-     * Returns a single-element sublist containing the element of <code>list</code> at <code>offset</code>. Valid
-     * offsets are from 1 to the size of the list. If an invalid offset is supplied, all elements from <code>list</code>
-     * are added to <code>sublist</code>.
-     *
-     * @param dates
-     * @param offset
-     */
-    private List<Date> getOffsetDates(final DateList dates, final int offset) {
-        if (offset == 0) {
-            return dates;
-        }
-        final List<Date> offsetDates = getDateListInstance(dates);
-        final int size = dates.size();
-        if (offset < 0 && offset >= -size) {
-            offsetDates.add(dates.get(size + offset));
-        } else if (offset > 0 && offset <= size) {
-            offsetDates.add(dates.get(offset - 1));
-        }
-        return offsetDates;
-    }
-
-    /**
-     * Applies BYHOUR rules specified in this Recur instance to the specified date list. If no BYHOUR rules are
-     * specified the date list is returned unmodified.
-     *
-     * @param dates
-     * @return
-     */
-    private DateList getHourVariants(final DateList dates) {
-        if (getHourList().isEmpty()) {
-            return dates;
-        }
-        final DateList hourlyDates = getDateListInstance(dates);
-        for (final Date date : dates) {
-            final Calendar cal = getCalendarInstance(date, true);
-            for (final Integer hour : getHourList()) {
-                cal.set(Calendar.HOUR_OF_DAY, hour);
-                hourlyDates.add(Dates.getInstance(cal.getTime(), hourlyDates.getType()));
-            }
-        }
-        return hourlyDates;
-    }
-
-    /**
-     * Applies BYMINUTE rules specified in this Recur instance to the specified date list. If no BYMINUTE rules are
-     * specified the date list is returned unmodified.
-     *
-     * @param dates
-     * @return
-     */
-    private DateList getMinuteVariants(final DateList dates) {
-        if (getMinuteList().isEmpty()) {
-            return dates;
-        }
-        final DateList minutelyDates = getDateListInstance(dates);
-        for (final Date date : dates) {
-            final Calendar cal = getCalendarInstance(date, true);
-            for (final Integer minute : getMinuteList()) {
-                cal.set(Calendar.MINUTE, minute);
-                minutelyDates.add(Dates.getInstance(cal.getTime(), minutelyDates.getType()));
-            }
-        }
-        return minutelyDates;
-    }
-
-    /**
-     * Applies BYSECOND rules specified in this Recur instance to the specified date list. If no BYSECOND rules are
-     * specified the date list is returned unmodified.
-     *
-     * @param dates
-     * @return
-     */
-    private DateList getSecondVariants(final DateList dates) {
-        if (getSecondList().isEmpty()) {
-            return dates;
-        }
-        final DateList secondlyDates = getDateListInstance(dates);
-        for (final Date date : dates) {
-            final Calendar cal = getCalendarInstance(date, true);
-            for (final Integer second : getSecondList()) {
-                cal.set(Calendar.SECOND, second);
-                secondlyDates.add(Dates.getInstance(cal.getTime(), secondlyDates.getType()));
-            }
-        }
-        return secondlyDates;
-    }
-
     private void validateFrequency() {
         if (frequency == null) {
-            throw new IllegalArgumentException(
-                    "A recurrence rule MUST contain a FREQ rule part.");
+            throw new IllegalArgumentException("A recurrence rule MUST contain a FREQ rule part.");
         }
-        if (SECONDLY.equals(getFrequency())) {
+        if (Frequency.SECONDLY.equals(getFrequency())) {
             calIncField = Calendar.SECOND;
-        } else if (MINUTELY.equals(getFrequency())) {
+        } else if (Frequency.MINUTELY.equals(getFrequency())) {
             calIncField = Calendar.MINUTE;
-        } else if (HOURLY.equals(getFrequency())) {
+        } else if (Frequency.HOURLY.equals(getFrequency())) {
             calIncField = Calendar.HOUR_OF_DAY;
-        } else if (DAILY.equals(getFrequency())) {
+        } else if (Frequency.DAILY.equals(getFrequency())) {
             calIncField = Calendar.DAY_OF_YEAR;
-        } else if (WEEKLY.equals(getFrequency())) {
+        } else if (Frequency.WEEKLY.equals(getFrequency())) {
             calIncField = Calendar.WEEK_OF_YEAR;
-        } else if (MONTHLY.equals(getFrequency())) {
+        } else if (Frequency.MONTHLY.equals(getFrequency())) {
             calIncField = Calendar.MONTH;
-        } else if (YEARLY.equals(getFrequency())) {
+        } else if (Frequency.YEARLY.equals(getFrequency())) {
             calIncField = Calendar.YEAR;
         } else {
             throw new IllegalArgumentException("Invalid FREQ rule part '"
@@ -1156,7 +1030,9 @@ public class Recur implements Serializable {
 
     /**
      * @param count The count to set.
+     * @deprecated will be removed in a future version to support immutable pattern.
      */
+    @Deprecated
     public final void setCount(final int count) {
         this.count = count;
         this.until = null;
@@ -1164,22 +1040,28 @@ public class Recur implements Serializable {
 
     /**
      * @param frequency The frequency to set.
+     * @deprecated will be removed in a future version to support immutable pattern.
      */
+    @Deprecated
     public final void setFrequency(final String frequency) {
-        this.frequency = frequency;
+        this.frequency = Frequency.valueOf(frequency);
         validateFrequency();
     }
 
     /**
      * @param interval The interval to set.
+     * @deprecated will be removed in a future version to support immutable pattern.
      */
+    @Deprecated
     public final void setInterval(final int interval) {
         this.interval = interval;
     }
 
     /**
      * @param until The until to set.
+     * @deprecated will be removed in a future version to support immutable pattern.
      */
+    @Deprecated
     public final void setUntil(final Date until) {
         this.until = until;
         this.count = -1;
@@ -1214,20 +1096,127 @@ public class Recur implements Serializable {
     }
 
     /**
-     * Instantiate a new datelist with the same type, timezone and utc settings
-     * as the origList.
-     *
-     * @param origList
-     * @return a new empty list.
+     * Support for building Recur instances.
      */
-    private static DateList getDateListInstance(final DateList origList) {
-        final DateList list = new DateList(origList.getType());
-        if (origList.isUtc()) {
-            list.setUtc(true);
-        } else {
-            list.setTimeZone(origList.getTimeZone());
-        }
-        return list;
-    }
+    public static class Builder {
 
+        private Frequency frequency;
+
+        private Date until;
+
+        private Integer count;
+
+        private Integer interval;
+
+        private NumberList secondList;
+
+        private NumberList minuteList;
+
+        private NumberList hourList;
+
+        private WeekDayList dayList;
+
+        private NumberList monthDayList;
+
+        private NumberList yearDayList;
+
+        private NumberList weekNoList;
+
+        private NumberList monthList;
+
+        private NumberList setPosList;
+
+        private WeekDay.Day weekStartDay;
+
+        public Builder frequency(Frequency frequency) {
+            this.frequency = frequency;
+            return this;
+        }
+
+        public Builder until(Date until) {
+            this.until = until;
+            return this;
+        }
+
+        public Builder count(Integer count) {
+            this.count = count;
+            return this;
+        }
+
+        public Builder interval(Integer interval) {
+            this.interval = interval;
+            return this;
+        }
+
+        public Builder secondList(NumberList secondList) {
+            this.secondList = secondList;
+            return this;
+        }
+
+        public Builder minuteList(NumberList minuteList) {
+            this.minuteList = minuteList;
+            return this;
+        }
+
+        public Builder hourList(NumberList hourList) {
+            this.hourList = hourList;
+            return this;
+        }
+
+        public Builder dayList(WeekDayList dayList) {
+            this.dayList = dayList;
+            return this;
+        }
+
+        public Builder monthDayList(NumberList monthDayList) {
+            this.monthDayList = monthDayList;
+            return this;
+        }
+
+        public Builder yearDayList(NumberList yearDayList) {
+            this.yearDayList = yearDayList;
+            return this;
+        }
+
+        public Builder weekNoList(NumberList weekNoList) {
+            this.weekNoList = weekNoList;
+            return this;
+        }
+
+        public Builder monthList(NumberList monthList) {
+            this.monthList = monthList;
+            return this;
+        }
+
+        public Builder setPosList(NumberList setPosList) {
+            this.setPosList = setPosList;
+            return this;
+        }
+
+        public Builder weekStartDay(WeekDay.Day weekStartDay) {
+            this.weekStartDay = weekStartDay;
+            return this;
+        }
+
+        public Recur build() {
+            Recur recur = new Recur();
+            recur.frequency = frequency;
+            recur.until = until;
+            recur.count = count;
+            recur.interval = interval;
+            recur.secondList = secondList;
+            recur.minuteList = minuteList;
+            recur.hourList = hourList;
+            recur.dayList = dayList;
+            recur.monthDayList = monthDayList;
+            recur.yearDayList = yearDayList;
+            recur.weekNoList = weekNoList;
+            recur.monthList = monthList;
+            recur.setPosList = setPosList;
+            recur.weekStartDay = weekStartDay;
+            recur.validateFrequency();
+            recur.initTransformers();
+            return recur;
+        }
+    }
 }

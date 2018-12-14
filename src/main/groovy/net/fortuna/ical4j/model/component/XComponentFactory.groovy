@@ -55,7 +55,7 @@ class XComponentFactory extends AbstractFactory {
              if (properties == null) {
                  properties = new PropertyList()
              }
-             component = newInstance(componentName, properties);
+             component = newInstance(componentName, properties)
          }
          return component
      }

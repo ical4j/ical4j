@@ -29,10 +29,9 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.component.VEvent;
-import groovy.util.GroovyTestCase;
+import net.fortuna.ical4j.model.component.VEvent
 
 class VEventRecurrenceTest extends GroovyTestCase {
 
@@ -58,5 +57,22 @@ class VEventRecurrenceTest extends GroovyTestCase {
 		
 		println dates
 		assert dates == expected
+	}
+
+	void testForDailyEventsWhereExDateIsDate() {
+		VEvent event = new ContentBuilder().vevent {
+			dtstart('20101113', parameters: parameters() { value('DATE') })
+			dtend('20101114', parameters: parameters() { value('DATE') })
+			rrule('FREQ=WEEKLY;WKST=MO;INTERVAL=3;BYDAY=MO,TU,SA')
+			exdate('20101129,20101204', parameters: parameters() { value('DATE') })
+		}
+		def expectedStr = ['20101113T000000Z/P1D', '20101130T000000Z/P1D', '20101220T000000Z/P1D', '20101221T000000Z/P1D', '20101225T000000Z/P1D'];
+		def expected = new PeriodList(true)
+		expectedStr.each { expected.add(new Period(it)) }
+
+		def actual = event.calculateRecurrenceSet(new Period('20101101T000000/20110101T000000'))
+
+		println actual
+		assert actual == expected
 	}
 }

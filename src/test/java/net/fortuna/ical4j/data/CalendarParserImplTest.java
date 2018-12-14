@@ -63,7 +63,7 @@ public class CalendarParserImplTest extends TestCase {
      * @param expectedErrorLineNo
      */
     public CalendarParserImplTest(String resourceString, int expectedErrorLineNo) {
-        super("testParseException");
+        super("testParserException");
         this.resource = getClass().getResource(resourceString);
         this.expectedErrorLineNo = expectedErrorLineNo;
     }
@@ -89,7 +89,7 @@ public class CalendarParserImplTest extends TestCase {
      *
      * @throws IOException
      */
-    public void testParseException() throws IOException {
+    public void testParserException() throws IOException {
         try {
             Calendars.load(resource);
             fail("Should throw ParserException: [" + resource + "]");

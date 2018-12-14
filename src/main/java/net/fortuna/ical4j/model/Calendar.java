@@ -255,7 +255,7 @@ public class Calendar implements Serializable {
      * @param name name of the property to retrieve
      * @return the first matching property in the property list with the specified name
      */
-    public final Property getProperty(final String name) {
+    public final <T extends Property> T getProperty(final String name) {
         return getProperties().getProperty(name);
     }
 
@@ -305,7 +305,7 @@ public class Calendar implements Serializable {
      * @return the PRODID property, or null if property doesn't exist
      */
     public final ProdId getProductId() {
-        return (ProdId) getProperty(Property.PRODID);
+        return getProperty(Property.PRODID);
     }
 
     /**
@@ -313,7 +313,7 @@ public class Calendar implements Serializable {
      * @return the VERSION property, or null if property doesn't exist
      */
     public final Version getVersion() {
-        return (Version) getProperty(Property.VERSION);
+        return getProperty(Property.VERSION);
     }
 
     /**
@@ -321,7 +321,7 @@ public class Calendar implements Serializable {
      * @return the CALSCALE property, or null if property doesn't exist
      */
     public final CalScale getCalendarScale() {
-        return (CalScale) getProperty(Property.CALSCALE);
+        return getProperty(Property.CALSCALE);
     }
 
     /**
@@ -329,7 +329,7 @@ public class Calendar implements Serializable {
      * @return the METHOD property, or null if property doesn't exist
      */
     public final Method getMethod() {
-        return (Method) getProperty(Property.METHOD);
+        return getProperty(Property.METHOD);
     }
 
     /**
@@ -357,7 +357,7 @@ public class Calendar implements Serializable {
        
         conformPropertiesToRfc5545(properties);
         
-        for(Component component : (List<CalendarComponent>)components){
+        for(Component component : components){
             CountableProperties.removeExceededPropertiesForComponent(component);
             
             //each component
@@ -392,12 +392,12 @@ public class Calendar implements Serializable {
         RuleManager.applyTo(component);
     }
     
-    private static enum CountableProperties{
+    private enum CountableProperties{
         STATUS(Property.STATUS, 1);
         private int maxApparitionNumber;
         private String name;
         
-        private CountableProperties(String name, int maxApparitionNumber){
+        CountableProperties(String name, int maxApparitionNumber){
             this.maxApparitionNumber = maxApparitionNumber;
             this.name = name;
         }

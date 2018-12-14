@@ -34,9 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.EmptyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -363,9 +361,7 @@ public abstract class Property extends Content {
 
     private final ParameterList parameters;
 
-    private final Validator<Property> validator;
-
-    private final PropertyFactoryImpl factory;
+    private final PropertyFactory factory;
 
     /**
      * Constructor.
@@ -373,7 +369,7 @@ public abstract class Property extends Content {
      * @param aName   property name
      * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, PropertyFactoryImpl factory) {
+    protected Property(final String aName, PropertyFactory factory) {
         this(aName, new ParameterList(), factory);
     }
 
@@ -383,7 +379,7 @@ public abstract class Property extends Content {
      * @param aList a list of parameters
      */
 //    protected Property(final String aName, final ParameterList aList) {
-//        this(aName, aList, PropertyFactoryImpl.getInstance());
+//        this(aName, aList, new Factory());
 //    }
 
     /**
@@ -391,14 +387,9 @@ public abstract class Property extends Content {
      * @param aList   a list of initial parameters
      * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, final ParameterList aList, PropertyFactoryImpl factory) {
-        this(aName, aList, new EmptyValidator<Property>(), factory);
-    }
-
-    protected Property(final String aName, final ParameterList aList, Validator<Property> validator, PropertyFactoryImpl factory) {
+    protected Property(final String aName, final ParameterList aList, PropertyFactory factory) {
         this.name = aName;
         this.parameters = aList;
-        this.validator = validator;
         this.factory = factory;
     }
 
@@ -432,7 +423,7 @@ public abstract class Property extends Content {
         buffer.append(':');
         boolean needsEscape = false;
         if (this instanceof XProperty) {
-            Value valParam = (Value) getParameter(Parameter.VALUE);
+            Value valParam = getParameter(Parameter.VALUE);
             if (valParam == null || valParam.equals(Value.TEXT)) {
                 needsEscape = true;
             }
@@ -447,16 +438,6 @@ public abstract class Property extends Content {
         buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
-    }
-
-    /**
-     * Indicates whether this property is a calendar property.
-     * 
-     * @return boolean
-     */
-    public boolean isCalendarProperty() {
-        return PRODID.equalsIgnoreCase(getName()) || VERSION.equalsIgnoreCase(getName())
-                || CALSCALE.equalsIgnoreCase(getName()) || METHOD.equalsIgnoreCase(getName());
     }
 
     /**
@@ -489,7 +470,7 @@ public abstract class Property extends Content {
      * @param name name of the parameter to retrieve
      * @return the first parameter from the parameter list with the specified name
      */
-    public final Parameter getParameter(final String name) {
+    public final <T extends Parameter> T getParameter(final String name) {
         return getParameters().getParameter(name);
     }
 
@@ -509,9 +490,7 @@ public abstract class Property extends Content {
      *
      * @throws ValidationException where the property is not in a valid state
      */
-    public void validate() throws ValidationException {
-        validator.validate(this);
-    }
+    public abstract void validate() throws ValidationException;
 
     /**
      * {@inheritDoc}
@@ -548,6 +527,6 @@ public abstract class Property extends Content {
         }
         // Deep copy parameter list..
         final ParameterList params = new ParameterList(getParameters(), false);
-        return factory.createProperty(getName(), params, getValue());
+        return factory.createProperty(params, getValue());
     }
 }

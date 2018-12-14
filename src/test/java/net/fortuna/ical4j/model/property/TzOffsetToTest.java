@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
-import net.fortuna.ical4j.model.UtcOffset;
+
+import java.text.ParseException;
+import java.time.ZoneOffset;
 
 /**
  * $Id$
@@ -68,7 +68,7 @@ public class TzOffsetToTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        TzOffsetTo offset = new TzOffsetTo(new UtcOffset("+1000"));
+        TzOffsetTo offset = new TzOffsetTo(ZoneOffset.of("+1000"));
         suite.addTest(new TzOffsetToTest(offset, "+1000"));
         suite.addTest(new TzOffsetToTest("testValidation", offset));
         suite.addTest(new TzOffsetToTest("testEquals", offset));

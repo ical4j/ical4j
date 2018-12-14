@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.util;
 
 import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.parameter.Value;
 
@@ -131,7 +132,7 @@ public final class Dates {
     public static int getAbsWeekNo(final java.util.Date date, final int weekNo) {
         if (weekNo == 0 || weekNo < -MAX_WEEKS_PER_YEAR || weekNo > MAX_WEEKS_PER_YEAR) {
             throw new IllegalArgumentException(MessageFormat.format(INVALID_WEEK_MESSAGE,
-                    new Object[] {weekNo}));
+                    weekNo));
         }
         if (weekNo > 0) {
             return weekNo;
@@ -161,7 +162,7 @@ public final class Dates {
     public static int getAbsYearDay(final java.util.Date date, final int yearDay) {
         if (yearDay == 0 || yearDay < -MAX_DAYS_PER_YEAR || yearDay > MAX_DAYS_PER_YEAR) {
             throw new IllegalArgumentException(MessageFormat.format(INVALID_YEAR_DAY_MESSAGE,
-                    new Object[] {yearDay}));
+                    yearDay));
         }
         if (yearDay > 0) {
             return yearDay;
@@ -191,7 +192,7 @@ public final class Dates {
     public static int getAbsMonthDay(final java.util.Date date, final int monthDay) {
         if (monthDay == 0 || monthDay < -MAX_DAYS_PER_MONTH || monthDay > MAX_DAYS_PER_MONTH) {
             throw new IllegalArgumentException(MessageFormat.format(INVALID_MONTH_DAY_MESSAGE,
-                    new Object[] {monthDay}));
+                    monthDay));
         }
         if (monthDay > 0) {
             return monthDay;
@@ -249,7 +250,24 @@ public final class Dates {
         }
         return instance;
     }
-    
+
+    /**
+     * Instantiate a new datelist with the same type, timezone and utc settings
+     * as the origList.
+     *
+     * @param origList
+     * @return a new empty list.
+     */
+    public static DateList getDateListInstance(final DateList origList) {
+        final DateList list = new DateList(origList.getType());
+        if (origList.isUtc()) {
+            list.setUtc(true);
+        } else {
+            list.setTimeZone(origList.getTimeZone());
+        }
+        return list;
+    }
+
     /**
      * @param time the time value to round
      * @param precision the rounding precision

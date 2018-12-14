@@ -35,6 +35,8 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.PeriodList;
 
+import java.util.function.Predicate;
+
 /**
  * $Id$
  *
@@ -43,7 +45,7 @@ import net.fortuna.ical4j.model.PeriodList;
  * A rule that matches any component that occurs in the specified time period.
  * @author Ben Fortuna
  */
-public class PeriodRule<T extends Component> implements Rule<T> {
+public class PeriodRule<T extends Component> implements Predicate<T> {
 
     private Period period;
 
@@ -58,7 +60,7 @@ public class PeriodRule<T extends Component> implements Rule<T> {
     /**
      * {@inheritDoc}
      */
-    public final boolean match(final Component component) {
+    public final boolean test(final Component component) {
 
         /*
         DtStart start = (DtStart) component.getProperty(Property.DTSTART);

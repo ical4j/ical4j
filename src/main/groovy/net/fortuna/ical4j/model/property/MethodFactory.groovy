@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
 
 /**
@@ -42,9 +41,9 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class MethodFactory extends AbstractPropertyFactory{
+class MethodFactory extends AbstractPropertyFactory{
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         Method instance
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Method.class)) {
             instance = (Method) value

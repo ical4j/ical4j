@@ -5,8 +5,6 @@ import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 
@@ -62,19 +60,12 @@ public class VJournalCancelValidator implements Validator<VJournal> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VJournal target) throws ValidationException {
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.SEQUENCE, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+        Arrays.asList(Property.DTSTAMP, Property.ORGANIZER, Property.SEQUENCE, Property.UID).forEach(
+                property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
+        Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTART, Property.LAST_MODIFIED, Property.RECURRENCE_ID, Property.STATUS, Property.SUMMARY,
-                Property.URL), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, target.getProperties());
-            }
-        });
+                Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
         PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());
     }

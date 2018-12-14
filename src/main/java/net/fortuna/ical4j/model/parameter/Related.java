@@ -70,7 +70,7 @@ public class Related extends Parameter {
      * @param aValue a string representation of an alarm trigger relationship
      */
     public Related(final String aValue) {
-        super(RELATED, ParameterFactoryImpl.getInstance());
+        super(RELATED, new Factory());
         this.value = Strings.unquote(aValue);
 
         // value must be one of finite list..

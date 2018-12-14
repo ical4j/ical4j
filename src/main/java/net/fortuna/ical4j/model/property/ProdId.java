@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -56,14 +57,14 @@ public class ProdId extends Property implements Escapable {
      * Default constructor.
      */
     public ProdId() {
-        super(PRODID, PropertyFactoryImpl.getInstance());
+        super(PRODID, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public ProdId(final String aValue) {
-        super(PRODID, PropertyFactoryImpl.getInstance());
+        super(PRODID, new Factory());
         setValue(aValue);
     }
 
@@ -72,13 +73,14 @@ public class ProdId extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public ProdId(final ParameterList aList, final String aValue) {
-        super(PRODID, aList, PropertyFactoryImpl.getInstance());
+        super(PRODID, aList, new Factory());
         setValue(aValue);
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -86,8 +88,14 @@ public class ProdId extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {
@@ -97,11 +105,13 @@ public class ProdId extends Property implements Escapable {
             super(PRODID);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ProdId(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new ProdId();
         }

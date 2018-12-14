@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
+import org.apache.commons.lang3.Validate;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -57,7 +58,7 @@ public abstract class AbstractContentFactory<T> implements Serializable {
      * Default constructor.
      */
     public AbstractContentFactory(ServiceLoader<T> factoryLoader) {
-        extendedFactories = new HashMap<String, T>();
+        extendedFactories = new HashMap<>();
         this.factoryLoader = factoryLoader;
     }
 
@@ -76,8 +77,10 @@ public abstract class AbstractContentFactory<T> implements Serializable {
      * @param key a factory key
      * @return a factory associated with the specified key, giving preference to
      * standard factories
+     * @throws IllegalArgumentException if the specified key is blank
      */
     protected final T getFactory(String key) {
+        Validate.notBlank(key, "Invalid factory key: [%s]", key);
         T factory = null;
         for (T candidate : factoryLoader) {
             if (factorySupports(candidate, key)) {

@@ -132,7 +132,7 @@ public class Encoding extends Parameter {
      * @param aValue a string representation of an Inline Encoding
      */
     public Encoding(final String aValue) {
-        super(ENCODING, ParameterFactoryImpl.getInstance());
+        super(ENCODING, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

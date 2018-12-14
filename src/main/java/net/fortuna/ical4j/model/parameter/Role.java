@@ -84,7 +84,7 @@ public class Role extends Parameter {
      * @param aValue a string representation of a participation role
      */
     public Role(final String aValue) {
-        super(ROLE, ParameterFactoryImpl.getInstance());
+        super(ROLE, new Factory());
         this.value = Strings.unquote(aValue);
     }
 
