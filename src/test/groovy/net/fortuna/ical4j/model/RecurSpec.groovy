@@ -141,6 +141,14 @@ class RecurSpec extends Specification {
 																						  '20000129',
 																						  '20000130',
 																						  '20000131']
+		'FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYMONTH=2,3,9,10;BYMONTHDAY=28,29,30,31;BYSETPOS=-1'	| Value.DATE	| '20150101'	| '20170101'	| ['20150228',
+																																							'20150331',
+																																							'20150930',
+																																							'20151031',
+																																							'20160229',
+																																							'20160331',
+																																							'20160930',
+																																							'20161031']
 	}
 
     @Unroll
