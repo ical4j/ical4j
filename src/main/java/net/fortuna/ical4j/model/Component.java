@@ -348,29 +348,31 @@ public abstract class Component implements Serializable {
 
         // add recurrence rules..
         List<RRule> rRules = getProperties(Property.RRULE);
-        recurrenceSet.addAll(rRules.stream().map(r -> r.getRecur().getDates(start.getDate(),
-                new Period(startMinusDuration, period.getEnd()), startValue)).flatMap(DateList::stream)
-                .map(rruleDate -> new Period(new DateTime(rruleDate), rDuration)).collect(Collectors.toList()));
-
-        // add initial instance if intersection with the specified period..
-        Period startPeriod;
-        if (end != null) {
-            startPeriod = new Period(new DateTime(start.getDate()),
-                    new DateTime(end.getDate()));
+        if (!rRules.isEmpty()) {
+            recurrenceSet.addAll(rRules.stream().map(r -> r.getRecur().getDates(start.getDate(),
+                    new Period(startMinusDuration, period.getEnd()), startValue)).flatMap(DateList::stream)
+                    .map(rruleDate -> new Period(new DateTime(rruleDate), rDuration)).collect(Collectors.toList()));
         } else {
-            /*
-             * PeS: Anniversary type has no DTEND nor DUR, define DUR 
-             * locally, otherwise we get NPE
-             */
-            if (duration == null) {
-                duration = new Duration(rDuration);
-            }
+            // add initial instance if intersection with the specified period..
+            Period startPeriod;
+            if (end != null) {
+                startPeriod = new Period(new DateTime(start.getDate()),
+                        new DateTime(end.getDate()));
+            } else {
+                /*
+                 * PeS: Anniversary type has no DTEND nor DUR, define DUR
+                 * locally, otherwise we get NPE
+                 */
+                if (duration == null) {
+                    duration = new Duration(rDuration);
+                }
 
-            startPeriod = new Period(new DateTime(start.getDate()),
-                    duration.getDuration());
-        }
-        if (period.intersects(startPeriod)) {
-            recurrenceSet.add(startPeriod);
+                startPeriod = new Period(new DateTime(start.getDate()),
+                        duration.getDuration());
+            }
+            if (period.intersects(startPeriod)) {
+                recurrenceSet.add(startPeriod);
+            }
         }
 
         // subtract exception dates..
