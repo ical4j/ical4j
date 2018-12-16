@@ -168,6 +168,7 @@ public class Trigger extends UtcProperty {
     /**
      * @param duration a duration in milliseconds
      */
+    @Deprecated
     public Trigger(final Dur duration) {
         this(TemporalAmountAdapter.from(duration));
     }
@@ -184,6 +185,7 @@ public class Trigger extends UtcProperty {
      * @param aList    a list of parameters for this component
      * @param duration a duration in milliseconds
      */
+    @Deprecated
     public Trigger(final ParameterList aList, final Dur duration) {
         this(aList, TemporalAmountAdapter.from(duration));
     }
