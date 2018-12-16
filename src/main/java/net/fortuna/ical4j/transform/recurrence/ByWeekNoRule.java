@@ -13,7 +13,7 @@ import java.util.Optional;
  * Applies BYWEEKNO rules specified in this Recur instance to the specified date list. If no BYWEEKNO rules are
  * specified the date list is returned unmodified.
  */
-public class ByWeekNoRule extends AbstractRecurrenceRule {
+public class ByWeekNoRule extends AbstractDateExpansionRule {
 
     private transient Logger log = LoggerFactory.getLogger(ByWeekNoRule.class);
 

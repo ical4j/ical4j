@@ -53,19 +53,63 @@ class RecurSpec extends Specification {
 	def 'verify recurrence rule: #rule'() {
 		setup: 'parse recurrence rule'
 		def recur = new Recur(rule)
-		def startDate = new Date(start)
-		def endDate = new Date(end)
+		def startDate
+		def endDate
 		def expectedDates = []
-		expected.each {
-			expectedDates << new DateTime(it)
+		if (valueType == Value.DATE) {
+			startDate = new Date(start)
+			endDate = new Date(end)
+			expected.each {
+				expectedDates << new Date(it)
+			}
+		} else {
+			startDate = new DateTime(start)
+			endDate = new DateTime(end)
+			expected.each {
+				expectedDates << new DateTime(it)
+			}
 		}
 
 		expect:
-		recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+		recur.getDates(startDate, endDate, valueType) == expectedDates
 		
 		where:
-		rule					| start			| end			| expected
-		'FREQ=WEEKLY;BYDAY=MO'	| '20110101'	| '20110201'	| ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000']
+		rule					| valueType | start			| end			| expected
+		'FREQ=WEEKLY;BYDAY=MO'	| Value.DATE_TIME	| '20110101T000000'	| '20110201T000000'	| ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000']
+		'FREQ=DAILY;INTERVAL=14;WKST=MO;BYMONTH=10,12'	| Value.DATE | '20181011'	| '20181231'	| ['20181011', '20181025', '20181206', '20181220']
+		'FREQ=WEEKLY;BYDAY=MO,TH,FR,SA,SU;BYHOUR=11;BYMINUTE=5'	| Value.DATE_TIME	| '20160325T110500'	| '20160329T121000'	| ['20160325T110500', '20160326T110500', '20160327T110500', '20160328T110500']
+		'FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;WKST=MO;UNTIL=20170127T003000Z'	| Value.DATE_TIME	| '20160727T0030000Z'	| '20170127T003000Z'	| ['20160729T003000Z',
+																																							 '20160805T003000Z',
+																																							 '20160812T003000Z',
+																																							 '20160819T003000Z',
+																																							 '20160826T003000Z',
+																																							 '20160902T003000Z',
+																																							 '20160909T003000Z',
+																																							 '20160916T003000Z',
+																																							 '20160923T003000Z',
+																																							 '20160930T003000Z',
+																																							 '20161007T003000Z',
+																																							 '20161014T003000Z',
+																																							 '20161021T003000Z',
+																																							 '20161028T003000Z',
+																																							 '20161104T003000Z',
+																																							 '20161111T003000Z',
+																																							 '20161118T003000Z',
+																																							 '20161125T003000Z',
+																																							 '20161202T003000Z',
+																																							 '20161209T003000Z',
+																																							 '20161216T003000Z',
+																																							 '20161223T003000Z',
+																																							 '20161230T003000Z',
+																																							 '20170106T003000Z',
+																																							 '20170113T003000Z',
+																																							 '20170120T003000Z',
+																																							 '20170127T003000Z']
+		'FREQ=WEEKLY;WKST=MO;BYDAY=SU;BYHOUR=0;BYMINUTE=0'	| Value.DATE_TIME	| '20181020T000000'	| '20181120T000000'	| ['20181021T000000',
+																																			'20181028T000000',
+																																			'20181104T000000',
+																																			'20181111T000000',
+																																			'20181118T000000']
 	}
 
     @Unroll
@@ -320,5 +364,17 @@ class RecurSpec extends Specification {
 
 		then: 'result is as expected'
 		recurDaily as String == "FREQ=DAILY;WKST=MO;UNTIL=20050307;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR"
+	}
+
+	def 'test Recur.getNextDate() with different recurrence rules'() {
+		given: 'a recurrence rule'
+		Recur recur = [rule]
+
+		expect: 'recur.getNextDate() returns the expected value'
+		recur.getNextDate(seed, start) == expectedDate
+
+		where:
+		rule	| seed	| start	| expectedDate
+		'FREQ=MONTHLY;COUNT=100;INTERVAL=1'	| new DateTime('20180329T025959')	| new DateTime('20170729T030000')	| new DateTime('20180329T025959')
 	}
 }
