@@ -22,17 +22,14 @@ public class BySecondRule extends AbstractDateExpansionRule {
 
     private final NumberList secondList;
 
-    private final Frequency frequency;
-
     public BySecondRule(NumberList secondList, Frequency frequency) {
+        super(frequency);
         this.secondList = secondList;
-        this.frequency = frequency;
     }
 
     public BySecondRule(NumberList secondList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
-        super(weekStartDay);
+        super(frequency, weekStartDay);
         this.secondList = secondList;
-        this.frequency = frequency;
     }
 
     @Override
@@ -42,7 +39,7 @@ public class BySecondRule extends AbstractDateExpansionRule {
         }
         final DateList secondlyDates = Dates.getDateListInstance(dates);
         for (final Date date : dates) {
-            if (frequency == Frequency.SECONDLY) {
+            if (getFrequency() == Frequency.SECONDLY) {
                 Optional<Date> limit = new LimitFilter().apply(date);
                 if (limit.isPresent()) {
                     secondlyDates.add(limit.get());

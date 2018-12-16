@@ -7,11 +7,13 @@ import net.fortuna.ical4j.model.WeekDayList
 import net.fortuna.ical4j.model.parameter.Value
 import spock.lang.Specification
 
+import static net.fortuna.ical4j.model.Recur.Frequency.WEEKLY
+
 class ByDayRuleTest extends Specification {
 
     def 'verify transformations by day'() {
         given: 'a BYDAY rule'
-        ByDayRule rule = [new WeekDayList(rulePart), filterType]
+        ByDayRule rule = [new WeekDayList(rulePart), frequency]
 
         and: 'a list of dates'
         DateList dateList = [Value.DATE]
@@ -21,7 +23,7 @@ class ByDayRuleTest extends Specification {
         rule.transform(dateList) == expectedResult
 
         where:
-        rulePart    | filterType                    | dates                  | expectedResult
-        WeekDay.FR  | ByDayRule.FilterType.Weekly   | [new Date('20150103')] | [new Date('20150102')]
+        rulePart    | frequency              | dates                  | expectedResult
+        WeekDay.FR  | WEEKLY | [new Date('20150103')] | [new Date('20150102')]
     }
 }

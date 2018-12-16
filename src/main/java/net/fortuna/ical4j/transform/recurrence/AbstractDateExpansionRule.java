@@ -2,6 +2,7 @@ package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.util.Dates;
@@ -80,15 +81,22 @@ import java.util.Optional;
  */
 public abstract class AbstractDateExpansionRule implements Transformer<DateList>, Serializable {
 
+    private final Frequency frequency;
+
     private final int calendarWeekStartDay;
 
-    public AbstractDateExpansionRule() {
+    public AbstractDateExpansionRule(Frequency frequency) {
         // default week start is Monday per RFC5545
-        this(Optional.of(WeekDay.Day.MO));
+        this(frequency, Optional.of(WeekDay.Day.MO));
     }
 
-    public AbstractDateExpansionRule(Optional<WeekDay.Day> weekStartDay) {
+    public AbstractDateExpansionRule(Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+        this.frequency = frequency;
         this.calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(weekStartDay.orElse(WeekDay.Day.MO)));
+    }
+
+    protected Frequency getFrequency() {
+        return frequency;
     }
 
     /**

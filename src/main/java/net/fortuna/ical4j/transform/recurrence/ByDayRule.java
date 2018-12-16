@@ -2,6 +2,7 @@ package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.WeekDayList;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -17,23 +18,16 @@ import java.util.stream.Collectors;
  */
 public class ByDayRule extends AbstractDateExpansionRule {
 
-    public enum FilterType {
-        Daily, Weekly, Monthly, Yearly;
-    }
-
     private final WeekDayList dayList;
 
-    private final FilterType filterType;
-
-    public ByDayRule(WeekDayList dayList, FilterType filterType) {
+    public ByDayRule(WeekDayList dayList, Frequency frequency) {
+        super(frequency);
         this.dayList = dayList;
-        this.filterType = filterType;
     }
 
-    public ByDayRule(WeekDayList dayList, FilterType filterType, Optional<WeekDay.Day> weekStartDay) {
-        super(weekStartDay);
+    public ByDayRule(WeekDayList dayList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+        super(frequency, weekStartDay);
         this.dayList = dayList;
-        this.filterType = filterType;
     }
 
     @Override
@@ -44,12 +38,12 @@ public class ByDayRule extends AbstractDateExpansionRule {
         final DateList weekDayDates = Dates.getDateListInstance(dates);
 
         Function<Date, List<Date>> transformer = null;
-        switch (filterType) {
-            case Weekly: transformer = new WeeklyWeekDayFilter(dates.getType()); break;
-            case Monthly: transformer = new MonthlyWeekDayFilter(dates.getType()); break;
-            case Yearly: transformer = new YearlyWeekDayFilter(dates.getType()); break;
-            case Daily:
-            default: transformer = new DailyWeekDayFilter();
+        switch (getFrequency()) {
+            case WEEKLY: transformer = new WeeklyExpansionFilter(dates.getType()); break;
+            case MONTHLY: transformer = new MonthlyExpansionFilter(dates.getType()); break;
+            case YEARLY: transformer = new YearlyExpansionFilter(dates.getType()); break;
+            case DAILY:
+            default: transformer = new LimitFilter();
         }
 
         for (final Date date : dates) {
@@ -65,7 +59,7 @@ public class ByDayRule extends AbstractDateExpansionRule {
         return weekDayDates;
     }
 
-    private class DailyWeekDayFilter implements Function<Date, List<Date>> {
+    private class LimitFilter implements Function<Date, List<Date>> {
 
         @Override
         public List<Date> apply(Date date) {
@@ -77,11 +71,11 @@ public class ByDayRule extends AbstractDateExpansionRule {
         }
     }
 
-    private class WeeklyWeekDayFilter implements Function<Date, List<Date>> {
+    private class WeeklyExpansionFilter implements Function<Date, List<Date>> {
 
         private final Value type;
 
-        public WeeklyWeekDayFilter(Value type) {
+        public WeeklyExpansionFilter(Value type) {
             this.type = type;
         }
 
@@ -104,11 +98,11 @@ public class ByDayRule extends AbstractDateExpansionRule {
         }
     }
 
-    private class MonthlyWeekDayFilter implements Function<Date, List<Date>> {
+    private class MonthlyExpansionFilter implements Function<Date, List<Date>> {
 
         private final Value type;
 
-        public MonthlyWeekDayFilter(Value type) {
+        public MonthlyExpansionFilter(Value type) {
             this.type = type;
         }
 
@@ -131,11 +125,11 @@ public class ByDayRule extends AbstractDateExpansionRule {
         }
     }
 
-    private class YearlyWeekDayFilter implements Function<Date, List<Date>> {
+    private class YearlyExpansionFilter implements Function<Date, List<Date>> {
 
         private final Value type;
 
-        public YearlyWeekDayFilter(Value type) {
+        public YearlyExpansionFilter(Value type) {
             this.type = type;
         }
 

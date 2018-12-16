@@ -26,17 +26,14 @@ public class ByMonthDayRule extends AbstractDateExpansionRule {
 
     private final NumberList monthDayList;
 
-    private final Frequency frequency;
-
     public ByMonthDayRule(NumberList monthDayList, Frequency frequency) {
+        super(frequency);
         this.monthDayList = monthDayList;
-        this.frequency = frequency;
     }
 
     public ByMonthDayRule(NumberList monthDayList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
-        super(weekStartDay);
+        super(frequency, weekStartDay);
         this.monthDayList = monthDayList;
-        this.frequency = frequency;
     }
 
     @Override
@@ -46,7 +43,7 @@ public class ByMonthDayRule extends AbstractDateExpansionRule {
         }
         final DateList monthDayDates = Dates.getDateListInstance(dates);
         for (final Date date : dates) {
-            if (EnumSet.of(MONTHLY, YEARLY).contains(frequency)) {
+            if (EnumSet.of(MONTHLY, YEARLY).contains(getFrequency())) {
                 monthDayDates.addAll(new ExpansionFilter(monthDayDates.getType()).apply(date));
             } else {
                 Optional<Date> limit = new LimitFilter().apply(date);

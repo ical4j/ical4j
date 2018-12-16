@@ -26,17 +26,14 @@ public class ByYearDayRule extends AbstractDateExpansionRule {
 
     private final NumberList yearDayList;
 
-    private final Frequency frequency;
-
     public ByYearDayRule(NumberList yearDayList, Frequency frequency) {
+        super(frequency);
         this.yearDayList = yearDayList;
-        this.frequency = frequency;
     }
 
     public ByYearDayRule(NumberList yearDayList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
-        super(weekStartDay);
+        super(frequency, weekStartDay);
         this.yearDayList = yearDayList;
-        this.frequency = frequency;
     }
 
     @Override
@@ -46,7 +43,7 @@ public class ByYearDayRule extends AbstractDateExpansionRule {
         }
         final DateList yearDayDates = Dates.getDateListInstance(dates);
         for (final Date date : dates) {
-            if (frequency == YEARLY) {
+            if (getFrequency() == YEARLY) {
                 yearDayDates.addAll(new ExpansionFilter(yearDayDates.getType()).apply(date));
             } else {
                 Optional<Date> limit = new LimitFilter().apply(date);
