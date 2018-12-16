@@ -21,17 +21,14 @@ public class ByMinuteRule extends AbstractDateExpansionRule {
 
     private final NumberList minuteList;
 
-    private final Frequency frequency;
-
     public ByMinuteRule(NumberList minuteList, Frequency frequency) {
+        super(frequency);
         this.minuteList = minuteList;
-        this.frequency = frequency;
     }
 
     public ByMinuteRule(NumberList minuteList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
-        super(weekStartDay);
+        super(frequency, weekStartDay);
         this.minuteList = minuteList;
-        this.frequency = frequency;
     }
 
     @Override
@@ -41,7 +38,7 @@ public class ByMinuteRule extends AbstractDateExpansionRule {
         }
         final DateList minutelyDates = Dates.getDateListInstance(dates);
         for (final Date date : dates) {
-            if (EnumSet.of(HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY).contains(frequency)) {
+            if (EnumSet.of(HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY).contains(getFrequency())) {
                 minutelyDates.addAll(new ExpansionFilter(minutelyDates.getType()).apply(date));
             } else {
                 Optional<Date> limit = new LimitFilter().apply(date);

@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.transform.recurrence.*;
-import net.fortuna.ical4j.transform.recurrence.ByDayRule.FilterType;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.Dates;
@@ -345,7 +344,7 @@ public class Recur implements Serializable {
             yearDayList = new NumberList(1, 366, true);
         }
         if (weekNoList != null) {
-            transformers.put(BYWEEKNO, new ByWeekNoRule(weekNoList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYWEEKNO, new ByWeekNoRule(weekNoList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             weekNoList = new NumberList(1, 53, true);
         }
@@ -367,18 +366,17 @@ public class Recur implements Serializable {
         }
     }
 
-    private FilterType deriveFilterType() {
-        FilterType filterType = null;
+    private Frequency deriveFilterType() {
         if (frequency == Frequency.DAILY || !getYearDayList().isEmpty() || !getMonthDayList().isEmpty()) {
-            filterType = FilterType.Daily;
+            return Frequency.DAILY;
         } else if (frequency == Frequency.WEEKLY || !getWeekNoList().isEmpty()) {
-            filterType = FilterType.Weekly;
+            return Frequency.WEEKLY;
         } else if (frequency == Frequency.MONTHLY || !getMonthList().isEmpty()) {
-            filterType = FilterType.Monthly;
+            return Frequency.MONTHLY;
         } else if (frequency == Frequency.YEARLY) {
-            filterType = FilterType.Yearly;
+            return Frequency.YEARLY;
         }
-        return filterType;
+        return null;
     }
 
     /**

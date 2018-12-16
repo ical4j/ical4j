@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +20,13 @@ public class ByWeekNoRule extends AbstractDateExpansionRule {
 
     private final NumberList weekNoList;
 
-    public ByWeekNoRule(NumberList weekNoList) {
+    public ByWeekNoRule(NumberList weekNoList, Frequency frequency) {
+        super(frequency);
         this.weekNoList = weekNoList;
     }
 
-    public ByWeekNoRule(NumberList weekNoList, Optional<WeekDay.Day> weekStartDay) {
-        super(weekStartDay);
+    public ByWeekNoRule(NumberList weekNoList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+        super(frequency, weekStartDay);
         this.weekNoList = weekNoList;
     }
 
