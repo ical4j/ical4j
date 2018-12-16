@@ -270,6 +270,50 @@ public class CalendarTest {
         }
     }
 
+	@Test
+	public void testCalendarParsingForBakuTZID() {
+		final String ICAL = "BEGIN:VCALENDAR\n"
+				+ "CALSCALE:GREGORIAN\n"
+				+ "PRODID:-//tzurl.org//NONSGML Olson 2018c//EN\n"
+				+ "VERSION:2.0\n"
+				+ "BEGIN:VTIMEZONE\n"
+				+ "TZID:Asia/Baku\n"
+				+ "X-LIC-LOCATION:Asia/Baku\n"
+				+ "BEGIN:STANDARD\n"
+				+ "TZNAME:+04\n"
+				+ "DTSTART:19700117T070000\n"
+				+ "RRULE:FREQ=YEARLY;BYDAY=3TU;BYMONTH=1\n"
+				+ "TZOFFSETFROM:+0400\n"
+				+ "TZOFFSETTO:+0400\n"
+				+ "END:STANDARD\n"
+				+ "BEGIN:DAYLIGHT\n"
+				+ "TZNAME:+04\n"
+				+ "DTSTART:19701029T050000\n"
+				+ "RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10\n"
+				+ "TZOFFSETFROM:+0500\n"
+				+ "TZOFFSETTO:+0400\n"
+				+ "END:DAYLIGHT\n"
+				+ "END:VTIMEZONE\n"
+				+ "BEGIN:VEVENT\n"
+				+ "CREATED:20170512T222745Z\n"
+				+ "DTSTART;TZID=Asia/Baku:20171219T093000\n"
+				+ "SUMMARY:Test\n"
+				+ "TRANSP:OPAQUE\n"
+				+ "STATUS:CONFIRMED\n"
+				+ "CLASS:PUBLIC\n"
+				+ "DTEND;TZID=Asia/Baku:20171219T120000\n"
+				+ "LAST-MODIFIED:20171218T202904Z\n"
+				+ "DTSTAMP:20170531T100623Z\n"
+				+ "SEQUENCE:9\n"
+				+ "END:VEVENT\n"
+				+ "END:VCALENDAR\n";
+
+		try{
+			new CalendarBuilder().build( new StringReader( ICAL ) );
+		}catch(IOException | ParserException e){
+			fail( e.getMessage() );
+		}
+
     private Calendar buildCalendar(String file) throws IOException, ParserException {
         InputStream is = getClass().getResourceAsStream(file);
         CalendarBuilder cb = new CalendarBuilder();
