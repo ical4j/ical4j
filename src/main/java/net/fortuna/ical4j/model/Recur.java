@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.transform.recurrence.*;
-import net.fortuna.ical4j.transform.recurrence.ByDayRule.FilterType;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
 import net.fortuna.ical4j.util.Dates;
@@ -320,37 +319,37 @@ public class Recur implements Serializable {
     private void initTransformers() {
         transformers = new HashMap<>();
         if (secondList != null) {
-            transformers.put(BYSECOND, new BySecondRule(secondList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYSECOND, new BySecondRule(secondList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             secondList = new NumberList(0, 59, false);
         }
         if (minuteList != null) {
-            transformers.put(BYMINUTE, new ByMinuteRule(minuteList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYMINUTE, new ByMinuteRule(minuteList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             minuteList = new NumberList(0, 59, false);
         }
         if (hourList != null) {
-            transformers.put(BYHOUR, new ByHourRule(hourList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYHOUR, new ByHourRule(hourList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             hourList = new NumberList(0, 23, false);
         }
         if (monthDayList != null) {
-            transformers.put(BYMONTHDAY, new ByMonthDayRule(monthDayList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYMONTHDAY, new ByMonthDayRule(monthDayList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             monthDayList = new NumberList(1, 31, true);
         }
         if (yearDayList != null) {
-            transformers.put(BYYEARDAY, new ByYearDayRule(yearDayList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYYEARDAY, new ByYearDayRule(yearDayList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             yearDayList = new NumberList(1, 366, true);
         }
         if (weekNoList != null) {
-            transformers.put(BYWEEKNO, new ByWeekNoRule(weekNoList, Optional.ofNullable(weekStartDay)));
+            transformers.put(BYWEEKNO, new ByWeekNoRule(weekNoList, frequency, Optional.ofNullable(weekStartDay)));
         } else {
             weekNoList = new NumberList(1, 53, true);
         }
         if (monthList != null) {
-            transformers.put(BYMONTH, new ByMonthRule(monthList, Optional.ofNullable(interval),
+            transformers.put(BYMONTH, new ByMonthRule(monthList, frequency,
                     Optional.ofNullable(weekStartDay)));
         } else {
             monthList = new NumberList(1, 12, false);
@@ -367,18 +366,17 @@ public class Recur implements Serializable {
         }
     }
 
-    private FilterType deriveFilterType() {
-        FilterType filterType = null;
+    private Frequency deriveFilterType() {
         if (frequency == Frequency.DAILY || !getYearDayList().isEmpty() || !getMonthDayList().isEmpty()) {
-            filterType = FilterType.Daily;
+            return Frequency.DAILY;
         } else if (frequency == Frequency.WEEKLY || !getWeekNoList().isEmpty()) {
-            filterType = FilterType.Weekly;
+            return Frequency.WEEKLY;
         } else if (frequency == Frequency.MONTHLY || !getMonthList().isEmpty()) {
-            filterType = FilterType.Monthly;
+            return Frequency.MONTHLY;
         } else if (frequency == Frequency.YEARLY) {
-            filterType = FilterType.Yearly;
+            return Frequency.YEARLY;
         }
-        return filterType;
+        return null;
     }
 
     /**
@@ -713,17 +711,14 @@ public class Recur implements Serializable {
 
             if (getUntil() != null && candidate != null
                     && candidate.after(getUntil())) {
-
                 break;
             }
             if (periodEnd != null && candidate != null
                     && candidate.after(periodEnd)) {
-
                 break;
             }
             if (getCount() >= 1
                     && (dates.size() + invalidCandidates.size()) >= getCount()) {
-
                 break;
             }
 
@@ -751,13 +746,15 @@ public class Recur implements Serializable {
                     if (!candidate.before(seed)) {
                         // candidates exclusive of periodEnd..
                         if (candidate.before(periodStart)
-                                || !candidate.before(periodEnd)) {
+                                || candidate.after(periodEnd)) {
                             invalidCandidates.add(candidate);
                         } else if (getCount() >= 1
                                 && (dates.size() + invalidCandidates.size()) >= getCount()) {
                             break;
-                        } else if (!(getUntil() != null
-                                && candidate.after(getUntil()))) {
+                        } else if (getUntil() instanceof Date
+                                && candidate.compareTo(getUntil()) < 1) {
+                            dates.add(candidate);
+                        } else if (!candidate.before(periodStart) && candidate.before(periodEnd)) {
                             dates.add(candidate);
                         }
                     }
@@ -953,7 +950,7 @@ public class Recur implements Serializable {
 
             NumberList implicitMonthDayList = new NumberList();
             implicitMonthDayList.add(rootSeed.get(Calendar.DAY_OF_MONTH));
-            ByMonthDayRule implicitRule = new ByMonthDayRule(implicitMonthDayList, Optional.ofNullable(weekStartDay));
+            ByMonthDayRule implicitRule = new ByMonthDayRule(implicitMonthDayList, frequency, Optional.ofNullable(weekStartDay));
             dates = implicitRule.transform(dates);
         }
 

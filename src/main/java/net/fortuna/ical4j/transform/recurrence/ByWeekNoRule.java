@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,18 +14,19 @@ import java.util.Optional;
  * Applies BYWEEKNO rules specified in this Recur instance to the specified date list. If no BYWEEKNO rules are
  * specified the date list is returned unmodified.
  */
-public class ByWeekNoRule extends AbstractRecurrenceRule {
+public class ByWeekNoRule extends AbstractDateExpansionRule {
 
     private transient Logger log = LoggerFactory.getLogger(ByWeekNoRule.class);
 
     private final NumberList weekNoList;
 
-    public ByWeekNoRule(NumberList weekNoList) {
+    public ByWeekNoRule(NumberList weekNoList, Frequency frequency) {
+        super(frequency);
         this.weekNoList = weekNoList;
     }
 
-    public ByWeekNoRule(NumberList weekNoList, Optional<WeekDay.Day> weekStartDay) {
-        super(weekStartDay);
+    public ByWeekNoRule(NumberList weekNoList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+        super(frequency, weekStartDay);
         this.weekNoList = weekNoList;
     }
 

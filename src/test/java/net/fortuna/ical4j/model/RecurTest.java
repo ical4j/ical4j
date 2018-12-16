@@ -539,8 +539,8 @@ public class RecurTest extends TestCase {
         // java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Europe/Paris"));
 
         // testGetDates..
-        Recur recur = new Recur(Recur.DAILY, 10);
-        recur.setInterval(2);
+        Recur recur = new Recur.Builder().frequency(Frequency.DAILY).count(10)
+                .interval(2).build();
         log.debug(recur.toString());
 
         Calendar cal = Calendar.getInstance();
@@ -548,13 +548,14 @@ public class RecurTest extends TestCase {
         cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
         Date end = new Date(cal.getTime().getTime());
         log.debug(recur.getDates(start, end, Value.DATE_TIME).toString());
-        
-        recur.setUntil(new Date(cal.getTime().getTime()));
+
+        recur = new Recur.Builder().frequency(Frequency.DAILY).until(new Date(cal.getTime().getTime()))
+                .interval(2).build();
         log.info(recur.toString());
         log.debug(recur.getDates(start, end, Value.DATE_TIME).toString());
-        
-        recur.setFrequency(Recur.WEEKLY);
-        recur.getDayList().add(MO);
+
+        recur = new Recur.Builder().frequency(Frequency.WEEKLY).until(new Date(cal.getTime().getTime()))
+                .interval(2).dayList(new WeekDayList(MO)).build();
         log.debug(recur.toString());
 
         DateList dates = recur.getDates(start, end, Value.DATE);
@@ -563,7 +564,7 @@ public class RecurTest extends TestCase {
         suite.addTest(new RecurTest(recur, start, end, Value.DATE, 5));
         
         // testGetNextDate..
-        recur = new Recur(Recur.DAILY, 3);
+        recur = new Recur.Builder().frequency(Frequency.DAILY).count(3).build();
         Date seed = new Date("20080401"); 
         Date firstDate = new Date("20080402");
         Date secondDate = new Date("20080403");
@@ -573,7 +574,7 @@ public class RecurTest extends TestCase {
         suite.addTest(new RecurTest(recur, seed, secondDate, null));
         
         // test DateTime
-        recur = new Recur(Recur.WEEKLY, new DateTime("20080421T063000"));
+        recur = new Recur.Builder().frequency(Frequency.WEEKLY).until(new DateTime("20080421T063000")).build();
         seed = new DateTime("20080407T063000");
         firstDate = new DateTime("20080414T063000");
         secondDate = new DateTime("20080421T063000");
@@ -583,13 +584,8 @@ public class RecurTest extends TestCase {
         suite.addTest(new RecurTest(recur, seed, secondDate, null));
         
         // Test BYDAY rules..
-        recur = new Recur(Recur.DAILY, 10);
-        recur.setInterval(1);
-        recur.getDayList().add(MO);
-        recur.getDayList().add(TU);
-        recur.getDayList().add(WE);
-        recur.getDayList().add(TH);
-        recur.getDayList().add(FR);
+        recur = new Recur.Builder().frequency(Frequency.DAILY).count(10)
+                .interval(1).dayList(new WeekDayList(MO, TU, WE, TH, FR)).build();
         log.debug(recur.toString());
         
         cal = Calendar.getInstance();

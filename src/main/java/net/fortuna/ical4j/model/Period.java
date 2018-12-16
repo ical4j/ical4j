@@ -98,6 +98,7 @@ public class Period extends DateRange implements Comparable<Period> {
      * @param duration
      *            the duration of the period
      */
+    @Deprecated
     public Period(final DateTime start, final Dur duration) {
         this(start, TemporalAmountAdapter.from(duration));
     }
