@@ -61,7 +61,8 @@ class DateTimeSpec extends Specification {
 	   '20110327T000000'| 'Europe/London'
 	   '20110326T090000'| 'Europe/Minsk'
    }
-   
+
+	@Ignore
    def 'test date time initialisation with a custom timezone'() {
 	   setup:
 	   def originalTimezone = TimeZone.default
@@ -97,7 +98,7 @@ class DateTimeSpec extends Specification {
 	   dateTimeString << ['20110327T000000']
    }
 
-	@Ignore
+//	@Ignore
 	  def 'test date time initialisation with a registered custom timezone'() {
 		  setup:
 		  def originalTimezone = TimeZone.default
