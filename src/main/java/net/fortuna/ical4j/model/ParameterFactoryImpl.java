@@ -32,11 +32,11 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.XParameter;
+import net.java.sezpoz.Index;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URISyntaxException;
-import java.util.ServiceLoader;
 
 /**
  * A factory for creating iCalendar parameters.
@@ -52,7 +52,7 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
     private static final long serialVersionUID = -4034423507432249165L;
 
     protected ParameterFactoryImpl() {
-        super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()));
+        super(ParameterFactory.Service.class, ParameterFactory.class);
     }
 
     @Override
@@ -102,6 +102,6 @@ public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactor
      */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        this.factoryLoader = ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader());
+        this.factoryLoader = Index.load(ParameterFactory.Service.class, ParameterFactory.class);
     }
 }

@@ -627,6 +627,7 @@ public class VFreeBusy extends CalendarComponent {
         return (Uid) getProperty(Property.UID);
     }
 
+    @ComponentFactory.Service
     public static class Factory extends Content.Factory implements ComponentFactory<VFreeBusy> {
 
         public Factory() {

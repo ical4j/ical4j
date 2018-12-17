@@ -86,6 +86,7 @@ public class Standard extends Observance {
         super(STANDARD, properties);
     }
 
+    @ComponentFactory.Service
     public static class Factory extends Content.Factory implements ComponentFactory<Standard> {
 
         public Factory() {

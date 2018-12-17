@@ -253,6 +253,7 @@ public class VAvailability extends CalendarComponent {
         return null;
     }
 
+    @ComponentFactory.Service
     public static class Factory extends Content.Factory implements ComponentFactory<VAvailability> {
 
         public Factory() {

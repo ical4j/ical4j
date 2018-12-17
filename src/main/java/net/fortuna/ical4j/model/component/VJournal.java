@@ -303,6 +303,7 @@ public class VJournal extends CalendarComponent {
         return (Uid) getProperty(Property.UID);
     }
 
+    @ComponentFactory.Service
     public static class Factory extends Content.Factory implements ComponentFactory<VJournal> {
 
         public Factory() {

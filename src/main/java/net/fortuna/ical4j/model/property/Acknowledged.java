@@ -144,7 +144,8 @@ public class Acknowledged extends UtcProperty{
         aDate.setUtc(true);
         setDate(aDate);
     }
-    
+
+    @PropertyFactory.Service
     public static class Factory extends Content.Factory implements PropertyFactory<Property> {
         private static final long serialVersionUID = 1L;
 

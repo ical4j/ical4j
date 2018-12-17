@@ -221,6 +221,7 @@ public class RecurrenceId extends DateProperty {
          */
     }
 
+    @PropertyFactory.Service
     public static class Factory extends Content.Factory implements PropertyFactory {
         private static final long serialVersionUID = 1L;
 

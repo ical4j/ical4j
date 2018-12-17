@@ -39,11 +39,11 @@ import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.Arrays;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Arrays;
 
 /**
  * $Id$
@@ -238,6 +238,7 @@ public class Organizer extends Property {
         this.calAddress = calAddress;
     }
 
+    @PropertyFactory.Service
     public static class Factory extends Content.Factory implements PropertyFactory {
         private static final long serialVersionUID = 1L;
 

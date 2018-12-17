@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 import java.net.URISyntaxException;
@@ -67,6 +66,7 @@ public class Cn extends Parameter {
         return value;
     }
 
+    @ParameterFactory.Service
     public static class Factory extends Content.Factory implements ParameterFactory {
         private static final long serialVersionUID = 1L;
 

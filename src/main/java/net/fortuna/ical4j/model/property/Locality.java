@@ -97,6 +97,7 @@ public class Locality extends Property implements Escapable {
 
     }
 
+    @PropertyFactory.Service
     public static class Factory extends Content.Factory implements PropertyFactory {
         private static final long serialVersionUID = 1L;
 

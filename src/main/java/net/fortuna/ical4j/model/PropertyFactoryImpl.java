@@ -32,12 +32,12 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.property.XProperty;
+import net.java.sezpoz.Index;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.ServiceLoader;
 
 /**
  * A factory for creating iCalendar properties. Note that if relaxed parsing is enabled (via specifying the system
@@ -55,7 +55,7 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
      * Constructor made private to prevent instantiation.
      */
     protected PropertyFactoryImpl() {
-        super(ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader()));
+        super(PropertyFactory.Service.class, PropertyFactory.class);
     }
 
     @Override
@@ -117,6 +117,6 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory>
      */
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        this.factoryLoader = ServiceLoader.load(PropertyFactory.class, PropertyFactory.class.getClassLoader());
+        this.factoryLoader = Index.load(PropertyFactory.Service.class, PropertyFactory.class);
     }
 }

@@ -35,7 +35,13 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.java.sezpoz.Indexable;
+
 import java.io.Serializable;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.net.URISyntaxException;
 
 
@@ -52,6 +58,11 @@ import java.net.URISyntaxException;
  *         Created on 14/06/2005
  */
 public interface ParameterFactory<T extends Parameter> extends Serializable {
+
+    @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
+    @Retention(RetentionPolicy.SOURCE)
+    @Indexable(type= ParameterFactory.class)
+    public @interface Service {}
 
     /**
      * Returns a parameter instance of the appropriate type with the specified value.

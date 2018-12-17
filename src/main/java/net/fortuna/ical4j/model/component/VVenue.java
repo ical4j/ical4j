@@ -173,6 +173,7 @@ public class VVenue extends CalendarComponent {
         return EMPTY_VALIDATOR;
     }
 
+    @ComponentFactory.Service
     public static class Factory extends Content.Factory implements ComponentFactory<VVenue> {
 
         public Factory() {

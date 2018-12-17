@@ -705,6 +705,7 @@ public class VEvent extends CalendarComponent {
         return copy;
     }
 
+    @ComponentFactory.Service
     public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {
 
         public Factory() {

@@ -32,12 +32,16 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.java.sezpoz.Index;
+import net.java.sezpoz.IndexItem;
 import org.apache.commons.lang3.Validate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ServiceLoader;
 
 /**
  * $Id$
@@ -50,16 +54,18 @@ import java.util.ServiceLoader;
  */
 public abstract class AbstractContentFactory<T> implements Serializable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CalendarDateFormatFactory.class);
+
     private final Map<String, T> extendedFactories;
 
-    protected transient ServiceLoader<T> factoryLoader;
+    protected transient Index<? extends Annotation, T> factoryLoader;
 
     /**
      * Default constructor.
      */
-    public AbstractContentFactory(ServiceLoader<T> factoryLoader) {
+    public AbstractContentFactory(Class<? extends Annotation> annotation, Class<T> instanceType) {
         extendedFactories = new HashMap<String, T>();
-        this.factoryLoader = factoryLoader;
+        this.factoryLoader = Index.load(annotation, instanceType);
     }
 
     /**
@@ -82,10 +88,16 @@ public abstract class AbstractContentFactory<T> implements Serializable {
     protected final T getFactory(String key) {
         Validate.notBlank(key, "Invalid factory key: [%s]", key);
         T factory = null;
-        for (T candidate : factoryLoader) {
-            if (factorySupports(candidate, key)) {
-                factory = candidate;
-                break;
+        for (IndexItem<? extends Annotation, T> candidate : factoryLoader) {
+            T instance = null;
+            try {
+                instance = candidate.instance();
+                if (factorySupports(instance, key)) {
+                    factory = instance;
+                    break;
+                }
+            } catch (InstantiationException e) {
+                LOG.error(String.format("Unable to create factory instance [%s]", candidate.className()), e);
             }
         }
         if (factory == null) {
