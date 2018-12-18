@@ -31,8 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -44,14 +42,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
 import static net.fortuna.ical4j.model.WeekDay.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Created on 16/03/2005
@@ -210,71 +204,5 @@ public class CalendarTest {
         copyCalendar.getComponents().add(week3UserC);
         copyCalendar.validate();
 
-    }
-
-    @Test
-    public void shouldCorrectCalendarBody() throws IOException, ParserException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
-
-        String[] calendarNames = { "yahoo1.txt", "yahoo2.txt", "outlook1.txt", "outlook2.txt", "apple.txt" };
-        for (String calendarName : calendarNames) {
-            Calendar calendar = buildCalendar(calendarName);
-            calendar.conformToRfc5545();
-            try {
-                calendar.validate();
-            } catch (ValidationException e) {
-                e.printStackTrace();
-                fail("Validation failed for " + calendarName);
-            }
-        }
-    }
-
-    @Test
-    public void shouldCorrectMsSpecificTimeZones() throws IOException, ParserException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
-        String actuals[] = { "timezones/outlook1.txt", "timezones/outlook2.txt" };
-        String expecteds[] = { "timezones/outlook1_expected.txt", "timezones/outlook2_expected.txt" };
-
-        for (int i = 0; i < actuals.length; i++) {
-            Calendar actual = buildCalendar(actuals[i]);
-            actual.conformToRfc5545();
-            Calendar expected = buildCalendar(expecteds[i]);
-            assertEquals("on from " + expecteds[i] + " and " + actuals[i] + " failed.", expected, actual);
-        }
-    }
-
-    @Test
-    public void shouldCorrectDTStampByAddingUTCTimezone() {
-        String calendarName = "dtstamp/invalid.txt";
-        try {
-            Calendar actual = buildCalendar(calendarName);
-            actual.conformToRfc5545();
-        } catch (IllegalAccessException | InvocationTargetException | IOException | ParserException e) {
-            e.printStackTrace();
-            fail("RFC transformation failed for " + calendarName);
-        }
-    }
-
-    @Test
-    public void shouldSetTimezoneToUtcForNoTZdescription() {
-        String actualCalendar = "outlook/TZ-no-description.txt";
-        try {
-            Calendar actual = buildCalendar(actualCalendar);
-            actual.conformToRfc5545();
-            Calendar expected = buildCalendar("outlook/TZ-set-to-utc.txt");
-            assertEquals(expected.toString(), actual.toString());
-            assertEquals(expected, actual);
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("RFC transformation failed for " + actualCalendar);
-        }
-    }
-
-    private Calendar buildCalendar(String file) throws IOException, ParserException {
-        InputStream is = getClass().getResourceAsStream(file);
-        CalendarBuilder cb = new CalendarBuilder();
-        Calendar calendar = cb.build(is);
-        is.close();
-        return calendar;
     }
 }
