@@ -4,6 +4,7 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.validate.ValidationException;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,6 +16,13 @@ import static org.junit.Assert.fail;
 
 public class Rfc5545TransformerTest {
 
+    private Rfc5545Transformer transformer;
+
+    @Before
+    public void setUp() {
+        transformer = new Rfc5545Transformer();
+    }
+
     @Test
     public void shouldCorrectCalendarBody() throws IOException, ParserException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException {
@@ -22,7 +30,7 @@ public class Rfc5545TransformerTest {
         String[] calendarNames = { "yahoo1.txt", "yahoo2.txt", "outlook1.txt", "outlook2.txt", "apple.txt" };
         for (String calendarName : calendarNames) {
             Calendar calendar = buildCalendar(calendarName);
-            calendar.conformToRfc5545();
+            calendar = transformer.transform(calendar);
             try {
                 calendar.validate();
             } catch (ValidationException e) {
@@ -40,7 +48,7 @@ public class Rfc5545TransformerTest {
 
         for (int i = 0; i < actuals.length; i++) {
             Calendar actual = buildCalendar(actuals[i]);
-            actual.conformToRfc5545();
+            actual = transformer.transform(actual);
             Calendar expected = buildCalendar(expecteds[i]);
             assertEquals("on from " + expecteds[i] + " and " + actuals[i] + " failed.", expected, actual);
         }
@@ -51,8 +59,8 @@ public class Rfc5545TransformerTest {
         String calendarName = "dtstamp/invalid.txt";
         try {
             Calendar actual = buildCalendar(calendarName);
-            actual.conformToRfc5545();
-        } catch (IllegalAccessException | InvocationTargetException | IOException | ParserException e) {
+            actual = transformer.transform(actual);
+        } catch (RuntimeException | IOException | ParserException e) {
             e.printStackTrace();
             fail("RFC transformation failed for " + calendarName);
         }
@@ -63,7 +71,7 @@ public class Rfc5545TransformerTest {
         String actualCalendar = "outlook/TZ-no-description.txt";
         try {
             Calendar actual = buildCalendar(actualCalendar);
-            actual.conformToRfc5545();
+            actual = transformer.transform(actual);
             Calendar expected = buildCalendar("outlook/TZ-set-to-utc.txt");
             assertEquals(expected.toString(), actual.toString());
             assertEquals(expected, actual);
