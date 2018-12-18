@@ -232,11 +232,9 @@ public class VFreeBusyTest extends CalendarComponentTest {
         components.add(event);
 
         // add recurrence..
-        Recur recur = new Recur(Recur.YEARLY, 20);
-        recur.getMonthList().add(new Integer(1));
-        recur.getMonthDayList().add(new Integer(26));
-        recur.getHourList().add(new Integer(9));
-        recur.getMinuteList().add(new Integer(30));
+        Recur recur = new Recur.Builder().frequency(Recur.Frequency.YEARLY).count(20)
+                .monthList(new NumberList("1")).monthDayList(new NumberList("26"))
+                .hourList(new NumberList("9")).minuteList(new NumberList("30")).build();
         event.getProperties().add(new RRule(recur));
 
         if (log.isDebugEnabled()) {

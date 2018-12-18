@@ -544,6 +544,7 @@ public class RecurTest extends TestCase {
         log.debug(recur.toString());
 
         Calendar cal = Calendar.getInstance();
+        cal.set(2018, 12, 16);
         Date start = new Date(cal.getTime().getTime());
         cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
         Date end = new Date(cal.getTime().getTime());
@@ -622,9 +623,8 @@ public class RecurTest extends TestCase {
          *  ==> (1997 9:00 AM EDT)September 2,4,9,11,16,18,23,25,30;October 2 
          * </pre>
          */
-        recur = new Recur(Recur.WEEKLY, 10);
-        recur.getDayList().add(TU);
-        recur.getDayList().add(TH);
+        recur = new Recur.Builder().frequency(Frequency.WEEKLY).count(10)
+            .dayList(new WeekDayList(TU, TH)).build();
         log.debug(recur.toString());
         
         cal = Calendar.getInstance();

@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.Recur;
+
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -68,7 +68,7 @@ public class RRuleTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        RRule rule = new RRule(new Recur(Recur.WEEKLY, 3));
+        RRule rule = new RRule(new Recur.Builder().frequency(Recur.Frequency.WEEKLY).count(3).build());
         suite.addTest(new RRuleTest(rule, "FREQ=WEEKLY;COUNT=3"));
         suite.addTest(new RRuleTest("testValidation", rule));
         suite.addTest(new RRuleTest("testEquals", rule));

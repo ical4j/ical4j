@@ -149,6 +149,7 @@ class RecurSpec extends Specification {
 																																							'20160331',
 																																							'20160930',
 																																							'20161031']
+//		'FREQ=WEEKLY;UNTIL=20190225;INTERVAL=2;BYDAY=MO'	| Value.DATE	| '20181216'	| '20190225'	| ['20181217', '20181231', '20190114', '20190128', '20190211', '20190225']
 	}
 
     @Unroll
