@@ -84,7 +84,6 @@ dependencies {
 
     testImplementation "org.codehaus.groovy:groovy-all:$groovyVersion",
         'org.spockframework:spock-core:1.1-groovy-2.4',
-        'commons-io:commons-io:2.4',
         'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
         "org.slf4j:slf4j-log4j12:$slf4jVersion",
         'org.ehcache:ehcache:3.4.0'
