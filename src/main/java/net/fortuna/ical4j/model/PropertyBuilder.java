@@ -1,12 +1,7 @@
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.model.property.DateListProperty;
-import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.XProperty;
-import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -23,8 +18,6 @@ public class PropertyBuilder extends AbstractContentBuilder {
     private String value;
 
     private ParameterList parameters = new ParameterList();
-
-    private TimeZone timeZone;
 
     public PropertyBuilder factories(List<PropertyFactory> factories) {
         this.factories.addAll(factories);
@@ -45,11 +38,6 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     public PropertyBuilder parameter(Parameter parameter) {
         parameters.add(parameter);
-        return this;
-    }
-
-    public PropertyBuilder timeZone(TimeZone timeZone) {
-        this.timeZone = timeZone;
         return this;
     }
 
@@ -74,41 +62,6 @@ public class PropertyBuilder extends AbstractContentBuilder {
             }
         }
 
-        if (property != null && timeZone != null) {
-            updateTimeZone(property, timeZone);
-        }
-
         return property;
-    }
-
-    private void updateTimeZone(Property property, TimeZone timezone) throws IOException {
-        // Get the String representation of date(s) as
-        // we will need this after changing the timezone
-        final String strDate = property.getValue();
-
-        try {
-            ((DateProperty) property).setTimeZone(timezone);
-        } catch (ClassCastException e) {
-            try {
-                ((DateListProperty) property).setTimeZone(timezone);
-            } catch (ClassCastException e2) {
-                if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
-                    Logger log = LoggerFactory.getLogger(PropertyBuilder.class);
-                    log.warn("Error setting timezone [" + timezone.getID()
-                            + "] on property [" + property.getName()
-                            + "]", e);
-                } else {
-                    throw e2;
-                }
-            }
-        }
-
-        // Reset value
-        try {
-            property.setValue(strDate);
-        } catch (ParseException | URISyntaxException e) {
-            // shouldn't happen as its already been parsed
-            throw new CalendarException(e);
-        }
     }
 }
