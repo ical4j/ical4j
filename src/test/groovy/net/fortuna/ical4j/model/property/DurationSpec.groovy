@@ -16,5 +16,6 @@ class DurationSpec extends Specification {
         value   | expectedValue
         'P7D'   | 'P1W'
         'P52W'  | 'P52W'
+        'PT10M' | 'PT10M'
     }
 }
