@@ -1,9 +1,7 @@
 package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.component.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
@@ -27,7 +25,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     private final TimeZoneRegistry tzRegistry;
 
-    private List<TzId> datesMissingTimezones;
+    private List<TzId> propertiesWithTzId;
 
     private final Consumer<Calendar> consumer;
 
@@ -59,18 +57,26 @@ public class DefaultContentHandler implements ContentHandler {
     @Override
     public void startCalendar() {
         calendar = new Calendar();
-        datesMissingTimezones = new ArrayList<>();
+        propertiesWithTzId = new ArrayList<>();
     }
 
     @Override
     public void endCalendar() throws IOException {
-        if (datesMissingTimezones.size() > 0 && tzRegistry != null) {
+        if (propertiesWithTzId.size() > 0 && tzRegistry != null) {
             for (CalendarComponent component : calendar.getComponents()) {
                 resolveTimezones(component.getProperties());
 
-                if (component instanceof VEvent) {
+                if (component instanceof VAvailability) {
+                    for (Component available : ((VAvailability) component).getAvailable()) {
+                        resolveTimezones(available.getProperties());
+                    }
+                } else if (component instanceof VEvent) {
                     for (Component alarm : ((VEvent) component).getAlarms()) {
                         resolveTimezones(alarm.getProperties());
+                    }
+                } else if (component instanceof VToDo) {
+                    for (Component todo : ((VToDo) component).getAlarms()) {
+                        resolveTimezones(todo.getProperties());
                     }
                 }
             }
@@ -148,15 +154,10 @@ public class DefaultContentHandler implements ContentHandler {
                 .name(name).value(value).build();
 
         if (parameter instanceof TzId && tzRegistry != null) {
-//            final TimeZone timezone = tzRegistry.getTimeZone(parameter.getValue());
-//            if (timezone != null) {
-//                propertyBuilder.timeZone(timezone);
-//            } else {
-                // VTIMEZONE may be defined later, so so keep
-                // track of dates until all components have been
-                // parsed, and then try again later
-                datesMissingTimezones.add((TzId) parameter);
-//            }
+            // VTIMEZONE may be defined later, so so keep
+            // track of dates until all components have been
+            // parsed, and then try again later
+            propertiesWithTzId.add((TzId) parameter);
         }
 
         propertyBuilder.parameter(parameter);
@@ -177,7 +178,7 @@ public class DefaultContentHandler implements ContentHandler {
     private void resolveTimezones(List<Property> properties) throws IOException {
 
         // Go through each property and try to resolve the TZID.
-        for (TzId tzParam : datesMissingTimezones) {
+        for (TzId tzParam : propertiesWithTzId) {
 
             //lookup timezone
             final TimeZone timezone = tzRegistry.getTimeZone(tzParam.getValue());
