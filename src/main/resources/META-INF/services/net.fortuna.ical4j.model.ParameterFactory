@@ -18,7 +18,6 @@ net.fortuna.ical4j.model.parameter.Rsvp$Factory
 net.fortuna.ical4j.model.parameter.ScheduleAgent$Factory
 net.fortuna.ical4j.model.parameter.ScheduleStatus$Factory
 net.fortuna.ical4j.model.parameter.SentBy$Factory
-net.fortuna.ical4j.model.parameter.Vvenue$Factory
 net.fortuna.ical4j.model.parameter.Type$Factory
 net.fortuna.ical4j.model.parameter.TzId$Factory
 net.fortuna.ical4j.model.parameter.Value$Factory
