@@ -34,6 +34,7 @@ package net.fortuna.ical4j.data;
 import net.fortuna.ical4j.util.Configurator;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * <pre>
@@ -51,30 +52,23 @@ import java.util.Optional;
  * 
  * @author Ben Fortuna
  */
-public abstract class CalendarParserFactory {
+public abstract class CalendarParserFactory implements Supplier<CalendarParser> {
 
     /**
      * The system property used to specify an alternate {@link CalendarParser} implementation.
      */
     public static final String KEY_FACTORY_CLASS = "net.fortuna.ical4j.parser";
 
-    private static CalendarParserFactory instance;
+    private static Supplier<CalendarParser> instance;
     static {
-        Optional<CalendarParserFactory> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
-        instance = property.orElse(new DefaultCalendarParserFactory());
+        Optional<Supplier<CalendarParser>> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
+        instance = property.orElse(() -> new CalendarParserImpl());
     }
 
     /**
      * @return a shared factory instance
      */
-    public static CalendarParserFactory getInstance() {
+    public static Supplier<CalendarParser> getInstance() {
         return instance;
     }
-
-    /**
-     * Returns a new instance of the configured {@link CalendarParser}.
-     * @return a calendar parser instance
-     */
-    public abstract CalendarParser createParser();
-
 }

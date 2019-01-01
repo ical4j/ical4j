@@ -66,7 +66,7 @@ public class TzIdTest extends TestCase {
 
         calendar.getComponents().forEach(calendarComponent -> {
             calendarComponent.getProperties().forEach(property -> {
-                TzId tzId = (TzId) property.getParameter(Parameter.TZID);
+                TzId tzId = property.getParameter(Parameter.TZID);
                 if (tzId != null) {
                     assertNotNull(registry.getTimeZone(tzId.getValue()));
                 }

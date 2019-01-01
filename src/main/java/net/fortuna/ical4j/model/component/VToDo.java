@@ -133,7 +133,7 @@ public class VToDo extends CalendarComponent {
         methodValidators.put(Method.REQUEST, new VToDoRequestValidator());
     }
     
-    private ComponentList<VAlarm> alarms = new ComponentList<VAlarm>();
+    private ComponentList<VAlarm> alarms = new ComponentList<>();
 
     /**
      * Default constructor.
@@ -155,6 +155,11 @@ public class VToDo extends CalendarComponent {
      */
     public VToDo(final PropertyList properties) {
         super(VTODO, properties);
+    }
+
+    public VToDo(PropertyList properties, ComponentList<VAlarm> alarms) {
+        super(VTODO, properties);
+        this.alarms = alarms;
     }
 
     /**
@@ -488,7 +493,7 @@ public class VToDo extends CalendarComponent {
 
         @Override
         public VToDo createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VTODO));
+            return new VToDo(properties, subComponents);
         }
     }
 }

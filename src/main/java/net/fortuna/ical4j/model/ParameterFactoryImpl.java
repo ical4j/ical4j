@@ -47,6 +47,7 @@ import java.util.ServiceLoader;
  *
  * @author Ben Fortuna
  */
+@Deprecated
 public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactory> {
 
     private static final long serialVersionUID = -4034423507432249165L;

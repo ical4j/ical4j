@@ -37,11 +37,8 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
-import org.apache.commons.io.filefilter.NotFileFilter;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -170,7 +167,7 @@ public class CalendarEqualsTest extends TestCase {
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
         
-        File[] testFiles = new File("src/test/resources/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
+        File[] testFiles = new File("src/test/resources/samples/valid").listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"));
         for (int i = 0; i < testFiles.length; i++) {
             suite.addTest(new CalendarEqualsTest((File) testFiles[i], true));
         }
