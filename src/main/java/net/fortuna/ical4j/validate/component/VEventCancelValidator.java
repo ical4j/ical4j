@@ -1,7 +1,5 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
@@ -9,6 +7,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Component.VALARM;
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * METHOD:CANCEL Validator.
@@ -75,16 +76,16 @@ public class VEventCancelValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public final void validate(final VEvent target) throws ValidationException {
-        Arrays.asList(Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER, Property.SEQUENCE,
-                Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
+        Arrays.asList(DTSTAMP, DTSTART, ORGANIZER, SEQUENCE,
+                UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
-                Property.DTEND, Property.DTSTART, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,
-                Property.PRIORITY, Property.RECURRENCE_ID, Property.RESOURCES, Property.STATUS, Property.SUMMARY,
-                Property.TRANSP, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
+        Arrays.asList(CATEGORIES, CLASS, CREATED, DESCRIPTION,
+                DTEND, DTSTART, DURATION, GEO, LAST_MODIFIED, LOCATION,
+                PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, SUMMARY,
+                TRANSP, URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
-        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());
+        PropertyValidator.getInstance().assertNone(REQUEST_STATUS, target.getProperties());
 
-        ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
+        ComponentValidator.assertNone(VALARM, target.getAlarms());
     }
 }

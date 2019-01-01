@@ -1,12 +1,13 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * METHOD:REQUEST Validator.
@@ -46,12 +47,12 @@ public class VFreeBusyRequestValidator implements Validator<VFreeBusy> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VFreeBusy target) throws ValidationException {
-        PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, target.getProperties());
+        PropertyValidator.getInstance().assertOneOrMore(ATTENDEE, target.getProperties());
 
-        Arrays.asList(Property.DTEND, Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER,
-                Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
+        Arrays.asList(DTEND, DTSTAMP, DTSTART, ORGANIZER,
+                UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        Arrays.asList(Property.FREEBUSY, Property.DURATION, Property.REQUEST_STATUS,
-                Property.URL).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
+        Arrays.asList(FREEBUSY, DURATION, REQUEST_STATUS,
+                URL).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
     }
 }

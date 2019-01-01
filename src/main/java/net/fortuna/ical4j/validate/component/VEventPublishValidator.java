@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Method;
@@ -10,6 +9,8 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * METHOD:PUBLISH Validator.
@@ -89,23 +90,23 @@ public class VEventPublishValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VEvent target) throws ValidationException {
-        Arrays.asList(Property.DTSTAMP, Property.DTSTART).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
+        Arrays.asList(DTSTAMP, DTSTART).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            Arrays.asList(Property.ORGANIZER, Property.SUMMARY).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
+            Arrays.asList(ORGANIZER, SUMMARY).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
         }
 
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+        PropertyValidator.getInstance().assertOne(UID, target.getProperties());
 
-        Arrays.asList(Property.RECURRENCE_ID, Property.SEQUENCE, Property.CATEGORIES, Property.CLASS,
-                Property.CREATED, Property.DESCRIPTION, Property.DTEND, Property.DURATION, Property.GEO, Property.LAST_MODIFIED,
-                Property.LOCATION, Property.PRIORITY, Property.RESOURCES, Property.STATUS, Property.TRANSP, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
+        Arrays.asList(RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS,
+                CREATED, DESCRIPTION, DTEND, DURATION, GEO, LAST_MODIFIED,
+                LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            PropertyValidator.getInstance().assertNone(Property.ATTENDEE, target.getProperties());
+            PropertyValidator.getInstance().assertNone(ATTENDEE, target.getProperties());
         }
 
-        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());
+        PropertyValidator.getInstance().assertNone(REQUEST_STATUS, target.getProperties());
 
         for (final VAlarm alarm : target.getAlarms()) {
             alarm.validate(Method.PUBLISH);
