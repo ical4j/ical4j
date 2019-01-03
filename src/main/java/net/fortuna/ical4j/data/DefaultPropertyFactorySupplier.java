@@ -3,6 +3,7 @@ package net.fortuna.ical4j.data;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.property.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
@@ -28,6 +29,11 @@ public class DefaultPropertyFactorySupplier implements Supplier<List<PropertyFac
                 new TzOffsetTo.Factory(), new TzUrl.Factory(), new Uid.Factory(), new Url.Factory(),
                 new Version.Factory());
 
-        return rfc5545;
+        List<PropertyFactory> rfc7986 = Arrays.asList(new Color.Factory(), new Conference.Factory(), new Image.Factory(),
+                new RefreshInterval.Factory(), new Source.Factory());
+
+        List<PropertyFactory> factories = new ArrayList<>(rfc5545);
+        factories.addAll(rfc7986);
+        return factories;
     }
 }

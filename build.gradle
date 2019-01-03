@@ -74,7 +74,8 @@ dependencies {
     api "org.slf4j:slf4j-api:$slf4jVersion",
             'commons-codec:commons-codec:1.10',
             'org.apache.commons:commons-lang3:3.6',
-            'org.apache.commons:commons-collections4:4.1'
+            'org.apache.commons:commons-collections4:4.1',
+            'javax.mail:javax.mail-api:1.5.4'
     
     implementation 'javax.cache:cache-api:1.0.0', optional
     implementation "org.codehaus.groovy:groovy-all:$groovyVersion", optional
@@ -86,7 +87,7 @@ dependencies {
         'org.spockframework:spock-core:1.1-groovy-2.4',
         'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
         "org.slf4j:slf4j-log4j12:$slf4jVersion",
-        'org.ehcache:ehcache:3.4.0'
+        'org.ehcache:ehcache:3.4.0', 'com.sun.mail:javax.mail:1.5.4'
 }
 
 jacocoTestReport {
