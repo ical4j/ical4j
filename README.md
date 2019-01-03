@@ -50,7 +50,7 @@
 5. [Configuration options][Configuration]
     - [Compatibility Hints]
 6. [Limitations - CUA compatibility, etc.][Limitations]
-7. [Development - Guide for contributing to the iCalj project][Development]
+7. [Development - Guide for contributing to the iCal4j project][Development]
     - [Building with Gradle]
     - [Redistribution]
     - [Contributing to iCal4j][Contributing]
