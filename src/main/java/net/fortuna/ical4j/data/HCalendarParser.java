@@ -257,7 +257,7 @@ public class HCalendarParser implements CalendarParser {
         }
     }
 
-    private void buildCalendar(Document d, ContentHandler handler) throws ParserException {
+    private void buildCalendar(Document d, ContentHandler handler) throws ParserException, IOException {
         // "The root class name for hCalendar is "vcalendar". An element with a
         // class name of "vcalendar" is itself called an hCalendar.
         //
@@ -284,10 +284,10 @@ public class HCalendarParser implements CalendarParser {
         handler.startProperty(Property.VERSION);
         try {
             handler.propertyValue(Version.VERSION_2_0.getValue());
+            handler.endProperty(Property.VERSION);
         } catch (IOException | ParseException | URISyntaxException e) {
             LOG.warn("Caught exception", e);
         }
-        handler.endProperty(Property.VERSION);
 
         Element method = findElement(XPATH_METHOD, d);
         if (method != null) {
@@ -439,6 +439,8 @@ public class HCalendarParser implements CalendarParser {
 
         try {
             handler.propertyValue(value);
+
+            handler.endProperty(propName);
         } catch (URISyntaxException e) {
             throw new ParserException("Malformed URI value for element '" + className + "'", -1, e);
         } catch (ParseException e) {
@@ -446,8 +448,6 @@ public class HCalendarParser implements CalendarParser {
         } catch (IOException e) {
             throw new CalendarException(e);
         }
-
-        handler.endProperty(propName);
     }
 
     // "The basic format of hCalendar is to use iCalendar object/property

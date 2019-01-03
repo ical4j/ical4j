@@ -1,3 +1,4 @@
+# RFC5545
 net.fortuna.ical4j.model.parameter.Abbrev$Factory
 net.fortuna.ical4j.model.parameter.AltRep$Factory
 net.fortuna.ical4j.model.parameter.Cn$Factory
@@ -18,8 +19,13 @@ net.fortuna.ical4j.model.parameter.Rsvp$Factory
 net.fortuna.ical4j.model.parameter.ScheduleAgent$Factory
 net.fortuna.ical4j.model.parameter.ScheduleStatus$Factory
 net.fortuna.ical4j.model.parameter.SentBy$Factory
-net.fortuna.ical4j.model.parameter.Vvenue$Factory
 net.fortuna.ical4j.model.parameter.Type$Factory
 net.fortuna.ical4j.model.parameter.TzId$Factory
 net.fortuna.ical4j.model.parameter.Value$Factory
 net.fortuna.ical4j.model.parameter.Vvenue$Factory
+
+#RFC7986
+net.fortuna.ical4j.model.parameter.Display$Factory
+net.fortuna.ical4j.model.parameter.Email$Factory
+net.fortuna.ical4j.model.parameter.Feature$Factory
+net.fortuna.ical4j.model.parameter.Label$Factory

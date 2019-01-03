@@ -170,7 +170,7 @@ public class Trigger extends UtcProperty {
      */
     @Deprecated
     public Trigger(final Dur duration) {
-        this(TemporalAmountAdapter.from(duration));
+        this(TemporalAmountAdapter.from(duration).getDuration());
     }
 
     /**
@@ -187,7 +187,7 @@ public class Trigger extends UtcProperty {
      */
     @Deprecated
     public Trigger(final ParameterList aList, final Dur duration) {
-        this(aList, TemporalAmountAdapter.from(duration));
+        this(aList, TemporalAmountAdapter.from(duration).getDuration());
     }
 
     /**

@@ -160,8 +160,7 @@ public class VTimeZone extends CalendarComponent {
      * @param properties a list of properties
      * @param observances a list of timezone types
      */
-    public VTimeZone(final PropertyList properties,
-            final ComponentList<Observance> observances) {
+    public VTimeZone(final PropertyList properties, final ComponentList<Observance> observances) {
         super(VTIMEZONE, properties);
         this.observances = observances;
     }

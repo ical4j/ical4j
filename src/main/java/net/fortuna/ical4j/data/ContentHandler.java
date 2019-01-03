@@ -55,7 +55,7 @@ public interface ContentHandler {
     /**
      * Triggers the end of handling a calendar.
      */
-    void endCalendar();
+    void endCalendar() throws IOException;
 
     /**
      * Triggers the start of handling a component.
@@ -89,7 +89,7 @@ public interface ContentHandler {
      * Triggers the end of handling a property.
      * @param name a property name
      */
-    void endProperty(String name);
+    void endProperty(String name) throws URISyntaxException, ParseException, IOException;
 
     /**
      * Triggers the handling of a parameter.

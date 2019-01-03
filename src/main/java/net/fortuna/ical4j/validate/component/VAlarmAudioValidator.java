@@ -1,10 +1,11 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
+
+import static net.fortuna.ical4j.model.Property.ATTACH;
 
 /**
  * Created by fortuna on 12/09/15.
@@ -20,6 +21,6 @@ public class VAlarmAudioValidator implements Validator<VAlarm> {
         /*
          * ; the following is optional, ; but MUST NOT occur more than once attach /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.ATTACH, target.getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(ATTACH, target.getProperties());
     }
 }

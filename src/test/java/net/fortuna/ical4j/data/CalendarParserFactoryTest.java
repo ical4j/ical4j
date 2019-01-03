@@ -66,20 +66,20 @@ public class CalendarParserFactoryTest extends TestCase {
     }
     
     /**
-     * Test method for {@link net.fortuna.ical4j.data.CalendarParserFactory#createParser()}.
+     * Test method for {@link CalendarParserFactory#get()}.
      */
     public void testCreateDefaultParser() {
-        assertTrue(CalendarParserFactory.getInstance().createParser() instanceof CalendarParserImpl);
+        assertTrue(CalendarParserFactory.getInstance().get() instanceof CalendarParserImpl);
     }
     
     /**
-     * Test method for {@link net.fortuna.ical4j.data.CalendarParserFactory#createParser()}.
+     * Test method for {@link CalendarParserFactory#get()}.
      */
     /*
     public void testCreateHCalendarParser() {
         System.setProperty(CalendarParserFactory.KEY_FACTORY_CLASS,
                 "net.fortuna.ical4j.data.HCalendarParserFactory");
-        assertTrue(CalendarParserFactory.getInstance().createParser() instanceof HCalendarParser);
+        assertTrue(CalendarParserFactory.getInstance().get() instanceof HCalendarParser);
     }
     */
 

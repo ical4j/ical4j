@@ -128,6 +128,13 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('url', new DefaultPropertyFactory(klass: Url))
         registerFactory('version', new VersionFactory())
         registerFactory('xproperty', new XPropertyFactory())
+
+        // RFC7986
+        registerFactory('color', new PropertyFactoryWrapper(Color, new Color.Factory()))
+        registerFactory('conference', new PropertyFactoryWrapper(Conference, new Conference.Factory()))
+        registerFactory('image', new PropertyFactoryWrapper(Image, new Image.Factory()))
+        registerFactory('refreshinterval', new PropertyFactoryWrapper(RefreshInterval, new RefreshInterval.Factory()))
+        registerFactory('source', new PropertyFactoryWrapper(Source, new Source.Factory()))
     }
     
     def registerParameters() {
@@ -155,6 +162,12 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('tzid_', new TzIdFactory())
         registerFactory('value', new ValueFactory())
         registerFactory('xparameter', new XParameterFactory())
+
+        // RFC7986
+        registerFactory('display', new ParameterFactoryWrapper(Display, new Display.Factory()))
+        registerFactory('email', new ParameterFactoryWrapper(Email, new Email.Factory()))
+        registerFactory('feature', new ParameterFactoryWrapper(Feature, new Feature.Factory()))
+        registerFactory('label', new ParameterFactoryWrapper(Label, new Label.Factory()))
     }
 }
 

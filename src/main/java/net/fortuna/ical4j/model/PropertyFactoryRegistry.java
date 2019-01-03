@@ -35,6 +35,7 @@ package net.fortuna.ical4j.model;
  * @author fortuna
  *
  */
+@Deprecated
 public final class PropertyFactoryRegistry extends PropertyFactoryImpl {
 
     private static final long serialVersionUID = 3924903719847189199L;
