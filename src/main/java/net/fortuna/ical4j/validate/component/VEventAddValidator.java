@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Method;
@@ -11,6 +10,8 @@ import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * METHOD:ADD Validator.
@@ -71,24 +72,24 @@ public class VEventAddValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VEvent target) throws ValidationException {
-        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER, Property.SEQUENCE,
-                Property.SUMMARY, Property.UID), new Closure<String>() {
+        CollectionUtils.forAllDo(Arrays.asList(DTSTAMP, DTSTART, ORGANIZER, SEQUENCE,
+                SUMMARY, UID), new Closure<String>() {
             @Override
             public void execute(String input) {
                 PropertyValidator.getInstance().assertOne(input, target.getProperties());
             }
         });
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
-                Property.DTEND, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.PRIORITY,
-                Property.RESOURCES, Property.STATUS, Property.TRANSP, Property.URL), new Closure<String>() {
+        CollectionUtils.forAllDo(Arrays.asList(CATEGORIES, CLASS, CREATED, DESCRIPTION,
+                DTEND, DURATION, GEO, LAST_MODIFIED, LOCATION, PRIORITY,
+                RESOURCES, STATUS, TRANSP, URL), new Closure<String>() {
             @Override
             public void execute(String input) {
                 PropertyValidator.getInstance().assertOneOrLess(input, target.getProperties());
             }
         });
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.RECURRENCE_ID, Property.REQUEST_STATUS), new Closure<String>() {
+        CollectionUtils.forAllDo(Arrays.asList(RECURRENCE_ID, REQUEST_STATUS), new Closure<String>() {
             @Override
             public void execute(String input) {
                 PropertyValidator.getInstance().assertNone(input, target.getProperties());

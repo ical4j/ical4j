@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -9,6 +8,8 @@ import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * Common validation for all iTIP methods.
@@ -35,14 +36,14 @@ public class VAlarmITIPValidator implements Validator<VAlarm> {
      * {@inheritDoc}
      */
     public void validate(final VAlarm target) throws ValidationException {
-        CollectionUtils.forAllDo(Arrays.asList(Property.ACTION, Property.TRIGGER), new Closure<String>() {
+        CollectionUtils.forAllDo(Arrays.asList(ACTION, TRIGGER), new Closure<String>() {
             @Override
             public void execute(String input) {
                 PropertyValidator.getInstance().assertOne(input, target.getProperties());
             }
         });
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.DESCRIPTION, Property.DURATION, Property.REPEAT, Property.SUMMARY),
+        CollectionUtils.forAllDo(Arrays.asList(DESCRIPTION, DURATION, REPEAT, SUMMARY),
                 new Closure<String>() {
                     @Override
                     public void execute(String input) {

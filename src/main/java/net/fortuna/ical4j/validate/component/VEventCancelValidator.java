@@ -1,7 +1,5 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
@@ -11,6 +9,9 @@ import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Component.VALARM;
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * METHOD:CANCEL Validator.
@@ -77,26 +78,26 @@ public class VEventCancelValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public final void validate(final VEvent target) throws ValidationException {
-        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER, Property.SEQUENCE,
-                Property.UID), new Closure<String>() {
+        CollectionUtils.forAllDo(Arrays.asList(DTSTAMP, DTSTART, ORGANIZER, SEQUENCE,
+                UID), new Closure<String>() {
             @Override
             public void execute(String input) {
                 PropertyValidator.getInstance().assertOne(input, target.getProperties());
             }
         });
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
-                Property.DTEND, Property.DTSTART, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,
-                Property.PRIORITY, Property.RECURRENCE_ID, Property.RESOURCES, Property.STATUS, Property.SUMMARY,
-                Property.TRANSP, Property.URL), new Closure<String>() {
+        CollectionUtils.forAllDo(Arrays.asList(CATEGORIES, CLASS, CREATED, DESCRIPTION,
+                DTEND, DTSTART, DURATION, GEO, LAST_MODIFIED, LOCATION,
+                PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, SUMMARY,
+                TRANSP, URL), new Closure<String>() {
             @Override
             public void execute(String input) {
                 PropertyValidator.getInstance().assertOneOrLess(input, target.getProperties());
             }
         });
 
-        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());
+        PropertyValidator.getInstance().assertNone(REQUEST_STATUS, target.getProperties());
 
-        ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
+        ComponentValidator.assertNone(VALARM, target.getAlarms());
     }
 }

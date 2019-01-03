@@ -31,6 +31,10 @@
  */
 package net.fortuna.ical4j.model
 
+
+import net.fortuna.ical4j.model.property.LastModified
+import net.fortuna.ical4j.util.RandomUidGenerator
+import net.fortuna.ical4j.validate.ValidationException
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -71,5 +75,81 @@ class ContentBuilderSpec extends Specification {
             }
         } as String == 'DTSTART;TZID=Australia/Lord_Howe:20150321T193000\r\n'
 
+	}
+
+	def 'test build RFC7986 properties and params'() {
+		expect:
+		builder.image('https://example.com/images/weather-cloudy.png') {
+			value 'URI'
+			display 'BADGE,THUMBNAIL'
+		} as String == 'IMAGE;VALUE=URI;DISPLAY="BADGE,THUMBNAIL":https://example.com/images/weather-cloudy.png\r\n'
+
+		and:
+		builder.attendee('mailto:opaque-token-1234@example.com') {
+			cn 'Cyrus Daboo'
+			email 'cyrus@example.com'
+		} as String == 'ATTENDEE;CN=Cyrus Daboo;EMAIL=cyrus@example.com:mailto:opaque-token-1234@example.com\r\n'
+
+		and:
+		builder.conference('https://video-chat.example.com/;group-id=1234') {
+			value 'URI'
+			feature 'AUDIO,VIDEO'
+			label 'Web video chat, access code=76543'
+		} as String == 'CONFERENCE;VALUE=URI;FEATURE="AUDIO,VIDEO";LABEL="Web video chat, access code=76543":https://video-chat.example.com/;group-id=1234\r\n'
+
+		and:
+		builder.color('turquoise') as String == 'COLOR:turquoise\r\n'
+
+		and:
+		builder.source('https://example.com/holidays.ics') {
+			value 'URI'
+		} as String == 'SOURCE;VALUE=URI:https://example.com/holidays.ics\r\n'
+
+		and:
+		builder.refreshinterval('P1W') {
+			value 'DURATION'
+		} as String == 'REFRESH-INTERVAL;VALUE=DURATION:P1W\r\n'
+
+		and:
+		builder.name('Company Vacation Days') as String == 'NAME:Company Vacation Days\r\n'
+	}
+
+	def 'test build and validate calendar with RFC7986 properties'() {
+		given: 'a calendar built with extension properties'
+		def calendar = builder.calendar {
+			prodid '-//Ben Fortuna//iCal4j 1.0//EN'
+			version '2.0'
+			uid new RandomUidGenerator().generateUid()
+			lastmodified new LastModified(new DateTime())
+			url 'https://example.com/calendar.ics'
+			refreshinterval('P1W') {
+				value 'DURATION'
+			}
+			source('https://example.com/holidays.ics') {
+				value 'URI'
+			}
+			color 'turquoise'
+			name 'Holiday Calendar'
+			description 'A collection of holidays'
+			categories 'Vacation'
+			image('http://example.com/images/party.png') {
+				value 'URI'
+				display 'BADGE'
+				fmttype 'image/png'
+			}
+			vevent {
+				uid '1'
+				dtstamp()
+				dtstart '20090810', parameters: parameters { value 'DATE' }
+				action 'DISPLAY'
+				attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+			}
+		}
+
+		when: 'the calendar is validated'
+		calendar.validate()
+
+		then: 'no exception is thrown'
+		notThrown(ValidationException)
 	}
 }

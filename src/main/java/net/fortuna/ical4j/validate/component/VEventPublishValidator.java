@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Method;
@@ -12,6 +11,8 @@ import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * METHOD:PUBLISH Validator.
@@ -91,7 +92,7 @@ public class VEventPublishValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VEvent target) throws ValidationException {
-        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTAMP, Property.DTSTART), new Closure<String>() {
+        CollectionUtils.forAllDo(Arrays.asList(DTSTAMP, DTSTART), new Closure<String>() {
             @Override
             public void execute(String input) {
                 PropertyValidator.getInstance().assertOne(input, target.getProperties());
@@ -99,7 +100,7 @@ public class VEventPublishValidator implements Validator<VEvent> {
         });
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            CollectionUtils.forAllDo(Arrays.asList(Property.ORGANIZER, Property.SUMMARY), new Closure<String>() {
+            CollectionUtils.forAllDo(Arrays.asList(ORGANIZER, SUMMARY), new Closure<String>() {
                 @Override
                 public void execute(String input) {
                     PropertyValidator.getInstance().assertOne(input, target.getProperties());
@@ -107,11 +108,11 @@ public class VEventPublishValidator implements Validator<VEvent> {
             });
         }
 
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+        PropertyValidator.getInstance().assertOne(UID, target.getProperties());
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.RECURRENCE_ID, Property.SEQUENCE, Property.CATEGORIES, Property.CLASS,
-                Property.CREATED, Property.DESCRIPTION, Property.DTEND, Property.DURATION, Property.GEO, Property.LAST_MODIFIED,
-                Property.LOCATION, Property.PRIORITY, Property.RESOURCES, Property.STATUS, Property.TRANSP, Property.URL),
+        CollectionUtils.forAllDo(Arrays.asList(RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS,
+                CREATED, DESCRIPTION, DTEND, DURATION, GEO, LAST_MODIFIED,
+                LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL),
                 new Closure<String>() {
             @Override
             public void execute(String input) {
@@ -120,10 +121,10 @@ public class VEventPublishValidator implements Validator<VEvent> {
         });
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            PropertyValidator.getInstance().assertNone(Property.ATTENDEE, target.getProperties());
+            PropertyValidator.getInstance().assertNone(ATTENDEE, target.getProperties());
         }
 
-        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());
+        PropertyValidator.getInstance().assertNone(REQUEST_STATUS, target.getProperties());
 
         for (final VAlarm alarm : target.getAlarms()) {
             alarm.validate(Method.PUBLISH);

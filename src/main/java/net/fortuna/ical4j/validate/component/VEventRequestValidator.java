@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Method;
@@ -12,6 +11,8 @@ import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * METHOD:REQUEST Validator.
@@ -74,20 +75,20 @@ public class VEventRequestValidator implements Validator<VEvent> {
 
     public void validate(final VEvent target) throws ValidationException {
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-            PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, target.getProperties());
+            PropertyValidator.getInstance().assertOneOrMore(ATTENDEE, target.getProperties());
         }
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER, Property.SUMMARY,
-                Property.UID), new Closure<String>() {
+        CollectionUtils.forAllDo(Arrays.asList(DTSTAMP, DTSTART, ORGANIZER, SUMMARY,
+                UID), new Closure<String>() {
             @Override
             public void execute(String input) {
                 PropertyValidator.getInstance().assertOne(input, target.getProperties());
             }
         });
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.SEQUENCE, Property.CATEGORIES, Property.CLASS, Property.CREATED,
-                Property.DESCRIPTION, Property.DTEND, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,
-                Property.PRIORITY, Property.RECURRENCE_ID, Property.RESOURCES, Property.STATUS, Property.TRANSP, Property.URL),
+        CollectionUtils.forAllDo(Arrays.asList(SEQUENCE, CATEGORIES, CLASS, CREATED,
+                DESCRIPTION, DTEND, DURATION, GEO, LAST_MODIFIED, LOCATION,
+                PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL),
                 new Closure<String>() {
             @Override
             public void execute(String input) {

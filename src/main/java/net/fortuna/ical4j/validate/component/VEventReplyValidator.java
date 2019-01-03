@@ -1,7 +1,5 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
@@ -11,6 +9,9 @@ import org.apache.commons.collections4.Closure;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Component.VALARM;
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * METHOD:REPLY Validator.
@@ -76,7 +77,7 @@ public class VEventReplyValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VEvent target) throws ValidationException {
-        CollectionUtils.forAllDo(Arrays.asList(Property.ATTENDEE, Property.DTSTAMP, Property.ORGANIZER, Property.UID),
+        CollectionUtils.forAllDo(Arrays.asList(ATTENDEE, DTSTAMP, ORGANIZER, UID),
                 new Closure<String>() {
             @Override
             public void execute(String input) {
@@ -84,16 +85,16 @@ public class VEventReplyValidator implements Validator<VEvent> {
             }
         });
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.RECURRENCE_ID, Property.SEQUENCE, Property.CATEGORIES, Property.CLASS,
-                Property.CREATED, Property.DESCRIPTION, Property.DTEND, Property.DTSTART, Property.DURATION, Property.GEO,
-                Property.LAST_MODIFIED, Property.LOCATION, Property.PRIORITY, Property.RESOURCES, Property.STATUS, Property.SUMMARY,
-                Property.TRANSP, Property.URL), new Closure<String>() {
+        CollectionUtils.forAllDo(Arrays.asList(RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS,
+                CREATED, DESCRIPTION, DTEND, DTSTART, DURATION, GEO,
+                LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, SUMMARY,
+                TRANSP, URL), new Closure<String>() {
             @Override
             public void execute(String input) {
                 PropertyValidator.getInstance().assertOneOrLess(input, target.getProperties());
             }
         });
 
-        ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
+        ComponentValidator.assertNone(VALARM, target.getAlarms());
     }
 }
