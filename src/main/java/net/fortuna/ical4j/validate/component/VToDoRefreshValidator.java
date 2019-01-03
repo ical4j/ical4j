@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.validate.component;
 
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
@@ -9,6 +8,8 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * <pre>
@@ -66,16 +67,16 @@ public class VToDoRefreshValidator implements Validator<VToDo> {
     private static final long serialVersionUID = 1L;
 
     public void validate(VToDo target) throws ValidationException {
-        Arrays.asList(Property.ATTENDEE, Property.DTSTAMP, Property.UID).forEach(
+        Arrays.asList(ATTENDEE, DTSTAMP, UID).forEach(
                 property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        PropertyValidator.getInstance().assertOneOrLess(Property.RECURRENCE_ID, target.getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(RECURRENCE_ID, target.getProperties());
 
-        Arrays.asList(Property.ATTACH, Property.CATEGORIES, Property.CLASS, Property.CONTACT, Property.CREATED,
-                Property.DESCRIPTION, Property.DTSTART, Property.DUE, Property.DURATION, Property.EXDATE, Property.EXRULE,
-                Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER, Property.PERCENT_COMPLETE,
-                Property.PRIORITY, Property.RDATE, Property.RELATED_TO, Property.REQUEST_STATUS, Property.RESOURCES,
-                Property.RRULE, Property.SEQUENCE, Property.STATUS, Property.URL).forEach(
+        Arrays.asList(ATTACH, CATEGORIES, CLASS, CONTACT, CREATED,
+                DESCRIPTION, DTSTART, DUE, DURATION, EXDATE, EXRULE,
+                GEO, LAST_MODIFIED, LOCATION, ORGANIZER, PERCENT_COMPLETE,
+                PRIORITY, RDATE, RELATED_TO, REQUEST_STATUS, RESOURCES,
+                RRULE, SEQUENCE, STATUS, URL).forEach(
                         property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
 
         ComponentValidator.assertNone(Component.VALARM, target.getAlarms());

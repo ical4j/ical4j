@@ -1,12 +1,13 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * Created by fortuna on 12/09/15.
@@ -30,8 +31,8 @@ public class VAlarmEmailValidator implements Validator<VAlarm> {
          * ; the following are optional,
          * ; and MAY occur more than once attach / x-prop
          */
-        Arrays.asList(Property.DESCRIPTION, Property.SUMMARY).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
+        Arrays.asList(DESCRIPTION, SUMMARY).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, target.getProperties());
+        PropertyValidator.getInstance().assertOneOrMore(ATTENDEE, target.getProperties());
     }
 }

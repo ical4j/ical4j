@@ -1,12 +1,13 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * <pre>
@@ -51,11 +52,11 @@ public class VFreeBusyReplyValidator implements Validator<VFreeBusy> {
 
         // FREEBUSY is 1+ in RFC2446 but 0+ in Calsify
 
-        Arrays.asList(Property.ATTENDEE, Property.DTSTAMP, Property.DTEND, Property.DTSTART,
-                Property.ORGANIZER, Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
+        Arrays.asList(ATTENDEE, DTSTAMP, DTEND, DTSTART,
+                ORGANIZER, UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        PropertyValidator.getInstance().assertOneOrLess(Property.URL, target.getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(URL, target.getProperties());
 
-        Arrays.asList(Property.DURATION, Property.SEQUENCE).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
+        Arrays.asList(DURATION, SEQUENCE).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
     }
 }

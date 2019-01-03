@@ -3,6 +3,7 @@ package net.fortuna.ical4j.data;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.model.parameter.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
@@ -18,6 +19,12 @@ public class DefaultParameterFactorySupplier implements Supplier<List<ParameterF
                 new Rsvp.Factory(), new ScheduleAgent.Factory(), new ScheduleStatus.Factory(),
                 new SentBy.Factory(), new Type.Factory(), new TzId.Factory(),
                 new Value.Factory(), new Vvenue.Factory());
+
+        List<ParameterFactory> rfc7986 = Arrays.asList(new Display.Factory(), new Email.Factory(), new Feature.Factory(),
+                new Label.Factory());
+
+        List<ParameterFactory> factories = new ArrayList<>(rfc5545);
+        factories.addAll(rfc7986);
 
         return rfc5545;
     }

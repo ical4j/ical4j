@@ -1,12 +1,13 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * Common validation for all iTIP methods.
@@ -33,8 +34,8 @@ public class VAlarmITIPValidator implements Validator<VAlarm> {
      * {@inheritDoc}
      */
     public void validate(final VAlarm target) throws ValidationException {
-        Arrays.asList(Property.ACTION, Property.TRIGGER).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
+        Arrays.asList(ACTION, TRIGGER).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        Arrays.asList(Property.DESCRIPTION, Property.DURATION, Property.REPEAT, Property.SUMMARY).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
+        Arrays.asList(DESCRIPTION, DURATION, REPEAT, SUMMARY).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
     }
 }
