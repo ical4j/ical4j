@@ -4,9 +4,6 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
 /**
  * From specification:
  *
@@ -51,16 +48,16 @@ public class Email extends Parameter {
 
     private static final String PARAMETER_NAME = "EMAIL";
 
-    private final InternetAddress address;
+    private final String value;
 
-    public Email(String address) throws AddressException {
+    public Email(String value) {
         super(PARAMETER_NAME, new Factory());
-        this.address = InternetAddress.parse(address)[0];
+        this.value = value;
     }
 
     @Override
     public String getValue() {
-        return address.getAddress();
+        return value;
     }
 
     public static class Factory extends Content.Factory implements ParameterFactory {
@@ -71,11 +68,7 @@ public class Email extends Parameter {
         }
 
         public Parameter createParameter(final String value) {
-            try {
-                return new Email(value);
-            } catch (AddressException e) {
-                throw new IllegalArgumentException(e);
-            }
+            return new Email(value);
         }
     }
 }
