@@ -72,8 +72,8 @@ repositories {
 
 dependencies {
     api "org.slf4j:slf4j-api:$slf4jVersion",
-            'commons-codec:commons-codec:1.10',
-            'org.apache.commons:commons-lang3:3.6',
+            'commons-codec:commons-codec:1.11',
+            'org.apache.commons:commons-lang3:3.8.1',
             'org.apache.commons:commons-collections4:4.1',
             'com.sun.mail:javax.mail:1.6.2'
     
