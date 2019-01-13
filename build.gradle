@@ -75,7 +75,7 @@ dependencies {
             'commons-codec:commons-codec:1.11',
             'org.apache.commons:commons-lang3:3.8.1',
             'org.apache.commons:commons-collections4:4.1',
-            'javax.mail:javax.mail-api:1.5.4'
+            'com.sun.mail:javax.mail:1.6.2'
     
     implementation 'javax.cache:cache-api:1.0.0', optional
     implementation "org.codehaus.groovy:groovy-all:$groovyVersion", optional
