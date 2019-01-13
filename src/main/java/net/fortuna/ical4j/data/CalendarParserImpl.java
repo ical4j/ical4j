@@ -178,7 +178,7 @@ public class CalendarParserImpl implements CalendarParser {
         int ntok = assertToken(tokeniser, in, Calendar.BEGIN, false, true);
         while (ntok != StreamTokenizer.TT_EOF) {
             parseCalendar(tokeniser, in, handler);
-            ntok = absorbWhitespace(tokeniser, in);
+            ntok = absorbWhitespace(tokeniser, in, true);
         }
     }
 
@@ -211,7 +211,7 @@ public class CalendarParserImpl implements CalendarParser {
                 } else if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                     throw new ParserException("Invalid property name", getLineNumber(tokeniser, in));
                 }
-                absorbWhitespace(tokeniser, in);
+                absorbWhitespace(tokeniser, in, false);
                 // assertToken(tokeniser, StreamTokenizer.TT_WORD);
             }
         }
@@ -388,7 +388,7 @@ public class CalendarParserImpl implements CalendarParser {
 
             while (Component.BEGIN.equals(tokeniser.sval)) {
                 componentParser.parse(tokeniser, in, handler);
-                absorbWhitespace(tokeniser, in);
+                absorbWhitespace(tokeniser, in, false);
                 // assertToken(tokeniser, StreamTokenizer.TT_WORD);
             }
         }
@@ -574,10 +574,10 @@ public class CalendarParserImpl implements CalendarParser {
      * @return int value of the ttype field of the tokeniser
      * @throws IOException
      */
-    private int absorbWhitespace(final StreamTokenizer tokeniser, Reader in) throws IOException, ParserException {
+    private int absorbWhitespace(final StreamTokenizer tokeniser, Reader in, boolean ignoreEOF) throws IOException, ParserException {
         // HACK: absorb extraneous whitespace between components (KOrganizer)..
         int ntok;
-        while ((ntok = nextToken(tokeniser, in, true)) == StreamTokenizer.TT_EOL) {
+        while ((ntok = nextToken(tokeniser, in, ignoreEOF)) == StreamTokenizer.TT_EOL) {
             if (log.isTraceEnabled()) {
                 log.trace("Absorbing extra whitespace..");
             }
