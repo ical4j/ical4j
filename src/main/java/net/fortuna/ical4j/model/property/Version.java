@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -195,19 +198,26 @@ public class Version extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Version> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(VERSION);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Version createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Version(parameters, value);
+
+            Version version;
+            if (VERSION_2_0.getValue().equals(value)) {
+                version = VERSION_2_0;
+            } else {
+                version = new Version(parameters, value);
+            }
+            return version;
         }
 
-        public Property createProperty() {
+        public Version createProperty() {
             return new Version();
         }
     }
