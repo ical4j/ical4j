@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -175,19 +178,32 @@ public class Clazz extends Property {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Clazz> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(CLASS);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Clazz createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Clazz(parameters, value);
+
+            Clazz clazz;
+            if (CONFIDENTIAL.getValue().equals(value)) {
+                clazz = CONFIDENTIAL;
+            }
+            else if (PRIVATE.getValue().equals(value)) {
+                clazz = PRIVATE;
+            }
+            else if (PUBLIC.getValue().equals(value)) {
+                clazz = PUBLIC;
+            } else {
+                clazz = new Clazz(parameters, value);
+            }
+            return clazz;
         }
 
-        public Property createProperty() {
+        public Clazz createProperty() {
             return new Clazz();
         }
     }
