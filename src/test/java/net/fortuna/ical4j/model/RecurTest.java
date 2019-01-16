@@ -211,6 +211,7 @@ public class RecurTest extends TestCase {
      * 
      */
     public void testGetDatesCount() {
+        java.util.TimeZone.setDefault(java.util.TimeZone.getTimeZone("Australia/Melbourne"));
         DateList dates = null;
         if (seed != null) {
             dates = recur.getDates(seed, periodStart, periodEnd, value);
