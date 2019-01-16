@@ -1,5 +1,8 @@
 package net.fortuna.ical4j.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.time.Period;
@@ -162,5 +165,25 @@ public class TemporalAmountAdapter {
      */
     public final Date getTime(final Date start) {
         return Date.from(Instant.from(duration.addTo(start.toInstant())));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TemporalAmountAdapter that = (TemporalAmountAdapter) o;
+
+        return new EqualsBuilder()
+                .append(duration, that.duration)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(duration)
+                .toHashCode();
     }
 }
