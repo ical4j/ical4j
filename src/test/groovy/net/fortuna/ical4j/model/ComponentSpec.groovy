@@ -32,6 +32,6 @@ class ComponentSpec extends Specification {
                                                                    '20150130T000000Z/PT1H',
                                                                    '20150330T000000Z/PT1H',
                                                                    '20150430T000000Z/PT1H',
-                                                                   '20150530T000000Z/PT1H']
+                                                                   '20150530T000000Z/PT1H', '20150630T000000Z/PT1H']
     }
 }

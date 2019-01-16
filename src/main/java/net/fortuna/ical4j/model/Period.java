@@ -367,7 +367,8 @@ public class Period extends DateRange implements Comparable<Period> {
 
         final Period period = (Period) o;
         return new EqualsBuilder().append(getStart(), period.getStart())
-            .append(getEnd(), period.getEnd()).isEquals();
+            .append((duration == null) ? getEnd() : duration,
+                    (period.duration == null) ? period.getEnd() : period.duration).isEquals();
     }
 
     /**
@@ -375,6 +376,7 @@ public class Period extends DateRange implements Comparable<Period> {
      */
     public final int hashCode() {
         return new HashCodeBuilder().append(getStart())
-            .append((duration == null) ? getEnd() : duration).toHashCode();
+            .append((duration == null) ? getEnd() : duration)
+                .toHashCode();
     }
 }

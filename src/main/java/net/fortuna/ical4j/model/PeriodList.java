@@ -376,13 +376,13 @@ public class PeriodList implements Set<Period>, Serializable {
 	}
 	
 	public boolean equals(Object obj) {
-		if (!getClass().isAssignableFrom(obj.getClass())) {
+		if (!(obj instanceof PeriodList)) {
 			return false;
 		}
 		final PeriodList rhs = (PeriodList) obj;
 		return new EqualsBuilder().append(periods, rhs.periods)
 			.append(timezone, rhs.timezone)
-			.append(utc, utc)
+			.append(utc, rhs.utc)
 			.isEquals();
 	}
 	

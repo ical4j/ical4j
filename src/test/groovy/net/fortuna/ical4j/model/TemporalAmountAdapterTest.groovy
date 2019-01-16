@@ -133,4 +133,18 @@ class TemporalAmountAdapterTest extends Specification {
         -TemporalAmountAdapter.from(new Dur('P1D')).duration == TemporalAmountAdapter.from(new Dur('-P1D')).duration
     }
 
+    def 'test hashcode equality'() {
+        given: 'a temporal amount adapter'
+        TemporalAmountAdapter adapter1 = TemporalAmountAdapter.parse('P1D')
+
+        and: 'a second identical period'
+        TemporalAmountAdapter adapter2 = TemporalAmountAdapter.parse('P1D')
+
+        expect: 'object equality'
+        adapter1 == adapter2
+
+        and: 'hashcode equality'
+        adapter1.hashCode() == adapter2.hashCode()
+    }
+
 }
