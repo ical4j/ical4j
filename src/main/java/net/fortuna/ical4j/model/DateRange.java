@@ -31,6 +31,9 @@
  */
 package net.fortuna.ical4j.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -199,5 +202,27 @@ public class DateRange implements Serializable {
     public final boolean contains(final DateRange range) {
         // Test for period's start and end dates in our range
         return (includes(range.getRangeStart()) && includes(range.getRangeEnd()));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DateRange dateRange = (DateRange) o;
+
+        return new EqualsBuilder()
+                .append(rangeStart, dateRange.rangeStart)
+                .append(rangeEnd, dateRange.rangeEnd)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(rangeStart)
+                .append(rangeEnd)
+                .toHashCode();
     }
 }

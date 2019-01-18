@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -157,7 +160,18 @@ public class BusyType extends Property {
 
         public BusyType createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new BusyType(parameters, value);
+
+            BusyType busyType;
+            if (BUSY.getValue().equals(value)) {
+                busyType = BUSY;
+            } else if (BUSY_TENTATIVE.getValue().equals(value)) {
+                busyType = BUSY_TENTATIVE;
+            } else if (BUSY_UNAVAILABLE.getValue().equals(value)) {
+                busyType = BUSY_UNAVAILABLE;
+            } else {
+                busyType = new BusyType(parameters, value);
+            }
+            return busyType;
         }
 
         public BusyType createProperty() {

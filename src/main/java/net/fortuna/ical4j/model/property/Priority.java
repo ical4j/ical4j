@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -237,19 +240,35 @@ public class Priority extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Priority> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(PRIORITY);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Priority createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Priority(parameters, value);
+
+            Priority priority;
+            if (HIGH.getValue().equals(value)) {
+                priority = HIGH;
+            }
+            else if (MEDIUM.getValue().equals(value)) {
+                priority = MEDIUM;
+            }
+            else if (LOW.getValue().equals(value)) {
+                priority = LOW;
+            }
+            else if (UNDEFINED.getValue().equals(value)) {
+                priority = UNDEFINED;
+            } else {
+                priority = new Priority(parameters, value);
+            }
+            return priority;
         }
 
-        public Property createProperty() {
+        public Priority createProperty() {
             return new Priority();
         }
     }
