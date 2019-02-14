@@ -80,7 +80,7 @@ public class ByMonthRule extends AbstractDateExpansionRule {
                 // Java months are zero-based..
 //                cal.set(Calendar.MONTH, month - 1);
                 cal.roll(Calendar.MONTH, (month - 1) - cal.get(Calendar.MONTH));
-                retVal.add(Dates.getInstance(cal.getTime(), type));
+                retVal.add(Dates.getInstance(getTime(date, cal), type));
             });
             return retVal;
         }

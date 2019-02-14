@@ -2,6 +2,7 @@ package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.transform.Transformer;
@@ -115,5 +116,18 @@ public abstract class AbstractDateExpansionRule implements Transformer<DateList>
         cal.setTime(date);
 
         return cal;
+    }
+
+    /**
+     * Get a DateTime from cal.getTime() with the timezone of the given reference date.
+     *
+     * @param referenceDate
+     * @param cal
+     * @return
+     */
+    protected static Date getTime(final Date referenceDate, final Calendar cal) {
+        final Date zonedDate = new DateTime(referenceDate);
+        zonedDate.setTime(cal.getTime().getTime());
+        return zonedDate;
     }
 }

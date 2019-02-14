@@ -288,6 +288,37 @@ class RecurSpec extends Specification {
     }
 
     @Unroll
+    def 'verify recurrence rule in different system timezones: #systemTimezone'() {
+        setup: 'override platform default timezone'
+        def originalTimezone = java.util.TimeZone.getDefault()
+        java.util.TimeZone.setDefault(TimeZone.getTimeZone(systemTimezone))
+
+        and: 'parse recurrence rule'
+        def recur = new Recur(rule)
+        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry()
+        def berlin = registry.getTimeZone("Europe/Berlin")
+        def startDate = new DateTime(start, berlin)
+        def endDate = new DateTime(end, berlin)
+        def expectedDates = []
+        expected.each {
+            expectedDates << new DateTime(it, berlin)
+        }
+
+        expect:
+        recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+
+        cleanup:
+        java.util.TimeZone.setDefault(originalTimezone)
+
+        where:
+        systemTimezone			| rule															| start				| end				| expected
+        'Europe/Berlin'			| 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5'	| '20161029T000000'	| '20161102T000000'	| ['20161029T000500', '20161030T000500', '20161031T000500', '20161101T000500']
+        'America/Phoenix'		| 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5'	| '20161029T000000'	| '20161102T000000'	| ['20161029T000500', '20161030T000500', '20161031T000500', '20161101T000500']
+        'America/St_Johns'		| 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5'	| '20161029T000000'	| '20161102T000000'	| ['20161029T000500', '20161030T000500', '20161031T000500', '20161101T000500']
+        'Africa/Johannesburg'	| 'FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR,SA,SU;BYHOUR=0;BYMINUTE=5'	| '20161029T000000'	| '20161102T000000'	| ['20161029T000500', '20161030T000500', '20161031T000500', '20161101T000500']
+    }
+
+    @Unroll
     def 'verify recurrence rule with a specified interval: #rule'() {
         setup: 'parse recurrence rule'
         def recur = new Recur(rule)

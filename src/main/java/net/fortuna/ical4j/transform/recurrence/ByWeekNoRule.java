@@ -59,7 +59,7 @@ public class ByWeekNoRule extends AbstractDateExpansionRule {
                     cal.set(Calendar.WEEK_OF_YEAR, numWeeksInYear);
                     cal.add(Calendar.WEEK_OF_YEAR, weekNo + 1);
                 }
-                weekNoDates.add(Dates.getInstance(cal.getTime(), weekNoDates.getType()));
+                weekNoDates.add(Dates.getInstance(getTime(date, cal), weekNoDates.getType()));
             }
         }
         return weekNoDates;

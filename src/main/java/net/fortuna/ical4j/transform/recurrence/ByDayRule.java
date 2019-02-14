@@ -90,7 +90,7 @@ public class ByDayRule extends AbstractDateExpansionRule {
                 if (!dayList.stream().map(weekDay -> WeekDay.getCalendarDay(weekDay))
                         .filter(calDay -> cal.get(Calendar.DAY_OF_WEEK) == calDay)
                         .collect(Collectors.toList()).isEmpty()) {
-                    retVal.add(Dates.getInstance(cal.getTime(), type));
+                    retVal.add(Dates.getInstance(getTime(date, cal), type));
                 }
                 cal.add(Calendar.DAY_OF_WEEK, 1);
             }
@@ -117,7 +117,7 @@ public class ByDayRule extends AbstractDateExpansionRule {
                 if (!dayList.stream().map(weekDay -> WeekDay.getCalendarDay(weekDay))
                         .filter(calDay -> cal.get(Calendar.DAY_OF_WEEK) == calDay)
                         .collect(Collectors.toList()).isEmpty()) {
-                    retVal.add(Dates.getInstance(cal.getTime(), type));
+                    retVal.add(Dates.getInstance(getTime(date, cal), type));
                 }
                 cal.add(Calendar.DAY_OF_MONTH, 1);
             }
@@ -144,7 +144,7 @@ public class ByDayRule extends AbstractDateExpansionRule {
                 if (!dayList.stream().map(weekDay -> WeekDay.getCalendarDay(weekDay))
                         .filter(calDay -> cal.get(Calendar.DAY_OF_WEEK) == calDay)
                         .collect(Collectors.toList()).isEmpty()) {
-                    retVal.add(Dates.getInstance(cal.getTime(), type));
+                    retVal.add(Dates.getInstance(getTime(date, cal), type));
                 }
                 cal.add(Calendar.DAY_OF_YEAR, 1);
             }
