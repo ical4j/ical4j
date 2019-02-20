@@ -100,7 +100,7 @@ public class ByYearDayRule extends AbstractDateExpansionRule {
                     cal.set(Calendar.DAY_OF_YEAR, numDaysInYear);
                     cal.add(Calendar.DAY_OF_YEAR, yearDay + 1);
                 }
-                retVal.add(Dates.getInstance(cal.getTime(), type));
+                retVal.add(Dates.getInstance(getTime(date, cal), type));
             }
             return retVal;
         }

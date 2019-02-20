@@ -77,7 +77,7 @@ public class ByHourRule extends AbstractDateExpansionRule {
             // construct a list of possible months..
             hourList.forEach(hour -> {
                 cal.set(Calendar.HOUR_OF_DAY, hour);
-                retVal.add(Dates.getInstance(cal.getTime(), type));
+                retVal.add(Dates.getInstance(getTime(date, cal), type));
             });
             return retVal;
         }

@@ -77,7 +77,7 @@ public class ByMinuteRule extends AbstractDateExpansionRule {
             // construct a list of possible minutes..
             minuteList.forEach(minute -> {
                 cal.set(Calendar.MINUTE, minute);
-                retVal.add(Dates.getInstance(cal.getTime(), type));
+                retVal.add(Dates.getInstance(getTime(date, cal), type));
             });
             return retVal;
         }
