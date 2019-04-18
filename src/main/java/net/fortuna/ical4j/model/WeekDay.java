@@ -35,6 +35,7 @@ import net.fortuna.ical4j.util.Numbers;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -183,9 +184,44 @@ public class WeekDay implements Serializable {
      * @return a weekday instance representing the specified calendar
      */
     public static WeekDay getWeekDay(final Calendar cal) {
-        return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), 0);
+        return getDay(cal.get(Calendar.DAY_OF_WEEK));
     }
-    
+
+    /**
+     * Returns a weekday representation of the specified calendar.
+     * @param cal a calendar (java.util)
+     * @return a weekday instance representing the specified calendar
+     */
+    public static WeekDay getWeekDay(DayOfWeek dayOfWeek) {
+        WeekDay day = null;
+        switch (dayOfWeek) {
+            case SUNDAY:
+                day = SU;
+                break;
+            case MONDAY:
+                day = MO;
+                break;
+            case TUESDAY:
+                day = TU;
+                break;
+            case WEDNESDAY:
+                day = WE;
+                break;
+            case THURSDAY:
+                day = TH;
+                break;
+            case FRIDAY:
+                day = FR;
+                break;
+            case SATURDAY:
+                day = SA;
+                break;
+            default:
+                break;
+        }
+        return day;
+    }
+
     /**
      * Returns a weekday/offset representation of the specified calendar.
      * @param cal a calendar (java.util)
@@ -240,7 +276,7 @@ public class WeekDay implements Serializable {
         }
         return day;
     }
-    
+
     /**
      * Returns the corresponding <code>java.util.Calendar.DAY_OF_WEEK</code>
      * constant for the specified <code>WeekDay</code>.
@@ -272,7 +308,33 @@ public class WeekDay implements Serializable {
         }
         return calendarDay;
     }
-    
+
+    public static DayOfWeek getDayOfWeek(WeekDay weekday) {
+        DayOfWeek dayOfWeek = null;
+        if (SU.getDay().equals(weekday.getDay())) {
+            dayOfWeek = DayOfWeek.SUNDAY;
+        }
+        else if (MO.getDay().equals(weekday.getDay())) {
+            dayOfWeek = DayOfWeek.MONDAY;
+        }
+        else if (TU.getDay().equals(weekday.getDay())) {
+            dayOfWeek = DayOfWeek.TUESDAY;
+        }
+        else if (WE.getDay().equals(weekday.getDay())) {
+            dayOfWeek = DayOfWeek.WEDNESDAY;
+        }
+        else if (TH.getDay().equals(weekday.getDay())) {
+            dayOfWeek = DayOfWeek.THURSDAY;
+        }
+        else if (FR.getDay().equals(weekday.getDay())) {
+            dayOfWeek = DayOfWeek.FRIDAY;
+        }
+        else if (SA.getDay().equals(weekday.getDay())) {
+            dayOfWeek = DayOfWeek.SATURDAY;
+        }
+        return dayOfWeek;
+    }
+
     /**
      * {@inheritDoc}
      */
