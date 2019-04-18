@@ -1,26 +1,30 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.NumberList;
+import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.Recur.Frequency;
-import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Year;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.time.temporal.ChronoField.DAY_OF_YEAR;
 import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY;
 
 /**
  * Applies BYYEARDAY rules specified in this Recur instance to the specified date list. If no BYYEARDAY rules are
  * specified the date list is returned unmodified.
  */
-public class ByYearDayRule extends AbstractDateExpansionRule {
+public class ByYearDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
     private transient Logger log = LoggerFactory.getLogger(ByYearDayRule.class);
 
@@ -31,22 +35,22 @@ public class ByYearDayRule extends AbstractDateExpansionRule {
         this.yearDayList = yearDayList;
     }
 
-    public ByYearDayRule(NumberList yearDayList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+    public ByYearDayRule(NumberList yearDayList, Frequency frequency, WeekDay.Day weekStartDay) {
         super(frequency, weekStartDay);
         this.yearDayList = yearDayList;
     }
 
     @Override
-    public DateList transform(DateList dates) {
+    public List<T> transform(List<T> dates) {
         if (yearDayList.isEmpty()) {
             return dates;
         }
-        final DateList yearDayDates = Dates.getDateListInstance(dates);
-        for (final Date date : dates) {
+        final List<T> yearDayDates = new ArrayList<>();
+        for (final T date : dates) {
             if (getFrequency() == YEARLY) {
-                yearDayDates.addAll(new ExpansionFilter(yearDayDates.getType()).apply(date));
+                yearDayDates.addAll(new ExpansionFilter().apply(date));
             } else {
-                Optional<Date> limit = new LimitFilter().apply(date);
+                Optional<T> limit = new LimitFilter().apply(date);
                 if (limit.isPresent()) {
                     yearDayDates.add(limit.get());
                 }
@@ -55,30 +59,23 @@ public class ByYearDayRule extends AbstractDateExpansionRule {
         return yearDayDates;
     }
 
-    private class LimitFilter implements Function<Date, Optional<Date>> {
+    private class LimitFilter implements Function<T, Optional<T>> {
 
         @Override
-        public Optional<Date> apply(Date date) {
-            final Calendar cal = getCalendarInstance(date, true);
-            if (yearDayList.contains(cal.get(Calendar.DAY_OF_YEAR))) {
+        public Optional<T> apply(T date) {
+            ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
+            if (yearDayList.contains(zonedDateTime.getDayOfYear())) {
                 return Optional.of(date);
             }
             return Optional.empty();
         }
     }
 
-    private class ExpansionFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public ExpansionFilter(Value type) {
-            this.type = type;
-        }
+    private class ExpansionFilter implements Function<T, List<T>> {
 
         @Override
-        public List<Date> apply(Date date) {
-            List<Date> retVal = new ArrayList<>();
-            final Calendar cal = getCalendarInstance(date, false);
+        public List<T> apply(T date) {
+            List<T> retVal = new ArrayList<>();
             // construct a list of possible year days..
             for (final int yearDay : yearDayList) {
                 if (yearDay == 0 || yearDay < -Dates.MAX_DAYS_PER_YEAR || yearDay > Dates.MAX_DAYS_PER_YEAR) {
@@ -87,20 +84,21 @@ public class ByYearDayRule extends AbstractDateExpansionRule {
                     }
                     continue;
                 }
-                final int numDaysInYear = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
+                ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
+                final int numDaysInYear = Year.of(zonedDateTime.getYear()).length();
+                T candidate;
                 if (yearDay > 0) {
                     if (numDaysInYear < yearDay) {
                         continue;
                     }
-                    cal.set(Calendar.DAY_OF_YEAR, yearDay);
+                    candidate = (T) date.with(DAY_OF_YEAR, yearDay);
                 } else {
                     if (numDaysInYear < -yearDay) {
                         continue;
                     }
-                    cal.set(Calendar.DAY_OF_YEAR, numDaysInYear);
-                    cal.add(Calendar.DAY_OF_YEAR, yearDay + 1);
+                    candidate = (T) date.with(DAY_OF_YEAR, numDaysInYear + yearDay);
                 }
-                retVal.add(Dates.getInstance(getTime(date, cal), type));
+                retVal.add(candidate);
             }
             return retVal;
         }

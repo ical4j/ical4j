@@ -1,23 +1,25 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.WeekDay;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.Dates;
 
-import java.util.*;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
+import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
 import static net.fortuna.ical4j.model.Recur.Frequency.*;
 
 /**
  * Applies BYMINUTE rules specified in this Recur instance to the specified date list. If no BYMINUTE rules are
  * specified the date list is returned unmodified.
  */
-public class ByMinuteRule extends AbstractDateExpansionRule {
+public class ByMinuteRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
     private final NumberList minuteList;
 
@@ -26,22 +28,22 @@ public class ByMinuteRule extends AbstractDateExpansionRule {
         this.minuteList = minuteList;
     }
 
-    public ByMinuteRule(NumberList minuteList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+    public ByMinuteRule(NumberList minuteList, Frequency frequency, WeekDay.Day weekStartDay) {
         super(frequency, weekStartDay);
         this.minuteList = minuteList;
     }
 
     @Override
-    public DateList transform(DateList dates) {
+    public List<T> transform(List<T> dates) {
         if (minuteList.isEmpty()) {
             return dates;
         }
-        final DateList minutelyDates = Dates.getDateListInstance(dates);
-        for (final Date date : dates) {
+        final List<T> minutelyDates = new ArrayList<>();
+        for (final T date : dates) {
             if (EnumSet.of(HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY).contains(getFrequency())) {
-                minutelyDates.addAll(new ExpansionFilter(minutelyDates.getType()).apply(date));
+                minutelyDates.addAll(new ExpansionFilter().apply(date));
             } else {
-                Optional<Date> limit = new LimitFilter().apply(date);
+                Optional<T> limit = new LimitFilter().apply(date);
                 if (limit.isPresent()) {
                     minutelyDates.add(limit.get());
                 }
@@ -50,34 +52,27 @@ public class ByMinuteRule extends AbstractDateExpansionRule {
         return minutelyDates;
     }
 
-    private class LimitFilter implements Function<Date, Optional<Date>> {
+    private class LimitFilter implements Function<T, Optional<T>> {
 
         @Override
-        public Optional<Date> apply(Date date) {
-            final Calendar cal = getCalendarInstance(date, true);
-            if (minuteList.contains(cal.get(Calendar.MINUTE))) {
+        public Optional<T> apply(T date) {
+            ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
+            if (minuteList.contains(zonedDateTime.getMinute())) {
                 return Optional.of(date);
             }
             return Optional.empty();
         }
     }
 
-    private class ExpansionFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public ExpansionFilter(Value type) {
-            this.type = type;
-        }
+    private class ExpansionFilter implements Function<T, List<T>> {
 
         @Override
-        public List<Date> apply(Date date) {
-            List<Date> retVal = new ArrayList<>();
-            final Calendar cal = getCalendarInstance(date, true);
+        public List<T> apply(T date) {
+            List<T> retVal = new ArrayList<>();
             // construct a list of possible minutes..
             minuteList.forEach(minute -> {
-                cal.set(Calendar.MINUTE, minute);
-                retVal.add(Dates.getInstance(getTime(date, cal), type));
+                T candidate = (T) date.with(MINUTE_OF_HOUR, minute);
+                retVal.add(candidate);
             });
             return retVal;
         }

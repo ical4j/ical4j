@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.WeekDay;
@@ -9,7 +8,9 @@ import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.util.Dates;
 
 import java.io.Serializable;
+import java.time.temporal.Temporal;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -80,7 +81,7 @@ import java.util.Optional;
  *                special expand for YEARLY.
  * </pre>
  */
-public abstract class AbstractDateExpansionRule implements Transformer<DateList>, Serializable {
+public abstract class AbstractDateExpansionRule<T extends Temporal> implements Transformer<List<T>>, Serializable {
 
     private final Frequency frequency;
 
@@ -88,12 +89,13 @@ public abstract class AbstractDateExpansionRule implements Transformer<DateList>
 
     public AbstractDateExpansionRule(Frequency frequency) {
         // default week start is Monday per RFC5545
-        this(frequency, Optional.of(WeekDay.Day.MO));
+        this(frequency, WeekDay.Day.MO);
     }
 
-    public AbstractDateExpansionRule(Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+    public AbstractDateExpansionRule(Frequency frequency, WeekDay.Day weekStartDay) {
         this.frequency = frequency;
-        this.calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(weekStartDay.orElse(WeekDay.Day.MO)));
+        this.calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(
+                Optional.ofNullable(weekStartDay).orElse(WeekDay.Day.MO)));
     }
 
     protected Frequency getFrequency() {

@@ -1,17 +1,22 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.NumberList;
+import net.fortuna.ical4j.model.TemporalComparator;
 import net.fortuna.ical4j.transform.Transformer;
-import net.fortuna.ical4j.util.Dates;
 
+import java.time.temporal.Temporal;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Applies BYSETPOS rules to <code>dates</code>. Valid positions are from 1 to the size of the date list. Invalid
  * positions are ignored.
  */
-public class BySetPosRule implements Transformer<DateList> {
+public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
+
+    private static final Comparator<Temporal> ONSET_COMPARATOR = new TemporalComparator();
 
     private final NumberList setPosList;
 
@@ -20,14 +25,14 @@ public class BySetPosRule implements Transformer<DateList> {
     }
 
     @Override
-    public DateList transform(DateList dates) {
+    public List<T> transform(List<T> dates) {
         // return if no SETPOS rules specified..
         if (setPosList.isEmpty()) {
             return dates;
         }
         // sort the list before processing..
-        Collections.sort(dates);
-        final DateList setPosDates = Dates.getDateListInstance(dates);
+        Collections.sort(dates, ONSET_COMPARATOR);
+        final List<T> setPosDates = new ArrayList<>();
         final int size = dates.size();
         for (final Integer setPos : setPosList) {
             final int pos = setPos;

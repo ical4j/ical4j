@@ -1,18 +1,24 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.NumberList;
+import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.Recur.Frequency;
-import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.*;
+import java.time.YearMonth;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
+import static java.time.temporal.ChronoField.DAY_OF_MONTH;
 import static net.fortuna.ical4j.model.Recur.Frequency.MONTHLY;
 import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY;
 
@@ -20,7 +26,7 @@ import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY;
  * Applies BYMONTHDAY rules specified in this Recur instance to the specified date list. If no BYMONTHDAY rules are
  * specified the date list is returned unmodified.
  */
-public class ByMonthDayRule extends AbstractDateExpansionRule {
+public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
     private transient Logger log = LoggerFactory.getLogger(ByMonthDayRule.class);
 
@@ -31,22 +37,22 @@ public class ByMonthDayRule extends AbstractDateExpansionRule {
         this.monthDayList = monthDayList;
     }
 
-    public ByMonthDayRule(NumberList monthDayList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+    public ByMonthDayRule(NumberList monthDayList, Frequency frequency, WeekDay.Day weekStartDay) {
         super(frequency, weekStartDay);
         this.monthDayList = monthDayList;
     }
 
     @Override
-    public DateList transform(DateList dates) {
+    public List<T> transform(List<T> dates) {
         if (monthDayList.isEmpty()) {
             return dates;
         }
-        final DateList monthDayDates = Dates.getDateListInstance(dates);
-        for (final Date date : dates) {
+        final List<T> monthDayDates = new ArrayList<>();
+        for (final T date : dates) {
             if (EnumSet.of(MONTHLY, YEARLY).contains(getFrequency())) {
-                monthDayDates.addAll(new ExpansionFilter(monthDayDates.getType()).apply(date));
+                monthDayDates.addAll(new ExpansionFilter().apply(date));
             } else {
-                Optional<Date> limit = new LimitFilter().apply(date);
+                Optional<T> limit = new LimitFilter().apply(date);
                 if (limit.isPresent()) {
                     monthDayDates.add(limit.get());
                 }
@@ -55,30 +61,23 @@ public class ByMonthDayRule extends AbstractDateExpansionRule {
         return monthDayDates;
     }
 
-    private class LimitFilter implements Function<Date, Optional<Date>> {
+    private class LimitFilter implements Function<T, Optional<T>> {
 
         @Override
-        public Optional<Date> apply(Date date) {
-            final Calendar cal = getCalendarInstance(date, true);
-            if (monthDayList.contains(cal.get(Calendar.DAY_OF_MONTH))) {
+        public Optional<T> apply(T date) {
+            ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
+            if (monthDayList.contains(zonedDateTime.getDayOfMonth())) {
                 return Optional.of(date);
             }
             return Optional.empty();
         }
     }
 
-    private class ExpansionFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public ExpansionFilter(Value type) {
-            this.type = type;
-        }
+    private class ExpansionFilter implements Function<T, List<T>> {
 
         @Override
-        public List<Date> apply(Date date) {
-            List<Date> retVal = new ArrayList<>();
-            final Calendar cal = getCalendarInstance(date, false);
+        public List<T> apply(T date) {
+            List<T> retVal = new ArrayList<>();
             // construct a list of possible month days..
             for (final int monthDay : monthDayList) {
                 if (monthDay == 0 || monthDay < -Dates.MAX_DAYS_PER_MONTH || monthDay > Dates.MAX_DAYS_PER_MONTH) {
@@ -87,20 +86,21 @@ public class ByMonthDayRule extends AbstractDateExpansionRule {
                     }
                     continue;
                 }
-                final int numDaysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+                ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
+                final int numDaysInMonth = YearMonth.of(zonedDateTime.getYear(), zonedDateTime.getMonth()).lengthOfMonth();
+                T candidate;
                 if (monthDay > 0) {
                     if (numDaysInMonth < monthDay) {
                         continue;
                     }
-                    cal.set(Calendar.DAY_OF_MONTH, monthDay);
+                    candidate = (T) date.with(DAY_OF_MONTH, monthDay);
                 } else {
                     if (numDaysInMonth < -monthDay) {
                         continue;
                     }
-                    cal.set(Calendar.DAY_OF_MONTH, numDaysInMonth);
-                    cal.add(Calendar.DAY_OF_MONTH, monthDay + 1);
+                    candidate = (T) date.with(DAY_OF_MONTH, numDaysInMonth + monthDay);
                 }
-                retVal.add(Dates.getInstance(getTime(date, cal), type));
+                retVal.add(candidate);
             };
             return retVal;
         }

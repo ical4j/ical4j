@@ -1,24 +1,23 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.WeekDay;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.util.Dates;
 
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+
+import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 
 /**
  * Applies BYSECOND rules specified in this Recur instance to the specified date list. If no BYSECOND rules are
  * specified the date list is returned unmodified.
  */
-public class BySecondRule extends AbstractDateExpansionRule {
+public class BySecondRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
     private final NumberList secondList;
 
@@ -27,58 +26,51 @@ public class BySecondRule extends AbstractDateExpansionRule {
         this.secondList = secondList;
     }
 
-    public BySecondRule(NumberList secondList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+    public BySecondRule(NumberList secondList, Frequency frequency, WeekDay.Day weekStartDay) {
         super(frequency, weekStartDay);
         this.secondList = secondList;
     }
 
     @Override
-    public DateList transform(DateList dates) {
+    public List<T> transform(List<T> dates) {
         if (secondList.isEmpty()) {
             return dates;
         }
-        final DateList secondlyDates = Dates.getDateListInstance(dates);
-        for (final Date date : dates) {
+        final List<T> secondlyDates = new ArrayList<>();
+        for (final T date : dates) {
             if (getFrequency() == Frequency.SECONDLY) {
-                Optional<Date> limit = new LimitFilter().apply(date);
+                Optional<T> limit = new LimitFilter().apply(date);
                 if (limit.isPresent()) {
                     secondlyDates.add(limit.get());
                 }
             } else {
-                secondlyDates.addAll(new ExpansionFilter(secondlyDates.getType()).apply(date));
+                secondlyDates.addAll(new ExpansionFilter().apply(date));
             }
         }
         return secondlyDates;
     }
 
-    private class LimitFilter implements Function<Date, Optional<Date>> {
+    private class LimitFilter implements Function<T, Optional<T>> {
 
         @Override
-        public Optional<Date> apply(Date date) {
-            final Calendar cal = getCalendarInstance(date, true);
-            if (secondList.contains(cal.get(Calendar.SECOND))) {
+        public Optional<T> apply(T date) {
+            ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
+            if (secondList.contains(zonedDateTime.getSecond())) {
                 return Optional.of(date);
             }
             return Optional.empty();
         }
     }
 
-    private class ExpansionFilter implements Function<Date, List<Date>> {
-
-        private final Value type;
-
-        public ExpansionFilter(Value type) {
-            this.type = type;
-        }
+    private class ExpansionFilter implements Function<T, List<T>> {
 
         @Override
-        public List<Date> apply(Date date) {
-            List<Date> retVal = new ArrayList<>();
-            final Calendar cal = getCalendarInstance(date, true);
+        public List<T> apply(T date) {
+            List<T> retVal = new ArrayList<>();
             // construct a list of possible seconds..
             secondList.forEach(second -> {
-                cal.set(Calendar.SECOND, second);
-                retVal.add(Dates.getInstance(getTime(date, cal), type));
+                T candidate = (T) date.with(SECOND_OF_MINUTE, second);
+                retVal.add(candidate);
             });
             return retVal;
         }
