@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -162,7 +163,7 @@ public class DtStart extends DateProperty {
      *
      * @param aDate a date
      */
-    public DtStart(final Date aDate) {
+    public DtStart(final Temporal aDate) {
         super(DTSTART, new Factory());
         setDate(aDate);
     }
@@ -173,7 +174,7 @@ public class DtStart extends DateProperty {
      * @param time the time of the DtStart
      * @param utc  specifies whether time is UTC
      */
-    public DtStart(final Date time, final boolean utc) {
+    public DtStart(final Temporal time, final boolean utc) {
         super(DTSTART, new Factory());
         setDate(time);
         setUtc(utc);
@@ -185,7 +186,7 @@ public class DtStart extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public DtStart(final ParameterList aList, final Date aDate) {
+    public DtStart(final ParameterList aList, final Temporal aDate) {
         super(DTSTART, aList, new Factory());
         setDate(aDate);
     }

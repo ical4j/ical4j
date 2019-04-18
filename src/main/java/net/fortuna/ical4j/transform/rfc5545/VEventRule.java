@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.rfc5545;
 
-import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -8,7 +7,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.DtStamp;
 
-import java.util.Calendar;
+import java.time.Period;
 import java.util.List;
 
 /**
@@ -49,10 +48,7 @@ public class VEventRule implements Rfc5545ComponentRule<VEvent> {
                     start.getValue().equals(end.getValue())){
                 if (end instanceof DateProperty) {
                     DateProperty endDate = (DateProperty) end;
-                    Calendar cal = Calendar.getInstance();
-                    cal.setTime(endDate.getDate());
-                    cal.add(Calendar.DATE, 1);
-                    endDate.setDate(new Date(cal.getTime()));
+                    endDate.setDate(endDate.getDate().plus(Period.ofDays(1)));
                 }
             }
         }

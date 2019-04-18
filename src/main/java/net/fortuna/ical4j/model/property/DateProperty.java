@@ -262,18 +262,19 @@ public abstract class DateProperty<T extends Temporal> extends Property {
                 throw new ValidationException("VALUE parameter [" + value
                         + "] is invalid for DATE-TIME instance");
             }
+        }
 
-            final DateTime dateTime = (DateTime) date;
+        if (date.getTemporal() instanceof ZonedDateTime) {
+
+            ZonedDateTime dateTime = (ZonedDateTime) date.getTemporal();
 
             // ensure tzid matches date-time timezone..
             final Parameter tzId = getParameter(Parameter.TZID);
-            if (dateTime.getTimeZone() != null
-                    && (tzId == null || !tzId.getValue().equals(
-                    dateTime.getTimeZone().getID()))) {
+            if (tzId == null || !tzId.getValue().equals(dateTime.getZone().getId())) {
 
                 throw new ValidationException("TZID parameter [" + tzId
                         + "] does not match the timezone ["
-                        + dateTime.getTimeZone().getID() + "]");
+                        + dateTime.getZone().getId() + "]");
             }
         } else if (getDate() != null) {
 

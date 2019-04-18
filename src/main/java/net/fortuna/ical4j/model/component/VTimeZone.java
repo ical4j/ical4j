@@ -46,6 +46,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.OffsetDateTime;
+import java.time.temporal.Temporal;
 import java.util.Objects;
 
 /**
@@ -244,13 +246,13 @@ public class VTimeZone extends CalendarComponent {
      * @return the latest applicable timezone observance for the specified date or null if there are no applicable
      * observances
      */
-    public final Observance getApplicableObservance(final Date date) {
+    public final Observance getApplicableObservance(final Temporal date) {
         Observance latestObservance = null;
-        Date latestOnset = null;
+        OffsetDateTime latestOnset = null;
         for (final Observance observance : getObservances()) {
-            final Date onset = observance.getLatestOnset(date);
+            final OffsetDateTime onset = observance.getLatestOnset(date);
             if (latestOnset == null
-                    || (onset != null && onset.after(latestOnset))) {
+                    || (onset != null && onset.isAfter(latestOnset))) {
                 latestOnset = onset;
                 latestObservance = observance;
             }

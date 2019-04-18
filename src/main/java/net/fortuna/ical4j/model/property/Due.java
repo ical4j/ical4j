@@ -36,6 +36,9 @@ import net.fortuna.ical4j.model.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -100,7 +103,7 @@ public class Due extends DateProperty {
     public Due() {
         super(DUE, new Factory());
         // defaults to UTC time..
-        setDate(new DateTime(true));
+        setDate(LocalDateTime.now(ZoneOffset.UTC));
     }
 
     /**
@@ -152,7 +155,7 @@ public class Due extends DateProperty {
      *
      * @param aDate a date
      */
-    public Due(final Date aDate) {
+    public Due(final Temporal aDate) {
         super(DUE, new Factory());
         setDate(aDate);
     }
@@ -163,7 +166,7 @@ public class Due extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public Due(final ParameterList aList, final Date aDate) {
+    public Due(final ParameterList aList, final Temporal aDate) {
         super(DUE, aList, new Factory());
         setDate(aDate);
     }

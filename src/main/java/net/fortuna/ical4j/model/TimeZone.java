@@ -37,7 +37,9 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 
-import java.util.Calendar;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 /**
@@ -84,16 +86,8 @@ public class TimeZone extends java.util.TimeZone {
         final int second = ms / 1000;
         ms -= second * 1000;
 
-        final Calendar cal = Calendar.getInstance();
-        cal.clear();    // don't retain current date/time, it may disturb the calculation
-
-        // set date and time
-        cal.set(Calendar.ERA, era);
-        cal.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-        cal.set(year, month, dayOfMonth, hour, minute, second);
-        cal.set(Calendar.MILLISECOND, ms);
-
-        final Observance observance = vTimeZone.getApplicableObservance(new DateTime(cal.getTime()));
+        OffsetDateTime date = OffsetDateTime.of(year, month, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.UTC);
+        final Observance observance = vTimeZone.getApplicableObservance(date);
         if (observance != null) {
             final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);
             return (int) (offset.getOffset().getTotalSeconds() * 1000L);
@@ -105,7 +99,7 @@ public class TimeZone extends java.util.TimeZone {
      * {@inheritDoc}
      */
     public int getOffset(long date) {
-        final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
+        final Observance observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
         if (observance != null) {
             final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);
             if ((offset.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
@@ -134,7 +128,7 @@ public class TimeZone extends java.util.TimeZone {
      * @return true if the specified date is in daylight time, otherwise false
      */
     public final boolean inDaylightTime(final Date date) {
-        final Observance observance = vTimeZone.getApplicableObservance(new DateTime(date));
+        final Observance observance = vTimeZone.getApplicableObservance(date.toInstant());
         return (observance instanceof Daylight);
     }
 
@@ -174,14 +168,13 @@ public class TimeZone extends java.util.TimeZone {
         if (seasonalTimes.size() > 1) {
             // per java spec and when dealing with historical time,
             // rawoffset is the raw offset at the current date
-            final DateTime now = new DateTime();
-            Date latestOnset = null;
+            OffsetDateTime latestOnset = null;
             for (Observance seasonalTime : seasonalTimes) {
-                Date onset = seasonalTime.getLatestOnset(now);
+                OffsetDateTime onset = seasonalTime.getLatestOnset(Instant.now());
                 if (onset == null) {
                     continue;
                 }
-                if (latestOnset == null || onset.after(latestOnset)) {
+                if (latestOnset == null || onset.isAfter(latestOnset)) {
                     latestOnset = onset;
                     latestSeasonalTime = seasonalTime;
                 }

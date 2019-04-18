@@ -37,6 +37,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
 
@@ -166,10 +167,23 @@ public class Duration extends Property {
      *
      * @param start the starting time for the duration
      * @param end   the end time for the duration
+     * @deprecated use {@link Duration#Duration(Temporal, Temporal)}
      */
+    @Deprecated
     public Duration(final Date start, final Date end) {
         super(DURATION, new Factory());
         setDuration(TemporalAmountAdapter.fromDateRange(start, end).getDuration());
+    }
+
+    /**
+     * Constructs a new duration representing the time between the specified start date and end date.
+     *
+     * @param start the starting time for the duration
+     * @param end   the end time for the duration
+     */
+    public Duration(final Temporal start, final Temporal end) {
+        super(DURATION, new Factory());
+        setDuration(TemporalAmountAdapter.from(start, end).getDuration());
     }
 
     /**

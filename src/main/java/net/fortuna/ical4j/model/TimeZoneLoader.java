@@ -60,7 +60,7 @@ public class TimeZoneLoader {
         NO_TRANSITIONS.getProperties().add(offsetFrom);
         NO_TRANSITIONS.getProperties().add(offsetTo);
         DtStart start = new DtStart();
-        start.setDate(new DateTime(0L));
+        start.setDate(Instant.EPOCH);
         NO_TRANSITIONS.getProperties().add(start);
 
         // Proxy configuration..

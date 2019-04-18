@@ -3,6 +3,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.Sequence;
 
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -25,7 +26,7 @@ public class ComponentSequenceComparator implements Comparator<Component> {
 
         retVal = sequence1.compareTo(sequence2);
         if (retVal == 0) {
-            DtStamp defaultDtStamp = new DtStamp(new DateTime(0));
+            DtStamp defaultDtStamp = new DtStamp(Instant.EPOCH);
             DtStamp dtStamp1 = Optional.ofNullable((DtStamp) o1.getProperty(Property.DTSTAMP)).orElse(defaultDtStamp);
             DtStamp dtStamp2 = Optional.ofNullable((DtStamp) o2.getProperty(Property.DTSTAMP)).orElse(defaultDtStamp);
 

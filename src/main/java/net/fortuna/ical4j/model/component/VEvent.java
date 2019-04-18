@@ -35,7 +35,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -46,6 +45,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -248,7 +248,7 @@ public class VEvent extends CalendarComponent {
      * @param start the start date of the new event
      * @param summary the event summary
      */
-    public VEvent(final Date start, final String summary) {
+    public VEvent(final Temporal start, final String summary) {
         this();
         getProperties().add(new DtStart(start));
         getProperties().add(new Summary(summary));
@@ -260,7 +260,7 @@ public class VEvent extends CalendarComponent {
      * @param end the end date of the new event
      * @param summary the event summary
      */
-    public VEvent(final Date start, final Date end, final String summary) {
+    public VEvent(final Temporal start, final Temporal end, final String summary) {
         this();
         getProperties().add(new DtStart(start));
         getProperties().add(new DtEnd(end));
@@ -274,7 +274,7 @@ public class VEvent extends CalendarComponent {
      * @param duration the duration of the new event
      * @param summary the event summary
      */
-    public VEvent(final Date start, final TemporalAmount duration, final String summary) {
+    public VEvent(final Temporal start, final TemporalAmount duration, final String summary) {
         this();
         getProperties().add(new DtStart(start));
         getProperties().add(new Duration(duration));
@@ -431,10 +431,10 @@ public class VEvent extends CalendarComponent {
      * @param rangeStart the start of a range
      * @param rangeEnd the end of a range
      * @return a normalised list of periods representing consumed time for this event
-     * @see VEvent#getConsumedTime(Date, Date, boolean)
+     * @see VEvent#getConsumedTime(Temporal, Temporal)
      */
-    public final PeriodList getConsumedTime(final Date rangeStart,
-            final Date rangeEnd) {
+    public final PeriodList getConsumedTime(final Temporal rangeStart,
+            final Temporal rangeEnd) {
         return getConsumedTime(rangeStart, rangeEnd, true);
     }
 
@@ -447,15 +447,14 @@ public class VEvent extends CalendarComponent {
      * @param normalise indicate whether the returned list of periods should be normalised
      * @return a list of periods representing consumed time for this event
      */
-    public final PeriodList getConsumedTime(final Date rangeStart,
-            final Date rangeEnd, final boolean normalise) {
+    public final PeriodList getConsumedTime(final Temporal rangeStart,
+            final Temporal rangeEnd, final boolean normalise) {
         PeriodList periods = new PeriodList();
         // if component is transparent return empty list..
         if (!Transp.TRANSPARENT.equals(getProperty(Property.TRANSP))) {
 
 //          try {
-          periods = calculateRecurrenceSet(new Period(new DateTime(rangeStart),
-                  new DateTime(rangeEnd)));
+          periods = calculateRecurrenceSet(new Period(rangeStart, rangeEnd));
 //          }
 //          catch (ValidationException ve) {
 //              log.error("Invalid event data", ve);
@@ -481,7 +480,7 @@ public class VEvent extends CalendarComponent {
      * @throws URISyntaxException where an invalid URI is encountered
      * @throws ParseException where an error occurs parsing data
      */
-    public final VEvent getOccurrence(final Date date) throws IOException,
+    public final VEvent getOccurrence(final Temporal date) throws IOException,
         URISyntaxException, ParseException {
         
         final PeriodList consumedTime = getConsumedTime(date, date);
@@ -640,8 +639,7 @@ public class VEvent extends CalendarComponent {
                 vEventDuration = new Duration(java.time.Duration.ofDays(1));
             }
 
-            dtEnd = new DtEnd(Dates.getInstance(Date.from(dtStart.getDate().toInstant().plus(vEventDuration.getDuration())),
-                    dtStart.getParameter(Parameter.VALUE)));
+            dtEnd = new DtEnd(dtStart.getDate().plus(vEventDuration.getDuration()));
             if (dtStart.isUtc()) {
                 dtEnd.setUtc(true);
             } else {

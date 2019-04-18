@@ -38,6 +38,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -134,7 +137,7 @@ public class RecurrenceId extends DateProperty {
      */
     public RecurrenceId() {
         super(RECURRENCE_ID, new Factory());
-        setDate(new DateTime());
+        setDate(LocalDateTime.now(ZoneOffset.UTC));
     }
 
     /**
@@ -186,7 +189,7 @@ public class RecurrenceId extends DateProperty {
      *
      * @param aDate a date representation of a date or date-time
      */
-    public RecurrenceId(final Date aDate) {
+    public RecurrenceId(final Temporal aDate) {
         super(RECURRENCE_ID, new Factory());
         setDate(aDate);
     }
@@ -197,7 +200,7 @@ public class RecurrenceId extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date representation of a date or date-time
      */
-    public RecurrenceId(final ParameterList aList, final Date aDate) {
+    public RecurrenceId(final ParameterList aList, final Temporal aDate) {
         super(RECURRENCE_ID, aList, new Factory());
         setDate(aDate);
     }

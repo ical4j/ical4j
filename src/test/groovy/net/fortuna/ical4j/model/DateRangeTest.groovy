@@ -6,10 +6,10 @@ class DateRangeTest extends Specification {
 
     def 'test hashcode equality'() {
         given: 'a date range'
-        DateRange range1 = [new DateTime('20140803T120100'), new DateTime('20140804T120100')]
+        DateRange range1 = [TemporalAdapter.parse('20140803T120100'), TemporalAdapter.parse('20140804T120100')]
 
         and: 'a second identical date range'
-        DateRange range2 = [new DateTime('20140803T120100'), new DateTime('20140804T120100')]
+        DateRange range2 = [TemporalAdapter.parse('20140803T120100'), TemporalAdapter.parse('20140804T120100')]
 
         expect: 'object equality'
         range1 == range2

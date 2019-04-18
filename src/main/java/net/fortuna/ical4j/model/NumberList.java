@@ -35,6 +35,7 @@ import net.fortuna.ical4j.util.Numbers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
@@ -121,5 +122,11 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      */
     public final String toString() {
         return stream().map(Object::toString).collect(Collectors.joining(","));
+    }
+
+    public static NumberList parse(String numberString) {
+        NumberList retVal = new NumberList();
+        retVal.addAll(Arrays.stream(numberString.split(",")).map(Numbers::parseInt).collect(Collectors.toList()));
+        return retVal;
     }
 }
