@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.Period;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
 
@@ -26,7 +27,7 @@ public class TemporalAmountAdapter {
 
     @Override
     public String toString() {
-        String retVal = null;
+        String retVal;
         if (Duration.ZERO.equals(duration) || Period.ZERO.equals(duration)) {
             retVal = duration.toString();
         } else if (duration instanceof Period) {
@@ -126,6 +127,11 @@ public class TemporalAmountAdapter {
         return new TemporalAmountAdapter(retVal);
     }
 
+    public static TemporalAmountAdapter from(Temporal start, Temporal end) {
+        TemporalAmount duration = Duration.between(start, end);
+        return new TemporalAmountAdapter(duration);
+    }
+
     public static TemporalAmountAdapter fromDateRange(Date start, Date end) {
         TemporalAmount duration;
         long durationMillis = end.getTime() - start.getTime();
@@ -162,7 +168,9 @@ public class TemporalAmountAdapter {
      * Returns a date representing the end of this duration from the specified start date.
      * @param start the date to start the duration
      * @return the end of the duration as a date
+     * @deprecated use <code>Instant.from(getDuration().addTo(start))</code>, where start is a {@link Temporal}
      */
+    @Deprecated
     public final Date getTime(final Date start) {
         return Date.from(Instant.from(duration.addTo(start.toInstant())));
     }

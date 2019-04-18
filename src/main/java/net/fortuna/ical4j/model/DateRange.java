@@ -35,13 +35,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.temporal.Temporal;
+import java.util.Comparator;
 
 /**
  * @author fortuna
  *
  */
-public class DateRange implements Serializable {
+public class DateRange<T extends Temporal> implements Serializable {
 
     private static final long serialVersionUID = -7303846680559287286L;
 
@@ -55,22 +56,24 @@ public class DateRange implements Serializable {
      */
     public static final int INCLUSIVE_END = 2;
 
-    private final Date rangeStart;
+    public static Comparator<Temporal> DATE_RANGE_COMPARATOR = new TemporalComparator();
+
+    private final T rangeStart;
     
-    private final Date rangeEnd;
+    private final T rangeEnd;
     
     /**
      * @param start the start of the range
      * @param end the end of the range
      */
-    public DateRange(Date start, Date end) {
+    public DateRange(T start, T end) {
         if (start == null) {
             throw new IllegalArgumentException("Range start is null");
         }
         if (end == null) {
             throw new IllegalArgumentException("Range end is null");
         }
-        if (end.before(start)) {
+        if (DATE_RANGE_COMPARATOR.compare(start, end) < 0) {
             throw new IllegalArgumentException("Range start must be before range end");
         }
         this.rangeStart = start;
@@ -80,14 +83,14 @@ public class DateRange implements Serializable {
     /**
      * @return the rangeStart
      */
-    public Date getRangeStart() {
+    public T getRangeStart() {
         return rangeStart;
     }
 
     /**
      * @return the rangeEnd
      */
-    public Date getRangeEnd() {
+    public T getRangeEnd() {
         return rangeEnd;
     }
 
@@ -98,7 +101,7 @@ public class DateRange implements Serializable {
      * @return true if the specified date occurs within the current period
      * 
      */
-    public final boolean includes(final Date date) {
+    public final boolean includes(final Temporal date) {
         return includes(date, INCLUSIVE_START | INCLUSIVE_END);
     }
 
@@ -111,19 +114,19 @@ public class DateRange implements Serializable {
      * @see Period#INCLUSIVE_START
      * @see Period#INCLUSIVE_END
      */
-    public final boolean includes(final Date date, final int inclusiveMask) {
+    public final boolean includes(final Temporal date, final int inclusiveMask) {
         boolean includes;
         if ((inclusiveMask & INCLUSIVE_START) > 0) {
-            includes = !rangeStart.after(date);
+            includes = DATE_RANGE_COMPARATOR.compare(rangeStart, date) <= 0;
         }
         else {
-            includes = rangeStart.before(date);
+            includes = DATE_RANGE_COMPARATOR.compare(rangeStart, date) < 0;
         }
         if ((inclusiveMask & INCLUSIVE_END) > 0) {
-            includes = includes && !rangeEnd.before(date);
+            includes = includes && DATE_RANGE_COMPARATOR.compare(rangeEnd, date) >= 0;
         }
         else {
-            includes = includes && rangeEnd.after(date);
+            includes = includes && DATE_RANGE_COMPARATOR.compare(rangeEnd, date) > 0;
         }
         return includes;
     }
@@ -137,7 +140,7 @@ public class DateRange implements Serializable {
      *         otherwise false
      */
     public final boolean before(final DateRange range) {
-        return (rangeEnd.before(range.getRangeStart()));
+        return DATE_RANGE_COMPARATOR.compare(rangeEnd, range.getRangeStart()) < 0;
     }
 
     /**
@@ -149,7 +152,7 @@ public class DateRange implements Serializable {
      *         otherwise false
      */
     public final boolean after(final DateRange range) {
-        return (rangeStart.after(range.getRangeEnd()));
+        return DATE_RANGE_COMPARATOR.compare(rangeStart, range.getRangeEnd()) > 0;
     }
 
     /**

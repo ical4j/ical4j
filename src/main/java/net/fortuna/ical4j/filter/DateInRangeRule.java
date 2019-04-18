@@ -33,14 +33,14 @@ package net.fortuna.ical4j.filter;
 
 import net.fortuna.ical4j.model.DateRange;
 
-import java.util.Date;
+import java.time.temporal.Temporal;
 import java.util.function.Predicate;
 
 /**
  * @author fortuna
  *
  */
-public class DateInRangeRule implements Predicate<Date> {
+public class DateInRangeRule implements Predicate<Temporal> {
 
     private final DateRange range;
     
@@ -58,7 +58,7 @@ public class DateInRangeRule implements Predicate<Date> {
     /**
      * {@inheritDoc}
      */
-    public boolean test(Date date) {
+    public boolean test(Temporal date) {
         return range.includes(date, inclusiveMask);
     }
 
