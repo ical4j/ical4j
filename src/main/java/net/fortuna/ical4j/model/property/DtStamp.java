@@ -31,11 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.Instant;
 
 /**
  * $Id$
@@ -116,10 +120,8 @@ public class DtStamp extends UtcProperty implements Comparable<DtStamp> {
     /**
      * @param aDate a date representing a date-time
      */
-    public DtStamp(final DateTime aDate) {
+    public DtStamp(final Instant aDate) {
         super(DTSTAMP, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
         setDate(aDate);
     }
 
@@ -127,10 +129,8 @@ public class DtStamp extends UtcProperty implements Comparable<DtStamp> {
      * @param aList a list of parameters for this component
      * @param aDate a date representing a date-time
      */
-    public DtStamp(final ParameterList aList, final DateTime aDate) {
+    public DtStamp(final ParameterList aList, final Instant aDate) {
         super(DTSTAMP, aList, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
         setDate(aDate);
     }
 

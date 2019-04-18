@@ -39,6 +39,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 
 /**
@@ -202,7 +203,7 @@ public class Trigger extends UtcProperty {
     /**
      * @param dateTime a date representation of a date-time
      */
-    public Trigger(final DateTime dateTime) {
+    public Trigger(final Instant dateTime) {
         super(TRIGGER, new Factory());
         setDateTime(dateTime);
     }
@@ -211,7 +212,7 @@ public class Trigger extends UtcProperty {
      * @param aList    a list of parameters for this component
      * @param dateTime a date representation of a date-time
      */
-    public Trigger(final ParameterList aList, final DateTime dateTime) {
+    public Trigger(final ParameterList aList, final Instant dateTime) {
         super(TRIGGER, aList, new Factory());
         setDateTime(dateTime);
     }
@@ -285,8 +286,8 @@ public class Trigger extends UtcProperty {
     /**
      * @param dateTime The dateTime to set.
      */
-    public final void setDateTime(final DateTime dateTime) {
-        super.setDateTime(dateTime);
+    public final void setDateTime(final Instant dateTime) {
+        setDate(dateTime);
         duration = null;
         getParameters().replace(Value.DATE_TIME);
     }

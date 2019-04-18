@@ -7,11 +7,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.Instant;
 
 /**
  * 
@@ -127,10 +131,8 @@ public class Acknowledged extends UtcProperty{
     /**
      * @param aDate a date representing a date-time 
      */
-    public Acknowledged(final DateTime aDate) {
+    public Acknowledged(final Instant aDate) {
         super(ACKNOWLEDGED, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
         setDate(aDate);
     }
 
@@ -138,10 +140,8 @@ public class Acknowledged extends UtcProperty{
      * @param aList a list of parameters for this component
      * @param aDate a date representing a date-time
      */
-    public Acknowledged(final ParameterList aList, final DateTime aDate) {
+    public Acknowledged(final ParameterList aList, final Instant aDate) {
         super(ACKNOWLEDGED, aList, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
         setDate(aDate);
     }
     

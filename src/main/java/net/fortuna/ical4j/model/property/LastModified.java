@@ -31,11 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.Instant;
 
 /**
  * $Id$
@@ -109,10 +113,8 @@ public class LastModified extends UtcProperty {
     /**
      * @param aDate a date representation of a date-time value
      */
-    public LastModified(final DateTime aDate) {
+    public LastModified(final Instant aDate) {
         super(LAST_MODIFIED, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
         setDate(aDate);
     }
 
@@ -120,10 +122,8 @@ public class LastModified extends UtcProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date representation of a date-time value
      */
-    public LastModified(final ParameterList aList, final DateTime aDate) {
+    public LastModified(final ParameterList aList, final Instant aDate) {
         super(LAST_MODIFIED, aList, new Factory());
-        // time must be in UTC..
-        aDate.setUtc(true);
         setDate(aDate);
     }
 

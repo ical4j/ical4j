@@ -31,8 +31,12 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.TimeZone;
+
+import java.time.Instant;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -43,7 +47,7 @@ import net.fortuna.ical4j.validate.ValidationException;
  *
  * @author Ben Fortuna
  */
-public abstract class UtcProperty extends DateProperty {
+public abstract class UtcProperty extends DateProperty<Instant> {
 
     /**
      *
@@ -56,7 +60,7 @@ public abstract class UtcProperty extends DateProperty {
      */
     public UtcProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
         super(name, parameters, factory);
-        setDate(new DateTime(true));
+        setDate(Instant.now());
     }
 
     /**
@@ -64,28 +68,26 @@ public abstract class UtcProperty extends DateProperty {
      */
     public UtcProperty(final String name, PropertyFactory factory) {
         super(name, factory);
-        setDate(new DateTime(true));
+        setDate(Instant.now());
     }
 
     /**
      * @return Returns the date-time.
+     * @deprecated use {@link DateProperty#getDate()}
      */
-    public final DateTime getDateTime() {
-        return (DateTime) getDate();
+    @Deprecated
+    public final Instant getDateTime() {
+        Instant dateTime = getDate();
+        return dateTime;
     }
 
     /**
      * @param dateTime The dateTime to set.
+     * @deprecated use {@link DateProperty#setDate(Temporal)}
      */
-    public void setDateTime(final DateTime dateTime) {
-        // time must be in UTC..
-        if (dateTime != null) {
-            final DateTime utcDateTime = new DateTime(dateTime);
-            utcDateTime.setUtc(true);
-            setDate(utcDateTime);
-        } else {
-            setDate(null);
-        }
+    @Deprecated
+    public void setDateTime(final Instant dateTime) {
+        setDate(dateTime);
     }
 
     /**
@@ -93,24 +95,5 @@ public abstract class UtcProperty extends DateProperty {
      */
     public void setTimeZone(TimeZone timezone) {
         throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void validate() throws ValidationException {
-        super.validate();
-
-        if (getDate() != null && !(getDate() instanceof DateTime)) {
-            throw new ValidationException(
-                    "Property must have a DATE-TIME value");
-        }
-
-        final DateTime dateTime = (DateTime) getDate();
-
-        if (dateTime != null && !dateTime.isUtc()) {
-            throw new ValidationException(getName() +
-                    ": DATE-TIME value must be specified in UTC time");
-        }
     }
 }
