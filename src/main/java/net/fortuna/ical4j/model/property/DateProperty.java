@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.TemporalAdapter.FormatType;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
@@ -41,6 +42,8 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -50,13 +53,24 @@ import java.text.ParseException;
  * Base class for properties with a DATE or DATE-TIME value. Note that some sub-classes may only allow either a DATE or
  * a DATE-TIME value, for which additional rules/validation should be specified.
  *
+ * Note that generics have been introduced as part of the migration to the new Java Date/Time API.
+ * Date properties should now indicate the applicable {@link Temporal} type for the property.
+ *
+ * For example:
+ *
+ * <ul>
+ *     <li>UTC-based properties should use {@link java.time.Instant} to represent UTC time</li>
+ *     <li>Date-only properties should use {@link java.time.LocalDate} to represent a date value</li>
+ *     <li>Date-time properties should use {@link java.time.ZonedDateTime} to represent a date-time value influenced by timezone rules</li>
+ * </ul>
+ *
  * @author Ben Fortuna
  */
-public abstract class DateProperty extends Property {
+public abstract class DateProperty<T extends Temporal> extends Property {
 
     private static final long serialVersionUID = 3160883132732961321L;
 
-    private Date date;
+    private TemporalAdapter<T> date;
 
     private TimeZone timeZone;
 
@@ -87,10 +101,15 @@ public abstract class DateProperty extends Property {
     }
 
     /**
+     * This method will attempt to dynamically cast the internal {@link Temporal} value to the
+     * required return value.
+     *
+     * e.g. LocalDate localDate = dateProperty.getDate();
+     *
      * @return Returns the date.
      */
-    public final Date getDate() {
-        return date;
+    public final T getDate() {
+        return date.getTemporal();
     }
 
     /**
@@ -99,25 +118,16 @@ public abstract class DateProperty extends Property {
      *
      * @param date The date to set.
      */
-    public final void setDate(final Date date) {
-        this.date = date;
-        if (date instanceof DateTime) {
-            if (Value.DATE.equals(getParameter(Parameter.VALUE))) {
-                getParameters().replace(Value.DATE_TIME);
-            }
-            updateTimeZone(((DateTime) date).getTimeZone());
+    public final void setDate(T date) {
+        FormatType formatType;
+        if (Value.DATE.equals(getParameter(Parameter.VALUE))) {
+            formatType = FormatType.Date;
+        } else if (Value.DATE_TIME.equals(getParameter(Parameter.VALUE))) {
+            formatType = FormatType.DateTimeFloating;
         } else {
-            if (date != null) {
-                getParameters().replace(Value.DATE);
-            }
-            /*
-            else {
-                getParameters().removeAll(Parameter.VALUE);
-            }
-            */
-            // ensure timezone is null for VALUE=DATE or null properties..
-            updateTimeZone(null);
+            formatType = FormatType.DateTimeUtc;
         }
+        this.date = new TemporalAdapter<>(date, formatType);
     }
 
     /**
@@ -129,12 +139,12 @@ public abstract class DateProperty extends Property {
      */
     public void setValue(final String value) throws ParseException {
         // value can be either a date-time or a date..
-        if (Value.DATE.equals(getParameter(Parameter.VALUE))) {
-            // ensure timezone is null for VALUE=DATE properties..
-            updateTimeZone(null);
-            this.date = new Date(value);
-        } else if (value != null && !value.isEmpty()){
-            this.date = new DateTime(value, timeZone);
+        TemporalAdapter parsedValue = TemporalAdapter.parse(value);
+        this.date = new TemporalAdapter<T>((T) parsedValue.getTemporal(), parsedValue.getFormatType());
+        if (date.getFormatType() == FormatType.Date) {
+            getParameters().replace(Value.DATE);
+        } else {
+            getParameters().replace(Value.DATE_TIME);
         }
     }
 
@@ -245,7 +255,8 @@ public abstract class DateProperty extends Property {
 
         final Value value = getParameter(Parameter.VALUE);
 
-        if (getDate() instanceof DateTime) {
+        if (date.getFormatType() == FormatType.DateTimeFloating
+                || date.getFormatType() == FormatType.DateTimeUtc) {
 
             if (value != null && !Value.DATE_TIME.equals(value)) {
                 throw new ValidationException("VALUE parameter [" + value
