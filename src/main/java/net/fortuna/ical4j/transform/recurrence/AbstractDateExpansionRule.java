@@ -1,17 +1,11 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Recur.Frequency;
-import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.transform.Transformer;
-import net.fortuna.ical4j.util.Dates;
 
 import java.io.Serializable;
 import java.time.temporal.Temporal;
-import java.util.Calendar;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Subclasses provide implementations to expand (or limit) a list of dates based on rule requirements as
@@ -85,51 +79,11 @@ public abstract class AbstractDateExpansionRule<T extends Temporal> implements T
 
     private final Frequency frequency;
 
-    private final int calendarWeekStartDay;
-
-    public AbstractDateExpansionRule(Frequency frequency) {
-        // default week start is Monday per RFC5545
-        this(frequency, WeekDay.Day.MO);
-    }
-
-    public AbstractDateExpansionRule(Frequency frequency, WeekDay.Day weekStartDay) {
+    AbstractDateExpansionRule(Frequency frequency) {
         this.frequency = frequency;
-        this.calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(
-                Optional.ofNullable(weekStartDay).orElse(WeekDay.Day.MO)));
     }
 
     protected Frequency getFrequency() {
         return frequency;
-    }
-
-    /**
-     * Construct a Calendar object and sets the time.
-     *
-     * @param date
-     * @param lenient
-     * @return
-     */
-    protected Calendar getCalendarInstance(final Date date, final boolean lenient) {
-        Calendar cal = Dates.getCalendarInstance(date);
-        // A week should have at least 4 days to be considered as such per RFC5545
-        cal.setMinimalDaysInFirstWeek(4);
-        cal.setFirstDayOfWeek(calendarWeekStartDay);
-        cal.setLenient(lenient);
-        cal.setTime(date);
-
-        return cal;
-    }
-
-    /**
-     * Get a DateTime from cal.getTime() with the timezone of the given reference date.
-     *
-     * @param referenceDate
-     * @param cal
-     * @return
-     */
-    protected static Date getTime(final Date referenceDate, final Calendar cal) {
-        final Date zonedDate = new DateTime(referenceDate);
-        zonedDate.setTime(cal.getTime().getTime());
-        return zonedDate;
     }
 }

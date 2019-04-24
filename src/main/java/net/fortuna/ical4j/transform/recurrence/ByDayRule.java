@@ -9,7 +9,6 @@ import java.time.Year;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -27,11 +26,6 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
 
     public ByDayRule(WeekDayList dayList, Frequency frequency) {
         super(frequency);
-        this.dayList = dayList;
-    }
-
-    public ByDayRule(WeekDayList dayList, Frequency frequency, WeekDay.Day weekStartDay) {
-        super(frequency, weekStartDay);
         this.dayList = dayList;
     }
 
@@ -70,7 +64,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
         public List<T> apply(T date) {
             ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
             if (dayList.contains(WeekDay.getWeekDay(zonedDateTime.getDayOfWeek()))) {
-                return Arrays.asList(date);
+                return Collections.singletonList(date);
             }
             return Collections.emptyList();
         }
@@ -83,7 +77,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
             List<T> retVal = new ArrayList<>();
             for (int i = 1; i <= 7; i++) {
                 T candidate = (T) date.with(DAY_OF_WEEK, i);
-                if (!dayList.stream().map(weekDay -> WeekDay.getDayOfWeek(weekDay))
+                if (!dayList.stream().map(WeekDay::getDayOfWeek)
                         .filter(calDay -> ZonedDateTime.from(candidate).getDayOfWeek() == calDay)
                         .collect(Collectors.toList()).isEmpty()) {
                     retVal.add(candidate);
@@ -103,7 +97,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
             // construct a list of possible month days..
             for (int i = 1; i <= month.length(leapYear); i++) {
                 T candidate = (T) date.with(DAY_OF_MONTH, i);
-                if (!dayList.stream().map(weekDay -> WeekDay.getDayOfWeek(weekDay))
+                if (!dayList.stream().map(WeekDay::getDayOfWeek)
                         .filter(calDay -> ZonedDateTime.from(candidate).getDayOfWeek() == calDay)
                         .collect(Collectors.toList()).isEmpty()) {
                     retVal.add(candidate);
@@ -122,7 +116,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
             // construct a list of possible year days..
             for (int i = 1; i <= Year.of(year).length(); i++) {
                 T candidate = (T) date.with(DAY_OF_YEAR, i);
-                if (!dayList.stream().map(weekDay -> WeekDay.getDayOfWeek(weekDay))
+                if (!dayList.stream().map(WeekDay::getDayOfWeek)
                         .filter(calDay -> ZonedDateTime.from(candidate).getDayOfWeek() == calDay)
                         .collect(Collectors.toList()).isEmpty()) {
                     retVal.add(candidate);

@@ -2,7 +2,6 @@ package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur.Frequency;
-import net.fortuna.ical4j.model.WeekDay;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
@@ -28,11 +27,6 @@ public class ByMinuteRule<T extends Temporal> extends AbstractDateExpansionRule<
         this.minuteList = minuteList;
     }
 
-    public ByMinuteRule(NumberList minuteList, Frequency frequency, WeekDay.Day weekStartDay) {
-        super(frequency, weekStartDay);
-        this.minuteList = minuteList;
-    }
-
     @Override
     public List<T> transform(List<T> dates) {
         if (minuteList.isEmpty()) {
@@ -44,9 +38,7 @@ public class ByMinuteRule<T extends Temporal> extends AbstractDateExpansionRule<
                 minutelyDates.addAll(new ExpansionFilter().apply(date));
             } else {
                 Optional<T> limit = new LimitFilter().apply(date);
-                if (limit.isPresent()) {
-                    minutelyDates.add(limit.get());
-                }
+                limit.ifPresent(minutelyDates::add);
             }
         }
         return minutelyDates;

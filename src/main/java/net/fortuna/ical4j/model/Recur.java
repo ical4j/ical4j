@@ -35,7 +35,6 @@ import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.transform.recurrence.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
-import net.fortuna.ical4j.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +46,6 @@ import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
-import java.util.Calendar;
 import java.util.*;
 
 /**
@@ -191,8 +189,6 @@ public class Recur implements Serializable {
 
     private WeekDay.Day weekStartDay;
 
-    private int calendarWeekStartDay;
-
     private Map<String, String> experimentalValues = new HashMap<String, String>();
 
     // Temporal field we increment based on frequency.
@@ -202,8 +198,6 @@ public class Recur implements Serializable {
      * Default constructor.
      */
     private Recur() {
-        // default week start is Monday per RFC5545
-        calendarWeekStartDay = Calendar.MONDAY;
     }
 
     /**
@@ -213,9 +207,6 @@ public class Recur implements Serializable {
      * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
      */
     public Recur(final String aValue) throws ParseException {
-        // default week start is Monday per RFC5545
-        calendarWeekStartDay = Calendar.MONDAY;
-
         Iterator<String> tokens = Arrays.asList(aValue.split("[;=]")).iterator();
         while (tokens.hasNext()) {
             final String token = tokens.next();
@@ -248,7 +239,6 @@ public class Recur implements Serializable {
                 setPosList.addAll(NumberList.parse(nextToken(tokens, token)));
             } else if (WKST.equals(token)) {
                 weekStartDay = WeekDay.Day.valueOf(nextToken(tokens, token));
-                calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(weekStartDay));
             } else {
                 if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                     // assume experimental value..
@@ -284,8 +274,6 @@ public class Recur implements Serializable {
      * @param until     maximum recurrence date
      */
     public Recur(final Frequency frequency, final Instant until) {
-        // default week start is Monday per RFC5545
-        calendarWeekStartDay = Calendar.MONDAY;
         this.frequency = frequency;
         this.until = until;
         validateFrequency();
@@ -305,8 +293,6 @@ public class Recur implements Serializable {
      * @param count     maximum recurrence count
      */
     public Recur(final Frequency frequency, final int count) {
-        // default week start is Monday per RFC5545
-        calendarWeekStartDay = Calendar.MONDAY;
         this.frequency = frequency;
         this.count = count;
         validateFrequency();
@@ -464,9 +450,6 @@ public class Recur implements Serializable {
     @Deprecated
     public final void setWeekStartDay(final WeekDay.Day weekStartDay) {
         this.weekStartDay = weekStartDay;
-        if (weekStartDay != null) {
-            calendarWeekStartDay = WeekDay.getCalendarDay(WeekDay.getWeekDay(weekStartDay));
-        }
     }
 
     /**
@@ -810,7 +793,7 @@ public class Recur implements Serializable {
         List<T> dates = new ArrayList<>();
         dates.add(date);
         if (transformers.get(BYMONTH) != null) {
-            dates = new ByMonthRule<T>(monthList, frequency, weekStartDay).transform(dates);
+            dates = new ByMonthRule<T>(monthList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTH processing: " + dates);
@@ -818,7 +801,7 @@ public class Recur implements Serializable {
         }
 
         if (transformers.get(BYWEEKNO) != null) {
-            dates = new ByWeekNoRule<T>(weekNoList, frequency, weekStartDay).transform(dates);
+            dates = new ByWeekNoRule<T>(weekNoList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYWEEKNO processing: " + dates);
@@ -826,7 +809,7 @@ public class Recur implements Serializable {
         }
 
         if (transformers.get(BYYEARDAY) != null) {
-            dates = new ByYearDayRule<T>(yearDayList, frequency, weekStartDay).transform(dates);
+            dates = new ByYearDayRule<T>(yearDayList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYYEARDAY processing: " + dates);
@@ -834,7 +817,7 @@ public class Recur implements Serializable {
         }
 
         if (transformers.get(BYMONTHDAY) != null) {
-            dates = new ByMonthDayRule<T>(monthDayList, frequency, weekStartDay).transform(dates);
+            dates = new ByMonthDayRule<T>(monthDayList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTHDAY processing: " + dates);
@@ -844,12 +827,12 @@ public class Recur implements Serializable {
 
             NumberList implicitMonthDayList = new NumberList();
             implicitMonthDayList.add(ZonedDateTime.from(rootSeed).getDayOfMonth());
-            ByMonthDayRule<T> implicitRule = new ByMonthDayRule<>(implicitMonthDayList, frequency, weekStartDay);
+            ByMonthDayRule<T> implicitRule = new ByMonthDayRule<>(implicitMonthDayList, frequency);
             dates = implicitRule.transform(dates);
         }
 
         if (transformers.get(BYDAY) != null) {
-            dates = new ByDayRule<T>(dayList, frequency, weekStartDay).transform(dates);
+            dates = new ByDayRule<T>(dayList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYDAY processing: " + dates);
@@ -858,12 +841,12 @@ public class Recur implements Serializable {
                 && !weekNoList.isEmpty() && monthDayList.isEmpty())) {
 
             ByDayRule<T> implicitRule = new ByDayRule<>(new WeekDayList(WeekDay.getWeekDay(
-                    ZonedDateTime.from(rootSeed).getDayOfWeek())), deriveFilterType(), weekStartDay);
+                    ZonedDateTime.from(rootSeed).getDayOfWeek())), deriveFilterType());
             dates = implicitRule.transform(dates);
         }
 
         if (transformers.get(BYHOUR) != null) {
-            dates = new ByHourRule<T>(hourList, frequency, weekStartDay).transform(dates);
+            dates = new ByHourRule<T>(hourList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYHOUR processing: " + dates);
@@ -871,7 +854,7 @@ public class Recur implements Serializable {
         }
 
         if (transformers.get(BYMINUTE) != null) {
-            dates = new ByMinuteRule<T>(minuteList, frequency, weekStartDay).transform(dates);
+            dates = new ByMinuteRule<T>(minuteList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMINUTE processing: " + dates);
@@ -879,7 +862,7 @@ public class Recur implements Serializable {
         }
 
         if (transformers.get(BYSECOND) != null) {
-            dates = new BySecondRule<T>(secondList, frequency, weekStartDay).transform(dates);
+            dates = new BySecondRule<T>(secondList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYSECOND processing: " + dates);
@@ -957,24 +940,6 @@ public class Recur implements Serializable {
     public final void setUntil(final Instant until) {
         this.until = until;
         this.count = -1;
-    }
-
-    /**
-     * Construct a Calendar object and sets the time.
-     *
-     * @param date
-     * @param lenient
-     * @return
-     */
-    private Calendar getCalendarInstance(final Date date, final boolean lenient) {
-        Calendar cal = Dates.getCalendarInstance(date);
-        // A week should have at least 4 days to be considered as such per RFC5545
-        cal.setMinimalDaysInFirstWeek(4);
-        cal.setFirstDayOfWeek(calendarWeekStartDay);
-        cal.setLenient(lenient);
-        cal.setTime(date);
-
-        return cal;
     }
 
     /**

@@ -6,7 +6,6 @@ import net.fortuna.ical4j.transform.Transformer;
 
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
             return dates;
         }
         // sort the list before processing..
-        Collections.sort(dates, ONSET_COMPARATOR);
+        dates.sort(ONSET_COMPARATOR);
         final List<T> setPosDates = new ArrayList<>();
         final int size = dates.size();
         for (final Integer setPos : setPosList) {

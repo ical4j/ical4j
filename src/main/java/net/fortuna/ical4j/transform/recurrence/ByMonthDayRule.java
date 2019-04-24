@@ -3,7 +3,6 @@ package net.fortuna.ical4j.transform.recurrence;
 import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.Recur.Frequency;
-import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +36,6 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
         this.monthDayList = monthDayList;
     }
 
-    public ByMonthDayRule(NumberList monthDayList, Frequency frequency, WeekDay.Day weekStartDay) {
-        super(frequency, weekStartDay);
-        this.monthDayList = monthDayList;
-    }
-
     @Override
     public List<T> transform(List<T> dates) {
         if (monthDayList.isEmpty()) {
@@ -53,9 +47,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
                 monthDayDates.addAll(new ExpansionFilter().apply(date));
             } else {
                 Optional<T> limit = new LimitFilter().apply(date);
-                if (limit.isPresent()) {
-                    monthDayDates.add(limit.get());
-                }
+                limit.ifPresent(monthDayDates::add);
             }
         }
         return monthDayDates;
