@@ -31,13 +31,13 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Dates;
+import net.fortuna.ical4j.util.TimeZones;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
-
-import net.fortuna.ical4j.util.Dates;
-import net.fortuna.ical4j.util.TimeZones;
 
 /**
  * $Id$
@@ -46,7 +46,10 @@ import net.fortuna.ical4j.util.TimeZones;
  *
  * A type used to represent iCalendar time values.
  * @author Ben Fortuna
+ *
+ * @deprecated Use {@link java.time.LocalTime} for iCalendar TIME representations.
  */
+@Deprecated
 public class Time extends Iso8601 {
     
     private static final long serialVersionUID = -8401010870773304348L;

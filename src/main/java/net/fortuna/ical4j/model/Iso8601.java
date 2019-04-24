@@ -31,12 +31,12 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.text.DateFormat;
-import java.util.Date;
-
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * $Id$
@@ -48,7 +48,10 @@ import net.fortuna.ical4j.util.TimeZones;
  * precision is used in constructor arguments, or that <code>Object.equals()</code>
  * is overridden to ensure equality checking is consistent with the type.
  * @author Ben Fortuna
+ *
+ * @deprecated Replaced with new Java Date/Time API implementation
  */
+@Deprecated
 public abstract class Iso8601 extends Date {
     
     /**

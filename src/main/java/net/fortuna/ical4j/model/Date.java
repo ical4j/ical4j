@@ -102,7 +102,10 @@ import java.util.TimeZone;
  * 
  * @author Ben Fortuna
  * @version 2.0
+ *
+ * @deprecated Use {@link java.time.LocalDate} for iCalendar DATE representations.
  */
+@Deprecated
 public class Date extends Iso8601 {
 
     private static final long serialVersionUID = 7136072363141363141L;
