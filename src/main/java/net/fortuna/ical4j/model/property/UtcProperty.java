@@ -31,7 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 
 /**
@@ -78,13 +82,17 @@ public abstract class UtcProperty extends DateProperty {
      * @param dateTime The dateTime to set.
      */
     public void setDateTime(final DateTime dateTime) {
-        // time must be in UTC..
-        if (dateTime != null) {
-            final DateTime utcDateTime = new DateTime(dateTime);
-            utcDateTime.setUtc(true);
-            setDate(utcDateTime);
+        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            super.setDate(dateTime);
         } else {
-            setDate(null);
+            // time must be in UTC..
+            if (dateTime != null) {
+                final DateTime utcDateTime = new DateTime(dateTime);
+                utcDateTime.setUtc(true);
+                setDate(utcDateTime);
+            } else {
+                setDate(null);
+            }
         }
     }
 
@@ -92,7 +100,11 @@ public abstract class UtcProperty extends DateProperty {
      * {@inheritDoc}
      */
     public void setTimeZone(TimeZone timezone) {
-        throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
+        if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            super.setTimeZone(timezone);
+        } else {
+            throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
+        }
     }
 
     /**
