@@ -111,7 +111,7 @@ public class XProperty extends Property implements Escapable {
         }
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<XProperty> {
         private static final long serialVersionUID = 1L;
 
         private final String name;
@@ -121,12 +121,12 @@ public class XProperty extends Property implements Escapable {
             this.name = name;
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public XProperty createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new XProperty(name, parameters, value);
         }
 
-        public Property createProperty() {
+        public XProperty createProperty() {
             return new XProperty(name);
         }
     }

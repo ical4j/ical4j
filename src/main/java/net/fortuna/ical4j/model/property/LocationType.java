@@ -124,19 +124,19 @@ public class LocationType extends Property {
         validator.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<LocationType> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(LOCATION_TYPE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public LocationType createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new LocationType(parameters, value);
         }
 
-        public Property createProperty() {
+        public LocationType createProperty() {
             return new LocationType();
         }
     }

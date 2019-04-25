@@ -96,19 +96,19 @@ public class ProdId extends Property implements Escapable {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ProdId> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(PRODID);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public ProdId createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ProdId(parameters, value);
         }
 
-        public Property createProperty() {
+        public ProdId createProperty() {
             return new ProdId();
         }
     }

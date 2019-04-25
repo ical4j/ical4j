@@ -100,19 +100,19 @@ public class Description extends Property implements Escapable {
         validator.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Description> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DESCRIPTION);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Description createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Description(parameters, value);
         }
 
-        public Property createProperty() {
+        public Description createProperty() {
             return new Description();
         }
     }

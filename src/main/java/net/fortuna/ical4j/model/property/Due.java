@@ -168,19 +168,19 @@ public class Due extends DateProperty {
         setDate(aDate);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Due> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DUE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Due createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Due(parameters, value);
         }
 
-        public Property createProperty() {
+        public Due createProperty() {
             return new Due();
         }
     }

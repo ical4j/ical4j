@@ -130,19 +130,19 @@ public class TzOffsetFrom extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<TzOffsetFrom> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TZOFFSETFROM);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public TzOffsetFrom createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new TzOffsetFrom(parameters, value);
         }
 
-        public Property createProperty() {
+        public TzOffsetFrom createProperty() {
             return new TzOffsetFrom();
         }
     }

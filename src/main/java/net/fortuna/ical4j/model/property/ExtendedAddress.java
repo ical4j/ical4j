@@ -97,19 +97,19 @@ public class ExtendedAddress extends Property implements Escapable {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ExtendedAddress> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(EXTENDED_ADDRESS);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public ExtendedAddress createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ExtendedAddress(parameters, value);
         }
 
-        public Property createProperty() {
+        public ExtendedAddress createProperty() {
             return new ExtendedAddress();
         }
     }

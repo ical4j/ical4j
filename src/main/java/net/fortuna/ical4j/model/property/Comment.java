@@ -100,19 +100,19 @@ public class Comment extends Property implements Escapable {
         validator.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Comment> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(COMMENT);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Comment createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Comment(parameters, value);
         }
 
-        public Property createProperty() {
+        public Comment createProperty() {
             return new Comment();
         }
     }

@@ -147,19 +147,19 @@ public class Summary extends Property implements Escapable {
         validator.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Summary> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(SUMMARY);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Summary createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Summary(parameters, value);
         }
 
-        public Property createProperty() {
+        public Summary createProperty() {
             return new Summary();
         }
     }

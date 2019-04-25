@@ -95,19 +95,19 @@ public class Country extends Property implements Escapable {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Country> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(COUNTRY);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Country createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Country(parameters, value);
         }
 
-        public Property createProperty() {
+        public Country createProperty() {
             return new Country();
         }
     }

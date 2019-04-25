@@ -125,19 +125,19 @@ public class RRule extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RRule> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RRULE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public RRule createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RRule(parameters, value);
         }
 
-        public Property createProperty() {
+        public RRule createProperty() {
             return new RRule();
         }
     }

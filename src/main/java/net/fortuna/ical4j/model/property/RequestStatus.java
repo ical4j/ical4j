@@ -214,19 +214,19 @@ public class RequestStatus extends Property {
         validator.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RequestStatus> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(REQUEST_STATUS);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public RequestStatus createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RequestStatus(parameters, value);
         }
 
-        public Property createProperty() {
+        public RequestStatus createProperty() {
             return new RequestStatus();
         }
     }

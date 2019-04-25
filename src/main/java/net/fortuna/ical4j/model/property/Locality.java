@@ -97,19 +97,19 @@ public class Locality extends Property implements Escapable {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Locality> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(LOCALITY);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Locality createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Locality(parameters, value);
         }
 
-        public Property createProperty() {
+        public Locality createProperty() {
             return new Locality();
         }
     }

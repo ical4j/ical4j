@@ -163,19 +163,19 @@ public class Uid extends Property implements Escapable {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Uid> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(UID);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Uid createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Uid(parameters, value);
         }
 
-        public Property createProperty() {
+        public Uid createProperty() {
             return new Uid();
         }
     }

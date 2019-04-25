@@ -100,19 +100,19 @@ public class RelatedTo extends Property implements Escapable {
         validator.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RelatedTo> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RELATED_TO);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public RelatedTo createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RelatedTo(parameters, value);
         }
 
-        public Property createProperty() {
+        public RelatedTo createProperty() {
             return new RelatedTo();
         }
     }

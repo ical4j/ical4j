@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -207,19 +210,19 @@ public class Sequence extends Property implements Comparable<Sequence> {
         return Integer.compare(getSequenceNo(), o.getSequenceNo());
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Sequence> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(SEQUENCE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Sequence createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Sequence(parameters, value);
         }
 
-        public Property createProperty() {
+        public Sequence createProperty() {
             return new Sequence();
         }
     }

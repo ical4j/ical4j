@@ -190,19 +190,19 @@ public class DtStart extends DateProperty {
         setDate(aDate);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<DtStart> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DTSTART);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public DtStart createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new DtStart(parameters, value);
         }
 
-        public Property createProperty() {
+        public DtStart createProperty() {
             return new DtStart();
         }
     }
