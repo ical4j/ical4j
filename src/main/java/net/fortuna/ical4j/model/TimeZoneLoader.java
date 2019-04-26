@@ -104,8 +104,8 @@ public class TimeZoneLoader {
                     final CalendarBuilder builder = new CalendarBuilder();
                     final Calendar calendar = builder.build(in);
                     final VTimeZone vTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
-                    // load any available updates for the timezone.. can be explicility disabled via configuration
-                    if (!"false".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("true"))) {
+                    // load any available updates for the timezone.. can be explicility enabled via configuration
+                    if ("true".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("false"))) {
                         return updateDefinition(vTimeZone);
                     }
                     if (vTimeZone != null) {
