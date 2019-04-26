@@ -5,7 +5,10 @@ import net.fortuna.ical4j.filter.HasPropertyRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Uid;
 
+import java.time.temporal.Temporal;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -28,24 +31,24 @@ import java.util.function.Predicate;
  *
  * Created by fortuna on 20/07/2017.
  */
-public class ComponentGroup<T extends Component> {
+public class ComponentGroup<C extends Component> {
 
-    private final ComponentList<T> components;
+    private final ComponentList<C> components;
 
-    private final Filter<T> componentFilter;
+    private final Filter<C> componentFilter;
 
-    public ComponentGroup(ComponentList<T> components, Uid uid) {
+    public ComponentGroup(ComponentList<C> components, Uid uid) {
         this(components, uid, null);
     }
 
-    public ComponentGroup(ComponentList<T> components, Uid uid, RecurrenceId recurrenceId) {
+    public ComponentGroup(ComponentList<C> components, Uid uid, RecurrenceId recurrenceId) {
         this.components = components;
 
-        Predicate<T> componentPredicate;
+        Predicate<C> componentPredicate;
         if (recurrenceId != null) {
-            componentPredicate = new HasPropertyRule<T>(uid).and(new HasPropertyRule<T>(recurrenceId));
+            componentPredicate = new HasPropertyRule<C>(uid).and(new HasPropertyRule<C>(recurrenceId));
         } else {
-            componentPredicate = new HasPropertyRule<T>(uid);
+            componentPredicate = new HasPropertyRule<C>(uid);
         }
         componentFilter = new Filter<>(componentPredicate);
     }
@@ -56,8 +59,8 @@ public class ComponentGroup<T extends Component> {
      *
      * @return
      */
-    public ComponentList<T> getRevisions() {
-        return (ComponentList<T>) componentFilter.filter(components);
+    public ComponentList<C> getRevisions() {
+        return (ComponentList<C>) componentFilter.filter(components);
     }
 
     /**
@@ -65,8 +68,8 @@ public class ComponentGroup<T extends Component> {
      *
      * @return
      */
-    public T getLatestRevision() {
-        ComponentList<T> revisions = getRevisions();
+    public C getLatestRevision() {
+        ComponentList<C> revisions = getRevisions();
         revisions.sort(new ComponentSequenceComparator());
         Collections.reverse(revisions);
         return revisions.iterator().next();
@@ -81,13 +84,11 @@ public class ComponentGroup<T extends Component> {
      *
      * @see Component#calculateRecurrenceSet(Period)
      */
-    public PeriodList calculateRecurrenceSet(final Period period) {
-        PeriodList periods = new PeriodList();
-
+    public <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<T> period) {
+        List<Period<T>> periods = new ArrayList<>();
         for (Component component : getRevisions()) {
-            periods = periods.add(component.calculateRecurrenceSet(period));
+            periods.addAll(component.calculateRecurrenceSet(period));
         }
-
         return periods;
     }
 }

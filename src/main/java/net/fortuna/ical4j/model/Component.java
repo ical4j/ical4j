@@ -44,7 +44,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -288,14 +288,14 @@ public abstract class Component implements Serializable {
      * @param period a range to calculate recurrences for
      * @return a list of periods
      */
-    public final PeriodList calculateRecurrenceSet(final Period period) {
+    public final <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<T> period) {
 
 //        validate();
 
-        final PeriodList recurrenceSet = new PeriodList();
+        final Set<Period<T>> recurrenceSet = new TreeSet<>();
 
-        final DtStart start = getProperty(Property.DTSTART);
-        DateProperty end = getProperty(Property.DTEND);
+        final DtStart<T> start = getProperty(Property.DTSTART);
+        DateProperty<T> end = getProperty(Property.DTEND);
         if (end == null) {
             end = getProperty(Property.DUE);
         }
@@ -303,17 +303,7 @@ public abstract class Component implements Serializable {
 
         // if no start date specified return empty list..
         if (start == null) {
-            return recurrenceSet;
-        }
-
-        final Value startValue = start.getParameter(Parameter.VALUE);
-
-        // initialise timezone..
-//        if (startValue == null || Value.DATE_TIME.equals(startValue)) {
-        if (start.isUtc()) {
-            recurrenceSet.setUtc(true);
-        } else if (start.getDate() instanceof DateTime) {
-            recurrenceSet.setTimeZone(((DateTime) start.getDate()).getTimeZone());
+            return Collections.emptyList();
         }
 
         // if an explicit event duration is not specified, derive a value for recurring
@@ -329,34 +319,35 @@ public abstract class Component implements Serializable {
         }
 
         // add recurrence dates..
-        List<RDate> rDates = getProperties(Property.RDATE);
+        List<RDate<T>> rDates = getProperties(Property.RDATE);
         recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.PERIOD)
-                .map(RDate::getPeriods).flatMap(List::stream).filter(rdatePeriod -> period.intersects(rdatePeriod))
+                .map(RDate::getPeriods).map(PeriodList<T>::getPeriods).flatMap(Set::stream).filter(period::intersects)
                 .collect(Collectors.toList()));
 
-        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE_TIME)
-                .map(DateListProperty::getDates).flatMap(List::stream).filter(date -> period.includes(date))
-                .map(rdateTime -> new Period(rdateTime, rDuration)).collect(Collectors.toList()));
+        List<Period<T>> calculated = rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE_TIME)
+                .map(DateListProperty::getDates).map(DateList::getDates).flatMap(List<T>::stream).filter(period::includes)
+                .map(rdateTime -> new Period<T>(rdateTime, rDuration)).collect(Collectors.toList());
+        recurrenceSet.addAll(calculated);
 
         recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE)
-                .map(DateListProperty::getDates).flatMap(List::stream).filter(date -> period.includes(date))
-                .map(rdateDate -> new Period(rdateDate, rDuration)).collect(Collectors.toList()));
+                .map(DateListProperty::getDates).map(DateList::getDates).flatMap(List<T>::stream).filter(period::includes)
+                .map(rdateDate -> new Period<T>(rdateDate, rDuration)).collect(Collectors.toList()));
 
         // allow for recurrence rules that start prior to the specified period
         // but still intersect with it..
-        final Temporal startMinusDuration = period.getStart().minus(rDuration);
+        final T startMinusDuration = (T) period.getStart().minus(rDuration);
 
         // add recurrence rules..
         List<RRule> rRules = getProperties(Property.RRULE);
         if (!rRules.isEmpty()) {
             recurrenceSet.addAll(rRules.stream().map(r -> r.getRecur().getDates(start.getDate(),
-                    startMinusDuration, period.getEnd())).flatMap(List::stream)
-                    .map(rruleDate -> new Period(rruleDate, rDuration)).collect(Collectors.toList()));
+                    startMinusDuration, period.getEnd())).flatMap(List<T>::stream)
+                    .map(rruleDate -> new Period<T>(rruleDate, rDuration)).collect(Collectors.toList()));
         } else {
             // add initial instance if intersection with the specified period..
             Period startPeriod;
             if (end != null) {
-                startPeriod = new Period(start.getDate(), end.getDate());
+                startPeriod = new Period<>(start.getDate(), end.getDate());
             } else {
                 /*
                  * PeS: Anniversary type has no DTEND nor DUR, define DUR
@@ -366,7 +357,7 @@ public abstract class Component implements Serializable {
                     duration = new Duration(rDuration);
                 }
 
-                startPeriod = new Period(start.getDate(), duration.getDuration());
+                startPeriod = new Period<>(start.getDate(), duration.getDuration());
             }
             if (period.intersects(startPeriod)) {
                 recurrenceSet.add(startPeriod);
@@ -375,7 +366,7 @@ public abstract class Component implements Serializable {
 
         // subtract exception dates..
         List<ExDate> exDateProps = getProperties(Property.EXDATE);
-        List<Temporal> exDates = exDateProps.stream().map(DateListProperty::getDates).flatMap(List::stream)
+        List<Temporal> exDates = exDateProps.stream().map(DateListProperty::getDates).map(DateList::getDates).flatMap(List<Temporal>::stream)
                 .collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> {
@@ -386,7 +377,7 @@ public abstract class Component implements Serializable {
         // subtract exception rules..
         List<ExRule> exRules = getProperties(Property.EXRULE);
         List<Object> exRuleDates = exRules.stream().map(e -> e.getRecur().getDates(start.getDate(),
-                period)).flatMap(List::stream).collect(Collectors.toList());
+                period)).flatMap(List<T>::stream).collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> {
             // for DATE-TIME instances check for DATE-based exclusions also..
@@ -394,6 +385,6 @@ public abstract class Component implements Serializable {
                     || exRuleDates.contains(recurrence.getStart());
         });
 
-        return recurrenceSet;
+        return new ArrayList<>(recurrenceSet);
     }
 }
