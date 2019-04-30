@@ -3,6 +3,7 @@ package net.fortuna.ical4j.model;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.Period;
@@ -12,7 +13,7 @@ import java.util.Date;
 /**
  * Support adapter for {@link java.time.temporal.TemporalAmount} representation in iCalendar format.
  */
-public class TemporalAmountAdapter {
+public class TemporalAmountAdapter implements Serializable {
 
     private final TemporalAmount duration;
 
@@ -46,28 +47,24 @@ public class TemporalAmountAdapter {
      */
     private String periodToString(Period period) {
         String retVal;
-        if (period.getYears() > 0) {
-            int weeks = Math.abs(period.getYears()) * 52;
-            if (period.getYears() < 0) {
-                weeks = -weeks;
-            }
+        Period absPeriod = period.isNegative() ? period.negated() : period;
+        if (absPeriod.getYears() != 0) {
+            int weeks = absPeriod.getYears() * 52;
             retVal = String.format("P%dW", weeks);
-        } else if (period.getMonths() > 0) {
-            int weeks = Math.abs(period.getMonths()) * 4;
-            if (period.getMonths() < 0) {
-                weeks = -weeks;
-            }
+        } else if (absPeriod.getMonths() != 0) {
+            int weeks = absPeriod.getMonths() * 4;
             retVal = String.format("P%dW", weeks);
-        } else if (period.getDays() % 7 == 0) {
-            int weeks = Math.abs(period.getDays()) / 7;
-            if (period.getDays() < 0) {
-                weeks = -weeks;
-            }
+        } else if (absPeriod.getDays() % 7 == 0) {
+            int weeks = absPeriod.getDays() / 7;
             retVal = String.format("P%dW", weeks);
         } else {
-            retVal = period.toString();
+            retVal = absPeriod.toString();
         }
-        return retVal;
+        if (period.isNegative()) {
+            return "-" + retVal;
+        } else {
+            return retVal;
+        }
     }
 
     /**
