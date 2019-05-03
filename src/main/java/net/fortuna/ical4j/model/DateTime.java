@@ -410,7 +410,8 @@ public class DateTime extends Date {
 			final java.util.TimeZone tz) throws ParseException {
 
 		if (tz != null) {
-			format.setTimeZone(tz);
+			java.util.TimeZone z = java.util.TimeZone.getTimeZone(tz.toZoneId());
+			format.setTimeZone(z);
 		}
 		setTime(format.parse(value).getTime());
 	}
