@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.util;
 
 import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.parameter.Value;
 
@@ -249,23 +248,6 @@ public final class Dates {
             instance = Calendar.getInstance(TimeZones.getDateTimeZone());
         }
         return instance;
-    }
-
-    /**
-     * Instantiate a new datelist with the same type, timezone and utc settings
-     * as the origList.
-     *
-     * @param origList
-     * @return a new empty list.
-     */
-    public static DateList getDateListInstance(final DateList origList) {
-        final DateList list = new DateList(origList.getType());
-        if (origList.isUtc()) {
-            list.setUtc(true);
-        } else {
-            list.setTimeZone(origList.getTimeZone());
-        }
-        return list;
     }
 
     /**
