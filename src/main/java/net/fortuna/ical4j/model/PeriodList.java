@@ -33,106 +33,96 @@ package net.fortuna.ical4j.model;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.threeten.extra.Interval;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.util.*;
+import java.time.ZoneId;
+import java.time.temporal.Temporal;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
  * $Id$ [23-Apr-2004]
  *
- * Defines a list of iCalendar periods. NOTE: By implementing the
- * <code>java.util.SortedSet</code> interface period lists will always be
- * sorted according to natural ordering.
+ * Defines a list of iCalendar periods. This class encapsulates a collection of naturally sorted periods that SHOULD
+ * conform to a common set of rules, including temporal type, applicable timezone and string representation (format).
+ *
+ * Results for a consumed time query will have the same temporal type, format type and (where applicable) timezone as
+ * the event start date.
+ *
+ * Results for a free-busy query will always be defined in UTC time (i.e. using temporal type {@link java.time.Instant})
+ *
+ * NOTE: By implementing the <code>java.util.SortedSet</code> interface period lists will always be sorted according
+ * to natural ordering.
  * 
  * @author Ben Fortuna
  */
-public class PeriodList implements Set<Period>, Serializable {
+public class PeriodList<T extends Temporal> implements Serializable {
 
 	private static final long serialVersionUID = -2317587285790834492L;
 
-	private final Set<Period> periods;
-    
-    private TimeZone timezone;
-    
-    private boolean utc;
-    
-    private final boolean unmodifiable;
+	private final Set<Period<T>> periods;
+
+    private transient final CalendarDateFormat dateFormat;
 
     /**
      * Default constructor.
      */
     public PeriodList() {
-        this(true);
+        this(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT);
     }
 
-    /**
-     * @param utc indicates whether the period list is in UTC time
-     */
-    public PeriodList(boolean utc) {
-    	this(utc, false);
+    public PeriodList(CalendarDateFormat dateFormat) {
+        this(new TreeSet<>(), dateFormat);
     }
 
-    /**
-     * @param utc indicates whether the period list is in UTC time
-     */
-    public PeriodList(boolean utc, final boolean unmodifiable) {
-        this.utc = utc;
-        this.unmodifiable = unmodifiable;
-        if (unmodifiable) {
-        	periods = Collections.emptySet();
-        }
-        else {
-        	periods = new TreeSet<Period>();
-        }
+    public PeriodList(Collection<Period<T>> periods) {
+        this(periods, CalendarDateFormat.FLOATING_DATE_TIME_FORMAT);
     }
-    
+
+    public PeriodList(Collection<Period<T>> periods, CalendarDateFormat dateFormat) {
+        this.periods = new TreeSet<>(periods);
+        this.dateFormat = dateFormat;
+    }
+
     /**
      * Parses the specified string representation to create a list of periods.
      * 
-     * @param aValue
-     *            a string representation of a list of periods
-     * @throws ParseException
-     *             thrown when an invalid string representation of a period list
-     *             is specified
+     * @param aValue a string representation of a list of periods
+     * @throws java.time.format.DateTimeParseException thrown when an invalid string representation of a period list
+     * is provided
      */
-    public PeriodList(final String aValue) throws ParseException {
-        this();
-        final StringTokenizer t = new StringTokenizer(aValue, ",");
-        while (t.hasMoreTokens()) {
-            add(new Period(t.nextToken()));
-        }
+    public static PeriodList parse(final String aValue) {
+        return new PeriodList<>(Arrays.stream(aValue.split(",")).map(Period::parse).collect(Collectors.toList()));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final String toString() {
-        return stream().map(Period::toString).collect(Collectors.joining(","));
+    @Override
+    public String toString() {
+        return periods.stream().map(p -> p.toString(dateFormat)).collect(Collectors.joining(","));
+    }
+
+    public String toString(ZoneId zoneId) {
+        return periods.stream().map(p -> p.toString(dateFormat, zoneId)).collect(Collectors.joining(","));
     }
 
     /**
      * Add a period to the list.
-     * 
+     *
      * @param period
      *            the period to add
      * @return true
      * @see java.util.List#add(java.lang.Object)
      */
-    public final boolean add(final Period period) {
-        if (isUtc()) {
-            period.setUtc(true);
-        }
-        else {
-            period.setTimeZone(timezone);
-        }
+    public final boolean add(final Period<T> period) {
         return periods.add(period);
     }
 
     /**
      * Remove a period from the list.
-     * 
+     *
      * @param period
      *            the period to remove
      * @return true if the list contained the specified period
@@ -151,32 +141,29 @@ public class PeriodList implements Set<Period>, Serializable {
      * 
      * @return a period list
      */
-    public final PeriodList normalise() {
-        Period prevPeriod = null;
-        Period period;
-        final PeriodList newList = new PeriodList(isUtc());
-        if (timezone != null) {
-            newList.setTimeZone(timezone);
-        }
+    public final PeriodList<T> normalise() {
+        Period<T> prevPeriod = null;
+        Period<T> period;
+        final PeriodList<T> newList = new PeriodList<>();
         boolean normalised = false;
-        for (Period period1 : this) {
+        for (Period<T> period1 : periods) {
             period = period1;
             if (period.isEmpty()) {
                 period = prevPeriod;
                 normalised = true;
             } else if (prevPeriod != null) {
-                // ignore periods contained by other periods..
-                if (prevPeriod.contains(period)) {
+                Interval prevInterval = prevPeriod.toInterval();
+                Interval periodInterval = period.toInterval();
+                if (prevInterval.encloses(periodInterval)) {
+                    // ignore periods contained by other periods..
                     period = prevPeriod;
                     normalised = true;
-                }
-                // combine intersecting periods..
-                else if (prevPeriod.intersects(period)) {
+                } else if (!prevInterval.intersection(periodInterval).isEmpty()) {
+                    // combine intersecting periods..
                     period = prevPeriod.add(period);
                     normalised = true;
-                }
-                // combine adjacent periods..
-                else if (prevPeriod.adjacent(period)) {
+                } else if (prevInterval.abuts(periodInterval)) {
+                    // combine adjacent periods..
                     period = prevPeriod.add(period);
                     normalised = true;
                 } else {
@@ -212,11 +199,11 @@ public class PeriodList implements Set<Period>, Serializable {
      * @param periods a list of periods to add
      * @return a period list instance
      */
-    public final PeriodList add(final PeriodList periods) {
+    public final PeriodList<T> add(final PeriodList<T> periods) {
         if (periods != null) {
-            final PeriodList newList = new PeriodList();
-            newList.addAll(this);
-            newList.addAll(periods);
+            final PeriodList<T> newList = new PeriodList<>();
+            newList.getPeriods().addAll(this.periods);
+            newList.getPeriods().addAll(this.periods);
             return newList.normalise();
         }
         return this;
@@ -231,165 +218,57 @@ public class PeriodList implements Set<Period>, Serializable {
      *            a list of periods to subtract from this list
      * @return a period list
      */
-    public final PeriodList subtract(final PeriodList subtractions) {
+    public final PeriodList<T> subtract(final PeriodList<T> subtractions) {
         if (subtractions == null || subtractions.isEmpty()) {
             return this;
         }
         
-        PeriodList result = this;
-        PeriodList tmpResult = new PeriodList();
+        PeriodList<T> result = this;
+        PeriodList<T> tmpResult = new PeriodList<>();
 
-        for (final Period subtraction : subtractions) {
-            for (final Period period : result) {
-                tmpResult.addAll(period.subtract(subtraction));
+        for (final Period<T> subtraction : subtractions.getPeriods()) {
+            for (final Period<T> period : result.getPeriods()) {
+                tmpResult.addAll(period.subtract(subtraction).getPeriods());
             }
             result = tmpResult;
-            tmpResult = new PeriodList();
+            tmpResult = new PeriodList<>();
         }
 
         return result;
     }
 
-    /**
-     * Indicates whether this list is in local or UTC format.
-     * @return Returns true if in UTC format, otherwise false.
-     */
-    public final boolean isUtc() {
-        return utc;
+    public Set<Period<T>> getPeriods() {
+        return periods;
     }
 
-    public boolean isUnmodifiable() {
-		return unmodifiable;
-	}
-    
     /**
-     * Sets whether this list is in UTC or local time format.
-     * @param utc The utc to set.
+     * {@inheritDoc}
      */
-    public final void setUtc(final boolean utc) {
-        for (final Period period : this) {
-            period.setUtc(utc);
+    public boolean addAll(Collection<Period<T>> arg0) {
+        for (Period<T> p : arg0) {
+            add(p);
         }
-        this.timezone = null;
-        this.utc = utc;
-    }
-    
-    /**
-     * Applies the specified timezone to all dates in the list.
-     * All dates added to this list will also have this timezone
-     * applied.
-     * @param timeZone the timezone for the period list
-     */
-    public final void setTimeZone(final TimeZone timeZone) {
-        for (final Period period : this) {
-            period.setTimeZone(timeZone);
-        }
-        this.timezone = timeZone;
-        this.utc = false;
+        return true;
     }
 
     /**
-     * @return Returns the timeZone.
+     * {@inheritDoc}
      */
-    public final TimeZone getTimeZone() {
-        return timezone;
+    public boolean isEmpty() {
+        return periods.isEmpty();
     }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean addAll(Collection<? extends Period> arg0) {
-		for (Period p : arg0) {
-			add(p);
-		}
-		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void clear() {
-		periods.clear();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean contains(Object o) {
-		return periods.contains(o);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean containsAll(Collection<?> arg0) {
-		return periods.containsAll(arg0);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isEmpty() {
-		return periods.isEmpty();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Iterator<Period> iterator() {
-		return periods.iterator();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean removeAll(Collection<?> arg0) {
-		return periods.removeAll(arg0);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean retainAll(Collection<?> arg0) {
-		return periods.retainAll(arg0);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int size() {
-		return periods.size();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Object[] toArray() {
-		return periods.toArray();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public <T> T[] toArray(T[] arg0) {
-		return periods.toArray(arg0);
-	}
-	
 	public boolean equals(Object obj) {
 		if (!(obj instanceof PeriodList)) {
 			return false;
 		}
 		final PeriodList rhs = (PeriodList) obj;
 		return new EqualsBuilder().append(periods, rhs.periods)
-			.append(timezone, rhs.timezone)
-			.append(utc, rhs.utc)
 			.isEquals();
 	}
 	
 	public int hashCode() {
 		return new HashCodeBuilder().append(periods)
-			.append(timezone)
-			.append(utc)
 			.toHashCode();
 	}
 }
