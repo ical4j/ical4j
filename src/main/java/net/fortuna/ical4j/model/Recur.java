@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.transform.Transformer;
 import net.fortuna.ical4j.transform.recurrence.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Configurator;
@@ -41,8 +40,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.ZonedDateTime;
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
@@ -56,7 +55,7 @@ import java.util.*;
  * @author Ben Fortuna
  * @version 2.0
  */
-public class Recur implements Serializable {
+public class Recur<T extends Temporal> implements Serializable {
 
     private static final long serialVersionUID = -7333226591784095142L;
 
@@ -161,7 +160,7 @@ public class Recur implements Serializable {
 
     private Frequency frequency;
 
-    private Instant until;
+    private TemporalAdapter<T> until;
 
     private Integer count;
 
@@ -184,8 +183,6 @@ public class Recur implements Serializable {
     private final NumberList monthList = new NumberList(1, 12, false);
 
     private final NumberList setPosList = new NumberList(1, 366, true);
-
-    private Map<String, Transformer<List<? extends Temporal>>> transformers;
 
     private WeekDay.Day weekStartDay;
 
@@ -214,7 +211,7 @@ public class Recur implements Serializable {
                 frequency = Frequency.valueOf(nextToken(tokens, token));
             } else if (UNTIL.equals(token)) {
                 final String untilString = nextToken(tokens, token);
-                until = Instant.from(TemporalAdapter.parse(untilString).getTemporal());
+                until = TemporalAdapter.parse(untilString);
             } else if (COUNT.equals(token)) {
                 count = Integer.parseInt(nextToken(tokens, token));
             } else if (INTERVAL.equals(token)) {
@@ -265,7 +262,7 @@ public class Recur implements Serializable {
      * @param until     maximum recurrence date
      */
     @Deprecated
-    public Recur(final String frequency, final Instant until) {
+    public Recur(final String frequency, final T until) {
         this(Frequency.valueOf(frequency), until);
     }
 
@@ -273,9 +270,9 @@ public class Recur implements Serializable {
      * @param frequency a recurrence frequency string
      * @param until     maximum recurrence date
      */
-    public Recur(final Frequency frequency, final Instant until) {
+    public Recur(final Frequency frequency, final T until) {
         this.frequency = frequency;
-        this.until = until;
+        this.until = new TemporalAdapter<T>(until);
         validateFrequency();
     }
 
@@ -432,8 +429,8 @@ public class Recur implements Serializable {
     /**
      * @return Returns the until or null if there is none.
      */
-    public final Instant getUntil() {
-        return until;
+    public final T getUntil() {
+        return until != null ? until.getTemporal() : null;
     }
 
     /**
@@ -552,7 +549,7 @@ public class Recur implements Serializable {
      * @param periodEnd   the end of the period
      * @return a list of dates
      */
-    public final <T extends Temporal> List<T> getDates(final T periodStart, final T periodEnd) {
+    public final List<T> getDates(final T periodStart, final T periodEnd) {
         return getDates(periodStart, periodStart, periodEnd, -1);
     }
 
@@ -563,7 +560,7 @@ public class Recur implements Serializable {
      * @param period the period of returned recurrence dates
      * @return a list of dates
      */
-    public final <T extends Temporal> List<T> getDates(final T seed, final Period<T> period) {
+    public final List<T> getDates(final T seed, final Period<T> period) {
         return getDates(seed, period.getStart(), period.getEnd(), -1);
     }
 
@@ -579,8 +576,7 @@ public class Recur implements Serializable {
      * @param periodEnd   the end of the period
      * @return a list of dates represented by this recur instance
      */
-    public final <T extends Temporal> List<T> getDates(final T seed, final T periodStart,
-                                   final T periodEnd) {
+    public final List<T> getDates(final T seed, final T periodStart, final T periodEnd) {
         return getDates(seed, periodStart, periodEnd, -1);
     }
 
@@ -598,8 +594,7 @@ public class Recur implements Serializable {
      *                    worth extra may be returned. Less than 0 means no limit
      * @return a list of dates represented by this recur instance
      */
-    public final <T extends Temporal> List<T> getDates(final T seed, final T periodStart,
-                                   final T periodEnd, final int maxCount) {
+    public final List<T> getDates(final T seed, final T periodStart, final T periodEnd, final int maxCount) {
 
         final List<T> dates = new ArrayList<>();
 
@@ -608,8 +603,8 @@ public class Recur implements Serializable {
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
         if (count == null) {
-            while (Instant.from(candidateSeed).isBefore(Instant.from(periodStart))) {
-                candidateSeed = (T) smartIncrement(candidateSeed);
+            while (TemporalAdapter.isBefore(candidateSeed, periodStart)) {
+                candidateSeed = smartIncrement(candidateSeed);
                 if (candidateSeed == null) {
                     return dates;
                 }
@@ -620,16 +615,13 @@ public class Recur implements Serializable {
         int noCandidateIncrementCount = 0;
         T candidate = null;
         while ((maxCount < 0) || (dates.size() < maxCount)) {
-            if (getUntil() != null && candidate != null
-                    && Instant.from(candidate).isAfter(getUntil())) {
+            if (getUntil() != null && candidate != null && TemporalAdapter.isAfter(candidate, getUntil())) {
                 break;
             }
-            if (periodEnd != null && candidate != null
-                    && Instant.from(candidate).isAfter(Instant.from(periodEnd))) {
+            if (periodEnd != null && candidate != null && TemporalAdapter.isAfter(candidate, periodEnd)) {
                 break;
             }
-            if (getCount() >= 1
-                    && (dates.size() + invalidCandidates.size()) >= getCount()) {
+            if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
                 break;
             }
 
@@ -641,20 +633,22 @@ public class Recur implements Serializable {
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
                 // sort candidates for identifying when UNTIL date is exceeded..
-                Collections.sort(candidates, CANDIDATE_SORTER);
+                if (seed instanceof LocalDate) {
+                    candidates.sort(new TemporalComparator(ChronoUnit.DAYS));
+                } else {
+                    candidates.sort(CANDIDATE_SORTER);
+                }
                 for (T candidate1 : candidates) {
                     candidate = candidate1;
                     // don't count candidates that occur before the seed date..
-                    if (!Instant.from(candidate).isBefore(Instant.from(seed))) {
+                    if (!TemporalAdapter.isBefore(candidate, seed)) {
                         // candidates exclusive of periodEnd..
-                        if (Instant.from(candidate).isBefore(Instant.from(periodStart))
-                                || Instant.from(candidate).isAfter(Instant.from(periodEnd))) {
+                        if (TemporalAdapter.isBefore(candidate, periodStart) || TemporalAdapter.isAfter(candidate, periodEnd)) {
                             invalidCandidates.add(candidate);
-                        } else if (getCount() >= 1
-                                && (dates.size() + invalidCandidates.size()) >= getCount()) {
+                        } else if (getCount() >= 1 && (dates.size() + invalidCandidates.size()) >= getCount()) {
                             break;
-                        } else if (!Instant.from(candidate).isBefore(Instant.from(periodStart)) && !Instant.from(candidate).isAfter(Instant.from(periodEnd))
-                            && (getUntil() == null || !Instant.from(candidate).isAfter(getUntil()))) {
+                        } else if (!TemporalAdapter.isBefore(candidate, periodStart) && !TemporalAdapter.isAfter(candidate, periodEnd)
+                            && (getUntil() == null || !TemporalAdapter.isAfter(candidate, getUntil()))) {
 
                             dates.add(candidate);
                         }
@@ -672,7 +666,11 @@ public class Recur implements Serializable {
             }
         }
         // sort final list..
-        Collections.sort(dates, CANDIDATE_SORTER);
+        if (seed instanceof LocalDate) {
+            dates.sort(new TemporalComparator(ChronoUnit.DAYS));
+        } else {
+            dates.sort(CANDIDATE_SORTER);
+        }
         return dates;
     }
 
@@ -687,15 +685,15 @@ public class Recur implements Serializable {
      * @param startDate the date to start the search
      * @return the next date in the recurrence series after startDate
      */
-    public final <T extends Temporal> T getNextDate(final T seed, final T startDate) {
+    public final T getNextDate(final T seed, final T startDate) {
 
         T candidateSeed = seed;
 
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
         if (count == null) {
-            while (Instant.from(candidateSeed).isBefore(Instant.from(startDate))) {
-                candidateSeed = (T) increment(candidateSeed);
+            while (TemporalAdapter.isBefore(candidateSeed, startDate)) {
+                candidateSeed = increment(candidateSeed);
             }
         }
 
@@ -704,7 +702,7 @@ public class Recur implements Serializable {
         T candidate = candidateSeed;
 
         while (true) {
-            if (getUntil() != null && Instant.from(candidate).isAfter(getUntil())) {
+            if (getUntil() != null && TemporalAdapter.isAfter(candidate, getUntil())) {
                 break;
             }
 
@@ -716,20 +714,23 @@ public class Recur implements Serializable {
             if (!candidates.isEmpty()) {
                 noCandidateIncrementCount = 0;
                 // sort candidates for identifying when UNTIL date is exceeded..
-                Collections.sort(candidates, CANDIDATE_SORTER);
+                if (seed instanceof LocalDate) {
+                    candidates.sort(new TemporalComparator(ChronoUnit.DAYS));
+                } else {
+                    candidates.sort(CANDIDATE_SORTER);
+                }
 
                 for (T candidate1 : candidates) {
                     candidate = candidate1;
                     // don't count candidates that occur before the seed date..
-                    if (!Instant.from(candidate).isBefore(Instant.from(seed))) {
+                    if (!TemporalAdapter.isBefore(candidate, seed)) {
                         // Candidate must be after startDate because
                         // we want the NEXT occurrence
-                        if (!Instant.from(candidate).isAfter(Instant.from(startDate))) {
+                        if (!TemporalAdapter.isAfter(candidate, startDate)) {
                             invalidCandidateCount++;
                         } else if (getCount() > 0 && invalidCandidateCount >= getCount()) {
                             break;
-                        } else if (!(getUntil() != null
-                                && Instant.from(candidate).isAfter(getUntil()))) {
+                        } else if (!(getUntil() != null && TemporalAdapter.isAfter(candidate, getUntil()))) {
                             return candidate;
                         }
                     }
@@ -740,7 +741,7 @@ public class Recur implements Serializable {
                     break;
                 }
             }
-            candidateSeed = (T) increment(candidateSeed);
+            candidateSeed = increment(candidateSeed);
         }
         return null;
     }
@@ -750,37 +751,38 @@ public class Recur implements Serializable {
      *
      * @param cal a {@link Temporal} value to increment
      */
-    private <T extends Temporal> T increment(final T cal) {
+    private T increment(final T cal) {
         // initialise interval..
         final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
         return (T) cal.plus(calInterval, calIncField);
     }
 
-    private <T extends Temporal> T smartIncrement(final T cal) {
+    private T smartIncrement(final T cal) {
         // initialise interval..
-        Temporal result = null;
+        T result = null;
         final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
-        int multiplier = 1;
         if (calIncField == ChronoUnit.MONTHS || calIncField == ChronoUnit.YEARS) {
-            Temporal seededCal;
+            Temporal seededCal = cal.plus(calInterval, calIncField);
             // increment up to 12 times to check for next valid occurence.
             // as this loop only increments monthly or yearly,
             // a monthly occurence will be found in (0,12] increments
             // and a valid yearly recurrence will be found within (0,4]
             // (ex. recurrence on February 29 on a leap year will find the next occurrence on the next leap year).
             // if none found in these, return null.
-            do {
+            int multiplier = 2;
+            for (; multiplier <= 12; multiplier++) {
                 seededCal = cal.plus(calInterval * multiplier, calIncField);
-                multiplier++;
-            } while (ZonedDateTime.from(seededCal).getDayOfMonth() != ZonedDateTime.from(cal).getDayOfMonth()
-                    && multiplier <= 12);
+                if (seededCal.get(ChronoField.DAY_OF_MONTH) != cal.get(ChronoField.DAY_OF_MONTH)) {
+                    break;
+                }
+            }
             if (multiplier <= 12) {
-                result = seededCal;
+                result = (T) seededCal;
             }
         } else {
-            result = cal.plus(calInterval, calIncField);
+            result = (T) cal.plus(calInterval, calIncField);
         }
-        return (T) result;
+        return result;
     }
 
     /**
@@ -789,10 +791,10 @@ public class Recur implements Serializable {
      * @param date  the seed date
      * @return a List of Temporal of the same type as the seed date
      */
-    private <T extends Temporal> List<T> getCandidates(final T rootSeed, final T date) {
+    private List<T> getCandidates(final T rootSeed, final T date) {
         List<T> dates = new ArrayList<>();
         dates.add(date);
-        if (transformers.get(BYMONTH) != null) {
+        if (!monthList.isEmpty()) {
             dates = new ByMonthRule<T>(monthList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
@@ -800,7 +802,7 @@ public class Recur implements Serializable {
             }
         }
 
-        if (transformers.get(BYWEEKNO) != null) {
+        if (!weekNoList.isEmpty()) {
             dates = new ByWeekNoRule<T>(weekNoList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
@@ -808,7 +810,7 @@ public class Recur implements Serializable {
             }
         }
 
-        if (transformers.get(BYYEARDAY) != null) {
+        if (!yearDayList.isEmpty()) {
             dates = new ByYearDayRule<T>(yearDayList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
@@ -816,7 +818,7 @@ public class Recur implements Serializable {
             }
         }
 
-        if (transformers.get(BYMONTHDAY) != null) {
+        if (!monthDayList.isEmpty()) {
             dates = new ByMonthDayRule<T>(monthDayList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
@@ -826,12 +828,13 @@ public class Recur implements Serializable {
                 && weekNoList.isEmpty() && dayList.isEmpty())) {
 
             NumberList implicitMonthDayList = new NumberList();
-            implicitMonthDayList.add(ZonedDateTime.from(rootSeed).getDayOfMonth());
+            // where seed doesn't provide timezone rules derive using system default timezone..
+            implicitMonthDayList.add(new TemporalAdapter<>(rootSeed).toLocalTime().getDayOfMonth());
             ByMonthDayRule<T> implicitRule = new ByMonthDayRule<>(implicitMonthDayList, frequency);
             dates = implicitRule.transform(dates);
         }
 
-        if (transformers.get(BYDAY) != null) {
+        if (!dayList.isEmpty()) {
             dates = new ByDayRule<T>(dayList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
@@ -840,12 +843,11 @@ public class Recur implements Serializable {
         } else if (frequency == Frequency.WEEKLY || (frequency == Frequency.YEARLY && yearDayList.isEmpty()
                 && !weekNoList.isEmpty() && monthDayList.isEmpty())) {
 
-            ByDayRule<T> implicitRule = new ByDayRule<>(new WeekDayList(WeekDay.getWeekDay(
-                    ZonedDateTime.from(rootSeed).getDayOfWeek())), deriveFilterType());
+            ByDayRule<T> implicitRule = new ByDayRule<>(rootSeed, deriveFilterType());
             dates = implicitRule.transform(dates);
         }
 
-        if (transformers.get(BYHOUR) != null) {
+        if (!hourList.isEmpty()) {
             dates = new ByHourRule<T>(hourList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
@@ -853,7 +855,7 @@ public class Recur implements Serializable {
             }
         }
 
-        if (transformers.get(BYMINUTE) != null) {
+        if (!minuteList.isEmpty()) {
             dates = new ByMinuteRule<T>(minuteList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
@@ -861,7 +863,7 @@ public class Recur implements Serializable {
             }
         }
 
-        if (transformers.get(BYSECOND) != null) {
+        if (!secondList.isEmpty()) {
             dates = new BySecondRule<T>(secondList, frequency).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
@@ -869,7 +871,7 @@ public class Recur implements Serializable {
             }
         }
 
-        if (transformers.get(BYSETPOS) != null) {
+        if (!setPosList.isEmpty()) {
             dates = new BySetPosRule<T>(setPosList).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
@@ -937,8 +939,8 @@ public class Recur implements Serializable {
      * @deprecated will be removed in a future version to support immutable pattern.
      */
     @Deprecated
-    public final void setUntil(final Instant until) {
-        this.until = until;
+    public final void setUntil(final T until) {
+        this.until = new TemporalAdapter<T>(until);
         this.count = -1;
     }
 
@@ -955,11 +957,11 @@ public class Recur implements Serializable {
     /**
      * Support for building Recur instances.
      */
-    public static class Builder {
+    public static class Builder<T extends Temporal> {
 
         private Frequency frequency;
 
-        private Instant until;
+        private T until;
 
         private Integer count;
 
@@ -990,7 +992,7 @@ public class Recur implements Serializable {
             return this;
         }
 
-        public Builder until(Instant until) {
+        public Builder until(T until) {
             this.until = until;
             return this;
         }
@@ -1055,10 +1057,10 @@ public class Recur implements Serializable {
             return this;
         }
 
-        public Recur build() {
-            Recur recur = new Recur();
+        public Recur<T> build() {
+            Recur<T> recur = new Recur<>();
             recur.frequency = frequency;
-            recur.until = until;
+            recur.until = new TemporalAdapter<T>(until);
             recur.count = count;
             recur.interval = interval;
             if (secondList != null) {
