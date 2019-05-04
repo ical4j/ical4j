@@ -3,7 +3,6 @@ package net.fortuna.ical4j.transform.recurrence;
 import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.Recur.Frequency;
-import net.fortuna.ical4j.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,7 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
         for (final T date : dates) {
             final int numWeeksInYear = (int) IsoFields.WEEK_OF_WEEK_BASED_YEAR.rangeRefinedBy(date).getMaximum();
             for (final Integer weekNo : weekNoList) {
-                if (weekNo == 0 || weekNo < -Dates.MAX_WEEKS_PER_YEAR || weekNo > Dates.MAX_WEEKS_PER_YEAR) {
+                if (weekNo == 0 || weekNo <= -numWeeksInYear || weekNo > numWeeksInYear) {
                     if (log.isTraceEnabled()) {
                         log.trace("Invalid week of year: " + weekNo);
                     }
@@ -50,12 +49,12 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
                     if (numWeeksInYear < weekNo) {
                         continue;
                     }
-                    candidate = (T) date.with(ALIGNED_WEEK_OF_YEAR, weekNo);
+                    candidate = withTemporalField(date, ALIGNED_WEEK_OF_YEAR, weekNo);
                 } else {
                     if (numWeeksInYear < -weekNo) {
                         continue;
                     }
-                    candidate = (T) date.with(ALIGNED_WEEK_OF_YEAR, numWeeksInYear + weekNo);
+                    candidate = withTemporalField(date, ALIGNED_WEEK_OF_YEAR, numWeeksInYear + weekNo);
                 }
                 weekNoDates.add(candidate);
             }

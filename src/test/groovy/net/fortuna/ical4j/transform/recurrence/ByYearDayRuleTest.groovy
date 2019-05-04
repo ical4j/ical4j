@@ -1,28 +1,26 @@
 package net.fortuna.ical4j.transform.recurrence
 
-import net.fortuna.ical4j.model.Date
-import net.fortuna.ical4j.model.DateList
+import net.fortuna.ical4j.model.CalendarDateFormat
 import net.fortuna.ical4j.model.NumberList
-import net.fortuna.ical4j.model.parameter.Value
+import spock.lang.Shared
 import spock.lang.Specification
 
 import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY
 
 class ByYearDayRuleTest extends Specification {
 
+    @Shared
+    def dateFormat = CalendarDateFormat.DATE_FORMAT
+
     def 'verify transformations by day'() {
         given: 'a BYYEARDAY rule'
         ByYearDayRule rule = [new NumberList(rulePart), frequency]
 
-        and: 'a list of dates'
-        DateList dateList = [Value.DATE]
-        dateList.addAll(dates)
-
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dateList) == expectedResult
+        rule.transform(dates) == expectedResult
 
         where:
         rulePart | frequency       | dates                  | expectedResult
-        '1'      | YEARLY | [new Date('20150103')] | [new Date('20150101')]
+        '1'      | YEARLY | [dateFormat.parse('20150103')] | [dateFormat.parse('20150101')]
     }
 }

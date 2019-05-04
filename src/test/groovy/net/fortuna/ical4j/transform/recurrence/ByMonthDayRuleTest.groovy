@@ -1,9 +1,8 @@
 package net.fortuna.ical4j.transform.recurrence
 
-import net.fortuna.ical4j.model.Date
-import net.fortuna.ical4j.model.DateList
+
 import net.fortuna.ical4j.model.NumberList
-import net.fortuna.ical4j.model.parameter.Value
+import net.fortuna.ical4j.model.TemporalAdapter
 import spock.lang.Specification
 
 import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY
@@ -14,15 +13,11 @@ class ByMonthDayRuleTest extends Specification {
         given: 'a BYMONTHDAY rule'
         ByMonthDayRule rule = [new NumberList(rulePart), frequency]
 
-        and: 'a list of dates'
-        DateList dateList = [Value.DATE]
-        dateList.addAll(dates)
-
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dateList) == expectedResult
+        rule.transform(dates) == expectedResult
 
         where:
-        rulePart | frequency       | dates                  | expectedResult
-        '1'      | YEARLY | [new Date('20150103')] | [new Date('20150101')]
+        rulePart | frequency       | dates                      | expectedResult
+        '1'      | YEARLY | [TemporalAdapter.parse('20150103').temporal] | [TemporalAdapter.parse('20150101').temporal]
     }
 }

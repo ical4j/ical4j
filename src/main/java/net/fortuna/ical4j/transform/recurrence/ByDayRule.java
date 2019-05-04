@@ -6,7 +6,6 @@ import net.fortuna.ical4j.model.WeekDayList;
 
 import java.time.Month;
 import java.time.Year;
-import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +22,11 @@ import static java.time.temporal.ChronoField.*;
 public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
     private final WeekDayList dayList;
+
+    public ByDayRule(T seed, Frequency frequency) {
+        super(frequency);
+        this.dayList = new WeekDayList(WeekDay.getWeekDay(getDayOfWeek(seed)));
+    }
 
     public ByDayRule(WeekDayList dayList, Frequency frequency) {
         super(frequency);
@@ -51,7 +55,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
             // filter by offset
             List<T> filtered = new ArrayList<>();
             dayList.forEach(day -> filtered.addAll(getOffsetDates(transformed.stream().filter(d ->
-                    ZonedDateTime.from(date).getDayOfWeek() == WeekDay.getDayOfWeek(day))
+                    getDayOfWeek(d) == WeekDay.getDayOfWeek(day))
                 .collect(Collectors.toList()), day.getOffset())));
             weekDayDates.addAll(filtered);
         }
@@ -59,11 +63,9 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
     }
 
     private class LimitFilter implements Function<T, List<T>> {
-
         @Override
         public List<T> apply(T date) {
-            ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
-            if (dayList.contains(WeekDay.getWeekDay(zonedDateTime.getDayOfWeek()))) {
+            if (dayList.contains(WeekDay.getWeekDay(getDayOfWeek(date)))) {
                 return Collections.singletonList(date);
             }
             return Collections.emptyList();
@@ -71,15 +73,12 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
     }
 
     private class WeeklyExpansionFilter implements Function<T, List<T>> {
-
         @Override
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
             for (int i = 1; i <= 7; i++) {
-                T candidate = (T) date.with(DAY_OF_WEEK, i);
-                if (!dayList.stream().map(WeekDay::getDayOfWeek)
-                        .filter(calDay -> ZonedDateTime.from(candidate).getDayOfWeek() == calDay)
-                        .collect(Collectors.toList()).isEmpty()) {
+                T candidate = withTemporalField(date, DAY_OF_WEEK, i);
+                if (dayList.stream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
                     retVal.add(candidate);
                 }
             }
@@ -88,18 +87,15 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
     }
 
     private class MonthlyExpansionFilter implements Function<T, List<T>> {
-
         @Override
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
-            Month month = ZonedDateTime.from(date).getMonth();
-            boolean leapYear = Year.isLeap(ZonedDateTime.from(date).getYear());
+            Month month = Month.of(getMonth(date));
+            boolean leapYear = Year.isLeap(getYear(date));
             // construct a list of possible month days..
             for (int i = 1; i <= month.length(leapYear); i++) {
-                T candidate = (T) date.with(DAY_OF_MONTH, i);
-                if (!dayList.stream().map(WeekDay::getDayOfWeek)
-                        .filter(calDay -> ZonedDateTime.from(candidate).getDayOfWeek() == calDay)
-                        .collect(Collectors.toList()).isEmpty()) {
+                T candidate = withTemporalField(date, DAY_OF_MONTH, i);
+                if (dayList.stream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
                     retVal.add(candidate);
                 }
             }
@@ -108,17 +104,14 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
     }
 
     private class YearlyExpansionFilter implements Function<T, List<T>> {
-
         @Override
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
-            int year = ZonedDateTime.from(date).getYear();
+            int year = getYear(date);
             // construct a list of possible year days..
             for (int i = 1; i <= Year.of(year).length(); i++) {
-                T candidate = (T) date.with(DAY_OF_YEAR, i);
-                if (!dayList.stream().map(WeekDay::getDayOfWeek)
-                        .filter(calDay -> ZonedDateTime.from(candidate).getDayOfWeek() == calDay)
-                        .collect(Collectors.toList()).isEmpty()) {
+                T candidate = withTemporalField(date, DAY_OF_YEAR, i);
+                if (dayList.stream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
                     retVal.add(candidate);
                 }
             }

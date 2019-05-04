@@ -3,7 +3,6 @@ package net.fortuna.ical4j.transform.recurrence;
 import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur.Frequency;
 
-import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +42,9 @@ public class BySecondRule<T extends Temporal> extends AbstractDateExpansionRule<
     }
 
     private class LimitFilter implements Function<T, Optional<T>> {
-
         @Override
         public Optional<T> apply(T date) {
-            ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
-            if (secondList.contains(zonedDateTime.getSecond())) {
+            if (secondList.contains(getSecond(date))) {
                 return Optional.of(date);
             }
             return Optional.empty();
@@ -55,13 +52,12 @@ public class BySecondRule<T extends Temporal> extends AbstractDateExpansionRule<
     }
 
     private class ExpansionFilter implements Function<T, List<T>> {
-
         @Override
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
             // construct a list of possible seconds..
             secondList.forEach(second -> {
-                T candidate = (T) date.with(SECOND_OF_MINUTE, second);
+                T candidate = withTemporalField(date, SECOND_OF_MINUTE, second);
                 retVal.add(candidate);
             });
             return retVal;

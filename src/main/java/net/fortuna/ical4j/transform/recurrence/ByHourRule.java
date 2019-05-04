@@ -3,7 +3,6 @@ package net.fortuna.ical4j.transform.recurrence;
 import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur.Frequency;
 
-import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -45,11 +44,9 @@ public class ByHourRule<T extends Temporal> extends AbstractDateExpansionRule<T>
     }
 
     private class LimitFilter implements Function<T, Optional<T>> {
-
         @Override
         public Optional<T> apply(T date) {
-            ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
-            if (hourList.contains(zonedDateTime.getHour())) {
+            if (hourList.contains(getHour(date))) {
                 return Optional.of(date);
             }
             return Optional.empty();
@@ -57,13 +54,12 @@ public class ByHourRule<T extends Temporal> extends AbstractDateExpansionRule<T>
     }
 
     private class ExpansionFilter implements Function<T, List<T>> {
-
         @Override
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
             // construct a list of possible months..
             hourList.forEach(hour -> {
-                T candidate = (T) date.with(HOUR_OF_DAY, hour);
+                T candidate = withTemporalField(date, HOUR_OF_DAY, hour);
                 retVal.add(candidate);
             });
             return retVal;

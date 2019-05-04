@@ -1,11 +1,17 @@
 package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.Recur.Frequency;
+import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.transform.Transformer;
 
 import java.io.Serializable;
+import java.time.DayOfWeek;
+import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
+import java.time.temporal.TemporalField;
 import java.util.List;
+
+import static java.time.temporal.ChronoField.*;
 
 /**
  * Subclasses provide implementations to expand (or limit) a list of dates based on rule requirements as
@@ -85,5 +91,53 @@ public abstract class AbstractDateExpansionRule<T extends Temporal> implements T
 
     protected Frequency getFrequency() {
         return frequency;
+    }
+
+    protected int getSecond(T date) {
+        return getTemporalField(date, SECOND_OF_MINUTE);
+    }
+
+    protected int getMinute(T date) {
+        return getTemporalField(date, MINUTE_OF_HOUR);
+    }
+
+    protected int getHour(T date) {
+        return getTemporalField(date, HOUR_OF_DAY);
+    }
+
+    protected DayOfWeek getDayOfWeek(T date) {
+        return DayOfWeek.of(getTemporalField(date, DAY_OF_WEEK));
+    }
+
+    protected int getDayOfMonth(T date) {
+        return getTemporalField(date, DAY_OF_MONTH);
+    }
+
+    protected int getDayOfYear(T date) {
+        return getTemporalField(date, DAY_OF_YEAR);
+    }
+
+    protected int getMonth(T date) {
+        return getTemporalField(date, MONTH_OF_YEAR);
+    }
+
+    protected int getYear(T date) {
+        return getTemporalField(date, YEAR);
+    }
+
+    protected int getTemporalField(T date, TemporalField field) {
+        if (date.isSupported(field)) {
+            return date.get(field);
+        } else {
+            ZonedDateTime zonedDateTime = new TemporalAdapter<>(date).toLocalTime();
+            return zonedDateTime.get(field);
+        }
+    }
+
+    protected T withTemporalField(T date, TemporalField field, int value) {
+        if (date.isSupported(field)) {
+            return (T) date.with(field, value);
+        }
+        throw new IllegalArgumentException("Invalid temporal type for this rule");
     }
 }

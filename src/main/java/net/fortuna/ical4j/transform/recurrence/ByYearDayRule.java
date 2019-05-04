@@ -3,13 +3,11 @@ package net.fortuna.ical4j.transform.recurrence;
 import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.Recur.Frequency;
-import net.fortuna.ical4j.util.Dates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.time.Year;
-import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,11 +50,9 @@ public class ByYearDayRule<T extends Temporal> extends AbstractDateExpansionRule
     }
 
     private class LimitFilter implements Function<T, Optional<T>> {
-
         @Override
         public Optional<T> apply(T date) {
-            ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
-            if (yearDayList.contains(zonedDateTime.getDayOfYear())) {
+            if (yearDayList.contains(getDayOfYear(date))) {
                 return Optional.of(date);
             }
             return Optional.empty();
@@ -69,26 +65,25 @@ public class ByYearDayRule<T extends Temporal> extends AbstractDateExpansionRule
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
             // construct a list of possible year days..
+            final int numDaysInYear = Year.of(getYear(date)).length();
             for (final int yearDay : yearDayList) {
-                if (yearDay == 0 || yearDay < -Dates.MAX_DAYS_PER_YEAR || yearDay > Dates.MAX_DAYS_PER_YEAR) {
+                if (yearDay == 0 || yearDay <= -numDaysInYear || yearDay > numDaysInYear) {
                     if (log.isTraceEnabled()) {
                         log.trace("Invalid day of year: " + yearDay);
                     }
                     continue;
                 }
-                ZonedDateTime zonedDateTime = ZonedDateTime.from(date);
-                final int numDaysInYear = Year.of(zonedDateTime.getYear()).length();
                 T candidate;
                 if (yearDay > 0) {
                     if (numDaysInYear < yearDay) {
                         continue;
                     }
-                    candidate = (T) date.with(DAY_OF_YEAR, yearDay);
+                    candidate = withTemporalField(date, DAY_OF_YEAR, yearDay);
                 } else {
                     if (numDaysInYear < -yearDay) {
                         continue;
                     }
-                    candidate = (T) date.with(DAY_OF_YEAR, numDaysInYear + yearDay);
+                    candidate = withTemporalField(date, DAY_OF_YEAR, numDaysInYear + yearDay);
                 }
                 retVal.add(candidate);
             }
