@@ -36,7 +36,6 @@ import net.fortuna.ical4j.util.Numbers;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 /**
@@ -91,11 +90,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      */
     public NumberList(final String aString, int minValue, int maxValue, boolean allowsNegativeValues) {
     	this(minValue, maxValue, allowsNegativeValues);
-        final StringTokenizer t = new StringTokenizer(aString, ",");
-        while (t.hasMoreTokens()) {
-        	final int value = Numbers.parseInt(t.nextToken());
-            add(value);
-        }
+        addAll(Arrays.stream(aString.split(",")).map(Numbers::parseInt).collect(Collectors.toList()));
     }
 
     /**

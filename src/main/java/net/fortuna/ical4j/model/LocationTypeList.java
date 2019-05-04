@@ -32,9 +32,9 @@
 package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -65,12 +65,8 @@ public class LocationTypeList implements Serializable, Iterable<String> {
      *            a string representation of a list of categories
      */
     public LocationTypeList(final String aValue) {
-        locationTypes = new CopyOnWriteArrayList<String>();
-
-        final StringTokenizer t = new StringTokenizer(aValue, ",");
-        while (t.hasMoreTokens()) {
-            locationTypes.add(t.nextToken());
-        }
+        locationTypes = new CopyOnWriteArrayList<>();
+        locationTypes.addAll(Arrays.asList(aValue.split(",")));
     }
 
     /**

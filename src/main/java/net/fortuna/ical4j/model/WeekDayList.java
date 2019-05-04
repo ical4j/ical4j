@@ -36,7 +36,6 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 /**
@@ -76,13 +75,11 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
         final boolean outlookCompatibility =
             CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
         
-        final StringTokenizer t = new StringTokenizer(aString, ",");
-        while (t.hasMoreTokens()) {
+        for (String w : aString.split(",")) {
             if (outlookCompatibility) {
-                add(new WeekDay(t.nextToken().replaceAll(" ", "")));
-            }
-            else {
-                add(new WeekDay(t.nextToken()));
+                add(new WeekDay(w.replaceAll(" ", "")));
+            } else {
+                add(new WeekDay(w));
             }
         }
     }

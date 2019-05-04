@@ -40,7 +40,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -70,18 +69,12 @@ public class AddressList implements Serializable, Iterable<URI> {
      */
     public AddressList(final String aValue) throws URISyntaxException {
         addresses = new CopyOnWriteArrayList<>();
-        final StringTokenizer t = new StringTokenizer(aValue, ",");
-        while (t.hasMoreTokens()) {
-
+        for (String a : aValue.split(",")) {
             try {
-                addresses.add(new URI(Uris.encode(Strings
-                        .unquote(t.nextToken()))));
-            }
-            catch (URISyntaxException use) {
+                addresses.add(new URI(Uris.encode(Strings.unquote(a))));
+            } catch (URISyntaxException use) {
                 // ignore invalid addresses if relaxed parsing is enabled..
-                if (!CompatibilityHints.isHintEnabled(
-                        CompatibilityHints.KEY_RELAXED_PARSING)) {
-
+                if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                     throw use;
                 }
             }
