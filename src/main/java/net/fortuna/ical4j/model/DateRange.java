@@ -35,14 +35,16 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
-import java.time.temporal.Temporal;
-import java.util.Comparator;
+import java.util.Date;
 
 /**
  * @author fortuna
  *
+ * @deprecated We can no longer use DateRange to compare dates reliably due to supporting incompatible temporal types.
+ * Use {@link org.threeten.extra.Interval} instead.
  */
-public class DateRange<T extends Temporal> implements Serializable {
+@Deprecated
+public class DateRange implements Serializable {
 
     private static final long serialVersionUID = -7303846680559287286L;
 
@@ -56,24 +58,22 @@ public class DateRange<T extends Temporal> implements Serializable {
      */
     public static final int INCLUSIVE_END = 2;
 
-    public static Comparator<Temporal> DATE_RANGE_COMPARATOR = new TemporalComparator();
-
-    private final T rangeStart;
+    private final Date rangeStart;
     
-    private final T rangeEnd;
+    private final Date rangeEnd;
     
     /**
      * @param start the start of the range
      * @param end the end of the range
      */
-    public DateRange(T start, T end) {
+    public DateRange(Date start, Date end) {
         if (start == null) {
             throw new IllegalArgumentException("Range start is null");
         }
         if (end == null) {
             throw new IllegalArgumentException("Range end is null");
         }
-        if (DATE_RANGE_COMPARATOR.compare(start, end) < 0) {
+        if (end.before(start)) {
             throw new IllegalArgumentException("Range start must be before range end");
         }
         this.rangeStart = start;
@@ -83,14 +83,14 @@ public class DateRange<T extends Temporal> implements Serializable {
     /**
      * @return the rangeStart
      */
-    public T getRangeStart() {
+    public Date getRangeStart() {
         return rangeStart;
     }
 
     /**
      * @return the rangeEnd
      */
-    public T getRangeEnd() {
+    public Date getRangeEnd() {
         return rangeEnd;
     }
 
@@ -101,7 +101,7 @@ public class DateRange<T extends Temporal> implements Serializable {
      * @return true if the specified date occurs within the current period
      * 
      */
-    public final boolean includes(final Temporal date) {
+    public final boolean includes(final Date date) {
         return includes(date, INCLUSIVE_START | INCLUSIVE_END);
     }
 
@@ -111,22 +111,20 @@ public class DateRange<T extends Temporal> implements Serializable {
      * @param inclusiveMask specifies whether period start and end are included
      * in the calculation
      * @return true if the date is in the period, false otherwise
-     * @see Period#INCLUSIVE_START
-     * @see Period#INCLUSIVE_END
      */
-    public final boolean includes(final Temporal date, final int inclusiveMask) {
+    public final boolean includes(final Date date, final int inclusiveMask) {
         boolean includes;
         if ((inclusiveMask & INCLUSIVE_START) > 0) {
-            includes = DATE_RANGE_COMPARATOR.compare(rangeStart, date) <= 0;
+            includes = !rangeStart.after(date);
         }
         else {
-            includes = DATE_RANGE_COMPARATOR.compare(rangeStart, date) < 0;
+            includes = rangeStart.before(date);
         }
         if ((inclusiveMask & INCLUSIVE_END) > 0) {
-            includes = includes && DATE_RANGE_COMPARATOR.compare(rangeEnd, date) >= 0;
+            includes = includes && !rangeEnd.before(date);
         }
         else {
-            includes = includes && DATE_RANGE_COMPARATOR.compare(rangeEnd, date) > 0;
+            includes = includes && rangeEnd.after(date);
         }
         return includes;
     }
@@ -140,7 +138,7 @@ public class DateRange<T extends Temporal> implements Serializable {
      *         otherwise false
      */
     public final boolean before(final DateRange range) {
-        return DATE_RANGE_COMPARATOR.compare(rangeEnd, range.getRangeStart()) < 0;
+        return (rangeEnd.before(range.getRangeStart()));
     }
 
     /**
@@ -152,7 +150,7 @@ public class DateRange<T extends Temporal> implements Serializable {
      *         otherwise false
      */
     public final boolean after(final DateRange range) {
-        return DATE_RANGE_COMPARATOR.compare(rangeStart, range.getRangeEnd()) > 0;
+        return (rangeStart.after(range.getRangeEnd()));
     }
 
     /**
