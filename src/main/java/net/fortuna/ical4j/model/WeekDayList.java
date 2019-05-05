@@ -31,8 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.util.CompatibilityHints;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -72,16 +70,8 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
      * @param aString a string representation of a day list
      */
     public WeekDayList(final String aString) {
-        final boolean outlookCompatibility =
-            CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
-        
-        for (String w : aString.split(",")) {
-            if (outlookCompatibility) {
-                add(new WeekDay(w.replaceAll(" ", "")));
-            } else {
-                add(new WeekDay(w));
-            }
-        }
+        addAll(Arrays.stream(aString.split("\\s*,\\s*")).filter(s -> !s.isEmpty())
+                .map(WeekDay::new).collect(Collectors.toList()));
     }
 
     /**
