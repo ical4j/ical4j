@@ -39,7 +39,6 @@ import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.StringTokenizer;
 
 /**
  * $Id$
@@ -150,18 +149,15 @@ public class RequestStatus extends Property {
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        final StringTokenizer t = new StringTokenizer(aValue, ";");
-
-        if (t.hasMoreTokens()) {
-            statusCode = t.nextToken();
+        String[] values = aValue.split(";");
+        if (values.length > 0) {
+            statusCode = values[0];
         }
-
-        if (t.hasMoreTokens()) {
-            description = t.nextToken();
+        if (values.length > 1) {
+            description = values[1];
         }
-
-        if (t.hasMoreTokens()) {
-            exData = t.nextToken();
+        if (values.length > 2) {
+            exData = values[2];
         }
     }
 
