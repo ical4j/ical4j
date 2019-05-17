@@ -93,6 +93,7 @@ public abstract class UtcProperty extends DateProperty<Instant> {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("deprecation")
     public void setTimeZone(TimeZone timezone) {
         throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
     }

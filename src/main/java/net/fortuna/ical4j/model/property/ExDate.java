@@ -39,6 +39,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -49,7 +50,7 @@ import java.text.ParseException;
  *
  * @author benf
  */
-public class ExDate extends DateListProperty {
+public class ExDate<T extends Temporal> extends DateListProperty<T> {
 
     private static final long serialVersionUID = 2635730172243974463L;
 
@@ -74,7 +75,7 @@ public class ExDate extends DateListProperty {
     /**
      * @param dList a list of dates
      */
-    public ExDate(final DateList dList) {
+    public ExDate(final DateList<T> dList) {
         super(EXDATE, dList, new Factory());
     }
 
@@ -82,7 +83,7 @@ public class ExDate extends DateListProperty {
      * @param aList a list of parameters for this component
      * @param dList a list of dates
      */
-    public ExDate(final ParameterList aList, final DateList dList) {
+    public ExDate(final ParameterList aList, final DateList<T> dList) {
         super(EXDATE, aList, dList, new Factory());
     }
 

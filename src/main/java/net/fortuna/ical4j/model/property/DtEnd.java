@@ -107,7 +107,7 @@ import java.time.temporal.Temporal;
  *
  * @author Ben Fortuna
  */
-public class DtEnd extends DateProperty {
+public class DtEnd<T extends Temporal> extends DateProperty<T> {
 
     private static final long serialVersionUID = 8107416684717228297L;
 
@@ -167,7 +167,7 @@ public class DtEnd extends DateProperty {
      *
      * @param aDate a date
      */
-    public DtEnd(final Temporal aDate) {
+    public DtEnd(final T aDate) {
         super(DTEND, new Factory());
         setDate(aDate);
     }
@@ -178,7 +178,7 @@ public class DtEnd extends DateProperty {
      * @param time the time of the DtEnd
      * @param utc  specifies whether time is UTC
      */
-    public DtEnd(final Temporal time, final boolean utc) {
+    public DtEnd(final T time, final boolean utc) {
         super(DTEND, new Factory());
         setDate(time);
         setUtc(utc);
@@ -190,7 +190,7 @@ public class DtEnd extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public DtEnd(final ParameterList aList, final Temporal aDate) {
+    public DtEnd(final ParameterList aList, final T aDate) {
         super(DTEND, aList, new Factory());
         setDate(aDate);
     }
@@ -208,7 +208,7 @@ public class DtEnd extends DateProperty {
         }
 
         public Property createProperty() {
-            return new DtEnd();
+            return new DtEnd<>();
         }
     }
 

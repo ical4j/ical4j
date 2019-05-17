@@ -105,7 +105,7 @@ import java.time.temporal.Temporal;
  *
  * @author Ben Fortuna
  */
-public class DtStart extends DateProperty {
+public class DtStart<T extends Temporal> extends DateProperty<T> {
 
     private static final long serialVersionUID = -5707097476081111815L;
 
@@ -127,9 +127,9 @@ public class DtStart extends DateProperty {
 
     /**
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
+     * @throws java.time.format.DateTimeParseException where the specified value string is not a valid date-time/date representation
      */
-    public DtStart(final String aValue) throws ParseException {
+    public DtStart(final String aValue) {
         super(DTSTART, new Factory());
         setValue(aValue);
     }
@@ -139,10 +139,10 @@ public class DtStart extends DateProperty {
      *
      * @param value    a string representation of a DTSTART value
      * @param timezone initial timezone
-     * @throws ParseException where the specified value is not a valid string
+     * @throws java.time.format.DateTimeParseException where the specified value is not a valid string
      *                        representation
      */
-    public DtStart(String value, TimeZone timezone) throws ParseException {
+    public DtStart(String value, TimeZone timezone) {
         super(DTSTART, timezone, new Factory());
         setValue(value);
     }
@@ -150,10 +150,9 @@ public class DtStart extends DateProperty {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
+     * @throws java.time.format.DateTimeParseException where the specified value string is not a valid date-time/date representation
      */
-    public DtStart(final ParameterList aList, final String aValue)
-            throws ParseException {
+    public DtStart(final ParameterList aList, final String aValue) {
         super(DTSTART, aList, new Factory());
         setValue(aValue);
     }
@@ -163,7 +162,7 @@ public class DtStart extends DateProperty {
      *
      * @param aDate a date
      */
-    public DtStart(final Temporal aDate) {
+    public DtStart(final T aDate) {
         super(DTSTART, new Factory());
         setDate(aDate);
     }
@@ -174,7 +173,7 @@ public class DtStart extends DateProperty {
      * @param time the time of the DtStart
      * @param utc  specifies whether time is UTC
      */
-    public DtStart(final Temporal time, final boolean utc) {
+    public DtStart(final T time, final boolean utc) {
         super(DTSTART, new Factory());
         setDate(time);
         setUtc(utc);
@@ -186,7 +185,7 @@ public class DtStart extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public DtStart(final ParameterList aList, final Temporal aDate) {
+    public DtStart(final ParameterList aList, final T aDate) {
         super(DTSTART, aList, new Factory());
         setDate(aDate);
     }
@@ -204,7 +203,7 @@ public class DtStart extends DateProperty {
         }
 
         public Property createProperty() {
-            return new DtStart();
+            return new DtStart<>();
         }
     }
 

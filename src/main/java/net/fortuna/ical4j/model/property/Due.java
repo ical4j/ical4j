@@ -93,18 +93,9 @@ import java.time.temporal.Temporal;
  *
  * @author Ben Fortuna
  */
-public class Due extends DateProperty {
+public class Due<T extends Temporal> extends DateProperty<T> {
 
     private static final long serialVersionUID = -2965312347832730406L;
-
-    /**
-     * Default constructor. The time value is initialised to the time of instantiation.
-     */
-    public Due() {
-        super(DUE, new Factory());
-        // defaults to UTC time..
-        setDate(LocalDateTime.now(ZoneOffset.UTC));
-    }
 
     /**
      * Creates a new DUE property initialised with the specified timezone.
@@ -119,9 +110,9 @@ public class Due extends DateProperty {
      * Creates a new instance initialised with the parsed value.
      *
      * @param value the DUE value string to parse
-     * @throws ParseException where the specified string is not a valid DUE value representation
+     * @throws java.time.format.DateTimeParseException where the specified string is not a valid DUE value representation
      */
-    public Due(final String value) throws ParseException {
+    public Due(final String value) {
         super(DUE, new Factory());
         setValue(value);
     }
@@ -131,10 +122,10 @@ public class Due extends DateProperty {
      *
      * @param value    a string representation of a DUE value
      * @param timezone initial timezone
-     * @throws ParseException where the specified value is not a valid string
+     * @throws java.time.format.DateTimeParseException where the specified value is not a valid string
      *                        representation
      */
-    public Due(String value, TimeZone timezone) throws ParseException {
+    public Due(String value, TimeZone timezone) {
         super(DUE, timezone, new Factory());
         setValue(value);
     }
@@ -142,10 +133,9 @@ public class Due extends DateProperty {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException when the specified string is not a valid date/date-time representation
+     * @throws java.time.format.DateTimeParseException when the specified string is not a valid date/date-time representation
      */
-    public Due(final ParameterList aList, final String aValue)
-            throws ParseException {
+    public Due(final ParameterList aList, final String aValue) {
         super(DUE, aList, new Factory());
         setValue(aValue);
     }
@@ -155,7 +145,7 @@ public class Due extends DateProperty {
      *
      * @param aDate a date
      */
-    public Due(final Temporal aDate) {
+    public Due(final T aDate) {
         super(DUE, new Factory());
         setDate(aDate);
     }
@@ -166,7 +156,7 @@ public class Due extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public Due(final ParameterList aList, final Temporal aDate) {
+    public Due(final ParameterList aList, final T aDate) {
         super(DUE, aList, new Factory());
         setDate(aDate);
     }
@@ -184,7 +174,7 @@ public class Due extends DateProperty {
         }
 
         public Property createProperty() {
-            return new Due();
+            return new Due<>(LocalDateTime.now(ZoneOffset.UTC));
         }
     }
 

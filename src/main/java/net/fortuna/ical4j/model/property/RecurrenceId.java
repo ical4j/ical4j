@@ -128,17 +128,9 @@ import java.time.temporal.Temporal;
  *
  * @author Ben Fortuna
  */
-public class RecurrenceId extends DateProperty {
+public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
 
     private static final long serialVersionUID = 4456883817126011006L;
-
-    /**
-     * Default constructor.
-     */
-    public RecurrenceId() {
-        super(RECURRENCE_ID, new Factory());
-        setDate(LocalDateTime.now(ZoneOffset.UTC));
-    }
 
     /**
      * Creates a new RECURRENCE_ID property initialised with the specified timezone.
@@ -189,7 +181,7 @@ public class RecurrenceId extends DateProperty {
      *
      * @param aDate a date representation of a date or date-time
      */
-    public RecurrenceId(final Temporal aDate) {
+    public RecurrenceId(final T aDate) {
         super(RECURRENCE_ID, new Factory());
         setDate(aDate);
     }
@@ -200,7 +192,7 @@ public class RecurrenceId extends DateProperty {
      * @param aList a list of parameters for this component
      * @param aDate a date representation of a date or date-time
      */
-    public RecurrenceId(final ParameterList aList, final Temporal aDate) {
+    public RecurrenceId(final ParameterList aList, final T aDate) {
         super(RECURRENCE_ID, aList, new Factory());
         setDate(aDate);
     }
@@ -237,7 +229,7 @@ public class RecurrenceId extends DateProperty {
         }
 
         public Property createProperty() {
-            return new RecurrenceId();
+            return new RecurrenceId<>(LocalDateTime.now(ZoneOffset.UTC));
         }
     }
 

@@ -36,10 +36,8 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAmount;
 
 /**
@@ -171,15 +169,19 @@ public class Trigger extends UtcProperty {
      */
     @Deprecated
     public Trigger(final Dur duration) {
-        this(TemporalAmountAdapter.from(duration).getDuration());
+        this(TemporalAmountAdapter.from(duration));
     }
 
     /**
      * @param duration a duration in milliseconds
      */
     public Trigger(final TemporalAmount duration) {
+        this(new TemporalAmountAdapter(duration));
+    }
+
+    private Trigger(final TemporalAmountAdapter duration) {
         super(TRIGGER, new Factory());
-        setDuration(duration);
+        this.duration = duration;
     }
 
     /**
@@ -188,7 +190,7 @@ public class Trigger extends UtcProperty {
      */
     @Deprecated
     public Trigger(final ParameterList aList, final Dur duration) {
-        this(aList, TemporalAmountAdapter.from(duration).getDuration());
+        this(aList, TemporalAmountAdapter.from(duration));
     }
 
     /**
@@ -196,8 +198,12 @@ public class Trigger extends UtcProperty {
      * @param duration a duration in milliseconds
      */
     public Trigger(final ParameterList aList, final TemporalAmount duration) {
+        this(aList, new TemporalAmountAdapter(duration));
+    }
+
+    private Trigger(final ParameterList aList, final TemporalAmountAdapter duration) {
         super(TRIGGER, aList, new Factory());
-        setDuration(duration);
+        this.duration = duration;
     }
 
     /**
@@ -244,7 +250,7 @@ public class Trigger extends UtcProperty {
             ParameterValidator.getInstance().assertNullOrEqual(Value.DATE_TIME,
                     getParameters());
 
-            if (getDateTime() == null) {
+            if (getDate() == null) {
                 throw new ValidationException("DATE-TIME value not specified");
             }
         }
@@ -267,9 +273,9 @@ public class Trigger extends UtcProperty {
         try {
             super.setValue(aValue);
             duration = null;
-        } catch (ParseException pe) {
+        } catch (DateTimeParseException pe) {
             duration = TemporalAmountAdapter.parse(aValue);
-            super.setDateTime(null);
+            super.setDate(null);
         }
     }
 
@@ -286,8 +292,8 @@ public class Trigger extends UtcProperty {
     /**
      * @param dateTime The dateTime to set.
      */
-    public final void setDateTime(final Instant dateTime) {
-        setDate(dateTime);
+    public void setDate(final Instant dateTime) {
+        super.setDate(dateTime);
         duration = null;
         getParameters().replace(Value.DATE_TIME);
     }
@@ -297,7 +303,7 @@ public class Trigger extends UtcProperty {
      */
     public final void setDuration(final TemporalAmount duration) {
         this.duration = new TemporalAmountAdapter(duration);
-        super.setDateTime(null);
+        super.setDate(null);
         // duration is the default value type for Trigger..
         if (getParameter(Parameter.VALUE) != null) {
             getParameters().replace(Value.DURATION);
@@ -311,8 +317,7 @@ public class Trigger extends UtcProperty {
             super(TRIGGER);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Property createProperty(final ParameterList parameters, final String value) {
             return new Trigger(parameters, value);
         }
 
