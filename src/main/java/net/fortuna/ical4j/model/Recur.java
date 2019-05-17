@@ -1060,7 +1060,9 @@ public class Recur<T extends Temporal> implements Serializable {
         public Recur<T> build() {
             Recur<T> recur = new Recur<>();
             recur.frequency = frequency;
-            recur.until = new TemporalAdapter<T>(until);
+            if (until != null) {
+                recur.until = new TemporalAdapter<T>(until);
+            }
             recur.count = count;
             recur.interval = interval;
             if (secondList != null) {

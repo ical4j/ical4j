@@ -9,6 +9,7 @@ import java.time.Period;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Support adapter for {@link java.time.temporal.TemporalAmount} representation in iCalendar format.
@@ -18,11 +19,32 @@ public class TemporalAmountAdapter {
     private final TemporalAmount duration;
 
     public TemporalAmountAdapter(TemporalAmount duration) {
+        Objects.requireNonNull(duration, "duration");
         this.duration = duration;
     }
 
     public TemporalAmount getDuration() {
         return duration;
+    }
+
+    private int getTotalWeeks() {
+        int totalWeeks = 0;
+        if (duration instanceof Period) {
+            Period period = (Period) duration;
+            if (period.getYears() != 0) {
+                totalWeeks += Math.abs(period.getYears()) * 52;
+            }
+            if (period.getMonths() != 0) {
+                totalWeeks += Math.abs(period.getMonths()) * 4;
+            }
+            if (period.getDays() % 7 == 0) {
+                totalWeeks += Math.abs(period.getDays()) / 7;
+            }
+            if (period.isNegative()) {
+                totalWeeks = -totalWeeks;
+            }
+        }
+        return totalWeeks;
     }
 
     @Override
@@ -117,8 +139,16 @@ public class TemporalAmountAdapter {
         }
     }
 
+    public Duration toDuration() {
+        if (duration instanceof Duration) {
+            return (Duration) duration;
+        } else {
+            return Duration.ofDays(getTotalWeeks() * 7);
+        }
+    }
+
     public static TemporalAmountAdapter parse(String value) {
-        TemporalAmount retVal = null;
+        TemporalAmount retVal;
         if (value.matches("P.*(W|D)$")) {
             retVal = java.time.Period.parse(value);
         } else {
@@ -143,6 +173,7 @@ public class TemporalAmountAdapter {
         return new TemporalAmountAdapter(duration);
     }
 
+    @SuppressWarnings("deprecation")
     public static TemporalAmountAdapter from(Dur dur) {
         TemporalAmount duration;
         if (dur.getWeeks() > 0) {

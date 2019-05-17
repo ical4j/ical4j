@@ -113,6 +113,7 @@ public class WeekDay implements Serializable {
      * @param offset a month offset value
      */
     private WeekDay(final Day day, final int offset) {
+        Objects.requireNonNull(day, "day");
         this.day = day;
         this.offset = offset;
     }
@@ -124,6 +125,7 @@ public class WeekDay implements Serializable {
      * @param offset a month offset value
      */
     public WeekDay(final WeekDay weekDay, final int offset) {
+        Objects.requireNonNull(weekDay, "weekDay");
         this.day = weekDay.getDay();
         this.offset = offset;
     }
@@ -188,8 +190,8 @@ public class WeekDay implements Serializable {
     }
 
     /**
-     * Returns a weekday representation of the specified calendar.
-     * @param cal a calendar (java.util)
+     * Returns a weekday representation of the specified day of week.
+     * @param dayOfWeek day of the week
      * @return a weekday instance representing the specified calendar
      */
     public static WeekDay getWeekDay(DayOfWeek dayOfWeek) {

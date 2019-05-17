@@ -43,10 +43,8 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * $Id$ [Apr 14, 2004]
@@ -142,6 +140,9 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @param dateFormat the format used to generate string representations
      */
     public Period(final T start, final T end, CalendarDateFormat dateFormat) {
+        Objects.requireNonNull(start, "start");
+        Objects.requireNonNull(end, "end");
+        Objects.requireNonNull(dateFormat, "dateFormat");
         this.start = start;
         this.end = end;
         this.duration = null;
@@ -187,6 +188,9 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @param dateFormat
      */
     private Period(final T start, final TemporalAmountAdapter duration, CalendarDateFormat dateFormat) {
+        Objects.requireNonNull(start, "start");
+        Objects.requireNonNull(duration, "duration");
+        Objects.requireNonNull(dateFormat, "dateFormat");
         this.start = start;
         this.duration = duration;
         this.end = (T) start.plus(duration.getDuration());

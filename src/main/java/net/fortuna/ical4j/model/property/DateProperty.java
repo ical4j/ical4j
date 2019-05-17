@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.TemporalAdapter.FormatType;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
@@ -42,7 +41,10 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 
 /**
@@ -108,7 +110,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      *
      * @return Returns the date.
      */
-    public final T getDate() {
+    public T getDate() {
         return date.getTemporal();
     }
 
@@ -118,16 +120,12 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      *
      * @param date The date to set.
      */
-    public final void setDate(T date) {
-        FormatType formatType;
-        if (Value.DATE.equals(getParameter(Parameter.VALUE))) {
-            formatType = FormatType.Date;
-        } else if (Value.DATE_TIME.equals(getParameter(Parameter.VALUE))) {
-            formatType = FormatType.DateTimeFloating;
+    public void setDate(T date) {
+        if (date != null) {
+            this.date = new TemporalAdapter<>(date);
         } else {
-            formatType = FormatType.DateTimeUtc;
+            this.date = null;
         }
-        this.date = new TemporalAdapter<>(date, formatType);
     }
 
     /**
@@ -137,14 +135,13 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * @throws ParseException where the specified value is not a valid DATE or DATE-TIME
      *                        representation
      */
-    public void setValue(final String value) throws ParseException {
+    public void setValue(final String value) throws DateTimeParseException {
         // value can be either a date-time or a date..
-        TemporalAdapter parsedValue = TemporalAdapter.parse(value);
-        this.date = new TemporalAdapter<T>((T) parsedValue.getTemporal(), parsedValue.getFormatType());
-        if (date.getFormatType() == FormatType.Date) {
-            getParameters().replace(Value.DATE);
+        TzId tzId = getParameter(Parameter.TZID);
+        if (tzId != null) {
+            this.date = (TemporalAdapter<T>) TemporalAdapter.parse(value, ZoneId.of(tzId.getValue()));
         } else {
-            getParameters().replace(Value.DATE_TIME);
+            this.date = TemporalAdapter.parse(value);
         }
     }
 
@@ -152,7 +149,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * {@inheritDoc}
      */
     public String getValue() {
-        return Strings.valueOf(getDate());
+        return Strings.valueOf(date);
     }
 
     /**
@@ -194,10 +191,6 @@ public abstract class DateProperty<T extends Temporal> extends Property {
                 throw new UnsupportedOperationException(
                         "TimeZone is not applicable to current value");
             }
-            if (getDate() != null) {
-                ((DateTime) getDate()).setTimeZone(timezone);
-            }
-
             getParameters().replace(new TzId(timezone.getID()));
         } else {
             // use setUtc() to reset timezone..
@@ -213,10 +206,9 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * @param utc a UTC value
      */
     public final void setUtc(final boolean utc) {
-        if (getDate() != null && (getDate() instanceof DateTime)) {
-            ((DateTime) getDate()).setUtc(utc);
+        if (utc) {
+            getParameters().remove(getParameter(Parameter.TZID));
         }
-        getParameters().remove(getParameter(Parameter.TZID));
     }
 
     /**
@@ -225,7 +217,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * @return true if the property is in UTC time, otherwise false
      */
     public final boolean isUtc() {
-        return getDate() instanceof DateTime && ((DateTime) getDate()).isUtc();
+        return TemporalAdapter.isUtc(date.getTemporal());
     }
 
     /**
@@ -255,35 +247,26 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
         final Value value = getParameter(Parameter.VALUE);
 
-        if (date.getFormatType() == FormatType.DateTimeFloating
-                || date.getFormatType() == FormatType.DateTimeUtc) {
-
-            if (value != null && !Value.DATE_TIME.equals(value)) {
-                throw new ValidationException("VALUE parameter [" + value
-                        + "] is invalid for DATE-TIME instance");
-            }
-        }
-
-        if (date.getTemporal() instanceof ZonedDateTime) {
-
-            ZonedDateTime dateTime = (ZonedDateTime) date.getTemporal();
-
-            // ensure tzid matches date-time timezone..
-            final Parameter tzId = getParameter(Parameter.TZID);
-            if (tzId == null || !tzId.getValue().equals(dateTime.getZone().getId())) {
-
-                throw new ValidationException("TZID parameter [" + tzId
-                        + "] does not match the timezone ["
-                        + dateTime.getZone().getId() + "]");
-            }
-        } else if (getDate() != null) {
-
+        if (date.getTemporal() instanceof LocalDate) {
             if (value == null) {
-                throw new ValidationException("VALUE parameter [" + Value.DATE
-                        + "] must be specified for DATE instance");
+                throw new ValidationException("VALUE parameter [" + Value.DATE + "] must be specified for DATE instance");
             } else if (!Value.DATE.equals(value)) {
-                throw new ValidationException("VALUE parameter [" + value
-                        + "] is invalid for DATE instance");
+                throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE instance");
+            }
+        } else {
+            if (value != null && !Value.DATE_TIME.equals(value)) {
+                throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE-TIME instance");
+            }
+
+            if (date.getTemporal() instanceof ZonedDateTime) {
+                ZonedDateTime dateTime = (ZonedDateTime) date.getTemporal();
+
+                // ensure tzid matches date-time timezone..
+                final Parameter tzId = getParameter(Parameter.TZID);
+                if (tzId == null || !tzId.getValue().equals(dateTime.getZone().getId())) {
+                    throw new ValidationException("TZID parameter [" + tzId + "] does not match the timezone ["
+                            + dateTime.getZone().getId() + "]");
+                }
             }
         }
     }
@@ -294,8 +277,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     public Property copy() throws IOException, URISyntaxException, ParseException {
         final Property copy = super.copy();
 
-        ((DateProperty) copy).timeZone = timeZone;
-        ((DateProperty) copy).setValue(getValue());
+        ((DateProperty<T>) copy).setValue(getValue());
 
         return copy;
     }
