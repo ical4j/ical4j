@@ -49,7 +49,10 @@ import java.util.TimeZone;
  * Implements a collection of utility methods relevant to date processing.
  * 
  * @author Ben Fortuna
+ *
+ * @deprecated Utility class for old date/time API no longer required
  */
+@Deprecated
 public final class Dates {
 
     /**

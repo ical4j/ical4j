@@ -49,7 +49,10 @@ import java.util.TimeZone;
  *
  * @author Dave Nault dnault@laszlosystems.com
  * @see #getInstance(String)
+ *
+ * @deprecated adoption of the new date/time API means formatting is now supported via {@link java.time.format.DateTimeFormatter}
  */
+@Deprecated
 public final class CalendarDateFormatFactory {
     private static final Logger LOG = LoggerFactory.getLogger(CalendarDateFormatFactory.class);
 

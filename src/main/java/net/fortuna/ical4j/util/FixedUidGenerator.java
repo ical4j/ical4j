@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.property.Uid;
 
 import java.net.SocketException;
 import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 /**
  * $Id$
@@ -96,8 +97,8 @@ public class FixedUidGenerator implements UidGenerator {
             if (currentMillis < lastMillis) {
                 currentMillis = lastMillis;
             }
-            if (currentMillis - lastMillis < Dates.MILLIS_PER_SECOND) {
-                currentMillis += Dates.MILLIS_PER_SECOND;
+            if (currentMillis - lastMillis < TimeUnit.SECONDS.toMillis(1)) {
+                currentMillis += TimeUnit.SECONDS.toMillis(1);
             }
             lastMillis = currentMillis;
         }
