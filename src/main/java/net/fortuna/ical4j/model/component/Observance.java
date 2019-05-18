@@ -32,9 +32,7 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -42,12 +40,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -76,16 +79,15 @@ public abstract class Observance extends Component {
 
     // TODO: clear cache when observance definition changes (??)
     private long[] onsetsMillisec;
-    private DateTime[] onsetsDates;
+    private OffsetDateTime[] onsetsDates;
     //    private Map onsets = new TreeMap();
-    private Date initialOnset = null;
+    private OffsetDateTime initialOnset = null;
 
     /**
      * Used for parsing times in a UTC date-time representation.
      */
     private static final String UTC_PATTERN = "yyyyMMdd'T'HHmmss";
-    private static final DateFormat UTC_FORMAT = new SimpleDateFormat(
-            UTC_PATTERN);
+    private static final DateFormat UTC_FORMAT = new SimpleDateFormat(UTC_PATTERN);
 
     static {
         UTC_FORMAT.setTimeZone(TimeZones.getUtcTimeZone());
@@ -93,7 +95,7 @@ public abstract class Observance extends Component {
     }
 
     /* If this is set we have rrules. If we get a date after this rebuild onsets */
-    private Date onsetLimit;
+    private Instant onsetLimit;
 
     /**
      * Constructs a timezone observance with the specified name and no properties.
@@ -122,20 +124,17 @@ public abstract class Observance extends Component {
         // From "4.8.3.3 Time Zone Offset From":
         // Conformance: This property MUST be specified in a "VTIMEZONE"
         // calendar component.
-        PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM,
-                getProperties());
+        PropertyValidator.getInstance().assertOne(Property.TZOFFSETFROM, getProperties());
 
         // From "4.8.3.4 Time Zone Offset To":
         // Conformance: This property MUST be specified in a "VTIMEZONE"
         // calendar component.
-        PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO,
-                getProperties());
+        PropertyValidator.getInstance().assertOne(Property.TZOFFSETTO, getProperties());
 
         /*
          * ; the following are each REQUIRED, ; but MUST NOT occur more than once dtstart / tzoffsetto / tzoffsetfrom /
          */
-        PropertyValidator.getInstance().assertOne(Property.DTSTART,
-                getProperties());
+        PropertyValidator.getInstance().assertOne(Property.DTSTART, getProperties());
 
         /*
          * ; the following are optional, ; and MAY occur more than once comment / rdate / rrule / tzname / x-prop
@@ -153,13 +152,13 @@ public abstract class Observance extends Component {
      * @return the latest applicable observance date or null if there is no applicable observance onset for the
      * specified date
      */
-    public final Date getLatestOnset(final Date date) {
+    public final OffsetDateTime getLatestOnset(final Temporal date) {
 
         if (initialOnset == null) {
             try {
-                DtStart dtStart = (DtStart) getRequiredProperty(Property.DTSTART);
-                initialOnset = applyOffsetFrom(calculateOnset(dtStart.getDate()));
-            } catch (ParseException | ConstraintViolationException e) {
+                DtStart dtStart = getRequiredProperty(Property.DTSTART);
+                initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(getOffsetFrom().getOffset());
+            } catch (ConstraintViolationException e) {
                 Logger log = LoggerFactory.getLogger(Observance.class);
                 log.error("Unexpected error calculating initial onset", e);
                 // XXX: is this correct?
@@ -168,50 +167,42 @@ public abstract class Observance extends Component {
         }
 
         // observance not applicable if date is before the effective date of this observance..
-        if (date.before(initialOnset)) {
+        if (TemporalAdapter.isBefore(date, initialOnset)) {
             return null;
         }
 
-        if ((onsetsMillisec != null) && (onsetLimit == null || date.before(onsetLimit))) {
+        if ((onsetsMillisec != null) &&
+                (onsetLimit == null || TemporalAdapter.isBefore(date, onsetLimit))) {
+
             return getCachedOnset(date);
         }
 
-        Date onset = initialOnset;
-        Date initialOnsetUTC;
+        OffsetDateTime onset = initialOnset;
+
         // get first onset without adding TZFROM as this may lead to a day boundary
         // change which would be incompatible with BYDAY RRULES
         // we will have to add the offset to all cacheable onsets
-        try {
-            initialOnsetUTC = calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate());
-        } catch (ParseException e) {
-            Logger log = LoggerFactory.getLogger(Observance.class);
-            log.error("Unexpected error calculating initial onset", e);
-            // XXX: is this correct?
-            return null;
-        }
+        Instant initialOnsetUTC = LocalDateTime.from(((DtStart) getProperty(Property.DTSTART)).getDate())
+                .toInstant(onset.getOffset());
+
         // collect all onsets for the purposes of caching..
-        final DateList cacheableOnsets = new DateList();
-        cacheableOnsets.setUtc(true);
+        final List<OffsetDateTime> cacheableOnsets = new ArrayList<>();
         cacheableOnsets.add(initialOnset);
 
         // check rdates for latest applicable onset..
-        final List<RDate> rdates = getProperties(Property.RDATE);
-        for (RDate rdate : rdates) {            
-            for (final Date rdateDate : rdate.getDates()) {
-                try {
-                    final DateTime rdateOnset = applyOffsetFrom(calculateOnset(rdateDate));
-                    if (!rdateOnset.after(date) && rdateOnset.after(onset)) {
-                        onset = rdateOnset;
-                    }
-                    /*
-                     * else if (rdateOnset.after(date) && rdateOnset.after(onset) && (nextOnset == null ||
-                     * rdateOnset.before(nextOnset))) { nextOnset = rdateOnset; }
-                     */
-                    cacheableOnsets.add(rdateOnset);
-                } catch (ParseException e) {
-                    Logger log = LoggerFactory.getLogger(Observance.class);
-                    log.error("Unexpected error calculating onset", e);
+        final List<RDate<LocalDateTime>> rdates = getProperties(Property.RDATE);
+        for (RDate<LocalDateTime> rdate : rdates) {
+            DateList<LocalDateTime> rdateDates = rdate.getDates();
+            for (final LocalDateTime rdateDate : rdateDates.getDates()) {
+                final OffsetDateTime rdateOnset = OffsetDateTime.from(rdateDate.atOffset(getOffsetFrom().getOffset()));
+                if (!rdateOnset.isAfter(OffsetDateTime.from(date)) && rdateOnset.isAfter(onset)) {
+                    onset = rdateOnset;
                 }
+                /*
+                 * else if (rdateOnset.after(date) && rdateOnset.after(onset) && (nextOnset == null ||
+                 * rdateOnset.before(nextOnset))) { nextOnset = rdateOnset; }
+                 */
+                cacheableOnsets.add(rdateOnset);
             }
         }
 
@@ -219,15 +210,12 @@ public abstract class Observance extends Component {
         final List<RRule> rrules = getProperties(Property.RRULE);
         for (RRule rrule : rrules) {            
             // include future onsets to determine onset period..
-            final Calendar cal = Dates.getCalendarInstance(date);
-            cal.setTime(date);
-            cal.add(Calendar.YEAR, 10);
-            onsetLimit = Dates.getInstance(cal.getTime(), Value.DATE_TIME);
-            final DateList recurrenceDates = rrule.getRecur().getDates(initialOnsetUTC,
-                    onsetLimit, Value.DATE_TIME);
-            for (final Date recurDate : recurrenceDates) {
-                final DateTime rruleOnset = applyOffsetFrom((DateTime) recurDate);
-                if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
+            onsetLimit = Instant.from(date.plus(10, ChronoUnit.YEARS));
+            final List<Temporal> recurrenceDates = rrule.getRecur().getDates(initialOnset, onsetLimit);
+            for (final Temporal recurDate : recurrenceDates) {
+                final OffsetDateTime rruleOnset = OffsetDateTime.from(recurDate).plus(
+                        getOffsetFrom().getOffset().getTotalSeconds(), ChronoUnit.SECONDS);
+                if (!rruleOnset.isAfter(OffsetDateTime.from(date)) && rruleOnset.isAfter(onset)) {
                     onset = rruleOnset;
                 }
                 /*
@@ -240,13 +228,13 @@ public abstract class Observance extends Component {
 
         // cache onsets..
         Collections.sort(cacheableOnsets);
-        DateTime cacheableOnset;
+        OffsetDateTime cacheableOnset;
         this.onsetsMillisec = new long[cacheableOnsets.size()];
-        this.onsetsDates = new DateTime[onsetsMillisec.length];
+        this.onsetsDates = new OffsetDateTime[onsetsMillisec.length];
 
         for (int i = 0; i < onsetsMillisec.length; i++) {
-            cacheableOnset = (DateTime) cacheableOnsets.get(i);
-            onsetsMillisec[i] = cacheableOnset.getTime();
+            cacheableOnset = cacheableOnsets.get(i);
+            onsetsMillisec[i] = TimeUnit.SECONDS.toMillis(cacheableOnset.getOffset().getTotalSeconds());
             onsetsDates[i] = cacheableOnset;
         }
 
@@ -259,8 +247,8 @@ public abstract class Observance extends Component {
      * @param date
      * @return a cached onset date or null if no cached onset is applicable for the specified date
      */
-    private DateTime getCachedOnset(final Date date) {
-        int index = Arrays.binarySearch(onsetsMillisec, date.getTime());
+    private OffsetDateTime getCachedOnset(final Temporal date) {
+        int index = Arrays.binarySearch(onsetsMillisec, Instant.from(date).toEpochMilli());
         if (index >= 0) {
             return onsetsDates[index];
         } else {
@@ -294,35 +282,5 @@ public abstract class Observance extends Component {
      */
     public final TzOffsetTo getOffsetTo() {
         return getProperty(Property.TZOFFSETTO);
-    }
-
-    //    private Date calculateOnset(DateProperty dateProperty) {
-//        return calculateOnset(dateProperty.getValue());
-//    }
-//    
-    private DateTime calculateOnset(Date date) throws ParseException {
-        return calculateOnset(date.toString());
-    }
-
-    private DateTime calculateOnset(String dateStr) throws ParseException {
-
-        // Translate local onset into UTC time by parsing local time 
-        // as GMT and adjusting by TZOFFSETFROM if required
-        long utcOnset;
-
-        synchronized (UTC_FORMAT) {
-            utcOnset = UTC_FORMAT.parse(dateStr).getTime();
-        }
-
-        // return a UTC
-        DateTime onset = new DateTime(true);
-        onset.setTime(utcOnset);
-        return onset;
-    }
-
-    private DateTime applyOffsetFrom(DateTime orig) {
-        DateTime withOffset = new DateTime(true);
-        withOffset.setTime(orig.getTime() - (getOffsetFrom().getOffset().getTotalSeconds() * 1000L));
-        return withOffset;
     }
 }
