@@ -38,6 +38,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$
@@ -108,14 +111,14 @@ public class FreeBusy extends Property {
 
     private static final long serialVersionUID = -6415954847619338567L;
 
-    private PeriodList periods;
+    private PeriodList<Instant> periods;
 
     /**
      * Default constructor.
      */
     public FreeBusy() {
         super(FREEBUSY, new Factory());
-        periods = new PeriodList();
+        periods = new PeriodList<>();
     }
 
     /**
@@ -141,24 +144,18 @@ public class FreeBusy extends Property {
     /**
      * @param pList a list of periods
      */
-    public FreeBusy(final PeriodList pList) {
+    public FreeBusy(final List<Period<Instant>> pList) {
         super(FREEBUSY, new Factory());
-        if (!pList.isUtc()) {
-            throw new IllegalArgumentException("Periods must be in UTC format");
-        }
-        periods = pList;
+        periods = new PeriodList<>(pList);
     }
 
     /**
      * @param aList a list of parameters for this component
      * @param pList a list of periods
      */
-    public FreeBusy(final ParameterList aList, final PeriodList pList) {
+    public FreeBusy(final ParameterList aList, final List<Period<Instant>> pList) {
         super(FREEBUSY, aList, new Factory());
-        if (!pList.isUtc()) {
-            throw new IllegalArgumentException("Periods must be in UTC format");
-        }
-        periods = pList;
+        periods = new PeriodList<>(pList);
     }
 
     /**
@@ -175,24 +172,20 @@ public class FreeBusy extends Property {
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
-
-        if (!periods.isUtc()) {
-            throw new ValidationException("Periods must be in UTC format");
-        }
     }
 
     /**
      * @return Returns the periods.
      */
-    public final PeriodList getPeriods() {
-        return periods;
+    public final List<Period<Instant>> getPeriods() {
+        return new ArrayList<>(periods.getPeriods());
     }
 
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) throws ParseException {
-        periods = new PeriodList(aValue);
+    public final void setValue(final String aValue) {
+        periods = PeriodList.parse(aValue);
     }
 
     /**
