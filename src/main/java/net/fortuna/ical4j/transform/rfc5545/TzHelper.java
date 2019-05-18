@@ -16,7 +16,7 @@ import net.fortuna.ical4j.model.property.DateProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -76,7 +76,7 @@ class TzHelper {
                 property.setTimeZone(TIMEZONE_REGISTRY.getTimeZone(newTimezone));
                 try {
                     property.setValue(value);
-                } catch (ParseException e) {
+                } catch (DateTimeParseException e) {
                     LOG.warn("Failed to reset property value", e);
                 }
             } else {

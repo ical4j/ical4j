@@ -2,7 +2,7 @@ package net.fortuna.ical4j.transform.rfc5545;
 
 import net.fortuna.ical4j.model.property.Created;
 
-import java.text.ParseException;
+import java.time.format.DateTimeParseException;
 
 /**
  * 
@@ -20,7 +20,7 @@ public class CreatedPropertyRule implements Rfc5545PropertyRule<Created> {
         }
         try {
             created.setValue(created.getValue() + UTC_MARKER);
-        } catch (ParseException e) {
+        } catch (DateTimeParseException e) {
             // Let the value as it is
         }
     }
