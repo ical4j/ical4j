@@ -202,8 +202,8 @@ public abstract class Component implements Serializable {
      * @return the first matching property in the property list with the specified name
      * @throws ConstraintViolationException when a property is not found
      */
-    protected final Property getRequiredProperty(String name) throws ConstraintViolationException {
-        Property p = getProperties().getProperty(name);
+    protected final <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
+        T p = getProperties().getProperty(name);
         if (p == null) {
             throw new ConstraintViolationException(String.format("Missing %s property", name));
         }
