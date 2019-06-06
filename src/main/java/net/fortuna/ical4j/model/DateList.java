@@ -55,7 +55,7 @@ public class DateList<T extends Temporal> implements Serializable {
 
     private final List<T> dates;
 
-    private transient final CalendarDateFormat dateFormat;
+    private final CalendarDateFormat dateFormat;
 
     /**
      * Default constructor.
@@ -73,6 +73,7 @@ public class DateList<T extends Temporal> implements Serializable {
     }
 
     public DateList(final boolean unmodifiable, CalendarDateFormat dateFormat) {
+        Objects.requireNonNull(dateFormat, "dateFormat");
         if (unmodifiable) {
         	dates = Collections.emptyList();
         } else {
@@ -91,6 +92,7 @@ public class DateList<T extends Temporal> implements Serializable {
     }
 
     public DateList(final List<T> list, CalendarDateFormat dateFormat) {
+        Objects.requireNonNull(dateFormat, "dateFormat");
         this.dates = new ArrayList<>(list);
         this.dateFormat = dateFormat;
     }

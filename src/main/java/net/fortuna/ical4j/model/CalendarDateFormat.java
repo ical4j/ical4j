@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model;
 
+import java.io.Serializable;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
@@ -164,48 +165,64 @@ import java.util.Objects;
  * </pre>
  *
  */
-public class CalendarDateFormat {
+public class CalendarDateFormat implements Serializable {
 
-    public static final CalendarDateFormat DATE_FORMAT = new CalendarDateFormat(DateTimeFormatter.BASIC_ISO_DATE,
-            LocalDate::from);
+    public static final CalendarDateFormat DATE_FORMAT = new CalendarDateFormat("yyyyMMdd",
+            (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> LocalDate.from(d));
 
     public static final CalendarDateFormat FLOATING_DATE_TIME_FORMAT = new CalendarDateFormat(
-            DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"), LocalDateTime::from);
+            "yyyyMMdd'T'HHmmss", (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> LocalDateTime.from(d));
 
     public static final CalendarDateFormat UTC_DATE_TIME_FORMAT = new CalendarDateFormat(
-            DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'").withZone(ZoneId.of("UTC")), Instant::from);
+            "yyyyMMdd'T'HHmmss'Z'", (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> Instant.from(d));
 
-    private final DateTimeFormatter formatter;
+    private final String pattern;
+
+    private transient DateTimeFormatter formatter;
 
     private final TemporalQuery<? extends TemporalAccessor>[] parsers;
 
     @SafeVarargs
-    public CalendarDateFormat(DateTimeFormatter formatter, TemporalQuery<? extends TemporalAccessor>...parsers) {
-        Objects.requireNonNull(formatter, "formatter");
-        this.formatter = formatter;
+    public CalendarDateFormat(String pattern, TemporalQuery<? extends TemporalAccessor>...parsers) {
+        Objects.requireNonNull(pattern, "pattern");
+        this.pattern = pattern;
         this.parsers = parsers;
+    }
+
+    private DateTimeFormatter getFormatter() {
+        if (formatter == null) {
+            synchronized (pattern) {
+                if (formatter == null) {
+                    formatter = DateTimeFormatter.ofPattern(pattern);
+                    if (pattern.endsWith("Z")) {
+                        formatter = formatter.withZone(ZoneOffset.UTC);
+                    }
+                }
+            }
+        }
+        return formatter;
     }
 
     public TemporalAccessor parse(String dateString) {
         if (parsers.length > 1) {
-            return formatter.parseBest(dateString, parsers);
+            return getFormatter().parseBest(dateString, parsers);
         } else if (parsers.length > 0) {
-            return formatter.parse(dateString, parsers[0]);
+            return getFormatter().parse(dateString, parsers[0]);
         } else {
-            return formatter.parse(dateString);
+            return getFormatter().parse(dateString);
         }
     }
 
     public ZonedDateTime parse(String dateString, ZoneId zoneId) {
-        return formatter.withZone(zoneId).parse(dateString, ZonedDateTime::from);
+        return getFormatter().withZone(zoneId).parse(dateString, ZonedDateTime::from);
     }
 
     public String format(TemporalAccessor date) {
-        return formatter.format(date);
+        return getFormatter().format(date);
     }
 
     public String format(TemporalAccessor date, ZoneId zoneId) {
-        return formatter.withZone(zoneId).format(date);
+        return getFormatter().withZone(zoneId).format(date);
     }
 
     public static CalendarDateFormat from(Temporal temporal) {
