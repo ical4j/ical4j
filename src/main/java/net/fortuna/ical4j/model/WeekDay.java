@@ -313,26 +313,22 @@ public class WeekDay implements Serializable {
 
     public static DayOfWeek getDayOfWeek(WeekDay weekday) {
         DayOfWeek dayOfWeek = null;
-        if (SU.getDay().equals(weekday.getDay())) {
-            dayOfWeek = DayOfWeek.SUNDAY;
-        }
-        else if (MO.getDay().equals(weekday.getDay())) {
-            dayOfWeek = DayOfWeek.MONDAY;
-        }
-        else if (TU.getDay().equals(weekday.getDay())) {
-            dayOfWeek = DayOfWeek.TUESDAY;
-        }
-        else if (WE.getDay().equals(weekday.getDay())) {
-            dayOfWeek = DayOfWeek.WEDNESDAY;
-        }
-        else if (TH.getDay().equals(weekday.getDay())) {
-            dayOfWeek = DayOfWeek.THURSDAY;
-        }
-        else if (FR.getDay().equals(weekday.getDay())) {
-            dayOfWeek = DayOfWeek.FRIDAY;
-        }
-        else if (SA.getDay().equals(weekday.getDay())) {
-            dayOfWeek = DayOfWeek.SATURDAY;
+        if (weekday != null) {
+            if (SU.getDay().equals(weekday.getDay())) {
+                dayOfWeek = DayOfWeek.SUNDAY;
+            } else if (MO.getDay().equals(weekday.getDay())) {
+                dayOfWeek = DayOfWeek.MONDAY;
+            } else if (TU.getDay().equals(weekday.getDay())) {
+                dayOfWeek = DayOfWeek.TUESDAY;
+            } else if (WE.getDay().equals(weekday.getDay())) {
+                dayOfWeek = DayOfWeek.WEDNESDAY;
+            } else if (TH.getDay().equals(weekday.getDay())) {
+                dayOfWeek = DayOfWeek.THURSDAY;
+            } else if (FR.getDay().equals(weekday.getDay())) {
+                dayOfWeek = DayOfWeek.FRIDAY;
+            } else if (SA.getDay().equals(weekday.getDay())) {
+                dayOfWeek = DayOfWeek.SATURDAY;
+            }
         }
         return dayOfWeek;
     }

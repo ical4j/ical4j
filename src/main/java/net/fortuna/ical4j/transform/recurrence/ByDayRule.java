@@ -4,16 +4,20 @@ import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.WeekDayList;
 
+import java.time.DayOfWeek;
 import java.time.Month;
 import java.time.Year;
 import java.time.temporal.Temporal;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.time.temporal.ChronoField.*;
+import static java.time.temporal.ChronoField.DAY_OF_MONTH;
+import static java.time.temporal.ChronoField.DAY_OF_YEAR;
 
 /**
  * Applies BYDAY rules specified in this Recur instance to the specified date list. If no BYDAY rules are specified
@@ -23,14 +27,34 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
 
     private final WeekDayList dayList;
 
+    private final WeekFields weekFields;
+
     public ByDayRule(T seed, Frequency frequency) {
+        this(seed, frequency, null);
+    }
+
+    public ByDayRule(T seed, Frequency frequency, DayOfWeek firstDayOfWeek) {
         super(frequency);
         this.dayList = new WeekDayList(WeekDay.getWeekDay(getDayOfWeek(seed)));
+        if (firstDayOfWeek != null) {
+            weekFields = WeekFields.of(firstDayOfWeek, 1);
+        } else {
+            weekFields = WeekFields.of(Locale.getDefault());
+        }
     }
 
     public ByDayRule(WeekDayList dayList, Frequency frequency) {
+        this(dayList, frequency, null);
+    }
+
+    public ByDayRule(WeekDayList dayList, Frequency frequency, DayOfWeek firstDayOfWeek) {
         super(frequency);
         this.dayList = dayList;
+        if (firstDayOfWeek != null) {
+            weekFields = WeekFields.of(firstDayOfWeek, 1);
+        } else {
+            weekFields = WeekFields.of(Locale.getDefault());
+        }
     }
 
     @Override
@@ -77,7 +101,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
             for (int i = 1; i <= 7; i++) {
-                T candidate = withTemporalField(date, DAY_OF_WEEK, i);
+                T candidate = withTemporalField(date, weekFields.dayOfWeek(), i);
                 if (dayList.stream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
                     retVal.add(candidate);
                 }

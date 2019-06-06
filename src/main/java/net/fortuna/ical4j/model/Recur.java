@@ -184,7 +184,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private final NumberList setPosList = new NumberList(1, 366, true);
 
-    private WeekDay.Day weekStartDay;
+    private WeekDay weekStartDay;
 
     private Map<String, String> experimentalValues = new HashMap<String, String>();
 
@@ -235,7 +235,7 @@ public class Recur<T extends Temporal> implements Serializable {
             } else if (BYSETPOS.equals(token)) {
                 setPosList.addAll(NumberList.parse(nextToken(tokens, token)));
             } else if (WKST.equals(token)) {
-                weekStartDay = WeekDay.Day.valueOf(nextToken(tokens, token));
+                weekStartDay = WeekDay.getWeekDay(WeekDay.Day.valueOf(nextToken(tokens, token)));
             } else {
                 if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                     // assume experimental value..
@@ -436,7 +436,7 @@ public class Recur<T extends Temporal> implements Serializable {
     /**
      * @return Returns the weekStartDay or null if there is none.
      */
-    public final WeekDay.Day getWeekStartDay() {
+    public final WeekDay getWeekStartDay() {
         return weekStartDay;
     }
 
@@ -445,7 +445,7 @@ public class Recur<T extends Temporal> implements Serializable {
      * @deprecated will be removed in a future version to support immutable pattern.
      */
     @Deprecated
-    public final void setWeekStartDay(final WeekDay.Day weekStartDay) {
+    public final void setWeekStartDay(final WeekDay weekStartDay) {
         this.weekStartDay = weekStartDay;
     }
 
@@ -604,7 +604,7 @@ public class Recur<T extends Temporal> implements Serializable {
         // (only applicable where a COUNT is not specified)
         if (count == null) {
             while (TemporalAdapter.isBefore(candidateSeed, periodStart)) {
-                candidateSeed = smartIncrement(candidateSeed);
+                candidateSeed = increment(candidateSeed);
                 if (candidateSeed == null) {
                     return dates;
                 }
@@ -660,7 +660,7 @@ public class Recur<T extends Temporal> implements Serializable {
                     break;
                 }
             }
-            candidateSeed = smartIncrement(candidateSeed);
+            candidateSeed = increment(candidateSeed);
             if (candidateSeed == null) {
                 break;
             }
@@ -835,7 +835,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         if (!dayList.isEmpty()) {
-            dates = new ByDayRule<T>(dayList, frequency).transform(dates);
+            dates = new ByDayRule<T>(dayList, deriveFilterType(), WeekDay.getDayOfWeek(weekStartDay)).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYDAY processing: " + dates);
@@ -843,7 +843,7 @@ public class Recur<T extends Temporal> implements Serializable {
         } else if (frequency == Frequency.WEEKLY || (frequency == Frequency.YEARLY && yearDayList.isEmpty()
                 && !weekNoList.isEmpty() && monthDayList.isEmpty())) {
 
-            ByDayRule<T> implicitRule = new ByDayRule<>(rootSeed, deriveFilterType());
+            ByDayRule<T> implicitRule = new ByDayRule<>(rootSeed, deriveFilterType(), WeekDay.getDayOfWeek(getWeekStartDay()));
             dates = implicitRule.transform(dates);
         }
 
@@ -985,7 +985,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
         private NumberList setPosList;
 
-        private WeekDay.Day weekStartDay;
+        private WeekDay weekStartDay;
 
         public Builder frequency(Frequency frequency) {
             this.frequency = frequency;
@@ -1052,7 +1052,7 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
-        public Builder weekStartDay(WeekDay.Day weekStartDay) {
+        public Builder weekStartDay(WeekDay weekStartDay) {
             this.weekStartDay = weekStartDay;
             return this;
         }
