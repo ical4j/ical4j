@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -47,10 +48,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -195,7 +193,7 @@ public class VEvent extends CalendarComponent {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
-    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
+    private final Map<Method, Validator<VEvent>> methodValidators = new HashMap<>();
     {
         methodValidators.put(Method.ADD, new VEventAddValidator());
         methodValidators.put(Method.CANCEL, new VEventCancelValidator());
@@ -250,7 +248,7 @@ public class VEvent extends CalendarComponent {
      */
     public VEvent(final Temporal start, final String summary) {
         this();
-        getProperties().add(new DtStart(start));
+        getProperties().add(new DtStart<>(start));
         getProperties().add(new Summary(summary));
     }
 
@@ -262,8 +260,8 @@ public class VEvent extends CalendarComponent {
      */
     public VEvent(final Temporal start, final Temporal end, final String summary) {
         this();
-        getProperties().add(new DtStart(start));
-        getProperties().add(new DtEnd(end));
+        getProperties().add(new DtStart<>(start));
+        getProperties().add(new DtEnd<>(end));
         getProperties().add(new Summary(summary));
     }
 
@@ -276,7 +274,7 @@ public class VEvent extends CalendarComponent {
      */
     public VEvent(final Temporal start, final TemporalAmount duration, final String summary) {
         this();
-        getProperties().add(new DtStart(start));
+        getProperties().add(new DtStart<>(start));
         getProperties().add(new Duration(duration));
         getProperties().add(new Summary(summary));
     }
@@ -433,8 +431,7 @@ public class VEvent extends CalendarComponent {
      * @return a normalised list of periods representing consumed time for this event
      * @see VEvent#getConsumedTime(Temporal, Temporal)
      */
-    public final PeriodList getConsumedTime(final Temporal rangeStart,
-            final Temporal rangeEnd) {
+    public final <T extends Temporal> List<Period<T>> getConsumedTime(final T rangeStart, final T rangeEnd) {
         return getConsumedTime(rangeStart, rangeEnd, true);
     }
 
@@ -447,28 +444,29 @@ public class VEvent extends CalendarComponent {
      * @param normalise indicate whether the returned list of periods should be normalised
      * @return a list of periods representing consumed time for this event
      */
-    public final PeriodList getConsumedTime(final Temporal rangeStart,
-            final Temporal rangeEnd, final boolean normalise) {
-        PeriodList periods = new PeriodList();
+    public final <T extends Temporal> List<Period<T>> getConsumedTime(final T rangeStart, final T rangeEnd,
+                                                                      final boolean normalise) {
+        PeriodList<T> periods;
         // if component is transparent return empty list..
         if (!Transp.TRANSPARENT.equals(getProperty(Property.TRANSP))) {
 
 //          try {
-          periods = calculateRecurrenceSet(new Period(rangeStart, rangeEnd));
+            periods = new PeriodList<>(calculateRecurrenceSet(new Period<>(rangeStart, rangeEnd)));
 //          }
 //          catch (ValidationException ve) {
 //              log.error("Invalid event data", ve);
 //              return periods;
 //          }
 
-          // if periods already specified through recurrence, return..
-          // ..also normalise before returning.
-          if (!periods.isEmpty() && normalise) {
-              periods = periods.normalise();
-          }
+            // if periods already specified through recurrence, return..
+            // ..also normalise before returning.
+            if (!periods.isEmpty() && normalise) {
+                periods = periods.normalise();
+            }
+        } else {
+            periods = new PeriodList<>();
         }
-
-        return periods;
+        return new ArrayList<>(periods.getPeriods());
     }
 
     /**
@@ -480,14 +478,14 @@ public class VEvent extends CalendarComponent {
      * @throws URISyntaxException where an invalid URI is encountered
      * @throws ParseException where an error occurs parsing data
      */
-    public final VEvent getOccurrence(final Temporal date) throws IOException,
+    public final <T extends Temporal> VEvent getOccurrence(final T date) throws IOException,
         URISyntaxException, ParseException {
         
-        final PeriodList consumedTime = getConsumedTime(date, date);
-        for (final Period p : consumedTime) {
+        final List<Period<T>> consumedTime = getConsumedTime(date, date);
+        for (final Period<T> p : consumedTime) {
             if (p.getStart().equals(date)) {
                 final VEvent occurrence = (VEvent) this.copy();
-                occurrence.getProperties().add(new RecurrenceId(date));
+                occurrence.getProperties().add(new RecurrenceId<>(date));
                 return occurrence;
             }
         }
@@ -631,7 +629,7 @@ public class VEvent extends CalendarComponent {
             final Duration vEventDuration;
             if (getDuration() != null) {
                 vEventDuration = getDuration();
-            } else if (dtStart.getDate() instanceof DateTime) {
+            } else if (Value.DATE_TIME.equals(dtStart.getParameter(Parameter.VALUE))) {
                 // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
                 vEventDuration = new Duration(java.time.Duration.ZERO);
             } else {
@@ -639,11 +637,12 @@ public class VEvent extends CalendarComponent {
                 vEventDuration = new Duration(java.time.Duration.ofDays(1));
             }
 
-            dtEnd = new DtEnd(dtStart.getDate().plus(vEventDuration.getDuration()));
-            if (dtStart.isUtc()) {
-                dtEnd.setUtc(true);
+            dtEnd = new DtEnd<>(dtStart.getDate().plus(vEventDuration.getDuration()));
+            Optional<TzId> tzId = Optional.ofNullable(dtStart.getParameter(Parameter.TZID));
+            if (tzId.isPresent()) {
+                dtEnd.getParameters().add(tzId.get());
             } else {
-                dtEnd.setTimeZone(dtStart.getTimeZone());
+                dtEnd.getParameters().removeAll(Parameter.TZID);
             }
         }
         return dtEnd;
@@ -694,7 +693,7 @@ public class VEvent extends CalendarComponent {
     public Component copy() throws ParseException, IOException,
             URISyntaxException {
         final VEvent copy = (VEvent) super.copy();
-        copy.alarms = new ComponentList<VAlarm>(alarms);
+        copy.alarms = new ComponentList<>(alarms);
         return copy;
     }
 

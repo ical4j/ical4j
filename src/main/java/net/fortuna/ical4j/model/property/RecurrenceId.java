@@ -133,15 +133,6 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
     private static final long serialVersionUID = 4456883817126011006L;
 
     /**
-     * Creates a new RECURRENCE_ID property initialised with the specified timezone.
-     *
-     * @param timezone initial timezone
-     */
-    public RecurrenceId(TimeZone timezone) {
-        super(RECURRENCE_ID, timezone, new Factory());
-    }
-
-    /**
      * Creates a new instance initialised with the parsed value.
      *
      * @param value the RECURRENCE_ID value string to parse
@@ -149,19 +140,6 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      */
     public RecurrenceId(final String value) throws ParseException {
         super(RECURRENCE_ID, new Factory());
-        setValue(value);
-    }
-
-    /**
-     * Creates a new RECURRENCE_ID property initialised with the specified timezone and value.
-     *
-     * @param value    a string representation of a RECURRENCE_ID value
-     * @param timezone initial timezone
-     * @throws ParseException where the specified value is not a valid string
-     *                        representation
-     */
-    public RecurrenceId(String value, TimeZone timezone) throws ParseException {
-        super(RECURRENCE_ID, timezone, new Factory());
         setValue(value);
     }
 

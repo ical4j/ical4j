@@ -46,6 +46,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -74,8 +75,6 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
     private TemporalAdapter<T> date;
 
-    private TimeZone timeZone;
-
     /**
      * @param name       the property name
      * @param parameters a list of initial parameters
@@ -92,17 +91,6 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     }
 
     /**
-     * Creates a new instance of the named property with an initial timezone.
-     *
-     * @param name     property name
-     * @param timezone initial timezone
-     */
-    public DateProperty(final String name, TimeZone timezone, PropertyFactory factory) {
-        super(name, factory);
-        updateTimeZone(timezone);
-    }
-
-    /**
      * This method will attempt to dynamically cast the internal {@link Temporal} value to the
      * required return value.
      *
@@ -111,7 +99,16 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * @return Returns the date.
      */
     public T getDate() {
-        return date.getTemporal();
+        if (date != null) {
+            Optional<TzId> tzId = Optional.ofNullable(getParameter(Parameter.TZID));
+            if (tzId.isPresent()) {
+                return (T) date.toLocalTime(tzId.get().toZoneId());
+            } else {
+                return date.getTemporal();
+            }
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -131,17 +128,25 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     /**
      * Default setValue() implementation. Allows for either DATE or DATE-TIME values.
      *
+     * Note that this method will use the system default zone rules to parse the string value. For parsing string
+     * values in a different timezone use {@link TemporalAdapter#parse(String, ZoneId)} and
+     * {@link DateProperty#setDate(Temporal)}.
+     *
      * @param value a string representation of a DATE or DATE-TIME value
      * @throws ParseException where the specified value is not a valid DATE or DATE-TIME
      *                        representation
      */
     public void setValue(final String value) throws DateTimeParseException {
         // value can be either a date-time or a date..
-        TzId tzId = getParameter(Parameter.TZID);
-        if (tzId != null) {
-            this.date = (TemporalAdapter<T>) TemporalAdapter.parse(value, ZoneId.of(tzId.getValue()));
+        if (value != null && !value.isEmpty()) {
+            TzId tzId = getParameter(Parameter.TZID);
+            if (tzId != null) {
+                this.date = (TemporalAdapter<T>) TemporalAdapter.parse(value, tzId);
+            } else {
+                this.date = TemporalAdapter.parse(value);
+            }
         } else {
-            this.date = TemporalAdapter.parse(value);
+            this.date = null;
         }
     }
 
@@ -153,22 +158,6 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     }
 
     /**
-     * Publically available method to update the current timezone.
-     *
-     * @param timezone a timezone instance
-     */
-    public void setTimeZone(final TimeZone timezone) {
-        updateTimeZone(timezone);
-    }
-
-    /**
-     * @return the timezone
-     */
-    public final TimeZone getTimeZone() {
-        return timeZone;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -177,47 +166,12 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     }
 
     /**
-     * Updates the timezone associated with the property's value. If the specified timezone is equivalent to UTC any
-     * existing TZID parameters will be removed. Note that this method is only applicable where the current date is an
-     * instance of <code>DateTime</code>. For all other cases an <code>UnsupportedOperationException</code> will be
-     * thrown.
-     *
-     * @param timezone
-     */
-    private void updateTimeZone(final TimeZone timezone) {
-        this.timeZone = timezone;
-        if (timezone != null) {
-            if (getDate() != null && !(getDate() instanceof DateTime)) {
-                throw new UnsupportedOperationException(
-                        "TimeZone is not applicable to current value");
-            }
-            getParameters().replace(new TzId(timezone.getID()));
-        } else {
-            // use setUtc() to reset timezone..
-            setUtc(isUtc());
-        }
-    }
-
-    /**
-     * Resets the VTIMEZONE associated with the property. If utc is true, any TZID parameters are removed and the Java
-     * timezone is updated to UTC time. If utc is false, TZID parameters are removed and the Java timezone is set to the
-     * default timezone (i.e. represents a "floating" local time)
-     *
-     * @param utc a UTC value
-     */
-    public final void setUtc(final boolean utc) {
-        if (utc) {
-            getParameters().remove(getParameter(Parameter.TZID));
-        }
-    }
-
-    /**
      * Indicates whether the current date value is specified in UTC time.
      *
      * @return true if the property is in UTC time, otherwise false
      */
     public final boolean isUtc() {
-        return TemporalAdapter.isUtc(date.getTemporal());
+        return date != null && TemporalAdapter.isUtc(date.getTemporal());
     }
 
     /**
@@ -275,10 +229,10 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * {@inheritDoc}
      */
     public Property copy() throws IOException, URISyntaxException, ParseException {
-        final Property copy = super.copy();
-
-        ((DateProperty<T>) copy).setValue(getValue());
-
+        final DateProperty<T> copy = super.copy();
+        if (date != null) {
+            copy.date = date;
+        }
         return copy;
     }
 }

@@ -31,20 +31,15 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-import java.util.Calendar;
-
 import junit.framework.TestCase;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.TimeZones;
+
+import java.text.ParseException;
+import java.util.Calendar;
 
 /**
  * $Id$
@@ -56,15 +51,11 @@ import net.fortuna.ical4j.util.TimeZones;
  */
 public class DtStartTest extends TestCase {
 
-    private TimeZone timezone;
-    
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
         super.setUp();
-        TimeZoneRegistry tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
-        timezone = tzReg.getTimeZone("Australia/Melbourne");
     }
     
     /*
@@ -86,31 +77,6 @@ public class DtStartTest extends TestCase {
         assertEquals(dtStart.getDate(), calendar.getTime());
     }
 
-    /**
-     * Unit tests for timezone constructor.
-     */
-    public void testDtStartTimezone() throws ParseException {
-        DtStart dtStart = new DtStart(timezone);
-
-        dtStart.setValue(new DateTime().toString());
-        assertEquals(timezone, dtStart.getTimeZone());
-
-        // initialising with DATE value should reset timezone..
-        dtStart.setDate(new Date());
-        assertNull(dtStart.getTimeZone());
-    }
-
-    /**
-     * Unit tests for value/timezone constructor.
-     */
-    public void testDtStartStringTimezone() throws ParseException {
-        String value = new DateTime().toString();
-        DtStart dtStart = new DtStart(value, timezone);
-
-        assertEquals(timezone, dtStart.getTimeZone());
-        assertEquals(value, dtStart.getValue());
-    }
-    
     /**
      * Test non-utc timezone works.
      */

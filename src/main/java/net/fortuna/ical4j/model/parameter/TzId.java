@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 
 import java.net.URISyntaxException;
+import java.time.ZoneId;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -53,14 +54,39 @@ public class TzId extends Parameter implements Escapable {
 
     private String value;
 
+    private transient TimeZoneRegistry timeZoneRegistry;
+
     /**
      * @param aValue a string representation of a time zone identifier
      */
     public TzId(final String aValue) {
+        this(aValue, null);
+    }
+
+    public TzId(final String aValue, TimeZoneRegistry timeZoneRegistry) {
         super(TZID, new Factory());
         // parameter values may be quoted if they contain characters in the
         // set [:;,]..
         this.value = Strings.unquote(aValue);
+        this.timeZoneRegistry = timeZoneRegistry;
+    }
+
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        this.timeZoneRegistry = timeZoneRegistry;
+    }
+
+    /**
+     * Provides a {@link ZoneId} representation of this instance. If created with a local timezone registry the
+     * returned value will provide the corresponding globally unique value.
+     *
+     * @return a zone id represented by this instance
+     */
+    public ZoneId toZoneId() {
+        if (timeZoneRegistry != null && !timeZoneRegistry.getZoneRules().isEmpty()) {
+            return timeZoneRegistry.getZoneId(getValue());
+        } else {
+            return TimeZoneRegistry.getGlobalZoneId(getValue());
+        }
     }
 
     /**
@@ -81,5 +107,4 @@ public class TzId extends Parameter implements Escapable {
             return new TzId(Strings.unescape(value));
         }
     }
-
 }

@@ -64,8 +64,8 @@ public class TzIdTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        TzId id = new TzId("");
-        suite.addTest(new TzIdTest(id, ""));
+        TzId id = new TzId("GMT");
+        suite.addTest(new TzIdTest(id, "GMT"));
         suite.addTest(new TzIdTest("testValidation", id));
         suite.addTest(new TzIdTest("testEquals", id));
         return suite;

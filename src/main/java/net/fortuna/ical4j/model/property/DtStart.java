@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -117,34 +120,12 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
     }
 
     /**
-     * Creates a new DTSTART property initialised with the specified timezone.
-     *
-     * @param timezone initial timezone
-     */
-    public DtStart(TimeZone timezone) {
-        super(DTSTART, timezone, new Factory());
-    }
-
-    /**
      * @param aValue a value string for this component
      * @throws java.time.format.DateTimeParseException where the specified value string is not a valid date-time/date representation
      */
     public DtStart(final String aValue) {
         super(DTSTART, new Factory());
         setValue(aValue);
-    }
-
-    /**
-     * Creates a new DTSTART property initialised with the specified timezone and value.
-     *
-     * @param value    a string representation of a DTSTART value
-     * @param timezone initial timezone
-     * @throws java.time.format.DateTimeParseException where the specified value is not a valid string
-     *                        representation
-     */
-    public DtStart(String value, TimeZone timezone) {
-        super(DTSTART, timezone, new Factory());
-        setValue(value);
     }
 
     /**
@@ -172,11 +153,12 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      *
      * @param time the time of the DtStart
      * @param utc  specifies whether time is UTC
+     *
+     * @deprecated UTC time is now specified via the generic type (i.e. {@link java.time.Instant})
      */
+    @Deprecated
     public DtStart(final T time, final boolean utc) {
-        super(DTSTART, new Factory());
-        setDate(time);
-        setUtc(utc);
+        this(time);
     }
 
     /**

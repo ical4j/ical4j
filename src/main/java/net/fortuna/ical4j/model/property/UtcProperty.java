@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.model.TimeZone;
 
 import java.time.Instant;
 import java.time.temporal.Temporal;
@@ -88,13 +87,5 @@ public abstract class UtcProperty extends DateProperty<Instant> {
     @Deprecated
     public void setDateTime(final Instant dateTime) {
         setDate(dateTime);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("deprecation")
-    public void setTimeZone(TimeZone timezone) {
-        throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
     }
 }
