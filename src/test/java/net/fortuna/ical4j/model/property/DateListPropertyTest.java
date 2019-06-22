@@ -31,15 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -89,16 +88,13 @@ public class DateListPropertyTest extends PropertyTest {
      * @return
      */
     public static TestSuite suite() throws ParseException {
-        TimeZoneRegistry tzReg = DefaultTimeZoneRegistryFactory.getInstance()
-                .createRegistry();
-
         TestSuite suite = new TestSuite();
         ExDate exZulu = new ExDate();
         exZulu.setValue("20111212T000000Z");
         suite.addTest(new DateListPropertyTest("testCopy", exZulu));
 
         ExDate exMelbourne = new ExDate();
-        exMelbourne.setTimeZone(tzReg.getTimeZone("Australia/Melbourne"));
+        exMelbourne.setTimeZone(TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne"));
         exMelbourne.setValue("20111212T000000");
 
         suite.addTest(new DateListPropertyTest("testCopy", exMelbourne));

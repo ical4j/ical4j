@@ -1,16 +1,15 @@
 package net.fortuna.ical4j.data;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.component.*;
+import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.parameter.TzId;
-import net.fortuna.ical4j.model.property.DateListProperty;
-import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.util.Constants;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.time.zone.ZoneRulesProvider;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -24,8 +23,6 @@ public class DefaultContentHandler implements ContentHandler {
     private final Supplier<List<ComponentFactory>> componentFactorySupplier;
 
     private final TimeZoneRegistry tzRegistry;
-
-    private List<TzId> propertiesWithTzId;
 
     private final Consumer<Calendar> consumer;
 
@@ -57,30 +54,11 @@ public class DefaultContentHandler implements ContentHandler {
     @Override
     public void startCalendar() {
         calendar = new Calendar();
-        propertiesWithTzId = new ArrayList<>();
     }
 
     @Override
-    public void endCalendar() throws IOException {
-        if (propertiesWithTzId.size() > 0 && tzRegistry != null) {
-            for (CalendarComponent component : calendar.getComponents()) {
-                resolveTimezones(component.getProperties());
-
-                if (component instanceof VAvailability) {
-                    for (Component available : ((VAvailability) component).getAvailable()) {
-                        resolveTimezones(available.getProperties());
-                    }
-                } else if (component instanceof VEvent) {
-                    for (Component alarm : ((VEvent) component).getAlarms()) {
-                        resolveTimezones(alarm.getProperties());
-                    }
-                } else if (component instanceof VToDo) {
-                    for (Component todo : ((VToDo) component).getAlarms()) {
-                        resolveTimezones(todo.getProperties());
-                    }
-                }
-            }
-        }
+    public void endCalendar() {
+        ZoneRulesProvider.registerProvider(new ZoneRulesProviderImpl(tzRegistry));
         consumer.accept(calendar);
     }
 
@@ -142,8 +120,6 @@ public class DefaultContentHandler implements ContentHandler {
         } else if (calendar != null) {
             calendar.getProperties().add(property);
         }
-
-        property = null;
     }
 
     @Override
@@ -157,7 +133,7 @@ public class DefaultContentHandler implements ContentHandler {
             // VTIMEZONE may be defined later, so so keep
             // track of dates until all components have been
             // parsed, and then try again later
-            propertiesWithTzId.add((TzId) parameter);
+            ((TzId) parameter).setTimeZoneRegistry(tzRegistry);
         }
 
         propertyBuilder.parameter(parameter);
@@ -172,45 +148,6 @@ public class DefaultContentHandler implements ContentHandler {
     private void assertProperty(PropertyBuilder property) {
         if (property == null) {
             throw new CalendarException("Expected property not initialised");
-        }
-    }
-
-    private void resolveTimezones(List<Property> properties) throws IOException {
-
-        // Go through each property and try to resolve the TZID.
-        for (TzId tzParam : propertiesWithTzId) {
-
-            //lookup timezone
-            final TimeZone timezone = tzRegistry.getTimeZone(tzParam.getValue());
-
-            // If timezone found, then update date property
-            if (timezone != null) {
-                for (Property property : properties) {
-                    if (tzParam.equals(property.getParameter(Parameter.TZID))) {
-
-                        // Get the String representation of date(s) as
-                        // we will need this after changing the timezone
-                        final String strDate = property.getValue();
-
-                        // Change the timezone
-                        if (property instanceof DateProperty) {
-                            ((DateProperty) property).setTimeZone(timezone);
-                        } else if (property instanceof DateListProperty) {
-                            ((DateListProperty) property).setTimeZone(timezone);
-                        } else {
-                            throw new CalendarException("Invalid parameter: " + tzParam.getName());
-                        }
-
-                        // Reset value
-                        try {
-                            property.setValue(strDate);
-                        } catch (ParseException | URISyntaxException e) {
-                            // shouldn't happen as its already been parsed
-                            throw new CalendarException(e);
-                        }
-                    }
-                }
-            }
         }
     }
 }

@@ -31,17 +31,17 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.InputStream;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.CompatibilityHints;
+
+import java.io.InputStream;
+import java.time.ZonedDateTime;
 
 /**
  * $Id: CalendarBuilderTimezoneTest.java [Jul 1, 2008]
@@ -96,14 +96,13 @@ public class CalendarBuilderTimezoneTest extends TestCase {
         VEvent vevent = (VEvent) comps.get(0);
 
         DtStart dtstart = vevent.getStartDate();
-        DateTime dateTime = (DateTime) dtstart.getDate();
+        ZonedDateTime dateTime = (ZonedDateTime) dtstart.getDate();
 
         assertEquals("date value not correct", "20080624T130000", dtstart
                 .getValue());
-        assertNotNull("timezone not present", dateTime.getTimeZone());
+        assertNotNull("timezone not present", dateTime.getZone());
         assertEquals("timezone not correct",
-                "/softwarestudio.org/Tzfile/America/Chicago", dateTime
-                        .getTimeZone().getID());
+                "/softwarestudio.org/Tzfile/America/Chicago", builder.getRegistry().getTzId(dateTime.getZone().getId()));
 
     }
 }

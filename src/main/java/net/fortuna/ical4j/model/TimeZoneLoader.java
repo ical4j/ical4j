@@ -13,8 +13,10 @@ import net.fortuna.ical4j.util.TimeZoneCache;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
@@ -46,14 +48,11 @@ public class TimeZoneLoader {
     private static final String MESSAGE_MISSING_DEFAULT_TZ_CACHE_IMPL = "Error loading default cache implementation. Please ensure the JCache API dependency is included in the classpath, or override the cache implementation (e.g. via configuration: net.fortuna.ical4j.timezone.cache.impl=net.fortuna.ical4j.util.MapTimeZoneCache)";
 
     private static Proxy proxy = null;
-    private static final Set<String> TIMEZONE_DEFINITIONS = new HashSet<String>();
     private static final String DATE_TIME_TPL = "yyyyMMdd'T'HHmmss";
     private static final String RRULE_TPL = "FREQ=YEARLY;BYMONTH=%d;BYDAY=%d%s";
     private static final Standard NO_TRANSITIONS;
 
     static {
-        TIMEZONE_DEFINITIONS.addAll(Arrays.asList(net.fortuna.ical4j.model.TimeZone.getAvailableIDs()));
-
         NO_TRANSITIONS = new Standard();
         TzOffsetFrom offsetFrom = new TzOffsetFrom(ZoneOffset.UTC);
         TzOffsetTo offsetTo = new TzOffsetTo(ZoneOffset.UTC);
@@ -88,6 +87,12 @@ public class TimeZoneLoader {
     public TimeZoneLoader(String resourcePrefix, TimeZoneCache cache) {
         this.resourcePrefix = resourcePrefix;
         this.cache = cache;
+    }
+
+    public String[] getAvailableIDs() {
+        return new BufferedReader(new InputStreamReader(
+                ResourceLoader.getResourceAsStream("net/fortuna/ical4j/model/tz.availableIds")))
+                .lines().toArray(String[]::new);
     }
 
     /**
@@ -153,7 +158,7 @@ public class TimeZoneLoader {
     }
 
     private static VTimeZone generateTimezoneForId(String timezoneId) throws ParseException {
-        if (!TIMEZONE_DEFINITIONS.contains(timezoneId)) {
+        if (!ZoneId.getAvailableZoneIds().contains(timezoneId)) {
             return null;
         }
         TimeZone javaTz = TimeZone.getTimeZone(timezoneId);

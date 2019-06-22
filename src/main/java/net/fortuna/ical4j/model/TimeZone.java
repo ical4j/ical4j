@@ -89,7 +89,8 @@ public class TimeZone extends java.util.TimeZone {
         final int second = ms / 1000;
         ms -= second * 1000;
 
-        OffsetDateTime date = OffsetDateTime.of(year, month, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.UTC);
+        // convert zero-based month of old API to new API by adding 1..
+        OffsetDateTime date = OffsetDateTime.of(year, month + 1, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.ofTotalSeconds(getRawOffset() / 1000));
         final Observance observance = vTimeZone.getApplicableObservance(date);
         if (observance != null) {
             final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);

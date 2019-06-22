@@ -31,6 +31,16 @@
  */
 package net.fortuna.ical4j.model;
 
+import java.time.DateTimeException;
+import java.time.ZoneId;
+import java.time.zone.ZoneRules;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import static java.time.ZoneId.getAvailableZoneIds;
+import static java.time.ZoneId.of;
+
 /**
  * $Id$
  *
@@ -41,6 +51,18 @@ package net.fortuna.ical4j.model;
  * @author Ben Fortuna
  */
 public interface TimeZoneRegistry {
+
+    Map<String, String> ZONE_IDS = new ConcurrentHashMap<>();
+
+    Map<String, String> ZONE_ALIASES = new ConcurrentHashMap<>();
+
+    static ZoneId getGlobalZoneId(String tzId) {
+        // Ensure zone rules are loaded..
+        Set<String> ids = getAvailableZoneIds();
+        return of(ZONE_IDS.entrySet().stream().filter(entry -> entry.getValue().equals(tzId))
+                .findFirst().orElseThrow(() -> new DateTimeException(String.format("Unknown timezone identifier [%s]", tzId))).getKey(),
+                ZONE_ALIASES);
+    }
 
     /**
      * Registers a new timezone for use with iCalendar objects. If a timezone
@@ -74,4 +96,10 @@ public interface TimeZoneRegistry {
      * is registered with the specified identifier null is returned.
      */
     TimeZone getTimeZone(final String id);
+
+    Map<String, ZoneRules> getZoneRules();
+
+    ZoneId getZoneId(String tzId);
+
+    String getTzId(String zoneId);
 }
