@@ -100,7 +100,7 @@ public class ByMonthDayRule extends AbstractDateExpansionRule {
                     cal.set(Calendar.DAY_OF_MONTH, numDaysInMonth);
                     cal.add(Calendar.DAY_OF_MONTH, monthDay + 1);
                 }
-                retVal.add(Dates.getInstance(cal.getTime(), type));
+                retVal.add(Dates.getInstance(getTime(date, cal), type));
             };
             return retVal;
         }

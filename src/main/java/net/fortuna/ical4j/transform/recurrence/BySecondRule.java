@@ -78,7 +78,7 @@ public class BySecondRule extends AbstractDateExpansionRule {
             // construct a list of possible seconds..
             secondList.forEach(second -> {
                 cal.set(Calendar.SECOND, second);
-                retVal.add(Dates.getInstance(cal.getTime(), type));
+                retVal.add(Dates.getInstance(getTime(date, cal), type));
             });
             return retVal;
         }
