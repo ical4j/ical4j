@@ -148,4 +148,15 @@ class TemporalAmountAdapterTest extends Specification {
         adapter1.hashCode() == adapter2.hashCode()
     }
 
+    def 'week period parsing and values'() {
+	given: 'a one week amount adapter'
+	TemporalAmountAdapter adapter1 = TemporalAmountAdapter.parse('P1W')
+
+        and: 'a negative one week identical period'
+        TemporalAmountAdapter adapter2 = TemporalAmountAdapter.parse('-P1W')
+	    
+        expect: 'same duration, except for the sign'
+        adapter1.duration == -adapter2.duration
+    }
+
 }

@@ -115,7 +115,7 @@ public class TemporalAmountAdapter implements Serializable {
 
     public static TemporalAmountAdapter parse(String value) {
         TemporalAmount retVal = null;
-        if (value.matches("P.*(W|D)$")) {
+        if (value.matches("([+-])?P.*(W|D)")) {
             retVal = java.time.Period.parse(value);
         } else {
             retVal = java.time.Duration.parse(value);
