@@ -754,8 +754,8 @@ public class RecurTest extends TestCase {
         rrule = "FREQ=DAILY;BYHOUR=9,10,11,12,13,14,15,16;BYMINUTE=0,30";
         recur = new Recur(rrule);
 
-        cal = Calendar.getInstance();
-        cal.set(2019, 02, 14, 0, 0, 0);
+        cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.set(2019, 02, 14, 8, 0, 0);
         start = new DateTime(cal.getTime());
         cal.add(Calendar.DAY_OF_YEAR, 1);
         end = new DateTime(cal.getTime());
