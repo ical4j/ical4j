@@ -755,9 +755,7 @@ public class RecurTest extends TestCase {
         recur = new Recur(rrule);
 
         cal = Calendar.getInstance();
-        cal.clear(Calendar.SECOND);
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.HOUR);
+        cal.set(2019, 02, 14, 0, 0, 0);
         start = new DateTime(cal.getTime());
         cal.add(Calendar.DAY_OF_YEAR, 1);
         end = new DateTime(cal.getTime());
