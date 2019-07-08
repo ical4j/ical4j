@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.component.Daylight;
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzId;
+import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 
 import java.util.Calendar;
@@ -189,7 +190,12 @@ public class TimeZone extends java.util.TimeZone {
         } else {
             latestSeasonalTime = seasonalTimes.get(0);
         }
-        if (latestSeasonalTime != null) {
+        if (latestSeasonalTime instanceof Daylight) {
+            final TzOffsetFrom offsetFrom = latestSeasonalTime.getProperty(Property.TZOFFSETFROM);
+            if (offsetFrom != null) {
+                return (int) (offsetFrom.getOffset().getTotalSeconds() * 1000L);
+            }
+        } else {
             final TzOffsetTo offsetTo = latestSeasonalTime.getProperty(Property.TZOFFSETTO);
             if (offsetTo != null) {
                 return (int) (offsetTo.getOffset().getTotalSeconds() * 1000L);
