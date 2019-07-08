@@ -31,21 +31,17 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-import java.util.List;
-
+import junit.framework.TestCase;
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import junit.framework.TestCase;
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.util.CompatibilityHints;
+import java.text.ParseException;
+import java.util.List;
 
 /**
  * $Id$
@@ -90,7 +86,22 @@ public class ExDateTest extends TestCase {
         }
     }
     
-    
+    public void testDstOnlyVTimeZones() throws Exception {
+        CalendarBuilder builder = new CalendarBuilder();
+
+        Calendar ical = builder.build(getClass().getResourceAsStream("/samples/valid/dst-only-vtimezone.ics"));
+        VTimeZone vTZ = (VTimeZone) ical.getComponent(VTimeZone.VTIMEZONE);
+
+        String id = vTZ.getTimeZoneId().getValue();
+        assertEquals("Europe/Berlin", id);
+        assertEquals(vTZ.getObservances().get(0), vTZ.getApplicableObservance(new Date("20180403")));
+
+        VEvent vEvent = (VEvent) ical.getComponent(VEvent.VEVENT);
+        DtStart start = vEvent.getStartDate();
+        assertEquals(vTZ, start.getTimeZone().getVTimeZone());
+        assertEquals(1522738800000L, start.getDate().getTime());
+    }
+
     public void testShouldPreserveUtcTimezoneForExDate() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
