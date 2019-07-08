@@ -42,8 +42,8 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.util.Calendar;
-import java.util.*;
 import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Created on 14/02/2005
@@ -767,10 +767,8 @@ public class RecurTest extends TestCase {
         rrule = "FREQ=DAILY;BYHOUR=9,10,11,12,13,14,15,16;BYMINUTE=0,30";
         recur = new Recur(rrule);
 
-        cal = Calendar.getInstance();
-        cal.clear(Calendar.SECOND);
-        cal.clear(Calendar.MINUTE);
-        cal.clear(Calendar.HOUR);
+        cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.set(2019, 02, 14, 8, 0, 0);
         start = new DateTime(cal.getTime());
         cal.add(Calendar.DAY_OF_YEAR, 1);
         end = new DateTime(cal.getTime());
