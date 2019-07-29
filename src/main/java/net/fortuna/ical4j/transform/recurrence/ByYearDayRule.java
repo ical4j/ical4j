@@ -67,7 +67,7 @@ public class ByYearDayRule<T extends Temporal> extends AbstractDateExpansionRule
             // construct a list of possible year days..
             final int numDaysInYear = Year.of(getYear(date)).length();
             for (final int yearDay : yearDayList) {
-                if (yearDay == 0 || yearDay <= -numDaysInYear || yearDay > numDaysInYear) {
+                if (yearDay == 0 || yearDay < -numDaysInYear || yearDay > numDaysInYear) {
                     if (log.isTraceEnabled()) {
                         log.trace("Invalid day of year: " + yearDay);
                     }
@@ -83,7 +83,7 @@ public class ByYearDayRule<T extends Temporal> extends AbstractDateExpansionRule
                     if (numDaysInYear < -yearDay) {
                         continue;
                     }
-                    candidate = withTemporalField(date, DAY_OF_YEAR, numDaysInYear + yearDay);
+                    candidate = withTemporalField(date, DAY_OF_YEAR, numDaysInYear + 1 + yearDay);
                 }
                 retVal.add(candidate);
             }

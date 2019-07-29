@@ -38,7 +38,7 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
         for (final T date : dates) {
             final int numWeeksInYear = (int) IsoFields.WEEK_OF_WEEK_BASED_YEAR.rangeRefinedBy(date).getMaximum();
             for (final Integer weekNo : weekNoList) {
-                if (weekNo == 0 || weekNo <= -numWeeksInYear || weekNo > numWeeksInYear) {
+                if (weekNo == 0 || weekNo < -numWeeksInYear || weekNo > numWeeksInYear) {
                     if (log.isTraceEnabled()) {
                         log.trace("Invalid week of year: " + weekNo);
                     }
@@ -54,7 +54,7 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
                     if (numWeeksInYear < -weekNo) {
                         continue;
                     }
-                    candidate = withTemporalField(date, ALIGNED_WEEK_OF_YEAR, numWeeksInYear + weekNo);
+                    candidate = withTemporalField(date, ALIGNED_WEEK_OF_YEAR, numWeeksInYear + 1 + weekNo);
                 }
                 weekNoDates.add(candidate);
             }

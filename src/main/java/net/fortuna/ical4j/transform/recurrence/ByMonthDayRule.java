@@ -68,7 +68,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
             // construct a list of possible month days..
             final int numDaysInMonth = YearMonth.of(getYear(date), getMonth(date)).lengthOfMonth();
             for (final int monthDay : monthDayList) {
-                if (monthDay == 0 || monthDay <= -numDaysInMonth || monthDay > numDaysInMonth) {
+                if (monthDay == 0 || monthDay < -numDaysInMonth || monthDay > numDaysInMonth) {
                     if (log.isTraceEnabled()) {
                         log.trace("Invalid day of month: " + monthDay);
                     }
@@ -84,7 +84,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
                     if (numDaysInMonth < -monthDay) {
                         continue;
                     }
-                    candidate = withTemporalField(date, DAY_OF_MONTH, numDaysInMonth + monthDay);
+                    candidate = withTemporalField(date, DAY_OF_MONTH, numDaysInMonth + 1 + monthDay);
                 }
                 retVal.add(candidate);
             };
