@@ -31,7 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -93,7 +97,7 @@ public class Version extends Property {
      * Default constructor.
      */
     public Version() {
-        super(VERSION, PropertyFactoryImpl.getInstance());
+        super(VERSION, new Factory());
     }
 
     /**
@@ -101,7 +105,7 @@ public class Version extends Property {
      * @param aValue a value string for this component
      */
     public Version(final ParameterList aList, final String aValue) {
-        super(VERSION, aList, PropertyFactoryImpl.getInstance());
+        super(VERSION, aList, new Factory());
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
             this.maxVersion = aValue.substring(aValue.indexOf(';'));
@@ -115,7 +119,7 @@ public class Version extends Property {
      * @param maxVersion a string representation of the maximum version
      */
     public Version(final String minVersion, final String maxVersion) {
-        super(VERSION, PropertyFactoryImpl.getInstance());
+        super(VERSION, new Factory());
         this.minVersion = minVersion;
         this.maxVersion = maxVersion;
     }
@@ -127,7 +131,7 @@ public class Version extends Property {
      */
     public Version(final ParameterList aList, final String aVersion1,
                    final String aVersion2) {
-        super(VERSION, aList, PropertyFactoryImpl.getInstance());
+        super(VERSION, aList, new Factory());
         minVersion = aVersion1;
         maxVersion = aVersion2;
     }
@@ -189,19 +193,31 @@ public class Version extends Property {
         this.minVersion = minVersion;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    @Override
+    public void validate() throws ValidationException {
+
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory<Version> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(VERSION);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Version createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Version(parameters, value);
+
+            Version version;
+            if (VERSION_2_0.getValue().equals(value)) {
+                version = VERSION_2_0;
+            } else {
+                version = new Version(parameters, value);
+            }
+            return version;
         }
 
-        public Property createProperty() {
+        public Version createProperty() {
             return new Version();
         }
     }

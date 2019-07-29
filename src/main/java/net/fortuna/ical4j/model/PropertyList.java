@@ -36,7 +36,7 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -82,11 +82,7 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder sb = new StringBuilder();
-        for (final Iterator<T> i = iterator(); i.hasNext();) {
-            sb.append(i.next().toString());
-        }
-        return sb.toString();
+        return stream().map(Property::toString).collect(Collectors.joining(""));
     }
 
     /**
@@ -94,10 +90,10 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      * @param aName name of property to return
      * @return a property or null if no matching property found
      */
-    public final T getProperty(final String aName) {
+    public final <R> R getProperty(final String aName) {
         for (final T p : this) {
             if (p.getName().equalsIgnoreCase(aName)) {
-                return p;
+                return (R) p;
             }
         }
         return null;

@@ -1,14 +1,13 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * <pre>
@@ -50,24 +49,13 @@ public class VFreeBusyPublishValidator implements Validator<VFreeBusy> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VFreeBusy target) throws ValidationException {
-        PropertyValidator.getInstance().assertOneOrMore(Property.FREEBUSY, target.getProperties());
+        PropertyValidator.getInstance().assertOneOrMore(FREEBUSY, target.getProperties());
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.DTSTAMP, Property.DTSTART, Property.DTEND, Property.ORGANIZER,
-                Property.UID), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOne(input, target.getProperties());
-            }
-        });
+        Arrays.asList(DTSTAMP, DTSTART, DTEND, ORGANIZER,
+                UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        PropertyValidator.getInstance().assertOneOrLess(Property.URL, target.getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(URL, target.getProperties());
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.ATTENDEE, Property.DURATION, Property.REQUEST_STATUS),
-                new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertNone(input, target.getProperties());
-            }
-        });
+        Arrays.asList(ATTENDEE, DURATION, REQUEST_STATUS).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
     }
 }

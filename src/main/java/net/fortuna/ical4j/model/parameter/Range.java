@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 
@@ -71,7 +70,7 @@ public class Range extends Parameter {
      * @param aValue a string representation of a recurrence identifier range
      */
     public Range(final String aValue) {
-        super(RANGE, ParameterFactoryImpl.getInstance());
+        super(RANGE, new Factory());
         this.value = Strings.unquote(aValue);
 
         // allow arbitrary ranges for Lotus Notes..

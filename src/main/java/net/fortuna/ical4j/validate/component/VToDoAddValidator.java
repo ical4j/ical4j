@@ -1,16 +1,15 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * <pre>
@@ -72,24 +71,15 @@ public class VToDoAddValidator implements Validator<VToDo> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VToDo target) throws ValidationException {
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.PRIORITY, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.SEQUENCE, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.SUMMARY, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+        Arrays.asList(DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID).forEach(
+                property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
-                Property.DTSTART, Property.DUE, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,
-                Property.PERCENT_COMPLETE, Property.RESOURCES, Property.STATUS, Property.URL), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, target.getProperties());
-            }
-        });
+        Arrays.asList(CATEGORIES, CLASS, CREATED, DESCRIPTION,
+                DTSTART, DUE, DURATION, GEO, LAST_MODIFIED, LOCATION,
+                PERCENT_COMPLETE, RESOURCES, STATUS, URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
-        PropertyValidator.getInstance().assertNone(Property.RECURRENCE_ID, target.getProperties());
-        PropertyValidator.getInstance().assertNone(Property.REQUEST_STATUS, target.getProperties());
+        Arrays.asList(RECURRENCE_ID, REQUEST_STATUS).forEach(
+                property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
 
         for (final VAlarm alarm : target.getAlarms()) {
             alarm.validate(Method.ADD);

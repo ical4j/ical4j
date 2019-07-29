@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.component
 
 import net.fortuna.ical4j.model.ContentBuilder
-import net.fortuna.ical4j.model.Dur
 import spock.lang.Specification
 
 class VFreeBusySpec extends Specification {

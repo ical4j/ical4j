@@ -31,15 +31,16 @@
  */
 package net.fortuna.ical4j.filter;
 
-import java.util.Date;
-
 import net.fortuna.ical4j.model.DateRange;
+
+import java.util.Date;
+import java.util.function.Predicate;
 
 /**
  * @author fortuna
  *
  */
-public class DateInRangeRule implements Rule<Date> {
+public class DateInRangeRule implements Predicate<Date> {
 
     private final DateRange range;
     
@@ -57,7 +58,7 @@ public class DateInRangeRule implements Rule<Date> {
     /**
      * {@inheritDoc}
      */
-    public boolean match(Date date) {
+    public boolean test(Date date) {
         return range.includes(date, inclusiveMask);
     }
 

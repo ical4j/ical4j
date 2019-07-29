@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
@@ -66,7 +65,7 @@ public class SentBy extends Parameter {
      * @param aUri a URI representing a sent by
      */
     public SentBy(final URI aUri) {
-        super(SENT_BY, ParameterFactoryImpl.getInstance());
+        super(SENT_BY, new Factory());
         this.address = aUri;
     }
 

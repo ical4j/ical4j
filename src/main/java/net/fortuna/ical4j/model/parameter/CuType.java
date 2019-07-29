@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 import java.net.URISyntaxException;
@@ -91,7 +90,7 @@ public class CuType extends Parameter {
      * @param aValue a string representation of a Calendar User Type
      */
     public CuType(final String aValue) {
-        super(CUTYPE, ParameterFactoryImpl.getInstance());
+        super(CUTYPE, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

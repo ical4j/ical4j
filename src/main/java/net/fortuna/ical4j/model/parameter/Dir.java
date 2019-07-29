@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
@@ -66,7 +65,7 @@ public class Dir extends Parameter {
      * @param aUri a URI representing a directory entry reference
      */
     public Dir(final URI aUri) {
-        super(DIR, ParameterFactoryImpl.getInstance());
+        super(DIR, new Factory());
         this.uri = aUri;
     }
 

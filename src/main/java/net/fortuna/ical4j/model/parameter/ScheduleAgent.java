@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 import java.net.URISyntaxException;
@@ -66,7 +65,7 @@ public class ScheduleAgent extends Parameter {
      * @param aValue a string representation of a scheduling agent
      */
     public ScheduleAgent(final String aValue) {
-        super(SCHEDULE_AGENT, ParameterFactoryImpl.getInstance());
+        super(SCHEDULE_AGENT, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

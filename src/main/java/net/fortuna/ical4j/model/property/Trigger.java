@@ -39,6 +39,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.temporal.TemporalAmount;
 
 /**
  * $Id$
@@ -146,13 +147,13 @@ public class Trigger extends UtcProperty {
 
     private static final long serialVersionUID = 5049421499261722194L;
 
-    private Dur duration;
+    private TemporalAmountAdapter duration;
 
     /**
      * Default constructor.
      */
     public Trigger() {
-        super(TRIGGER, PropertyFactoryImpl.getInstance());
+        super(TRIGGER, new Factory());
     }
 
     /**
@@ -160,15 +161,23 @@ public class Trigger extends UtcProperty {
      * @param aValue a value string for this component
      */
     public Trigger(final ParameterList aList, final String aValue) {
-        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
+        super(TRIGGER, aList, new Factory());
         setValue(aValue);
     }
 
     /**
      * @param duration a duration in milliseconds
      */
+    @Deprecated
     public Trigger(final Dur duration) {
-        super(TRIGGER, PropertyFactoryImpl.getInstance());
+        this(TemporalAmountAdapter.from(duration).getDuration());
+    }
+
+    /**
+     * @param duration a duration in milliseconds
+     */
+    public Trigger(final TemporalAmount duration) {
+        super(TRIGGER, new Factory());
         setDuration(duration);
     }
 
@@ -176,8 +185,17 @@ public class Trigger extends UtcProperty {
      * @param aList    a list of parameters for this component
      * @param duration a duration in milliseconds
      */
+    @Deprecated
     public Trigger(final ParameterList aList, final Dur duration) {
-        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
+        this(aList, TemporalAmountAdapter.from(duration).getDuration());
+    }
+
+    /**
+     * @param aList    a list of parameters for this component
+     * @param duration a duration in milliseconds
+     */
+    public Trigger(final ParameterList aList, final TemporalAmount duration) {
+        super(TRIGGER, aList, new Factory());
         setDuration(duration);
     }
 
@@ -185,7 +203,7 @@ public class Trigger extends UtcProperty {
      * @param dateTime a date representation of a date-time
      */
     public Trigger(final DateTime dateTime) {
-        super(TRIGGER, PropertyFactoryImpl.getInstance());
+        super(TRIGGER, new Factory());
         setDateTime(dateTime);
     }
 
@@ -194,7 +212,7 @@ public class Trigger extends UtcProperty {
      * @param dateTime a date representation of a date-time
      */
     public Trigger(final ParameterList aList, final DateTime dateTime) {
-        super(TRIGGER, aList, PropertyFactoryImpl.getInstance());
+        super(TRIGGER, aList, new Factory());
         setDateTime(dateTime);
     }
 
@@ -234,8 +252,11 @@ public class Trigger extends UtcProperty {
     /**
      * @return Returns the duration.
      */
-    public final Dur getDuration() {
-        return duration;
+    public final TemporalAmount getDuration() {
+        if (duration != null) {
+            return duration.getDuration();
+        }
+        return null;
     }
 
     /**
@@ -246,7 +267,7 @@ public class Trigger extends UtcProperty {
             super.setValue(aValue);
             duration = null;
         } catch (ParseException pe) {
-            duration = new Dur(aValue);
+            duration = TemporalAmountAdapter.parse(aValue);
             super.setDateTime(null);
         }
     }
@@ -273,8 +294,8 @@ public class Trigger extends UtcProperty {
     /**
      * @param duration The duration to set.
      */
-    public final void setDuration(final Dur duration) {
-        this.duration = duration;
+    public final void setDuration(final TemporalAmount duration) {
+        this.duration = new TemporalAmountAdapter(duration);
         super.setDateTime(null);
         // duration is the default value type for Trigger..
         if (getParameter(Parameter.VALUE) != null) {
@@ -298,5 +319,4 @@ public class Trigger extends UtcProperty {
             return new Trigger();
         }
     }
-
 }

@@ -63,7 +63,7 @@ public class CalendarParserImplTest extends TestCase {
      * @param expectedErrorLineNo
      */
     public CalendarParserImplTest(String resourceString, int expectedErrorLineNo) {
-        super("testParseException");
+        super("testParserException");
         this.resource = getClass().getResource(resourceString);
         this.expectedErrorLineNo = expectedErrorLineNo;
     }
@@ -89,7 +89,7 @@ public class CalendarParserImplTest extends TestCase {
      *
      * @throws IOException
      */
-    public void testParseException() throws IOException {
+    public void testParserException() throws IOException {
         try {
             Calendars.load(resource);
             fail("Should throw ParserException: [" + resource + "]");
@@ -118,15 +118,11 @@ public class CalendarParserImplTest extends TestCase {
         suite.addTest(new CalendarParserImplTest("/samples/invalid/google_aus_holidays.ics", 11));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/13-MoonPhase.ics", 215));
 
-        // CalendarParserImpl thinks this error happened on line 24, but you can
-        // see that invalid property "X" starts on line 23, and ends there.
-//        suite.addTest(new CalendarParserImplTest("samples/invalid/CalendarDataFile.ics", 23));
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/CalendarDataFile.ics", 24));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/CalendarDataFile.ics", 25));
 
         suite.addTest(new CalendarParserImplTest("/samples/invalid/overlaps.ics", 1));
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/phpicalendar_sample.ics", 93));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/schedule-unstable.ics", 196));
-        suite.addTest(new CalendarParserImplTest("/samples/invalid/smallcluster.ics", 2));
+        suite.addTest(new CalendarParserImplTest("/samples/invalid/smallcluster.ics", 12));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/twinkle.ics", 67));
         suite.addTest(new CalendarParserImplTest("/samples/invalid/zidestoreical4jbomb.ics", 10));
         return suite;

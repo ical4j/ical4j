@@ -31,13 +31,14 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.net.SocketException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.util.RandomUidGenerator;
 import net.fortuna.ical4j.util.UidGenerator;
+
+import java.net.SocketException;
 
 /**
  * $Id$
@@ -66,7 +67,7 @@ public class VAvailabilityTest extends ComponentTest {
         suite.addTest(new VAvailabilityTest("testIsCalendarComponent", a));
         suite.addTest(new VAvailabilityTest("testValidationException", a));
         
-        UidGenerator g = new UidGenerator("test");
+        UidGenerator g = new RandomUidGenerator();
         a = new VAvailability();
         a.getProperties().add(g.generateUid());
         a.getProperties().add(new DtStart(new DateTime()));

@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
 
 import java.net.URISyntaxException;
 
@@ -76,7 +75,7 @@ public class Rsvp extends Parameter {
      * @param aValue a boolean value
      */
     public Rsvp(final Boolean aValue) {
-        super(RSVP, ParameterFactoryImpl.getInstance());
+        super(RSVP, new Factory());
         this.rsvp = aValue;
     }
 

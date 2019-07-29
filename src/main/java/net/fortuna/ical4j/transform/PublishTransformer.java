@@ -32,11 +32,11 @@
 package net.fortuna.ical4j.transform;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.Sequence;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.transform.command.OrganizerUpdate;
+import net.fortuna.ical4j.util.UidGenerator;
 
 /**
  * $Id$
@@ -46,40 +46,20 @@ import net.fortuna.ical4j.model.property.Sequence;
  * Transforms a calendar for publishing.
  * @author benfortuna
  */
-public class PublishTransformer extends Transformer {
+public class PublishTransformer extends AbstractMethodTransformer {
 
-    /**
-     * {@inheritDoc}
-     */
-    public final Calendar transform(final Calendar calendar) {
-        PropertyList calProps = calendar.getProperties();
+    private final OrganizerUpdate organizerUpdate;
 
-        Property method = calProps.getProperty(Property.METHOD);
-
-        if (method != null) {
-            calProps.remove(method);
-        }
-
-        calProps.add(Method.PUBLISH);
-
-        // if a calendar component has already been published previously
-        // update the sequence number..
-        for (Component component : calendar.getComponents()) {
-            PropertyList compProps = component.getProperties();
-
-            Sequence sequence = (Sequence) compProps
-                    .getProperty(Property.SEQUENCE);
-
-            if (sequence == null) {
-                compProps.add(new Sequence(0));
-            }
-            else {
-                compProps.remove(sequence);
-                compProps.add(new Sequence(sequence.getSequenceNo() + 1));
-            }
-        }
-
-        return calendar;
+    public PublishTransformer(Organizer organizer, UidGenerator uidGenerator, boolean incrementSequence) {
+        super(Method.PUBLISH, uidGenerator, false, incrementSequence);
+        this.organizerUpdate = new OrganizerUpdate(organizer);
     }
 
+    @Override
+    public Calendar transform(Calendar object) {
+        for (CalendarComponent component : object.getComponents()) {
+            organizerUpdate.transform(component);
+        }
+        return super.transform(object);
+    }
 }

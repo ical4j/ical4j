@@ -61,8 +61,8 @@ class DateTimeSpec extends Specification {
 	   '20110327T000000'| 'Europe/London'
 	   '20110326T090000'| 'Europe/Minsk'
    }
-   
-   @Ignore
+
+	@Ignore
    def 'test date time initialisation with a custom timezone'() {
 	   setup:
 	   def originalTimezone = TimeZone.default
@@ -97,12 +97,13 @@ class DateTimeSpec extends Specification {
 	   where:
 	   dateTimeString << ['20110327T000000']
    }
-   
+
+//	@Ignore
 	  def 'test date time initialisation with a registered custom timezone'() {
 		  setup:
 		  def originalTimezone = TimeZone.default
 		  TimeZone.default = TimeZone.getTimeZone('Europe/London')
-		  
+
 		  def vTimeZone = new ContentBuilder().vtimezone {
 			  tzid 'Europe/London'
 			  standard {
@@ -123,18 +124,18 @@ class DateTimeSpec extends Specification {
 		  println vTimeZone
 		  def customTimezone = new TimeZone(vTimeZone)
 		  tzRegistry.register(customTimezone)
-		  
+
 		  when:
 		  new DateTime(dateTimeString, customTimezone)
-		  
+
 		  then:
 		  thrown(ParseException)
-   
+
 		  cleanup:
 		  TimeZone.default = originalTimezone
 		  // remove custom timezone..
 		  tzRegistry.clear()
-		  
+
 		  where:
 		  dateTimeString << ['20110327T000000']
 	  }
@@ -151,7 +152,20 @@ class DateTimeSpec extends Specification {
 	   dateTimeString		| timezone
 	   '20110327T010000'	| tzRegistry.getTimeZone('Europe/London')
    }
-   
+
+   @Unroll
+   def 'verify parse success for valid dates: #dateTimeString'() {
+	   when:
+	   def dt = new DateTime(dateTimeString, timezone)
+
+	   then:
+	   dt as String == dateTimeString
+
+	   where:
+	   dateTimeString		| timezone
+	   '20180319T061500'	| tzRegistry.getTimeZone('Europe/Dublin')
+   }
+
    def 'test conversion of UTC date-time to local time'() {
 	   setup: 'Override default timezone for test consistency'
 	   def originalTimezone = TimeZone.default

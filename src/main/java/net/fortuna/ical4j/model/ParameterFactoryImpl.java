@@ -47,21 +47,13 @@ import java.util.ServiceLoader;
  *
  * @author Ben Fortuna
  */
+@Deprecated
 public class ParameterFactoryImpl extends AbstractContentFactory<ParameterFactory> {
 
     private static final long serialVersionUID = -4034423507432249165L;
 
-    private static ParameterFactoryImpl instance = new ParameterFactoryImpl();
-
     protected ParameterFactoryImpl() {
         super(ServiceLoader.load(ParameterFactory.class, ParameterFactory.class.getClassLoader()));
-    }
-
-    /**
-     * @return Returns the instance.
-     */
-    public static ParameterFactoryImpl getInstance() {
-        return instance;
     }
 
     @Override

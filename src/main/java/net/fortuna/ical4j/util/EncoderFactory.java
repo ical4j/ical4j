@@ -36,6 +36,7 @@ import org.apache.commons.codec.BinaryEncoder;
 import org.apache.commons.codec.StringEncoder;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Optional;
 
 /**
  * Abstract base class for encoder factory implementations.
@@ -56,14 +57,8 @@ public abstract class EncoderFactory {
 
     private static EncoderFactory instance;
     static {
-        try {
-            @SuppressWarnings("unchecked")
-			final Class<EncoderFactory> factoryClass = (Class<EncoderFactory>) Class.forName(Configurator.getProperty(KEY_FACTORY_CLASS));
-            instance = factoryClass.newInstance();
-        }
-        catch (Exception e) {
-            instance = new DefaultEncoderFactory();
-        }
+        Optional<EncoderFactory> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
+        instance = property.orElse(new DefaultEncoderFactory());
     }
     
     /**

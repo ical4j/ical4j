@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 
@@ -66,7 +65,7 @@ public class AltRep extends Parameter {
      * @param aUri a URI representing an alternate text representation
      */
     public AltRep(final URI aUri) {
-        super(ALTREP, ParameterFactoryImpl.getInstance());
+        super(ALTREP, new Factory());
         this.uri = aUri;
     }
 

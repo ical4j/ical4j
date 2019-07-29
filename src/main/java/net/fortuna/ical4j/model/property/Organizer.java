@@ -36,14 +36,12 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.Arrays;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Arrays;
 
 /**
  * $Id$
@@ -141,7 +139,7 @@ public class Organizer extends Property {
      * Default constructor.
      */
     public Organizer() {
-        super(ORGANIZER, PropertyFactoryImpl.getInstance());
+        super(ORGANIZER, new Factory());
     }
 
     /**
@@ -151,7 +149,7 @@ public class Organizer extends Property {
      * @throws URISyntaxException where the specified value is not a valid URI
      */
     public Organizer(String value) throws URISyntaxException {
-        super(ORGANIZER, PropertyFactoryImpl.getInstance());
+        super(ORGANIZER, new Factory());
         setValue(value);
     }
 
@@ -162,7 +160,7 @@ public class Organizer extends Property {
      */
     public Organizer(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
+        super(ORGANIZER, aList, new Factory());
         setValue(aValue);
     }
 
@@ -170,7 +168,7 @@ public class Organizer extends Property {
      * @param aUri a URI representation of a calendar address
      */
     public Organizer(final URI aUri) {
-        super(ORGANIZER, PropertyFactoryImpl.getInstance());
+        super(ORGANIZER, new Factory());
         calAddress = aUri;
     }
 
@@ -179,7 +177,7 @@ public class Organizer extends Property {
      * @param aUri  a URI representation of a calendar address
      */
     public Organizer(final ParameterList aList, final URI aUri) {
-        super(ORGANIZER, aList, PropertyFactoryImpl.getInstance());
+        super(ORGANIZER, aList, new Factory());
         calAddress = aUri;
     }
 
@@ -192,13 +190,8 @@ public class Organizer extends Property {
          * ; the following are optional, ; but MUST NOT occur more than once (";" cnparam) / (";" dirparam) / (";"
          * sentbyparam) / (";" languageparam) /
          */
-        CollectionUtils.forAllDo(Arrays.asList(Parameter.CN, Parameter.DIR, Parameter.SENT_BY,
-                Parameter.LANGUAGE), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                ParameterValidator.getInstance().assertOneOrLess(input, getParameters());
-            }
-        });
+        Arrays.asList(Parameter.CN, Parameter.DIR, Parameter.SENT_BY,
+                Parameter.LANGUAGE).forEach(parameter -> ParameterValidator.getInstance().assertOneOrLess(parameter, getParameters()));
 
         /* schedulestatus added for CalDAV scheduling
          */

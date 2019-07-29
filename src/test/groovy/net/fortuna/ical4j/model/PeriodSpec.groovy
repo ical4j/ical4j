@@ -37,11 +37,25 @@ class PeriodSpec extends Specification {
 
 	def 'extension module test: plus'() {
 		expect:
-		new Period('20110412T120000/1D') + new Period('20110413T120000/1D') == new Period('20110412T120000/2D')
+        new Period('20110412T120000/P1D') + new Period('20110413T120000/P1D') == new Period('20110412T120000/P2D')
 	}
 	
 	def 'extension module test: minus'() {
 		expect:
-		new Period('20110412T120000/1D') - new Period('20110412T130000/1H') == new PeriodList('20110412T120000/1H,20110412T140000/22H')
+        new Period('20110412T120000/P1D') - new Period('20110412T130000/PT1H') == new PeriodList('20110412T120000/PT1H,20110412T140000/PT22H')
+	}
+
+	def 'test hashcode equality'() {
+		given: 'a period'
+		Period period1 = ['20140803T120100/P1D']
+
+		and: 'a second identical period'
+		Period period2 = ['20140803T120100/P1D']
+
+		expect: 'object equality'
+		period1 == period2
+
+		and: 'hashcode equality'
+		period1.hashCode() == period2.hashCode()
 	}
 }

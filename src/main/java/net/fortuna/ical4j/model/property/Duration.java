@@ -32,10 +32,12 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.temporal.TemporalAmount;
 import java.util.Date;
 
 /**
@@ -46,42 +48,59 @@ import java.util.Date;
  * Defines a DURATION iCalendar component property.
  * <p/>
  * <pre>
- *     4.3.6   Duration
+ * 3.3.6.  Duration
  *
- *        Value Name: DURATION
+ * Value Name:  DURATION
  *
- *        Purpose: This value type is used to identify properties that contain
- *        a duration of time.
+ * Purpose:  This value type is used to identify properties that contain
+ * a duration of time.
  *
- *        Formal Definition: The value type is defined by the following
- *        notation:
+ * Format Definition:  This value type is defined by the following
+ * notation:
  *
- *          dur-value  = ([&quot;+&quot;] / &quot;-&quot;) &quot;P&quot; (dur-date / dur-time / dur-week)
+ * dur-value  = (["+"] / "-") "P" (dur-date / dur-time / dur-week)
  *
- *          dur-date   = dur-day [dur-time]
- *          dur-time   = &quot;T&quot; (dur-hour / dur-minute / dur-second)
- *          dur-week   = 1*DIGIT &quot;W&quot;
- *          dur-hour   = 1*DIGIT &quot;H&quot; [dur-minute]
- *          dur-minute = 1*DIGIT &quot;M&quot; [dur-second]
- *          dur-second = 1*DIGIT &quot;S&quot;
- *          dur-day    = 1*DIGIT &quot;D&quot;
+ * dur-date   = dur-day [dur-time]
+ * dur-time   = "T" (dur-hour / dur-minute / dur-second)
+ * dur-week   = 1*DIGIT "W"
+ * dur-hour   = 1*DIGIT "H" [dur-minute]
+ * dur-minute = 1*DIGIT "M" [dur-second]
+ * dur-second = 1*DIGIT "S"
+ * dur-day    = 1*DIGIT "D"
  *
- *        Description: If the property permits, multiple &quot;duration&quot; values are
- *        specified by a COMMA character (US-ASCII decimal 44) separated list
- *        of values. The format is expressed as the [ISO 8601] basic format for
- *        the duration of time. The format can represent durations in terms of
- *        weeks, days, hours, minutes, and seconds.
+ * Description:  If the property permits, multiple "duration" values are
+ * specified by a COMMA-separated list of values.  The format is
+ * based on the [ISO.8601.2004] complete representation basic format
+ * with designators for the duration of time.  The format can
+ * represent nominal durations (weeks and days) and accurate
+ * durations (hours, minutes, and seconds).  Note that unlike
+ * [ISO.8601.2004], this value type doesn't support the "Y" and "M"
+ * designators to specify durations in terms of years and months.
  *
- *        No additional content value encoding (i.e., BACKSLASH character
- *        encoding) are defined for this value type.
+ * The duration of a week or a day depends on its position in the
+ * calendar.  In the case of discontinuities in the time scale, such
+ * as the change from standard time to daylight time and back, the
+ * computation of the exact duration requires the subtraction or
+ * addition of the change of duration of the discontinuity.  Leap
+ * seconds MUST NOT be considered when computing an exact duration.
+ * When computing an exact duration, the greatest order time
+ * components MUST be added first, that is, the number of days MUST
+ * be added first, followed by the number of hours, number of
+ * minutes, and number of seconds.
  *
- *        Example: A duration of 15 days, 5 hours and 20 seconds would be:
+ * Negative durations are typically used to schedule an alarm to
+ * trigger before an associated time (see Section 3.8.6.3).
  *
- *          P15DT5H0M20S
+ * No additional content value encoding (i.e., BACKSLASH character
+ * encoding, see Section 3.3.11) are defined for this value type.
  *
- *        A duration of 7 weeks would be:
+ * Example:  A duration of 15 days, 5 hours, and 20 seconds would be:
  *
- *          P7W
+ * P15DT5H0M20S
+ *
+ * A duration of 7 weeks would be:
+ *
+ * P7W
  * </pre>
  *
  * @author Ben Fortuna
@@ -90,13 +109,13 @@ public class Duration extends Property {
 
     private static final long serialVersionUID = 9144969653829796798L;
 
-    private Dur duration;
+    private TemporalAmountAdapter duration;
 
     /**
      * Default constructor.
      */
     public Duration() {
-        super(DURATION, PropertyFactoryImpl.getInstance());
+        super(DURATION, new Factory());
     }
 
     /**
@@ -104,24 +123,41 @@ public class Duration extends Property {
      * @param aValue a value string for this component
      */
     public Duration(final ParameterList aList, final String aValue) {
-        super(DURATION, aList, PropertyFactoryImpl.getInstance());
+        super(DURATION, aList, new Factory());
         setValue(aValue);
     }
 
     /**
      * @param duration a duration  value
      */
+    @Deprecated
     public Duration(final Dur duration) {
-        super(DURATION, PropertyFactoryImpl.getInstance());
-        this.duration = duration;
+        this(TemporalAmountAdapter.from(duration).getDuration());
+    }
+
+    /**
+     * @param duration a duration  value
+     */
+    public Duration(final TemporalAmount duration) {
+        super(DURATION, new Factory());
+        this.duration = new TemporalAmountAdapter(duration);
     }
 
     /**
      * @param aList    a list of parameters for this component
      * @param duration a duration value
      */
+    @Deprecated
     public Duration(final ParameterList aList, final Dur duration) {
-        super(DURATION, aList, PropertyFactoryImpl.getInstance());
+        this(aList, TemporalAmountAdapter.from(duration).getDuration());
+    }
+
+    /**
+     * @param aList    a list of parameters for this component
+     * @param duration a duration value
+     */
+    public Duration(final ParameterList aList, final TemporalAmount duration) {
+        super(DURATION, aList, new Factory());
         setDuration(duration);
     }
 
@@ -132,38 +168,41 @@ public class Duration extends Property {
      * @param end   the end time for the duration
      */
     public Duration(final Date start, final Date end) {
-        super(DURATION, PropertyFactoryImpl.getInstance());
-        setDuration(new Dur(start, end));
+        super(DURATION, new Factory());
+        setDuration(TemporalAmountAdapter.fromDateRange(start, end).getDuration());
     }
 
     /**
      * @return Returns the duration.
      */
-    public final Dur getDuration() {
-        return duration;
+    public final TemporalAmount getDuration() {
+        return duration.getDuration();
     }
 
     /**
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        // duration = DurationFormat.getInstance().parse(aValue);
-        duration = new Dur(aValue);
+        duration = TemporalAmountAdapter.parse(aValue);
     }
 
     /**
      * {@inheritDoc}
      */
     public final String getValue() {
-        // return DurationFormat.getInstance().format(getDuration());
         return duration.toString();
     }
 
     /**
      * @param duration The duration to set.
      */
-    public final void setDuration(final Dur duration) {
-        this.duration = duration;
+    public final void setDuration(final TemporalAmount duration) {
+        this.duration = new TemporalAmountAdapter(duration);
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {

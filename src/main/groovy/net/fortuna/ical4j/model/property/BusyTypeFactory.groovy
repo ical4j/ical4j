@@ -31,8 +31,8 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
+
 /**
  * $Id$
  *
@@ -41,9 +41,9 @@ import net.fortuna.ical4j.model.ParameterList
  * @author fortuna
  *
  */
-public class BusyTypeFactory extends AbstractPropertyFactory{
+class BusyTypeFactory extends AbstractPropertyFactory{
 
-    public Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+    Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         BusyType busyType
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, BusyType.class)) {
             busyType = (BusyType) value
@@ -57,8 +57,8 @@ public class BusyTypeFactory extends AbstractPropertyFactory{
                 else if (BusyType.BUSY_TENTATIVE.getValue().equals(busyTypeValue)) {
                     busyType = BusyType.BUSY_TENTATIVE
                 }
-                else if (BusyType.UNAVAILABLE.getValue().equals(busyTypeValue)) {
-                    busyType = BusyType.UNAVAILABLE
+                else if (BusyType.BUSY_UNAVAILABLE.getValue().equals(busyTypeValue)) {
+                    busyType = BusyType.BUSY_UNAVAILABLE
                 }
                 else {
                     attributes.put('value', busyTypeValue)
@@ -66,17 +66,14 @@ public class BusyTypeFactory extends AbstractPropertyFactory{
                 }
             }
             else {
-                if (BusyType.AUDIO.getValue().equals(value)) {
-                    busyType = BusyType.AUDIO
+                if (BusyType.BUSY.getValue().equals(value)) {
+                    busyType = BusyType.BUSY
                 }
-                else if (BusyType.DISPLAY.getValue().equals(value)) {
-                    busyType = BusyType.DISPLAY
+                else if (BusyType.BUSY_TENTATIVE.getValue().equals(value)) {
+                    busyType = BusyType.BUSY_TENTATIVE
                 }
-                else if (BusyType.EMAIL.getValue().equals(value)) {
-                    busyType = BusyType.EMAIL
-                }
-                else if (BusyType.PROCEDURE.getValue().equals(value)) {
-                    busyType = BusyType.PROCEDURE
+                else if (BusyType.BUSY_UNAVAILABLE.getValue().equals(value)) {
+                    busyType = BusyType.BUSY_UNAVAILABLE
                 }
                 else {
                     busyType = super.newInstance(builder, name, value, attributes)

@@ -152,7 +152,8 @@ public class ComponentTest extends TestCase {
             public void validate(boolean recurse) throws ValidationException {
             }
         };
-        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime(), new Dur(1, 0, 0, 0)), new PeriodList()));
+        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime(),
+                java.time.Duration.ofDays(1)), new PeriodList()));
         
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
@@ -161,7 +162,7 @@ public class ComponentTest extends TestCase {
         // 10am-12pm for 7 days..
         component.getProperties().add(new DtStart("20080601T100000Z"));
         component.getProperties().add(new DtEnd("20080601T120000Z"));
-        Recur recur = new Recur(Recur.DAILY, 7);
+        Recur recur = new Recur.Builder().frequency(Recur.Frequency.DAILY).count(7).build();
         component.getProperties().add(new RRule(recur));
         PeriodList expectedPeriods = new PeriodList();
         expectedPeriods.add(new Period("20080601T100000Z/PT2H"));
@@ -171,7 +172,8 @@ public class ComponentTest extends TestCase {
         expectedPeriods.add(new Period("20080605T100000Z/PT2H"));
         expectedPeriods.add(new Period("20080606T100000Z/PT2H"));
         expectedPeriods.add(new Period("20080607T100000Z/PT2H"));
-        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"), new Dur(7, 0, 0, 0)), expectedPeriods));
+        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"),
+                java.time.Duration.ofDays(7)), expectedPeriods));
 
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
@@ -180,7 +182,7 @@ public class ComponentTest extends TestCase {
         // weekly for 5 instances using DATE format and due date.
         component.getProperties().add(new DtStart(new Date("20080601")));
         component.getProperties().add(new Due(new Date("20080602")));
-        recur = new Recur(Recur.WEEKLY, 5);
+        recur = new Recur.Builder().frequency(Recur.Frequency.WEEKLY).count(5).build();
         component.getProperties().add(new RRule(recur));
         expectedPeriods = new PeriodList();
         expectedPeriods.add(new Period("20080601T000000Z/P1D"));
@@ -188,7 +190,8 @@ public class ComponentTest extends TestCase {
         expectedPeriods.add(new Period("20080615T000000Z/P1D"));
         expectedPeriods.add(new Period("20080622T000000Z/P1D"));
         expectedPeriods.add(new Period("20080629T000000Z/P1D"));
-        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"), new Dur(6)), expectedPeriods));
+        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"),
+                java.time.Period.ofWeeks(6)), expectedPeriods));
         return suite;
     }
 }

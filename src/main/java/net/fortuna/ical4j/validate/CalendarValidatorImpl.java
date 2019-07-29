@@ -6,8 +6,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.Predicate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,10 +16,12 @@ import java.util.List;
  */
 public class CalendarValidatorImpl implements Validator<Calendar> {
 
-    protected final List<Class<? extends Property>> calendarProperties = new ArrayList<Class<? extends Property>>();
+    protected final List<Class<? extends Property>> calendarProperties = new ArrayList<>();
 
     public CalendarValidatorImpl() {
-        Collections.addAll(calendarProperties, CalScale.class, Method.class, ProdId.class, Version.class);
+        Collections.addAll(calendarProperties, CalScale.class, Method.class, ProdId.class, Version.class,
+                Uid.class, LastModified.class, Url.class, RefreshInterval.class, Source.class, Color.class,
+                Name.class, Description.class, Categories.class, Image.class);
     }
 
     @Override
@@ -53,12 +53,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
         // validate properties..
         for (final Property property : target.getProperties()) {
-            boolean isCalendarProperty = CollectionUtils.find(calendarProperties, new Predicate<Class<? extends Property>>() {
-                @Override
-                public boolean evaluate(Class<? extends Property> object) {
-                    return object.isInstance(property);
-                }
-            }) != null;
+            boolean isCalendarProperty = calendarProperties.stream().filter(calProp -> calProp.isInstance(property)) != null;
 
             if (!(property instanceof XProperty) && !isCalendarProperty) {
                 throw new ValidationException("Invalid property: " + property.getName());
@@ -67,8 +62,45 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
 //        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
         // validate method..
-        final Method method = (Method) target.getProperty(Property.METHOD);
+        final Method method = target.getProperty(Property.METHOD);
         if (Method.PUBLISH.equals(method)) {
+            new PublishValidator().validate(target);
+        }
+        else if (Method.REQUEST.equals(target.getProperty(Property.METHOD))) {
+            new RequestValidator().validate(target);
+        }
+        else if (Method.REPLY.equals(target.getProperty(Property.METHOD))) {
+            new ReplyValidator().validate(target);
+        }
+        else if (Method.ADD.equals(target.getProperty(Property.METHOD))) {
+            new AddValidator().validate(target);
+        }
+        else if (Method.CANCEL.equals(target.getProperty(Property.METHOD))) {
+            new CancelValidator().validate(target);
+        }
+        else if (Method.REFRESH.equals(target.getProperty(Property.METHOD))) {
+            new RefreshValidator().validate(target);
+        }
+        else if (Method.COUNTER.equals(target.getProperty(Property.METHOD))) {
+            new CounterValidator().validate(target);
+        }
+        else if (Method.DECLINE_COUNTER.equals(target.getProperty(Property.METHOD))) {
+            new DeclineCounterValidator().validate(target);
+        }
+//        }
+
+        // perform ITIP validation on components..
+        if (method != null) {
+            for (CalendarComponent component : target.getComponents()) {
+                component.validate(method);
+            }
+        }
+    }
+
+    public static class PublishValidator implements Validator<Calendar> {
+
+        @Override
+        public void validate(Calendar target) throws ValidationException {
             if (target.getComponent(Component.VEVENT) != null) {
                 ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
                 ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
@@ -94,7 +126,12 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 //                    ComponentValidator.assertNone(Component.VTODO, target.getComponents());
 //                }
         }
-        else if (Method.REQUEST.equals(target.getProperty(Property.METHOD))) {
+    }
+
+    public static class RequestValidator implements Validator<Calendar> {
+
+        @Override
+        public void validate(Calendar target) throws ValidationException {
             if (target.getComponent(Component.VEVENT) != null) {
                 ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
                 ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
@@ -112,7 +149,12 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
                 ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
             }
         }
-        else if (Method.REPLY.equals(target.getProperty(Property.METHOD))) {
+    }
+
+    public static class ReplyValidator implements Validator<Calendar> {
+
+        @Override
+        public void validate(Calendar target) throws ValidationException {
             if (target.getComponent(Component.VEVENT) != null) {
                 ComponentValidator.assertOneOrLess(Component.VTIMEZONE, target.getComponents());
 
@@ -136,7 +178,12 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
                 ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
             }
         }
-        else if (Method.ADD.equals(target.getProperty(Property.METHOD))) {
+    }
+
+    public static class AddValidator implements Validator<Calendar> {
+
+        @Override
+        public void validate(Calendar target) throws ValidationException {
             if (target.getComponent(Component.VEVENT) != null) {
                 ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
                 ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
@@ -155,7 +202,12 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 //                  ComponentValidator.assertNone(Component.VTODO, target.getComponents());
             }
         }
-        else if (Method.CANCEL.equals(target.getProperty(Property.METHOD))) {
+    }
+
+    public static class CancelValidator implements Validator<Calendar> {
+
+        @Override
+        public void validate(Calendar target) throws ValidationException {
             if (target.getComponent(Component.VEVENT) != null) {
                 ComponentValidator.assertNone(Component.VALARM, target.getComponents());
                 ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
@@ -177,7 +229,12 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 //                  ComponentValidator.assertNone(Component.VTODO, target.getComponents());
             }
         }
-        else if (Method.REFRESH.equals(target.getProperty(Property.METHOD))) {
+    }
+
+    public static class RefreshValidator implements Validator<Calendar> {
+
+        @Override
+        public void validate(Calendar target) throws ValidationException {
             if (target.getComponent(Component.VEVENT) != null) {
                 ComponentValidator.assertNone(Component.VALARM, target.getComponents());
                 ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
@@ -192,7 +249,12 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
                 ComponentValidator.assertNone(Component.VTIMEZONE, target.getComponents());
             }
         }
-        else if (Method.COUNTER.equals(target.getProperty(Property.METHOD))) {
+    }
+
+    public static class CounterValidator implements Validator<Calendar> {
+
+        @Override
+        public void validate(Calendar target) throws ValidationException {
             if (target.getComponent(Component.VEVENT) != null) {
                 ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
                 ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
@@ -206,7 +268,12 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
                 ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
             }
         }
-        else if (Method.DECLINE_COUNTER.equals(target.getProperty(Property.METHOD))) {
+    }
+
+    public static class DeclineCounterValidator implements Validator<Calendar> {
+
+        @Override
+        public void validate(Calendar target) throws ValidationException {
             if (target.getComponent(Component.VEVENT) != null) {
                 ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
                 ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
@@ -219,14 +286,6 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
                 ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
 //                  ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
                 ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-            }
-        }
-//        }
-
-        // perform ITIP validation on components..
-        if (method != null) {
-            for (CalendarComponent component : target.getComponents()) {
-                component.validate(method);
             }
         }
     }

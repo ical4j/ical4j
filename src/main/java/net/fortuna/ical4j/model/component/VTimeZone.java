@@ -41,12 +41,12 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneITIPValidator;
-import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Objects;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -160,8 +160,7 @@ public class VTimeZone extends CalendarComponent {
      * @param properties a list of properties
      * @param observances a list of timezone types
      */
-    public VTimeZone(final PropertyList properties,
-            final ComponentList<Observance> observances) {
+    public VTimeZone(final PropertyList properties, final ComponentList<Observance> observances) {
         super(VTIMEZONE, properties);
         this.observances = observances;
     }
@@ -263,21 +262,21 @@ public class VTimeZone extends CalendarComponent {
      * @return the mandatory timezone identifier property
      */
     public final TzId getTimeZoneId() {
-        return (TzId) getProperty(Property.TZID);
+        return getProperty(Property.TZID);
     }
 
     /**
      * @return the optional last-modified property
      */
     public final LastModified getLastModified() {
-        return (LastModified) getProperty(Property.LAST_MODIFIED);
+        return getProperty(Property.LAST_MODIFIED);
     }
 
     /**
      * @return the optional timezone url property
      */
     public final TzUrl getTimeZoneUrl() {
-        return (TzUrl) getProperty(Property.TZURL);
+        return getProperty(Property.TZURL);
     }
 
     /**
@@ -286,7 +285,7 @@ public class VTimeZone extends CalendarComponent {
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VTimeZone) {
             return super.equals(arg0)
-                    && ObjectUtils.equals(observances, ((VTimeZone) arg0)
+                    && Objects.equals(observances, ((VTimeZone) arg0)
                             .getObservances());
         }
         return super.equals(arg0);

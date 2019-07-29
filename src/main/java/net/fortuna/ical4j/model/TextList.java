@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -47,7 +48,7 @@ import java.util.regex.Pattern;
  * Defines a list of iCalendar text elements.
  * @author Ben Fortuna
  */
-public class TextList implements Serializable {
+public class TextList implements Serializable, Iterable<String> {
 
 	private static final long serialVersionUID = -417427815871330636L;
 	
@@ -87,14 +88,7 @@ public class TextList implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<String> i = texts.iterator(); i.hasNext();) {
-            b.append(Strings.escape(i.next()));
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+        return texts.stream().map(t -> Strings.escape(t)).collect(Collectors.joining(","));
     }
 
     /**

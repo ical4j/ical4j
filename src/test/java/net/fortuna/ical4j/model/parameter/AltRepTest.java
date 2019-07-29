@@ -31,14 +31,11 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
+import junit.framework.TestCase;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
-import junit.framework.TestCase;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 
 /**
@@ -79,8 +76,8 @@ public class AltRepTest extends TestCase {
         catch (URISyntaxException use) {
             // test success.
         }
-        
-        AltRep ar = (AltRep) ParameterFactoryImpl.getInstance().createParameter(Parameter.ALTREP, "mailto:valid@test.com");
+
+        AltRep ar = (AltRep) new AltRep.Factory().createParameter("mailto:valid@test.com");
         
         assertNotNull(ar.getUri());
     }

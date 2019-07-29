@@ -31,7 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -201,14 +205,14 @@ public class Status extends Property {
      * Default constructor.
      */
     public Status() {
-        super(STATUS, PropertyFactoryImpl.getInstance());
+        super(STATUS, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Status(final String aValue) {
-        super(STATUS, PropertyFactoryImpl.getInstance());
+        super(STATUS, new Factory());
         this.value = aValue;
     }
 
@@ -217,7 +221,7 @@ public class Status extends Property {
      * @param aValue a value string for this component
      */
     public Status(final ParameterList aList, final String aValue) {
-        super(STATUS, aList, PropertyFactoryImpl.getInstance());
+        super(STATUS, aList, new Factory());
         this.value = aValue;
     }
 
@@ -235,19 +239,49 @@ public class Status extends Property {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    @Override
+    public void validate() throws ValidationException {
+
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory<Status> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(STATUS);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Status createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Status(parameters, value);
+
+            Status status;
+            if (Status.VEVENT_CANCELLED.getValue().equals(value)) {
+                status = Status.VEVENT_CANCELLED;
+            } else if (Status.VEVENT_CONFIRMED.getValue().equals(value)) {
+                status = Status.VEVENT_CONFIRMED;
+            } else if (Status.VEVENT_TENTATIVE.getValue().equals(value)) {
+                status = Status.VEVENT_TENTATIVE;
+            } else if (Status.VJOURNAL_CANCELLED.getValue().equals(value)) {
+                status = Status.VJOURNAL_CANCELLED;
+            } else if (Status.VJOURNAL_DRAFT.getValue().equals(value)) {
+                status = Status.VJOURNAL_DRAFT;
+            } else if (Status.VJOURNAL_FINAL.getValue().equals(value)) {
+                status = Status.VJOURNAL_FINAL;
+            } else if (Status.VTODO_CANCELLED.getValue().equals(value)) {
+                status = Status.VTODO_CANCELLED;
+            } else if (Status.VTODO_COMPLETED.getValue().equals(value)) {
+                status = Status.VTODO_COMPLETED;
+            } else if (Status.VTODO_IN_PROCESS.getValue().equals(value)) {
+                status = Status.VTODO_IN_PROCESS;
+            } else if (Status.VTODO_NEEDS_ACTION.getValue().equals(value)) {
+                status = Status.VTODO_NEEDS_ACTION;
+            } else {
+                status = new Status(parameters, value);
+            }
+            return status;
         }
 
-        public Property createProperty() {
+        public Status createProperty() {
             return new Status();
         }
     }

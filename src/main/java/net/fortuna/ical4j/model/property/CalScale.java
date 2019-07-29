@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 
@@ -86,14 +89,14 @@ public class CalScale extends Property {
      * Default constructor.
      */
     public CalScale() {
-        super(CALSCALE, PropertyFactoryImpl.getInstance());
+        super(CALSCALE, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public CalScale(final String aValue) {
-        super(CALSCALE, PropertyFactoryImpl.getInstance());
+        super(CALSCALE, new Factory());
         this.value = aValue;
     }
 
@@ -102,7 +105,7 @@ public class CalScale extends Property {
      * @param aValue a value string for this component
      */
     public CalScale(final ParameterList aList, final String aValue) {
-        super(CALSCALE, aList, PropertyFactoryImpl.getInstance());
+        super(CALSCALE, aList, new Factory());
         this.value = aValue;
     }
 
@@ -135,19 +138,26 @@ public class CalScale extends Property {
         }
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<CalScale> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(CALSCALE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public CalScale createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new CalScale(parameters, value);
+
+            CalScale calScale;
+            if (GREGORIAN.getValue().equals(value)) {
+                calScale = GREGORIAN;
+            } else {
+                calScale = new CalScale(parameters, value);
+            }
+            return calScale;
         }
 
-        public Property createProperty() {
+        public CalScale createProperty() {
             return new CalScale();
         }
     }

@@ -36,7 +36,6 @@ import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
-import net.fortuna.ical4j.transform.rfc5545.RuleManager;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.AbstractCalendarValidatorFactory;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -46,10 +45,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.List;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -255,7 +252,7 @@ public class Calendar implements Serializable {
      * @param name name of the property to retrieve
      * @return the first matching property in the property list with the specified name
      */
-    public final Property getProperty(final String name) {
+    public final <T extends Property> T getProperty(final String name) {
         return getProperties().getProperty(name);
     }
 
@@ -305,7 +302,7 @@ public class Calendar implements Serializable {
      * @return the PRODID property, or null if property doesn't exist
      */
     public final ProdId getProductId() {
-        return (ProdId) getProperty(Property.PRODID);
+        return getProperty(Property.PRODID);
     }
 
     /**
@@ -313,7 +310,7 @@ public class Calendar implements Serializable {
      * @return the VERSION property, or null if property doesn't exist
      */
     public final Version getVersion() {
-        return (Version) getProperty(Property.VERSION);
+        return getProperty(Property.VERSION);
     }
 
     /**
@@ -321,7 +318,7 @@ public class Calendar implements Serializable {
      * @return the CALSCALE property, or null if property doesn't exist
      */
     public final CalScale getCalendarScale() {
-        return (CalScale) getProperty(Property.CALSCALE);
+        return getProperty(Property.CALSCALE);
     }
 
     /**
@@ -329,7 +326,7 @@ public class Calendar implements Serializable {
      * @return the METHOD property, or null if property doesn't exist
      */
     public final Method getMethod() {
-        return (Method) getProperty(Property.METHOD);
+        return getProperty(Property.METHOD);
     }
 
     /**
@@ -350,73 +347,5 @@ public class Calendar implements Serializable {
     public final int hashCode() {
         return new HashCodeBuilder().append(getProperties()).append(
                 getComponents()).toHashCode();
-    }
-    
-    @SuppressWarnings("unchecked")
-    public void conformToRfc5545() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException{
-       
-        conformPropertiesToRfc5545(properties);
-        
-        for(Component component : (List<CalendarComponent>)components){
-            CountableProperties.removeExceededPropertiesForComponent(component);
-            
-            //each component
-            conformComponentToRfc5545(component);
-            
-            //each component property
-            conformPropertiesToRfc5545(component.getProperties());
-            
-            for(java.lang.reflect.Method m : component.getClass().getDeclaredMethods()){
-                if(ComponentList.class.isAssignableFrom(m.getReturnType()) && 
-                   m.getName().startsWith("get")){
-                    List<Component> components = (List<Component>) m.invoke(component);
-                    for(Component c : components){
-                        //each inner component
-                        conformComponentToRfc5545(c);
-                        
-                        //each inner component properties
-                        conformPropertiesToRfc5545(c.getProperties());
-                    }
-                }
-            }
-        }
-    }
-    
-    private static void conformPropertiesToRfc5545(List<Property> properties) {
-        for (Property property : properties) {
-            RuleManager.applyTo(property);
-        }
-    }
-    
-    private static void conformComponentToRfc5545(Component component){
-        RuleManager.applyTo(component);
-    }
-    
-    private static enum CountableProperties{
-        STATUS(Property.STATUS, 1);
-        private int maxApparitionNumber;
-        private String name;
-        
-        private CountableProperties(String name, int maxApparitionNumber){
-            this.maxApparitionNumber = maxApparitionNumber;
-            this.name = name;
-        }
-        
-        protected void limitApparitionsNumberIn(Component component){
-            PropertyList<? extends Property> propertyList = component.getProperties(name);
-            
-            if(propertyList.size() <= maxApparitionNumber){
-                return;
-            }
-            int toRemove = propertyList.size() - maxApparitionNumber; 
-            for(int i = 0; i < toRemove; i++){
-                component.getProperties().remove(propertyList.get(i));            }
-        }
-        
-        private static void removeExceededPropertiesForComponent(Component component){
-            for(CountableProperties cp: values()){
-                cp.limitApparitionsNumberIn(component);
-            }
-        }
     }
 }

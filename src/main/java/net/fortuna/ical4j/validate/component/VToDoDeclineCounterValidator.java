@@ -1,16 +1,15 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Component.VALARM;
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * <pre>
@@ -69,23 +68,16 @@ public class VToDoDeclineCounterValidator implements Validator<VToDo> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VToDo target) throws ValidationException {
-        PropertyValidator.getInstance().assertOneOrMore(Property.ATTENDEE, target.getProperties());
+        PropertyValidator.getInstance().assertOneOrMore(ATTENDEE, target.getProperties());
 
-        PropertyValidator.getInstance().assertOne(Property.DTSTAMP, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.ORGANIZER, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.SEQUENCE, target.getProperties());
-        PropertyValidator.getInstance().assertOne(Property.UID, target.getProperties());
+        Arrays.asList(DTSTAMP, ORGANIZER, SEQUENCE, UID).forEach(
+                property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        CollectionUtils.forAllDo(Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.DESCRIPTION,
-                Property.DTSTART, Property.DUE, Property.DURATION, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION,
-                Property.LOCATION, Property.PERCENT_COMPLETE, Property.PRIORITY, Property.RECURRENCE_ID, Property.RESOURCES,
-                Property.STATUS, Property.URL), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, target.getProperties());
-            }
-        });
+        Arrays.asList(CATEGORIES, CLASS, CREATED, DESCRIPTION,
+                DTSTART, DUE, DURATION, GEO, LAST_MODIFIED, LOCATION,
+                LOCATION, PERCENT_COMPLETE, PRIORITY, RECURRENCE_ID, RESOURCES,
+                STATUS, URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
-        ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
+        ComponentValidator.assertNone(VALARM, target.getAlarms());
     }
 }

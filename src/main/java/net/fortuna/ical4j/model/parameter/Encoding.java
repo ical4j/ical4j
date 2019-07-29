@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 import java.net.URISyntaxException;
@@ -132,7 +131,7 @@ public class Encoding extends Parameter {
      * @param aValue a string representation of an Inline Encoding
      */
     public Encoding(final String aValue) {
-        super(ENCODING, ParameterFactoryImpl.getInstance());
+        super(ENCODING, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

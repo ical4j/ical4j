@@ -35,6 +35,8 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 
+import java.util.function.Predicate;
+
 /**
  * $Id$
  *
@@ -44,7 +46,7 @@ import net.fortuna.ical4j.model.PropertyList;
  * matching only on the value of the property.
  * @author Ben Fortuna
  */
-public class HasPropertyRule implements Rule<Component> {
+public class HasPropertyRule<T extends Component> implements Predicate<T> {
 
     private Property property;
 
@@ -73,7 +75,7 @@ public class HasPropertyRule implements Rule<Component> {
     /**
      * {@inheritDoc}
      */
-    public final boolean match(final Component component) {
+    public final boolean test(final Component component) {
         boolean match = false;
         final PropertyList<Property> properties = component.getProperties(property.getName());
         for (final Property p : properties) {

@@ -1,10 +1,12 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
+
+import static net.fortuna.ical4j.model.Property.ATTACH;
+import static net.fortuna.ical4j.model.Property.DESCRIPTION;
 
 /**
  * Created by fortuna on 12/09/15.
@@ -27,8 +29,8 @@ public class VAlarmProcedureValidator implements Validator<VAlarm> {
          * ; and MUST NOT occur more than once description /
          * ; the following is optional, ; and MAY occur more than once x-prop
          */
-        PropertyValidator.getInstance().assertOne(Property.ATTACH, target.getProperties());
+        PropertyValidator.getInstance().assertOne(ATTACH, target.getProperties());
 
-        PropertyValidator.getInstance().assertOneOrLess(Property.DESCRIPTION, target.getProperties());
+        PropertyValidator.getInstance().assertOneOrLess(DESCRIPTION, target.getProperties());
     }
 }

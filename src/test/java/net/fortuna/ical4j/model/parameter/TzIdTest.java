@@ -34,12 +34,11 @@ package net.fortuna.ical4j.model.parameter;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * $Id$
@@ -64,16 +63,14 @@ public class TzIdTest extends TestCase {
         assertNotNull(calendar);
         
         TimeZoneRegistry registry = builder.getRegistry();
-        
-        for (Iterator<CalendarComponent> i = calendar.getComponents().iterator(); i.hasNext();) {
-            Component c = i.next();
-            for (Iterator<Property> j = c.getProperties().iterator(); j.hasNext();) {
-                Property p = j.next();
-                TzId tzId = (TzId) p.getParameter(Parameter.TZID);
+
+        calendar.getComponents().forEach(calendarComponent -> {
+            calendarComponent.getProperties().forEach(property -> {
+                TzId tzId = property.getParameter(Parameter.TZID);
                 if (tzId != null) {
                     assertNotNull(registry.getTimeZone(tzId.getValue()));
                 }
-            }
-        }
+            });
+        });
     }
 }

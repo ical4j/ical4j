@@ -31,7 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -121,14 +125,14 @@ public class Method extends Property {
      * Default constructor.
      */
     public Method() {
-        super(METHOD, PropertyFactoryImpl.getInstance());
+        super(METHOD, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Method(final String aValue) {
-        super(METHOD, PropertyFactoryImpl.getInstance());
+        super(METHOD, new Factory());
         this.value = aValue;
     }
 
@@ -137,7 +141,7 @@ public class Method extends Property {
      * @param aValue a value string for this component
      */
     public Method(final ParameterList aList, final String aValue) {
-        super(METHOD, aList, PropertyFactoryImpl.getInstance());
+        super(METHOD, aList, new Factory());
         this.value = aValue;
     }
 
@@ -155,19 +159,52 @@ public class Method extends Property {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    @Override
+    public void validate() throws ValidationException {
+
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory<Method> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(METHOD);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Method createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Method(parameters, value);
+
+            Method method;
+            if (ADD.getValue().equals(value)) {
+                method = ADD;
+            }
+            else if (CANCEL.getValue().equals(value)) {
+                method = CANCEL;
+            }
+            else if (COUNTER.getValue().equals(value)) {
+                method = COUNTER;
+            }
+            else if (DECLINE_COUNTER.getValue().equals(value)) {
+                method = DECLINE_COUNTER;
+            }
+            else if (PUBLISH.getValue().equals(value)) {
+                method = PUBLISH;
+            }
+            else if (REFRESH.getValue().equals(value)) {
+                method = REFRESH;
+            }
+            else if (REPLY.getValue().equals(value)) {
+                method = REPLY;
+            }
+            else if (REQUEST.getValue().equals(value)) {
+                method = REQUEST;
+            } else {
+                method = new Method(parameters, value);
+            }
+            return method;
         }
 
-        public Property createProperty() {
+        public Method createProperty() {
             return new Method();
         }
     }

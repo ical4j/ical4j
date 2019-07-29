@@ -31,24 +31,16 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.ComponentTest;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.parameter.FmtType;
+import net.fortuna.ical4j.model.property.*;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-
-import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.ComponentTest;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.parameter.FmtType;
-import net.fortuna.ical4j.model.property.Action;
-import net.fortuna.ical4j.model.property.Attach;
-import net.fortuna.ical4j.model.property.Attendee;
-import net.fortuna.ical4j.model.property.Description;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.Repeat;
-import net.fortuna.ical4j.model.property.Summary;
-import net.fortuna.ical4j.model.property.Trigger;
 
 /**
  * $Id$
@@ -91,10 +83,10 @@ public class VAlarmTest extends ComponentTest {
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
         // Test duration/repeat validation..
-        alarm = new VAlarm(new Dur(0, 2, 0, 0));
+        alarm = new VAlarm(java.time.Duration.ofHours(2));
         alarm.getProperties().add(Action.DISPLAY);
         alarm.getProperties().add(new Description("Testing display"));
-        Duration duration = new Duration(new Dur(0, 0, 2, 0));
+        Duration duration = new Duration(java.time.Duration.ofMinutes(2));
         alarm.getProperties().add(duration);
         suite.addTest(new VAlarmTest("testValidationException", alarm));
         
@@ -107,7 +99,7 @@ public class VAlarmTest extends ComponentTest {
         suite.addTest(new VAlarmTest("testValidationException", alarm));
         
         //testValidationEmail..
-        alarm = new VAlarm(new Dur(-2, 0, 0, 0));
+        alarm = new VAlarm(java.time.Duration.ofDays(-2));
         alarm.getProperties().add(Action.EMAIL);
         alarm.getProperties().add(new Attendee("mailto:john_doe@example.com"));
         alarm.getProperties().add(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"));

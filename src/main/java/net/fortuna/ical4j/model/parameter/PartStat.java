@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.model.ParameterFactoryImpl;
 import net.fortuna.ical4j.util.Strings;
 
 import java.net.URISyntaxException;
@@ -105,7 +104,7 @@ public class PartStat extends Parameter {
      * @param aValue a string representation of a participation status
      */
     public PartStat(final String aValue) {
-        super(PARTSTAT, ParameterFactoryImpl.getInstance());
+        super(PARTSTAT, new Factory());
         this.value = Strings.unquote(aValue);
     }
 

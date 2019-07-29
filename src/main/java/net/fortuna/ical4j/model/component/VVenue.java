@@ -37,8 +37,6 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import org.apache.commons.collections4.Closure;
-import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Arrays;
 
@@ -147,14 +145,9 @@ public class VVenue extends CalendarComponent {
          *                location-type / categories /
          *                dtstamp / created / last-modified
          */
-        CollectionUtils.forAllDo(Arrays.asList(Property.NAME, Property.DESCRIPTION, Property.STREET_ADDRESS, Property.EXTENDED_ADDRESS,
+        Arrays.asList(Property.NAME, Property.DESCRIPTION, Property.STREET_ADDRESS, Property.EXTENDED_ADDRESS,
                 Property.LOCALITY, Property.REGION, Property.COUNTRY, Property.POSTALCODE, Property.TZID, Property.GEO,
-                Property.LOCATION_TYPE, Property.CATEGORIES, Property.DTSTAMP, Property.CREATED, Property.LAST_MODIFIED), new Closure<String>() {
-            @Override
-            public void execute(String input) {
-                PropertyValidator.getInstance().assertOneOrLess(input, getProperties());
-            }
-        });
+                Property.LOCATION_TYPE, Property.CATEGORIES, Property.DTSTAMP, Property.CREATED, Property.LAST_MODIFIED).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
 
         /*
          * ; the following is optional, ; and MAY occur more than once tel / url / x-prop

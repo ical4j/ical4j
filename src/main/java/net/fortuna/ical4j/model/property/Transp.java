@@ -31,7 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -129,14 +133,14 @@ public class Transp extends Property {
      * Default constructor.
      */
     public Transp() {
-        super(TRANSP, PropertyFactoryImpl.getInstance());
+        super(TRANSP, new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Transp(final String aValue) {
-        super(TRANSP, PropertyFactoryImpl.getInstance());
+        super(TRANSP, new Factory());
         this.value = aValue;
     }
 
@@ -145,7 +149,7 @@ public class Transp extends Property {
      * @param aValue a value string for this component
      */
     public Transp(final ParameterList aList, final String aValue) {
-        super(TRANSP, aList, PropertyFactoryImpl.getInstance());
+        super(TRANSP, aList, new Factory());
         this.value = aValue;
     }
 
@@ -163,19 +167,34 @@ public class Transp extends Property {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    @Override
+    public void validate() throws ValidationException {
+
+    }
+
+    public static class Factory extends Content.Factory implements PropertyFactory<Transp> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TRANSP);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Transp createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Transp(parameters, value);
+
+            Transp transp;
+            if (OPAQUE.getValue().equals(value)) {
+                transp = OPAQUE;
+            }
+            else if (TRANSPARENT.getValue().equals(value)) {
+                transp = TRANSPARENT;
+            } else {
+                transp = new Transp(parameters, value);
+            }
+            return transp;
         }
 
-        public Property createProperty() {
+        public Transp createProperty() {
             return new Transp();
         }
     }
