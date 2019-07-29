@@ -1,1 +1,2 @@
 Import-Package: groovy.*;resolution:=optional, org.codehaus.groovy*;resolution:=optional, *
+Require-Capability: osgi.extender;filter:="(osgi.extender=osgi.serviceloader.processor)", osgi.serviceloader;filter:="(osgi.serviceloader=net.fortuna.ical4j.model.*)";cardinality:=multiple
