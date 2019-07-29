@@ -1,9 +1,16 @@
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.parameter.TzId;
+
 import java.io.Serializable;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.time.*;
-import java.time.format.DateTimeFormatter;
+import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.Objects;
 
@@ -29,15 +36,11 @@ import java.util.Objects;
  */
 public class TemporalAdapter<T extends Temporal> implements Serializable {
 
-    public static DateTimeFormatter DATE_TIME_DEFAULT = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss");
-
-    public static DateTimeFormatter DATE_TIME_UTC = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss'Z'").withZone(ZoneId.of("UTC"));
-
     /**
      * A formatter capable of parsing to multiple temporal types based on the input string.
      */
     private static CalendarDateFormat PARSE_FORMAT = new CalendarDateFormat(
-            DateTimeFormatter.ofPattern("yyyyMMdd['T'HHmmss[X]]"), Instant::from, LocalDateTime::from, LocalDate::from);
+            "yyyyMMdd['T'HHmmss[X]]", Instant::from, LocalDateTime::from, LocalDate::from);
 
     private final T temporal;
 
@@ -50,13 +53,36 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         this.temporal = temporal;
     }
 
+    /**
+     * Support lazy parsing of value string using a zone id to allow full initialisation of
+     * {@link java.time.zone.ZoneRulesProvider} instances.
+     *
+     * @param value a string representation of a floating date/time value
+     * @param tzId a zone id to apply to the parsed value
+     */
+    private TemporalAdapter(String value, TzId tzId) {
+        temporal = (T) Proxy.newProxyInstance(ChronoZonedDateTime.class.getClassLoader(),
+                new Class[]{ChronoZonedDateTime.class},
+                new InvocationHandler() {
+                    private ChronoZonedDateTime temporal;
+
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if (temporal == null) {
+                            temporal = CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(value, tzId.toZoneId());
+                        }
+                        return method.invoke(temporal, args);
+                    }
+                });
+    }
+
     public T getTemporal() {
         return temporal;
     }
 
     @Override
     public String toString() {
-        if (temporal instanceof LocalDate) {
+        if (!ChronoUnit.SECONDS.isSupportedBy(temporal)) {
             return toString(CalendarDateFormat.DATE_FORMAT);
         } else {
             if (isFloating(temporal)) {
@@ -78,10 +104,14 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     }
 
     public ZonedDateTime toLocalTime() {
+        return toLocalTime(ZoneId.systemDefault());
+    }
+
+    public ZonedDateTime toLocalTime(ZoneId zoneId) {
         if (isFloating(temporal)) {
-            return ((LocalDateTime) temporal).atZone(ZoneId.systemDefault());
+            return ((LocalDateTime) temporal).atZone(zoneId);
         } else if (isUtc(temporal)) {
-            return ((Instant) temporal).atZone(ZoneId.systemDefault());
+            return ((Instant) temporal).atZone(zoneId);
         } else {
             return ZonedDateTime.from(temporal);
         }
@@ -106,8 +136,20 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @return an adapter containing the parsed temporal value
      * @throws DateTimeParseException if the string cannot be parsed
      */
-    public static TemporalAdapter<ZonedDateTime> parse(String value, ZoneId zoneId) throws DateTimeParseException {
+    public static TemporalAdapter<ZonedDateTime> parse(String value, ZoneId zoneId) {
         return new TemporalAdapter<>(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(value, zoneId));
+    }
+
+    /**
+     * Parse a string representation of a temporal value applicable to the specified timezone.
+     *
+     * @param value a string representing a floating temporal value
+     * @param tzId a timezone applied to the parsed value
+     * @return an adapter containing the parsed temporal value
+     * @throws DateTimeParseException if the string cannot be parsed
+     */
+    public static TemporalAdapter<ZonedDateTime> parse(String value, TzId tzId) {
+        return new TemporalAdapter<>(value, tzId);
     }
 
     /**
@@ -138,7 +180,8 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @return true if the temporal type is floating, otherwise false
      */
     public static boolean isFloating(Temporal date) {
-        return date instanceof LocalDateTime || date instanceof LocalTime;
+        return !ChronoField.OFFSET_SECONDS.isSupportedBy(date) &&
+                !ChronoField.INSTANT_SECONDS.isSupportedBy(date);
     }
 
     /**
@@ -146,11 +189,11 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @return true if the temporal type is in UTC time, otherwise false
      */
     public static boolean isUtc(Temporal date) {
-        return date instanceof Instant;
+        return !ChronoField.OFFSET_SECONDS.isSupportedBy(date);
     }
 
     public static <T extends Temporal> boolean isBefore(T date1, T date2) {
-        if (date1 instanceof LocalDate) {
+        if (date1 instanceof LocalDate && date2 instanceof LocalDate) {
             return ((LocalDate) date1).isBefore((LocalDate) date2);
         } else if (date1 instanceof LocalDateTime) {
             return ((LocalDateTime) date1).isBefore((LocalDateTime) date2);
