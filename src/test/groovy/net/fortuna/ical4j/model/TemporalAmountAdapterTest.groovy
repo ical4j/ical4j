@@ -22,6 +22,7 @@ class TemporalAmountAdapterTest extends Specification {
         java.time.Period.ofDays(364) | "P52W"
         java.time.Period.ofYears(1) | "P52W"
         java.time.Period.ofMonths(6) | "P24W"
+        java.time.Period.ofMonths(-6) | "-P24W"
         Duration.ofDays(15).plusHours(5).plusSeconds(20)    | 'P15DT5H0M20S'
     }
 
@@ -145,6 +146,17 @@ class TemporalAmountAdapterTest extends Specification {
 
         and: 'hashcode equality'
         adapter1.hashCode() == adapter2.hashCode()
+    }
+
+    def 'week period parsing and values'() {
+	given: 'a one week amount adapter'
+	TemporalAmountAdapter adapter1 = TemporalAmountAdapter.parse('P1W')
+
+        and: 'a negative one week identical period'
+        TemporalAmountAdapter adapter2 = TemporalAmountAdapter.parse('-P1W')
+	    
+        expect: 'same duration, except for the sign'
+        adapter1.duration == -adapter2.duration
     }
 
 }
