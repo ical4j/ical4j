@@ -31,8 +31,10 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.DateTime
+
 import net.fortuna.ical4j.model.ParameterList
+
+import java.time.Instant
 
 /**
  * $Id$
@@ -60,7 +62,7 @@ class DtStampFactory extends AbstractPropertyFactory{
             return new DtStamp(parameters, value)
         }
         else if (parameters) {
-            return new DtStamp(parameters, new DateTime(true))
+            return new DtStamp(parameters, Instant.now())
         }
         else {
             return new DtStamp()
