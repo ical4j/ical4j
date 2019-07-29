@@ -102,7 +102,6 @@ public class FixedUidGenerator implements UidGenerator {
             }
             lastMillis = currentMillis;
         }
-        final TemporalAdapter<Instant> timestamp = new TemporalAdapter<>(Instant.ofEpochMilli(currentMillis), TemporalAdapter.FormatType.DateTimeUtc);
-        return timestamp;
+        return new TemporalAdapter<>(Instant.ofEpochMilli(currentMillis));
     }
 }

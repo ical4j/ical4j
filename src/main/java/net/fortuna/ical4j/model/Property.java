@@ -361,7 +361,7 @@ public abstract class Property extends Content {
 
     private final ParameterList parameters;
 
-    private final PropertyFactory factory;
+    private final PropertyFactory<? extends Property> factory;
 
     /**
      * Constructor.
@@ -387,7 +387,7 @@ public abstract class Property extends Content {
      * @param aList   a list of initial parameters
      * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, final ParameterList aList, PropertyFactory factory) {
+    protected Property(final String aName, final ParameterList aList, PropertyFactory<? extends Property> factory) {
         this.name = aName;
         this.parameters = aList;
         this.factory = factory;
@@ -521,12 +521,12 @@ public abstract class Property extends Content {
      * @throws URISyntaxException where the property contains an invalid URI value
      * @throws ParseException     where the property contains an invalid date value
      */
-    public Property copy() throws IOException, URISyntaxException, ParseException {
+    public <T extends Property> T copy() throws IOException, URISyntaxException, ParseException {
         if (factory == null) {
             throw new UnsupportedOperationException("No factory specified");
         }
         // Deep copy parameter list..
         final ParameterList params = new ParameterList(getParameters(), false);
-        return factory.createProperty(params, getValue());
+        return (T) factory.createProperty(params, getValue());
     }
 }

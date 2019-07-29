@@ -100,19 +100,16 @@ public class DtStamp extends UtcProperty implements Comparable<DtStamp> {
 
     /**
      * @param aValue a string representation of a DTSTAMP value
-     * @throws ParseException if the specified value is not a valid representation
      */
-    public DtStamp(final String aValue) throws ParseException {
+    public DtStamp(final String aValue) {
         this(new ParameterList(), aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public DtStamp(final ParameterList aList, final String aValue)
-            throws ParseException {
+    public DtStamp(final ParameterList aList, final String aValue) {
         super(DTSTAMP, aList, new Factory());
         setValue(aValue);
     }

@@ -194,7 +194,7 @@ public class CalendarDateFormat implements Serializable {
             synchronized (pattern) {
                 if (formatter == null) {
                     formatter = DateTimeFormatter.ofPattern(pattern);
-                    if (pattern.endsWith("Z")) {
+                    if (pattern.endsWith("'Z'")) {
                         formatter = formatter.withZone(ZoneOffset.UTC);
                     }
                 }
