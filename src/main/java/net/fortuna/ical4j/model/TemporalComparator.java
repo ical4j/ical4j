@@ -19,6 +19,7 @@ public class TemporalComparator implements Comparator<Temporal> {
 
     @Override
     public int compare(Temporal o1, Temporal o2) {
-        return (int) comparisonUnit.between(o1, o2);
+        // sort ascending by default..
+        return (int) comparisonUnit.between(o2, o1);
     }
 }

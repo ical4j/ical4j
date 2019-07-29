@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.TemporalComparator;
 import net.fortuna.ical4j.transform.Transformer;
 
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -26,11 +27,15 @@ public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
     @Override
     public List<T> transform(List<T> dates) {
         // return if no SETPOS rules specified..
-        if (setPosList.isEmpty()) {
+        if (setPosList.isEmpty() || dates.isEmpty()) {
             return dates;
         }
         // sort the list before processing..
-        dates.sort(ONSET_COMPARATOR);
+        if (dates.get(0).isSupported(ChronoUnit.SECONDS)) {
+            dates.sort(ONSET_COMPARATOR);
+        } else {
+            dates.sort(new TemporalComparator(ChronoUnit.DAYS));
+        }
         final List<T> setPosDates = new ArrayList<>();
         final int size = dates.size();
         for (final Integer setPos : setPosList) {
