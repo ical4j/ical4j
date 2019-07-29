@@ -11,7 +11,7 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.8.1'
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.8.4"
-    id "net.ltgt.errorprone" version "0.0.16"
+    id "net.ltgt.errorprone" version "0.8.1"
 }
 
 apply plugin: 'java'
@@ -71,6 +71,9 @@ repositories {
 }
 
 dependencies {
+    errorprone "com.google.errorprone:error_prone_core:2.3.3"
+    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+
     api "org.slf4j:slf4j-api:$slf4jVersion",
             'commons-codec:commons-codec:1.11',
             'org.apache.commons:commons-lang3:3.8.1',
