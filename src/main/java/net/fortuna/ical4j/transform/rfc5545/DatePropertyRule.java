@@ -17,7 +17,6 @@ public class DatePropertyRule implements Rfc5545PropertyRule<DateProperty> {
             return;
         }
         element.getParameters().removeAll(Parameter.TZID);
-        element.setUtc(true);
     }
 
     @Override

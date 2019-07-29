@@ -7,16 +7,15 @@
  */
 package net.fortuna.ical4j.transform.rfc5545;
 
-import net.fortuna.ical4j.model.DefaultTimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DateProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -33,8 +32,11 @@ class TzHelper {
     private static final Map<String, String> MS_TIMEZONE_IDS = new HashMap<String, String>();
     private static final Map<String, String> MS_TIMEZONE_NAMES = new HashMap<String, String>();
 
-    private static final TimeZoneRegistry TIMEZONE_REGISTRY = DefaultTimeZoneRegistryFactory.getInstance()
-            .createRegistry();
+    private static final TimeZoneRegistry TIMEZONE_REGISTRY;
+    static {
+        TimeZoneRegistryFactory timeZoneRegistryFactory = TimeZoneRegistryFactory.getInstance();
+        TIMEZONE_REGISTRY = timeZoneRegistryFactory.createRegistry();
+    }
 
     private static final Logger LOG = LoggerFactory.getLogger(TzHelper.class);
     static {
@@ -72,16 +74,6 @@ class TzHelper {
             String newTimezone = getCorrectedTimezoneFromTzParameter(property);
             String value = property.getValue();
             correctTzParameter(property, newTimezone);
-            if (newTimezone != null) {
-                property.setTimeZone(TIMEZONE_REGISTRY.getTimeZone(newTimezone));
-                try {
-                    property.setValue(value);
-                } catch (DateTimeParseException e) {
-                    LOG.warn("Failed to reset property value", e);
-                }
-            } else {
-                property.setUtc(true);
-            }
         }
     }
 

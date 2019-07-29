@@ -57,7 +57,7 @@ public class ByHourRule<T extends Temporal> extends AbstractDateExpansionRule<T>
         @Override
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
-            // construct a list of possible months..
+            // construct a list of possible hours..
             hourList.forEach(hour -> {
                 T candidate = withTemporalField(date, HOUR_OF_DAY, hour);
                 retVal.add(candidate);
