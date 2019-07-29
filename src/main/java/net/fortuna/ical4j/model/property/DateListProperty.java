@@ -37,8 +37,8 @@ import net.fortuna.ical4j.util.Strings;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.ZoneId;
 import java.time.temporal.Temporal;
-import java.util.Optional;
 
 /**
  * $Id$
@@ -69,7 +69,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
 
     private DateList<T> dates;
 
-    private TimeZone timeZone;
+    private ZoneId timeZone;
 
     /**
      * @param name the property name
@@ -131,14 +131,14 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      *
      * @param timezone a timezone to associate with this property
      */
-    public void setTimeZone(final TimeZone timezone) {
+    public void setTimeZone(final ZoneId timezone) {
         if (dates == null) {
             throw new UnsupportedOperationException(
                     "TimeZone is not applicable to current value");
         }
         this.timeZone = timezone;
         if (timezone != null) {
-            final net.fortuna.ical4j.model.parameter.TzId tzId = new net.fortuna.ical4j.model.parameter.TzId(timezone.getID());
+            final net.fortuna.ical4j.model.parameter.TzId tzId = new net.fortuna.ical4j.model.parameter.TzId(timezone.getId());
             getParameters().replace(tzId);
         } else {
             // use setUtc() to reset timezone..
@@ -149,8 +149,8 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     /**
      * @return the timezone
      */
-    public final Optional<TimeZone> getTimeZone() {
-        return Optional.ofNullable(timeZone);
+    public final ZoneId getTimeZone() {
+        return timeZone;
     }
 
     /**
