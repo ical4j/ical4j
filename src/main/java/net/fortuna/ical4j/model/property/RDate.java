@@ -42,7 +42,9 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -231,7 +233,8 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @return Returns the period list.
      */
     public final List<Period<T>> getPeriods() {
-        return new ArrayList<>(periods.getPeriods());
+        return Collections.unmodifiableList(
+                new ArrayList<>(Optional.ofNullable(periods).orElseGet(PeriodList::new).getPeriods()));
     }
 
     /**

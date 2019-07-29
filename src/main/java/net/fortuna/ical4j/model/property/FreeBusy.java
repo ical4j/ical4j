@@ -192,7 +192,7 @@ public class FreeBusy extends Property {
      * {@inheritDoc}
      */
     public final String getValue() {
-        return getPeriods().toString();
+        return periods.toString();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {
