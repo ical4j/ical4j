@@ -41,6 +41,7 @@ import net.fortuna.ical4j.validate.component.VJournalAddValidator;
 import net.fortuna.ical4j.validate.component.VJournalCancelValidator;
 import net.fortuna.ical4j.validate.component.VJournalPublishValidator;
 
+import java.time.temporal.Temporal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -142,7 +143,7 @@ public class VJournal extends CalendarComponent {
      * @param start the date the journal entry is associated with
      * @param summary the journal summary
      */
-    public VJournal(final Date start, final String summary) {
+    public VJournal(final Temporal start, final String summary) {
         this();
         getProperties().add(new DtStart(start));
         getProperties().add(new Summary(summary));
