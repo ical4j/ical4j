@@ -1,9 +1,12 @@
+import aQute.bnd.gradle.Bundle
+
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath 'org.hidetake:gradle-ssh-plugin:1.1.3'
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.2.0'
     }
 }
 
@@ -17,7 +20,7 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'groovy'
-apply plugin: 'osgi'
+apply plugin: 'biz.aQute.bnd.builder'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
@@ -38,33 +41,6 @@ ext {
     slf4jVersion = '1.7.25'
     groovyVersion = '2.5.4'
 }
-
-/*
-githubPages {
-//    repoUri = 'https://github.com/ical4j/ical4j.github.io.git'
-    repoUri = 'git@github.com:ical4j/ical4j.github.io.git'
-    pages {
-        from javadoc.outputs.files
-    }
-}
-*/
-/*
-github {
-    /* Wiki repo will be calculated from this. *
-    repo = 'git@github.com:ical4j/ical4j.git'
-
-    wiki {
-        /*
-        This is the same as used in Gradle Copy Task.
-        Please refer to Gradle documentation for information.
-        *
-        from javadoc.outputs.files {
-            into 'ical4j/javadoc'
-        }
-        into { "javadoc/$project.release.version" }
-    }
-}
-*/
 
 repositories {
     mavenCentral()
@@ -104,6 +80,11 @@ javadoc {
     }
 }
 
+task bundle(type: Bundle) {
+    from sourceSets.main.output
+    bndfile = 'bnd.bnd'
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from 'build/docs/javadoc'
@@ -114,14 +95,10 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-jar {
-    manifest {
-        instruction 'Import-Package', 'groovy.*;resolution:=optional, org.codehaus.groovy*;resolution:=optional, *'
-    }
-}
+jar.enabled = false
 
 artifacts {
-    archives jar
+    archives bundle
     archives javadocJar
     archives sourcesJar
 }

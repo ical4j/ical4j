@@ -1,0 +1,1 @@
+Import-Package: groovy.*;resolution:=optional, org.codehaus.groovy*;resolution:=optional, *
