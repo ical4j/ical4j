@@ -37,13 +37,11 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.threeten.extra.Interval;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
@@ -325,28 +323,26 @@ public abstract class Component implements Serializable {
         if (end == null && duration == null) {
             rDuration = java.time.Duration.ZERO;
         } else if (duration == null) {
-            rDuration = java.time.Duration.between(start.getDate(), end.getDate());
+            rDuration = TemporalAmountAdapter.between(start.getDate(), end.getDate()).getDuration();
         } else {
             rDuration = duration.getDuration();
         }
 
-        Interval interval = period.toInterval(zoneId);
-
         // add recurrence dates..
         List<RDate<T>> rDates = getProperties(Property.RDATE);
         recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.PERIOD)
-                .map(RDate::getPeriods).flatMap(List<Period<T>>::stream).filter(p -> p.toInterval(zoneId).overlaps(interval))
+                .map(RDate::getPeriods).flatMap(List<Period<T>>::stream).filter(period::intersects)
                 .collect(Collectors.toList()));
 
         List<Period<T>> calculated = rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE_TIME)
                 .map(DateListProperty::getDates).map(DateList::getDates)
-                .flatMap(List<T>::stream).filter(d -> interval.contains(Instant.from(d)))
+                .flatMap(List<T>::stream).filter(period::includes)
                 .map(rdateTime -> new Period<>(rdateTime, rDuration)).collect(Collectors.toList());
         recurrenceSet.addAll(calculated);
 
         recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE)
                 .map(DateListProperty::getDates).map(DateList::getDates)
-                .flatMap(List<T>::stream).filter(d -> interval.contains(Instant.from(d)))
+                .flatMap(List<T>::stream).filter(period::includes)
                 .map(rdateDate -> new Period<>(rdateDate, rDuration)).collect(Collectors.toList()));
 
         // allow for recurrence rules that start prior to the specified period
@@ -375,7 +371,7 @@ public abstract class Component implements Serializable {
 
                 startPeriod = new Period<>(start.getDate(), duration.getDuration());
             }
-            if (!period.toInterval(zoneId).intersection(startPeriod.toInterval(zoneId)).isEmpty()) {
+            if (period.intersects(startPeriod)) {
                 recurrenceSet.add(startPeriod);
             }
         }

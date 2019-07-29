@@ -158,7 +158,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
                     // ignore periods contained by other periods..
                     period = prevPeriod;
                     normalised = true;
-                } else if (!prevInterval.intersection(periodInterval).isEmpty()) {
+                } else if (prevPeriod.intersects(period)) {
                     // combine intersecting periods..
                     period = prevPeriod.add(period);
                     normalised = true;
@@ -186,7 +186,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
         }
         else {
             return this;
-	}
+	    }
     }
 
     /**

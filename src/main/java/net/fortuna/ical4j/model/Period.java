@@ -170,6 +170,10 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         this(start, new TemporalAmountAdapter(duration));
     }
 
+    public Period(final T start, final TemporalAmount duration, CalendarDateFormat dateFormat) {
+        this(start, new TemporalAmountAdapter(duration), dateFormat);
+    }
+
     /**
      * Constructs a new period with the specified start date and duration.
      *
@@ -295,7 +299,9 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      *
      */
     public final boolean includes(final Temporal date) {
-        return toInterval().contains(Instant.from(date));
+//        return toInterval().contains(Instant.from(date));
+        Objects.requireNonNull(date, "date");
+        return DATE_RANGE_COMPARATOR.compare(start, date) >= 0 && DATE_RANGE_COMPARATOR.compare(date, end) <= 0;
     }
 
     /**
@@ -434,6 +440,18 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
             b.append(duration);
         }
         return b.toString();
+    }
+    
+    /**
+     * Decides whether this period intersects with another one.
+     *
+     * @param other a possible intersecting period
+     * @return true if the specified period intersects this one, false otherwise.
+     */
+    public boolean intersects(Period other) {
+        Objects.requireNonNull(other, "other");
+        return other.equals(this) || (DATE_RANGE_COMPARATOR.compare(start, other.end) < 0
+                && DATE_RANGE_COMPARATOR.compare(other.start, end) < 0);
     }
 
     public Interval toInterval() {
