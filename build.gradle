@@ -1,23 +1,26 @@
+import aQute.bnd.gradle.Bundle
+
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.hidetake:gradle-ssh-plugin:1.1.3'
+        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.2.0'
     }
 }
 
 plugins {
-    id 'pl.allegro.tech.build.axion-release' version '1.8.1'
+    id 'pl.allegro.tech.build.axion-release' version '1.10.2'
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.8.4"
-    id "net.ltgt.errorprone" version "0.0.16"
+    id "net.ltgt.errorprone" version "0.8.1"
 }
 
 apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'groovy'
-apply plugin: 'osgi'
+apply plugin: 'biz.aQute.bnd.builder'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
@@ -39,38 +42,14 @@ ext {
     groovyVersion = '2.5.4'
 }
 
-/*
-githubPages {
-//    repoUri = 'https://github.com/ical4j/ical4j.github.io.git'
-    repoUri = 'git@github.com:ical4j/ical4j.github.io.git'
-    pages {
-        from javadoc.outputs.files
-    }
-}
-*/
-/*
-github {
-    /* Wiki repo will be calculated from this. *
-    repo = 'git@github.com:ical4j/ical4j.git'
-
-    wiki {
-        /*
-        This is the same as used in Gradle Copy Task.
-        Please refer to Gradle documentation for information.
-        *
-        from javadoc.outputs.files {
-            into 'ical4j/javadoc'
-        }
-        into { "javadoc/$project.release.version" }
-    }
-}
-*/
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    errorprone "com.google.errorprone:error_prone_core:2.3.3"
+    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+
     api "org.slf4j:slf4j-api:$slf4jVersion",
             'commons-codec:commons-codec:1.11',
             'org.apache.commons:commons-lang3:3.8.1',
@@ -90,6 +69,13 @@ dependencies {
         'org.ehcache:ehcache:3.4.0', 'com.sun.mail:javax.mail:1.5.4'
 }
 
+tasks.withType(JavaCompile).configureEach {
+    if (JavaVersion.current().isJava12Compatible()) {
+        // TODO: Remove when resolved https://github.com/google/error-prone/issues/1106
+        options.errorprone.disable("Finally")
+    }
+}
+
 jacocoTestReport {
     reports {
         xml.enabled true
@@ -104,6 +90,11 @@ javadoc {
     }
 }
 
+task bundle(type: Bundle) {
+    from sourceSets.main.output
+    bndfile = 'bnd.bnd'
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from 'build/docs/javadoc'
@@ -114,14 +105,10 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-jar {
-    manifest {
-        instruction 'Import-Package', 'groovy.*;resolution:=optional, org.codehaus.groovy*;resolution:=optional, *'
-    }
-}
+jar.enabled = false
 
 artifacts {
-    archives jar
+    archives bundle
     archives javadocJar
     archives sourcesJar
 }
