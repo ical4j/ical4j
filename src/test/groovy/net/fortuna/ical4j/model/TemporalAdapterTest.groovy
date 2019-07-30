@@ -4,37 +4,23 @@ import spock.lang.Specification
 
 import java.time.*
 import java.time.format.DateTimeParseException
-import java.time.temporal.UnsupportedTemporalTypeException
 
 class TemporalAdapterTest extends Specification {
 
     def "verify string representation"() {
         expect:
-        new TemporalAdapter(temporal, format) as String == expectedValue
+        new TemporalAdapter(temporal) as String == expectedValue
 
         where:
-        temporal                       | format                                              |   expectedValue
+        temporal                       | expectedValue
 
-        LocalDate.of(2001, 04, 03)     | TemporalAdapter.FormatType.Date                     | '20010403'
+        LocalDate.of(2001, 04, 03)     | '20010403'
 
-        LocalDateTime.of(2001, 04, 03, 11, 00) | TemporalAdapter.FormatType.Date             | '20010403'
+        LocalDateTime.of(2001, 04, 03, 11, 00) | '20010403T110000'
 
-        LocalDateTime.of(2001, 04, 03, 11, 00) | TemporalAdapter.FormatType.DateTimeUtc      | '20010403T110000Z'
+        LocalDateTime.of(2001, 04, 03, 11, 00).toInstant(ZoneOffset.UTC) | '20010403T110000Z'
 
-        LocalDateTime.of(2001, 04, 03, 11, 00) | TemporalAdapter.FormatType.DateTimeFloating | '20010403T110000'
-    }
-
-    def "verify formatting error handling"() {
-        when:
-        new TemporalAdapter(temporal, format) as String
-
-        then:
-        thrown(UnsupportedTemporalTypeException)
-
-        where:
-        temporal                       | format
-        LocalDate.of(2001, 04, 03)     | TemporalAdapter.FormatType.DateTimeUtc
-        LocalDate.of(2001, 04, 03)     | TemporalAdapter.FormatType.DateTimeFloating
+        LocalDateTime.of(2001, 04, 03, 11, 00) | '20010403T110000'
     }
 
     def 'verify date string parsing'() {
@@ -51,8 +37,7 @@ class TemporalAdapterTest extends Specification {
 
     def 'verify zoned date string parsing'() {
         expect:
-        def parsed = TemporalAdapter.parse(dateString, ZoneId.systemDefault())
-        parsed.temporal.class == expectedType
+        TemporalAdapter<ZonedDateTime> parsed = TemporalAdapter.parse(dateString, expectedZone)
         parsed.temporal.zone == expectedZone
 
         where:
@@ -73,7 +58,8 @@ class TemporalAdapterTest extends Specification {
 
     def 'verify invalid zoned date string parsing'() {
         when: 'attempted parsing'
-        TemporalAdapter.parse(dateString, ZoneId.systemDefault())
+        def adapter = TemporalAdapter.parse(dateString, ZoneId.systemDefault())
+        adapter.temporal as String
 
         then:
         thrown(DateTimeParseException)
