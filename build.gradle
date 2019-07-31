@@ -113,11 +113,6 @@ artifacts {
     archives sourcesJar
 }
 
-signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
-}
-
 scmVersion {
     tag {
         prefix = 'ical4j'
@@ -223,6 +218,12 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+//    sign configurations.archives
+    sign publishing.publications.mavenArtifacts
 }
 
 bintray {
