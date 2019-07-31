@@ -96,13 +96,13 @@ task bundle(type: Bundle) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from 'build/docs/javadoc'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    classifier = 'sources'
+    archiveClassifier = 'sources'
 }
 
 jar.enabled = false
@@ -111,11 +111,6 @@ artifacts {
     archives bundle
     archives javadocJar
     archives sourcesJar
-}
-
-signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
 }
 
 scmVersion {
@@ -223,6 +218,12 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+//    sign configurations.archives
+    sign publishing.publications.mavenArtifacts
 }
 
 bintray {
