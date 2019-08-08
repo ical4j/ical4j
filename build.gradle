@@ -106,6 +106,7 @@ task sourcesJar(type: Jar) {
 }
 
 jar.enabled = false
+build.dependsOn bundle
 
 artifacts {
     archives bundle
