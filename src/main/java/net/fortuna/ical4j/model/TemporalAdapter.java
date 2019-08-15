@@ -64,7 +64,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         temporal = (T) Proxy.newProxyInstance(ChronoZonedDateTime.class.getClassLoader(),
                 new Class[]{ChronoZonedDateTime.class},
                 new InvocationHandler() {
-                    private ChronoZonedDateTime temporal;
+                    private ChronoZonedDateTime<LocalDate> temporal;
 
                     @Override
                     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
