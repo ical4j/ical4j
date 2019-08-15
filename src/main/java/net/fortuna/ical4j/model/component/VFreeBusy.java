@@ -41,13 +41,12 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VFreeBusyPublishValidator;
 import net.fortuna.ical4j.validate.component.VFreeBusyReplyValidator;
 import net.fortuna.ical4j.validate.component.VFreeBusyRequestValidator;
+import org.threeten.extra.Interval;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -252,7 +251,7 @@ public class VFreeBusy extends CalendarComponent {
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
-        getProperties().add(new DtStart(start, true));
+        getProperties().add(new DtStart<>(start));
         
         // 4.8.2.2 Date/Time End
         //
@@ -260,7 +259,7 @@ public class VFreeBusy extends CalendarComponent {
         //    end date and time for the free or busy time information. The time
         //    MUST be specified in the UTC time format. The value MUST be later in
         //    time than the value of the "DTSTART" property.
-        getProperties().add(new DtEnd(end, true));
+        getProperties().add(new DtEnd<>(end));
     }
 
     /**
@@ -270,7 +269,7 @@ public class VFreeBusy extends CalendarComponent {
      * @param end the ending boundary for the VFreeBusy
      * @param duration the length of the period being requested
      */
-    public VFreeBusy(final Temporal start, final Temporal end, final TemporalAmount duration) {
+    public VFreeBusy(final Instant start, final Instant end, final TemporalAmount duration) {
         this();
         
         // 4.8.2.4 Date/Time Start:
@@ -278,7 +277,7 @@ public class VFreeBusy extends CalendarComponent {
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
-        getProperties().add(new DtStart(start, true));
+        getProperties().add(new DtStart<>(start));
         
         // 4.8.2.2 Date/Time End
         //
@@ -286,7 +285,7 @@ public class VFreeBusy extends CalendarComponent {
         //    end date and time for the free or busy time information. The time
         //    MUST be specified in the UTC time format. The value MUST be later in
         //    time than the value of the "DTSTART" property.
-        getProperties().add(new DtEnd(end, true));
+        getProperties().add(new DtEnd<>(end));
 
         getProperties().add(new Duration(duration));
     }
@@ -317,7 +316,7 @@ public class VFreeBusy extends CalendarComponent {
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
-        getProperties().add(new DtStart(start.getDate(), true));
+        getProperties().add(new DtStart<>(start.getDate()));
         
         // 4.8.2.2 Date/Time End
         //
@@ -325,13 +324,13 @@ public class VFreeBusy extends CalendarComponent {
         //    end date and time for the free or busy time information. The time
         //    MUST be specified in the UTC time format. The value MUST be later in
         //    time than the value of the "DTSTART" property.
-        getProperties().add(new DtEnd(end.getDate(), true));
+        getProperties().add(new DtEnd<>(end.getDate()));
         
         if (duration != null) {
             getProperties().add(new Duration(duration.getDuration()));
             // Initialise with all free time of at least the specified duration..
-            final ZonedDateTime freeStart = ZonedDateTime.from(start.getDate());
-            final ZonedDateTime freeEnd = ZonedDateTime.from(end.getDate());
+            final Instant freeStart = Instant.from(start.getDate());
+            final Instant freeEnd = Instant.from(end.getDate());
             final FreeBusy fb = new FreeTimeBuilder().start(freeStart)
                 .end(freeEnd)
                 .duration(duration.getDuration())
@@ -343,8 +342,8 @@ public class VFreeBusy extends CalendarComponent {
         }
         else {
             // initialise with all busy time for the specified period..
-            final ZonedDateTime busyStart = ZonedDateTime.from(start.getDate());
-            final ZonedDateTime busyEnd = ZonedDateTime.from(end.getDate());
+            final Instant busyStart = Instant.from(start.getDate());
+            final Instant busyEnd = Instant.from(end.getDate());
             final FreeBusy fb = new BusyTimeBuilder().start(busyStart)
                 .end(busyEnd)
                 .components(components)
@@ -363,18 +362,18 @@ public class VFreeBusy extends CalendarComponent {
      */
     private class BusyTimeBuilder {
         
-        private Temporal start;
+        private Instant start;
         
-        private Temporal end;
+        private Instant end;
         
         private ComponentList<CalendarComponent> components;
         
-        public BusyTimeBuilder start(Temporal start) {
+        public BusyTimeBuilder start(Instant start) {
             this.start = start;
             return this;
         }
         
-        public BusyTimeBuilder end(Temporal end) {
+        public BusyTimeBuilder end(Instant end) {
             this.end = end;
             return this;
         }
@@ -385,13 +384,11 @@ public class VFreeBusy extends CalendarComponent {
         }
         
         public FreeBusy build() {
-            final PeriodList periods = getConsumedTime(components, start, end);
-            final DateRange range = new DateRange(start, end);
             // periods must be in UTC time for freebusy..
-            periods.setUtc(true);
+            final List<Period<Instant>> periods = getConsumedTime(components, start, end);
             periods.removeIf(period -> {
                 // check if period outside bounds..
-                return !range.intersects(period);
+                return !period.intersects(new Period<>(start, end));
             });
             return new FreeBusy(periods);
         }
@@ -405,20 +402,20 @@ public class VFreeBusy extends CalendarComponent {
      */
     private class FreeTimeBuilder {
         
-        private ZonedDateTime start;
+        private Instant start;
         
-        private ZonedDateTime end;
+        private Instant end;
         
         private TemporalAmount duration;
         
         private ComponentList<CalendarComponent> components;
         
-        public FreeTimeBuilder start(ZonedDateTime start) {
+        public FreeTimeBuilder start(Instant start) {
             this.start = start;
             return this;
         }
         
-        public FreeTimeBuilder end(ZonedDateTime end) {
+        public FreeTimeBuilder end(Instant end) {
             this.end = end;
             return this;
         }
@@ -436,27 +433,27 @@ public class VFreeBusy extends CalendarComponent {
         public FreeBusy build() {
             final FreeBusy fb = new FreeBusy();
             fb.getParameters().add(FbType.FREE);
-            final PeriodList periods = getConsumedTime(components, start, end);
-            final DateRange<ZonedDateTime> range = new DateRange<>(start, end);
+            final List<Period<Instant>> periods = getConsumedTime(components, start, end);
+            final Interval interval = Interval.of(start, end);
             // Add final consumed time to avoid special-case end-of-list processing
-            periods.add(new Period(end, end));
-            ZonedDateTime lastPeriodEnd = ZonedDateTime.from(start);
+            periods.add(new Period<>(end, end));
+            Instant lastPeriodEnd = start;
             // where no time is consumed set the last period end as the range start..
-            for (final Period period : periods) {
+            for (final Period<Instant> period : periods) {
                 // check if period outside bounds.. or period intersects with the end of the range..
-                if (range.contains(period) || 
-                		(range.intersects(period)
-                                && ZonedDateTime.from(period.getRangeStart()).isAfter(range.getRangeStart()))) {
+                if (interval.encloses(period.toInterval()) ||
+                		(interval.overlaps(period.toInterval())
+                                && Instant.from(period.getStart()).isAfter(Instant.from(interval.getStart())))) {
                     
                     // calculate duration between this period start and last period end..
                     final Duration freeDuration = new Duration(lastPeriodEnd, period.getStart());
                     if (new TemporalAmountComparator().compare(freeDuration.getDuration(), duration) >= 0) {
-                        fb.getPeriods().add(new Period(lastPeriodEnd, freeDuration.getDuration()));
+                        fb.getPeriods().add(new Period<>(lastPeriodEnd, freeDuration.getDuration()));
                     }
                 }
                 
-                if (ZonedDateTime.from(period.getEnd()).isAfter(lastPeriodEnd)) {
-                    lastPeriodEnd = ZonedDateTime.from(period.getEnd());
+                if (Instant.from(period.getEnd()).isAfter(lastPeriodEnd)) {
+                    lastPeriodEnd = period.getEnd();
                 }
             }
             return fb;
@@ -468,15 +465,15 @@ public class VFreeBusy extends CalendarComponent {
      * @param components
      * @return
      */
-    private PeriodList getConsumedTime(final ComponentList<CalendarComponent> components, final Temporal rangeStart,
-            final Temporal rangeEnd) {
+    private <T extends Temporal> List<Period<T>> getConsumedTime(final ComponentList<CalendarComponent> components, final T rangeStart,
+                                                                 final T rangeEnd) {
         
-        final PeriodList periods = new PeriodList();
+        final PeriodList<T> periods = new PeriodList<>();
         // only events consume time..
         for (final Component event : components.getComponents(Component.VEVENT)) {
             periods.addAll(((VEvent) event).getConsumedTime(rangeStart, rangeEnd, false));
         }
-        return periods.normalise();
+        return new ArrayList<>(periods.normalise().getPeriods());
     }
 
     /**
@@ -542,7 +539,7 @@ public class VFreeBusy extends CalendarComponent {
         }
         
         if (dtStart != null && dtEnd != null
-                && !ZonedDateTime.from(dtStart.getDate()).isBefore(ZonedDateTime.from(dtEnd.getDate()))) {
+                && !Instant.from(dtStart.getDate()).isBefore(Instant.from(dtEnd.getDate()))) {
             throw new ValidationException("Property [" + Property.DTEND
                     + "] must be later in time than [" + Property.DTSTART + "]");
         }
