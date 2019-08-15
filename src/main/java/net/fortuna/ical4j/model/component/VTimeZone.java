@@ -48,6 +48,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.OffsetDateTime;
 import java.time.temporal.Temporal;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -247,12 +248,22 @@ public class VTimeZone extends CalendarComponent {
      * observances
      */
     public final Observance getApplicableObservance(final Temporal date) {
+        return getApplicableObservance(date, getObservances());
+    }
+
+    /**
+     * Returns the latest applicable timezone observance for the specified date.
+     * @param date the latest possible date for a timezone observance onset
+     * @param observances a list of observances to choose from
+     * @return the latest applicable timezone observance for the specified date or null if there are no applicable
+     * observances
+     */
+    public static Observance getApplicableObservance(final Temporal date, List<Observance> observances) {
         Observance latestObservance = null;
         OffsetDateTime latestOnset = null;
-        for (final Observance observance : getObservances()) {
+        for (final Observance observance : observances) {
             final OffsetDateTime onset = observance.getLatestOnset(date);
-            if (latestOnset == null
-                    || (onset != null && onset.isAfter(latestOnset))) {
+            if (latestOnset == null || (onset != null && onset.isAfter(latestOnset))) {
                 latestOnset = onset;
                 latestObservance = observance;
             }
