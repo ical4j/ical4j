@@ -44,6 +44,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.DateTimeException;
 
 /**
  * $Id: CalendarBuilderTest.java [Apr 5, 2004]
@@ -120,7 +121,7 @@ public class CalendarBuilderTest extends TestCase {
             Calendar calendar = builder.build(fin);
             calendar.validate();
             fail("Should throw ParserException or ValidationException");
-        } catch (ValidationException | ParserException e) {
+        } catch (DateTimeException | ValidationException | ParserException e) {
             log.trace("Caught exception: [" + filename + "," + e.getMessage() + "]");
         }
     }

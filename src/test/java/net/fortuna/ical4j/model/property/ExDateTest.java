@@ -95,12 +95,12 @@ public class ExDateTest extends TestCase {
 
         String id = vTZ.getTimeZoneId().getValue();
         assertEquals("Europe/Berlin", id);
-        assertEquals(vTZ.getObservances().get(0), vTZ.getApplicableObservance(new Date("20180403")));
+        assertEquals(vTZ.getObservances().get(0), vTZ.getApplicableObservance(TemporalAdapter.parse("20180403").getTemporal()));
 
         VEvent vEvent = (VEvent) ical.getComponent(VEvent.VEVENT);
         DtStart start = vEvent.getStartDate();
-        assertEquals(vTZ, start.getTimeZone().getVTimeZone());
-        assertEquals(1522738800000L, start.getDate().getTime());
+        assertEquals(vTZ.getTimeZoneId(), start.getParameter(Parameter.TZID));
+        assertEquals(1522738800000L, Instant.from(start.getDate()).toEpochMilli());
     }
 
     public void testShouldPreserveUtcTimezoneForExDate() throws Exception {
