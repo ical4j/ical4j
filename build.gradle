@@ -195,7 +195,7 @@ uploadArchives {
 publishing {
     publications {
         mavenArtifacts(MavenPublication) {
-            from components.java
+            artifact bundle
             artifact javadocJar
             artifact sourcesJar
             pom.withXml {
