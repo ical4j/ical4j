@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
@@ -190,6 +191,16 @@ public class TemporalAmountAdapter implements Serializable {
             duration = d;
         }
         return new TemporalAmountAdapter(duration);
+    }
+
+    public static TemporalAmountAdapter between(Temporal t1, Temporal t2) {
+        TemporalAmount difference;
+        if (t1 instanceof LocalDate && t2 instanceof LocalDate) {
+            difference = Period.between((LocalDate) t1, (LocalDate) t2);
+        } else {
+            difference = Duration.between(t1, t2);
+        }
+        return new TemporalAmountAdapter(difference);
     }
 
     /**
