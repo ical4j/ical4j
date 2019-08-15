@@ -44,13 +44,13 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -154,10 +154,13 @@ public abstract class Observance extends Component {
      */
     public final OffsetDateTime getLatestOnset(final Temporal date) {
 
+        OffsetDateTime offsetDate = LocalDateTime.ofInstant(Instant.from(date), ZoneOffset.UTC).atOffset(
+                getOffsetTo().getOffset());
+
         if (initialOnset == null) {
             try {
                 DtStart dtStart = getRequiredProperty(Property.DTSTART);
-                initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(getOffsetFrom().getOffset());
+                initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(getOffsetTo().getOffset());
             } catch (ConstraintViolationException e) {
                 Logger log = LoggerFactory.getLogger(Observance.class);
                 log.error("Unexpected error calculating initial onset", e);
@@ -167,14 +170,14 @@ public abstract class Observance extends Component {
         }
 
         // observance not applicable if date is before the effective date of this observance..
-        if (TemporalAdapter.isBefore(date, initialOnset)) {
+        if (TemporalAdapter.isBefore(offsetDate, initialOnset)) {
             return null;
         }
 
         if ((onsetsMillisec != null) &&
-                (onsetLimit == null || TemporalAdapter.isBefore(date, onsetLimit))) {
+                (onsetLimit == null || TemporalAdapter.isBefore(offsetDate, onsetLimit))) {
 
-            return getCachedOnset(date);
+            return getCachedOnset(offsetDate);
         }
 
         OffsetDateTime onset = initialOnset;
@@ -195,7 +198,7 @@ public abstract class Observance extends Component {
             DateList<LocalDateTime> rdateDates = rdate.getDates();
             for (final LocalDateTime rdateDate : rdateDates.getDates()) {
                 final OffsetDateTime rdateOnset = OffsetDateTime.from(rdateDate.atOffset(getOffsetFrom().getOffset()));
-                if (!rdateOnset.isAfter(OffsetDateTime.from(date)) && rdateOnset.isAfter(onset)) {
+                if (!rdateOnset.isAfter(offsetDate) && rdateOnset.isAfter(onset)) {
                     onset = rdateOnset;
                 }
                 /*
@@ -210,12 +213,12 @@ public abstract class Observance extends Component {
         final List<RRule> rrules = getProperties(Property.RRULE);
         for (RRule rrule : rrules) {            
             // include future onsets to determine onset period..
-            onsetLimit = Instant.from(date.plus(10, ChronoUnit.YEARS));
+            onsetLimit = Instant.from(offsetDate.plus(10, ChronoUnit.YEARS));
             final List<Temporal> recurrenceDates = rrule.getRecur().getDates(initialOnset, onsetLimit);
             for (final Temporal recurDate : recurrenceDates) {
                 final OffsetDateTime rruleOnset = OffsetDateTime.from(recurDate).plus(
                         getOffsetFrom().getOffset().getTotalSeconds(), ChronoUnit.SECONDS);
-                if (!rruleOnset.isAfter(OffsetDateTime.from(date)) && rruleOnset.isAfter(onset)) {
+                if (!rruleOnset.isAfter(offsetDate) && rruleOnset.isAfter(onset)) {
                     onset = rruleOnset;
                 }
                 /*
@@ -234,7 +237,7 @@ public abstract class Observance extends Component {
 
         for (int i = 0; i < onsetsMillisec.length; i++) {
             cacheableOnset = cacheableOnsets.get(i);
-            onsetsMillisec[i] = TimeUnit.SECONDS.toMillis(cacheableOnset.getOffset().getTotalSeconds());
+            onsetsMillisec[i] = cacheableOnset.toInstant().toEpochMilli();
             onsetsDates[i] = cacheableOnset;
         }
 
@@ -262,7 +265,7 @@ public abstract class Observance extends Component {
      *
      * @return the DTSTART property or null if not specified
      */
-    public final DtStart getStartDate() {
+    public final DtStart<LocalDateTime> getStartDate() {
         return getProperty(Property.DTSTART);
     }
 
