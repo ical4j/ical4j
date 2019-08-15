@@ -38,6 +38,8 @@ import net.fortuna.ical4j.validate.ValidationException
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.time.Instant
+
 /**
  * @author fortuna
  *
@@ -120,7 +122,7 @@ class ContentBuilderSpec extends Specification {
 			prodid '-//Ben Fortuna//iCal4j 1.0//EN'
 			version '2.0'
 			uid new RandomUidGenerator().generateUid()
-			lastmodified new LastModified(new DateTime())
+			lastmodified new LastModified(Instant.now())
 			url 'https://example.com/calendar.ics'
 			refreshinterval('P1W') {
 				value 'DURATION'

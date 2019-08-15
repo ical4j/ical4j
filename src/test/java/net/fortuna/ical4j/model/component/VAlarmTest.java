@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model.component;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.parameter.FmtType;
 import net.fortuna.ical4j.model.property.*;
 
@@ -41,6 +40,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.Instant;
 
 /**
  * $Id$
@@ -72,7 +72,7 @@ public class VAlarmTest extends ComponentTest {
         TestSuite suite = new TestSuite();
         
         VAlarm alarm = new VAlarm();
-        alarm.getProperties().add(new Trigger(new DateTime(System.currentTimeMillis())));
+        alarm.getProperties().add(new Trigger(Instant.now()));
         
         suite.addTest(new VAlarmTest("testIsCalendarComponent", alarm));
         suite.addTest(new VAlarmTest("testValidationException", alarm));

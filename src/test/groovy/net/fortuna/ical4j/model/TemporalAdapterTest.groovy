@@ -40,9 +40,13 @@ class TemporalAdapterTest extends Specification {
         TemporalAdapter<ZonedDateTime> parsed = TemporalAdapter.parse(dateString, expectedZone)
         parsed.temporal.zone == expectedZone
 
+        and:
+        parsed as String == dateString
+
         where:
         dateString              | expectedType      | expectedZone
         '20150504T120000'       | ZonedDateTime     | ZoneId.systemDefault()
+        '20150504T120000'       | ZonedDateTime     | ZoneId.of("Australia/Melbourne")
     }
 
     def 'verify invalid date string parsing'() {

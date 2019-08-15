@@ -36,9 +36,10 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
 
 import java.io.IOException;
+import java.time.zone.ZoneRules;
+import java.util.Map;
 
 /**
  * $Id$
@@ -61,14 +62,14 @@ public class TzIdTest extends TestCase {
         
         // ensure the calendar is loaded properly..
         assertNotNull(calendar);
-        
-        TimeZoneRegistry registry = builder.getRegistry();
+
+        Map<String, ZoneRules> zoneRulesMap = builder.getRegistry().getZoneRules();
 
         calendar.getComponents().forEach(calendarComponent -> {
             calendarComponent.getProperties().forEach(property -> {
                 TzId tzId = property.getParameter(Parameter.TZID);
                 if (tzId != null) {
-                    assertNotNull(registry.getTimeZone(tzId.getValue()));
+                    assertTrue(zoneRulesMap.containsKey(builder.getRegistry().getZoneId(tzId.getValue()).getId()));
                 }
             });
         });

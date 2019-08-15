@@ -2,6 +2,8 @@ package net.fortuna.ical4j.model
 
 import spock.lang.Specification
 
+import java.time.ZoneId
+
 class PeriodListSpec extends Specification {
 
     def 'test hashcode equality'() {
@@ -12,8 +14,7 @@ class PeriodListSpec extends Specification {
         PeriodList list2 = ['20140803T120100/P1D']
 
         and: 'both lists are initialised with a timezone'
-        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-        TimeZone timezone = registry.getTimeZone("Australia/Melbourne");
+        ZoneId timezone = TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne");
 
         list1.timeZone = timezone
         list2.timeZone = timezone

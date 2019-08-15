@@ -47,6 +47,11 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$
@@ -56,15 +61,15 @@ import java.text.ParseException;
  * Unit tests for <code>Component</code> base class.
  * @author Ben Fortuna
  */
-public class ComponentTest extends TestCase {
+public class ComponentTest<T extends Temporal> extends TestCase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ComponentTest.class);
 
     protected Component component;
     
-    private Period period;
+    private Period<T> period;
     
-    private PeriodList expectedPeriods;
+    private List<Period<T>> expectedPeriods;
     
     /**
      * @param component
@@ -80,7 +85,7 @@ public class ComponentTest extends TestCase {
      * @param period
      * @param expectedPeriods
      */
-    public ComponentTest(String testMethod, Component component, Period period, PeriodList expectedPeriods) {
+    public ComponentTest(String testMethod, Component component, Period<T> period, List<Period<T>> expectedPeriods) {
         this(testMethod, component);
         this.period = period;
         this.expectedPeriods = expectedPeriods;
@@ -136,7 +141,7 @@ public class ComponentTest extends TestCase {
     }
     
     public void testCalculateRecurrenceSet() {
-        PeriodList periods = component.calculateRecurrenceSet(period);
+        List<Period<T>> periods = component.calculateRecurrenceSet(period);
         assertEquals("Wrong number of periods", expectedPeriods.size(), periods.size());
         assertEquals(expectedPeriods, periods);
     }
@@ -152,8 +157,8 @@ public class ComponentTest extends TestCase {
             public void validate(boolean recurse) throws ValidationException {
             }
         };
-        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime(),
-                java.time.Duration.ofDays(1)), new PeriodList()));
+        suite.addTest(new ComponentTest<>("testCalculateRecurrenceSet", component, new Period<>(LocalDate.now(),
+                java.time.Period.ofDays(1)), new ArrayList<>()));
         
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
@@ -164,34 +169,34 @@ public class ComponentTest extends TestCase {
         component.getProperties().add(new DtEnd("20080601T120000Z"));
         Recur recur = new Recur.Builder().frequency(Recur.Frequency.DAILY).count(7).build();
         component.getProperties().add(new RRule(recur));
-        PeriodList expectedPeriods = new PeriodList();
-        expectedPeriods.add(new Period("20080601T100000Z/PT2H"));
-        expectedPeriods.add(new Period("20080602T100000Z/PT2H"));
-        expectedPeriods.add(new Period("20080603T100000Z/PT2H"));
-        expectedPeriods.add(new Period("20080604T100000Z/PT2H"));
-        expectedPeriods.add(new Period("20080605T100000Z/PT2H"));
-        expectedPeriods.add(new Period("20080606T100000Z/PT2H"));
-        expectedPeriods.add(new Period("20080607T100000Z/PT2H"));
-        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"),
-                java.time.Duration.ofDays(7)), expectedPeriods));
+        List<Period<Instant>> expectedPeriods = new ArrayList<>();
+        expectedPeriods.add(Period.parse("20080601T100000Z/PT2H"));
+        expectedPeriods.add(Period.parse("20080602T100000Z/PT2H"));
+        expectedPeriods.add(Period.parse("20080603T100000Z/PT2H"));
+        expectedPeriods.add(Period.parse("20080604T100000Z/PT2H"));
+        expectedPeriods.add(Period.parse("20080605T100000Z/PT2H"));
+        expectedPeriods.add(Period.parse("20080606T100000Z/PT2H"));
+        expectedPeriods.add(Period.parse("20080607T100000Z/PT2H"));
+        suite.addTest(new ComponentTest<>("testCalculateRecurrenceSet", component, new Period(TemporalAdapter.parse("20080601T000000Z").getTemporal(),
+                java.time.Period.ofDays(7)), expectedPeriods));
 
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
             }
         };
         // weekly for 5 instances using DATE format and due date.
-        component.getProperties().add(new DtStart(new Date("20080601")));
-        component.getProperties().add(new Due(new Date("20080602")));
+        component.getProperties().add(new DtStart<>((LocalDate) TemporalAdapter.parse("20080601").getTemporal()));
+        component.getProperties().add(new Due<>((LocalDate) TemporalAdapter.parse("20080602").getTemporal()));
         recur = new Recur.Builder().frequency(Recur.Frequency.WEEKLY).count(5).build();
         component.getProperties().add(new RRule(recur));
-        expectedPeriods = new PeriodList();
-        expectedPeriods.add(new Period("20080601T000000Z/P1D"));
-        expectedPeriods.add(new Period("20080608T000000Z/P1D"));
-        expectedPeriods.add(new Period("20080615T000000Z/P1D"));
-        expectedPeriods.add(new Period("20080622T000000Z/P1D"));
-        expectedPeriods.add(new Period("20080629T000000Z/P1D"));
-        suite.addTest(new ComponentTest("testCalculateRecurrenceSet", component, new Period(new DateTime("20080601T000000Z"),
-                java.time.Period.ofWeeks(6)), expectedPeriods));
+        List<Period<LocalDate>> expectedPeriods2 = new ArrayList<>();
+        expectedPeriods2.add(Period.parse("20080601/P1D"));
+        expectedPeriods2.add(Period.parse("20080608/P1D"));
+        expectedPeriods2.add(Period.parse("20080615/P1D"));
+        expectedPeriods2.add(Period.parse("20080622/P1D"));
+        expectedPeriods2.add(Period.parse("20080629/P1D"));
+        suite.addTest(new ComponentTest<>("testCalculateRecurrenceSet", component, new Period<>((LocalDate) TemporalAdapter.parse("20080601").getTemporal(),
+                java.time.Period.ofWeeks(6)), expectedPeriods2));
         return suite;
     }
 }

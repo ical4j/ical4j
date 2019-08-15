@@ -35,7 +35,10 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -45,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 
 /**
  * $Id$
@@ -88,12 +92,7 @@ public class AttachTest extends TestCase {
 
         //log.info(attach);
 
-        // create event start date..
-        java.util.Calendar cal = java.util.Calendar.getInstance();
-        cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
-        cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
-
-        DtStart start = new DtStart(new Date(cal.getTime().getTime()));
+        DtStart start = new DtStart<>(LocalDate.now().withMonth(12).withDayOfMonth(25));
         start.getParameters().replace(Value.DATE);
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");

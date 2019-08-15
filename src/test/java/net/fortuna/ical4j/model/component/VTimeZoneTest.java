@@ -32,10 +32,7 @@
 package net.fortuna.ical4j.model.component;
 
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentTest;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,22 +59,10 @@ public class VTimeZoneTest extends ComponentTest {
     }
 
     /**
-     *
-     */
-    public void testCreateDefinition() {
-        Calendar calendar = new Calendar();
-        calendar.getComponents().add(tz);
-        log.info(calendar.toString());
-    }
-
-    /**
      * @return
      */
     public static TestSuite suite() {
-        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
         TestSuite suite = new TestSuite();
-
-        suite.addTest(new VTimeZoneTest("testCreateDefinition", registry.getTimeZone("Australia/Melbourne").getVTimeZone()));
 
         VTimeZone tz = new VTimeZone();
         suite.addTest(new VTimeZoneTest("testIsCalendarComponent", tz));

@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.parameter.Value;
 
 import java.text.ParseException;
 
@@ -53,12 +52,11 @@ public class DateListTest extends TestCase {
 
     /**
      * @param value
-     * @param type
      * @param expectedSize
      * @throws ParseException
      */
-    public DateListTest(String value, Value type, int expectedSize) throws ParseException {
-        this(new DateList(value, type), expectedSize);
+    public DateListTest(String value, int expectedSize) {
+        this(DateList.parse(value), expectedSize);
     }
 
     /**
@@ -75,7 +73,7 @@ public class DateListTest extends TestCase {
      * 
      */
     public void testSize() {
-        assertEquals(expectedSize, dateList.size());
+        assertEquals(expectedSize, dateList.getDates().size());
     }
     
     /**
@@ -85,9 +83,9 @@ public class DateListTest extends TestCase {
     public static TestSuite suite() throws ParseException {
         TestSuite suite = new TestSuite();
         suite.addTest(new DateListTest(new DateList(), 0));
-        suite.addTest(new DateListTest(new Date().toString(), Value.DATE, 1));
-        suite.addTest(new DateListTest(new DateTime().toString(), Value.DATE_TIME, 1));
-        suite.addTest(new DateListTest(new DateTime(123).toString() + "," + new DateTime(999).toString(), Value.DATE_TIME, 2));
+        suite.addTest(new DateListTest(new Date().toString(), 1));
+        suite.addTest(new DateListTest(new DateTime().toString(), 1));
+        suite.addTest(new DateListTest(new DateTime(123).toString() + "," + new DateTime(999).toString(), 2));
         return suite;
     }
 }

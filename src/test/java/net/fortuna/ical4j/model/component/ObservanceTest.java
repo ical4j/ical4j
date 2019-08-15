@@ -31,14 +31,15 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.util.Calendar;
-
-import net.fortuna.ical4j.model.Date;
+import junit.framework.TestCase;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
-import junit.framework.TestCase;
+
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.temporal.Temporal;
 
 /**
  * $Id$
@@ -64,15 +65,13 @@ public class ObservanceTest extends TestCase {
     }
 
     /**
-     * Test method for {@link net.fortuna.ical4j.model.component.Observance#getLatestOnset(net.fortuna.ical4j.model.Date)}.
+     * Test method for {@link net.fortuna.ical4j.model.component.Observance#getLatestOnset(Temporal)}.
      */
     public void testGetLatestOnset() {
         for (int i = 10; i > 0; i--) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(2000 + i, i, i);
-            Date onset = observance.getLatestOnset(new Date(cal.getTime()));
+            OffsetDateTime onset = observance.getLatestOnset(
+                    ZonedDateTime.now().withYear(2000 + 1).withMonth(i).withDayOfMonth(i));
             assertNotNull(onset);
         }
     }
-
 }

@@ -34,17 +34,17 @@ class VFreeBusyUserAgentTest extends Specification {
                 dtstart '20090810T000000'
                 dtend '20090810T120000'
                 action 'DISPLAY'
-                attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+                attach 'http://example.com/attachment', parameters: parameters { value 'URI' }
                 attendee 'mailto:org@example.com'
             }
         }
 
         and: 'a freebusy request'
-        VFreeBusy vfreeBusy = builder.vfreebusy {
+        VFreeBusy vfreeBusy = new ContentBuilder().vfreebusy {
             uid '1'
             dtstamp()
-            dtstart '20090801T000000'
-            dtend '20090901T000000'
+            dtstart '20090801T000000Z'
+            dtend '20090901T000000Z'
         }
 
         when: 'the result is generated and published'

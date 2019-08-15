@@ -6,6 +6,8 @@ import net.fortuna.ical4j.model.property.Uid
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.time.Instant
+
 /**
  * Created by fortuna on 21/07/2017.
  */
@@ -39,7 +41,7 @@ class ComponentGroupTest extends Specification {
         rev2 = builder.vevent {
             uid(uid)
             sequence('1')
-            dtstamp(new DtStamp(new DateTime()))
+            dtstamp(new DtStamp(Instant.now()))
             dtstart('20101113', parameters: parameters() { value('DATE') })
             dtend('20101114', parameters: parameters() { value('DATE') })
             rrule('FREQ=WEEKLY;WKST=MO;INTERVAL=3;BYDAY=MO,TU,SA')
@@ -73,7 +75,7 @@ class ComponentGroupTest extends Specification {
         def components = new ComponentList<VEvent>([event, rev1])
 
         when: 'recurrence instances are calculated'
-        Period period = ['20101113T120000/P3W']
+        Period period = Period.parse('20101113T120000/P3W')
         def recurrences = new ComponentGroup(components, uid).calculateRecurrenceSet(period)
 
         then: 'the expected number of recurrences are returned'

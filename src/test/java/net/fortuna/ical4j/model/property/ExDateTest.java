@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -82,7 +83,7 @@ public class ExDateTest extends TestCase {
         Component event = calendar.getComponent(Component.VEVENT);
         List<ExDate> exdates = event.getProperties(Property.EXDATE);
         for (ExDate exDate : exdates) {            
-            assertNotNull("This EXDATE should have a timezone", exDate.getDates().getTimeZone());
+            assertNotNull("This EXDATE should have a timezone", exDate.getParameter(Parameter.TZID));
         }
     }
     
@@ -107,12 +108,10 @@ public class ExDateTest extends TestCase {
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
 
         Component event = calendar.getComponent(Component.VEVENT);
-        List<ExDate> exdates = event.getProperties(Property.EXDATE);
-        for (ExDate exDate : exdates) {            
-            for (Date dateEx : exDate.getDates()) {
-                DateTime dateTimeEx = (DateTime) dateEx;
-                assertNotNull(dateTimeEx);
-                assertTrue("This exception date should be in UTC", dateTimeEx.isUtc());
+        List<ExDate<Instant>> exdates = event.getProperties(Property.EXDATE);
+        for (ExDate<Instant> exDate : exdates) {
+            for (Instant dateEx : exDate.getDates().getDates()) {
+                assertNotNull(dateEx);
             }
         }
     }

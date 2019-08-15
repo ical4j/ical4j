@@ -33,17 +33,19 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.ComponentTest;
 import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.temporal.Temporal;
+import java.util.List;
+
 /**
  * @author Ben
  */
-public class CalendarComponentTest extends ComponentTest {
+public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> {
 
     private static final Logger LOG = LoggerFactory.getLogger(CalendarComponentTest.class);
 
@@ -65,7 +67,7 @@ public class CalendarComponentTest extends ComponentTest {
      * @param expectedPeriods
      */
     public CalendarComponentTest(String testMethod, CalendarComponent component,
-                                 Period period, PeriodList expectedPeriods) {
+                                 Period<T> period, List<Period<T>> expectedPeriods) {
         super(testMethod, component, period, expectedPeriods);
         this.component = component;
     }

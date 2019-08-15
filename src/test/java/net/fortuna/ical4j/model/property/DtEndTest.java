@@ -32,8 +32,6 @@
 package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -43,6 +41,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.ZonedDateTime;
 
 /**
  * $Id$
@@ -75,7 +74,7 @@ public class DtEndTest extends PropertyTest {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
         
         TestSuite suite = new TestSuite();
-        DtEnd dtEnd = new DtEnd(new DateTime());
+        DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(ZonedDateTime.now());
         dtEnd.getParameters().replace(Value.DATE_TIME);
 
         // test validation..
@@ -83,26 +82,25 @@ public class DtEndTest extends PropertyTest {
         suite.addTest(new DtEndTest("testValidation", dtEnd));
 
         //
-        dtEnd = (DtEnd) dtEnd.copy();
+        dtEnd = (DtEnd<ZonedDateTime>) dtEnd.copy();
         dtEnd.getParameters().replace(Value.DATE);
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidationException", dtEnd));
 
         //
-        dtEnd = (DtEnd) dtEnd.copy();
-        dtEnd.setUtc(true);
+        dtEnd = (DtEnd<ZonedDateTime>) dtEnd.copy();
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidation", dtEnd));
 
         //
-        dtEnd = (DtEnd) dtEnd.copy();
+        dtEnd = (DtEnd<ZonedDateTime>) dtEnd.copy();
         dtEnd.getParameters().replace(Value.DATE);
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidation", dtEnd));
 
         //
-        dtEnd = (DtEnd) dtEnd.copy();
-        dtEnd.setDate(new Date());
+        dtEnd = (DtEnd<ZonedDateTime>) dtEnd.copy();
+        dtEnd.setDate(ZonedDateTime.now());
         dtEnd.getParameters().remove(Value.DATE);
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidationException", dtEnd));

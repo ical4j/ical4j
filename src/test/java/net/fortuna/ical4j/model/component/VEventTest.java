@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model.component;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -49,9 +50,13 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
+import java.time.*;
+import java.time.temporal.Temporal;
 import java.util.Calendar;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.WeekDay.*;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * $Id: VEventTest.java [28/09/2004]
@@ -60,15 +65,15 @@ import static net.fortuna.ical4j.model.WeekDay.*;
  *
  * @author Ben Fortuna
  */
-public class VEventTest extends CalendarComponentTest {
+public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
     private static Logger log = LoggerFactory.getLogger(VEventTest.class);
 
     private VEvent event;
 
-    private Period period;
+    private Period<T> period;
 
-    private Date date;
+    private T date;
 
     private TzId tzParam;
 
@@ -93,7 +98,7 @@ public class VEventTest extends CalendarComponentTest {
      * @param component
      * @param period
      */
-    public VEventTest(String testMethod, VEvent component, Period period) {
+    public VEventTest(String testMethod, VEvent component, Period<T> period) {
         this(testMethod, component);
         this.period = period;
     }
@@ -103,7 +108,7 @@ public class VEventTest extends CalendarComponentTest {
      * @param component
      * @param date
      */
-    public VEventTest(String testMethod, VEvent component, Date date) {
+    public VEventTest(String testMethod, VEvent component, T date) {
         this(testMethod, component);
         this.date = date;
     }
@@ -116,11 +121,10 @@ public class VEventTest extends CalendarComponentTest {
         // relax validation to avoid UID requirement..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
 
-        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-        // create timezone property..
-        VTimeZone tz = registry.getTimeZone("Australia/Melbourne").getVTimeZone();
+        TimeZoneRegistryFactory timeZoneRegistryFactory = TimeZoneRegistryFactory.getInstance();
+        TimeZoneRegistry registry = timeZoneRegistryFactory.createRegistry();
         // create tzid parameter..
-        tzParam = new TzId(tz.getProperty(Property.TZID).getValue());
+        tzParam = new TzId(registry.getTimeZone("Australia/Melbourne").getID());
     }
 
     /* (non-Javadoc)
@@ -130,13 +134,6 @@ public class VEventTest extends CalendarComponentTest {
         // relax validation to avoid UID requirement..
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
         super.tearDown();
-    }
-
-    /**
-     * @return
-     */
-    private static Calendar getCalendarInstance() {
-        return Calendar.getInstance(java.util.TimeZone.getTimeZone(TimeZones.GMT_ID));
     }
 
     /**
@@ -163,11 +160,9 @@ public class VEventTest extends CalendarComponentTest {
      */
     public final void testChristmas() {
         // create event start date..
-        java.util.Calendar calendar = getCalendarInstance();
-        calendar.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
-        calendar.set(java.util.Calendar.DAY_OF_MONTH, 25);
+        LocalDate christmasDay = LocalDate.now().withMonth(12).withDayOfMonth(25);
 
-        DtStart start = new DtStart(new Date(calendar.getTime()));
+        DtStart<LocalDate> start = new DtStart<>(christmasDay);
         start.getParameters().add(tzParam);
         start.getParameters().add(Value.DATE);
 
@@ -184,30 +179,19 @@ public class VEventTest extends CalendarComponentTest {
      * Test creating an event with an associated timezone.
      */
     public final void testMelbourneCup() {
-        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-        TimeZone timezone = registry.getTimeZone("Australia/Melbourne");
+        ZoneId timezone = TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne");
 
-        java.util.Calendar cal = java.util.Calendar.getInstance(timezone);
-        cal.set(java.util.Calendar.YEAR, 2005);
-        cal.set(java.util.Calendar.MONTH, java.util.Calendar.NOVEMBER);
-        cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
-        cal.set(java.util.Calendar.HOUR_OF_DAY, 15);
-        cal.clear(java.util.Calendar.MINUTE);
-        cal.clear(java.util.Calendar.SECOND);
-
-        DateTime dt = new DateTime(cal.getTime());
-        dt.setTimeZone(timezone);
+        ZonedDateTime dt = ZonedDateTime.now(timezone).withYear(2005).withMonth(11).withDayOfMonth(1)
+                .withHour(15).withMinute(0).withSecond(0);
         VEvent melbourneCup = new VEvent(dt, "Melbourne Cup");
 
         log.info(melbourneCup.toString());
     }
 
     public final void test2() {
-        java.util.Calendar cal = getCalendarInstance();
-        cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
-        cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
+        LocalDate christmasDay = LocalDate.now().withMonth(12).withDayOfMonth(25);
 
-        VEvent christmas = new VEvent(new Date(cal.getTime()), "Christmas Day");
+        VEvent christmas = new VEvent(christmasDay, "Christmas Day");
 
         // initialise as an all-day event..
         christmas.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
@@ -219,14 +203,10 @@ public class VEventTest extends CalendarComponentTest {
     }
 
     public final void test3() {
-        java.util.Calendar cal = getCalendarInstance();
         // tomorrow..
-        cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
-        cal.set(java.util.Calendar.HOUR_OF_DAY, 9);
-        cal.set(java.util.Calendar.MINUTE, 30);
+        ZonedDateTime tomorrow = ZonedDateTime.now().withDayOfMonth(1).withHour(9).withMinute(30);
 
-        VEvent meeting = new VEvent(new DateTime(cal.getTime().getTime()),
-                java.time.Duration.ofHours(1), "Progress Meeting");
+        VEvent meeting = new VEvent(tomorrow, java.time.Duration.ofHours(1), "Progress Meeting");
 
         // add timezone information..
         meeting.getProperty(Property.DTSTART).getParameters().add(tzParam);
@@ -253,29 +233,22 @@ public class VEventTest extends CalendarComponentTest {
 
         // Test Start 04/01/2005, End One month later.
         // Query Calendar Start and End Dates.
-        Calendar queryStartDate = getCalendarInstance();
-        queryStartDate.set(2005, Calendar.APRIL, 1, 14, 47, 0);
-        queryStartDate.set(Calendar.MILLISECOND, 0);
-        DateTime queryStart = new DateTime(queryStartDate.getTime().getTime());
+        ZonedDateTime queryStart = ZonedDateTime.now().withYear(2005).withMonth(4).withDayOfMonth(1)
+                .withHour(14).withMinute(47).withSecond(0).withNano(0);
 
-        Calendar queryEndDate = getCalendarInstance();
-        queryEndDate.set(2005, Calendar.MAY, 1, 07, 15, 0);
-        queryEndDate.set(Calendar.MILLISECOND, 0);
-        DateTime queryEnd = new DateTime(queryEndDate.getTime().getTime());
+        ZonedDateTime queryEnd = ZonedDateTime.now().withYear(2005).withMonth(5).withDayOfMonth(1)
+                .withHour(7).withMinute(15).withSecond(0).withNano(0);
 
-        Calendar week1EndDate = getCalendarInstance();
-        week1EndDate.set(2005, Calendar.APRIL, 8, 11, 15, 0);
-        week1EndDate.set(Calendar.MILLISECOND, 0);
+        ZonedDateTime week1EndDate = ZonedDateTime.now().withYear(2005).withMonth(4).withDayOfMonth(8)
+                .withHour(11).withMinute(15).withSecond(0).withNano(0);
 
-        Calendar week4StartDate = getCalendarInstance();
-        week4StartDate.set(2005, Calendar.APRIL, 24, 14, 47, 0);
-        week4StartDate.set(Calendar.MILLISECOND, 0);
-//        DateTime week4Start = new DateTime(week4StartDate.getTime().getTime());
+        ZonedDateTime week4StartDate = ZonedDateTime.now().withYear(2005).withMonth(4).withDayOfMonth(24)
+                .withHour(14).withMinute(47).withSecond(0).withNano(0);
 
         // This range is monday to friday every three weeks, starting from
         // March 7th 2005, which means for our query dates we need
         // April 18th through to the 22nd.
-        PeriodList weeklyPeriods = event.getConsumedTime(queryStart, queryEnd);
+        List<Period<ZonedDateTime>> weeklyPeriods = event.getConsumedTime(queryStart, queryEnd);
 //        PeriodList dailyPeriods = dailyWeekdayEvents.getConsumedTime(queryStart, queryEnd);
 //                                                      week1EndDate.getTime());
 //        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
@@ -312,12 +285,10 @@ public class VEventTest extends CalendarComponentTest {
 
         // Test Starts 04/03/2005, Ends One week later.
         // Query Calendar Start and End Dates.
-        Calendar queryStartDate = getCalendarInstance();
-        queryStartDate.set(2005, Calendar.APRIL, 3, 05, 12, 0);
-        queryStartDate.set(Calendar.MILLISECOND, 0);
-        Calendar queryEndDate = getCalendarInstance();
-        queryEndDate.set(2005, Calendar.APRIL, 10, 21, 55, 0);
-        queryEndDate.set(Calendar.MILLISECOND, 0);
+        ZonedDateTime queryStartDate = ZonedDateTime.of(2005, 4, 3,
+                5, 12, 0, 0, ZoneId.systemDefault());
+        ZonedDateTime queryEndDate = ZonedDateTime.of(2005, 4, 10,
+                21, 55, 0, 0, ZoneId.systemDefault());
 
         // This range is Monday to Friday every day (which has a filtering
         // effect), starting from March 7th 2005. Our query dates are
@@ -325,16 +296,13 @@ public class VEventTest extends CalendarComponentTest {
 //        PeriodList weeklyPeriods =
 //                event.getConsumedTime(new DateTime(queryStartDate.getTime()),
 //                        new DateTime(queryEndDate.getTime()));
-        PeriodList dailyPeriods =
-                event.getConsumedTime(new DateTime(queryStartDate.getTime()),
-                        new DateTime(queryEndDate.getTime()));
-        Calendar expectedCal = getCalendarInstance();
-        expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
-        expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedStartOfFirstRange = new DateTime(expectedCal.getTime());
-        expectedCal.set(2005, Calendar.APRIL, 4, 17, 0, 0);
-        expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedEndOfFirstRange = new DateTime(expectedCal.getTime());
+        List<Period<ZonedDateTime>> dailyPeriods = event.getConsumedTime(queryStartDate, queryEndDate);
+
+        ZonedDateTime expectedStartOfFirstRange = ZonedDateTime.of(2005, 4, 4,
+                9, 0, 0, 0, ZoneId.systemDefault());
+        ZonedDateTime expectedEndOfFirstRange = ZonedDateTime.of(2005, 4, 4,
+                17, 0, 0, 0, ZoneId.systemDefault());
+
         assertNotNull(dailyPeriods);
         assertTrue(dailyPeriods.size() > 0);
         Period firstPeriod = (Period) dailyPeriods.toArray()[0];
@@ -363,29 +331,23 @@ public class VEventTest extends CalendarComponentTest {
 
         // Test Starts 04/03/2005, Ends two weeks later.
         // Query Calendar Start and End Dates.
-        Calendar queryStartDate = getCalendarInstance();
-        queryStartDate.set(2005, Calendar.APRIL, 3, 05, 12, 0);
-        queryStartDate.set(Calendar.MILLISECOND, 0);
-        Calendar queryEndDate = getCalendarInstance();
-        queryEndDate.set(2005, Calendar.APRIL, 17, 21, 55, 0);
-        queryEndDate.set(Calendar.MILLISECOND, 0);
+        ZonedDateTime queryStartDate = ZonedDateTime.of(2005, 4, 3,
+                5, 12, 0, 0, ZoneId.systemDefault());
+        ZonedDateTime queryEndDate = ZonedDateTime.of(2005, 4, 17,
+                21, 55, 0, 0, ZoneId.systemDefault());
 
         // This range is Monday to Friday every month (which has a multiplying
         // effect), starting from March 7th 2005. Our query dates are
         // April 3rd through to the 17th.
-        PeriodList monthlyPeriods =
-                event.getConsumedTime(new DateTime(queryStartDate.getTime()),
-                        new DateTime(queryEndDate.getTime()));
+        List<Period<ZonedDateTime>> monthlyPeriods = event.getConsumedTime(queryStartDate, queryEndDate);
 //        PeriodList dailyPeriods =
 //                dailyWeekdayEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
 //                        new DateTime(queryEndDate.getTime()));
-        Calendar expectedCal = getCalendarInstance();
-        expectedCal.set(2005, Calendar.APRIL, 4, 9, 0, 0);
-        expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedStartOfFirstRange = new DateTime(expectedCal.getTime());
-        expectedCal.set(2005, Calendar.APRIL, 4, 17, 0, 0);
-        expectedCal.set(Calendar.MILLISECOND, 0);
-        Date expectedEndOfFirstRange = new DateTime(expectedCal.getTime());
+
+        ZonedDateTime expectedStartOfFirstRange = ZonedDateTime.of(2005, 4, 4,
+                9, 0, 0, 0, ZoneId.systemDefault());
+        ZonedDateTime expectedEndOfFirstRange = ZonedDateTime.of(2005, 4, 4,
+                17, 0, 0, 0, ZoneId.systemDefault());
         assertNotNull(monthlyPeriods);
         assertTrue(monthlyPeriods.size() > 0);
         Period firstPeriod = (Period) monthlyPeriods.toArray()[0];
@@ -400,14 +362,13 @@ public class VEventTest extends CalendarComponentTest {
 
         net.fortuna.ical4j.model.Calendar calendar = loadCalendar(resource);
 
-        Date start = new Date();
-        Calendar endCal = getCalendarInstance();
-        endCal.setTime(start);
-        endCal.add(Calendar.WEEK_OF_YEAR, 4);
-//        Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
+        LocalDate start = LocalDate.now();
+        LocalDate end = start.plusWeeks(4);
+
+        //Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
         calendar.getComponents().forEach(calendarComponent -> {
             if (calendarComponent instanceof VEvent) {
-                PeriodList consumed = ((VEvent) calendarComponent).getConsumedTime(start, new Date(endCal.getTime().getTime()));
+                List<Period<LocalDate>> consumed = ((VEvent) calendarComponent).getConsumedTime(start, end);
 
                 log.debug("Event [" + calendarComponent + "]");
                 log.debug("Consumed time [" + consumed + "]");
@@ -422,12 +383,10 @@ public class VEventTest extends CalendarComponentTest {
 
         VEvent vev = (VEvent) calendar.getComponent(Component.VEVENT);
 
-        Date start = vev.getStartDate().getDate();
-        Calendar cal = getCalendarInstance();
-        cal.add(Calendar.YEAR, 1);
-        Date latest = new Date(cal.getTime());
+        LocalDate start = (LocalDate) vev.getStartDate().getDate();
+        LocalDate latest = LocalDate.now().plusYears(1);
 
-        PeriodList pl = vev.getConsumedTime(start, latest);
+        List<Period<LocalDate>> pl = vev.getConsumedTime(start, latest);
         assertTrue(!pl.isEmpty());
     }
 
@@ -439,12 +398,9 @@ public class VEventTest extends CalendarComponentTest {
             .interval(1).dayList(new WeekDayList(SU)).build();
         log.info(recur.toString());
 
-        Calendar cal = getCalendarInstance();
-        cal.set(Calendar.DAY_OF_MONTH, 8);
-        Date start = new DateTime(cal.getTime());
+        ZonedDateTime start = ZonedDateTime.now().withDayOfMonth(8);
 //        cal.add(Calendar.DAY_OF_WEEK_IN_MONTH, 10);
-        cal.add(Calendar.HOUR_OF_DAY, 1);
-        Date end = new DateTime(cal.getTime());
+        ZonedDateTime end = start.plusHours(1);
 //        log.info(recur.getDates(start, end, Value.DATE_TIME));
 
         RRule rrule = new RRule(recur);
@@ -452,10 +408,8 @@ public class VEventTest extends CalendarComponentTest {
         event.getProperties().add(rrule);
         log.info(event.toString());
 
-        Calendar rangeCal = getCalendarInstance();
-        Date rangeStart = new DateTime(rangeCal.getTime());
-        rangeCal.add(Calendar.WEEK_OF_YEAR, 4);
-        Date rangeEnd = new DateTime(rangeCal.getTime());
+        ZonedDateTime rangeStart = ZonedDateTime.now();
+        ZonedDateTime rangeEnd = rangeStart.plusWeeks(4);
 
         log.info(event.getConsumedTime(rangeStart, rangeEnd).toString());
     }
@@ -465,15 +419,13 @@ public class VEventTest extends CalendarComponentTest {
      * from a given start date and duration.
      */
     public final void testEventEndDate() {
-        Calendar cal = getCalendarInstance();
-        Date startDate = new Date(cal.getTime());
+        LocalDate startDate = LocalDate.now();
         log.info("Start date: " + startDate);
         VEvent event = new VEvent(startDate,
                 java.time.Duration.ofDays(3), "3 day event");
-        Date endDate = event.getEndDate().getDate();
+        Temporal endDate = event.getEndDate().getDate();
         log.info("End date: " + endDate);
-        cal.add(Calendar.DAY_OF_YEAR, 3);
-        assertEquals(new Date(cal.getTime()), endDate);
+        assertEquals(startDate.plusDays(3), endDate);
     }
 
     /**
@@ -482,11 +434,11 @@ public class VEventTest extends CalendarComponentTest {
      */
     public final void testEventEndDateWithTimeZone() throws ParseException {
         TimeZone timezone = new TimeZoneRegistryImpl().getTimeZone("Asia/Seoul");
-        DateTime startDateTime = new DateTime("20181003T130000", timezone);
+        TemporalAdapter startDateTime = TemporalAdapter.parse("20181003T130000", timezone.toZoneId());
         log.info("Start date: " + startDateTime);
-        VEvent event = new VEvent(startDateTime,
+        VEvent event = new VEvent(startDateTime.getTemporal(),
                 java.time.Duration.ofHours(1), "1 hour event");
-        assertEquals(new DateTime("20181003T140000", timezone), event.getEndDate().getDate());
+        assertEquals(startDateTime.getTemporal(), event.getEndDate().getDate());
     }
 
     /**
@@ -496,7 +448,7 @@ public class VEventTest extends CalendarComponentTest {
      */
     public void testGetConsumedTimeWithExDate() throws ParseException {
 
-        VEvent event1 = new VEvent(new DateTime("20050103T080000"),
+        VEvent event1 = new VEvent(TemporalAdapter.parse("20050103T080000").getTemporal(),
                 java.time.Duration.ofMinutes(15), "Event 1");
 
         Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
@@ -508,9 +460,9 @@ public class VEventTest extends CalendarComponentTest {
         ExDate exDate = new ExDate(parameterList, "20050106");
         event1.getProperties().add(exDate);
 
-        Date start = new Date("20050106");
-        Date end = new Date("20050107");
-        PeriodList list = event1.getConsumedTime(start, end);
+        TemporalAdapter start = TemporalAdapter.parse("20050106");
+        TemporalAdapter end = TemporalAdapter.parse("20050107");
+        List<Period<Temporal>> list = event1.getConsumedTime(start.getTemporal(), end.getTemporal());
         assertTrue(list.isEmpty());
     }
 
@@ -525,13 +477,10 @@ public class VEventTest extends CalendarComponentTest {
 
         VEvent event = (VEvent) calendar.getComponent(Component.VEVENT);
 
-        Calendar cal = Calendar.getInstance();
-        cal.set(1997, 8, 2);
-        Date start = new Date(cal.getTime());
-        cal.set(1997, 8, 4);
-        Date end = new Date(cal.getTime());
+        LocalDate start = LocalDate.now().withYear(1997).withMonth(8).withDayOfMonth(2);
+        LocalDate end = start.withDayOfMonth(4);
 
-        PeriodList periods = event.getConsumedTime(start, end);
+        List<Period<LocalDate>> periods = event.getConsumedTime(start, end);
         assertTrue(periods.isEmpty());
     }
 
@@ -539,32 +488,31 @@ public class VEventTest extends CalendarComponentTest {
      * Test equality of events with different alarm sub-components.
      */
     public void testEquals() {
-        Date date = new Date();
         String summary = "test event";
-        PropertyList props = new PropertyList();
-        props.add(new DtStart(date));
+        PropertyList<Property> props = new PropertyList<>();
+        props.add(new DtStart<>(Instant.now()));
         props.add(new Summary(summary));
 
         VEvent e1 = new VEvent(props);
         VEvent e2 = new VEvent(props);
 
-        assertTrue(e1.equals(e2));
+        assertEquals(e1, e2);
 
         e2.getAlarms().add(new VAlarm());
 
-        assertFalse(e1.equals(e2));
+        assertNotEquals(e1, e2);
     }
 
     /**
      *
      */
     public void testCalculateRecurrenceSetNotEmpty() {
-        PeriodList recurrenceSet = event.calculateRecurrenceSet(period);
+        List<Period<T>> recurrenceSet = event.calculateRecurrenceSet(period);
         assertTrue(!recurrenceSet.isEmpty());
     }
 
     /**
-     * Unit tests for {@link VEvent#getOccurrence(Date)}.
+     * Unit tests for {@link VEvent#getOccurrence(Temporal)}.
      */
     public void testGetOccurrence() throws IOException, ParseException, URISyntaxException {
         VEvent occurrence = event.getOccurrence(date);
@@ -583,47 +531,45 @@ public class VEventTest extends CalendarComponentTest {
     public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException, ParserException {
         UidGenerator uidGenerator = new RandomUidGenerator();
 
-        Calendar weekday9AM = getCalendarInstance();
-        weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
-        weekday9AM.set(Calendar.MILLISECOND, 0);
+        ZonedDateTime weekday9AM = ZonedDateTime.now().withYear(2005).withMonth(3).withDayOfMonth(7)
+                .withHour(9).withMinute(0).withSecond(0).withNano(0);
 
-        Calendar weekday5PM = getCalendarInstance();
-        weekday5PM.set(2005, Calendar.MARCH, 7, 17, 0, 0);
-        weekday5PM.set(Calendar.MILLISECOND, 0);
+        ZonedDateTime weekday5PM = ZonedDateTime.now().withYear(2005).withMonth(3).withDayOfMonth(7)
+                .withHour(17).withMinute(0).withSecond(0).withNano(0);
 
         // Do the recurrence until December 31st.
-        Calendar untilCal = getCalendarInstance();
-        untilCal.set(2005, Calendar.DECEMBER, 31);
-        untilCal.set(Calendar.MILLISECOND, 0);
-        Date until = new Date(untilCal.getTime().getTime());
+        LocalDate until = LocalDate.now().withYear(2005).withMonth(12).withDayOfMonth(31);
 
         // 9:00AM to 5:00PM Rule using weekly
         Recur recurWeekly = new Recur.Builder().frequency(Frequency.WEEKLY).until(until)
             .dayList(new WeekDayList(MO, TU, WE, TH, FR))
-            .interval(1).weekStartDay(MO.getDay()).build();
+            .interval(1).weekStartDay(MO).build();
         RRule rruleWeekly = new RRule(recurWeekly);
 
         // 9:00AM to 5:00PM Rule using daily frequency
         Recur recurDaily = new Recur.Builder().frequency(Frequency.DAILY).until(until)
             .dayList(new WeekDayList(MO, TU, WE, TH, FR))
-            .interval(1).weekStartDay(MO.getDay()).build();
+            .interval(1).weekStartDay(MO).build();
         RRule rruleDaily = new RRule(recurDaily);
 
         // 9:00AM to 5:00PM Rule using monthly frequency
         Recur recurMonthly = new Recur.Builder().frequency(Frequency.MONTHLY).until(until)
             .dayList(new WeekDayList(MO, TU, WE, TH, FR))
-            .interval(1).weekStartDay(MO.getDay()).build();
+            .interval(1).weekStartDay(MO).build();
         RRule rruleMonthly = new RRule(recurMonthly);
 
         Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
 
+        ParameterList tzParams = new ParameterList();
+        tzParams.add(new TzId("Australia/Melbourne"));
+
         VEvent weekdayNineToFiveEvents = new VEvent();
         weekdayNineToFiveEvents.getProperties().add(rruleWeekly);
         weekdayNineToFiveEvents.getProperties().add(summary);
-        DtStart dtStart = new DtStart(new DateTime(weekday9AM.getTime().getTime()), true);
+        DtStart dtStart = new DtStart<>(tzParams, weekday9AM);
 //        dtStart.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.getProperties().add(dtStart);
-        DtEnd dtEnd = new DtEnd(new DateTime(weekday5PM.getTime().getTime()), true);
+        DtEnd dtEnd = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.getProperties().add(dtEnd);
         weekdayNineToFiveEvents.getProperties().add(uidGenerator.generateUid());
@@ -635,10 +581,10 @@ public class VEventTest extends CalendarComponentTest {
         VEvent dailyWeekdayEvents = new VEvent();
         dailyWeekdayEvents.getProperties().add(rruleDaily);
         dailyWeekdayEvents.getProperties().add(summary);
-        DtStart dtStart2 = new DtStart(new DateTime(weekday9AM.getTime().getTime()), true);
+        DtStart dtStart2 = new DtStart<>(tzParams, weekday9AM);
 //        dtStart2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.getProperties().add(dtStart2);
-        DtEnd dtEnd2 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()), true);
+        DtEnd dtEnd2 = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.getProperties().add(dtEnd2);
         dailyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
@@ -650,10 +596,10 @@ public class VEventTest extends CalendarComponentTest {
         VEvent monthlyWeekdayEvents = new VEvent();
         monthlyWeekdayEvents.getProperties().add(rruleMonthly);
         monthlyWeekdayEvents.getProperties().add(summary);
-        DtStart dtStart3 = new DtStart(new DateTime(weekday9AM.getTime().getTime()), true);
+        DtStart dtStart3 = new DtStart<>(tzParams, weekday9AM);
 //        dtStart3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.getProperties().add(dtStart3);
-        DtEnd dtEnd3 = new DtEnd(new DateTime(weekday5PM.getTime().getTime()), true);
+        DtEnd dtEnd3 = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.getProperties().add(dtEnd3);
         monthlyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
@@ -666,13 +612,14 @@ public class VEventTest extends CalendarComponentTest {
         TestSuite suite = new TestSuite();
 
         //testCalculateRecurrenceSet..
-        DateTime periodStart = new DateTime("20050101T000000");
-        DateTime periodEnd = new DateTime("20051231T235959");
-        Period period = new Period(periodStart, periodEnd);
-        suite.addTest(new VEventTest("testCalculateRecurrenceSetNotEmpty", weekdayNineToFiveEvents, period));
+        LocalDateTime periodStart = (LocalDateTime) TemporalAdapter.parse("20050101T000000").getTemporal();
+        LocalDateTime periodEnd = (LocalDateTime) TemporalAdapter.parse("20051231T235959").getTemporal();
+        Period<LocalDateTime> period = new Period<>(periodStart, periodEnd);
+        suite.addTest(new VEventTest<>("testCalculateRecurrenceSetNotEmpty", weekdayNineToFiveEvents, period));
 
         //testGetOccurrence..
-        suite.addTest(new VEventTest("testGetOccurrence", weekdayNineToFiveEvents, weekdayNineToFiveEvents.getStartDate().getDate()));
+        suite.addTest(new VEventTest<>("testGetOccurrence", weekdayNineToFiveEvents,
+                weekdayNineToFiveEvents.getStartDate().getDate()));
 
         //testGetConsumedTime..
         suite.addTest(new VEventTest("testGetConsumedTime", weekdayNineToFiveEvents));
@@ -683,9 +630,11 @@ public class VEventTest extends CalendarComponentTest {
         UidGenerator ug = new RandomUidGenerator();
         Uid uid = ug.generateUid();
 
-        DtStart start = new DtStart(new Date());
+        ParameterList startParams = new ParameterList();
+        tzParams.add(new TzId(ZoneId.systemDefault().getId()));
+        DtStart<ZonedDateTime> start = new DtStart<>(startParams, ZonedDateTime.now());
 
-        DtEnd end = new DtEnd(new Date());
+        DtEnd<ZonedDateTime> end = new DtEnd<>(ZonedDateTime.now());
         VEvent event = new VEvent();
 
         event.getProperties().add(uid);
@@ -695,7 +644,7 @@ public class VEventTest extends CalendarComponentTest {
 
         event = (VEvent) event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
-        start = new DtStart(new DateTime());
+        start = new DtStart<>(ZonedDateTime.now());
         start.getParameters().replace(Value.DATE_TIME);
         event.getProperties().remove(event.getProperty(Property.DTSTART));
         event.getProperties().add(start);
@@ -703,7 +652,7 @@ public class VEventTest extends CalendarComponentTest {
 
         // test 1..
         event = (VEvent) event.copy();
-        start = (DtStart) event.getProperty(Property.DTSTART);
+        start = event.getProperty(Property.DTSTART);
         start.getParameters().replace(Value.DATE);
         suite.addTest(new VEventTest("testValidationException", event));
 
@@ -716,9 +665,9 @@ public class VEventTest extends CalendarComponentTest {
 
         // test 2..
         event = (VEvent) event.copy();
-        start = (DtStart) event.getProperty(Property.DTSTART);
+        start = event.getProperty(Property.DTSTART);
         start.getParameters().replace(Value.DATE_TIME);
-        end = (DtEnd) event.getProperty(Property.DTEND);
+        end = event.getProperty(Property.DTEND);
         end.getParameters().replace(Value.DATE);
         suite.addTest(new VEventTest("testValidationException", event));
 
@@ -752,9 +701,9 @@ public class VEventTest extends CalendarComponentTest {
         // test iTIP validation..
 //        File[] testFiles = new File("etc/samples/valid").listFiles((FileFilter) new NotFileFilter(DirectoryFileFilter.INSTANCE));
         URL[] testFiles = new URL[]{VEventTest.class.getResource("/samples/valid/calconnect.ics"), VEventTest.class.getResource("/samples/valid/calconnect10.ics")};
-        for (int i = 0; i < testFiles.length; i++) {
-            log.info("Sample [" + testFiles[i] + "]");
-            net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFiles[i]);
+        for (URL testFile : testFiles) {
+            log.info("Sample [" + testFile + "]");
+            net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFile);
             if (Method.PUBLISH.equals(calendar.getProperty(Property.METHOD))) {
                 calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
                     suite.addTest(new VEventTest("testPublishValidation", (VEvent) calendarComponent));

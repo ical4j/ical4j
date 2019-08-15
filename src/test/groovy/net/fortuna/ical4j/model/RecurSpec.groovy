@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.model.parameter.Value
+
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -53,64 +53,54 @@ class RecurSpec extends Specification {
     def 'verify recurrence rule: #rule'() {
         setup: 'parse recurrence rule'
         def recur = new Recur(rule)
-        def startDate
-        def endDate
+        def startDate = TemporalAdapter.parse(start).temporal
+        def endDate = TemporalAdapter.parse(end).temporal
         def expectedDates = []
-        if (valueType == Value.DATE) {
-            startDate = new Date(start)
-            endDate = new Date(end)
-            expected.each {
-                expectedDates << new Date(it)
-            }
-        } else {
-            startDate = new DateTime(start)
-            endDate = new DateTime(end)
-            expected.each {
-                expectedDates << new DateTime(it)
-            }
+        expected.each {
+            expectedDates << TemporalAdapter.parse(it).temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, valueType) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         where:
-        rule					| valueType | start			| end			| expected
-        'FREQ=WEEKLY;BYDAY=MO'	| Value.DATE_TIME	| '20110101T000000'	| '20110201T000000'	| ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000']
-        'FREQ=DAILY;INTERVAL=14;WKST=MO;BYMONTH=10,12'	| Value.DATE | '20181011'	| '20181231'	| ['20181011', '20181025', '20181206', '20181220']
-        'FREQ=WEEKLY;BYDAY=MO,TH,FR,SA,SU;BYHOUR=11;BYMINUTE=5'	| Value.DATE_TIME	| '20160325T110500'	| '20160329T121000'	| ['20160325T110500', '20160326T110500', '20160327T110500', '20160328T110500']
-        'FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;WKST=MO;UNTIL=20170127T003000Z'	| Value.DATE_TIME	| '20160727T0030000Z'	| '20170127T003000Z'	| ['20160729T003000Z',
-                                                                                                                                                     '20160805T003000Z',
-                                                                                                                                                     '20160812T003000Z',
-                                                                                                                                                     '20160819T003000Z',
-                                                                                                                                                     '20160826T003000Z',
-                                                                                                                                                     '20160902T003000Z',
-                                                                                                                                                     '20160909T003000Z',
-                                                                                                                                                     '20160916T003000Z',
-                                                                                                                                                     '20160923T003000Z',
-                                                                                                                                                     '20160930T003000Z',
-                                                                                                                                                     '20161007T003000Z',
-                                                                                                                                                     '20161014T003000Z',
-                                                                                                                                                     '20161021T003000Z',
-                                                                                                                                                     '20161028T003000Z',
-                                                                                                                                                     '20161104T003000Z',
-                                                                                                                                                     '20161111T003000Z',
-                                                                                                                                                     '20161118T003000Z',
-                                                                                                                                                     '20161125T003000Z',
-                                                                                                                                                     '20161202T003000Z',
-                                                                                                                                                     '20161209T003000Z',
-                                                                                                                                                     '20161216T003000Z',
-                                                                                                                                                     '20161223T003000Z',
-                                                                                                                                                     '20161230T003000Z',
-                                                                                                                                                     '20170106T003000Z',
-                                                                                                                                                     '20170113T003000Z',
-                                                                                                                                                     '20170120T003000Z',
-                                                                                                                                                     '20170127T003000Z']
-        'FREQ=WEEKLY;WKST=MO;BYDAY=SU;BYHOUR=0;BYMINUTE=0'	| Value.DATE_TIME	| '20181020T000000'	| '20181120T000000'	| ['20181021T000000',
+        rule					| start			                | end			    | expected
+        'FREQ=WEEKLY;BYDAY=MO'	| '20110101T000000'	            | '20110201T000000'	| ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000']
+        'FREQ=DAILY;INTERVAL=14;WKST=MO;BYMONTH=10,12'          |	'20181011'	    | '20181231'	| ['20181011', '20181025', '20181206', '20181220']
+        'FREQ=WEEKLY;BYDAY=MO,TH,FR,SA,SU;BYHOUR=11;BYMINUTE=5' | '20160325T110500'	| '20160329T121000'	| ['20160325T110500', '20160326T110500', '20160327T110500', '20160328T110500']
+        'FREQ=WEEKLY;INTERVAL=1;BYDAY=FR;WKST=MO;UNTIL=20170127T003000'	| '20160727T003000'	| '20170127T003000'	| ['20160729T003000',
+                                                                                                                                                     '20160805T003000',
+                                                                                                                                                     '20160812T003000',
+                                                                                                                                                     '20160819T003000',
+                                                                                                                                                     '20160826T003000',
+                                                                                                                                                     '20160902T003000',
+                                                                                                                                                     '20160909T003000',
+                                                                                                                                                     '20160916T003000',
+                                                                                                                                                     '20160923T003000',
+                                                                                                                                                     '20160930T003000',
+                                                                                                                                                     '20161007T003000',
+                                                                                                                                                     '20161014T003000',
+                                                                                                                                                     '20161021T003000',
+                                                                                                                                                     '20161028T003000',
+                                                                                                                                                     '20161104T003000',
+                                                                                                                                                     '20161111T003000',
+                                                                                                                                                     '20161118T003000',
+                                                                                                                                                     '20161125T003000',
+                                                                                                                                                     '20161202T003000',
+                                                                                                                                                     '20161209T003000',
+                                                                                                                                                     '20161216T003000',
+                                                                                                                                                     '20161223T003000',
+                                                                                                                                                     '20161230T003000',
+                                                                                                                                                     '20170106T003000',
+                                                                                                                                                     '20170113T003000',
+                                                                                                                                                     '20170120T003000',
+                                                                                                                                                     '20170127T003000']
+        'FREQ=WEEKLY;WKST=MO;BYDAY=SU;BYHOUR=0;BYMINUTE=0'	| '20181020T000000'	| '20181120T000000'	| ['20181021T000000',
                                                                                                                                     '20181028T000000',
                                                                                                                                     '20181104T000000',
                                                                                                                                     '20181111T000000',
                                                                                                                                     '20181118T000000']
-        'FREQ=DAILY;BYMONTH=1'	| Value.DATE	| '20000101'	| '20000201' | ['20000101',
+        'FREQ=DAILY;BYMONTH=1'	| '20000101'	| '20000201' | ['20000101',
                                                                                   '20000102',
                                                                                   '20000103',
                                                                                   '20000104',
@@ -141,7 +131,7 @@ class RecurSpec extends Specification {
                                                                                   '20000129',
                                                                                   '20000130',
                                                                                   '20000131']
-        'FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYMONTH=2,3,9,10;BYMONTHDAY=28,29,30,31;BYSETPOS=-1'	| Value.DATE	| '20150101'	| '20170101'	| ['20150228',
+        'FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYMONTH=2,3,9,10;BYMONTHDAY=28,29,30,31;BYSETPOS=-1'	| '20150101'	| '20170101'	| ['20150228',
                                                                                                                                                     '20150331',
                                                                                                                                                     '20150930',
                                                                                                                                                     '20151031',
@@ -151,22 +141,22 @@ class RecurSpec extends Specification {
                                                                                                                                                     '20161031']
 //		'FREQ=WEEKLY;UNTIL=20190225;INTERVAL=2;BYDAY=MO'	| Value.DATE	| '20181216'	| '20190225'	| ['20181217', '20181231', '20190114', '20190128', '20190211', '20190225']
 //        'FREQ=DAILY;UNTIL=20130906' | Value.DATE_TIME    | '20130831T170001'    | '20200110T133320'    | []
-        'FREQ=DAILY;UNTIL=20130906' | Value.DATE    | '20130831'    | '20200110'    | ['20130831', '20130901', '20130902', '20130903', '20130904', '20130905', '20130906']
+        'FREQ=DAILY;UNTIL=20130906' | '20130831'    | '20200110'    | ['20130831', '20130901', '20130902', '20130903', '20130904', '20130905', '20130906']
     }
 
     @Unroll
     def 'verify byweekno recurrence rules without byday: #rule wkst: #wkst'() {
         setup: 'parse recurrence rule'
         def recur = new Recur("FREQ=YEARLY;BYWEEKNO=$rule;WKST=$wkst")
-        def startDate = new Date(start)
-        def endDate = new Date(end)
+        def startDate = TemporalAdapter.parse(start).temporal
+        def endDate = TemporalAdapter.parse(end).temporal
         def expectedDates = []
         expected.each {
-            expectedDates << new Date(it)
+            expectedDates << TemporalAdapter.parse(it).temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, Value.DATE) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         where:
         rule          | wkst | start      | end        || expected
@@ -181,15 +171,15 @@ class RecurSpec extends Specification {
     def 'verify byweekno recurrence rules: #rule wkst: #wkst byday: #byday'() {
         setup: 'parse recurrence rule'
         def recur = new Recur("FREQ=YEARLY;BYWEEKNO=$rule;WKST=$wkst;BYDAY=$byday")
-        def startDate = new Date(start)
-        def endDate = new Date(end)
+        def startDate = TemporalAdapter.parse(start).temporal
+        def endDate = TemporalAdapter.parse(end).temporal
         def expectedDates = []
         expected.each {
-            expectedDates << new Date(it)
+            expectedDates << TemporalAdapter.parse(it).temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, Value.DATE) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         where:
         rule          | wkst | byday   | start      | end        || expected
@@ -202,15 +192,15 @@ class RecurSpec extends Specification {
     def 'verify monthly bymonthday recurrence rules: #rule #year'() {
         setup: 'parse recurrence rule'
         def recur = new Recur("FREQ=MONTHLY;BYMONTHDAY=$rule")
-        def startDate = new Date("${year}${start}")
-        def endDate = new Date("${year}${end}")
+        def startDate = TemporalAdapter.parse("${year}${start}").temporal
+        def endDate = TemporalAdapter.parse("${year}${end}").temporal
         def expectedDates = []
         expected.each {
-            expectedDates << new Date("${year}${it}")
+            expectedDates << TemporalAdapter.parse("${year}${it}").temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, Value.DATE) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         where:
         rule			 | year   | start  | end    || expected
@@ -224,15 +214,15 @@ class RecurSpec extends Specification {
     def 'verify yearly bymonthday recurrence rules: #rule #start'() {
         setup: 'parse recurrence rule'
         def recur = new Recur("FREQ=YEARLY;BYMONTHDAY=$rule")
-        def startDate = new Date(start)
-        def endDate = new Date(end)
+        def startDate = TemporalAdapter.parse(start).temporal
+        def endDate = TemporalAdapter.parse(end).temporal
         def expectedDates = []
         expected.each {
-            expectedDates << new Date(it)
+            expectedDates << TemporalAdapter.parse(it).temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, Value.DATE) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         where:
         rule       | start      | end        || expected
@@ -244,15 +234,15 @@ class RecurSpec extends Specification {
     def 'verify byyearday recurrence rules: #rule'() {
         setup: 'parse recurrence rule'
         def recur = new Recur("FREQ=YEARLY;BYYEARDAY=$rule")
-        def startDate = new Date(start)
-        def endDate = new Date(end)
+        def startDate = TemporalAdapter.parse(start).temporal
+        def endDate = TemporalAdapter.parse(end).temporal
         def expectedDates = []
         expected.each {
-            expectedDates << new Date(it)
+            expectedDates << TemporalAdapter.parse(it).temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, Value.DATE) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         where:
         rule			| start			| end			|| expected
@@ -269,22 +259,22 @@ class RecurSpec extends Specification {
 
         and: 'parse recurrence rule'
         def recur = new Recur(rule)
-        def startDate = new Date(start)
-        def endDate = new Date(end)
+        def startDate = TemporalAdapter.parse(start).temporal
+        def endDate = TemporalAdapter.parse(end).temporal
         def expectedDates = []
         expected.each {
-            expectedDates << new DateTime(it)
+            expectedDates << TemporalAdapter.parse(it).temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         cleanup:
         Locale.default = originalLocale
 
         where:
         rule					| start			| end			| expected
-        'FREQ=WEEKLY;BYDAY=MO'	| '20110101'	| '20110201'	| ['20110103T000000', '20110110T000000', '20110117T000000', '20110124T000000', '20110131T000000']
+        'FREQ=WEEKLY;BYDAY=MO'	| '20110101'	| '20110201'	| ['20110103', '20110110', '20110117', '20110124', '20110131']
     }
 
     @Unroll
@@ -295,17 +285,16 @@ class RecurSpec extends Specification {
 
         and: 'parse recurrence rule'
         def recur = new Recur(rule)
-        TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry()
-        def berlin = registry.getTimeZone("Europe/Berlin")
-        def startDate = new DateTime(start, berlin)
-        def endDate = new DateTime(end, berlin)
+        def berlin = TimeZoneRegistry.getGlobalZoneId("Europe/Berlin")
+        def startDate = TemporalAdapter.parse(start, berlin).temporal
+        def endDate = TemporalAdapter.parse(end, berlin).temporal
         def expectedDates = []
         expected.each {
-            expectedDates << new DateTime(it, berlin)
+            expectedDates << TemporalAdapter.parse(it, berlin).temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         cleanup:
         java.util.TimeZone.setDefault(originalTimezone)
@@ -322,19 +311,19 @@ class RecurSpec extends Specification {
     def 'verify recurrence rule with a specified interval: #rule'() {
         setup: 'parse recurrence rule'
         def recur = new Recur(rule)
-        def startDate = new Date(start)
-        def endDate = new Date(end)
+        def startDate = TemporalAdapter.parse(start).temporal
+        def endDate = TemporalAdapter.parse(end).temporal
         def expectedDates = []
         expected.each {
-            expectedDates << new DateTime(it)
+            expectedDates << TemporalAdapter.parse(it).temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         where:
         rule								| start			| end			| expected
-        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102T000000', '20110116T000000', '20110130T000000']
+        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102', '20110116', '20110130']
     }
 
     @Unroll
@@ -344,21 +333,21 @@ class RecurSpec extends Specification {
 
         setup: 'parse recurrence rule'
         def recur = new Recur(rule)
-        def startDate = new Date(start)
-        def endDate = new Date(end)
+        def startDate = TemporalAdapter.parse(start).temporal
+        def endDate = TemporalAdapter.parse(end).temporal
         def expectedDates = []
         expected.each {
-            expectedDates << new DateTime(it)
+            expectedDates << TemporalAdapter.parse(it).temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         where:
         rule										| start			| end			| expected
-        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;WKST=SU'	| '20110101'	| '20110201'	| ['20110109T000000', '20110123T000000']
-        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO;WKST=MO'			| '20110306'	| '20110313'	| ['20110306T000000']
-        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO;WKST=SU'			| '20110306'	| '20110313'	| ['20110306T000000', '20110307T000000']
+        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU;WKST=SU'	| '20110101'	| '20110201'	| ['20110109', '20110123']
+        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO;WKST=MO'			| '20110306'	| '20110313'	| ['20110306']
+        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU,MO;WKST=SU'			| '20110306'	| '20110313'	| ['20110306', '20110307']
     }
 
     @Unroll
@@ -369,22 +358,22 @@ class RecurSpec extends Specification {
 
         and: 'parse recurrence rule'
         def recur = new Recur(rule)
-        def startDate = new Date(start)
-        def endDate = new Date(end)
+        def startDate = TemporalAdapter.parse(start).temporal
+        def endDate = TemporalAdapter.parse(end).temporal
         def expectedDates = []
         expected.each {
-            expectedDates << new DateTime(it)
+            expectedDates << TemporalAdapter.parse(it).temporal
         }
 
         expect:
-        recur.getDates(startDate, endDate, Value.DATE_TIME) == expectedDates
+        recur.getDates(startDate, endDate) == expectedDates
 
         cleanup:
         Locale.default = originalLocale
 
         where:
         rule								| start			| end			| expected
-        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102T000000', '20110116T000000', '20110130T000000']
+        'FREQ=WEEKLY;INTERVAL=2;BYDAY=SU'	| '20110101'	| '20110201'	| ['20110102', '20110116', '20110130']
     }
 
     def 'verify no-args constructor has no side-effects'() {
@@ -429,11 +418,11 @@ class RecurSpec extends Specification {
         Recur.Builder builder = []
 
         when: 'populated'
-        Date until = new Date('20050307');
+        def until = TemporalAdapter.parse('20050307').temporal;
 
         Recur recurDaily = builder.frequency(Recur.Frequency.DAILY).until(until)
                 .dayList(new WeekDayList(MO, TU, WE, TH, FR))
-                .interval(1).weekStartDay(MO.getDay()).build();
+                .interval(1).weekStartDay(MO).build();
 
         then: 'result is as expected'
         recurDaily as String == "FREQ=DAILY;WKST=MO;UNTIL=20050307;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR"
@@ -448,6 +437,6 @@ class RecurSpec extends Specification {
 
         where:
         rule	| seed	| start	| expectedDate
-        'FREQ=MONTHLY;COUNT=100;INTERVAL=1'	| new DateTime('20180329T025959')	| new DateTime('20170729T030000')	| new DateTime('20180329T025959')
+        'FREQ=MONTHLY;COUNT=100;INTERVAL=1'	| CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse('20180329T025959')	| CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse('20170729T030000')	| CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse('20180329T025959')
     }
 }

@@ -35,11 +35,14 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.StringReader;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -299,14 +302,11 @@ public class TimeZoneTest extends TestCase {
         java.util.TimeZone indianaTz = java.util.TimeZone
                 .getTimeZone("America/Indiana/Indianapolis");
 
-        Calendar cal = Calendar.getInstance(indianaTz);
-        cal.set(Calendar.HOUR_OF_DAY, 10);
-        cal.set(Calendar.MINUTE, 20);
-
-        DateTime dtStart = new DateTime(cal.getTime());
-        DtStart pDtStart = new DtStart(dtStart);
-        pDtStart.setTimeZone(registry
-                .getTimeZone("America/Indiana/Indianapolis"));
+        ZonedDateTime dtStart = ZonedDateTime.now(indianaTz.toZoneId()).withHour(10).withMinute(20);
+        ParameterList tzParams = new ParameterList();
+        tzParams.add(new TzId(ZoneId.systemDefault().getId()));
+        DtStart pDtStart = new DtStart<>(tzParams, dtStart);
+        assertFalse(pDtStart.isUtc());
     }
 
     public void testAustraliaSydney() {

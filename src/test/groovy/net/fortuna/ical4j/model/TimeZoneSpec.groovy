@@ -106,6 +106,7 @@ class TimeZoneSpec extends Specification {
                 1, 2014, [0, 6, 11], 31..30, java.util.Calendar.SUNDAY, 36000000].combinations()
     }
 
+	@Unroll("#tzid")
     def 'verify valid timezone ids'() {
         expect: 'the specified id translates to a timezone instance'
         def tz = tzRegistry.getTimeZone(tzid)

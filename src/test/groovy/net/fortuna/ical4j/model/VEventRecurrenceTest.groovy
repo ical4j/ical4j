@@ -44,16 +44,16 @@ class VEventRecurrenceTest extends GroovyTestCase {
 			rrule('FREQ=WEEKLY;WKST=MO;INTERVAL=3;BYDAY=MO,TU,SA')
 		}
 		
-		def dates = event.calculateRecurrenceSet(new Period('20101101T000000/20110101T000000'))
+		def dates = event.calculateRecurrenceSet(Period.parse('20101101T000000/20110101T000000'))
 		
-		def expected = new PeriodList(true)
-		expected.add new Period('20101113T000000Z/P1D')
-		expected.add new Period('20101129T000000Z/P1D')
-		expected.add new Period('20101130T000000Z/P1D')
-		expected.add new Period('20101204T000000Z/P1D')
-		expected.add new Period('20101220T000000Z/P1D')
-		expected.add new Period('20101221T000000Z/P1D')
-		expected.add new Period('20101225T000000Z/P1D')
+		def expected = new PeriodList()
+		expected.add Period.parse('20101113T000000Z/P1D')
+		expected.add Period.parse('20101129T000000Z/P1D')
+		expected.add Period.parse('20101130T000000Z/P1D')
+		expected.add Period.parse('20101204T000000Z/P1D')
+		expected.add Period.parse('20101220T000000Z/P1D')
+		expected.add Period.parse('20101221T000000Z/P1D')
+		expected.add Period.parse('20101225T000000Z/P1D')
 		
 		println dates
 		assert dates == expected
@@ -67,10 +67,10 @@ class VEventRecurrenceTest extends GroovyTestCase {
 			exdate('20101129,20101204', parameters: parameters() { value('DATE') })
 		}
 		def expectedStr = ['20101113T000000Z/P1D', '20101130T000000Z/P1D', '20101220T000000Z/P1D', '20101221T000000Z/P1D', '20101225T000000Z/P1D'];
-		def expected = new PeriodList(true)
-		expectedStr.each { expected.add(new Period(it)) }
+		def expected = new PeriodList()
+		expectedStr.each { expected.add(Period.parse(it)) }
 
-		def actual = event.calculateRecurrenceSet(new Period('20101101T000000/20110101T000000'))
+		def actual = event.calculateRecurrenceSet(Period.parse('20101101T000000/20110101T000000'))
 
 		println actual
 		assert actual == expected
