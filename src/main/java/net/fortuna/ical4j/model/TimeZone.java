@@ -53,10 +53,7 @@ import java.util.Date;
  * definition.
  *
  * @author Ben Fortuna
- *
- * @deprecated with the introduction of the new date/time API the older API is now deprecated.
  */
-@Deprecated
 public class TimeZone extends java.util.TimeZone {
 
     private static final long serialVersionUID = -5620979316746547234L;
