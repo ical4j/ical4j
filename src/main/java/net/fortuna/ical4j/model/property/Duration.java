@@ -130,8 +130,9 @@ public class Duration extends Property {
     /**
      * @param duration a duration  value
      */
+    @Deprecated
     public Duration(final Dur duration) {
-        this(TemporalAmountAdapter.from(duration));
+        this(TemporalAmountAdapter.from(duration).getDuration());
     }
 
     /**
@@ -146,8 +147,9 @@ public class Duration extends Property {
      * @param aList    a list of parameters for this component
      * @param duration a duration value
      */
+    @Deprecated
     public Duration(final ParameterList aList, final Dur duration) {
-        this(aList, TemporalAmountAdapter.from(duration));
+        this(aList, TemporalAmountAdapter.from(duration).getDuration());
     }
 
     /**

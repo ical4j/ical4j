@@ -72,13 +72,13 @@ class ContentBuilder extends FactoryBuilderSupport {
     
     def registerProperties() {
         // properties..
-        registerFactory('action', new ActionFactory())
-        registerFactory('attach', new DefaultPropertyFactory(klass: Attach))
-        registerFactory('attendee', new DefaultPropertyFactory(klass: Attendee))
-        registerFactory('busytype', new BusyTypeFactory())
-        registerFactory('calscale', new CalScaleFactory())
-        registerFactory('categories', new DefaultPropertyFactory(klass: Categories))
-        registerFactory('class', new ClazzFactory())
+        registerFactory('action', new PropertyFactoryWrapper(Action, new Action.Factory()))
+        registerFactory('attach', new PropertyFactoryWrapper(Attach, new Attach.Factory()))
+        registerFactory('attendee', new PropertyFactoryWrapper(Attendee, new Attendee.Factory()))
+        registerFactory('busytype', new PropertyFactoryWrapper(BusyType, new BusyType.Factory()))
+        registerFactory('calscale', new PropertyFactoryWrapper(CalScale, new CalScale.Factory()))
+        registerFactory('categories', new PropertyFactoryWrapper(Categories, new Categories.Factory()))
+        registerFactory('class', new PropertyFactoryWrapper(Clazz, new Clazz.Factory()))
         registerFactory('comment', new DefaultPropertyFactory(klass: Comment))
         registerFactory('completed', new DefaultPropertyFactory(klass: Completed))
         registerFactory('contact', new DefaultPropertyFactory(klass: Contact))
@@ -97,12 +97,12 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('lastmodified', new DefaultPropertyFactory(klass: LastModified))
         registerFactory('location', new DefaultPropertyFactory(klass: Location))
         registerFactory('locationtype', new DefaultPropertyFactory(klass: LocationType))
-        registerFactory('method', new MethodFactory())
+        registerFactory('method', new PropertyFactoryWrapper(Method, new Method.Factory()))
         registerFactory('name', new DefaultPropertyFactory(klass: Name))
         registerFactory('organizer', new DefaultPropertyFactory(klass: Organizer))
         registerFactory('percentcomplete', new DefaultPropertyFactory(klass: PercentComplete))
         registerFactory('postalcode', new DefaultPropertyFactory(klass: Postalcode))
-        registerFactory('priority', new PriorityFactory())
+        registerFactory('priority', new PropertyFactoryWrapper(Priority, new Priority.Factory()))
         registerFactory('prodid', new DefaultPropertyFactory(klass: ProdId))
         registerFactory('rdate', new DefaultPropertyFactory(klass: RDate))
         registerFactory('recurrenceid', new DefaultPropertyFactory(klass: RecurrenceId))
@@ -113,11 +113,11 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('resources', new DefaultPropertyFactory(klass: Resources))
         registerFactory('rrule', new DefaultPropertyFactory(klass: RRule))
         registerFactory('sequence', new DefaultPropertyFactory(klass: Sequence))
-        registerFactory('status', new StatusFactory())
+        registerFactory('status', new PropertyFactoryWrapper(Status, new Status.Factory()))
         registerFactory('streetaddress', new DefaultPropertyFactory(klass: StreetAddress))
         registerFactory('summary', new DefaultPropertyFactory(klass: Summary))
         registerFactory('tel', new DefaultPropertyFactory(klass: Tel))
-        registerFactory('transp', new TranspFactory())
+        registerFactory('transp', new PropertyFactoryWrapper(Transp, new Transp.Factory()))
         registerFactory('trigger', new DefaultPropertyFactory(klass: Trigger))
         registerFactory('tzid', new DefaultPropertyFactory(klass: net.fortuna.ical4j.model.property.TzId))
         registerFactory('tzname', new DefaultPropertyFactory(klass: TzName))
@@ -126,8 +126,15 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('tzurl', new DefaultPropertyFactory(klass: TzUrl))
         registerFactory('uid', new DefaultPropertyFactory(klass: Uid))
         registerFactory('url', new DefaultPropertyFactory(klass: Url))
-        registerFactory('version', new VersionFactory())
+        registerFactory('version', new PropertyFactoryWrapper(Version, new Version.Factory()))
         registerFactory('xproperty', new XPropertyFactory())
+
+        // RFC7986
+        registerFactory('color', new PropertyFactoryWrapper(Color, new Color.Factory()))
+        registerFactory('conference', new PropertyFactoryWrapper(Conference, new Conference.Factory()))
+        registerFactory('image', new PropertyFactoryWrapper(Image, new Image.Factory()))
+        registerFactory('refreshinterval', new PropertyFactoryWrapper(RefreshInterval, new RefreshInterval.Factory()))
+        registerFactory('source', new PropertyFactoryWrapper(Source, new Source.Factory()))
     }
     
     def registerParameters() {
@@ -155,6 +162,12 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('tzid_', new TzIdFactory())
         registerFactory('value', new ValueFactory())
         registerFactory('xparameter', new XParameterFactory())
+
+        // RFC7986
+        registerFactory('display', new ParameterFactoryWrapper(Display, new Display.Factory()))
+        registerFactory('email', new ParameterFactoryWrapper(Email, new Email.Factory()))
+        registerFactory('feature', new ParameterFactoryWrapper(Feature, new Feature.Factory()))
+        registerFactory('label', new ParameterFactoryWrapper(Label, new Label.Factory()))
     }
 }
 

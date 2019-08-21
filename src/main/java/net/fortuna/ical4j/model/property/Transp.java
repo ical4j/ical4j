@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -169,19 +172,29 @@ public class Transp extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Transp> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TRANSP);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
+        public Transp createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Transp(parameters, value);
+
+            Transp transp;
+            if (OPAQUE.getValue().equals(value)) {
+                transp = OPAQUE;
+            }
+            else if (TRANSPARENT.getValue().equals(value)) {
+                transp = TRANSPARENT;
+            } else {
+                transp = new Transp(parameters, value);
+            }
+            return transp;
         }
 
-        public Property createProperty() {
+        public Transp createProperty() {
             return new Transp();
         }
     }

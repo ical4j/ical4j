@@ -1,12 +1,13 @@
 package net.fortuna.ical4j.validate.component;
 
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * <pre>
@@ -61,12 +62,12 @@ public class VJournalPublishValidator implements Validator<VJournal> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VJournal target) throws ValidationException {
-        Arrays.asList(Property.DESCRIPTION, Property.DTSTAMP, Property.DTSTART, Property.ORGANIZER, Property.UID).forEach(
+        Arrays.asList(DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, UID).forEach(
                 property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        Arrays.asList(Property.CATEGORIES, Property.CLASS, Property.CREATED, Property.LAST_MODIFIED,
-                Property.RECURRENCE_ID, Property.SEQUENCE, Property.STATUS, Property.SUMMARY, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
+        Arrays.asList(CATEGORIES, CLASS, CREATED, LAST_MODIFIED,
+                RECURRENCE_ID, SEQUENCE, STATUS, SUMMARY, URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
-        PropertyValidator.getInstance().assertNone(Property.ATTENDEE, target.getProperties());
+        PropertyValidator.getInstance().assertNone(ATTENDEE, target.getProperties());
     }
 }

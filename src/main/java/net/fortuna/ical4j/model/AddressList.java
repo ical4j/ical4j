@@ -42,6 +42,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [23-Apr-2004]
@@ -91,14 +92,8 @@ public class AddressList implements Serializable, Iterable<URI> {
      * {@inheritDoc}
      */
     public final String toString() {
-        final StringBuilder b = new StringBuilder();
-        for (final Iterator<URI> i = addresses.iterator(); i.hasNext();) {
-            b.append(Strings.quote(Uris.decode(Strings.valueOf(i.next()))));
-            if (i.hasNext()) {
-                b.append(',');
-            }
-        }
-        return b.toString();
+        return addresses.stream().map(a -> Strings.quote(Uris.decode(Strings.valueOf(a))))
+                .collect(Collectors.joining(","));
     }
 
     /**

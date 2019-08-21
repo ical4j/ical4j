@@ -108,10 +108,10 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
                 public Parameter createParameter(final String value) throws URISyntaxException {
                     return new ScheduleStatus(value, this);
-                    }
+                }
             });
         builder = new CalendarBuilder(
-                CalendarParserFactory.getInstance().createParser(),
+                CalendarParserFactory.getInstance().get(),
                 new PropertyFactoryRegistry(),
                 paramFactory,
                 TimeZoneRegistryFactory.getInstance().createRegistry());

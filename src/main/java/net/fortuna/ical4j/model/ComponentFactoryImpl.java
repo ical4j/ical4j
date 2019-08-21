@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.XComponent;
-import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -46,6 +45,7 @@ import java.util.ServiceLoader;
  *
  * @author Ben Fortuna
  */
+@Deprecated
 public final class ComponentFactoryImpl extends AbstractContentFactory<ComponentFactory> {
 
     /**
@@ -132,14 +132,6 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
                 && name.length() > Component.EXPERIMENTAL_PREFIX.length();
     }
 
-    /**
-     * @return true if non-standard names are allowed, otherwise false
-     */
-    protected boolean allowIllegalNames() {
-        return CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
-    }
-    
     /**
      * Needed for initializing the transient member after deserializing a <code>Calendar</code>
      * 

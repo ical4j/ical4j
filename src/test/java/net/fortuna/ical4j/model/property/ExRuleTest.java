@@ -31,11 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.Recur;
+
+import java.text.ParseException;
 
 /**
  * Created: [24/11/2008]
@@ -66,7 +66,7 @@ public class ExRuleTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        ExRule rule = new ExRule(new Recur(Recur.DAILY, 1));
+        ExRule rule = new ExRule(new Recur.Builder().frequency(Recur.Frequency.DAILY).count(1).build());
         suite.addTest(new ExRuleTest(rule, "FREQ=DAILY;COUNT=1"));
         suite.addTest(new ExRuleTest("testValidation", rule));
         suite.addTest(new ExRuleTest("testEquals", rule));

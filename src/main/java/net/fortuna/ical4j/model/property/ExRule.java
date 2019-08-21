@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class ExRule extends Property {
      */
     public ExRule() {
         super(EXRULE, new Factory());
-        recur = new Recur(Recur.DAILY, 1);
+        recur = new Recur(Frequency.DAILY, 1);
     }
 
     /**

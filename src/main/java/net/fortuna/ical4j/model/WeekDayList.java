@@ -35,6 +35,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,10 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
      * Default constructor.
      */
     public WeekDayList() {
+    }
+
+    public WeekDayList(WeekDay...weekDays) {
+        addAll(Arrays.asList(weekDays));
     }
 
     /**

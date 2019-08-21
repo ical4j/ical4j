@@ -131,7 +131,7 @@ public class VAvailability extends CalendarComponent {
      * @param available a list of available components
      */
     public VAvailability(final PropertyList properties, final ComponentList<Available> available) {
-        super(VEVENT, properties);
+        super(VAVAILABILITY, properties);
         this.available = available;
     }
 
@@ -259,7 +259,7 @@ public class VAvailability extends CalendarComponent {
 
         @Override
         public VAvailability createComponent(PropertyList properties, ComponentList subComponents) {
-            throw new UnsupportedOperationException(String.format("%s does not support sub-components", VAVAILABILITY));
+            return new VAvailability(properties, subComponents);
         }
     }
 }

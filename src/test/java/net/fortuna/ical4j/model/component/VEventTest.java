@@ -35,6 +35,7 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
@@ -49,6 +50,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.Calendar;
+
+import static net.fortuna.ical4j.model.WeekDay.*;
 
 /**
  * $Id: VEventTest.java [28/09/2004]
@@ -432,9 +435,8 @@ public class VEventTest extends CalendarComponentTest {
      * Test COUNT rules.
      */
     public void testGetConsumedTimeByCount() {
-        Recur recur = new Recur(Recur.WEEKLY, 3);
-        recur.setInterval(1);
-        recur.getDayList().add(WeekDay.SU);
+        Recur recur = new Recur.Builder().frequency(Frequency.WEEKLY).count(3)
+            .interval(1).dayList(new WeekDayList(SU)).build();
         log.info(recur.toString());
 
         Calendar cal = getCalendarInstance();
@@ -596,36 +598,21 @@ public class VEventTest extends CalendarComponentTest {
         Date until = new Date(untilCal.getTime().getTime());
 
         // 9:00AM to 5:00PM Rule using weekly
-        Recur recurWeekly = new Recur(Recur.WEEKLY, until);
-        recurWeekly.getDayList().add(WeekDay.MO);
-        recurWeekly.getDayList().add(WeekDay.TU);
-        recurWeekly.getDayList().add(WeekDay.WE);
-        recurWeekly.getDayList().add(WeekDay.TH);
-        recurWeekly.getDayList().add(WeekDay.FR);
-        recurWeekly.setInterval(1);
-        recurWeekly.setWeekStartDay(WeekDay.MO.getDay());
+        Recur recurWeekly = new Recur.Builder().frequency(Frequency.WEEKLY).until(until)
+            .dayList(new WeekDayList(MO, TU, WE, TH, FR))
+            .interval(1).weekStartDay(MO.getDay()).build();
         RRule rruleWeekly = new RRule(recurWeekly);
 
         // 9:00AM to 5:00PM Rule using daily frequency
-        Recur recurDaily = new Recur(Recur.DAILY, until);
-        recurDaily.getDayList().add(WeekDay.MO);
-        recurDaily.getDayList().add(WeekDay.TU);
-        recurDaily.getDayList().add(WeekDay.WE);
-        recurDaily.getDayList().add(WeekDay.TH);
-        recurDaily.getDayList().add(WeekDay.FR);
-        recurDaily.setInterval(1);
-        recurDaily.setWeekStartDay(WeekDay.MO.getDay());
+        Recur recurDaily = new Recur.Builder().frequency(Frequency.DAILY).until(until)
+            .dayList(new WeekDayList(MO, TU, WE, TH, FR))
+            .interval(1).weekStartDay(MO.getDay()).build();
         RRule rruleDaily = new RRule(recurDaily);
 
         // 9:00AM to 5:00PM Rule using monthly frequency
-        Recur recurMonthly = new Recur(Recur.MONTHLY, until);
-        recurMonthly.getDayList().add(WeekDay.MO);
-        recurMonthly.getDayList().add(WeekDay.TU);
-        recurMonthly.getDayList().add(WeekDay.WE);
-        recurMonthly.getDayList().add(WeekDay.TH);
-        recurMonthly.getDayList().add(WeekDay.FR);
-        recurMonthly.setInterval(1);
-        recurMonthly.setWeekStartDay(WeekDay.MO.getDay());
+        Recur recurMonthly = new Recur.Builder().frequency(Frequency.MONTHLY).until(until)
+            .dayList(new WeekDayList(MO, TU, WE, TH, FR))
+            .interval(1).weekStartDay(MO.getDay()).build();
         RRule rruleMonthly = new RRule(recurMonthly);
 
         Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");

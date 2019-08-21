@@ -81,6 +81,7 @@ public class TzOffsetFrom extends Property {
     /**
      * @param anOffset a timezone offset in milliseconds
      */
+    @Deprecated
     public TzOffsetFrom(final UtcOffset anOffset) {
         this(ZoneOffsetAdapter.from(anOffset));
     }
@@ -97,6 +98,7 @@ public class TzOffsetFrom extends Property {
      * @param aList    a list of parameters for this component
      * @param anOffset a timezone offset in milliseconds
      */
+    @Deprecated
     public TzOffsetFrom(final ParameterList aList, final UtcOffset anOffset) {
         this(aList, ZoneOffsetAdapter.from(anOffset));
     }

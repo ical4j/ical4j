@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.validate.component;
 
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
@@ -9,6 +8,8 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
+
+import static net.fortuna.ical4j.model.Property.*;
 
 /**
  * METHOD:DECLINECOUNTER Validator.
@@ -70,15 +71,15 @@ public class VEventDeclineCounterValidator implements Validator<VEvent> {
     private static final long serialVersionUID = 1L;
 
     public void validate(final VEvent target) throws ValidationException {
-        Arrays.asList(Property.DTSTAMP, Property.ORGANIZER, Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
+        Arrays.asList(DTSTAMP, ORGANIZER, UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, target.getProperties()));
 
-        Arrays.asList(Property.RECURRENCE_ID, Property.SEQUENCE).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
+        Arrays.asList(RECURRENCE_ID, SEQUENCE).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
-        Arrays.asList(Property.ATTACH, Property.ATTENDEE, Property.CATEGORIES, Property.CLASS,
-                Property.CONTACT, Property.CREATED, Property.DESCRIPTION, Property.DTEND, Property.DTSTART, Property.DURATION,
-                Property.EXDATE, Property.EXRULE, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.PRIORITY,
-                Property.RDATE, Property.RELATED_TO, Property.RESOURCES, Property.RRULE, Property.STATUS, Property.SUMMARY,
-                Property.TRANSP, Property.URL).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
+        Arrays.asList(ATTACH, ATTENDEE, CATEGORIES, CLASS,
+                CONTACT, CREATED, DESCRIPTION, DTEND, DTSTART, DURATION,
+                EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, PRIORITY,
+                RDATE, RELATED_TO, RESOURCES, RRULE, STATUS, SUMMARY,
+                TRANSP, URL).forEach(property -> PropertyValidator.getInstance().assertNone(property, target.getProperties()));
 
         ComponentValidator.assertNone(Component.VALARM, target.getAlarms());
     }
