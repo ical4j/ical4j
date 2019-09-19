@@ -184,4 +184,16 @@ class DateTimeSpec extends Specification {
         cleanup:
         TimeZone.default = originalTimezone
     }
+
+    def 'datetime constructor using calendar'() {
+        given: 'a calendar instance'
+        def cal = java.util.Calendar.instance
+        cal.timeZone = java.util.TimeZone.getTimeZone('Europe/Berlin')
+
+        when: 'a datetime is created'
+        DateTime dateTime = [cal.time, tzRegistry.getTimeZone(cal.timeZone.getID())]
+
+        then: 'it has the timezone set'
+        dateTime.timeZone == tzRegistry.getTimeZone(cal.timeZone.getID())
+    }
 }
