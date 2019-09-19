@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.io.IOException;
@@ -187,7 +188,15 @@ public class Priority extends Property {
      */
     public Priority(final ParameterList aList, final String aValue) {
         super(PRIORITY, aList, new Factory());
-        level = Integer.parseInt(aValue);
+        try {
+            level = Integer.parseInt(aValue);
+        } catch (NumberFormatException e) {
+            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                level = UNDEFINED.level;
+            } else {
+                throw e;
+            }
+        }
     }
 
     /**
