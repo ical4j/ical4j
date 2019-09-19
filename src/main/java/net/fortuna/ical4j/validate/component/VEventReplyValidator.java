@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.validate.component;
 
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -82,6 +83,8 @@ public class VEventReplyValidator implements Validator<VEvent> {
                 LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, SUMMARY,
                 TRANSP, URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, target.getProperties()));
 
-        ComponentValidator.assertNone(VALARM, target.getAlarms());
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            ComponentValidator.assertNone(VALARM, target.getAlarms());
+        }
     }
 }
