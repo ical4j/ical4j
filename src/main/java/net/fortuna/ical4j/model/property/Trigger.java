@@ -211,7 +211,7 @@ public class Trigger extends UtcProperty {
      */
     public Trigger(final Instant dateTime) {
         super(TRIGGER, new Factory());
-        setDateTime(dateTime);
+        setDate(dateTime);
     }
 
     /**
@@ -220,7 +220,7 @@ public class Trigger extends UtcProperty {
      */
     public Trigger(final ParameterList aList, final Instant dateTime) {
         super(TRIGGER, aList, new Factory());
-        setDateTime(dateTime);
+        setDate(dateTime);
     }
 
     /**

@@ -31,12 +31,13 @@
  */
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.util.Dates;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+
+import static java.util.concurrent.TimeUnit.*;
 
 /**
  * $Id$
@@ -93,15 +94,15 @@ public class UtcOffset implements Serializable {
         offset = 0;
         offset += Integer.parseInt(value.substring(HOUR_START_INDEX,
                 HOUR_END_INDEX))
-                * Dates.MILLIS_PER_HOUR;
+                * HOURS.toMillis(1);
 
 //cludge to handle Utcffset of vcard 3
         if ( value.contains(":")){
         	offset += Integer.parseInt(value.substring(MINUTE_START_INDEX +1, MINUTE_END_INDEX +1))
-                    * Dates.MILLIS_PER_MINUTE;
+                    * MINUTES.toMillis(1);
         } else {
         	offset += Integer.parseInt(value.substring(MINUTE_START_INDEX, MINUTE_END_INDEX))
-                                     * Dates.MILLIS_PER_MINUTE;
+                                     * MINUTES.toMillis(1);
         }
 
 //        offset += Integer.parseInt(value.substring(MINUTE_START_INDEX,
@@ -110,7 +111,7 @@ public class UtcOffset implements Serializable {
         if (value.length() == SECOND_END_INDEX) {
             offset += Integer.parseInt(value.substring(SECOND_START_INDEX,
                     SECOND_END_INDEX))
-                    * Dates.MILLIS_PER_SECOND;
+                    * SECONDS.toMillis(1);
         }
         if (negative) {
             offset = -offset;
@@ -121,7 +122,7 @@ public class UtcOffset implements Serializable {
      * @param offset an offset value in milliseconds
      */
     public UtcOffset(final long offset) {
-        this.offset = (long) Math.floor(offset / (double) Dates.MILLIS_PER_SECOND) * Dates.MILLIS_PER_SECOND;
+        this.offset = (long) Math.floor(offset / (double) SECONDS.toMillis(1)) * SECONDS.toMillis(1);
     }
 
     /**
@@ -137,14 +138,14 @@ public class UtcOffset implements Serializable {
         else {
             b.append('+');
         }
-        b.append(HOUR_FORMAT.format(remainder / Dates.MILLIS_PER_HOUR));
+        b.append(HOUR_FORMAT.format(remainder / HOURS.toMillis(1)));
 
-        remainder = remainder % Dates.MILLIS_PER_HOUR;
-        b.append(MINUTE_FORMAT.format(remainder / Dates.MILLIS_PER_MINUTE));
+        remainder = remainder % HOURS.toMillis(1);
+        b.append(MINUTE_FORMAT.format(remainder / MINUTES.toMillis(1)));
 
-        remainder = remainder % Dates.MILLIS_PER_MINUTE;
+        remainder = remainder % MINUTES.toMillis(1);
         if (remainder > 0) {
-            b.append(SECOND_FORMAT.format(remainder / Dates.MILLIS_PER_SECOND));
+            b.append(SECOND_FORMAT.format(remainder / SECONDS.toMillis(1)));
         }
         return b.toString();
     }
