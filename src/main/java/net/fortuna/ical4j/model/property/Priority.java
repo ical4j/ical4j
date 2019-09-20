@@ -258,7 +258,23 @@ public class Priority extends Property {
 
         public Priority createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
-            return new Priority(parameters, value);
+
+            Priority priority;
+            if (HIGH.getValue().equals(value)) {
+                priority = HIGH;
+            }
+            else if (MEDIUM.getValue().equals(value)) {
+                priority = MEDIUM;
+            }
+            else if (LOW.getValue().equals(value)) {
+                priority = LOW;
+            }
+            else if (UNDEFINED.getValue().equals(value)) {
+                priority = UNDEFINED;
+            } else {
+                priority = new Priority(parameters, value);
+            }
+            return priority;
         }
 
         public Priority createProperty() {
