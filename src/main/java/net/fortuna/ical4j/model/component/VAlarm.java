@@ -208,10 +208,6 @@ public class VAlarm extends CalendarComponent {
         actionValidators.put(Action.PROCEDURE, new ComponentValidator<VAlarm>(
                 Arrays.asList(new ValidationRule(One, ATTACH), new ValidationRule(OneOrLess, DESCRIPTION))));
     }
-    
-    private final Validator itipValidator = new ComponentValidator<VAlarm>(Arrays.asList(
-            new ValidationRule(One, ACTION, TRIGGER),
-            new ValidationRule(OneOrLess, DESCRIPTION, DURATION, REPEAT, SUMMARY)));
 
     /**
      * Default constructor.
@@ -292,7 +288,7 @@ public class VAlarm extends CalendarComponent {
      * {@inheritDoc}
      */
     protected Validator getValidator(Method method) {
-        return itipValidator;
+        throw new UnsupportedOperationException("VALARM validation included in VEVENT or VTODO method validator.");
     }
 
     /**
