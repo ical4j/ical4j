@@ -37,6 +37,8 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.List;
 
+import static net.fortuna.ical4j.validate.Validator.assertFalse;
+
 /**
  * $Id$ [15-May-2004]
  *
@@ -46,13 +48,13 @@ import java.util.List;
  */
 public final class PropertyValidator implements Validator<Property> {
 
-    private static final String ASSERT_NONE_MESSAGE = "Property [{0}] is not applicable";
+    public static final String ASSERT_NONE_MESSAGE = "Property [{0}] is not applicable";
 
-    private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Property [{0}] must only be specified once";
+    public static final String ASSERT_ONE_OR_LESS_MESSAGE = "Property [{0}] must only be specified once";
 
-    private static final String ASSERT_ONE_MESSAGE = "Property [{0}] must be specified once";
+    public static final String ASSERT_ONE_MESSAGE = "Property [{0}] must be specified once";
 
-    private static final String ASSERT_ONE_OR_MORE_MESSAGE = "Property [{0}] must be specified at least once";
+    public static final String ASSERT_ONE_OR_MORE_MESSAGE = "Property [{0}] must be specified at least once";
 
     private final List<ValidationRule> rules;
 
@@ -63,23 +65,21 @@ public final class PropertyValidator implements Validator<Property> {
     @Override
     public void validate(Property target) throws ValidationException {
         for (ValidationRule rule : rules) {
-            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
-                    && rule.isRelaxedModeSupported()) {
-                continue;
-            }
+            boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
+                    && rule.isRelaxedModeSupported();
 
             switch (rule.getType()) {
                 case None:
-                    rule.getInstances().forEach(s -> ParameterValidator.assertNone(s,
-                            target.getParameters()));
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameter(s) != null,
+                            ParameterValidator.ASSERT_NONE_MESSAGE, warnOnly, target.getParameters(), s));
                     break;
                 case One:
-                    rule.getInstances().forEach(s -> ParameterValidator.assertOne(s,
-                            target.getParameters()));
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameters(s).size() != 1,
+                            ParameterValidator.ASSERT_ONE_MESSAGE, warnOnly, target.getParameters(), s));
                     break;
                 case OneOrLess:
-                    rule.getInstances().forEach(s -> ParameterValidator.assertOneOrLess(s,
-                            target.getParameters()));
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameters(s).size() > 1,
+                            ParameterValidator.ASSERT_ONE_OR_LESS_MESSAGE, warnOnly, target.getParameters(), s));
                     break;
             }
         }
@@ -95,12 +95,9 @@ public final class PropertyValidator implements Validator<Property> {
      * @throws ValidationException
      *             when the specified property occurs more than once
      */
-    public static void assertOneOrLess(final String propertyName,
-            final PropertyList properties) throws ValidationException {
-
-        if (properties.getProperties(propertyName).size() > 1) {
-            throw new ValidationException(ASSERT_ONE_OR_LESS_MESSAGE, new Object[] {propertyName});
-        }
+    public static void assertOneOrLess(final String propertyName, final PropertyList properties) throws ValidationException {
+        assertFalse(input -> input.getProperties(propertyName).size() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
+                properties, propertyName);
     }
 
     /**
@@ -113,12 +110,9 @@ public final class PropertyValidator implements Validator<Property> {
      * @throws ValidationException
      *             when the specified property occurs more than once
      */
-    public static void assertOneOrMore(final String propertyName,
-            final PropertyList properties) throws ValidationException {
-
-        if (properties.getProperties(propertyName).size() < 1) {
-            throw new ValidationException(ASSERT_ONE_OR_MORE_MESSAGE, new Object[] {propertyName});
-        }
+    public static void assertOneOrMore(final String propertyName, final PropertyList properties) throws ValidationException {
+        assertFalse(input -> input.getProperties(propertyName).size() < 1, ASSERT_ONE_OR_MORE_MESSAGE, false,
+                properties, propertyName);
     }
 
     /**
@@ -131,12 +125,9 @@ public final class PropertyValidator implements Validator<Property> {
      * @throws ValidationException
      *             when the specified property does not occur once
      */
-    public static void assertOne(final String propertyName,
-            final PropertyList properties) throws ValidationException {
-
-        if (properties.getProperties(propertyName).size() != 1) {
-            throw new ValidationException(ASSERT_ONE_MESSAGE, new Object[] {propertyName});
-        }
+    public static void assertOne(final String propertyName, final PropertyList properties) throws ValidationException {
+        assertFalse(input -> input.getProperties(propertyName).size() != 1, ASSERT_ONE_MESSAGE, false,
+                properties, propertyName);
     }
     
     /**
@@ -147,8 +138,7 @@ public final class PropertyValidator implements Validator<Property> {
      * is found in the list of properties
      */
     public static void assertNone(final String propertyName, final PropertyList properties) throws ValidationException {
-        if (properties.getProperty(propertyName) != null) {
-            throw new ValidationException(ASSERT_NONE_MESSAGE, new Object[] {propertyName});
-        }
+        assertFalse(input -> input.getProperty(propertyName) != null, ASSERT_NONE_MESSAGE, false,
+                properties, propertyName);
     }
 }
