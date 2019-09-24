@@ -87,7 +87,7 @@ import java.time.Instant;
  *
  * @author Ben Fortuna
  */
-public class DtStamp extends UtcProperty implements Comparable<DtStamp> {
+public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp> {
 
     private static final long serialVersionUID = 7581197869433744070L;
 
@@ -95,7 +95,7 @@ public class DtStamp extends UtcProperty implements Comparable<DtStamp> {
      * Default constructor. Initialises the dateTime value to the time of instantiation.
      */
     public DtStamp() {
-        super(DTSTAMP, new Factory());
+        this(Instant.now());
     }
 
     /**

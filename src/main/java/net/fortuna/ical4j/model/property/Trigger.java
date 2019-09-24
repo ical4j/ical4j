@@ -142,7 +142,7 @@ import java.time.temporal.TemporalAmount;
  *
  * @author Ben Fortuna
  */
-public class Trigger extends UtcProperty {
+public class Trigger extends DateProperty<Instant> {
 
     private static final long serialVersionUID = 5049421499261722194L;
 
@@ -152,7 +152,7 @@ public class Trigger extends UtcProperty {
      * Default constructor.
      */
     public Trigger() {
-        super(TRIGGER, new Factory());
+        this(Instant.now());
     }
 
     /**

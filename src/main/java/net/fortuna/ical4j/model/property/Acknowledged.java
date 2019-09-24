@@ -101,12 +101,12 @@ Internet-Draft              VALARM Extensions                  June 2012
 
    ACKNOWLEDGED:20090604T084500Z
  */
-public class Acknowledged extends UtcProperty{
+public class Acknowledged extends DateProperty<Instant> {
 
     private static final long serialVersionUID = 596619479148598528L;
 
     public Acknowledged() {
-        super(ACKNOWLEDGED, new Factory());
+        this(Instant.now());
     }
 
     /**

@@ -75,7 +75,7 @@ import java.time.Instant;
  *
  * @author Ben Fortuna
  */
-public class Completed extends UtcProperty {
+public class Completed extends DateProperty<Instant> {
 
     private static final long serialVersionUID = 6824213281785639181L;
 
@@ -83,7 +83,7 @@ public class Completed extends UtcProperty {
      * Default constructor.
      */
     public Completed() {
-        super(COMPLETED, new Factory());
+        this(Instant.now());
     }
 
     /**

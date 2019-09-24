@@ -80,7 +80,7 @@ import java.time.Instant;
  *
  * @author benf
  */
-public class LastModified extends UtcProperty {
+public class LastModified extends DateProperty<Instant> {
 
     private static final long serialVersionUID = 5288572652052836062L;
 
@@ -88,7 +88,7 @@ public class LastModified extends UtcProperty {
      * Default constructor.
      */
     public LastModified() {
-        super(LAST_MODIFIED, new Factory());
+        this(Instant.now());
     }
 
     /**
