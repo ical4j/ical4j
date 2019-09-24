@@ -178,7 +178,7 @@ public class Attach extends Property {
         /*
          * ; the following is optional, ; but MUST NOT occur more than once (";" fmttypeparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.FMTTYPE,
+        ParameterValidator.assertOneOrLess(Parameter.FMTTYPE,
                 getParameters());
 
         /*
@@ -190,7 +190,7 @@ public class Attach extends Property {
          * value ";ENCODING=BASE64".
          */
         if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
-            ParameterValidator.getInstance().assertOne(Parameter.ENCODING,
+            ParameterValidator.assertOne(Parameter.ENCODING,
                     getParameters());
             if (!Encoding.BASE64.equals(getParameter(Parameter.ENCODING))) {
                 throw new ValidationException(

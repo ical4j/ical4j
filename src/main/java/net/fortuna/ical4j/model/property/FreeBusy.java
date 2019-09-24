@@ -166,7 +166,7 @@ public class FreeBusy extends Property {
         /*
          * ; the following is optional, ; but MUST NOT occur more than once (";" fbtypeparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.FBTYPE,
+        ParameterValidator.assertOneOrLess(Parameter.FBTYPE,
                 getParameters());
 
         /*

@@ -96,7 +96,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
          * (";" tzidparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
+        ParameterValidator.assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
         final Parameter valueParam = getParameter(Parameter.VALUE);
@@ -107,7 +107,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
                     + "] is invalid");
         }
 
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
+        ParameterValidator.assertOneOrLess(Parameter.TZID,
                 getParameters());
 
         /*

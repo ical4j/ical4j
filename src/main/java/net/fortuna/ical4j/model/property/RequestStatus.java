@@ -31,14 +31,23 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.property.OneOrLessParameterValidator;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Arrays;
+import java.util.StringTokenizer;
+
+import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$
@@ -79,7 +88,8 @@ public class RequestStatus extends Property {
 
     private String exData;
 
-    private final Validator<Property> validator = new OneOrLessParameterValidator(Parameter.LANGUAGE);
+    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
+            new ValidationRule(OneOrLess, LANGUAGE)));
 
     /**
      * Default constructor.

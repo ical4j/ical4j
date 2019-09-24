@@ -234,20 +234,20 @@ public class Trigger extends UtcProperty {
 
         if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
 
-            ParameterValidator.getInstance().assertOneOrLess(Parameter.RELATED,
+            ParameterValidator.assertOneOrLess(Parameter.RELATED,
                     getParameters());
 
-            ParameterValidator.getInstance().assertNullOrEqual(Value.DURATION,
+            ParameterValidator.assertNullOrEqual(Value.DURATION,
                     getParameters());
 
             if (getDuration() == null) {
                 throw new ValidationException("Duration value not specified");
             }
         } else {
-            ParameterValidator.getInstance().assertOne(Parameter.VALUE,
+            ParameterValidator.assertOne(Parameter.VALUE,
                     getParameters());
 
-            ParameterValidator.getInstance().assertNullOrEqual(Value.DATE_TIME,
+            ParameterValidator.assertNullOrEqual(Value.DATE_TIME,
                     getParameters());
 
             if (getDate() == null) {

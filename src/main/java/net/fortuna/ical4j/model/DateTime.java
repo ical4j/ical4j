@@ -275,6 +275,11 @@ public class DateTime extends Date {
 		}
 	}
 
+	public DateTime(final java.util.Date date, TimeZone timeZone) {
+		this(date);
+		setTimeZone(timeZone);
+	}
+
 	/**
 	 * Constructs a new DateTime instance from parsing the specified string
 	 * representation in the default (local) timezone.

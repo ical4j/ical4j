@@ -31,11 +31,12 @@
  */
 package net.fortuna.ical4j.model
 
-import net.fortuna.ical4j.util.Calendars;
-import spock.lang.Ignore;
-import spock.lang.Shared;
-import spock.lang.Specification;
+import net.fortuna.ical4j.util.Calendars
+import spock.lang.Ignore
+import spock.lang.Shared
+import spock.lang.Specification
 
+@Ignore
 class CalendarValidationSpec extends Specification {
 
 	private static String innerjoin = 'http://www.innerjoin.org/iCalendar/test-cases/'
@@ -45,7 +46,6 @@ class CalendarValidationSpec extends Specification {
 //	@Shared def parser = new XmlSlurper(new org.ccil.cowan.tagsoup.Parser()).parse(innerjoin + 'index.html')
 	@Shared def parser = new XmlSlurper(new org.ccil.cowan.tagsoup.Parser()).parse(iCalValid)
 	
-	@Ignore
 	def 'successful calendar validation'() {
 		expect: 'calendar validates successfully'
 		def calendar = Calendars.load(new URL(testUrl))

@@ -133,7 +133,7 @@ public class VVenue extends CalendarComponent {
         /*
          * ; 'uiid' is required, but MUST NOT occur more ; than once uiid /
          */
-        PropertyValidator.getInstance().assertOne(Property.UID,
+        PropertyValidator.assertOne(Property.UID,
                 getProperties());
 
         /*
@@ -147,7 +147,7 @@ public class VVenue extends CalendarComponent {
          */
         Arrays.asList(Property.NAME, Property.DESCRIPTION, Property.STREET_ADDRESS, Property.EXTENDED_ADDRESS,
                 Property.LOCALITY, Property.REGION, Property.COUNTRY, Property.POSTALCODE, Property.TZID, Property.GEO,
-                Property.LOCATION_TYPE, Property.CATEGORIES, Property.DTSTAMP, Property.CREATED, Property.LAST_MODIFIED).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
+                Property.LOCATION_TYPE, Property.CATEGORIES, Property.DTSTAMP, Property.CREATED, Property.LAST_MODIFIED).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
         /*
          * ; the following is optional, ; and MAY occur more than once tel / url / x-prop

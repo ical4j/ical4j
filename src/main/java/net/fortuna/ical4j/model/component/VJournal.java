@@ -34,17 +34,15 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.validate.PropertyValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.VJournalAddValidator;
-import net.fortuna.ical4j.validate.component.VJournalCancelValidator;
-import net.fortuna.ical4j.validate.component.VJournalPublishValidator;
+import net.fortuna.ical4j.validate.*;
 
 import java.time.temporal.Temporal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -111,9 +109,20 @@ public class VJournal extends CalendarComponent {
 
     private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
     {
-        methodValidators.put(Method.ADD, new VJournalAddValidator());
-        methodValidators.put(Method.CANCEL, new VJournalCancelValidator());
-        methodValidators.put(Method.PUBLISH, new VJournalPublishValidator());
+        methodValidators.put(Method.ADD, new ComponentValidator<VJournal>(Arrays.asList(
+                new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
+                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, STATUS, SUMMARY, URL),
+                new ValidationRule(None, ATTENDEE, RECURRENCE_ID))));
+        methodValidators.put(Method.CANCEL, new ComponentValidator(Arrays.asList(
+                new ValidationRule(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
+                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, LAST_MODIFIED,
+                        RECURRENCE_ID, STATUS, SUMMARY, URL),
+                new ValidationRule(None, REQUEST_STATUS))));
+        methodValidators.put(Method.PUBLISH, new ComponentValidator(Arrays.asList(
+                new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, UID),
+                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, RECURRENCE_ID, SEQUENCE, STATUS,
+                        SUMMARY, URL),
+                new ValidationRule(None, ATTENDEE))));
     }
     
     /**
@@ -161,13 +170,13 @@ public class VJournal extends CalendarComponent {
             // From "4.8.4.7 Unique Identifier":
             // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
             // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.getInstance().assertOne(Property.UID,
+            PropertyValidator.assertOne(Property.UID,
                     getProperties());
 
             // From "4.8.7.2 Date/Time Stamp":
             // Conformance: This property MUST be included in the "VEVENT", "VTODO",
             // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
+            PropertyValidator.assertOne(Property.DTSTAMP,
                     getProperties());
         }
 
@@ -177,7 +186,7 @@ public class VJournal extends CalendarComponent {
          */
         Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION, Property.DTSTART,
                 Property.DTSTAMP, Property.LAST_MODIFIED, Property.ORGANIZER, Property.RECURRENCE_ID, Property.SEQUENCE,
-                Property.STATUS, Property.SUMMARY, Property.UID, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
+                Property.STATUS, Property.SUMMARY, Property.UID, Property.URL).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
         final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())

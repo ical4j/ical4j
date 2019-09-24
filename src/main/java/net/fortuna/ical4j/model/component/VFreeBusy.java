@@ -35,18 +35,16 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.validate.PropertyValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.VFreeBusyPublishValidator;
-import net.fortuna.ical4j.validate.component.VFreeBusyReplyValidator;
-import net.fortuna.ical4j.validate.component.VFreeBusyRequestValidator;
+import net.fortuna.ical4j.validate.*;
 import org.threeten.extra.Interval;
 
 import java.time.Instant;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
+
+import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -210,9 +208,19 @@ public class VFreeBusy extends CalendarComponent {
 
     private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
     {
-        methodValidators.put(Method.PUBLISH, new VFreeBusyPublishValidator());
-        methodValidators.put(Method.REPLY, new VFreeBusyReplyValidator());
-        methodValidators.put(Method.REQUEST, new VFreeBusyRequestValidator());
+        methodValidators.put(Method.PUBLISH, new ComponentValidator<VFreeBusy>(Arrays.asList(
+                new ValidationRule(OneOrMore, FREEBUSY),
+                new ValidationRule(One, DTSTAMP, DTSTART, DTEND, ORGANIZER, UID),
+                new ValidationRule(OneOrLess, URL),
+                new ValidationRule(None, ATTENDEE, DURATION, REQUEST_STATUS))));
+        methodValidators.put(Method.REPLY, new ComponentValidator(Arrays.asList(
+                new ValidationRule(One, ATTENDEE, DTSTAMP, DTEND, DTSTART, ORGANIZER, UID),
+                new ValidationRule(OneOrLess, URL),
+                new ValidationRule(None, DURATION, SEQUENCE))));
+        methodValidators.put(Method.REQUEST, new ComponentValidator(Arrays.asList(
+                new ValidationRule(OneOrMore, ATTENDEE),
+                new ValidationRule(One, DTEND, DTSTAMP, DTSTART, ORGANIZER, UID),
+                new ValidationRule(None, FREEBUSY, DURATION, REQUEST_STATUS, URL))));
     }
     
     /**
@@ -486,13 +494,13 @@ public class VFreeBusy extends CalendarComponent {
             // From "4.8.4.7 Unique Identifier":
             // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
             // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.getInstance().assertOne(Property.UID,
+            PropertyValidator.assertOne(Property.UID,
                     getProperties());
 
             // From "4.8.7.2 Date/Time Stamp":
             // Conformance: This property MUST be included in the "VEVENT", "VTODO",
             // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
+            PropertyValidator.assertOne(Property.DTSTAMP,
                     getProperties());
         }
 
@@ -501,7 +509,7 @@ public class VFreeBusy extends CalendarComponent {
          * dtstamp / organizer / uid / url /
          */
         Arrays.asList(Property.CONTACT, Property.DTSTART, Property.DTEND, Property.DURATION,
-                Property.DTSTAMP, Property.ORGANIZER, Property.UID, Property.URL).forEach(parameter -> PropertyValidator.getInstance().assertOneOrLess(parameter, getProperties()));
+                Property.DTSTAMP, Property.ORGANIZER, Property.UID, Property.URL).forEach(parameter -> PropertyValidator.assertOneOrLess(parameter, getProperties()));
 
         /*
          * ; the following are optional, ; and MAY occur more than once attendee / comment / freebusy / rstatus / x-prop
@@ -512,7 +520,7 @@ public class VFreeBusy extends CalendarComponent {
          * calendar component. Any recurring events are resolved into their individual busy time periods using the
          * "FREEBUSY" property.
          */
-        Arrays.asList(Property.RRULE, Property.EXRULE, Property.RDATE, Property.EXDATE).forEach(property -> PropertyValidator.getInstance().assertNone(property, getProperties()));
+        Arrays.asList(Property.RRULE, Property.EXRULE, Property.RDATE, Property.EXDATE).forEach(property -> PropertyValidator.assertNone(property, getProperties()));
 
         // DtEnd value must be later in time that DtStart..
         final DtStart dtStart = getProperty(Property.DTSTART);

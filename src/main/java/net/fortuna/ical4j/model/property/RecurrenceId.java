@@ -186,7 +186,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
          * (";" tzidparam) / (";" rangeparam) /
          */
 
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.RANGE,
+        ParameterValidator.assertOneOrLess(Parameter.RANGE,
                 getParameters());
 
         /*
