@@ -95,7 +95,7 @@ public class ExDate extends DateListProperty {
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
          * (";" tzidparam) /
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
+        ParameterValidator.assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
         final Parameter valueParam = getParameter(Parameter.VALUE);
@@ -106,7 +106,7 @@ public class ExDate extends DateListProperty {
                     + "] is invalid");
         }
 
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
+        ParameterValidator.assertOneOrLess(Parameter.TZID,
                 getParameters());
 
         /*

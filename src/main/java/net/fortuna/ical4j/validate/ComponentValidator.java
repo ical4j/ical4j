@@ -31,24 +31,57 @@
  */
 package net.fortuna.ical4j.validate;
 
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.util.CompatibilityHints;
+
+import java.util.List;
 
 /**
  * @author Ben
  *
  */
-public final class ComponentValidator {
+public class ComponentValidator<T extends Component> implements Validator<T> {
 
     private static final String ASSERT_NONE_MESSAGE = "Component [{0}] is not applicable";
 
     private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Component [{0}] must only be specified once";
-    
-    /**
-     * Constructor made private to enforce static nature.
-     */
-    private ComponentValidator() {
+
+    private final List<ValidationRule> rules;
+
+    public ComponentValidator(List<ValidationRule> rules) {
+        this.rules = rules;
     }
-    
+
+    @Override
+    public void validate(T target) throws ValidationException {
+        for (ValidationRule rule : rules) {
+            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
+                    && rule.isRelaxedModeSupported()) {
+                continue;
+            }
+
+            switch (rule.getType()) {
+                case None:
+                    rule.getInstances().forEach(s -> PropertyValidator.assertNone(s,
+                            target.getProperties()));
+                    break;
+                case One:
+                    rule.getInstances().forEach(s -> PropertyValidator.assertOne(s,
+                            target.getProperties()));
+                    break;
+                case OneOrLess:
+                    rule.getInstances().forEach(s -> PropertyValidator.assertOneOrLess(s,
+                            target.getProperties()));
+                    break;
+                case OneOrMore:
+                    rule.getInstances().forEach(s -> PropertyValidator.assertOneOrMore(s,
+                            target.getProperties()));
+                    break;
+            }
+        }
+    }
+
     /**
      * @param componentName a component name used in the assertion
      * @param components a list of components

@@ -213,7 +213,7 @@ public class RecurrenceId extends DateProperty {
          * (";" tzidparam) / (";" rangeparam) /
          */
 
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.RANGE,
+        ParameterValidator.assertOneOrLess(Parameter.RANGE,
                 getParameters());
 
         /*

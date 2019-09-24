@@ -31,7 +31,11 @@
  */
 package net.fortuna.ical4j.validate;
 
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.util.CompatibilityHints;
+
+import java.util.List;
 
 /**
  * $Id$ [15-May-2004]
@@ -40,7 +44,7 @@ import net.fortuna.ical4j.model.PropertyList;
  *
  * @author Ben Fortuna
  */
-public final class PropertyValidator {
+public final class PropertyValidator implements Validator<Property> {
 
     private static final String ASSERT_NONE_MESSAGE = "Property [{0}] is not applicable";
 
@@ -50,12 +54,35 @@ public final class PropertyValidator {
 
     private static final String ASSERT_ONE_OR_MORE_MESSAGE = "Property [{0}] must be specified at least once";
 
-    private static PropertyValidator instance = new PropertyValidator();
+    private final List<ValidationRule> rules;
 
-    /**
-     * Constructor made private to enforce singleton.
-     */
-    private PropertyValidator() {
+    public PropertyValidator(List<ValidationRule> rules) {
+        this.rules = rules;
+    }
+
+    @Override
+    public void validate(Property target) throws ValidationException {
+        for (ValidationRule rule : rules) {
+            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
+                    && rule.isRelaxedModeSupported()) {
+                continue;
+            }
+
+            switch (rule.getType()) {
+                case None:
+                    rule.getInstances().forEach(s -> ParameterValidator.assertNone(s,
+                            target.getParameters()));
+                    break;
+                case One:
+                    rule.getInstances().forEach(s -> ParameterValidator.assertOne(s,
+                            target.getParameters()));
+                    break;
+                case OneOrLess:
+                    rule.getInstances().forEach(s -> ParameterValidator.assertOneOrLess(s,
+                            target.getParameters()));
+                    break;
+            }
+        }
     }
 
     /**
@@ -68,7 +95,7 @@ public final class PropertyValidator {
      * @throws ValidationException
      *             when the specified property occurs more than once
      */
-    public void assertOneOrLess(final String propertyName,
+    public static void assertOneOrLess(final String propertyName,
             final PropertyList properties) throws ValidationException {
 
         if (properties.getProperties(propertyName).size() > 1) {
@@ -86,7 +113,7 @@ public final class PropertyValidator {
      * @throws ValidationException
      *             when the specified property occurs more than once
      */
-    public void assertOneOrMore(final String propertyName,
+    public static void assertOneOrMore(final String propertyName,
             final PropertyList properties) throws ValidationException {
 
         if (properties.getProperties(propertyName).size() < 1) {
@@ -104,7 +131,7 @@ public final class PropertyValidator {
      * @throws ValidationException
      *             when the specified property does not occur once
      */
-    public void assertOne(final String propertyName,
+    public static void assertOne(final String propertyName,
             final PropertyList properties) throws ValidationException {
 
         if (properties.getProperties(propertyName).size() != 1) {
@@ -119,16 +146,9 @@ public final class PropertyValidator {
      * @throws ValidationException thrown when the specified property
      * is found in the list of properties
      */
-    public void assertNone(final String propertyName, final PropertyList properties) throws ValidationException {
+    public static void assertNone(final String propertyName, final PropertyList properties) throws ValidationException {
         if (properties.getProperty(propertyName) != null) {
             throw new ValidationException(ASSERT_NONE_MESSAGE, new Object[] {propertyName});
         }
-    }
-
-    /**
-     * @return Returns the instance.
-     */
-    public static PropertyValidator getInstance() {
-        return instance;
     }
 }
