@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
+
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -69,7 +69,6 @@ public class LastModifiedTest extends PropertyTest {
         TestSuite suite = new TestSuite();
         LastModified modified = new LastModified("20081124T090000");
         suite.addTest(new LastModifiedTest(modified, "20081124T090000"));
-        suite.addTest(new LastModifiedTest("testValidationException", modified));
         
         modified = new LastModified("20081124T090000Z");
         suite.addTest(new LastModifiedTest("testValidation", modified));
