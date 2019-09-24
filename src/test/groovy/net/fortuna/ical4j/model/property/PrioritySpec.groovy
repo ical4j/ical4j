@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 
 class PrioritySpec extends Specification {
@@ -19,5 +20,19 @@ class PrioritySpec extends Specification {
         '9' | Priority.LOW
         '5' | Priority.MEDIUM
         '1' | Priority.HIGH
+    }
+
+    def 'test relaxed parsing with invalid values'() {
+        when: 'relaxed parsing is enabled'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
+
+        and: 'factory is invoked with invalid value'
+        def priority = factory.createProperty(new ParameterList(), value)
+
+        then: 'the returned priority is UNDEFINED'
+        priority == Priority.UNDEFINED
+
+        where:
+        value << ['', 'low', 'blah']
     }
 }
