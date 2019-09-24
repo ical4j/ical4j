@@ -40,12 +40,13 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.VTimeZoneITIPValidator;
+import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -125,7 +126,7 @@ public class VTimeZone extends CalendarComponent {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
-    private final Validator itipValidator = new VTimeZoneITIPValidator();
+    private final Validator itipValidator = new VTimeZoneValidator(Collections.emptyList());
     
     private ComponentList<Observance> observances;
 
@@ -190,15 +191,15 @@ public class VTimeZone extends CalendarComponent {
         /*
          * ; 'tzid' is required, but MUST NOT occur more ; than once tzid /
          */
-        PropertyValidator.getInstance().assertOne(Property.TZID,
+        PropertyValidator.assertOne(Property.TZID,
                 getProperties());
 
         /*
          * ; 'last-mod' and 'tzurl' are optional, but MUST NOT occur more than once last-mod / tzurl /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.LAST_MODIFIED,
+        PropertyValidator.assertOneOrLess(Property.LAST_MODIFIED,
                 getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.TZURL,
+        PropertyValidator.assertOneOrLess(Property.TZURL,
                 getProperties());
 
         /*

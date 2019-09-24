@@ -115,7 +115,7 @@ public class Available extends Component {
         /*
          * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
          */
-        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(property -> PropertyValidator.getInstance().assertOne(property, getProperties()));
+        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(property -> PropertyValidator.assertOne(property, getProperties()));
 
         /*       If specified, the "DTSTART" and "DTEND" properties in
          *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
@@ -136,7 +136,7 @@ public class Available extends Component {
          *               summary /
          */
         Arrays.asList(Property.CREATED, Property.LAST_MODIFIED, Property.RECURRENCE_ID,
-                Property.RRULE, Property.SUMMARY).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
+                Property.RRULE, Property.SUMMARY).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
         /*
          ; either a 'dtend' or a 'duration' is required
@@ -146,7 +146,7 @@ public class Available extends Component {
          ; than once
          */
         if (getProperty(Property.DTEND) != null) {
-            PropertyValidator.getInstance().assertOne(Property.DTEND,
+            PropertyValidator.assertOne(Property.DTEND,
                     getProperties());
             /* Must be DATE_TIME */
             final DtEnd end = getProperty(Property.DTEND);
@@ -155,7 +155,7 @@ public class Available extends Component {
                         + "] must be a " + Value.DATE_TIME);
             }
         } else {
-            PropertyValidator.getInstance().assertOne(Property.DURATION,
+            PropertyValidator.assertOne(Property.DURATION,
                     getProperties());
         }
 

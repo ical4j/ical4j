@@ -39,8 +39,9 @@ import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.*;
+import net.fortuna.ical4j.validate.component.VEventValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
@@ -51,6 +52,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -197,14 +201,50 @@ public class VEvent extends CalendarComponent {
 
     private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
     {
-        methodValidators.put(Method.ADD, new VEventAddValidator());
-        methodValidators.put(Method.CANCEL, new VEventCancelValidator());
-        methodValidators.put(Method.COUNTER, new VEventCounterValidator());
-        methodValidators.put(Method.DECLINE_COUNTER, new VEventDeclineCounterValidator());
-        methodValidators.put(Method.PUBLISH, new VEventPublishValidator());
-        methodValidators.put(Method.REFRESH, new VEventRefreshValidator());
-        methodValidators.put(Method.REPLY, new VEventReplyValidator());
-        methodValidators.put(Method.REQUEST, new VEventRequestValidator());
+        methodValidators.put(Method.ADD, new VEventValidator(Arrays.asList(
+                new ValidationRule(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, SUMMARY, UID),
+                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
+                        LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL),
+                new ValidationRule(None, RECURRENCE_ID, REQUEST_STATUS))));
+        methodValidators.put(Method.CANCEL, new VEventValidator(Arrays.asList(
+                new ValidationRule(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
+                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DTSTART, DURATION, GEO,
+                        LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, SUMMARY, TRANSP, URL),
+                new ValidationRule(None, REQUEST_STATUS)), false));
+        methodValidators.put(Method.COUNTER, new VEventValidator(Arrays.asList(
+                new ValidationRule(One, DTSTAMP, DTSTART, SEQUENCE, SUMMARY, UID),
+                new ValidationRule(One, true, ORGANIZER),
+                new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
+                        LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL))));
+        methodValidators.put(Method.DECLINE_COUNTER, new VEventValidator(Arrays.asList(
+                new ValidationRule(One, DTSTAMP, ORGANIZER, UID),
+                new ValidationRule(OneOrLess, RECURRENCE_ID, SEQUENCE),
+                new ValidationRule(None, ATTACH, ATTENDEE, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND,
+                        DTSTART, DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RDATE, RELATED_TO,
+                        RESOURCES, RRULE, STATUS, SUMMARY, TRANSP, URL)), false));
+        methodValidators.put(Method.PUBLISH, new VEventValidator(Arrays.asList(
+                new ValidationRule(One, DTSTART, UID),
+                new ValidationRule(One, true, DTSTAMP, ORGANIZER, SUMMARY),
+                new ValidationRule(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
+                        DURATION, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, TRANSP, URL),
+                new ValidationRule(None, true, ATTENDEE),
+                new ValidationRule(None, REQUEST_STATUS))));
+        methodValidators.put(Method.REFRESH, new VEventValidator(Arrays.asList(
+                new ValidationRule(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
+                new ValidationRule(OneOrLess, RECURRENCE_ID),
+                new ValidationRule(None, ATTACH, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTEND, DTSTART,
+                        DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RDATE, RELATED_TO,
+                        REQUEST_STATUS, RESOURCES, RRULE, SEQUENCE, STATUS, SUMMARY, TRANSP, URL)), false));
+        methodValidators.put(Method.REPLY, new VEventValidator(Arrays.asList(
+                new ValidationRule(One, ATTENDEE, DTSTAMP, ORGANIZER, UID),
+                new ValidationRule(OneOrLess, RECURRENCE_ID, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND,
+                        DTSTART, DURATION, GEO, LAST_MODIFIED, LOCATION, PRIORITY, RESOURCES, STATUS, SUMMARY, TRANSP,
+                        URL)), CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)));
+        methodValidators.put(Method.REQUEST, new VEventValidator(Arrays.asList(
+                new ValidationRule(OneOrMore, true, ATTENDEE),
+                new ValidationRule(One, DTSTAMP, DTSTART, ORGANIZER, SUMMARY, UID),
+                new ValidationRule(OneOrLess, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTEND, DURATION, GEO,
+                        LAST_MODIFIED, LOCATION, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS, TRANSP, URL))));
     }
     
     private ComponentList<VAlarm> alarms;
@@ -329,13 +369,13 @@ public class VEvent extends CalendarComponent {
             // From "4.8.4.7 Unique Identifier":
             // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
             // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.getInstance().assertOne(Property.UID,
+            PropertyValidator.assertOne(Property.UID,
                     getProperties());
 
             // From "4.8.7.2 Date/Time Stamp":
             // Conformance: This property MUST be included in the "VEVENT", "VTODO",
             // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.getInstance().assertOne(Property.DTSTAMP,
+            PropertyValidator.assertOne(Property.DTSTAMP,
                     getProperties());
         }
 
@@ -347,7 +387,7 @@ public class VEvent extends CalendarComponent {
         Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION,
                 Property.DTSTART, Property.GEO, Property.LAST_MODIFIED, Property.LOCATION, Property.ORGANIZER,
                 Property.PRIORITY, Property.DTSTAMP, Property.SEQUENCE, Property.STATUS, Property.SUMMARY,
-                Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
+                Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
         final Status status = getProperty(Property.STATUS);
         if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
@@ -362,11 +402,11 @@ public class VEvent extends CalendarComponent {
          * the same 'eventprop' dtend / duration /
          */
         try {
-            PropertyValidator.getInstance().assertNone(Property.DTEND,
+            PropertyValidator.assertNone(Property.DTEND,
                     getProperties());
         }
         catch (ValidationException ve) {
-            PropertyValidator.getInstance().assertNone(Property.DURATION,
+            PropertyValidator.assertNone(Property.DURATION,
                     getProperties());
         }
 

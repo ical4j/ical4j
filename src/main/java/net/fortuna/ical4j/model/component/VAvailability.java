@@ -179,7 +179,7 @@ public class VAvailability extends CalendarComponent {
         /*
          * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
          */
-        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(parameter -> PropertyValidator.getInstance().assertOne(parameter, getProperties()));
+        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(parameter -> PropertyValidator.assertOne(parameter, getProperties()));
 
         /*       If specified, the "DTSTART" and "DTEND" properties in
          *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
@@ -197,7 +197,7 @@ public class VAvailability extends CalendarComponent {
          * the same 'eventprop' dtend / duration /
          */
         if (getProperty(Property.DTEND) != null) {
-            PropertyValidator.getInstance().assertOne(Property.DTEND,
+            PropertyValidator.assertOne(Property.DTEND,
                     getProperties());
             /* Must be DATE_TIME */
             final DtEnd end = getProperty(Property.DTEND);
@@ -221,7 +221,7 @@ public class VAvailability extends CalendarComponent {
          *                  organizer / seq / summary / url /
          */
         Arrays.asList(Property.BUSYTYPE, Property.CREATED, Property.LAST_MODIFIED,
-                Property.ORGANIZER, Property.SEQUENCE, Property.SUMMARY, Property.URL).forEach(property -> PropertyValidator.getInstance().assertOneOrLess(property, getProperties()));
+                Property.ORGANIZER, Property.SEQUENCE, Property.SUMMARY, Property.URL).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
         /*
          * ; the following are optional, ; and MAY occur more than once

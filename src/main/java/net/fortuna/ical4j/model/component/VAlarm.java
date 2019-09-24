@@ -33,14 +33,16 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.PropertyValidator;
-import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
-import net.fortuna.ical4j.validate.component.*;
+import net.fortuna.ical4j.validate.*;
 
 import java.time.temporal.TemporalAmount;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -197,14 +199,16 @@ public class VAlarm extends CalendarComponent {
 
     private final Map<Action, Validator> actionValidators = new HashMap<Action, Validator>();
     {
-        actionValidators.put(Action.AUDIO, new VAlarmAudioValidator());
-        actionValidators.put(Action.DISPLAY, new VAlarmDisplayValidator());
-        actionValidators.put(Action.EMAIL, new VAlarmEmailValidator());
-        actionValidators.put(Action.PROCEDURE, new VAlarmProcedureValidator());
+        actionValidators.put(Action.AUDIO, new ComponentValidator<VAlarm>(
+                Collections.singletonList(new ValidationRule(OneOrLess, ATTACH))));
+        actionValidators.put(Action.DISPLAY, new ComponentValidator<VAlarm>(
+                Collections.singletonList(new ValidationRule(One, DESCRIPTION))));
+        actionValidators.put(Action.EMAIL, new ComponentValidator<VAlarm>(
+                Arrays.asList(new ValidationRule(One, DESCRIPTION, SUMMARY), new ValidationRule(OneOrMore, ATTENDEE))));
+        actionValidators.put(Action.PROCEDURE, new ComponentValidator<VAlarm>(
+                Arrays.asList(new ValidationRule(One, ATTACH), new ValidationRule(OneOrLess, DESCRIPTION))));
     }
-    
-    private final Validator itipValidator = new VAlarmITIPValidator();
-    
+
     /**
      * Default constructor.
      */
@@ -247,23 +251,23 @@ public class VAlarm extends CalendarComponent {
         /*
          * ; 'action' and 'trigger' are both REQUIRED, ; but MUST NOT occur more than once action / trigger /
          */
-        PropertyValidator.getInstance().assertOne(Property.ACTION, getProperties());
-        PropertyValidator.getInstance().assertOne(Property.TRIGGER, getProperties());
+        PropertyValidator.assertOne(Property.ACTION, getProperties());
+        PropertyValidator.assertOne(Property.TRIGGER, getProperties());
 
         /*
          * ; 'duration' and 'repeat' are both optional, ; and MUST NOT occur more than once each, ; but if one occurs,
          * so MUST the other duration / repeat /
          */
-        PropertyValidator.getInstance().assertOneOrLess(Property.DURATION, getProperties());
-        PropertyValidator.getInstance().assertOneOrLess(Property.REPEAT, getProperties());
+        PropertyValidator.assertOneOrLess(Property.DURATION, getProperties());
+        PropertyValidator.assertOneOrLess(Property.REPEAT, getProperties());
 
         try {
-            PropertyValidator.getInstance().assertNone(Property.DURATION, getProperties());
-            PropertyValidator.getInstance().assertNone(Property.REPEAT, getProperties());
+            PropertyValidator.assertNone(Property.DURATION, getProperties());
+            PropertyValidator.assertNone(Property.REPEAT, getProperties());
         }
         catch (ValidationException ve) {
-            PropertyValidator.getInstance().assertOne(Property.DURATION, getProperties());
-            PropertyValidator.getInstance().assertOne(Property.REPEAT, getProperties());
+            PropertyValidator.assertOne(Property.DURATION, getProperties());
+            PropertyValidator.assertOne(Property.REPEAT, getProperties());
         }
         
         /*
@@ -284,7 +288,7 @@ public class VAlarm extends CalendarComponent {
      * {@inheritDoc}
      */
     protected Validator getValidator(Method method) {
-        return itipValidator;
+        throw new UnsupportedOperationException("VALARM validation included in VEVENT or VTODO method validator.");
     }
 
     /**
