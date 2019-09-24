@@ -57,7 +57,7 @@ public class ZoneRulesBuilder {
     }
 
     public ZoneRules build() {
-        Observance current = vTimeZone.getApplicableObservance(Instant.now(),
+        Observance current = VTimeZone.getApplicableObservance(Instant.now(),
                 vTimeZone.getObservances().getComponents(Observance.STANDARD));
         ZoneOffset standardOffset = current.getOffsetTo().getOffset();
         ZoneOffset wallOffset = current.getOffsetFrom().getOffset();

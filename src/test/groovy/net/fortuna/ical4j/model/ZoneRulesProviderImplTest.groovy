@@ -18,6 +18,6 @@ class ZoneRulesProviderImplTest extends Specification {
         ZoneRules zoneRules = zoneRulesProvider.provideRules('Australia/Melbourne', false)
 
         then: 'an appropriate rules instance is provided'
-        zoneRules.getStandardOffset(Instant.now()) == ZoneOffset.ofHours(10)
+        zoneRules != null && zoneRules.getStandardOffset(Instant.now()) == ZoneOffset.ofHours(10)
     }
 }

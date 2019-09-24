@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
 import java.time.ZoneId;
 
 /**
@@ -96,14 +95,14 @@ public class TzId extends Parameter implements Escapable {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<TzId> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TZID);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public TzId createParameter(final String value) {
             return new TzId(Strings.unescape(value));
         }
     }

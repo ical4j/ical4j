@@ -3,11 +3,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.parameter.TzId;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.time.*;
-import java.time.chrono.ChronoZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
@@ -42,15 +38,31 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     private static CalendarDateFormat PARSE_FORMAT = new CalendarDateFormat(
             "yyyyMMdd['T'HHmmss[X]]", Instant::from, LocalDateTime::from, LocalDate::from);
 
-    private final T temporal;
+    private final String valueString;
+
+    private final TzId tzId;
+
+    private transient T temporal;
 
     public TemporalAdapter(TemporalAdapter<T> adapter) {
         this.temporal = adapter.temporal;
+        this.valueString = adapter.valueString;
+        this.tzId = adapter.tzId;
     }
 
     public TemporalAdapter(T temporal) {
         Objects.requireNonNull(temporal, "temporal");
         this.temporal = temporal;
+        this.valueString = toString(temporal);
+        if (ChronoUnit.SECONDS.isSupportedBy(temporal) && !isFloating(temporal) && !isUtc(temporal)) {
+            this.tzId = new TzId.Factory().createParameter(ZoneId.systemDefault().getId());
+        } else {
+            this.tzId = null;
+        }
+    }
+
+    private TemporalAdapter(String valueString) {
+        this(valueString, null);
     }
 
     /**
@@ -61,45 +73,65 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @param tzId a zone id to apply to the parsed value
      */
     private TemporalAdapter(String value, TzId tzId) {
-        temporal = (T) Proxy.newProxyInstance(ChronoZonedDateTime.class.getClassLoader(),
-                new Class[]{ChronoZonedDateTime.class},
-                new InvocationHandler() {
-                    private ChronoZonedDateTime<LocalDate> temporal;
-
-                    @Override
-                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                        if (temporal == null) {
-                            temporal = CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(value, tzId.toZoneId());
-                        }
-                        return method.invoke(temporal, args);
-                    }
-                });
+        this.valueString = value;
+        this.tzId = tzId;
     }
 
     public T getTemporal() {
+        if (temporal == null) {
+            synchronized (valueString) {
+                if (temporal == null) {
+                    if (tzId != null) {
+                        temporal = (T) CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(valueString, tzId.toZoneId());
+                    } else {
+                        temporal = (T) PARSE_FORMAT.parse(valueString);
+                    }
+                    /*
+                    temporal = (T) Proxy.newProxyInstance(ChronoZonedDateTime.class.getClassLoader(),
+                            new Class[]{ChronoZonedDateTime.class},
+                            new InvocationHandler() {
+                                private ChronoZonedDateTime<LocalDate> temporal;
+
+                                @Override
+                                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                                    if (temporal == null) {
+                                        temporal = CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(valueString, tzId.toZoneId());
+                                    }
+                                    return method.invoke(temporal, args);
+                                }
+                            });
+
+                     */
+                }
+            }
+        }
         return temporal;
     }
 
     @Override
     public String toString() {
+        return toString(getTemporal());
+    }
+
+    private String toString(T temporal) {
         if (!ChronoUnit.SECONDS.isSupportedBy(temporal)) {
-            return toString(CalendarDateFormat.DATE_FORMAT);
+            return toString(CalendarDateFormat.DATE_FORMAT, temporal);
         } else {
-            if (isFloating(temporal)) {
-                return toString(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT);
-            } else if (isUtc(temporal)) {
-                return toString(CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+            if (isFloating(getTemporal())) {
+                return toString(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT, temporal);
+            } else if (isUtc(getTemporal())) {
+                return toString(CalendarDateFormat.UTC_DATE_TIME_FORMAT, temporal);
             } else {
-                return toString(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT, ZoneId.systemDefault());
+                return toString(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT, ZoneId.systemDefault(), temporal);
             }
         }
     }
 
-    public String toString(CalendarDateFormat format) {
+    private String toString(CalendarDateFormat format, T temporal) {
         return format.format(temporal);
     }
 
-    public String toString(CalendarDateFormat format, ZoneId zoneId) {
+    private String toString(CalendarDateFormat format, ZoneId zoneId, T temporal) {
         return format.format(temporal, zoneId);
     }
 
@@ -108,12 +140,12 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     }
 
     public ZonedDateTime toLocalTime(ZoneId zoneId) {
-        if (isFloating(temporal)) {
-            return ((LocalDateTime) temporal).atZone(zoneId);
-        } else if (isUtc(temporal)) {
-            return ((Instant) temporal).atZone(zoneId);
+        if (isFloating(getTemporal())) {
+            return ((LocalDate) getTemporal()).atStartOfDay().atZone(zoneId);
+        } else if (isUtc(getTemporal())) {
+            return ((Instant) getTemporal()).atZone(zoneId);
         } else {
-            return ZonedDateTime.from(temporal);
+            return ZonedDateTime.from(getTemporal());
         }
     }
 
@@ -166,6 +198,8 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
             DateTime dateTime = (DateTime) date;
             if (dateTime.isUtc()) {
                 temporal = date.toInstant();
+            } else if (dateTime.getTimeZone() == null) {
+                temporal = LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
             } else {
                 temporal = ZonedDateTime.ofInstant(date.toInstant(), dateTime.getTimeZone().toZoneId());
             }

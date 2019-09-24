@@ -201,25 +201,27 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
         final Value value = getParameter(Parameter.VALUE);
 
-        if (date.getTemporal() instanceof LocalDate) {
-            if (value == null) {
-                throw new ValidationException("VALUE parameter [" + Value.DATE + "] must be specified for DATE instance");
-            } else if (!Value.DATE.equals(value)) {
-                throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE instance");
-            }
-        } else {
-            if (value != null && !Value.DATE_TIME.equals(value)) {
-                throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE-TIME instance");
-            }
+        if (date != null) {
+            if (date.getTemporal() instanceof LocalDate) {
+                if (value == null) {
+                    throw new ValidationException("VALUE parameter [" + Value.DATE + "] must be specified for DATE instance");
+                } else if (!Value.DATE.equals(value)) {
+                    throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE instance");
+                }
+            } else {
+                if (value != null && !Value.DATE_TIME.equals(value)) {
+                    throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE-TIME instance");
+                }
 
-            if (date.getTemporal() instanceof ZonedDateTime) {
-                ZonedDateTime dateTime = (ZonedDateTime) date.getTemporal();
+                if (date.getTemporal() instanceof ZonedDateTime) {
+                    ZonedDateTime dateTime = (ZonedDateTime) date.getTemporal();
 
-                // ensure tzid matches date-time timezone..
-                final Parameter tzId = getParameter(Parameter.TZID);
-                if (tzId == null || !tzId.getValue().equals(dateTime.getZone().getId())) {
-                    throw new ValidationException("TZID parameter [" + tzId + "] does not match the timezone ["
-                            + dateTime.getZone().getId() + "]");
+                    // ensure tzid matches date-time timezone..
+                    final TzId tzId = getParameter(Parameter.TZID);
+                    if (tzId == null || !tzId.toZoneId().equals(dateTime.getZone())) {
+                        throw new ValidationException("TZID parameter [" + tzId + "] does not match the timezone ["
+                                + dateTime.getZone().getId() + "]");
+                    }
                 }
             }
         }
