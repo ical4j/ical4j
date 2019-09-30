@@ -31,13 +31,29 @@
  */
 package net.fortuna.ical4j.validate;
 
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
+import java.text.MessageFormat;
+import java.util.function.Predicate;
 
 /**
  * @author fortuna
  *
  */
 public interface Validator<T> extends Serializable {
+
+    static <T> void assertFalse(Predicate<T> predicate, String message, boolean warn, T components,
+                                Object...messageParams) {
+
+        if (predicate.test(components)) {
+            if (warn) {
+                LoggerFactory.getLogger(Validator.class).warn(MessageFormat.format(message, messageParams));
+            } else {
+                throw new ValidationException(message, messageParams);
+            }
+        }
+    }
 
     /**
      * Validates the associated model against an applicable standard.

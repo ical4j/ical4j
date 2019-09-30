@@ -34,6 +34,8 @@ package net.fortuna.ical4j.validate;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 
+import static net.fortuna.ical4j.validate.Validator.assertFalse;
+
 /**
  * $Id$ [15-May-2004]
  *
@@ -44,18 +46,16 @@ import net.fortuna.ical4j.model.ParameterList;
  */
 public final class ParameterValidator {
 
-    private static final String ASSERT_NONE_MESSAGE = "Parameter [{0}] is not applicable";
+    public static final String ASSERT_NONE_MESSAGE = "Parameter [{0}] is not applicable";
 
-    private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Parameter [{0}] must only be specified once";
+    public static final String ASSERT_ONE_OR_LESS_MESSAGE = "Parameter [{0}] must only be specified once";
 
-    private static final String ASSERT_ONE_MESSAGE = "Parameter [{0}] must be specified once";
+    public static final String ASSERT_ONE_MESSAGE = "Parameter [{0}] must be specified once";
 
     private static final String ASSERT_NULL_OR_EQUAL_MESSAGE = "Parameter [{0}] is invalid";
 
-    private static ParameterValidator instance = new ParameterValidator();
-
     /**
-     * Constructor made private to enforce singleton.
+     * Constructor made private to enforce static nature.
      */
     private ParameterValidator() {
     }
@@ -70,12 +70,11 @@ public final class ParameterValidator {
      * @throws ValidationException
      *             when the specified parameter occurs more than once
      */
-    public void assertOneOrLess(final String paramName,
-            final ParameterList parameters) throws ValidationException {
+    public static void assertOneOrLess(final String paramName, final ParameterList parameters)
+            throws ValidationException {
 
-        if (parameters.getParameters(paramName).size() > 1) {
-            throw new ValidationException(ASSERT_ONE_OR_LESS_MESSAGE, new Object[] {paramName});
-        }
+        assertFalse(parameters1 -> parameters1.getParameters(paramName).size() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
+                parameters, paramName);
     }
 
     /**
@@ -88,12 +87,9 @@ public final class ParameterValidator {
      * @throws ValidationException
      *             when the specified parameter does not occur once
      */
-    public void assertOne(final String paramName,
-            final ParameterList parameters) throws ValidationException {
-
-        if (parameters.getParameters(paramName).size() != 1) {
-            throw new ValidationException(ASSERT_ONE_MESSAGE, new Object[] {paramName});
-        }
+    public static void assertOne(final String paramName, final ParameterList parameters) throws ValidationException {
+        assertFalse(parameters1 -> parameters1.getParameters(paramName).size() != 1, ASSERT_ONE_MESSAGE, false,
+                parameters, paramName);
     }
     
     /**
@@ -103,10 +99,9 @@ public final class ParameterValidator {
      * @throws ValidationException thrown when the specified property
      * is found in the list of properties
      */
-    public void assertNone(final String paramName, final ParameterList parameters) throws ValidationException {
-        if (parameters.getParameter(paramName) != null) {
-            throw new ValidationException(ASSERT_NONE_MESSAGE, new Object[] {paramName});
-        }
+    public static void assertNone(final String paramName, final ParameterList parameters) throws ValidationException {
+        assertFalse(parameters1 -> parameters1.getParameter(paramName) != null, ASSERT_NONE_MESSAGE, false,
+                parameters, paramName);
     }
 
     /**
@@ -114,17 +109,10 @@ public final class ParameterValidator {
      * @param parameters a list of parameters
      * @throws ValidationException where the assertion fails
      */
-    public void assertNullOrEqual(final Parameter param, final ParameterList parameters) throws ValidationException {
+    public static void assertNullOrEqual(final Parameter param, final ParameterList parameters) throws ValidationException {
         final Parameter p = parameters.getParameter(param.getName());
         if (p != null && !param.equals(p)) {
             throw new ValidationException(ASSERT_NULL_OR_EQUAL_MESSAGE, new Object[] {p});
         }
-    }
-    
-    /**
-     * @return Returns the instance.
-     */
-    public static ParameterValidator getInstance() {
-        return instance;
     }
 }

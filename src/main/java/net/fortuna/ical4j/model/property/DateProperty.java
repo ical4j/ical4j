@@ -232,14 +232,14 @@ public abstract class DateProperty extends Property {
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
 
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.VALUE,
+        ParameterValidator.assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
         if (isUtc()) {
-            ParameterValidator.getInstance().assertNone(Parameter.TZID,
+            ParameterValidator.assertNone(Parameter.TZID,
                     getParameters());
         } else {
-            ParameterValidator.getInstance().assertOneOrLess(Parameter.TZID,
+            ParameterValidator.assertOneOrLess(Parameter.TZID,
                     getParameters());
         }
 

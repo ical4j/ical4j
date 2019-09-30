@@ -191,11 +191,11 @@ public class Organizer extends Property {
          * sentbyparam) / (";" languageparam) /
          */
         Arrays.asList(Parameter.CN, Parameter.DIR, Parameter.SENT_BY,
-                Parameter.LANGUAGE).forEach(parameter -> ParameterValidator.getInstance().assertOneOrLess(parameter, getParameters()));
+                Parameter.LANGUAGE).forEach(parameter -> ParameterValidator.assertOneOrLess(parameter, getParameters()));
 
         /* schedulestatus added for CalDAV scheduling
          */
-        ParameterValidator.getInstance().assertOneOrLess(Parameter.SCHEDULE_STATUS,
+        ParameterValidator.assertOneOrLess(Parameter.SCHEDULE_STATUS,
                 getParameters());
 
         /*

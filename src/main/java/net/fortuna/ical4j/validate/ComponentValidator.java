@@ -31,33 +31,65 @@
  */
 package net.fortuna.ical4j.validate;
 
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.util.CompatibilityHints;
+
+import java.util.List;
+
+import static net.fortuna.ical4j.validate.Validator.assertFalse;
 
 /**
  * @author Ben
  *
  */
-public final class ComponentValidator {
+public class ComponentValidator<T extends Component> implements Validator<T> {
 
     private static final String ASSERT_NONE_MESSAGE = "Component [{0}] is not applicable";
 
     private static final String ASSERT_ONE_OR_LESS_MESSAGE = "Component [{0}] must only be specified once";
-    
-    /**
-     * Constructor made private to enforce static nature.
-     */
-    private ComponentValidator() {
+
+    private final List<ValidationRule> rules;
+
+    public ComponentValidator(List<ValidationRule> rules) {
+        this.rules = rules;
     }
-    
+
+    @Override
+    public void validate(T target) throws ValidationException {
+        for (ValidationRule rule : rules) {
+            boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
+                    && rule.isRelaxedModeSupported();
+
+            switch (rule.getType()) {
+                case None:
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.getProperty(s) != null,
+                            PropertyValidator.ASSERT_NONE_MESSAGE, warnOnly, target.getProperties(), s));
+                    break;
+                case One:
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.getProperties(s).size() != 1,
+                            PropertyValidator.ASSERT_ONE_MESSAGE, warnOnly, target.getProperties(), s));
+                    break;
+                case OneOrLess:
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.getProperties(s).size() > 1,
+                            PropertyValidator.ASSERT_ONE_OR_LESS_MESSAGE, warnOnly, target.getProperties(), s));
+                    break;
+                case OneOrMore:
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.getProperties(s).size() < 1,
+                            PropertyValidator.ASSERT_ONE_OR_MORE_MESSAGE, warnOnly, target.getProperties(), s));
+                    break;
+            }
+        }
+    }
+
     /**
      * @param componentName a component name used in the assertion
      * @param components a list of components
      * @throws ValidationException where the assertion fails
      */
     public static void assertNone(String componentName, ComponentList<?> components) throws ValidationException {
-        if (components.getComponent(componentName) != null) {
-            throw new ValidationException(ASSERT_NONE_MESSAGE, new Object[] {componentName});
-        }
+        assertFalse(input -> input.getComponent(componentName) != null, ASSERT_NONE_MESSAGE, false,
+                components, componentName);
     }
     
     /**
@@ -66,8 +98,7 @@ public final class ComponentValidator {
      * @throws ValidationException where the assertion fails
      */
     public static void assertOneOrLess(String componentName, ComponentList<?> components) throws ValidationException {
-        if (components.getComponents(componentName).size() > 1) {
-            throw new ValidationException(ASSERT_ONE_OR_LESS_MESSAGE, new Object[] {componentName});
-        }
+        assertFalse(input -> input.getComponents(componentName).size() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
+                components, componentName);
     }
 }
