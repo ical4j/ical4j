@@ -40,11 +40,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -220,19 +216,18 @@ public class RequestStatus extends Property {
         validator.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RequestStatus> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(REQUEST_STATUS);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public RequestStatus createProperty(final ParameterList parameters, final String value) {
             return new RequestStatus(parameters, value);
         }
 
-        public Property createProperty() {
+        public RequestStatus createProperty() {
             return new RequestStatus();
         }
     }

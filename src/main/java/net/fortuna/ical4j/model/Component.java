@@ -38,7 +38,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -261,15 +260,13 @@ public abstract class Component implements Serializable {
      * Create a (deep) copy of this component.
      *
      * @return the component copy
-     * @throws IOException        where an error occurs reading the component data
      * @throws ParseException     where parsing component data fails
      * @throws URISyntaxException where component data contains an invalid URI
      */
-    public Component copy() throws ParseException, IOException,
-            URISyntaxException {
+    public Component copy() throws ParseException, URISyntaxException {
 
         // Deep copy properties..
-        final PropertyList<Property> newprops = new PropertyList<Property>(getProperties());
+        final PropertyList<Property> newprops = new PropertyList<>(getProperties());
 
         return new ComponentFactoryImpl().createComponent(getName(),
                 newprops);

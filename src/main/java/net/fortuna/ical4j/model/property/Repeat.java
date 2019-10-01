@@ -31,12 +31,11 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -119,19 +118,18 @@ public class Repeat extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Repeat> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(REPEAT);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Repeat createProperty(final ParameterList parameters, final String value) {
             return new Repeat(parameters, value);
         }
 
-        public Property createProperty() {
+        public Repeat createProperty() {
             return new Repeat();
         }
     }

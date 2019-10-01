@@ -37,10 +37,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -171,8 +167,7 @@ public class Method extends Property {
             super(METHOD);
         }
 
-        public Method createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Method createProperty(final ParameterList parameters, final String value) {
 
             Method method;
             if (ADD.getValue().equals(value)) {

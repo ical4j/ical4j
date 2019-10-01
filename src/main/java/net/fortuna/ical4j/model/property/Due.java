@@ -35,9 +35,6 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
@@ -148,8 +145,7 @@ public class Due<T extends Temporal> extends DateProperty<T> {
             super(DUE);
         }
 
-        public Due createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Due createProperty(final ParameterList parameters, final String value) {
             return new Due(parameters, value);
         }
 

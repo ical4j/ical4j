@@ -35,8 +35,6 @@ import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.temporal.Temporal;
 
@@ -136,8 +134,7 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * @param aValue a value string for this component
      * @throws ParseException when the specified string is not a valid date/date-time representation
      */
-    public DtEnd(final ParameterList aList, final String aValue)
-            throws ParseException {
+    public DtEnd(final ParameterList aList, final String aValue) {
         super(DTEND, aList, new Factory());
         setValue(aValue);
     }
@@ -182,8 +179,7 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
             super(DTEND);
         }
 
-        public DtEnd createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public DtEnd createProperty(final ParameterList parameters, final String value) {
             return new DtEnd(parameters, value);
         }
 

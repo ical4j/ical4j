@@ -35,8 +35,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 
 /**
@@ -124,19 +122,18 @@ public class ExRule extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ExRule> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(EXRULE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public ExRule createProperty(final ParameterList parameters, final String value) throws ParseException {
             return new ExRule(parameters, value);
         }
 
-        public Property createProperty() {
+        public ExRule createProperty() {
             return new ExRule();
         }
     }

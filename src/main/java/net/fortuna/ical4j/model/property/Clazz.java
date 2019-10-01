@@ -37,10 +37,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -185,9 +181,7 @@ public class Clazz extends Property {
             super(CLASS);
         }
 
-        public Clazz createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-
+        public Clazz createProperty(final ParameterList parameters, final String value) {
             Clazz clazz;
             if (CONFIDENTIAL.getValue().equals(value)) {
                 clazz = CONFIDENTIAL;

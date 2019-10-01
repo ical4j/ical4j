@@ -9,11 +9,8 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.Instant;
 
@@ -145,19 +142,18 @@ public class Acknowledged extends DateProperty<Instant> {
         setDate(aDate);
     }
     
-    public static class Factory extends Content.Factory implements PropertyFactory<Property> {
+    public static class Factory extends Content.Factory implements PropertyFactory<Acknowledged> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(ACKNOWLEDGED);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Acknowledged createProperty(final ParameterList parameters, final String value) throws ParseException {
             return new Acknowledged(parameters, value);
         }
 
-        public Property createProperty() {
+        public Acknowledged createProperty() {
             return new Acknowledged();
         }
     }

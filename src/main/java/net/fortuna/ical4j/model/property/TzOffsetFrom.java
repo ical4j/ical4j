@@ -34,9 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.ZoneOffset;
 
 /**
@@ -148,19 +145,18 @@ public class TzOffsetFrom extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<TzOffsetFrom> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TZOFFSETFROM);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public TzOffsetFrom createProperty(final ParameterList parameters, final String value) {
             return new TzOffsetFrom(parameters, value);
         }
 
-        public Property createProperty() {
+        public TzOffsetFrom createProperty() {
             return new TzOffsetFrom();
         }
     }

@@ -37,9 +37,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Arrays;
 
 import static net.fortuna.ical4j.model.Parameter.ALTREP;
@@ -124,19 +121,18 @@ public class Resources extends Property {
         validator.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Resources> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RESOURCES);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Resources createProperty(final ParameterList parameters, final String value) {
             return new Resources(parameters, value);
         }
 
-        public Property createProperty() {
+        public Resources createProperty() {
             return new Resources();
         }
     }

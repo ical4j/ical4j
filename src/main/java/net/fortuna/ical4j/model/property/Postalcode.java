@@ -34,10 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -104,8 +100,7 @@ public class Postalcode extends Property implements Escapable {
             super(POSTALCODE);
         }
 
-        public Postalcode createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Postalcode createProperty(final ParameterList parameters, final String value) {
             return new Postalcode(parameters, value);
         }
 

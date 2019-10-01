@@ -521,7 +521,7 @@ public abstract class Property extends Content {
      * @throws URISyntaxException where the property contains an invalid URI value
      * @throws ParseException     where the property contains an invalid date value
      */
-    public <T extends Property> T copy() throws IOException, URISyntaxException, ParseException {
+    public <T extends Property> T copy() throws URISyntaxException, ParseException {
         if (factory == null) {
             throw new UnsupportedOperationException("No factory specified");
         }

@@ -31,7 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -59,11 +58,10 @@ public interface PropertyFactory<T extends Property> extends Serializable {
      * @param parameters a list of property parameters
      * @param value      a property value
      * @return a new instance of the specified property
-     * @throws IOException        where an unexpected error occurs reading data
      * @throws URISyntaxException where data contains an invalid URI
      * @throws ParseException     where data is unable to be parsed correctly
      */
-    T createProperty(ParameterList parameters, String value) throws IOException, URISyntaxException, ParseException;
+    T createProperty(ParameterList parameters, String value) throws URISyntaxException, ParseException;
 
     boolean supports(String name);
 }

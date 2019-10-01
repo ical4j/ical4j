@@ -37,8 +37,6 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
@@ -258,19 +256,18 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
         return super.getValue();
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RDate> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RDATE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public RDate createProperty(final ParameterList parameters, final String value) throws ParseException {
             return new RDate(parameters, value);
         }
 
-        public Property createProperty() {
+        public RDate createProperty() {
             return new RDate();
         }
     }

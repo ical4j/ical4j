@@ -34,10 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -155,19 +151,18 @@ public class TzId extends Property implements Escapable {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<TzId> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TZID);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public TzId createProperty(final ParameterList parameters, final String value) {
             return new TzId(parameters, value);
         }
 
-        public Property createProperty() {
+        public TzId createProperty() {
             return new TzId();
         }
     }

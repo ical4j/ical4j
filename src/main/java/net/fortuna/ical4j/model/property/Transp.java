@@ -37,10 +37,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -179,9 +175,7 @@ public class Transp extends Property {
             super(TRANSP);
         }
 
-        public Transp createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-
+        public Transp createProperty(final ParameterList parameters, final String value) {
             Transp transp;
             if (OPAQUE.getValue().equals(value)) {
                 transp = OPAQUE;

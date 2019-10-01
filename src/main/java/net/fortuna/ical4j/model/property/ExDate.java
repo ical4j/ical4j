@@ -36,8 +36,6 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.temporal.Temporal;
 
@@ -115,19 +113,18 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
          */
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<ExDate> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(EXDATE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public ExDate createProperty(final ParameterList parameters, final String value) throws ParseException {
             return new ExDate(parameters, value);
         }
 
-        public Property createProperty() {
+        public ExDate createProperty() {
             return new ExDate();
         }
     }

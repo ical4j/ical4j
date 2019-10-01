@@ -37,10 +37,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -205,9 +201,7 @@ public class Version extends Property {
             super(VERSION);
         }
 
-        public Version createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-
+        public Version createProperty(final ParameterList parameters, final String value) {
             Version version;
             if (VERSION_2_0.getValue().equals(value)) {
                 version = VERSION_2_0;

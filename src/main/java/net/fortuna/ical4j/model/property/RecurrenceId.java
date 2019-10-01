@@ -31,12 +31,13 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -194,19 +195,18 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
          */
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RecurrenceId> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RECURRENCE_ID);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public RecurrenceId createProperty(final ParameterList parameters, final String value) throws ParseException {
             return new RecurrenceId(parameters, value);
         }
 
-        public Property createProperty() {
+        public RecurrenceId createProperty() {
             return new RecurrenceId<>(LocalDateTime.now(ZoneOffset.UTC));
         }
     }

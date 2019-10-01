@@ -37,10 +37,8 @@ import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Arrays;
 
 /**
@@ -163,19 +161,18 @@ public class Attendee extends Property {
         return new Attendee(new ParameterList(getParameters(), false), calAddress);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Attendee> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(ATTENDEE);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Attendee createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
             return new Attendee(parameters, value);
         }
 
-        public Property createProperty() {
+        public Attendee createProperty() {
             return new Attendee();
         }
     }

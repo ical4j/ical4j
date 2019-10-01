@@ -34,9 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
@@ -219,19 +216,18 @@ public class Duration extends Property {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Duration> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DURATION);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Duration createProperty(final ParameterList parameters, final String value) {
             return new Duration(parameters, value);
         }
 
-        public Property createProperty() {
+        public Duration createProperty() {
             return new Duration();
         }
     }

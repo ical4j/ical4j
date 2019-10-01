@@ -31,14 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -243,19 +243,18 @@ public class Geo extends Property {
         this.longitude = longitude;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Geo> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(GEO);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Geo createProperty(final ParameterList parameters, final String value) {
             return new Geo(parameters, value);
         }
 
-        public Property createProperty() {
+        public Geo createProperty() {
             return new Geo();
         }
     }

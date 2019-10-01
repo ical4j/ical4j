@@ -34,10 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -97,19 +93,18 @@ public class StreetAddress extends Property implements Escapable {
 
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<StreetAddress> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(STREET_ADDRESS);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public StreetAddress createProperty(final ParameterList parameters, final String value) {
             return new StreetAddress(parameters, value);
         }
 
-        public Property createProperty() {
+        public StreetAddress createProperty() {
             return new StreetAddress();
         }
     }

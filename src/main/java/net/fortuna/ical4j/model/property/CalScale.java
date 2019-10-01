@@ -38,10 +38,6 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -145,9 +141,7 @@ public class CalScale extends Property {
             super(CALSCALE);
         }
 
-        public CalScale createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-
+        public CalScale createProperty(final ParameterList parameters, final String value) {
             CalScale calScale;
             if (GREGORIAN.getValue().equals(value)) {
                 calScale = GREGORIAN;

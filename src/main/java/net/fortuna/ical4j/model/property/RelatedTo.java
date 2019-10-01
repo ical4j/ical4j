@@ -37,9 +37,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Arrays;
 
 import static net.fortuna.ical4j.model.Parameter.RELTYPE;
@@ -106,19 +103,18 @@ public class RelatedTo extends Property implements Escapable {
         validator.validate(this);
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<RelatedTo> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RELATED_TO);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public RelatedTo createProperty(final ParameterList parameters, final String value) {
             return new RelatedTo(parameters, value);
         }
 
-        public Property createProperty() {
+        public RelatedTo createProperty() {
             return new RelatedTo();
         }
     }

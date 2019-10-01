@@ -33,12 +33,8 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.Instant;
 
 /**
@@ -136,19 +132,18 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
         return getDate().compareTo(o.getDate());
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<DtStamp> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DTSTAMP);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public DtStamp createProperty(final ParameterList parameters, final String value) {
             return new DtStamp(parameters, value);
         }
 
-        public Property createProperty() {
+        public DtStamp createProperty() {
             return new DtStamp();
         }
     }

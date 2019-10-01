@@ -37,10 +37,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -251,9 +247,7 @@ public class Status extends Property {
             super(STATUS);
         }
 
-        public Status createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-
+        public Status createProperty(final ParameterList parameters, final String value) {
             Status status;
             if (Status.VEVENT_CANCELLED.getValue().equals(value)) {
                 status = Status.VEVENT_CANCELLED;

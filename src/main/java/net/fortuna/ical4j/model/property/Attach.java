@@ -47,11 +47,9 @@ import org.apache.commons.codec.EncoderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 
 /**
  * $Id$
@@ -289,19 +287,18 @@ public class Attach extends Property {
         this.binary = null;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<Property> {
+    public static class Factory extends Content.Factory implements PropertyFactory<Attach> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(ATTACH);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
+        public Attach createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
             return new Attach(parameters, value);
         }
 
-        public Property createProperty() {
+        public Attach createProperty() {
             return new Attach();
         }
     }

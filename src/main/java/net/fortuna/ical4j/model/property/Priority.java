@@ -38,10 +38,6 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -256,9 +252,7 @@ public class Priority extends Property {
             super(PRIORITY);
         }
 
-        public Priority createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-
+        public Priority createProperty(final ParameterList parameters, final String value) {
             Priority priority;
             if (HIGH.getValue().equals(value)) {
                 priority = HIGH;

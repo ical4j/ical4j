@@ -37,10 +37,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-
 /**
  * $Id$
  * <p/>
@@ -149,9 +145,7 @@ public class Action extends Property {
             super(ACTION);
         }
 
-        public Action createProperty(final ParameterList parameters, final String value)
-                throws IOException, URISyntaxException, ParseException {
-
+        public Action createProperty(final ParameterList parameters, final String value) {
             Action action;
             if (AUDIO.getValue().equals(value)) {
                 action = AUDIO;
