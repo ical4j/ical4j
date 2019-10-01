@@ -81,7 +81,7 @@ import static java.time.temporal.ChronoField.*;
  *                special expand for YEARLY.
  * </pre>
  */
-public abstract class AbstractDateExpansionRule<T extends Temporal> implements Transformer<List<T>>, Serializable {
+abstract class AbstractDateExpansionRule<T extends Temporal> implements Transformer<List<T>>, Serializable {
 
     private final Frequency frequency;
 
@@ -89,43 +89,43 @@ public abstract class AbstractDateExpansionRule<T extends Temporal> implements T
         this.frequency = frequency;
     }
 
-    protected Frequency getFrequency() {
+    Frequency getFrequency() {
         return frequency;
     }
 
-    protected int getSecond(T date) {
+    int getSecond(T date) {
         return getTemporalField(date, SECOND_OF_MINUTE);
     }
 
-    protected int getMinute(T date) {
+    int getMinute(T date) {
         return getTemporalField(date, MINUTE_OF_HOUR);
     }
 
-    protected int getHour(T date) {
+    int getHour(T date) {
         return getTemporalField(date, HOUR_OF_DAY);
     }
 
-    protected DayOfWeek getDayOfWeek(T date) {
+    DayOfWeek getDayOfWeek(T date) {
         return DayOfWeek.of(getTemporalField(date, DAY_OF_WEEK));
     }
 
-    protected int getDayOfMonth(T date) {
+    int getDayOfMonth(T date) {
         return getTemporalField(date, DAY_OF_MONTH);
     }
 
-    protected int getDayOfYear(T date) {
+    int getDayOfYear(T date) {
         return getTemporalField(date, DAY_OF_YEAR);
     }
 
-    protected int getMonth(T date) {
+    int getMonth(T date) {
         return getTemporalField(date, MONTH_OF_YEAR);
     }
 
-    protected int getYear(T date) {
+    int getYear(T date) {
         return getTemporalField(date, YEAR);
     }
 
-    protected int getTemporalField(T date, TemporalField field) {
+    private int getTemporalField(T date, TemporalField field) {
         if (date.isSupported(field)) {
             return date.get(field);
         } else {
@@ -134,7 +134,7 @@ public abstract class AbstractDateExpansionRule<T extends Temporal> implements T
         }
     }
 
-    protected T withTemporalField(T date, TemporalField field, int value) {
+    T withTemporalField(T date, TemporalField field, int value) {
         if (date.isSupported(field)) {
             return (T) date.with(field, value);
         }
