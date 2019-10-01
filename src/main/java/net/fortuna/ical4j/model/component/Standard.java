@@ -66,7 +66,7 @@ import net.fortuna.ical4j.model.PropertyList;
  *
  * @author Ben Fortuna
  */
-public class Standard extends Observance {
+public class Standard extends Observance<Standard> {
 
     private static final long serialVersionUID = -4750910013406451159L;
 

@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component implements Serializable {
+public abstract class Component<C extends Component> implements Serializable {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -129,7 +129,7 @@ public abstract class Component implements Serializable {
      * @param s a component name
      */
     protected Component(final String s) {
-        this(s, new PropertyList<Property>());
+        this(s, new PropertyList<>());
     }
 
     /**
@@ -178,7 +178,7 @@ public abstract class Component implements Serializable {
      * @param name name of properties to retrieve
      * @return a property list containing only properties with the specified name
      */
-    public final <C extends Property> PropertyList<C> getProperties(final String name) {
+    public final <T extends Property> PropertyList<T> getProperties(final String name) {
         return getProperties().getProperties(name);
     }
 
@@ -263,7 +263,7 @@ public abstract class Component implements Serializable {
      * @throws ParseException     where parsing component data fails
      * @throws URISyntaxException where component data contains an invalid URI
      */
-    public Component copy() throws ParseException, URISyntaxException {
+    public C copy() throws ParseException, URISyntaxException {
 
         // Deep copy properties..
         final PropertyList<Property> newprops = new PropertyList<>(getProperties());

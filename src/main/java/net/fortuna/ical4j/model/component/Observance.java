@@ -60,7 +60,7 @@ import java.util.List;
  *
  * @author Ben Fortuna
  */
-public abstract class Observance extends Component {
+public abstract class Observance<T extends Observance> extends Component<T> {
 
     /**
      *

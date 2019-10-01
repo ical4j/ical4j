@@ -103,22 +103,22 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VJournal extends CalendarComponent {
+public class VJournal extends CalendarComponent<VJournal> {
 
     private static final long serialVersionUID = -7635140949183238830L;
 
-    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
+    private final Map<Method, Validator<VJournal>> methodValidators = new HashMap<>();
     {
-        methodValidators.put(Method.ADD, new ComponentValidator<VJournal>(Arrays.asList(
+        methodValidators.put(Method.ADD, new ComponentValidator<>(Arrays.asList(
                 new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, STATUS, SUMMARY, URL),
                 new ValidationRule(None, ATTENDEE, RECURRENCE_ID))));
-        methodValidators.put(Method.CANCEL, new ComponentValidator(Arrays.asList(
+        methodValidators.put(Method.CANCEL, new ComponentValidator<>(Arrays.asList(
                 new ValidationRule(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, LAST_MODIFIED,
                         RECURRENCE_ID, STATUS, SUMMARY, URL),
                 new ValidationRule(None, REQUEST_STATUS))));
-        methodValidators.put(Method.PUBLISH, new ComponentValidator(Arrays.asList(
+        methodValidators.put(Method.PUBLISH, new ComponentValidator<>(Arrays.asList(
                 new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, RECURRENCE_ID, SEQUENCE, STATUS,
                         SUMMARY, URL),
@@ -209,7 +209,7 @@ public class VJournal extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    protected Validator getValidator(Method method) {
+    protected Validator<VJournal> getValidator(Method method) {
         return methodValidators.get(method);
     }
 

@@ -202,22 +202,22 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VFreeBusy extends CalendarComponent {
+public class VFreeBusy extends CalendarComponent<VFreeBusy> {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
-    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
+    private final Map<Method, Validator<VFreeBusy>> methodValidators = new HashMap<>();
     {
-        methodValidators.put(Method.PUBLISH, new ComponentValidator<VFreeBusy>(Arrays.asList(
+        methodValidators.put(Method.PUBLISH, new ComponentValidator<>(Arrays.asList(
                 new ValidationRule(OneOrMore, FREEBUSY),
                 new ValidationRule(One, DTSTAMP, DTSTART, DTEND, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, URL),
                 new ValidationRule(None, ATTENDEE, DURATION, REQUEST_STATUS))));
-        methodValidators.put(Method.REPLY, new ComponentValidator(Arrays.asList(
+        methodValidators.put(Method.REPLY, new ComponentValidator<>(Arrays.asList(
                 new ValidationRule(One, ATTENDEE, DTSTAMP, DTEND, DTSTART, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, URL),
                 new ValidationRule(None, DURATION, SEQUENCE))));
-        methodValidators.put(Method.REQUEST, new ComponentValidator(Arrays.asList(
+        methodValidators.put(Method.REQUEST, new ComponentValidator<>(Arrays.asList(
                 new ValidationRule(OneOrMore, ATTENDEE),
                 new ValidationRule(One, DTEND, DTSTAMP, DTSTART, ORGANIZER, UID),
                 new ValidationRule(None, FREEBUSY, DURATION, REQUEST_STATUS, URL))));
@@ -560,7 +560,7 @@ public class VFreeBusy extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    protected Validator getValidator(Method method) {
+    protected Validator<VFreeBusy> getValidator(Method method) {
         return methodValidators.get(method);
     }
 

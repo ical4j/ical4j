@@ -43,12 +43,11 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Collections;
 import java.time.OffsetDateTime;
 import java.time.temporal.Temporal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -125,11 +124,11 @@ import java.util.Objects;
  * 
  * @author Ben Fortuna
  */
-public class VTimeZone extends CalendarComponent {
+public class VTimeZone extends CalendarComponent<VTimeZone> {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
-    private final Validator itipValidator = new VTimeZoneValidator(Collections.emptyList());
+    private final Validator<VTimeZone> itipValidator = new VTimeZoneValidator(Collections.emptyList());
     
     private ComponentList<Observance> observances;
 
@@ -231,7 +230,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    protected Validator getValidator(Method method) {
+    protected Validator<VTimeZone> getValidator(Method method) {
         return itipValidator;
     }
 
@@ -317,13 +316,12 @@ public class VTimeZone extends CalendarComponent {
      * Overrides default copy method to add support for copying observance sub-components.
      * @return a copy of the instance
      * @throws ParseException where an error occurs parsing data
-     * @throws IOException where an error occurs reading data
      * @throws URISyntaxException where an invalid URI is encountered
      * @see net.fortuna.ical4j.model.Component#copy()
      */
-    public Component copy() throws ParseException, IOException, URISyntaxException {
-        final VTimeZone copy = (VTimeZone) super.copy();
-        copy.observances = new ComponentList<Observance>(observances);
+    public VTimeZone copy() throws ParseException, URISyntaxException {
+        final VTimeZone copy = super.copy();
+        copy.observances = new ComponentList<>(observances);
         return copy;
     }
 

@@ -42,7 +42,6 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.temporal.Temporal;
@@ -122,11 +121,11 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * 
  * @author Ben Fortuna
  */
-public class VToDo extends CalendarComponent {
+public class VToDo extends CalendarComponent<VToDo> {
 
     private static final long serialVersionUID = -269658210065896668L;
 
-    private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
+    private final Map<Method, Validator<VToDo>> methodValidators = new HashMap<>();
     {
         methodValidators.put(Method.ADD, new VToDoValidator(Arrays.asList(
                 new ValidationRule(One, DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID),
@@ -339,7 +338,7 @@ public class VToDo extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    protected Validator getValidator(Method method) {
+    protected Validator<VToDo> getValidator(Method method) {
         return methodValidators.get(method);
     }
 
@@ -508,13 +507,12 @@ public class VToDo extends CalendarComponent {
      * Overrides default copy method to add support for copying alarm sub-components.
      * @return a copy of the instance
      * @throws ParseException where an error occurs parsing data
-     * @throws IOException where an error occurs reading data
      * @throws URISyntaxException where an invalid URI is encountered
      * @see net.fortuna.ical4j.model.Component#copy()
      */
-    public Component copy() throws ParseException, IOException, URISyntaxException {
-        final VToDo copy = (VToDo) super.copy();
-        copy.alarms = new ComponentList<VAlarm>(alarms);
+    public VToDo copy() throws ParseException, URISyntaxException {
+        final VToDo copy = super.copy();
+        copy.alarms = new ComponentList<>(alarms);
         return copy;
     }
 

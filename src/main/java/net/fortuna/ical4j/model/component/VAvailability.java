@@ -95,7 +95,7 @@ import java.util.Arrays;
  * @author Ben Fortuna
  * @author Mike Douglass
  */
-public class VAvailability extends CalendarComponent {
+public class VAvailability extends CalendarComponent<VAvailability> {
 
 	private static final long serialVersionUID = -3001603309266267258L;
 	
@@ -236,7 +236,7 @@ public class VAvailability extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    protected Validator getValidator(Method method) {
+    protected Validator<VAvailability> getValidator(Method method) {
         // TODO Auto-generated method stub
         return null;
     }

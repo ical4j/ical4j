@@ -90,7 +90,7 @@ import java.util.Arrays;
  * @author Ben Fortuna
  * @author Mike Douglass
  */
-public class VVenue extends CalendarComponent {
+public class VVenue extends CalendarComponent<VVenue> {
 
 	private static final long serialVersionUID = 4502423035501438515L;
 
@@ -161,7 +161,7 @@ public class VVenue extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    protected Validator getValidator(Method method) {
+    protected Validator<VVenue> getValidator(Method method) {
         // No method validation required.. 
         return EMPTY_VALIDATOR;
     }

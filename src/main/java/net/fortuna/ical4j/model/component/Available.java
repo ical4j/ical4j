@@ -86,7 +86,7 @@ import java.util.Arrays;
  * @author Ben Fortuna
  * @author Mike Douglass
  */
-public class Available extends Component {
+public class Available extends Component<Available> {
 
     private static final long serialVersionUID = -2494710612002978763L;
 

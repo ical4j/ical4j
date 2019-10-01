@@ -193,7 +193,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * 
  * @author Ben Fortuna
  */
-public class VEvent extends CalendarComponent {
+public class VEvent extends CalendarComponent<VEvent> {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
@@ -726,12 +726,10 @@ public class VEvent extends CalendarComponent {
      * Overrides default copy method to add support for copying alarm sub-components.
      * @return a copy of the instance
      * @throws ParseException where values in the instance cannot be parsed
-     * @throws IOException where values in the instance cannot be read
      * @throws URISyntaxException where an invalid URI value is encountered in the instance
      * @see net.fortuna.ical4j.model.Component#copy()
      */
-    public Component copy() throws ParseException, IOException,
-            URISyntaxException {
+    public VEvent copy() throws ParseException, URISyntaxException {
         final VEvent copy = (VEvent) super.copy();
         copy.alarms = new ComponentList<>(alarms);
         return copy;
