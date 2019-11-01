@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -115,7 +116,10 @@ public class TemporalAmountAdapter implements Serializable {
 
     public static TemporalAmountAdapter parse(String value) {
         TemporalAmount retVal = null;
-        if (value.matches("([+-])?P.*(W|D)")) {
+        if ("P".equals(value) && CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+            retVal = Period.ZERO;
+        }
+        else if (value.matches("([+-])?P.*(W|D)")) {
             retVal = java.time.Period.parse(value);
         } else {
             retVal = java.time.Duration.parse(value);
