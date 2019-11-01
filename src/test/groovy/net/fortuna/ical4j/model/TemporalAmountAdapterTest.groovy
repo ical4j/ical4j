@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model
 
+import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -24,6 +25,18 @@ class TemporalAmountAdapterTest extends Specification {
         java.time.Period.ofMonths(6) | "P24W"
         java.time.Period.ofMonths(-6) | "-P24W"
         Duration.ofDays(15).plusHours(5).plusSeconds(20)    | 'P15DT5H0M20S'
+    }
+
+    def "verify relaxed string parsing"() {
+        setup: 'enable relaxed parsing'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
+
+        expect:
+        TemporalAmountAdapter.parse(stringValue).duration == expectedDuration
+
+        where:
+        stringValue     | expectedDuration
+        "P"             | java.time.Period.ZERO
     }
 
     def 'verify temporalamount creation'() {
