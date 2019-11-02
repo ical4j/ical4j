@@ -46,13 +46,13 @@ import java.net.URISyntaxException;
 public class ScheduleStatus extends Parameter {
     private static final long serialVersionUID = -96936874776850075L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string scheduling status
      */
     public ScheduleStatus(final String aValue) {
-        super(SCHEDULE_STATUS, new Factory());
+        super(SCHEDULE_STATUS);
         this.value = Strings.unquote(aValue);
     }
 

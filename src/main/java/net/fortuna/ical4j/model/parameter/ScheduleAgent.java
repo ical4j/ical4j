@@ -59,13 +59,13 @@ public class ScheduleAgent extends Parameter {
 
     public static final ScheduleAgent NONE = new ScheduleAgent(VALUE_NONE);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a scheduling agent
      */
     public ScheduleAgent(final String aValue) {
-        super(SCHEDULE_AGENT, new Factory());
+        super(SCHEDULE_AGENT);
         this.value = Strings.unquote(aValue);
     }
 

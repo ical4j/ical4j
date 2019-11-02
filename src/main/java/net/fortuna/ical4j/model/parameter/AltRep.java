@@ -51,7 +51,7 @@ public class AltRep extends Parameter {
 
     private static final long serialVersionUID = -2445932592596993470L;
 
-    private URI uri;
+    private final URI uri;
 
     /**
      * @param aValue a string representation of an alternate text represenation
@@ -65,7 +65,7 @@ public class AltRep extends Parameter {
      * @param aUri a URI representing an alternate text representation
      */
     public AltRep(final URI aUri) {
-        super(ALTREP, new Factory());
+        super(ALTREP);
         this.uri = aUri;
     }
 

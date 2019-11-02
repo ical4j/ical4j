@@ -63,7 +63,7 @@ public class Display extends Parameter {
     private final String[] values;
 
     public Display(String value) {
-        super(PARAMETER_NAME, new Factory());
+        super(PARAMETER_NAME);
         String[] valueStrings = value.split(",");
         for (String valueString : valueStrings) {
             try {

@@ -49,13 +49,13 @@ public class Type extends Parameter {
 
 	private static final long serialVersionUID = -1153398789161059941L;
 
-	private String value;
+	private final String value;
 
     /**
      * @param aValue a string abbreviation
      */
     public Type(final String aValue) {
-        super(TYPE, new Factory());
+        super(TYPE);
         this.value = Strings.unquote(aValue);
     }
 

@@ -78,13 +78,13 @@ public class FbType extends Parameter {
      */
     public static final FbType BUSY_TENTATIVE = new FbType(VALUE_BUSY_TENTATIVE);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a format type
      */
     public FbType(final String aValue) {
-        super(FBTYPE, new Factory());
+        super(FBTYPE);
 
         this.value = Strings.unquote(aValue);
     }

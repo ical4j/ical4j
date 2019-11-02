@@ -49,13 +49,13 @@ public class Language extends Parameter {
 
     private static final long serialVersionUID = 4864176270266226608L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a Language
      */
     public Language(final String aValue) {
-        super(LANGUAGE, new Factory());
+        super(LANGUAGE);
         this.value = Strings.unquote(aValue);
     }
 

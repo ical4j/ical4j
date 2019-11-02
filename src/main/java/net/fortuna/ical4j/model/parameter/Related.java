@@ -63,13 +63,13 @@ public class Related extends Parameter {
      */
     public static final Related END = new Related(VALUE_END);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of an alarm trigger relationship
      */
     public Related(final String aValue) {
-        super(RELATED, new Factory());
+        super(RELATED);
         this.value = Strings.unquote(aValue);
 
         // value must be one of finite list..

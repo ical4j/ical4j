@@ -47,7 +47,7 @@ public class DelegatedFrom extends Parameter {
 
     private static final long serialVersionUID = -795956139235258568L;
 
-    private AddressList delegators;
+    private final AddressList delegators;
 
     /**
      * @param aValue a string representation of Delegators
@@ -61,7 +61,7 @@ public class DelegatedFrom extends Parameter {
      * @param aList a list of addresses
      */
     public DelegatedFrom(final AddressList aList) {
-        super(DELEGATED_FROM, new Factory());
+        super(DELEGATED_FROM);
         delegators = aList;
     }
 

@@ -35,15 +35,9 @@ import net.fortuna.ical4j.util.Strings;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.net.URISyntaxException;
-
 /**
  * Defines an iCalendar parameter. Subclasses of this class provide additional validation and typed values for specific
  * iCalendar parameters.
- * <p/>
- * Note that subclasses must provide a reference to the factory used to create the
- * parameter to support parameter cloning (copy). If no factory is specified an
- * {@link UnsupportedOperationException} will be thrown by the {@link #copy()} method.
  *
  * @author Ben Fortuna
  *         <p/>
@@ -183,17 +177,13 @@ public abstract class Parameter extends Content {
      */
     public static final String EXPERIMENTAL_PREFIX = "X-";
 
-    private String name;
-
-    private final ParameterFactory factory;
+    private final String name;
 
     /**
      * @param aName   the parameter identifier
-     * @param factory the factory used to create the parameter
      */
-    public Parameter(final String aName, ParameterFactory factory) {
+    public Parameter(final String aName) {
         this.name = aName;
-        this.factory = factory;
     }
 
     /**
@@ -247,18 +237,5 @@ public abstract class Parameter extends Content {
         // as parameter name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
                 getValue()).toHashCode();
-    }
-
-    /**
-     * Deep copy of parameter.
-     *
-     * @return new parameter
-     * @throws URISyntaxException where an invalid URI is encountered
-     */
-    public <T extends Parameter> T copy() throws URISyntaxException {
-        if (factory == null) {
-            throw new UnsupportedOperationException("No factory specified");
-        }
-        return (T) factory.createParameter(getValue());
     }
 }

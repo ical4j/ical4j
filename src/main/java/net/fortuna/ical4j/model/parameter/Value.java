@@ -146,13 +146,13 @@ public class Value extends Parameter {
      */
     public static final Value UTC_OFFSET = new Value(VALUE_UTC_OFFSET);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a value data type
      */
     public Value(final String aValue) {
-        super(VALUE, new Factory());
+        super(VALUE);
         this.value = Strings.unquote(aValue);
     }
 

@@ -84,13 +84,13 @@ public class CuType extends Parameter {
      */
     public static final CuType UNKNOWN = new CuType(VALUE_UNKNOWN);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a Calendar User Type
      */
     public CuType(final String aValue) {
-        super(CUTYPE, new Factory());
+        super(CUTYPE);
         this.value = Strings.unquote(aValue);
     }
 

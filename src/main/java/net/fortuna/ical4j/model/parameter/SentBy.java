@@ -51,7 +51,7 @@ public class SentBy extends Parameter {
 
     private static final long serialVersionUID = -1169413145174029391L;
 
-    private URI address;
+    private final URI address;
 
     /**
      * @param aValue a string representation of a sent by
@@ -65,7 +65,7 @@ public class SentBy extends Parameter {
      * @param aUri a URI representing a sent by
      */
     public SentBy(final URI aUri) {
-        super(SENT_BY, new Factory());
+        super(SENT_BY);
         this.address = aUri;
     }
 

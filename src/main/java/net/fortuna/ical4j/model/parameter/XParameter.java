@@ -48,14 +48,14 @@ public class XParameter extends Parameter {
 
     private static final long serialVersionUID = -3372153616695145903L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aName parameter name
      * @param aValue parameter value
      */
     public XParameter(final String aName, final String aValue) {
-        super(aName, new Factory(aName));
+        super(aName);
         this.value = Strings.unquote(aValue);
     }
 

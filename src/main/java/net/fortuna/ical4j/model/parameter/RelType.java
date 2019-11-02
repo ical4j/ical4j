@@ -70,13 +70,13 @@ public class RelType extends Parameter {
      */
     public static final RelType SIBLING = new RelType(VALUE_SIBLING);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a relationship type
      */
     public RelType(final String aValue) {
-        super(RELTYPE, new Factory());
+        super(RELTYPE);
         this.value = Strings.unquote(aValue);
     }
 

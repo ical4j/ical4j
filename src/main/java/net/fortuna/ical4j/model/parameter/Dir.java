@@ -51,7 +51,7 @@ public class Dir extends Parameter {
 
     private static final long serialVersionUID = -8581904779721020689L;
 
-    private URI uri;
+    private final URI uri;
 
     /**
      * @param aValue a string representation of a directory entry reference
@@ -65,7 +65,7 @@ public class Dir extends Parameter {
      * @param aUri a URI representing a directory entry reference
      */
     public Dir(final URI aUri) {
-        super(DIR, new Factory());
+        super(DIR);
         this.uri = aUri;
     }
 

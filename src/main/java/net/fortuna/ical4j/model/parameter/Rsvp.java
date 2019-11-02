@@ -62,7 +62,7 @@ public class Rsvp extends Parameter {
      */
     public static final Rsvp FALSE = new Rsvp(VALUE_FALSE);
 
-    private Boolean rsvp;
+    private final Boolean rsvp;
 
     /**
      * @param aValue a string representation of an RSVP
@@ -75,7 +75,7 @@ public class Rsvp extends Parameter {
      * @param aValue a boolean value
      */
     public Rsvp(final Boolean aValue) {
-        super(RSVP, new Factory());
+        super(RSVP);
         this.rsvp = aValue;
     }
 
@@ -94,18 +94,6 @@ public class Rsvp extends Parameter {
             return VALUE_TRUE;
         } else {
             return VALUE_FALSE;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final Parameter copy() {
-        if (rsvp) {
-            return TRUE;
-        } else {
-            return FALSE;
         }
     }
 

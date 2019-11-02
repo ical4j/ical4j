@@ -50,13 +50,13 @@ public class Vvenue extends Parameter {
 
     private static final long serialVersionUID = -8381878834513491869L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string abbreviation
      */
     public Vvenue(final String aValue) {
-        super(VVENUE, new Factory());
+        super(VVENUE);
         this.value = Strings.unquote(aValue);
     }
 

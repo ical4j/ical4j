@@ -54,7 +54,7 @@ public class Email extends Parameter {
     private final InternetAddress address;
 
     public Email(String address) throws AddressException {
-        super(PARAMETER_NAME, new Factory());
+        super(PARAMETER_NAME);
         this.address = InternetAddress.parse(address)[0];
     }
 

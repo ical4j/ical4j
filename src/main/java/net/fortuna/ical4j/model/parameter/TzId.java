@@ -51,7 +51,7 @@ public class TzId extends Parameter implements Escapable {
      */
     public static final String PREFIX = "/";
 
-    private String value;
+    private final String value;
 
     private transient TimeZoneRegistry timeZoneRegistry;
 
@@ -63,7 +63,7 @@ public class TzId extends Parameter implements Escapable {
     }
 
     public TzId(final String aValue, TimeZoneRegistry timeZoneRegistry) {
-        super(TZID, new Factory());
+        super(TZID);
         // parameter values may be quoted if they contain characters in the
         // set [:;,]..
         this.value = Strings.unquote(aValue);

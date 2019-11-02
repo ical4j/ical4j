@@ -64,13 +64,13 @@ public class Range extends Parameter {
      */
     public static final Range THISANDFUTURE = new Range(VALUE_THISANDFUTURE);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a recurrence identifier range
      */
     public Range(final String aValue) {
-        super(RANGE, new Factory());
+        super(RANGE);
         this.value = Strings.unquote(aValue);
 
         // allow arbitrary ranges for Lotus Notes..

@@ -98,13 +98,13 @@ public class PartStat extends Parameter {
      */
     public static final PartStat IN_PROCESS = new PartStat(VALUE_IN_PROCESS);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a participation status
      */
     public PartStat(final String aValue) {
-        super(PARTSTAT, new Factory());
+        super(PARTSTAT);
         this.value = Strings.unquote(aValue);
     }
 

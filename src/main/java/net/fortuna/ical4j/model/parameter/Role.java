@@ -77,13 +77,13 @@ public class Role extends Parameter {
      */
     public static final Role NON_PARTICIPANT = new Role(VALUE_NON_PARTICIPANT);
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a participation role
      */
     public Role(final String aValue) {
-        super(ROLE, new Factory());
+        super(ROLE);
         this.value = Strings.unquote(aValue);
     }
 

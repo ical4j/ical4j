@@ -49,13 +49,13 @@ public class FmtType extends Parameter {
 
     private static final long serialVersionUID = -8764966004966855480L;
 
-    private String value;
+    private final String value;
 
     /**
      * @param aValue a string representation of a format type
      */
     public FmtType(final String aValue) {
-        super(FMTTYPE, new Factory());
+        super(FMTTYPE);
         this.value = Strings.unquote(aValue);
     }
 
