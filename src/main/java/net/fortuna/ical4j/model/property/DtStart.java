@@ -154,7 +154,7 @@ public class DtStart extends DateProperty {
     public DtStart(final ParameterList aList, final String aValue)
             throws ParseException {
         super(DTSTART, aList, new Factory());
-        setValue(aValue);
+        setValue(aValue, aList.getParameter("TZID") != null); // Use neutral UTC to avoid collisions with localtime time conversion
     }
 
     /**

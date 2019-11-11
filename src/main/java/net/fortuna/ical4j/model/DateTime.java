@@ -228,6 +228,8 @@ public class DateTime extends Date {
 
 	private TimeZone timezone;
 
+	private boolean nullTimezoneUtc = false;
+
 	/**
 	 * Default constructor.
 	 */
@@ -302,7 +304,7 @@ public class DateTime extends Date {
 	 * Creates a new date-time instance from the specified value in the given
 	 * timezone. If a timezone is not specified, the default timezone (as
 	 * returned by {@link java.util.TimeZone#getDefault()}) is used.
-	 * 
+	 *
 	 * @param value
 	 *            a string representation of a date-time
 	 * @param timezone
@@ -312,9 +314,28 @@ public class DateTime extends Date {
 	 */
 	public DateTime(final String value, final TimeZone timezone)
 			throws ParseException {
+		this(value, timezone, false);
+	}
+
+	/**
+	 * Creates a new date-time instance from the specified value in the given
+	 * timezone. If a timezone is not specified, the default timezone (as
+	 * returned by {@link java.util.TimeZone#getDefault()}) is used.
+	 * 
+	 * @param value
+	 *            a string representation of a date-time
+	 * @param timezone
+	 *            the timezone for the date-time instance
+	 * @param nullTimezoneUtc treat null timezone as utc
+	 * @throws ParseException
+	 *             where the specified string is not a valid date-time
+	 */
+	public DateTime(final String value, final TimeZone timezone, boolean nullTimezoneUtc)
+			throws ParseException {
 		// setting the time to 0 since we are going to reset it anyway
 		super(0, Dates.PRECISION_SECOND, timezone != null ? timezone
-				: java.util.TimeZone.getDefault());
+				: (nullTimezoneUtc ? TimeZones.getUtcTimeZone() : java.util.TimeZone.getDefault()));
+		this.nullTimezoneUtc = nullTimezoneUtc;
 		this.time = new Time(getTime(), getFormat().getTimeZone());
 
         try {
@@ -483,8 +504,12 @@ public class DateTime extends Date {
 	private void resetTimeZone() {
 		// use GMT timezone to avoid daylight savings rules affecting floating
 		// time values..
-		getFormat().setTimeZone(TimeZone.getDefault());
-		// getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+		if (nullTimezoneUtc) {
+			getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+		} else {
+			getFormat().setTimeZone(TimeZone.getDefault());
+		}
+
 	}
 
 	/**
