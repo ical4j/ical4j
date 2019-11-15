@@ -8,6 +8,7 @@ import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
     private final List<ValidationRule> rules;
 
-    public CalendarValidatorImpl(List<ValidationRule> rules) {
-        this.rules = rules;
+    public CalendarValidatorImpl(ValidationRule... rules) {
+        this.rules = Arrays.asList(rules);
 
         Collections.addAll(calendarProperties, CalScale.class, Method.class, ProdId.class, Version.class,
                 Uid.class, LastModified.class, Url.class, RefreshInterval.class, Source.class, Color.class,

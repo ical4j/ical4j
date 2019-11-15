@@ -7,9 +7,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static net.fortuna.ical4j.model.Component.VALARM;
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
@@ -17,17 +14,16 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
 
 public class VEventValidator extends ComponentValidator<VEvent> {
 
-    private final Validator<VAlarm> itipValidator = new ComponentValidator<>(Arrays.asList(
-            new ValidationRule(One, ACTION, TRIGGER),
-            new ValidationRule(OneOrLess, DESCRIPTION, DURATION, REPEAT, SUMMARY)));
+    private final Validator<VAlarm> itipValidator = new ComponentValidator<>(new ValidationRule(One, ACTION, TRIGGER),
+            new ValidationRule(OneOrLess, DESCRIPTION, DURATION, REPEAT, SUMMARY));
 
     private final boolean alarmsAllowed;
 
-    public VEventValidator(List<ValidationRule> rules) {
-        this(rules, true);
+    public VEventValidator(ValidationRule... rules) {
+        this(true, rules);
     }
 
-    public VEventValidator(List<ValidationRule> rules, boolean alarmsAllowed) {
+    public VEventValidator(boolean alarmsAllowed, ValidationRule... rules) {
         super(rules);
         this.alarmsAllowed = alarmsAllowed;
     }

@@ -46,7 +46,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Collections;
 import java.util.Objects;
 
 /**
@@ -126,7 +125,7 @@ public class VTimeZone extends CalendarComponent {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
-    private final Validator itipValidator = new VTimeZoneValidator(Collections.emptyList());
+    private final Validator itipValidator = new VTimeZoneValidator();
     
     private ComponentList<Observance> observances;
 
