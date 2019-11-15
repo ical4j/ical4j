@@ -128,16 +128,18 @@ public abstract class DateProperty extends Property {
      *                        representation
      */
     public void setValue(final String value) throws ParseException {
+        setValue(value, true);
+    }
+    public void setValue(final String value, boolean nullTimezoneUtc) throws ParseException {
         // value can be either a date-time or a date..
         if (Value.DATE.equals(getParameter(Parameter.VALUE))) {
             // ensure timezone is null for VALUE=DATE properties..
             updateTimeZone(null);
             this.date = new Date(value);
         } else if (value != null && !value.isEmpty()){
-            this.date = new DateTime(value, timeZone);
+            this.date = new DateTime(value, timeZone, nullTimezoneUtc);
         }
     }
-
     /**
      * {@inheritDoc}
      */
