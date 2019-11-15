@@ -6,20 +6,16 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 public class VTimeZoneValidator extends ComponentValidator<VTimeZone> {
 
-    private final Validator itipValidator = new ComponentValidator(Arrays.asList(
-            new ValidationRule(One, DTSTART, TZOFFSETFROM, TZOFFSETTO),
-            new ValidationRule(OneOrLess, TZNAME)));
+    private final Validator itipValidator = new ComponentValidator(new ValidationRule(One, DTSTART, TZOFFSETFROM, TZOFFSETTO),
+            new ValidationRule(OneOrLess, TZNAME));
 
-    public VTimeZoneValidator(List<ValidationRule> rules) {
+    public VTimeZoneValidator(ValidationRule... rules) {
         super(rules);
     }
 

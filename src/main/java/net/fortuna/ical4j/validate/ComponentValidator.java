@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static net.fortuna.ical4j.validate.Validator.assertFalse;
@@ -51,8 +52,8 @@ public class ComponentValidator<T extends Component> implements Validator<T> {
 
     private final List<ValidationRule> rules;
 
-    public ComponentValidator(List<ValidationRule> rules) {
-        this.rules = rules;
+    public ComponentValidator(ValidationRule... rules) {
+        this.rules = Arrays.asList(rules);
     }
 
     @Override
