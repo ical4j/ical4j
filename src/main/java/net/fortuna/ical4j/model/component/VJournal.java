@@ -108,20 +108,17 @@ public class VJournal extends CalendarComponent {
 
     private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
     {
-        methodValidators.put(Method.ADD, new ComponentValidator<VJournal>(Arrays.asList(
-                new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
+        methodValidators.put(Method.ADD, new ComponentValidator<VJournal>(new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, STATUS, SUMMARY, URL),
-                new ValidationRule(None, ATTENDEE, RECURRENCE_ID))));
-        methodValidators.put(Method.CANCEL, new ComponentValidator(Arrays.asList(
-                new ValidationRule(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
+                new ValidationRule(None, ATTENDEE, RECURRENCE_ID)));
+        methodValidators.put(Method.CANCEL, new ComponentValidator(new ValidationRule(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, LAST_MODIFIED,
                         RECURRENCE_ID, STATUS, SUMMARY, URL),
-                new ValidationRule(None, REQUEST_STATUS))));
-        methodValidators.put(Method.PUBLISH, new ComponentValidator(Arrays.asList(
-                new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, UID),
+                new ValidationRule(None, REQUEST_STATUS)));
+        methodValidators.put(Method.PUBLISH, new ComponentValidator(new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, RECURRENCE_ID, SEQUENCE, STATUS,
                         SUMMARY, URL),
-                new ValidationRule(None, ATTENDEE))));
+                new ValidationRule(None, ATTENDEE)));
     }
     
     /**

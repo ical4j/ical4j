@@ -127,52 +127,44 @@ public class VToDo extends CalendarComponent {
 
     private final Map<Method, Validator> methodValidators = new HashMap<Method, Validator>();
     {
-        methodValidators.put(Method.ADD, new VToDoValidator(Arrays.asList(
-                new ValidationRule(One, DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID),
+        methodValidators.put(Method.ADD, new VToDoValidator(new ValidationRule(One, DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RESOURCES, STATUS, URL),
-                new ValidationRule(None, RECURRENCE_ID, REQUEST_STATUS))));
-        methodValidators.put(Method.CANCEL, new VToDoValidator(Arrays.asList(
-                new ValidationRule(One, UID, DTSTAMP, ORGANIZER, SEQUENCE),
+                new ValidationRule(None, RECURRENCE_ID, REQUEST_STATUS)));
+        methodValidators.put(Method.CANCEL, new VToDoValidator(false, new ValidationRule(One, UID, DTSTAMP, ORGANIZER, SEQUENCE),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, PRIORITY, STATUS, URL),
-                new ValidationRule(None, REQUEST_STATUS)), false));
-        methodValidators.put(Method.COUNTER, new VToDoValidator(Arrays.asList(
-                new ValidationRule(OneOrMore, ATTENDEE),
+                new ValidationRule(None, REQUEST_STATUS)));
+        methodValidators.put(Method.COUNTER, new VToDoValidator(new ValidationRule(OneOrMore, ATTENDEE),
                 new ValidationRule(One, DTSTAMP, ORGANIZER, PRIORITY, SUMMARY, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, RRULE, SEQUENCE, STATUS,
-                        URL))));
-        methodValidators.put(Method.DECLINE_COUNTER, new VToDoValidator(Arrays.asList(
-                new ValidationRule(OneOrMore, ATTENDEE),
+                        URL)));
+        methodValidators.put(Method.DECLINE_COUNTER, new VToDoValidator(false, new ValidationRule(OneOrMore, ATTENDEE),
                 new ValidationRule(One, DTSTAMP, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, LOCATION, PERCENT_COMPLETE, PRIORITY, RECURRENCE_ID, RESOURCES, STATUS,
-                        URL)), false));
-        methodValidators.put(Method.PUBLISH, new VToDoValidator(Arrays.asList(
-                new ValidationRule(One, DTSTAMP, SUMMARY, UID),
+                        URL)));
+        methodValidators.put(Method.PUBLISH, new VToDoValidator(new ValidationRule(One, DTSTAMP, SUMMARY, UID),
                 new ValidationRule(One, true, ORGANIZER, PRIORITY),
                 new ValidationRule(OneOrLess, DTSTART, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DUE, DURATION,
                         GEO, LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, STATUS, URL),
-                new ValidationRule(None, ATTENDEE, REQUEST_STATUS))));
-        methodValidators.put(Method.REFRESH, new VToDoValidator(Arrays.asList(
-                new ValidationRule(One, ATTENDEE, DTSTAMP, UID),
+                new ValidationRule(None, ATTENDEE, REQUEST_STATUS)));
+        methodValidators.put(Method.REFRESH, new VToDoValidator(false, new ValidationRule(One, ATTENDEE, DTSTAMP, UID),
                 new ValidationRule(OneOrLess, RECURRENCE_ID),
                 new ValidationRule(None, ATTACH, CATEGORIES, CLASS, CONTACT, CREATED, DESCRIPTION, DTSTART, DUE,
                         DURATION, EXDATE, EXRULE, GEO, LAST_MODIFIED, LOCATION, ORGANIZER, PERCENT_COMPLETE, PRIORITY,
-                        RDATE, RELATED_TO, REQUEST_STATUS, RESOURCES, RRULE, SEQUENCE, STATUS, URL)), false));
-        methodValidators.put(Method.REPLY, new VToDoValidator(Arrays.asList(
-                new ValidationRule(OneOrMore, ATTENDEE),
+                        RDATE, RELATED_TO, REQUEST_STATUS, RESOURCES, RRULE, SEQUENCE, STATUS, URL)));
+        methodValidators.put(Method.REPLY, new VToDoValidator(false, new ValidationRule(OneOrMore, ATTENDEE),
                 new ValidationRule(One, DTSTAMP, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, PRIORITY, RESOURCES, RECURRENCE_ID, SEQUENCE, STATUS,
-                        SUMMARY, URL)), false));
-        methodValidators.put(Method.REQUEST, new VToDoValidator(Arrays.asList(
-                new ValidationRule(OneOrMore, ATTENDEE),
+                        SUMMARY, URL)));
+        methodValidators.put(Method.REQUEST, new VToDoValidator(new ValidationRule(OneOrMore, ATTENDEE),
                 new ValidationRule(One, DTSTAMP, DTSTART, ORGANIZER, PRIORITY, SUMMARY, UID),
                 new ValidationRule(OneOrLess, SEQUENCE, CATEGORIES, CLASS, CREATED, DESCRIPTION, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RECURRENCE_ID, RESOURCES, STATUS, URL),
-                new ValidationRule(None, REQUEST_STATUS))));
+                new ValidationRule(None, REQUEST_STATUS)));
     }
     
     private ComponentList<VAlarm> alarms = new ComponentList<>();
