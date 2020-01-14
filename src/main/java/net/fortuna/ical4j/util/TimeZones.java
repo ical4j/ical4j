@@ -82,7 +82,7 @@ public final class TimeZones {
     }
 
     public static TimeZone getDefault() {
-        if ("true".equals(Configurator.getProperty("net.fortuna.ical4j.timezone.utcDefault").orElse("false"))) {
+        if ("true".equals(Configurator.getProperty("net.fortuna.ical4j.timezone.default.utc").orElse("false"))) {
             return getUtcTimeZone();
         }
         return TimeZone.getDefault();

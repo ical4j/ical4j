@@ -75,6 +75,8 @@ public class CalendarBuilderTimezoneTest extends TestCase {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+
+        System.clearProperty("net.fortuna.ical4j.timezone.utcDefault");
     }
     
 
@@ -112,7 +114,9 @@ public class CalendarBuilderTimezoneTest extends TestCase {
 
     public void testTwoDaylights() throws IOException, ParserException {
 
-String ical = "BEGIN:VCALENDAR\n" +
+        System.setProperty("net.fortuna.ical4j.timezone.utcDefault", "true");
+
+        String ical = "BEGIN:VCALENDAR\n" +
                 "VERSION:2.0\n" +
                 "PRODID:-//Test - ECPv4.9.9//NONSGML v1.0//EN\n" +
                 "CALSCALE:GREGORIAN\n" +
