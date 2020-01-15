@@ -37,8 +37,6 @@ import net.fortuna.ical4j.validate.*;
 
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -200,14 +198,12 @@ public class VAlarm extends CalendarComponent<VAlarm> {
 
     private final Map<Action, Validator> actionValidators = new HashMap<Action, Validator>();
     {
-        actionValidators.put(Action.AUDIO, new ComponentValidator<VAlarm>(
-                Collections.singletonList(new ValidationRule(OneOrLess, ATTACH))));
-        actionValidators.put(Action.DISPLAY, new ComponentValidator<VAlarm>(
-                Collections.singletonList(new ValidationRule(One, DESCRIPTION))));
-        actionValidators.put(Action.EMAIL, new ComponentValidator<VAlarm>(
-                Arrays.asList(new ValidationRule(One, DESCRIPTION, SUMMARY), new ValidationRule(OneOrMore, ATTENDEE))));
-        actionValidators.put(Action.PROCEDURE, new ComponentValidator<VAlarm>(
-                Arrays.asList(new ValidationRule(One, ATTACH), new ValidationRule(OneOrLess, DESCRIPTION))));
+        actionValidators.put(Action.AUDIO, new ComponentValidator<VAlarm>(new ValidationRule(OneOrLess, ATTACH)));
+        actionValidators.put(Action.DISPLAY, new ComponentValidator<VAlarm>(new ValidationRule(One, DESCRIPTION)));
+        actionValidators.put(Action.EMAIL, new ComponentValidator<VAlarm>(new ValidationRule(One, DESCRIPTION, SUMMARY),
+                new ValidationRule(OneOrMore, ATTENDEE)));
+        actionValidators.put(Action.PROCEDURE, new ComponentValidator<VAlarm>(new ValidationRule(One, ATTACH),
+                new ValidationRule(OneOrLess, DESCRIPTION)));
     }
 
     /**

@@ -35,12 +35,16 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.time.ZonedDateTime;
 
 /**
@@ -72,6 +76,8 @@ public class CalendarBuilderTimezoneTest extends TestCase {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+
+        System.clearProperty("net.fortuna.ical4j.timezone.utcDefault");
     }
     
 
@@ -103,6 +109,113 @@ public class CalendarBuilderTimezoneTest extends TestCase {
         assertNotNull("timezone not present", dateTime.getZone());
         assertEquals("timezone not correct",
                 "/softwarestudio.org/Tzfile/America/Chicago", builder.getRegistry().getTzId(dateTime.getZone().getId()));
+
+    }
+
+    public void testTwoDaylights() throws IOException, ParserException {
+
+        System.setProperty("net.fortuna.ical4j.timezone.utcDefault", "true");
+
+        String ical = "BEGIN:VCALENDAR\n" +
+                "VERSION:2.0\n" +
+                "PRODID:-//Test - ECPv4.9.9//NONSGML v1.0//EN\n" +
+                "CALSCALE:GREGORIAN\n" +
+                "METHOD:PUBLISH\n" +
+                "BEGIN:VTIMEZONE\n" +
+                "TZID:Europe/Amsterdam\n" +
+                "BEGIN:DAYLIGHT\n" +
+                "TZOFFSETFROM:+0100\n" +
+                "TZOFFSETTO:+0200\n" +
+                "TZNAME:CEST\n" +
+                "DTSTART:20190331T010000\n" +
+                "END:DAYLIGHT\n" +
+                "BEGIN:STANDARD\n" +
+                "TZOFFSETFROM:+0200\n" +
+                "TZOFFSETTO:+0100\n" +
+                "TZNAME:CET\n" +
+                "DTSTART:20191027T010000\n" +
+                "END:STANDARD\n" +
+                "BEGIN:DAYLIGHT\n" +
+                "TZOFFSETFROM:+0100\n" +
+                "TZOFFSETTO:+0200\n" +
+                "TZNAME:CEST\n" +
+                "DTSTART:20200329T010000\n" +
+                "END:DAYLIGHT\n" +
+                "BEGIN:STANDARD\n" +
+                "TZOFFSETFROM:+0200\n" +
+                "TZOFFSETTO:+0100\n" +
+                "TZNAME:CET\n" +
+                "DTSTART:20201025T010000\n" +
+                "END:STANDARD\n" +
+                "END:VTIMEZONE\n" +
+                "BEGIN:VEVENT\n" +
+                "DTSTART;TZID=Europe/Amsterdam:20200503T173000\n" +
+                "DTEND;TZID=Europe/Amsterdam:20200503T200000\n" +
+                "DTSTAMP:20191006T163046\n" +
+                "CREATED:20190924T180719Z\n" +
+                "LAST-MODIFIED:20191006T154131Z\n" +
+                "SUMMARY:Test summary\n" +
+                "DESCRIPTION:Test description \\n\n" +
+                "END:VEVENT\n" +
+                "BEGIN:VEVENT\n" +
+                "DTSTART;TZID=Europe/Amsterdam:20191006T190000\n" +
+                "DTEND;TZID=Europe/Amsterdam:20191006T203000\n" +
+                "DTSTAMP:20191006T163047\n" +
+                "CREATED:20190912T190803Z\n" +
+                "LAST-MODIFIED:20190918T193650Z\n" +
+                "SUMMARY:Second test summary\n" +
+                "DESCRIPTION:Second test description \\n\n" +
+                "END:VEVENT\n" +
+                "END:VCALENDAR";
+
+        StringReader in = new StringReader(ical);
+        CalendarBuilder builder = new CalendarBuilder();
+        Calendar calendar = null;
+
+        calendar = builder.build(in);
+        assertNotNull("Calendar is null", calendar);
+        ComponentList<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
+        assertEquals("2 VEVENTs not found", 2, comps.size());
+        VEvent vevent0 = (VEvent) comps.get(0);
+
+        DtStart dtstart0 = vevent0.getStartDate();
+        DateTime dateTime = (DateTime) dtstart0.getDate();
+
+        assertEquals("date value not correct", "20200503T173000", dtstart0
+                .getValue());
+        assertNotNull("timezone not present", dateTime.getTimeZone());
+        assertEquals("timezone not correct",
+                "Europe/Amsterdam", dateTime
+                        .getTimeZone().getID());
+
+        DtEnd dtend0 = vevent0.getEndDate();
+        dateTime = (DateTime) dtend0.getDate();
+        assertEquals("date value not correct", "20200503T200000", dtend0
+                .getValue());
+        assertNotNull("timezone not present", dateTime.getTimeZone());
+        assertEquals("timezone not correct",
+                "Europe/Amsterdam", dateTime
+                        .getTimeZone().getID());
+
+        VEvent vevent1 = (VEvent) comps.get(1);
+        DtStart dtstart1 = vevent1.getStartDate();
+        dateTime = (DateTime) dtstart1.getDate();
+
+        assertEquals("date value not correct", "20191006T190000", dtstart1
+                .getValue());
+        assertNotNull("timezone not present", dateTime.getTimeZone());
+        assertEquals("timezone not correct",
+                "Europe/Amsterdam", dateTime
+                        .getTimeZone().getID());
+
+        DtEnd dtend1 = vevent1.getEndDate();
+        dateTime = (DateTime) dtend1.getDate();
+        assertEquals("date value not correct", "20191006T203000", dtend1
+                .getValue());
+        assertNotNull("timezone not present", dateTime.getTimeZone());
+        assertEquals("timezone not correct",
+                "Europe/Amsterdam", dateTime
+                        .getTimeZone().getID());
 
     }
 }

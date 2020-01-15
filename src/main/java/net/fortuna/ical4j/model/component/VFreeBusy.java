@@ -208,19 +208,16 @@ public class VFreeBusy extends CalendarComponent<VFreeBusy> {
 
     private final Map<Method, Validator<VFreeBusy>> methodValidators = new HashMap<>();
     {
-        methodValidators.put(Method.PUBLISH, new ComponentValidator<>(Arrays.asList(
-                new ValidationRule(OneOrMore, FREEBUSY),
+        methodValidators.put(Method.PUBLISH, new ComponentValidator<VFreeBusy>(new ValidationRule(OneOrMore, FREEBUSY),
                 new ValidationRule(One, DTSTAMP, DTSTART, DTEND, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, URL),
-                new ValidationRule(None, ATTENDEE, DURATION, REQUEST_STATUS))));
-        methodValidators.put(Method.REPLY, new ComponentValidator<>(Arrays.asList(
-                new ValidationRule(One, ATTENDEE, DTSTAMP, DTEND, DTSTART, ORGANIZER, UID),
+                new ValidationRule(None, ATTENDEE, DURATION, REQUEST_STATUS)));
+        methodValidators.put(Method.REPLY, new ComponentValidator(new ValidationRule(One, ATTENDEE, DTSTAMP, DTEND, DTSTART, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, URL),
-                new ValidationRule(None, DURATION, SEQUENCE))));
-        methodValidators.put(Method.REQUEST, new ComponentValidator<>(Arrays.asList(
-                new ValidationRule(OneOrMore, ATTENDEE),
+                new ValidationRule(None, DURATION, SEQUENCE)));
+        methodValidators.put(Method.REQUEST, new ComponentValidator(new ValidationRule(OneOrMore, ATTENDEE),
                 new ValidationRule(One, DTEND, DTSTAMP, DTSTART, ORGANIZER, UID),
-                new ValidationRule(None, FREEBUSY, DURATION, REQUEST_STATUS, URL))));
+                new ValidationRule(None, FREEBUSY, DURATION, REQUEST_STATUS, URL)));
     }
     
     /**

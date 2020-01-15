@@ -239,7 +239,18 @@ public class WeekDay implements Serializable {
      * @return a weekday instance representing the specified calendar
      */
     public static WeekDay getNegativeMonthlyOffset(final Calendar cal) {
-        return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), cal.get(Calendar.DAY_OF_WEEK_IN_MONTH) - 6);
+        Calendar calClone = (Calendar) cal.clone();
+		int delta = -1;
+		do {
+			calClone.add(7, Calendar.DAY_OF_YEAR);
+			if(calClone.get(Calendar.MONTH)==cal.get(Calendar.MONTH)) {
+				delta -= 1;
+			}else {
+				break;
+			}
+		}while(delta>-5);
+		
+		return new WeekDay(getDay(cal.get(Calendar.DAY_OF_WEEK)), delta);
     }
     
     /**
