@@ -301,7 +301,7 @@ public class DateTime extends Date {
 	/**
 	 * Creates a new date-time instance from the specified value in the given
 	 * timezone. If a timezone is not specified, the default timezone (as
-	 * returned by {@link java.util.TimeZone#getDefault()}) is used.
+	 * returned by {@link TimeZones#getDefault()}) is used.
 	 * 
 	 * @param value
 	 *            a string representation of a date-time
@@ -313,8 +313,7 @@ public class DateTime extends Date {
 	public DateTime(final String value, final TimeZone timezone)
 			throws ParseException {
 		// setting the time to 0 since we are going to reset it anyway
-		super(0, Dates.PRECISION_SECOND, timezone != null ? timezone
-				: java.util.TimeZone.getDefault());
+		super(0, Dates.PRECISION_SECOND, timezone != null ? timezone : TimeZones.getDefault());
 		this.time = new Time(getTime(), getFormat().getTimeZone());
 
         try {
@@ -368,8 +367,7 @@ public class DateTime extends Date {
 	public DateTime(String value, String pattern, TimeZone timezone)
 			throws ParseException {
 		// setting the time to 0 since we are going to reset it anyway
-		super(0, Dates.PRECISION_SECOND, timezone != null ? timezone
-				: java.util.TimeZone.getDefault());
+		super(0, Dates.PRECISION_SECOND, timezone != null ? timezone : TimeZones.getDefault());
 		this.time = new Time(getTime(), getFormat().getTimeZone());
 
 		final DateFormat format = CalendarDateFormatFactory
@@ -483,7 +481,7 @@ public class DateTime extends Date {
 	private void resetTimeZone() {
 		// use GMT timezone to avoid daylight savings rules affecting floating
 		// time values..
-		getFormat().setTimeZone(TimeZone.getDefault());
+		getFormat().setTimeZone(TimeZones.getDefault());
 		// getFormat().setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
 	}
 

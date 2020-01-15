@@ -13,7 +13,7 @@ public class DefaultParameterFactorySupplier implements Supplier<List<ParameterF
     @Override
     public List<ParameterFactory> get() {
         List<ParameterFactory> rfc5545 = Arrays.asList(new Abbrev.Factory(), new AltRep.Factory(), new Cn.Factory(), new CuType.Factory(),
-                new DelegatedFrom.Factory(), new Dir.Factory(), new Encoding.Factory(), new FmtType.Factory(),
+                new DelegatedFrom.Factory(), new DelegatedTo.Factory(), new Dir.Factory(), new Encoding.Factory(), new FmtType.Factory(),
                 new FbType.Factory(), new Language.Factory(), new Member.Factory(), new PartStat.Factory(),
                 new Range.Factory(), new Related.Factory(), new RelType.Factory(), new Role.Factory(),
                 new Rsvp.Factory(), new ScheduleAgent.Factory(), new ScheduleStatus.Factory(),
