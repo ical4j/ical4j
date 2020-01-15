@@ -10,11 +10,14 @@ class WeekDaySpec extends Specification {
     def 'assert result of getNegativeMonthlyOffset'() {
 
         expect: 'returned result matches expected'
+        java.util.Calendar cal = Dates.getCalendarInstance(date)
+        cal.setTime(date)
         WeekDay.getNegativeMonthlyOffset(cal) as String == expected
 
         where:
-        cal     | expected
-        Dates.getCalendarInstance(new Date('20180228')) | '-3WE'
-        Dates.getCalendarInstance(new Date('20191130')) | '-3WE'
+        date                    | expected
+        new Date('20180228')    | '-1WE'
+        new Date('20180221')    | '-2WE'
+        new Date('20191130')    | '-1SA'
     }
 }
