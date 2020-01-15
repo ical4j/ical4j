@@ -51,16 +51,25 @@ class TemporalAmountAdapterTest extends Specification {
         new Dur(-9)  | java.time.Period.ofWeeks(-9)
     }
 
+    def 'test creation from  date range'() {
+        expect:
+        TemporalAmountAdapter.fromDateRange(new DateTime(start), new DateTime(end)).duration == expectedTemporalAmount
+
+        where:
+        start   | end   | expectedTemporalAmount
+        '20200107T000000'   | '20200331T000000' | java.time.Period.ofWeeks(12)
+    }
+
     @Unroll
     def 'validate string representation: #dur'() {
         expect: 'derived string representation equals expected'
-        dur.toString() == expectedString
+        TemporalAmountAdapter.from(dur).toString() == expectedString
 
         where:
         dur						| expectedString
-        TemporalAmountAdapter.from(new Dur(33))				| 'P33W'
-        TemporalAmountAdapter.from(new Dur('-P2D'))			| '-P2D'
-        TemporalAmountAdapter.from(new Dur(-2, 0, 0, 0))	| '-P2D'
+        new Dur(33)				| 'P33W'
+        new Dur('-P2D')			| '-P2D'
+        new Dur(-2, 0, 0, 0)	| '-P2D'
     }
 
     @Unroll
