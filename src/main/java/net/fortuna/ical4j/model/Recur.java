@@ -687,13 +687,13 @@ public class Recur implements Serializable {
                 dates.setTimeZone(((DateTime) seed).getTimeZone());
             }
         }
-        Calendar cal = getCalendarInstance(seed, true);
+        final Calendar cal = getCalendarInstance(seed, true);
         final Calendar rootSeed = (Calendar)cal.clone();
         
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
         if (count == null) {
-            Calendar seededCal = (Calendar) cal.clone();
+            final Calendar seededCal = (Calendar) cal.clone();
             while (seededCal.getTime().before(periodStart)) {
                 cal.setTime(seededCal.getTime());
                 increment(seededCal);
