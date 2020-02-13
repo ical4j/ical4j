@@ -687,19 +687,16 @@ public class Recur implements Serializable {
                 dates.setTimeZone(((DateTime) seed).getTimeZone());
             }
         }
-        Calendar cal = getCalendarInstance(seed, true);
+        final Calendar cal = getCalendarInstance(seed, true);
         final Calendar rootSeed = (Calendar)cal.clone();
         
         // optimize the start time for selecting candidates
         // (only applicable where a COUNT is not specified)
         if (count == null) {
-            Calendar seededCal = (Calendar) cal.clone();
+            final Calendar seededCal = (Calendar) cal.clone();
             while (seededCal.getTime().before(periodStart)) {
                 cal.setTime(seededCal.getTime());
-                seededCal = smartIncrement(seededCal);
-                if (seededCal == null) {
-                    return dates;
-                }
+                increment(seededCal);
             }
         }
 
@@ -764,10 +761,7 @@ public class Recur implements Serializable {
                     break;
                 }
             }
-            cal = smartIncrement(cal);
-            if (cal == null) {
-                break;
-            }
+            increment(cal);
         }
         // sort final list..
         Collections.sort(dates);
@@ -869,34 +863,6 @@ public class Recur implements Serializable {
         cal.add(calIncField, calInterval);
     }
 
-    private Calendar smartIncrement(final Calendar cal) {
-        // initialise interval..
-        Calendar result = null;
-        final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
-        int multiplier = 1;
-        if (calIncField == 2 || calIncField == 1) {
-            Calendar seededCal;
-            // increment up to 12 times to check for next valid occurence.
-            // as this loop only increments monthly or yearly,
-            // a monthly occurence will be found in (0,12] increments
-            // and a valid yearly recurrence will be found within (0,4]
-            // (ex. recurrence on February 29 on a leap year will find the next occurrence on the next leap year).
-            // if none found in these, return null.
-            do {
-                seededCal = (Calendar) cal.clone();
-                seededCal.add(calIncField, calInterval * multiplier);
-                multiplier++;
-            } while (seededCal.get(Calendar.DAY_OF_MONTH) != cal.get(Calendar.DAY_OF_MONTH) && multiplier <= 12);
-            if (multiplier <= 12) {
-                result = (Calendar) seededCal.clone();
-            }
-        } else {
-            result = (Calendar) cal.clone();
-            result.add(calIncField, calInterval);
-        }
-        return result;
-    }
-
     /**
      * Returns a list of possible dates generated from the applicable BY* rules, using the specified date as a seed.
      *
@@ -944,8 +910,8 @@ public class Recur implements Serializable {
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTHDAY processing: " + dates);
             }
-        } else if (frequency == Frequency.MONTHLY || (frequency == Frequency.YEARLY && yearDayList.isEmpty()
-                && weekNoList.isEmpty() && dayList.isEmpty())) {
+        } else if ((frequency == Frequency.MONTHLY && dayList.isEmpty()) ||
+                (frequency == Frequency.YEARLY && yearDayList.isEmpty() && weekNoList.isEmpty() && dayList.isEmpty())) {
 
             NumberList implicitMonthDayList = new NumberList();
             implicitMonthDayList.add(rootSeed.get(Calendar.DAY_OF_MONTH));

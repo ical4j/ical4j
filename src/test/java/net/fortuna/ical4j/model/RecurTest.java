@@ -852,6 +852,16 @@ public class RecurTest extends TestCase {
         suite.addTest(new RecurTest(recur, new DateTime("20200229T000000"),
                 new DateTime("20200229T000000"), new DateTime("20240229T000000")));
 
+        // last working day starting from may 31 2020 should return jun 30 2020
+        recur = new Recur("FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1");
+        suite.addTest(new RecurTest(recur, new DateTime("20200531T000000"),
+                new DateTime("20200531T000000"), new DateTime("20200630T000000")));
+
+        // 5th sunday monthly starting from aug 31 2020 should return nov 29 2020
+        recur = new Recur("FREQ=MONTHLY;BYDAY=SU;BYSETPOS=5");
+        suite.addTest(new RecurTest(recur, new DateTime("20200831T000000"),
+                new DateTime("20200831T000000"), new DateTime("20201129T000000")));
+
         return suite;
     }
 }
