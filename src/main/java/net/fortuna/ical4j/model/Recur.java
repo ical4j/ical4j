@@ -910,8 +910,8 @@ public class Recur implements Serializable {
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTHDAY processing: " + dates);
             }
-        } else if (frequency == Frequency.MONTHLY || (frequency == Frequency.YEARLY && yearDayList.isEmpty()
-                && weekNoList.isEmpty() && dayList.isEmpty())) {
+        } else if ((frequency == Frequency.MONTHLY && dayList.isEmpty()) ||
+                (frequency == Frequency.YEARLY && yearDayList.isEmpty() && weekNoList.isEmpty() && dayList.isEmpty())) {
 
             NumberList implicitMonthDayList = new NumberList();
             implicitMonthDayList.add(rootSeed.get(Calendar.DAY_OF_MONTH));
