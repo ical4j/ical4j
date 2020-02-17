@@ -198,6 +198,8 @@ public class Calendar implements Serializable {
                 ':' +
                 VCALENDAR +
                 Strings.LINE_SEPARATOR +
+                "VERSION:2.0" + // 1.0 -> vCalendar, 2.0 -> iCalendar
+                Strings.LINE_SEPARATOR +
                 getProperties() +
                 getComponents() +
                 END +
