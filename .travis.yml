@@ -18,7 +18,7 @@ services:
 #before_install:
 #  - etc/scripts/update-zoneinfo.sh
 script:
-  - ./gradlew build --stacktrace --info jacocoTestReport
+  - ./gradlew build jacocoTestReport --stacktrace --info
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 deploy:
