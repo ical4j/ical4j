@@ -58,6 +58,7 @@ public abstract class Iso8601 extends Date {
      * 
      */
     private static final long serialVersionUID = -4290728005713946811L;
+    private static final java.util.TimeZone GMT = TimeZone.getTimeZone(TimeZones.GMT_ID);
 
     private DateFormat format;
     
@@ -119,7 +120,7 @@ public abstract class Iso8601 extends Date {
         if (!(timeZone instanceof TimeZone)) {
             if (gmtFormat == null) {
                 gmtFormat = (DateFormat) format.clone();
-                gmtFormat.setTimeZone(TimeZone.getTimeZone(TimeZones.GMT_ID));
+                gmtFormat.setTimeZone(GMT);
             }
             if (timeZone.inDaylightTime(this)
                     && timeZone.inDaylightTime(new Date(getTime() - 1))) {
