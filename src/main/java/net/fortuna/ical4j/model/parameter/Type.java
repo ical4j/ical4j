@@ -66,14 +66,14 @@ public class Type extends Parameter {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Type> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TYPE);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Type createParameter(final String value) throws URISyntaxException {
             return new Type(value);
         }
     }

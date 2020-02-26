@@ -92,14 +92,14 @@ public class Range extends Parameter {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Range> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RANGE);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Range createParameter(final String value) throws URISyntaxException {
             Range parameter = new Range(value);
             if (Range.THISANDFUTURE.equals(parameter)) {
                 parameter = Range.THISANDFUTURE;

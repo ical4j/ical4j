@@ -3,7 +3,11 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <pre>
@@ -52,7 +56,7 @@ public class Feature extends Parameter {
         AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO;
     }
 
-    private final String[] values;
+    private final Set<String> values;
 
     public Feature(String value) {
         super(PARAMETER_NAME);
@@ -66,22 +70,22 @@ public class Feature extends Parameter {
                 }
             }
         }
-        this.values = valueStrings;
+        this.values = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(valueStrings)));
     }
 
     @Override
     public String getValue() {
-        return StringUtils.join(values, ",");
+        return String.join(",", values);
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Feature> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(PARAMETER_NAME);
         }
 
-        public Parameter createParameter(final String value) {
+        public Feature createParameter(final String value) {
             return new Feature(value);
         }
     }

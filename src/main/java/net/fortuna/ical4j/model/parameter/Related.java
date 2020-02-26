@@ -85,14 +85,14 @@ public class Related extends Parameter {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Related> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RELATED);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Related createParameter(final String value) throws URISyntaxException {
             Related parameter = new Related(value);
             if (Related.START.equals(parameter)) {
                 parameter = Related.START;

@@ -38,6 +38,7 @@ import net.fortuna.ical4j.util.Uris;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -79,6 +80,10 @@ public class AddressList implements Serializable, Iterable<URI> {
                 }
             }
         }
+    }
+
+    public List<URI> getAddresses() {
+        return new ArrayList<>(addresses);
     }
 
     /**

@@ -115,14 +115,14 @@ public class PartStat extends Parameter {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<PartStat> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(PARTSTAT);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public PartStat createParameter(final String value) throws URISyntaxException {
             PartStat parameter = new PartStat(value);
             if (PartStat.NEEDS_ACTION.equals(parameter)) {
                 parameter = PartStat.NEEDS_ACTION;

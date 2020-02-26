@@ -66,7 +66,7 @@ public class XParameter extends Parameter {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<XParameter> {
         private static final long serialVersionUID = 1L;
         private final String name;
 
@@ -75,7 +75,7 @@ public class XParameter extends Parameter {
             this.name = name;
         }
 
-        public Parameter createParameter(final String value)
+        public XParameter createParameter(final String value)
                 throws URISyntaxException {
             return new XParameter(name, value);
         }

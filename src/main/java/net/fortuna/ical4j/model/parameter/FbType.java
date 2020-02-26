@@ -96,14 +96,14 @@ public class FbType extends Parameter {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<FbType> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(FBTYPE);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public FbType createParameter(final String value) throws URISyntaxException {
             FbType parameter = new FbType(value);
             if (FbType.FREE.equals(parameter)) {
                 parameter = FbType.FREE;

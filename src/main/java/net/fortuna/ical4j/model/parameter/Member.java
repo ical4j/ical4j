@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.AddressList;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -68,8 +73,8 @@ public class Member extends Parameter {
     /**
      * @return Returns the group addresses.
      */
-    public final AddressList getGroups() {
-        return groups;
+    public final List<URI> getGroups() {
+        return groups.getAddresses();
     }
 
     /**
@@ -87,14 +92,14 @@ public class Member extends Parameter {
         return false;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Member> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(MEMBER);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Member createParameter(final String value) throws URISyntaxException {
             return new Member(value);
         }
     }

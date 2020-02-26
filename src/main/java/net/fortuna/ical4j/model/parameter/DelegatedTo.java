@@ -31,10 +31,15 @@
  */
 package net.fortuna.ical4j.model.parameter;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.AddressList;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
 
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  * $Id$ [18-Apr-2004]
@@ -68,8 +73,8 @@ public class DelegatedTo extends Parameter {
     /**
      * @return Returns the delegatees addresses.
      */
-    public final AddressList getDelegatees() {
-        return delegatees;
+    public final List<URI> getDelegatees() {
+        return delegatees.getAddresses();
     }
 
     /**
@@ -87,14 +92,14 @@ public class DelegatedTo extends Parameter {
         return false;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<DelegatedTo> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DELEGATED_TO);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public DelegatedTo createParameter(final String value) throws URISyntaxException {
             return new DelegatedTo(value);
         }
     }

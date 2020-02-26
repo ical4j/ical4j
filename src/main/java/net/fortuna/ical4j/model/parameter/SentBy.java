@@ -83,14 +83,14 @@ public class SentBy extends Parameter {
         return Uris.decode(Strings.valueOf(getAddress()));
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<SentBy> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(SENT_BY);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public SentBy createParameter(final String value) throws URISyntaxException {
             return new SentBy(value);
         }
     }

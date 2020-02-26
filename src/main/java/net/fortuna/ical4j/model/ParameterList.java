@@ -86,11 +86,7 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
     	
         final List<Parameter> parameterList = new CopyOnWriteArrayList<Parameter>();
         list.forEach(parameter -> {
-            try {
-                parameterList.add(parameter.copy());
-            } catch (URISyntaxException e) {
-                throw new IllegalArgumentException(e);
-            }
+            parameterList.add(parameter);
         });
         if (unmodifiable) {
             parameters = Collections.unmodifiableList(parameterList);

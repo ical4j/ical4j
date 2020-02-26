@@ -77,7 +77,7 @@ public class ScheduleAgent extends Parameter {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<ScheduleAgent> {
         /**
          *
          */
@@ -87,7 +87,7 @@ public class ScheduleAgent extends Parameter {
             super(SCHEDULE_AGENT);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public ScheduleAgent createParameter(final String value) throws URISyntaxException {
             final ScheduleAgent parameter = new ScheduleAgent(value);
             if (ScheduleAgent.SERVER.equals(parameter)) {
                 return ScheduleAgent.SERVER;

@@ -69,8 +69,8 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
         private String value;
 
-        public ScheduleStatus(String aValue, ParameterFactory factory) {
-            super(SCHEDULE_STATUS, factory);
+        public ScheduleStatus(String aValue) {
+            super(SCHEDULE_STATUS);
             value = Strings.unquote(aValue);
         }
 
@@ -107,7 +107,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
                 }
 
                 public Parameter createParameter(final String value) throws URISyntaxException {
-                    return new ScheduleStatus(value, this);
+                    return new ScheduleStatus(value);
                 }
             });
         builder = new CalendarBuilder(

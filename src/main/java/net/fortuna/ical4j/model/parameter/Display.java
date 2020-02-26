@@ -3,7 +3,11 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
-import org.apache.commons.lang3.StringUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * <pre>
@@ -60,7 +64,7 @@ public class Display extends Parameter {
         BADGE, GRAPHIC, FULLSIZE, THUMBNAIL;
     }
 
-    private final String[] values;
+    private final Set<String> values;
 
     public Display(String value) {
         super(PARAMETER_NAME);
@@ -74,22 +78,22 @@ public class Display extends Parameter {
                 }
             }
         }
-        this.values = valueStrings;
+        this.values = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(valueStrings)));
     }
 
     @Override
     public String getValue() {
-        return StringUtils.join(values, ",");
+        return String.join(",", values);
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Display> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(PARAMETER_NAME);
         }
 
-        public Parameter createParameter(final String value) {
+        public Display createParameter(final String value) {
             return new Display(value);
         }
     }

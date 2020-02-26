@@ -185,7 +185,7 @@ public class PropertyTest extends AbstractPropertyTest {
         }
 
         try {
-            property.getParameters().add(new Parameter("name", null) {
+            property.getParameters().add(new Parameter("name") {
                 public String getValue() {
                     return null;
                 }

@@ -94,14 +94,14 @@ public class Role extends Parameter {
         return value;
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Role> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(ROLE);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public Role createParameter(final String value) throws URISyntaxException {
             Role parameter = new Role(value);
             if (Role.CHAIR.equals(parameter)) {
                 parameter = Role.CHAIR;

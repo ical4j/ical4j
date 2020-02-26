@@ -3,9 +3,11 @@ package net.fortuna.ical4j.model.parameter;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.util.Uris;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * From specification:
@@ -51,29 +53,37 @@ public class Email extends Parameter {
 
     private static final String PARAMETER_NAME = "EMAIL";
 
-    private final InternetAddress address;
+    private final URI address;
 
-    public Email(String address) throws AddressException {
+    public Email(String address) throws URISyntaxException {
+        this(Uris.create(Strings.unquote(address)));
+    }
+
+    public Email(URI address) {
         super(PARAMETER_NAME);
-        this.address = InternetAddress.parse(address)[0];
+        this.address = address;
+    }
+
+    public URI getAddress() {
+        return address;
     }
 
     @Override
     public String getValue() {
-        return address.getAddress();
+        return Uris.decode(Strings.valueOf(getAddress()));
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<Email> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(PARAMETER_NAME);
         }
 
-        public Parameter createParameter(final String value) {
+        public Email createParameter(final String value) {
             try {
                 return new Email(value);
-            } catch (AddressException e) {
+            } catch (URISyntaxException e) {
                 throw new IllegalArgumentException(e);
             }
         }

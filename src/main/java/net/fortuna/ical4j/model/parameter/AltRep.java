@@ -83,14 +83,14 @@ public class AltRep extends Parameter {
         return Uris.decode(Strings.valueOf(getUri()));
     }
 
-    public static class Factory extends Content.Factory implements ParameterFactory {
+    public static class Factory extends Content.Factory implements ParameterFactory<AltRep> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(ALTREP);
         }
 
-        public Parameter createParameter(final String value) throws URISyntaxException {
+        public AltRep createParameter(final String value) throws URISyntaxException {
             return new AltRep(value);
         }
     }
