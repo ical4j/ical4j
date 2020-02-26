@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
@@ -757,34 +756,6 @@ public class Recur<T extends Temporal> implements Serializable {
         return (T) cal.plus(calInterval, calIncField);
     }
 
-    private T smartIncrement(final T cal) {
-        // initialise interval..
-        T result = null;
-        final int calInterval = (getInterval() >= 1) ? getInterval() : 1;
-        if (calIncField == ChronoUnit.MONTHS || calIncField == ChronoUnit.YEARS) {
-            Temporal seededCal = cal.plus(calInterval, calIncField);
-            // increment up to 12 times to check for next valid occurence.
-            // as this loop only increments monthly or yearly,
-            // a monthly occurence will be found in (0,12] increments
-            // and a valid yearly recurrence will be found within (0,4]
-            // (ex. recurrence on February 29 on a leap year will find the next occurrence on the next leap year).
-            // if none found in these, return null.
-            int multiplier = 2;
-            for (; multiplier <= 12; multiplier++) {
-                seededCal = cal.plus(calInterval * multiplier, calIncField);
-                if (seededCal.get(ChronoField.DAY_OF_MONTH) != cal.get(ChronoField.DAY_OF_MONTH)) {
-                    break;
-                }
-            }
-            if (multiplier <= 12) {
-                result = (T) seededCal;
-            }
-        } else {
-            result = (T) cal.plus(calInterval, calIncField);
-        }
-        return result;
-    }
-
     /**
      * Returns a list of possible dates generated from the applicable BY* rules, using the specified date as a seed.
      *
@@ -987,72 +958,72 @@ public class Recur<T extends Temporal> implements Serializable {
 
         private WeekDay weekStartDay;
 
-        public Builder frequency(Frequency frequency) {
+        public Builder<T> frequency(Frequency frequency) {
             this.frequency = frequency;
             return this;
         }
 
-        public Builder until(T until) {
+        public Builder<T> until(T until) {
             this.until = until;
             return this;
         }
 
-        public Builder count(Integer count) {
+        public Builder<T> count(Integer count) {
             this.count = count;
             return this;
         }
 
-        public Builder interval(Integer interval) {
+        public Builder<T> interval(Integer interval) {
             this.interval = interval;
             return this;
         }
 
-        public Builder secondList(NumberList secondList) {
+        public Builder<T> secondList(NumberList secondList) {
             this.secondList = secondList;
             return this;
         }
 
-        public Builder minuteList(NumberList minuteList) {
+        public Builder<T> minuteList(NumberList minuteList) {
             this.minuteList = minuteList;
             return this;
         }
 
-        public Builder hourList(NumberList hourList) {
+        public Builder<T> hourList(NumberList hourList) {
             this.hourList = hourList;
             return this;
         }
 
-        public Builder dayList(WeekDayList dayList) {
+        public Builder<T> dayList(WeekDayList dayList) {
             this.dayList = dayList;
             return this;
         }
 
-        public Builder monthDayList(NumberList monthDayList) {
+        public Builder<T> monthDayList(NumberList monthDayList) {
             this.monthDayList = monthDayList;
             return this;
         }
 
-        public Builder yearDayList(NumberList yearDayList) {
+        public Builder<T> yearDayList(NumberList yearDayList) {
             this.yearDayList = yearDayList;
             return this;
         }
 
-        public Builder weekNoList(NumberList weekNoList) {
+        public Builder<T> weekNoList(NumberList weekNoList) {
             this.weekNoList = weekNoList;
             return this;
         }
 
-        public Builder monthList(NumberList monthList) {
+        public Builder<T> monthList(NumberList monthList) {
             this.monthList = monthList;
             return this;
         }
 
-        public Builder setPosList(NumberList setPosList) {
+        public Builder<T> setPosList(NumberList setPosList) {
             this.setPosList = setPosList;
             return this;
         }
 
-        public Builder weekStartDay(WeekDay weekStartDay) {
+        public Builder<T> weekStartDay(WeekDay weekStartDay) {
             this.weekStartDay = weekStartDay;
             return this;
         }
