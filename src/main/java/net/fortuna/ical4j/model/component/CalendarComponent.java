@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.validate.EmptyValidator;
@@ -47,7 +46,7 @@ import net.fortuna.ical4j.validate.Validator;
  * Base class for components that may be added to a calendar.
  * @author Ben Fortuna
  */
-public abstract class CalendarComponent<T extends CalendarComponent> extends Component<T> {
+public abstract class CalendarComponent extends Component {
 
     /**
      * 
@@ -57,7 +56,7 @@ public abstract class CalendarComponent<T extends CalendarComponent> extends Com
     /**
      * Validator instance that does nothing.
      */
-    protected static final Validator EMPTY_VALIDATOR = new EmptyValidator<>();
+    protected static final Validator<CalendarComponent> EMPTY_VALIDATOR = new EmptyValidator<>();
     
     /**
      * @param name component name
@@ -70,7 +69,7 @@ public abstract class CalendarComponent<T extends CalendarComponent> extends Com
      * @param name component name
      * @param properties component properties
      */
-    public CalendarComponent(final String name, final PropertyList<Property> properties) {
+    public CalendarComponent(final String name, final PropertyList properties) {
         super(name, properties);
     }
 
@@ -79,22 +78,10 @@ public abstract class CalendarComponent<T extends CalendarComponent> extends Com
      * @param method the applicable method
      * @throws ValidationException where the component does not comply with RFC2446
      */
-    public final void validate(Method method) throws ValidationException {
-        final Validator<T> validator = getValidator(method);
-        if (validator != null) {
-            validator.validate((T) this);
-        }
-        else {
-            throw new ValidationException("Unsupported method: " + method);
-        }
+    public void validate(Method method) throws ValidationException {
+        throw new ValidationException("Unsupported method: " + method);
     }
 
-    /**
-     * @param method a method to validate on
-     * @return a validator for the specified method or null if the method is not supported
-     */
-    protected abstract Validator<T> getValidator(Method method);
-    
     /**
      * Apply validation for METHOD=PUBLISH.
      * @throws ValidationException where the component does not comply with RFC2446

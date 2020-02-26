@@ -33,8 +33,8 @@ package net.fortuna.ical4j.filter;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
@@ -77,7 +77,7 @@ public class HasPropertyRule<T extends Component> implements Predicate<T> {
      */
     public final boolean test(final Component component) {
         boolean match = false;
-        final PropertyList<Property> properties = component.getProperties(property.getName());
+        final List<Property> properties = component.getProperties(property.getName());
         for (final Property p : properties) {
             if (matchEquals && property.equals(p)) {
                 match = true;

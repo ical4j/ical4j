@@ -88,7 +88,7 @@ public class XComponent extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    protected Validator<XComponent> getValidator(Method method) {
+    protected Validator<CalendarComponent> getValidator(Method method) {
         // No method validation required.. 
         return EMPTY_VALIDATOR;
     }

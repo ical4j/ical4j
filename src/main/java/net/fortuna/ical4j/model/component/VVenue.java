@@ -32,11 +32,9 @@
 package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
 
@@ -90,7 +88,7 @@ import java.util.Arrays;
  * @author Ben Fortuna
  * @author Mike Douglass
  */
-public class VVenue extends CalendarComponent<VVenue> {
+public class VVenue extends CalendarComponent {
 
 	private static final long serialVersionUID = 4502423035501438515L;
 
@@ -156,14 +154,6 @@ public class VVenue extends CalendarComponent<VVenue> {
         if (recurse) {
             validateProperties();
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected Validator<VVenue> getValidator(Method method) {
-        // No method validation required.. 
-        return EMPTY_VALIDATOR;
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VVenue> {

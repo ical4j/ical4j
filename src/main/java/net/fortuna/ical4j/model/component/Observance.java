@@ -60,7 +60,7 @@ import java.util.List;
  *
  * @author Ben Fortuna
  */
-public abstract class Observance<T extends Observance> extends Component<T> {
+public abstract class Observance extends Component {
 
     /**
      *
@@ -112,7 +112,7 @@ public abstract class Observance<T extends Observance> extends Component<T> {
      * @param name       the name of the time type
      * @param properties a list of properties
      */
-    protected Observance(final String name, final PropertyList<Property> properties) {
+    protected Observance(final String name, final PropertyList properties) {
         super(name, properties);
     }
 
@@ -196,9 +196,9 @@ public abstract class Observance<T extends Observance> extends Component<T> {
         cacheableOnsets.add(initialOnset);
 
         // check rdates for latest applicable onset..
-        final List<RDate<LocalDateTime>> rdates = getProperties(Property.RDATE);
-        for (RDate<LocalDateTime> rdate : rdates) {
-            DateList<LocalDateTime> rdateDates = rdate.getDates();
+        final List<Property> rdates = getProperties(Property.RDATE);
+        for (Property rdate : rdates) {
+            DateList<LocalDateTime> rdateDates = ((RDate<LocalDateTime>) rdate).getDates();
             for (final LocalDateTime rdateDate : rdateDates.getDates()) {
                 final OffsetDateTime rdateOnset = OffsetDateTime.from(rdateDate.atOffset(getOffsetFrom().getOffset()));
                 if (!rdateOnset.isAfter(offsetDate) && rdateOnset.isAfter(onset)) {
@@ -213,11 +213,11 @@ public abstract class Observance<T extends Observance> extends Component<T> {
         }
 
         // check recurrence rules for latest applicable onset..
-        final List<RRule> rrules = getProperties(Property.RRULE);
-        for (RRule rrule : rrules) {            
+        final List<Property> rrules = getProperties(Property.RRULE);
+        for (Property rrule : rrules) {
             // include future onsets to determine onset period..
             onsetLimit = Instant.from(offsetDate.plus(10, ChronoUnit.YEARS));
-            final List<Temporal> recurrenceDates = rrule.getRecur().getDates(initialOnset, onsetLimit);
+            final List<Temporal> recurrenceDates = ((RRule) rrule).getRecur().getDates(initialOnset, onsetLimit);
             for (final Temporal recurDate : recurrenceDates) {
                 final OffsetDateTime rruleOnset = OffsetDateTime.from(recurDate).plus(
                         getOffsetFrom().getOffset().getTotalSeconds(), ChronoUnit.SECONDS);

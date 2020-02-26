@@ -35,7 +35,10 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -110,7 +113,7 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        List<Categories> categories = calendar.getComponent(Component.VEVENT)
+        List<Property> categories = calendar.getComponent(Component.VEVENT)
                 .getProperties(Property.CATEGORIES);
 
         assertEquals(cat1, categories.get(0));

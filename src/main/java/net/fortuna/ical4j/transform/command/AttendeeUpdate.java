@@ -2,9 +2,10 @@ package net.fortuna.ical4j.transform.command;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.transform.Transformer;
+
+import java.util.List;
 
 public class AttendeeUpdate implements Transformer<Component> {
 
@@ -16,7 +17,7 @@ public class AttendeeUpdate implements Transformer<Component> {
 
     @Override
     public Component transform(Component object) {
-        PropertyList<Attendee> attendees = object.getProperties().getProperties(Property.ATTENDEE);
+        List<Property> attendees = object.getProperties().getProperties(Property.ATTENDEE);
         if (attendees.contains(attendee)) {
             attendees.remove(attendee);
         }

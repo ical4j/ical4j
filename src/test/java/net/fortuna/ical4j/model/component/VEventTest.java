@@ -489,7 +489,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
      */
     public void testEquals() {
         String summary = "test event";
-        PropertyList<Property> props = new PropertyList<>();
+        PropertyList props = new PropertyList();
         props.add(new DtStart<>(Instant.now()));
         props.add(new Summary(summary));
 

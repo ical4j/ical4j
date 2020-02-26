@@ -43,11 +43,11 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.OffsetDateTime;
 import java.time.temporal.Temporal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -124,7 +124,7 @@ import java.util.Objects;
  * 
  * @author Ben Fortuna
  */
-public class VTimeZone extends CalendarComponent<VTimeZone> {
+public class VTimeZone extends CalendarComponent {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
@@ -137,7 +137,7 @@ public class VTimeZone extends CalendarComponent<VTimeZone> {
      */
     public VTimeZone() {
         super(VTIMEZONE);
-        this.observances = new ComponentList<Observance>();
+        this.observances = new ComponentList<>();
     }
 
     /**
@@ -146,7 +146,7 @@ public class VTimeZone extends CalendarComponent<VTimeZone> {
      */
     public VTimeZone(final PropertyList properties) {
         super(VTIMEZONE, properties);
-        this.observances = new ComponentList<Observance>();
+        this.observances = new ComponentList<>();
     }
 
     /**
@@ -230,7 +230,7 @@ public class VTimeZone extends CalendarComponent<VTimeZone> {
     /**
      * {@inheritDoc}
      */
-    protected Validator<VTimeZone> getValidator(Method method) {
+    protected Validator<CalendarComponent> getValidator(Method method) {
         return itipValidator;
     }
 
@@ -319,8 +319,8 @@ public class VTimeZone extends CalendarComponent<VTimeZone> {
      * @throws URISyntaxException where an invalid URI is encountered
      * @see net.fortuna.ical4j.model.Component#copy()
      */
-    public VTimeZone copy() throws ParseException, URISyntaxException {
-        final VTimeZone copy = super.copy();
+    public VTimeZone copy() throws ParseException, URISyntaxException, IOException {
+        final VTimeZone copy = (VTimeZone) super.copy();
         copy.observances = new ComponentList<>(observances);
         return copy;
     }

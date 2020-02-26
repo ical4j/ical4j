@@ -16,7 +16,7 @@ public class OrganizerUpdate implements Transformer<Component> {
 
     @Override
     public Component transform(Component object) {
-        PropertyList<Property> props = object.getProperties();
+        PropertyList props = object.getProperties();
         Organizer oldOrganizer = props.getProperty(Property.ORGANIZER);
         if (oldOrganizer != null) {
             props.remove(oldOrganizer);

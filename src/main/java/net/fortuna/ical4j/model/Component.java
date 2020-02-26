@@ -38,6 +38,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -55,7 +56,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component<C extends Component> implements Serializable {
+public abstract class Component implements Serializable {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -121,7 +122,7 @@ public abstract class Component<C extends Component> implements Serializable {
 
     private String name;
 
-    private PropertyList<Property> properties;
+    private PropertyList properties;
 
     /**
      * Constructs a new component containing no properties.
@@ -129,7 +130,7 @@ public abstract class Component<C extends Component> implements Serializable {
      * @param s a component name
      */
     protected Component(final String s) {
-        this(s, new PropertyList<>());
+        this(s, new PropertyList());
     }
 
     /**
@@ -138,7 +139,7 @@ public abstract class Component<C extends Component> implements Serializable {
      * @param s component name
      * @param p a list of properties
      */
-    protected Component(final String s, final PropertyList<Property> p) {
+    protected Component(final String s, final PropertyList p) {
         this.name = s;
         this.properties = p;
     }
@@ -168,7 +169,7 @@ public abstract class Component<C extends Component> implements Serializable {
     /**
      * @return Returns the properties.
      */
-    public final PropertyList<Property> getProperties() {
+    public final PropertyList getProperties() {
         return properties;
     }
 
@@ -178,7 +179,7 @@ public abstract class Component<C extends Component> implements Serializable {
      * @param name name of properties to retrieve
      * @return a property list containing only properties with the specified name
      */
-    public final <T extends Property> PropertyList<T> getProperties(final String name) {
+    public final List<Property> getProperties(final String name) {
         return getProperties().getProperties(name);
     }
 
@@ -188,7 +189,7 @@ public abstract class Component<C extends Component> implements Serializable {
      * @param name name of the property to retrieve
      * @return the first matching property in the property list with the specified name
      */
-    public final <T extends Property> T getProperty(final String name) {
+    public <T extends Property> T getProperty(final String name) {
         return (T) getProperties().getProperty(name);
     }
 
@@ -200,11 +201,11 @@ public abstract class Component<C extends Component> implements Serializable {
      * @throws ConstraintViolationException when a property is not found
      */
     protected final <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
-        T p = getProperties().getProperty(name);
+        Property p = getProperties().getProperty(name);
         if (p == null) {
             throw new ConstraintViolationException(String.format("Missing %s property", name));
         }
-        return p;
+        return (T) p;
     }
 
     /**
@@ -263,10 +264,10 @@ public abstract class Component<C extends Component> implements Serializable {
      * @throws ParseException     where parsing component data fails
      * @throws URISyntaxException where component data contains an invalid URI
      */
-    public C copy() throws ParseException, URISyntaxException {
+    public Component copy() throws ParseException, URISyntaxException, IOException {
 
         // Deep copy properties..
-        final PropertyList<Property> newprops = new PropertyList<>(getProperties());
+        final PropertyList newprops = new PropertyList(getProperties());
 
         return new ComponentFactoryImpl().createComponent(getName(),
                 newprops);
@@ -326,19 +327,19 @@ public abstract class Component<C extends Component> implements Serializable {
         }
 
         // add recurrence dates..
-        List<RDate<T>> rDates = getProperties(Property.RDATE);
+        List<Property> rDates = getProperties(Property.RDATE);
         recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.PERIOD)
-                .map(RDate::getPeriods).flatMap(List<Period<T>>::stream).filter(period::intersects)
+                .map(p -> ((RDate<T>) p).getPeriods()).flatMap(List<Period<T>>::stream).filter(period::intersects)
                 .collect(Collectors.toList()));
 
         List<Period<T>> calculated = rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE_TIME)
-                .map(DateListProperty::getDates).map(DateList::getDates)
+                .map(p -> ((DateListProperty<T>) p).getDates()).map(DateList::getDates)
                 .flatMap(List<T>::stream).filter(period::includes)
                 .map(rdateTime -> new Period<>(rdateTime, rDuration)).collect(Collectors.toList());
         recurrenceSet.addAll(calculated);
 
         recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE) == Value.DATE)
-                .map(DateListProperty::getDates).map(DateList::getDates)
+                .map(p -> ((DateListProperty<T>) p).getDates()).map(DateList::getDates)
                 .flatMap(List<T>::stream).filter(period::includes)
                 .map(rdateDate -> new Period<>(rdateDate, rDuration)).collect(Collectors.toList()));
 
@@ -347,9 +348,9 @@ public abstract class Component<C extends Component> implements Serializable {
         final T startMinusDuration = (T) period.getStart().minus(rDuration);
 
         // add recurrence rules..
-        List<RRule> rRules = getProperties(Property.RRULE);
+        List<Property> rRules = getProperties(Property.RRULE);
         if (!rRules.isEmpty()) {
-            recurrenceSet.addAll(rRules.stream().map(r -> r.getRecur().getDates(start.getDate(),
+            recurrenceSet.addAll(rRules.stream().map(r -> ((RRule) r).getRecur().getDates(start.getDate(),
                     startMinusDuration, period.getEnd())).flatMap(List<T>::stream)
                     .map(rruleDate -> new Period<T>(rruleDate, rDuration)).collect(Collectors.toList()));
         } else {
@@ -374,15 +375,15 @@ public abstract class Component<C extends Component> implements Serializable {
         }
 
         // subtract exception dates..
-        List<ExDate> exDateProps = getProperties(Property.EXDATE);
-        List<Temporal> exDates = exDateProps.stream().map(DateListProperty::getDates).map(DateList::getDates).flatMap(List<Temporal>::stream)
-                .collect(Collectors.toList());
+        List<Property> exDateProps = getProperties(Property.EXDATE);
+        List<Temporal> exDates = exDateProps.stream().map(p -> ((DateListProperty<T>) p).getDates())
+                .map(DateList::getDates).flatMap(List<T>::stream).collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> exDates.contains(recurrence.getStart()));
 
         // subtract exception rules..
-        List<ExRule> exRules = getProperties(Property.EXRULE);
-        List<Object> exRuleDates = exRules.stream().map(e -> e.getRecur().getDates(start.getDate(),
+        List<Property> exRules = getProperties(Property.EXRULE);
+        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule) e).getRecur().getDates(start.getDate(),
                 period)).flatMap(List<T>::stream).collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> exRuleDates.contains(recurrence.getStart()));

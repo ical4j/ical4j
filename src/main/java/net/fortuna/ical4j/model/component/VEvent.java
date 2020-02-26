@@ -193,7 +193,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * 
  * @author Ben Fortuna
  */
-public class VEvent extends CalendarComponent<VEvent> {
+public class VEvent extends CalendarComponent {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
@@ -449,12 +449,20 @@ public class VEvent extends CalendarComponent<VEvent> {
             validateProperties();
         }
     }
-    
+
     /**
-     * {@inheritDoc}
+     * Performs method-specific ITIP validation.
+     * @param method the applicable method
+     * @throws ValidationException where the component does not comply with RFC2446
      */
-    protected Validator getValidator(Method method) {
-        return methodValidators.get(method);
+    public void validate(Method method) throws ValidationException {
+        final Validator<VEvent> validator = methodValidators.get(method);
+        if (validator != null) {
+            validator.validate(this);
+        }
+        else {
+            super.validate(method);
+        }
     }
 
     /**
@@ -722,7 +730,7 @@ public class VEvent extends CalendarComponent<VEvent> {
      * @throws URISyntaxException where an invalid URI value is encountered in the instance
      * @see net.fortuna.ical4j.model.Component#copy()
      */
-    public VEvent copy() throws ParseException, URISyntaxException {
+    public VEvent copy() throws ParseException, URISyntaxException, IOException {
         final VEvent copy = (VEvent) super.copy();
         copy.alarms = new ComponentList<>(alarms);
         return copy;

@@ -202,7 +202,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VFreeBusy extends CalendarComponent<VFreeBusy> {
+public class VFreeBusy extends CalendarComponent {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
@@ -555,10 +555,18 @@ public class VFreeBusy extends CalendarComponent<VFreeBusy> {
     }
 
     /**
-     * {@inheritDoc}
+     * Performs method-specific ITIP validation.
+     * @param method the applicable method
+     * @throws ValidationException where the component does not comply with RFC2446
      */
-    protected Validator<VFreeBusy> getValidator(Method method) {
-        return methodValidators.get(method);
+    public void validate(Method method) throws ValidationException {
+        final Validator<VFreeBusy> validator = methodValidators.get(method);
+        if (validator != null) {
+            validator.validate(this);
+        }
+        else {
+            super.validate(method);
+        }
     }
 
     /**

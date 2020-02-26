@@ -66,7 +66,7 @@ import net.fortuna.ical4j.model.PropertyList;
  *
  * @author Ben Fortuna
  */
-public class Daylight extends Observance<Daylight> {
+public class Daylight extends Observance {
 
     private static final long serialVersionUID = -2494710612002978763L;
 

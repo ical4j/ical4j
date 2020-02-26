@@ -192,7 +192,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *
  * @author Ben Fortuna
  */
-public class VAlarm extends CalendarComponent<VAlarm> {
+public class VAlarm extends CalendarComponent {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
@@ -217,7 +217,7 @@ public class VAlarm extends CalendarComponent<VAlarm> {
      * Constructor.
      * @param properties a list of properties
      */
-    public VAlarm(final PropertyList<Property> properties) {
+    public VAlarm(final PropertyList properties) {
         super(VALARM, properties);
     }
 
@@ -284,7 +284,7 @@ public class VAlarm extends CalendarComponent<VAlarm> {
     /**
      * {@inheritDoc}
      */
-    protected Validator<VAlarm> getValidator(Method method) {
+    protected Validator<CalendarComponent> getValidator(Method method) {
         throw new UnsupportedOperationException("VALARM validation included in VEVENT or VTODO method validator.");
     }
 

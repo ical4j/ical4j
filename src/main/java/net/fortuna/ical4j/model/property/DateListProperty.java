@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.ZoneId;
@@ -74,7 +73,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     /**
      * @param name the property name
      */
-    public DateListProperty(final String name, PropertyFactory factory) {
+    public DateListProperty(final String name, PropertyFactory<?> factory) {
         this(name, new DateList<>(), factory);
     }
 
@@ -82,7 +81,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      * @param name       the property name
      * @param parameters property parameters
      */
-    public DateListProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
+    public DateListProperty(final String name, final ParameterList parameters, PropertyFactory<?> factory) {
         super(name, parameters, factory);
     }
 
@@ -90,7 +89,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      * @param name  the property name
      * @param dates a list of initial dates for the property
      */
-    public DateListProperty(final String name, final DateList<T> dates, PropertyFactory factory) {
+    public DateListProperty(final String name, final DateList<T> dates, PropertyFactory<?> factory) {
         this(name, new ParameterList(), dates, factory);
     }
 
@@ -100,7 +99,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      * @param dates      a list of initial dates for the property
      */
     public DateListProperty(final String name, final ParameterList parameters, final DateList<T> dates,
-                            PropertyFactory factory) {
+                            PropertyFactory<?> factory) {
         super(name, parameters, factory);
         this.dates = dates;
     }
@@ -172,11 +171,11 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     /**
      * {@inheritDoc}
      */
-    public final Property copy() throws IOException, URISyntaxException, ParseException {
+    public final Property copy() throws URISyntaxException, ParseException {
         final Property copy = super.copy();
 
-        ((DateListProperty) copy).timeZone = timeZone;
-        ((DateListProperty) copy).setValue(getValue());
+        ((DateListProperty<?>) copy).timeZone = timeZone;
+        ((DateListProperty<?>) copy).setValue(getValue());
 
         return copy;
     }

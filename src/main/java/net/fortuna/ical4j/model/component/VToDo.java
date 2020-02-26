@@ -42,6 +42,7 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.temporal.Temporal;
@@ -121,7 +122,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * 
  * @author Ben Fortuna
  */
-public class VToDo extends CalendarComponent<VToDo> {
+public class VToDo extends CalendarComponent {
 
     private static final long serialVersionUID = -269658210065896668L;
 
@@ -261,8 +262,7 @@ public class VToDo extends CalendarComponent<VToDo> {
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
+    public final void validate(final boolean recurse) throws ValidationException {
 
         // validate that getAlarms() only contains VAlarm components
         for (VAlarm component : getAlarms()) {
@@ -328,10 +328,18 @@ public class VToDo extends CalendarComponent<VToDo> {
     }
 
     /**
-     * {@inheritDoc}
+     * Performs method-specific ITIP validation.
+     * @param method the applicable method
+     * @throws ValidationException where the component does not comply with RFC2446
      */
-    protected Validator<VToDo> getValidator(Method method) {
-        return methodValidators.get(method);
+    public void validate(Method method) throws ValidationException {
+        final Validator<VToDo> validator = methodValidators.get(method);
+        if (validator != null) {
+            validator.validate(this);
+        }
+        else {
+            super.validate(method);
+        }
     }
 
     /**
@@ -502,8 +510,8 @@ public class VToDo extends CalendarComponent<VToDo> {
      * @throws URISyntaxException where an invalid URI is encountered
      * @see net.fortuna.ical4j.model.Component#copy()
      */
-    public VToDo copy() throws ParseException, URISyntaxException {
-        final VToDo copy = super.copy();
+    public VToDo copy() throws ParseException, URISyntaxException, IOException {
+        final VToDo copy = (VToDo) super.copy();
         copy.alarms = new ComponentList<>(alarms);
         return copy;
     }

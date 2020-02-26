@@ -1,6 +1,9 @@
 package net.fortuna.ical4j.transform;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.transform.rfc5545.RuleManager;
 
 import java.lang.reflect.InvocationTargetException;
@@ -65,7 +68,7 @@ public class Rfc5545Transformer implements Transformer<Calendar> {
         }
 
         protected void limitApparitionsNumberIn(Component component){
-            PropertyList<? extends Property> propertyList = component.getProperties(name);
+            List<Property> propertyList = component.getProperties(name);
 
             if(propertyList.size() <= maxApparitionNumber){
                 return;

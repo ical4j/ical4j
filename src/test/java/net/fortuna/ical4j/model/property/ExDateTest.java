@@ -81,8 +81,8 @@ public class ExDateTest extends TestCase {
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE.ics"));
         
         Component event = calendar.getComponent(Component.VEVENT);
-        List<ExDate> exdates = event.getProperties(Property.EXDATE);
-        for (ExDate exDate : exdates) {            
+        List<Property> exdates = event.getProperties(Property.EXDATE);
+        for (Property exDate : exdates) {
             assertNotNull("This EXDATE should have a timezone", exDate.getParameter(Parameter.TZID));
         }
     }
@@ -108,9 +108,9 @@ public class ExDateTest extends TestCase {
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
 
         Component event = calendar.getComponent(Component.VEVENT);
-        List<ExDate<Instant>> exdates = event.getProperties(Property.EXDATE);
-        for (ExDate<Instant> exDate : exdates) {
-            for (Instant dateEx : exDate.getDates().getDates()) {
+        List<Property> exdates = event.getProperties(Property.EXDATE);
+        for (Property exDate : exdates) {
+            for (Instant dateEx : ((ExDate<Instant>) exDate).getDates().getDates()) {
                 assertNotNull(dateEx);
             }
         }

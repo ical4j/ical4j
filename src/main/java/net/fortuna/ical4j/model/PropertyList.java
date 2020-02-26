@@ -36,6 +36,7 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
  * Defines a list of iCalendar properties.
  * @author Ben Fortuna
  */
-public class PropertyList<T extends Property> extends ArrayList<T> implements Serializable {
+public class PropertyList extends ArrayList<Property> implements Serializable {
 
     private static final long serialVersionUID = -8875923766224921031L;
 
@@ -71,10 +72,10 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      */
     
     @SuppressWarnings("unchecked")
-    public PropertyList(PropertyList<? extends T> properties) throws ParseException, IOException, URISyntaxException {
+    public PropertyList(PropertyList properties) throws ParseException, IOException, URISyntaxException {
         super();
-        for ( T p: properties) {
-            add((T)p.copy());
+        for (Property p: properties) {
+            add(p.copy());
         }
     }
 
@@ -90,10 +91,10 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      * @param aName name of property to return
      * @return a property or null if no matching property found
      */
-    public final <R> R getProperty(final String aName) {
-        for (final T p : this) {
+    public final <T extends Property> T getProperty(final String aName) {
+        for (final Property p : this) {
             if (p.getName().equalsIgnoreCase(aName)) {
-                return (R) p;
+                return (T) p;
             }
         }
         return null;
@@ -105,11 +106,11 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      * @return a property list
      */
     @SuppressWarnings("unchecked")
-    public final <C extends T> PropertyList<C> getProperties(final String name) {
-        final PropertyList<C> list = new PropertyList<C>();
-        for (final T p : this) {
+    public final List<Property> getProperties(final String name) {
+        final PropertyList list = new PropertyList();
+        for (final Property p : this) {
             if (p.getName().equalsIgnoreCase(name)) {
-                list.add((C) p);
+                list.add(p);
             }
         }
         return list;
@@ -121,7 +122,7 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      * @return true
      * @see java.util.List#add(java.lang.Object)
      */
-    public final boolean add(final T property) {
+    public final boolean add(final Property property) {
         return super.add(property);
     }
 

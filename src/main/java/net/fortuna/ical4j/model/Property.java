@@ -361,7 +361,7 @@ public abstract class Property extends Content {
 
     private final ParameterList parameters;
 
-    private final PropertyFactory<? extends Property> factory;
+    private final PropertyFactory<?> factory;
 
     /**
      * Constructor.
@@ -369,7 +369,7 @@ public abstract class Property extends Content {
      * @param aName   property name
      * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, PropertyFactory factory) {
+    protected Property(final String aName, PropertyFactory<?> factory) {
         this(aName, new ParameterList(), factory);
     }
 
@@ -387,7 +387,7 @@ public abstract class Property extends Content {
      * @param aList   a list of initial parameters
      * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, final ParameterList aList, PropertyFactory<? extends Property> factory) {
+    protected Property(final String aName, final ParameterList aList, PropertyFactory<?> factory) {
         this.name = aName;
         this.parameters = aList;
         this.factory = factory;
@@ -517,16 +517,15 @@ public abstract class Property extends Content {
      * Create a (deep) copy of this property.
      *
      * @return the copy of the property
-     * @throws IOException        where an error occurs reading property data
      * @throws URISyntaxException where the property contains an invalid URI value
      * @throws ParseException     where the property contains an invalid date value
      */
-    public <T extends Property> T copy() throws URISyntaxException, ParseException {
+    public Property copy() throws URISyntaxException, ParseException {
         if (factory == null) {
             throw new UnsupportedOperationException("No factory specified");
         }
         // Deep copy parameter list..
         final ParameterList params = new ParameterList(getParameters(), false);
-        return (T) factory.createProperty(params, getValue());
+        return factory.createProperty(params, getValue());
     }
 }
