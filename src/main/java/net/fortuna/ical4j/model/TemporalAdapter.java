@@ -53,7 +53,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     public TemporalAdapter(T temporal) {
         Objects.requireNonNull(temporal, "temporal");
         this.temporal = temporal;
-        this.valueString = toString(temporal);
+        this.valueString = toString(temporal, ZoneId.systemDefault());
         if (ChronoUnit.SECONDS.isSupportedBy(temporal) && !isFloating(temporal) && !isUtc(temporal)) {
             this.tzId = new TzId.Factory().createParameter(ZoneId.systemDefault().getId());
         } else {
@@ -110,10 +110,14 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
 
     @Override
     public String toString() {
-        return toString(getTemporal());
+        return toString(getTemporal(), ZoneId.systemDefault());
     }
 
-    private String toString(T temporal) {
+    public String toString(ZoneId zoneId) {
+        return toString(getTemporal(), zoneId);
+    }
+
+    private String toString(T temporal, ZoneId zoneId) {
         if (!ChronoUnit.SECONDS.isSupportedBy(temporal)) {
             return toString(CalendarDateFormat.DATE_FORMAT, temporal);
         } else {
@@ -122,7 +126,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
             } else if (isUtc(getTemporal())) {
                 return toString(CalendarDateFormat.UTC_DATE_TIME_FORMAT, temporal);
             } else {
-                return toString(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT, ZoneId.systemDefault(), temporal);
+                return toString(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT, zoneId, temporal);
             }
         }
     }
@@ -229,7 +233,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     public static <T extends Temporal> boolean isBefore(T date1, T date2) {
         if (date1 instanceof LocalDate && date2 instanceof LocalDate) {
             return ((LocalDate) date1).isBefore((LocalDate) date2);
-        } else if (date1 instanceof LocalDateTime) {
+        } else if (date1 instanceof LocalDateTime && date2 instanceof LocalDateTime) {
             return ((LocalDateTime) date1).isBefore((LocalDateTime) date2);
         }
         return Instant.from(date1).isBefore(Instant.from(date2));
@@ -238,7 +242,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     public static <T extends Temporal> boolean isAfter(T date1, T date2) {
         if (date1 instanceof LocalDate) {
             return ((LocalDate) date1).isAfter((LocalDate) date2);
-        } else if (date1 instanceof LocalDateTime) {
+        } else if (date1 instanceof LocalDateTime && date2 instanceof LocalDateTime) {
             return ((LocalDateTime) date1).isAfter((LocalDateTime) date2);
         }
         return Instant.from(date1).isAfter(Instant.from(date2));
