@@ -124,8 +124,7 @@ public class Available extends Component {
          *      "DATE-TIME" values specified as either date with UTC time or date
          *      with local time and a time zone reference.
          */
-        final DtStart start = getProperty(Property.DTSTART);
-        if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
+        if (getProperty(Property.DTSTART).getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
             throw new ValidationException("Property [" + Property.DTSTART
                     + "] must be a " + Value.DATE_TIME);
         }

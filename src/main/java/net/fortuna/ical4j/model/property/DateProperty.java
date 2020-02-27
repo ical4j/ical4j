@@ -98,7 +98,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      */
     public T getDate() {
         if (date != null) {
-            Optional<TzId> tzId = Optional.ofNullable(getParameter(Parameter.TZID));
+            Optional<TzId> tzId = getParameter(Parameter.TZID);
             if (tzId.isPresent()) {
                 return (T) date.toLocalTime(tzId.get().toZoneId());
             } else {
@@ -137,12 +137,9 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     public void setValue(final String value) throws DateTimeParseException {
         // value can be either a date-time or a date..
         if (value != null && !value.isEmpty()) {
-            TzId tzId = getParameter(Parameter.TZID);
-            if (tzId != null) {
-                this.date = (TemporalAdapter<T>) TemporalAdapter.parse(value, tzId);
-            } else {
-                this.date = TemporalAdapter.parse(value);
-            }
+            Optional<TzId> tzId = getParameter(Parameter.TZID);
+            this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id))
+                    .orElseGet(() -> TemporalAdapter.parse(value));
         } else {
             this.date = null;
         }
@@ -202,26 +199,26 @@ public abstract class DateProperty<T extends Temporal> extends Property {
                     getParameters());
         }
 
-        final Value value = getParameter(Parameter.VALUE);
+        final Optional<Value> value = getParameter(Parameter.VALUE);
 
         if (date != null) {
             if (date.getTemporal() instanceof LocalDate) {
-                if (value == null) {
+                if (!value.isPresent()) {
                     throw new ValidationException("VALUE parameter [" + Value.DATE + "] must be specified for DATE instance");
-                } else if (!Value.DATE.equals(value)) {
-                    throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE instance");
+                } else if (!Value.DATE.equals(value.get())) {
+                    throw new ValidationException("VALUE parameter [" + value.get() + "] is invalid for DATE instance");
                 }
             } else {
-                if (value != null && !Value.DATE_TIME.equals(value)) {
-                    throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE-TIME instance");
+                if (value.isPresent() && !Value.DATE_TIME.equals(value.get())) {
+                    throw new ValidationException("VALUE parameter [" + value.get() + "] is invalid for DATE-TIME instance");
                 }
 
                 if (date.getTemporal() instanceof ZonedDateTime) {
                     ZonedDateTime dateTime = (ZonedDateTime) date.getTemporal();
 
                     // ensure tzid matches date-time timezone..
-                    final TzId tzId = getParameter(Parameter.TZID);
-                    if (tzId == null || !tzId.toZoneId().equals(dateTime.getZone())) {
+                    final Optional<TzId> tzId = getParameter(Parameter.TZID);
+                    if (!tzId.isPresent() || !tzId.get().toZoneId().equals(dateTime.getZone())) {
                         throw new ValidationException("TZID parameter [" + tzId + "] does not match the timezone ["
                                 + dateTime.getZone().getId() + "]");
                     }

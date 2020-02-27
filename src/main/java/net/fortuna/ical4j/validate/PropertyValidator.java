@@ -70,7 +70,7 @@ public final class PropertyValidator implements Validator<Property> {
 
             switch (rule.getType()) {
                 case None:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameter(s) != null,
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameter(s).isPresent(),
                             ParameterValidator.ASSERT_NONE_MESSAGE, warnOnly, target.getParameters(), s));
                     break;
                 case One:

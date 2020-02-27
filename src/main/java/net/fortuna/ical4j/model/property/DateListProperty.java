@@ -32,11 +32,13 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Strings;
 
 import java.text.ParseException;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -163,7 +165,8 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
             throw new UnsupportedOperationException("TimeZone is not applicable to current value");
         }
         if (utc) {
-            getParameters().remove(getParameter(Parameter.TZID));
+            Optional<TzId> tzId = getParameter(Parameter.TZID);
+            tzId.ifPresent(p -> getParameters().remove(p));
         }
     }
 }

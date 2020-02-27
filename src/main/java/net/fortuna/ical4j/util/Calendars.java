@@ -48,6 +48,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -151,7 +152,7 @@ public final class Calendars {
             
             Calendar uidCal = calendars.get(uid);
             if (uidCal == null) {
-                uidCal = new Calendar(calendar.getProperties(), new ComponentList<CalendarComponent>());
+                uidCal = new Calendar(calendar.getProperties(), new ComponentList<>());
                 // remove METHOD property for split calendars..
                 for (final Property mp : uidCal.getProperties(Property.METHOD)) {
                     uidCal.getProperties().remove(mp);
@@ -160,9 +161,9 @@ public final class Calendars {
             }
             
             for (final Property p : c.getProperties()) {
-                final TzId tzid = p.getParameter(Parameter.TZID);
-                if (tzid != null) {
-                    final VTimeZone timezone = timezones.getComponent(tzid.getValue());
+                final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
+                if (tzid.isPresent()) {
+                    final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
                     if (!uidCal.getComponents().contains(timezone)) {
                         uidCal.getComponents().add(timezone);
                     }

@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -83,7 +84,7 @@ public class ExDateTest extends TestCase {
         Component event = calendar.getComponent(Component.VEVENT);
         List<Property> exdates = event.getProperties(Property.EXDATE);
         for (Property exDate : exdates) {
-            assertNotNull("This EXDATE should have a timezone", exDate.getParameter(Parameter.TZID));
+            assertTrue("This EXDATE should have a timezone", exDate.getParameter(Parameter.TZID).isPresent());
         }
     }
     
@@ -99,7 +100,7 @@ public class ExDateTest extends TestCase {
 
         VEvent vEvent = (VEvent) ical.getComponent(VEvent.VEVENT);
         DtStart start = vEvent.getStartDate();
-        assertEquals(vTZ.getTimeZoneId(), start.getParameter(Parameter.TZID));
+        assertTrue(start.getParameter(Parameter.TZID).equals(Optional.of(vTZ.getTimeZoneId())));
         assertEquals(1522738800000L, Instant.from(start.getDate()).toEpochMilli());
     }
 

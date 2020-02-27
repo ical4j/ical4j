@@ -38,6 +38,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 
 import java.text.ParseException;
 import java.time.temporal.Temporal;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -97,10 +98,10 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
         ParameterValidator.assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
-        final Parameter valueParam = getParameter(Parameter.VALUE);
+        final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
 
-        if (valueParam != null && !Value.DATE_TIME.equals(valueParam)
-                && !Value.DATE.equals(valueParam)) {
+        if (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get())
+                && !Value.DATE.equals(valueParam.get())) {
             throw new ValidationException("Parameter [" + Parameter.VALUE
                     + "] is invalid");
         }

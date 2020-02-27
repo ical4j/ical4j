@@ -44,9 +44,6 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VEventValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
@@ -452,32 +449,28 @@ public class VEvent extends CalendarComponent {
 
     /**
      * Returns a normalised list of periods representing the consumed time for this event.
-     * @param rangeStart the start of a range
-     * @param rangeEnd the end of a range
+     * @param range the range to check for consumed time
      * @return a normalised list of periods representing consumed time for this event
-     * @see VEvent#getConsumedTime(Temporal, Temporal)
      */
-    public final <T extends Temporal> List<Period<T>> getConsumedTime(final T rangeStart, final T rangeEnd) {
-        return getConsumedTime(rangeStart, rangeEnd, true);
+    public final <T extends Temporal> List<Period<T>> getConsumedTime(final Period<T> range) {
+        return getConsumedTime(range, true);
     }
 
     /**
      * Returns a list of periods representing the consumed time for this event in the specified range. Note that the
      * returned list may contain a single period for non-recurring components or multiple periods for recurring
      * components. If no time is consumed by this event an empty list is returned.
-     * @param rangeStart the start of the range to check for consumed time
-     * @param rangeEnd the end of the range to check for consumed time
+     * @param range the range to check for consumed time
      * @param normalise indicate whether the returned list of periods should be normalised
      * @return a list of periods representing consumed time for this event
      */
-    public final <T extends Temporal> List<Period<T>> getConsumedTime(final T rangeStart, final T rangeEnd,
-                                                                      final boolean normalise) {
+    public final <T extends Temporal> List<Period<T>> getConsumedTime(final Period<T> range, final boolean normalise) {
         PeriodList<T> periods;
         // if component is transparent return empty list..
         if (!Transp.TRANSPARENT.equals(getProperty(Property.TRANSP))) {
 
 //          try {
-            periods = new PeriodList<>(calculateRecurrenceSet(new Period<>(rangeStart, rangeEnd)));
+            periods = new PeriodList<>(calculateRecurrenceSet(range));
 //          }
 //          catch (ValidationException ve) {
 //              log.error("Invalid event data", ve);
@@ -500,14 +493,10 @@ public class VEvent extends CalendarComponent {
      * @param date a date on which the occurence should occur
      * @return a single non-recurring event instance for the specified date, or null if the event doesn't
      * occur on the specified date
-     * @throws IOException where an error occurs reading data
-     * @throws URISyntaxException where an invalid URI is encountered
-     * @throws ParseException where an error occurs parsing data
      */
-    public final <T extends Temporal> VEvent getOccurrence(final T date) throws IOException,
-        URISyntaxException, ParseException {
+    public final <T extends Temporal> VEvent getOccurrence(final T date) {
         
-        final List<Period<T>> consumedTime = getConsumedTime(date, date);
+        final List<Period<T>> consumedTime = getConsumedTime(new Period<>(date, date));
         for (final Period<T> p : consumedTime) {
             if (p.getStart().equals(date)) {
                 final VEvent occurrence = (VEvent) this.copy();
@@ -655,7 +644,7 @@ public class VEvent extends CalendarComponent {
             final Duration vEventDuration;
             if (getDuration() != null) {
                 vEventDuration = getDuration();
-            } else if (Value.DATE_TIME.equals(dtStart.getParameter(Parameter.VALUE))) {
+            } else if (dtStart.getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
                 // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
                 vEventDuration = new Duration(java.time.Duration.ZERO);
             } else {

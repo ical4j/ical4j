@@ -35,10 +35,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -112,13 +109,13 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
      * @param aName name of the parameter
      * @return the first matching parameter or null if no matching parameters
      */
-    public final <T extends Parameter> T getParameter(final String aName) {
+    public final <T extends Parameter> Optional<T> getParameter(final String aName) {
         for (final Parameter p : parameters) {
             if (aName.equalsIgnoreCase(p.getName())) {
-                return (T) p;
+                return Optional.of((T) p);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     /**

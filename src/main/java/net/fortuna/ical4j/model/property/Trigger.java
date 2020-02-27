@@ -39,6 +39,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAmount;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -229,26 +230,22 @@ public class Trigger extends DateProperty<Instant> {
     public final void validate() throws ValidationException {
         super.validate();
 
-        final Parameter relParam = getParameter(Parameter.RELATED);
-        final Parameter valueParam = getParameter(Parameter.VALUE);
+        final Optional<Parameter> relParam = getParameter(Parameter.RELATED);
+        final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
 
-        if (relParam != null || !Value.DATE_TIME.equals(valueParam)) {
+        if (relParam.isPresent() || !Value.DATE_TIME.equals(valueParam.get())) {
 
-            ParameterValidator.assertOneOrLess(Parameter.RELATED,
-                    getParameters());
+            ParameterValidator.assertOneOrLess(Parameter.RELATED, getParameters());
 
-            ParameterValidator.assertNullOrEqual(Value.DURATION,
-                    getParameters());
+            ParameterValidator.assertNullOrEqual(Value.DURATION, getParameters());
 
             if (getDuration() == null) {
                 throw new ValidationException("Duration value not specified");
             }
         } else {
-            ParameterValidator.assertOne(Parameter.VALUE,
-                    getParameters());
+            ParameterValidator.assertOne(Parameter.VALUE, getParameters());
 
-            ParameterValidator.assertNullOrEqual(Value.DATE_TIME,
-                    getParameters());
+            ParameterValidator.assertNullOrEqual(Value.DATE_TIME, getParameters());
 
             if (getDate() == null) {
                 throw new ValidationException("DATE-TIME value not specified");
@@ -305,7 +302,7 @@ public class Trigger extends DateProperty<Instant> {
         this.duration = new TemporalAmountAdapter(duration);
         super.setDate(null);
         // duration is the default value type for Trigger..
-        if (getParameter(Parameter.VALUE) != null) {
+        if (getParameter(Parameter.VALUE).isPresent()) {
             getParameters().replace(Value.DURATION);
         }
     }

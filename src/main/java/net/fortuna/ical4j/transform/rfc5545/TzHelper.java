@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 
 /**
@@ -59,7 +60,7 @@ class TzHelper {
     }
 
     static void correctTzParameterFrom(Property property) {
-        if (property.getParameter(Parameter.TZID) != null) {
+        if (property.getParameter(Parameter.TZID).isPresent()) {
             String newTimezoneId = getCorrectedTimezoneFromTzParameter(property);
             correctTzParameter(property, newTimezoneId);
         }
@@ -70,7 +71,7 @@ class TzHelper {
             property.getParameters().removeAll(Parameter.TZID);
             return;
         }
-        if (property.getParameter(Parameter.TZID) != null) {
+        if (property.getParameter(Parameter.TZID).isPresent()) {
             String newTimezone = getCorrectedTimezoneFromTzParameter(property);
             String value = property.getValue();
             correctTzParameter(property, newTimezone);
@@ -85,7 +86,8 @@ class TzHelper {
     }
 
     private static String getCorrectedTimezoneFromTzParameter(Property property) {
-        String tzIdValue = property.getParameter(Parameter.TZID).getValue();
+        Optional<TzId> tzId = property.getParameter(Parameter.TZID);
+        String tzIdValue = tzId.get().getValue();
         return getCorrectedTimeZoneIdFrom(tzIdValue);
     }
 

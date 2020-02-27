@@ -40,6 +40,7 @@ import net.fortuna.ical4j.model.Parameter;
 import java.io.IOException;
 import java.time.zone.ZoneRules;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -67,10 +68,8 @@ public class TzIdTest extends TestCase {
 
         calendar.getComponents().forEach(calendarComponent -> {
             calendarComponent.getProperties().forEach(property -> {
-                TzId tzId = property.getParameter(Parameter.TZID);
-                if (tzId != null) {
-                    assertTrue(zoneRulesMap.containsKey(builder.getRegistry().getZoneId(tzId.getValue()).getId()));
-                }
+                Optional<TzId> tzId = property.getParameter(Parameter.TZID);
+                tzId.ifPresent(id -> assertTrue(zoneRulesMap.containsKey(builder.getRegistry().getZoneId(id.getValue()).getId())));
             });
         });
     }

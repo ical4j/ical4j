@@ -9,6 +9,7 @@ import net.fortuna.ical4j.model.property.DtStamp;
 
 import java.time.Period;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 
@@ -40,11 +41,11 @@ public class VEventRule implements Rfc5545ComponentRule<VEvent> {
          *      so we add 1 day to the end date
          */  
         if (start!=null && end!=null){
-            Parameter startType = start.getParameter(Parameter.VALUE);
-            Parameter endType = end.getParameter(Parameter.VALUE);
-            if (startType!=null && endType!=null &&
-                    startType.getValue().equals(Value.DATE.getValue()) &&
-                    endType.getValue().equals(Value.DATE.getValue()) &&
+            Optional<Parameter> startType = start.getParameter(Parameter.VALUE);
+            Optional<Parameter> endType = end.getParameter(Parameter.VALUE);
+            if (startType.isPresent() && endType.isPresent() &&
+                    startType.get().getValue().equals(Value.DATE.getValue()) &&
+                    endType.get().getValue().equals(Value.DATE.getValue()) &&
                     start.getValue().equals(end.getValue())){
                 if (end instanceof DateProperty) {
                     DateProperty endDate = (DateProperty) end;

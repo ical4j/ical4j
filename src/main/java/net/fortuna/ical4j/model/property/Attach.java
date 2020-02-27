@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -187,10 +188,10 @@ public class Attach extends Property {
          * If the value type parameter is ";VALUE=BINARY", then the inline encoding parameter MUST be specified with the
          * value ";ENCODING=BASE64".
          */
-        if (Value.BINARY.equals(getParameter(Parameter.VALUE))) {
+        if (getParameter(Parameter.VALUE).equals(Optional.of(Value.BINARY))) {
             ParameterValidator.assertOne(Parameter.ENCODING,
                     getParameters());
-            if (!Encoding.BASE64.equals(getParameter(Parameter.ENCODING))) {
+            if (!getParameter(Parameter.ENCODING).equals(Optional.of(Encoding.BASE64))) {
                 throw new ValidationException(
                         "If the value type parameter is [BINARY], the inline"
                                 + "encoding parameter MUST be specified with the value [BASE64]"
@@ -227,12 +228,12 @@ public class Attach extends Property {
 
         // determine if ATTACH is a URI or an embedded
         // binary..
-        if (getParameter(Parameter.ENCODING) != null) {
+        Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
+        if (encoding.isPresent()) {
             // binary = Base64.decode(aValue);
             try {
                 final BinaryDecoder decoder = DecoderFactory.getInstance()
-                        .createBinaryDecoder(
-                                getParameter(Parameter.ENCODING));
+                        .createBinaryDecoder(encoding.get());
                 binary = decoder.decode(aValue.getBytes());
             } catch (UnsupportedEncodingException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);
@@ -257,9 +258,9 @@ public class Attach extends Property {
         } else if (getBinary() != null) {
             // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
             try {
+                Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
                 final BinaryEncoder encoder = EncoderFactory.getInstance()
-                        .createBinaryEncoder(
-                                getParameter(Parameter.ENCODING));
+                        .createBinaryEncoder(encoding.get());
                 return new String(encoder.encode(getBinary()));
             } catch (UnsupportedEncodingException | EncoderException uee) {
                 Logger log = LoggerFactory.getLogger(Attach.class);

@@ -210,11 +210,11 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
         ParameterValidator.assertOneOrLess(Parameter.VALUE,
                 getParameters());
 
-        final Parameter valueParam = getParameter(Parameter.VALUE);
+        final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
 
-        if (valueParam != null && !Value.DATE_TIME.equals(valueParam)
-                && !Value.DATE.equals(valueParam)
-                && !Value.PERIOD.equals(valueParam)) {
+        if (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get())
+                && !Value.DATE.equals(valueParam.get())
+                && !Value.PERIOD.equals(valueParam.get())) {
             throw new ValidationException("Parameter [" + Parameter.VALUE
                     + "] is invalid");
         }
@@ -230,16 +230,19 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
     /**
      * @return Returns the period list.
      */
-    public final List<Period<T>> getPeriods() {
-        return Collections.unmodifiableList(
-                new ArrayList<>(Optional.ofNullable(periods).orElseGet(PeriodList::new).getPeriods()));
+    public final Optional<List<Period<T>>> getPeriods() {
+        if (periods != null) {
+            return Optional.of(Collections.unmodifiableList(new ArrayList<>(periods.getPeriods())));
+        } else {
+            return Optional.empty();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) throws ParseException {
-        if (Value.PERIOD.equals(getParameter(Parameter.VALUE))) {
+        if (getParameter(Parameter.VALUE).equals(Optional.of(Value.PERIOD))) {
             periods = PeriodList.parse(aValue);
         } else {
             super.setValue(aValue);

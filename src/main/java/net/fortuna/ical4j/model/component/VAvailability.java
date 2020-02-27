@@ -43,6 +43,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -187,7 +188,7 @@ public class VAvailability extends CalendarComponent {
          *      with local time and a time zone reference.
          */
         final DtStart start = getProperty(Property.DTSTART);
-        if (Value.DATE.equals(start.getParameter(Parameter.VALUE))) {
+        if (start.getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
             throw new ValidationException("Property [" + Property.DTSTART
                     + "] must be a " + Value.DATE_TIME);
         }
@@ -201,7 +202,7 @@ public class VAvailability extends CalendarComponent {
                     getProperties());
             /* Must be DATE_TIME */
             final DtEnd end = getProperty(Property.DTEND);
-            if (Value.DATE.equals(end.getParameter(Parameter.VALUE))) {
+            if (end.getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
                 throw new ValidationException("Property [" + Property.DTEND
                         + "] must be a " + Value.DATE_TIME);
             }

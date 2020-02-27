@@ -13,7 +13,7 @@ public class DatePropertyRule implements Rfc5545PropertyRule<DateProperty> {
     @Override
     public void applyTo(DateProperty element) {
         TzHelper.correctTzParameterFrom(element);
-        if (!element.isUtc() || element.getParameter(Parameter.TZID) == null) {
+        if (!element.isUtc() || !element.getParameter(Parameter.TZID).isPresent()) {
             return;
         }
         element.getParameters().removeAll(Parameter.TZID);

@@ -50,6 +50,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
+import java.util.Optional;
 
 /**
  * Created on 10/02/2005
@@ -329,7 +330,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
     public void testFbType() {
         VFreeBusy result = new VFreeBusy(request, components);
         FreeBusy fb = result.getProperty(Property.FREEBUSY);
-        assertEquals(expectedFbType, fb.getParameter(Parameter.FBTYPE));
+        assertTrue(fb.getParameter(Parameter.FBTYPE).equals(Optional.of(expectedFbType)));
     }
 
     /**
