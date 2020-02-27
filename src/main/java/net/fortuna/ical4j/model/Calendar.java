@@ -184,11 +184,10 @@ public class Calendar implements Serializable {
      * @throws ParseException where calendar parsing fails
      * @throws URISyntaxException where an invalid URI string is encountered
      */
-    public Calendar(Calendar c) throws ParseException, IOException,
-            URISyntaxException {
+    public Calendar(Calendar c) throws ParseException, URISyntaxException {
         
         this(new PropertyList(c.getProperties()),
-        		new ComponentList<CalendarComponent>(c.getComponents()));
+        		new ComponentList<>(c.getComponents()));
     }
 
     /**

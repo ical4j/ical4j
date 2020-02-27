@@ -62,7 +62,7 @@ public abstract class CalendarParserFactory implements Supplier<CalendarParser> 
     private static Supplier<CalendarParser> instance;
     static {
         Optional<Supplier<CalendarParser>> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
-        instance = property.orElse(() -> new CalendarParserImpl());
+        instance = property.orElse(CalendarParserImpl::new);
     }
 
     /**
