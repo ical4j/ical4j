@@ -287,6 +287,11 @@ public class Attach extends Property {
         this.binary = null;
     }
 
+    @Override
+    public Property copy() throws URISyntaxException {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Attach> {
         private static final long serialVersionUID = 1L;
 

@@ -153,12 +153,9 @@ public class Attendee extends Property {
         this.calAddress = calAddress;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public final Property copy() {
-        // URI are immutable
-        return new Attendee(new ParameterList(getParameters(), false), calAddress);
+    @Override
+    public Property copy() throws URISyntaxException {
+        return new Factory().createProperty(getParameters(), getValue());
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Attendee> {
@@ -169,7 +166,7 @@ public class Attendee extends Property {
         }
 
         public Attendee createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
-            return new Attendee(parameters, value);
+            return new Attendee(new ParameterList(parameters, false), value);
         }
 
         public Attendee createProperty() {

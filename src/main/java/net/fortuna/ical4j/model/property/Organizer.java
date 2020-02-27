@@ -229,6 +229,11 @@ public class Organizer extends Property {
         this.calAddress = calAddress;
     }
 
+    @Override
+    public Property copy() throws URISyntaxException {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Organizer> {
         private static final long serialVersionUID = 1L;
 

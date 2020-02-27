@@ -45,6 +45,11 @@ public class RefreshInterval extends Property {
         return duration.toString();
     }
 
+    @Override
+    public Property copy() {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<RefreshInterval> {
         public Factory() {
             super(PROPERTY_NAME);

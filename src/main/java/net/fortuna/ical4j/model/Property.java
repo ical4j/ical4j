@@ -41,6 +41,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Optional;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
@@ -423,8 +424,8 @@ public abstract class Property extends Content {
         buffer.append(':');
         boolean needsEscape = false;
         if (this instanceof XProperty) {
-            Value valParam = getParameter(Parameter.VALUE);
-            if (valParam == null || valParam.equals(Value.TEXT)) {
+            Optional<Value> valParam = getParameter(Parameter.VALUE);
+            if (!valParam.isPresent() || valParam.get().equals(Value.TEXT)) {
                 needsEscape = true;
             }
         } else if (this instanceof Escapable) {
@@ -470,7 +471,7 @@ public abstract class Property extends Content {
      * @param name name of the parameter to retrieve
      * @return the first parameter from the parameter list with the specified name
      */
-    public final <T extends Parameter> T getParameter(final String name) {
+    public final <P extends Parameter> Optional<P> getParameter(final String name) {
         return getParameters().getParameter(name);
     }
 
@@ -517,15 +518,6 @@ public abstract class Property extends Content {
      * Create a (deep) copy of this property.
      *
      * @return the copy of the property
-     * @throws URISyntaxException where the property contains an invalid URI value
-     * @throws ParseException     where the property contains an invalid date value
      */
-    public Property copy() throws URISyntaxException, ParseException {
-        if (factory == null) {
-            throw new UnsupportedOperationException("No factory specified");
-        }
-        // Deep copy parameter list..
-        final ParameterList params = new ParameterList(getParameters(), false);
-        return factory.createProperty(params, getValue());
-    }
+    public abstract Property copy() throws URISyntaxException, ParseException;
 }

@@ -68,7 +68,7 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      */
     
     @SuppressWarnings("unchecked")
-    public PropertyList(PropertyList properties) throws ParseException, IOException, URISyntaxException {
+    public PropertyList(PropertyList properties) throws URISyntaxException, ParseException {
         super();
         for (Property p: properties) {
             add(p.copy());

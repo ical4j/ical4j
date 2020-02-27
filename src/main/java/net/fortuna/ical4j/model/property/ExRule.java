@@ -122,6 +122,11 @@ public class ExRule extends Property {
 
     }
 
+    @Override
+    public Property copy() throws ParseException {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<ExRule> {
         private static final long serialVersionUID = 1L;
 

@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.text.ParseException;
@@ -170,6 +171,11 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
     public DtEnd(final ParameterList aList, final T aDate) {
         super(DTEND, aList, new Factory());
         setDate(aDate);
+    }
+
+    @Override
+    public Property copy() {
+        return new Factory().createProperty(getParameters(), getValue());
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<DtEnd> {

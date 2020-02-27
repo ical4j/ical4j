@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.text.ParseException;
@@ -122,6 +123,11 @@ public class Created extends DateProperty<Instant> {
     public Created(final ParameterList aList, final Instant aDate) {
         super(CREATED, aList, new Factory());
         setDate(aDate);
+    }
+
+    @Override
+    public Property copy() throws ParseException {
+        return new Factory().createProperty(getParameters(), getValue());
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Created> {

@@ -138,6 +138,11 @@ public class Action extends Property {
 
     }
 
+    @Override
+    public Property copy() {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Action> {
         private static final long serialVersionUID = 1L;
 

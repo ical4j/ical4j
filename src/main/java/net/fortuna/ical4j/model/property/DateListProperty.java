@@ -34,7 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.Strings;
 
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
@@ -166,17 +165,5 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
         if (utc) {
             getParameters().remove(getParameter(Parameter.TZID));
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final Property copy() throws URISyntaxException, ParseException {
-        final Property copy = super.copy();
-
-        ((DateListProperty<?>) copy).timeZone = timeZone;
-        ((DateListProperty<?>) copy).setValue(getValue());
-
-        return copy;
     }
 }

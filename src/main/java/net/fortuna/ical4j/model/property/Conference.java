@@ -41,6 +41,11 @@ public class Conference extends Property {
         return value;
     }
 
+    @Override
+    public Property copy() {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Conference> {
         public Factory() {
             super(PROPERTY_NAME);

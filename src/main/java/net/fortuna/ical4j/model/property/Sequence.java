@@ -206,6 +206,11 @@ public class Sequence extends Property implements Comparable<Sequence> {
         return Integer.compare(getSequenceNo(), o.getSequenceNo());
     }
 
+    @Override
+    public Property copy() {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Sequence> {
         private static final long serialVersionUID = 1L;
 

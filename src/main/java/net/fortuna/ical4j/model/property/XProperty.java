@@ -107,6 +107,11 @@ public class XProperty extends Property implements Escapable {
         }
     }
 
+    @Override
+    public Property copy() {
+        return new Factory(getName()).createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<XProperty> {
         private static final long serialVersionUID = 1L;
 

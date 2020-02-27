@@ -256,6 +256,11 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
         return super.getValue();
     }
 
+    @Override
+    public Property copy() throws ParseException {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<RDate> {
         private static final long serialVersionUID = 1L;
 

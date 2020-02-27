@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.text.ParseException;
@@ -101,8 +102,7 @@ public class LastModified extends DateProperty<Instant> {
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public LastModified(final ParameterList aList, final String aValue)
-            throws ParseException {
+    public LastModified(final ParameterList aList, final String aValue) {
         super(LAST_MODIFIED, aList, new Factory());
         setValue(aValue);
     }
@@ -124,6 +124,11 @@ public class LastModified extends DateProperty<Instant> {
         setDate(aDate);
     }
 
+    @Override
+    public Property copy() {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<LastModified> {
         private static final long serialVersionUID = 1L;
 
@@ -131,7 +136,7 @@ public class LastModified extends DateProperty<Instant> {
             super(LAST_MODIFIED);
         }
 
-        public LastModified createProperty(final ParameterList parameters, final String value) throws ParseException {
+        public LastModified createProperty(final ParameterList parameters, final String value) {
             return new LastModified(parameters, value);
         }
 

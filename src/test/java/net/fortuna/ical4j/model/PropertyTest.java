@@ -122,6 +122,11 @@ public class PropertyTest extends AbstractPropertyTest {
 
             public void validate() throws ValidationException {
             }
+
+            @Override
+            public Property copy() throws URISyntaxException, ParseException {
+                return null;
+            }
         };
 
         assertFalse("Properties are equal", property.equals(notEqual));
@@ -214,6 +219,11 @@ public class PropertyTest extends AbstractPropertyTest {
 
             public void validate() throws ValidationException {
             }
+
+            @Override
+            public Property copy() throws URISyntaxException, ParseException {
+                return null;
+            }
         };
 
         @SuppressWarnings("serial")
@@ -228,6 +238,11 @@ public class PropertyTest extends AbstractPropertyTest {
 
             public void validate() throws ValidationException {
                 throw new ValidationException();
+            }
+
+            @Override
+            public Property copy() throws URISyntaxException, ParseException {
+                return null;
             }
         };
         suite.addTest(new PropertyTest("testEquals", property));

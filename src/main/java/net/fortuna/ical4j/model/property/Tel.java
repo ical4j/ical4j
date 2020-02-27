@@ -104,6 +104,11 @@ public class Tel extends Property implements Escapable {
         validator.validate(this);
     }
 
+    @Override
+    public Property copy() {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<Tel> {
         private static final long serialVersionUID = 1L;
 

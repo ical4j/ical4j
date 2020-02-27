@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
@@ -149,8 +146,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public RecurrenceId(final ParameterList aList, final String aValue)
-            throws ParseException {
+    public RecurrenceId(final ParameterList aList, final String aValue) {
         super(RECURRENCE_ID, aList, new Factory());
         setValue(aValue);
     }
@@ -195,6 +191,11 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
          */
     }
 
+    @Override
+    public Property copy() {
+        return new Factory().createProperty(getParameters(), getValue());
+    }
+
     public static class Factory extends Content.Factory implements PropertyFactory<RecurrenceId> {
         private static final long serialVersionUID = 1L;
 
@@ -202,7 +203,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
             super(RECURRENCE_ID);
         }
 
-        public RecurrenceId createProperty(final ParameterList parameters, final String value) throws ParseException {
+        public RecurrenceId createProperty(final ParameterList parameters, final String value) {
             return new RecurrenceId(parameters, value);
         }
 

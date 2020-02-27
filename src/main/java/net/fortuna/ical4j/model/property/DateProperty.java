@@ -38,7 +38,6 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -229,16 +228,5 @@ public abstract class DateProperty<T extends Temporal> extends Property {
                 }
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Property copy() throws URISyntaxException, ParseException {
-        final DateProperty<T> copy = (DateProperty<T>) super.copy();
-        if (date != null) {
-            copy.date = date;
-        }
-        return copy;
     }
 }
