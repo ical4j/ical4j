@@ -153,7 +153,12 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * {@inheritDoc}
      */
     public String getValue() {
-        return Strings.valueOf(date);
+        Optional<TzId> tzId = getParameter(Parameter.TZID);
+        if (tzId.isPresent()) {
+            return date.toString(tzId.get().toZoneId());
+        } else {
+            return Strings.valueOf(date);
+        }
     }
 
     /**
