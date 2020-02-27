@@ -158,7 +158,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      * Class under test for void VFreeBusy(ComponentList)
      */
     public final void testVFreeBusyComponentList() {
-        ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
+        ComponentList<CalendarComponent> components = new ComponentList<>();
 
         ZonedDateTime startDate = ZonedDateTime.ofInstant(
                 Instant.ofEpochMilli(0), ZoneId.systemDefault());
@@ -218,8 +218,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
         }
     }
 
-    public final void testVFreeBusyComponentList3() throws Exception {
-        ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
+    public final void testVFreeBusyComponentList3() {
+        ComponentList<CalendarComponent> components = new ComponentList<>();
 
         ZonedDateTime eventStart = ZonedDateTime.ofInstant(
                 Instant.ofEpochMilli(0), ZoneId.systemDefault());
@@ -255,7 +255,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
     }
 
     public final void testVFreeBusyComponentList4() {
-        ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
+        ComponentList<CalendarComponent> components = new ComponentList<>();
 
         Instant startDate = Instant.now();
         Instant endDate = ZonedDateTime.now().plusDays(3).toInstant();
@@ -402,7 +402,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         // A test for a request for free time where the VFreeBusy instance doesn't
         // consume any time in the specified range. Correct behaviour should see the
         // return of a VFreeBusy specifying the entire range as free.
-        ComponentList<CalendarComponent> components = new ComponentList<CalendarComponent>();
+        ComponentList<CalendarComponent> components = new ComponentList<>();
         VEvent event1 = new VEvent(TemporalAdapter.parse("20050101T080000").getTemporal(),
                 java.time.Duration.ofMinutes(15), "Consultation 1");
         components.add(event1);
@@ -423,7 +423,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", requestFree, components, periods));
 
         //testBusyTime..
-        components = new ComponentList<CalendarComponent>();
+        components = new ComponentList<>();
         event1 = new VEvent((Temporal) TemporalAdapter.parse("20050103T080000Z").getTemporal(),
                 java.time.Duration.ofHours(5), "Event 1");
         Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");

@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 
 /**
  * Support for operations applicable to a group of components. Typically this class is used to manage
- * component revisions (whereby each revision is a separate component), and the resulting ouput of
+ * component revisions (whereby each revision is a separate component), and the resulting output of
  * such group functions.
  *
  * Example - Find latest revision of an event:

@@ -124,20 +124,17 @@ public abstract class Observance extends Component {
         // From "4.8.3.3 Time Zone Offset From":
         // Conformance: This property MUST be specified in a "VTIMEZONE"
         // calendar component.
-        PropertyValidator.assertOne(Property.TZOFFSETFROM,
-                getProperties());
+        PropertyValidator.assertOne(Property.TZOFFSETFROM, getProperties());
 
         // From "4.8.3.4 Time Zone Offset To":
         // Conformance: This property MUST be specified in a "VTIMEZONE"
         // calendar component.
-        PropertyValidator.assertOne(Property.TZOFFSETTO,
-                getProperties());
+        PropertyValidator.assertOne(Property.TZOFFSETTO, getProperties());
 
         /*
          * ; the following are each REQUIRED, ; but MUST NOT occur more than once dtstart / tzoffsetto / tzoffsetfrom /
          */
-        PropertyValidator.assertOne(Property.DTSTART,
-                getProperties());
+        PropertyValidator.assertOne(Property.DTSTART, getProperties());
 
         /*
          * ; the following are optional, ; and MAY occur more than once comment / rdate / rrule / tzname / x-prop

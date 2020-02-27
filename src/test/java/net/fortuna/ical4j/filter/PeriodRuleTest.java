@@ -88,7 +88,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
-    protected void tearDown() throws Exception {
+    protected void tearDown() {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
 
@@ -128,7 +128,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         ZonedDateTime apr1 = ZonedDateTime.now().withYear(2004).withMonth(4).withDayOfMonth(1);
         // period of two weeks..
         Period<ZonedDateTime> period = new Period<>(apr1, java.time.Period.ofWeeks(2));
-        Filter<CalendarComponent> filter = new Filter<CalendarComponent>(new PeriodRule<>(period));
+        Filter<CalendarComponent> filter = new Filter<>(new PeriodRule<>(period));
 //        ComponentList filtered = (ComponentList) filter.filter(calendar.getComponents());
 //        assertTrue(!filtered.isEmpty());
         suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents()));

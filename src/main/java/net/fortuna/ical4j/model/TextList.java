@@ -66,7 +66,7 @@ public class TextList implements Serializable, Iterable<String> {
      * @param aValue a string representation of a list of categories
      */
     public TextList(final String aValue) {
-        texts = new CopyOnWriteArrayList<String>();
+        texts = new CopyOnWriteArrayList<>();
 
         final Pattern pattern = Pattern.compile("(?:\\\\.|[^\\\\,]++)+");
 
@@ -80,7 +80,7 @@ public class TextList implements Serializable, Iterable<String> {
     /**
      * @param textValues an array of text values
      */
-    public TextList(String[] textValues) {
+    public TextList(String...textValues) {
         texts = Arrays.asList(textValues);
     }
     
@@ -88,7 +88,7 @@ public class TextList implements Serializable, Iterable<String> {
      * {@inheritDoc}
      */
     public final String toString() {
-        return texts.stream().map(t -> Strings.escape(t)).collect(Collectors.joining(","));
+        return texts.stream().map(Strings::escape).collect(Collectors.joining(","));
     }
 
     /**

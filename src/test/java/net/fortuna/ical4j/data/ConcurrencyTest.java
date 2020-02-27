@@ -94,7 +94,7 @@ public class ConcurrencyTest extends TestCase {
                     try {
                         Calendar cal = new Calendar(calendar);
                         size.addAndGet(cal.getComponents().size());
-                    } catch (IOException | ParseException | URISyntaxException e) {
+                    } catch (ParseException | URISyntaxException e) {
                         e.printStackTrace();
                     }
                 }

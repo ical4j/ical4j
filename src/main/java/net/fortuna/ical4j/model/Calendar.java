@@ -43,7 +43,6 @@ import net.fortuna.ical4j.validate.Validator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -180,7 +179,6 @@ public class Calendar implements Serializable {
     /**
      * Creates a deep copy of the specified calendar.
      * @param c the calendar to copy
-     * @throws IOException where an error occurs reading calendar data
      * @throws ParseException where calendar parsing fails
      * @throws URISyntaxException where an invalid URI string is encountered
      */
