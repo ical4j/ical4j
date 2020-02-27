@@ -129,7 +129,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @param end the end date of the period
      */
     public Period(final T start, final T end) {
-        this(start, end, CalendarDateFormat.FLOATING_DATE_TIME_FORMAT);
+        this(start, end, CalendarDateFormat.from(start));
     }
 
     /**
@@ -181,7 +181,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @param duration the duration of the period
      */
     private Period(final T start, final TemporalAmountAdapter duration) {
-        this(start, duration, CalendarDateFormat.FLOATING_DATE_TIME_FORMAT);
+        this(start, duration, CalendarDateFormat.from(start));
     }
 
     /**
