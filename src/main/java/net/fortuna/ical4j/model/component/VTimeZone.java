@@ -43,9 +43,6 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.OffsetDateTime;
 import java.time.temporal.Temporal;
 import java.util.List;
@@ -225,6 +222,10 @@ public class VTimeZone extends CalendarComponent {
         if (recurse) {
             validateProperties();
         }
+    }
+
+    @Override
+    public void validate(Method method) throws ValidationException {
     }
 
     /**
