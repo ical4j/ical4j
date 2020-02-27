@@ -35,6 +35,8 @@ import net.fortuna.ical4j.model.component.XComponent;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ServiceLoader;
 
 /**
@@ -87,7 +89,7 @@ public final class ComponentFactoryImpl extends AbstractContentFactory<Component
      * @return a component
      */
     @SuppressWarnings("unchecked")
-    public <T extends Component> T createComponent(final String name, final PropertyList properties) {
+    public <T extends Component> T createComponent(final String name, final PropertyList properties) throws ParseException, URISyntaxException {
         Component component;
         ComponentFactory factory = getFactory(name);
         if (factory != null) {

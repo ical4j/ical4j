@@ -626,6 +626,11 @@ public class VFreeBusy extends CalendarComponent {
         return getProperty(Property.UID);
     }
 
+    @Override
+    public Component copy() {
+        return new Factory().createComponent(getProperties());
+    }
+
     public static class Factory extends Content.Factory implements ComponentFactory<VFreeBusy> {
 
         public Factory() {

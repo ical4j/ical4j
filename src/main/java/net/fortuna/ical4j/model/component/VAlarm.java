@@ -344,6 +344,11 @@ public class VAlarm extends CalendarComponent {
         return getProperty(Property.SUMMARY);
     }
 
+    @Override
+    public Component copy() {
+        return new Factory().createComponent(getProperties());
+    }
+
     public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {
 
         public Factory() {

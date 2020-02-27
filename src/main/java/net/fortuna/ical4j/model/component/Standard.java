@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.ComponentFactory;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.*;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -84,6 +81,11 @@ public class Standard extends Observance {
      */
     public Standard(final PropertyList properties) {
         super(STANDARD, properties);
+    }
+
+    @Override
+    public Component copy() {
+        return new Factory().createComponent(getProperties());
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<Standard> {

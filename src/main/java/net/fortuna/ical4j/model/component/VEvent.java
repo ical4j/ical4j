@@ -410,29 +410,14 @@ public class VEvent extends CalendarComponent {
              * anniversary type of "VEVENT" can span more than one date (i.e, "DTEND" property value is set to a
              * calendar date after the "DTSTART" property value).
              */
-            final DtStart start = getProperty(Property.DTSTART);
+            final DtStart<Temporal> start = getProperty(Property.DTSTART);
             final DtEnd end = getProperty(Property.DTEND);
 
             if (start != null) {
-                final Parameter startValue = start.getParameter(Parameter.VALUE);
-                final Parameter endValue = end.getParameter(Parameter.VALUE);
+                final Optional<Parameter> startValue = start.getParameter(Parameter.VALUE);
+                final Optional<Parameter> endValue = end.getParameter(Parameter.VALUE);
                 
-                boolean startEndValueMismatch = false;
-                if (endValue != null) {
-                    if (startValue != null && !endValue.equals(startValue)) {
-                        // invalid..
-                        startEndValueMismatch = true;
-                    }
-                    else if (startValue == null && !Value.DATE_TIME.equals(endValue)) {
-                        // invalid..
-                        startEndValueMismatch = true;
-                    }
-                }
-                else if (startValue != null && !Value.DATE_TIME.equals(startValue)) {
-                    //invalid..
-                    startEndValueMismatch = true;
-                }
-                if (startEndValueMismatch) {
+                if (!startValue.equals(endValue)) {
                     throw new ValidationException("Property [" + Property.DTEND
                             + "] must have the same [" + Parameter.VALUE
                             + "] as [" + Property.DTSTART + "]");
@@ -679,7 +664,7 @@ public class VEvent extends CalendarComponent {
             }
 
             dtEnd = new DtEnd<>(dtStart.getDate().plus(vEventDuration.getDuration()));
-            Optional<TzId> tzId = Optional.ofNullable(dtStart.getParameter(Parameter.TZID));
+            Optional<TzId> tzId = dtStart.getParameter(Parameter.TZID);
             if (tzId.isPresent()) {
                 dtEnd.getParameters().add(tzId.get());
             } else {
@@ -726,14 +711,10 @@ public class VEvent extends CalendarComponent {
     /**
      * Overrides default copy method to add support for copying alarm sub-components.
      * @return a copy of the instance
-     * @throws ParseException where values in the instance cannot be parsed
-     * @throws URISyntaxException where an invalid URI value is encountered in the instance
      * @see net.fortuna.ical4j.model.Component#copy()
      */
-    public VEvent copy() throws ParseException, URISyntaxException, IOException {
-        final VEvent copy = (VEvent) super.copy();
-        copy.alarms = new ComponentList<>(alarms);
-        return copy;
+    public VEvent copy() {
+        return new Factory().createComponent(getProperties(), getAlarms());
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {

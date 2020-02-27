@@ -259,19 +259,9 @@ public abstract class Component implements Serializable {
 
     /**
      * Create a (deep) copy of this component.
-     *
      * @return the component copy
-     * @throws ParseException     where parsing component data fails
-     * @throws URISyntaxException where component data contains an invalid URI
      */
-    public Component copy() throws ParseException, URISyntaxException, IOException {
-
-        // Deep copy properties..
-        final PropertyList newprops = new PropertyList(getProperties());
-
-        return new ComponentFactoryImpl().createComponent(getName(),
-                newprops);
-    }
+    public abstract Component copy() throws URISyntaxException, ParseException;
 
     /**
      * Calculates the recurrence set for this component using the specified period.

@@ -42,9 +42,6 @@ import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Arrays;
@@ -506,14 +503,10 @@ public class VToDo extends CalendarComponent {
     /**
      * Overrides default copy method to add support for copying alarm sub-components.
      * @return a copy of the instance
-     * @throws ParseException where an error occurs parsing data
-     * @throws URISyntaxException where an invalid URI is encountered
      * @see net.fortuna.ical4j.model.Component#copy()
      */
-    public VToDo copy() throws ParseException, URISyntaxException, IOException {
-        final VToDo copy = (VToDo) super.copy();
-        copy.alarms = new ComponentList<>(alarms);
-        return copy;
+    public VToDo copy() {
+        return new Factory().createComponent(getProperties(), getAlarms());
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VToDo> {

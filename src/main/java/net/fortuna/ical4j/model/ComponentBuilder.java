@@ -2,6 +2,8 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.XComponent;
 
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +46,11 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
                 if (!subComponents.isEmpty()) {
                     component = factory.createComponent(properties, subComponents);
                 } else {
-                    component = factory.createComponent(properties);
+                    try {
+                        component = factory.createComponent(properties);
+                    } catch (ParseException | URISyntaxException e) {
+                        throw new IllegalArgumentException("Invalid content", e);
+                    }
                 }
             }
         }

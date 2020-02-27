@@ -311,6 +311,11 @@ public class VJournal extends CalendarComponent {
         return getProperty(Property.UID);
     }
 
+    @Override
+    public Component copy() {
+        return new Factory().createComponent(getProperties());
+    }
+
     public static class Factory extends Content.Factory implements ComponentFactory<VJournal> {
 
         public Factory() {

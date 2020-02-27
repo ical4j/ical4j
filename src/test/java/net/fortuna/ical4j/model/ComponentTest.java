@@ -156,12 +156,21 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         Component component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
             }
+
+            @Override
+            public Component copy() throws URISyntaxException, ParseException {
+                return null;
+            }
         };
         suite.addTest(new ComponentTest<>("testCalculateRecurrenceSet", component, new Period<>(LocalDate.now(),
                 java.time.Period.ofDays(1)), new ArrayList<>()));
         
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
+            }
+            @Override
+            public Component copy() throws URISyntaxException, ParseException {
+                return null;
             }
         };
         // 10am-12pm for 7 days..
@@ -182,6 +191,10 @@ public class ComponentTest<T extends Temporal> extends TestCase {
 
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
+            }
+            @Override
+            public Component copy() throws URISyntaxException, ParseException {
+                return null;
             }
         };
         // weekly for 5 instances using DATE format and due date.

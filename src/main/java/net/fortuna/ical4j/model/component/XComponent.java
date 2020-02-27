@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.component;
 
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -91,5 +92,10 @@ public class XComponent extends CalendarComponent {
     protected Validator<CalendarComponent> getValidator(Method method) {
         // No method validation required.. 
         return EMPTY_VALIDATOR;
+    }
+
+    @Override
+    public Component copy() {
+        return new XComponent(getName(), getProperties());
     }
 }

@@ -156,6 +156,11 @@ public class VVenue extends CalendarComponent {
         }
     }
 
+    @Override
+    public Component copy() {
+        return new Factory().createComponent(getProperties());
+    }
+
     public static class Factory extends Content.Factory implements ComponentFactory<VVenue> {
 
         public Factory() {

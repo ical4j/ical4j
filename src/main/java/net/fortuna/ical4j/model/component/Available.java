@@ -34,11 +34,13 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -170,6 +172,11 @@ public class Available extends Component {
         }
     }
 
+    @Override
+    public Available copy() throws URISyntaxException, ParseException {
+        return new Factory().createComponent(getProperties());
+    }
+
     public static class Factory extends Content.Factory implements ComponentFactory<Available> {
 
         public Factory() {
@@ -182,8 +189,8 @@ public class Available extends Component {
         }
 
         @Override
-        public Available createComponent(PropertyList properties) {
-            return new Available(properties);
+        public Available createComponent(PropertyList properties) throws URISyntaxException, ParseException {
+            return new Available(new PropertyList(properties));
         }
 
         @Override

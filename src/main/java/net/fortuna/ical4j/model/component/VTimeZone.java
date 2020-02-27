@@ -316,14 +316,10 @@ public class VTimeZone extends CalendarComponent {
     /**
      * Overrides default copy method to add support for copying observance sub-components.
      * @return a copy of the instance
-     * @throws ParseException where an error occurs parsing data
-     * @throws URISyntaxException where an invalid URI is encountered
      * @see net.fortuna.ical4j.model.Component#copy()
      */
-    public VTimeZone copy() throws ParseException, URISyntaxException, IOException {
-        final VTimeZone copy = (VTimeZone) super.copy();
-        copy.observances = new ComponentList<>(observances);
-        return copy;
+    public VTimeZone copy() {
+        return new Factory().createComponent(getProperties(), getObservances());
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VTimeZone> {
