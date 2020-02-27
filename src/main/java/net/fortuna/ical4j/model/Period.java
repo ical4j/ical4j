@@ -36,11 +36,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
@@ -299,9 +297,8 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      *
      */
     public final boolean includes(final Temporal date) {
-//        return toInterval().contains(Instant.from(date));
         Objects.requireNonNull(date, "date");
-        return DATE_RANGE_COMPARATOR.compare(start, date) >= 0 && DATE_RANGE_COMPARATOR.compare(date, end) <= 0;
+        return toInterval().encloses(Interval.of(Instant.from(date), Duration.ZERO));
     }
 
     /**
@@ -315,9 +312,6 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @return a period
      */
     public final Period<T> add(final Period<T> period) {
-        Interval thisInterval = TemporalAdapter.isFloating(getStart()) ? toInterval(ZoneId.systemDefault()) : toInterval();
-        Interval thatInterval = TemporalAdapter.isFloating(getStart()) ? period.toInterval(ZoneId.systemDefault()) : period.toInterval();
-
         T newPeriodStart;
         T newPeriodEnd;
 
@@ -325,6 +319,9 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
             newPeriodStart = getStart();
             newPeriodEnd = getEnd();
         } else {
+            Interval thisInterval = TemporalAdapter.isFloating(getStart()) ? toInterval(ZoneId.systemDefault()) : toInterval();
+            Interval thatInterval = TemporalAdapter.isFloating(getStart()) ? period.toInterval(ZoneId.systemDefault()) : period.toInterval();
+
             if (thisInterval.getStart().isBefore(thatInterval.getStart())) {
                 newPeriodStart = getStart();
             } else {
@@ -448,10 +445,9 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @param other a possible intersecting period
      * @return true if the specified period intersects this one, false otherwise.
      */
-    public boolean intersects(Period other) {
+    public boolean intersects(Period<?> other) {
         Objects.requireNonNull(other, "other");
-        return other.equals(this) || (DATE_RANGE_COMPARATOR.compare(start, other.end) < 0
-                && DATE_RANGE_COMPARATOR.compare(other.start, end) < 0);
+        return toInterval().overlaps(other.toInterval());
     }
 
     public Interval toInterval() {
@@ -459,7 +455,10 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
     }
 
     public Interval toInterval(ZoneId zoneId) {
-        if (start instanceof Instant) {
+        if (start instanceof LocalDate) {
+            throw new UnsupportedOperationException("Unable to create Interval from date-only temporal.");
+        }
+        else if (start instanceof Instant) {
             return Interval.of((Instant) start, (Instant) end);
         } else {
             // calculate zone offset based on current applicable rules
@@ -486,13 +485,21 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         if (period == null) {
             throw new ClassCastException("Cannot compare this object to null");
         }
-        final int startCompare = DATE_RANGE_COMPARATOR.compare(getStart(), period.getStart());
+        if (start instanceof LocalDate) {
+            return compareTo(period, new TemporalComparator(ChronoUnit.DAYS));
+        } else {
+            return compareTo(period, DATE_RANGE_COMPARATOR);
+        }
+    }
+
+    private int compareTo(final Period<T> period, TemporalComparator comparator) {
+        final int startCompare = comparator.compare(getStart(), period.getStart());
         if (startCompare != 0) {
             return startCompare;
         }
         // start dates are equal, compare end dates..
         else if (duration == null) {
-            final int endCompare = DATE_RANGE_COMPARATOR.compare(getEnd(), period.getEnd());
+            final int endCompare = comparator.compare(getEnd(), period.getEnd());
             if (endCompare != 0) {
                 return endCompare;
             }
@@ -512,7 +519,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
             return false;
         }
 
-        final Period period = (Period) o;
+        final Period<?> period = (Period<?>) o;
         return new EqualsBuilder().append(getStart(), period.getStart()).append((duration == null) ? getEnd() : duration,
                     (period.duration == null) ? period.getEnd() : period.duration).isEquals();
     }

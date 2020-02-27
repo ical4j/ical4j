@@ -5,6 +5,9 @@ import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
 import java.util.Comparator;
 
+/**
+ * Compare {@link Temporal} values based on a specified {@link ChronoUnit}.
+ */
 public class TemporalComparator implements Comparator<Temporal> {
 
     private final TemporalUnit comparisonUnit;
