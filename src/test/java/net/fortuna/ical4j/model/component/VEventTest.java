@@ -86,7 +86,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
     /**
      * @param testMethod
-     * @param component
+     * @param event
      */
     public VEventTest(String testMethod, VEvent event) {
         super(testMethod, event);
@@ -137,7 +137,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
     }
 
     /**
-     * @param filename
+     * @param resourceString
      * @return
      */
     private net.fortuna.ical4j.model.Calendar loadCalendar(String resourceString)
@@ -225,7 +225,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         // Test Null Dates
         try {
-            event.getConsumedTime(null, null);
+            event.getConsumedTime(null);
             fail("Should've thrown an exception.");
         } catch (RuntimeException re) {
             log.info("Expecting an exception here.");
@@ -248,7 +248,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         // This range is monday to friday every three weeks, starting from
         // March 7th 2005, which means for our query dates we need
         // April 18th through to the 22nd.
-        List<Period<ZonedDateTime>> weeklyPeriods = event.getConsumedTime(queryStart, queryEnd);
+        List<Period<ZonedDateTime>> weeklyPeriods = event.getConsumedTime(new Period<>(queryStart, queryEnd));
 //        PeriodList dailyPeriods = dailyWeekdayEvents.getConsumedTime(queryStart, queryEnd);
 //                                                      week1EndDate.getTime());
 //        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
@@ -296,7 +296,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 //        PeriodList weeklyPeriods =
 //                event.getConsumedTime(new DateTime(queryStartDate.getTime()),
 //                        new DateTime(queryEndDate.getTime()));
-        List<Period<ZonedDateTime>> dailyPeriods = event.getConsumedTime(queryStartDate, queryEndDate);
+        List<Period<ZonedDateTime>> dailyPeriods = event.getConsumedTime(new Period<>(queryStartDate, queryEndDate));
 
         ZonedDateTime expectedStartOfFirstRange = ZonedDateTime.of(2005, 4, 4,
                 9, 0, 0, 0, ZoneId.systemDefault());
@@ -339,7 +339,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         // This range is Monday to Friday every month (which has a multiplying
         // effect), starting from March 7th 2005. Our query dates are
         // April 3rd through to the 17th.
-        List<Period<ZonedDateTime>> monthlyPeriods = event.getConsumedTime(queryStartDate, queryEndDate);
+        List<Period<ZonedDateTime>> monthlyPeriods = event.getConsumedTime(new Period<>(queryStartDate, queryEndDate));
 //        PeriodList dailyPeriods =
 //                dailyWeekdayEvents.getConsumedTime(new DateTime(queryStartDate.getTime()),
 //                        new DateTime(queryEndDate.getTime()));
@@ -368,7 +368,8 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         //Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
         calendar.getComponents().forEach(calendarComponent -> {
             if (calendarComponent instanceof VEvent) {
-                List<Period<LocalDate>> consumed = ((VEvent) calendarComponent).getConsumedTime(start, end);
+                List<Period<LocalDate>> consumed = ((VEvent) calendarComponent).getConsumedTime(
+                        new Period<>(start, end));
 
                 log.debug("Event [" + calendarComponent + "]");
                 log.debug("Consumed time [" + consumed + "]");
@@ -386,7 +387,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         LocalDate start = (LocalDate) vev.getStartDate().getDate();
         LocalDate latest = LocalDate.now().plusYears(1);
 
-        List<Period<LocalDate>> pl = vev.getConsumedTime(start, latest);
+        List<Period<LocalDate>> pl = vev.getConsumedTime(new Period<>(start, latest));
         assertTrue(!pl.isEmpty());
     }
 
@@ -411,7 +412,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         ZonedDateTime rangeStart = ZonedDateTime.now();
         ZonedDateTime rangeEnd = rangeStart.plusWeeks(4);
 
-        log.info(event.getConsumedTime(rangeStart, rangeEnd).toString());
+        log.info(event.getConsumedTime(new Period<Temporal>(rangeStart, rangeEnd)).toString());
     }
 
     /**
@@ -462,7 +463,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         TemporalAdapter start = TemporalAdapter.parse("20050106");
         TemporalAdapter end = TemporalAdapter.parse("20050107");
-        List<Period<Temporal>> list = event1.getConsumedTime(start.getTemporal(), end.getTemporal());
+        List<Period<Temporal>> list = event1.getConsumedTime(new Period<>(start.getTemporal(), end.getTemporal()));
         assertTrue(list.isEmpty());
     }
 
@@ -480,7 +481,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         LocalDate start = LocalDate.now().withYear(1997).withMonth(8).withDayOfMonth(2);
         LocalDate end = start.withDayOfMonth(4);
 
-        List<Period<LocalDate>> periods = event.getConsumedTime(start, end);
+        List<Period<LocalDate>> periods = event.getConsumedTime(new Period<>(start, end));
         assertTrue(periods.isEmpty());
     }
 

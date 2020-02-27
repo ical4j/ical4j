@@ -38,11 +38,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
@@ -283,12 +281,6 @@ public abstract class Component implements Serializable {
      * @return a list of periods representing component occurrences within the specified boundary
      */
     public final <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<T> period) {
-        return calculateRecurrenceSet(period, ZoneId.systemDefault());
-    }
-
-    public final <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<T> period, ZoneId zoneId) {
-
-//        validate();
 
         final Set<Period<T>> recurrenceSet = new TreeSet<>();
 
@@ -345,7 +337,7 @@ public abstract class Component implements Serializable {
                     .map(rruleDate -> new Period<T>(rruleDate, rDuration)).collect(Collectors.toList()));
         } else {
             // add initial instance if intersection with the specified period..
-            Period startPeriod;
+            Period<T> startPeriod;
             if (end != null) {
                 startPeriod = new Period<>(start.getDate(), end.getDate());
             } else {

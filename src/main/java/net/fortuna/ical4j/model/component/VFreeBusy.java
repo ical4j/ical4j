@@ -390,7 +390,7 @@ public class VFreeBusy extends CalendarComponent {
         
         public FreeBusy build() {
             // periods must be in UTC time for freebusy..
-            final List<Period<Instant>> periods = getConsumedTime(components, start, end);
+            final List<Period<Instant>> periods = getConsumedTime(components, new Period<>(start, end));
             periods.removeIf(period -> {
                 // check if period outside bounds..
                 return !period.intersects(new Period<>(start, end));
@@ -438,7 +438,7 @@ public class VFreeBusy extends CalendarComponent {
         public FreeBusy build() {
             final FreeBusy fb = new FreeBusy();
             fb.getParameters().add(FbType.FREE);
-            final List<Period<Instant>> periods = getConsumedTime(components, start, end);
+            final List<Period<Instant>> periods = getConsumedTime(components, new Period<>(start, end));
             final Interval interval = Interval.of(start, end);
             // Add final consumed time to avoid special-case end-of-list processing
             periods.add(new Period<>(end, end));
@@ -470,13 +470,13 @@ public class VFreeBusy extends CalendarComponent {
      * @param components
      * @return
      */
-    private <T extends Temporal> List<Period<T>> getConsumedTime(final ComponentList<CalendarComponent> components, final T rangeStart,
-                                                                 final T rangeEnd) {
+    private <T extends Temporal> List<Period<T>> getConsumedTime(final ComponentList<CalendarComponent> components,
+                                                                 final Period<T> range) {
         
         final PeriodList<T> periods = new PeriodList<>();
         // only events consume time..
         for (final Component event : components.getComponents(Component.VEVENT)) {
-            periods.addAll(((VEvent) event).getConsumedTime(rangeStart, rangeEnd, false));
+            periods.addAll(((VEvent) event).getConsumedTime(range, false));
         }
         return new ArrayList<>(periods.normalise().getPeriods());
     }
