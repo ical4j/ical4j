@@ -81,7 +81,7 @@ public class Member extends Parameter {
      * {@inheritDoc}
      */
     public final String getValue() {
-        return getGroups().toString();
+        return groups.toString();
     }
 
     /**
