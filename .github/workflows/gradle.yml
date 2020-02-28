@@ -12,4 +12,5 @@ jobs:
         java-version: 11
     - uses: eskatos/gradle-command-action@v1
       with:
-        arguments: build
+        arguments: build -x test publish
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
