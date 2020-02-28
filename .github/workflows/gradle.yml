@@ -13,4 +13,6 @@ jobs:
     - uses: eskatos/gradle-command-action@v1
       with:
         arguments: build -x test publish
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      env:
+        GPR_USERNAME: benfortuna
+        GPR_TOKEN: ${{ secrets.GITHUB_TOKEN }}

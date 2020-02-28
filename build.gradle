@@ -219,6 +219,10 @@ publishing {
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/ical4j/ical4j")
+            credentials {
+                username = System.getenv("GPR_USERNAME")
+                password = System.getenv("GPR_TOKEN")
+            }
         }
     }
 }
