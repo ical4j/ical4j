@@ -219,10 +219,6 @@ publishing {
         maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/ical4j/ical4j")
-            credentials {
-                username = project.findProperty('gpr.user') ?: System.getenv("GPR_USER")
-                username = project.findProperty('gpr.key') ?: System.getenv("GPR_API_KEY")
-            }
         }
     }
 }
