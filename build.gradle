@@ -118,23 +118,18 @@ artifacts {
 scmVersion {
     tag {
         prefix = 'ical4j'
-        branchPrefix = [
-            'ical4j-1.x-maintenance' : 'jdk14_ical4j'
-        ]
-        branchPrefix = [
-            'ical4j-2.x-maintenance' : 'jdk7_ical4j'
-        ]
+        branchPrefix = ['ical4j-1.x-maintenance' : 'jdk14_ical4j']
+        branchPrefix = ['ical4j-2.x-maintenance' : 'jdk7_ical4j']
     }
     versionCreator 'versionWithBranch'
-    branchVersionCreator = [
-        'master': 'simple'
-    ]
-    branchVersionCreator = [
-        'ical4j-1.x-maintenance': 'simple'
-    ]
-    branchVersionCreator = [
-        'ical4j-2.x-maintenance': 'simple'
-    ]
+    branchVersionCreator = ['master': 'simple']
+    branchVersionCreator = ['ical4j-1.x-maintenance': 'simple']
+    branchVersionCreator = ['ical4j-2.x-maintenance': 'simple']
+    branchVersionCreator = ['feature/jsr-310-localdate': 'simple']
+    nextVersion {
+        suffix = 'alpha'
+        separator = '-'
+    }
 }
 version = scmVersion.version
 
