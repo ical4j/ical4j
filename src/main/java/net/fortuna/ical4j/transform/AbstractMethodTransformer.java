@@ -1,9 +1,11 @@
 package net.fortuna.ical4j.transform;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.ComponentGroup;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.transform.command.MethodUpdate;
 import net.fortuna.ical4j.transform.command.SequenceIncrement;
 import net.fortuna.ical4j.transform.command.UidUpdate;
@@ -19,7 +21,7 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
     private final boolean incrementSequence;
     private final boolean sameUid;
 
-    public AbstractMethodTransformer(Method method, UidGenerator uidGenerator, boolean sameUid, boolean incrementSequence) {
+    AbstractMethodTransformer(Method method, UidGenerator uidGenerator, boolean sameUid, boolean incrementSequence) {
         this.method = method;
         this.uidUpdate = new UidUpdate(uidGenerator);
         this.sequenceIncrement = new SequenceIncrement();
@@ -32,7 +34,7 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
         MethodUpdate methodUpdate = new MethodUpdate(method);
         methodUpdate.transform(object);
 
-        Property uid = null;
+        Uid uid = null;
         for (CalendarComponent component : object.getComponents()) {
             uidUpdate.transform(component);
             if (uid == null) {
@@ -41,10 +43,12 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
                 throw new IllegalArgumentException("All components must share the same non-null UID");
             }
 
+            ComponentGroup<CalendarComponent> componentGroup = new ComponentGroup<>(object.getComponents(), uid);
+
             // if a calendar component has already been published previously
             // update the sequence number..
             if (incrementSequence) {
-                sequenceIncrement.transform(component);
+                sequenceIncrement.transform(componentGroup.getLatestRevision());
             }
         }
         return object;
