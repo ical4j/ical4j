@@ -126,7 +126,7 @@ scmVersion {
     branchVersionCreator = ['ical4j-2.x-maintenance': 'simple']
     branchVersionCreator = ['feature/jsr-310-localdate': 'simple']
     nextVersion {
-        suffix = 'alpha'
+        suffix = 'pre'
         separator = '-'
     }
 }
