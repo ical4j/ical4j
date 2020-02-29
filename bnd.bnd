@@ -1,4 +1,4 @@
 Export-Package: net.fortuna.ical4j.*
-Import-Package: groovy.*;resolution:=optional, org.codehaus.groovy*;resolution:=optional, *
+Import-Package: groovy.*;resolution:=optional, org.codehaus.groovy*;resolution:=optional, javax.cache*;resolution:=optional, *
 Require-Capability: osgi.extender;filter:="(osgi.extender=osgi.serviceloader.processor)", osgi.serviceloader;filter:="(osgi.serviceloader=net.fortuna.ical4j.model.*)";cardinality:=multiple
 Automatic-Module-Name: org.mnode.ical4j.core
