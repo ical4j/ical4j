@@ -56,7 +56,7 @@ dependencies {
             'org.apache.commons:commons-collections4:4.1',
             'org.threeten:threeten-extra:1.5.0'
     
-    implementation 'javax.cache:cache-api:1.0.0', optional
+    implementation 'javax.cache:cache-api:1.1.1', optional
     implementation "org.codehaus.groovy:groovy-all:$groovyVersion", optional
     implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion", optional
 
@@ -66,7 +66,7 @@ dependencies {
         'org.spockframework:spock-core:1.1-groovy-2.4',
         'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
         "org.slf4j:slf4j-log4j12:$slf4jVersion",
-        'org.ehcache:ehcache:3.4.0', 'com.sun.mail:javax.mail:1.5.4'
+        'org.cache2k:cache2k-jcache:1.2.4.Final'
 }
 
 tasks.withType(JavaCompile).configureEach {
