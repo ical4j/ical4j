@@ -81,7 +81,7 @@ public class DelegatedTo extends Parameter {
      * {@inheritDoc}
      */
     public final String getValue() {
-        return getDelegatees().toString();
+        return delegatees.toString();
     }
 
     /**

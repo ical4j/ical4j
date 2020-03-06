@@ -219,8 +219,8 @@ public abstract class DateProperty<T extends Temporal> extends Property {
                     // ensure tzid matches date-time timezone..
                     final Optional<TzId> tzId = getParameter(Parameter.TZID);
                     if (!tzId.isPresent() || !tzId.get().toZoneId().equals(dateTime.getZone())) {
-                        throw new ValidationException("TZID parameter [" + tzId + "] does not match the timezone ["
-                                + dateTime.getZone().getId() + "]");
+                        throw new ValidationException("TZID parameter [" + tzId.get() + "] does not match the timezone ["
+                                + dateTime.getZone() + "]");
                     }
                 }
             }

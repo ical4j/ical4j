@@ -5,6 +5,8 @@ import net.fortuna.ical4j.model.property.Sequence
 import spock.lang.Shared
 import spock.lang.Specification
 
+import java.time.Instant
+
 class ComponentSequenceComparatorTest extends Specification {
 
     @Shared
@@ -24,14 +26,14 @@ class ComponentSequenceComparatorTest extends Specification {
         seq1 = [1]
         seq2 = [2]
 
-        dt1 = [new DateTime(1000)]
-        dt2 = [new DateTime(2000)]
-        dt3 = [new DateTime(3000)]
+        dt1 = [Instant.ofEpochMilli(1000)]
+        dt2 = [Instant.ofEpochMilli(2000)]
+        dt3 = [Instant.ofEpochMilli(3000)]
     }
 
     def "Compare equality"() {
         expect:
-        comparator.compare(o1, o2) == 0
+        comparator.compare((Component) o1, (Component) o2) == 0
 
         where:
         o1                              | o2
@@ -41,7 +43,7 @@ class ComponentSequenceComparatorTest extends Specification {
 
     def "Compare sequence ordering"() {
         expect:
-        comparator.compare(o1, o2) == expectedResult
+        comparator.compare((Component) o1, (Component) o2) == expectedResult
 
         where:
         o1                              | o2                                | expectedResult
@@ -51,7 +53,7 @@ class ComponentSequenceComparatorTest extends Specification {
 
     def "Compare dtstamp ordering"() {
         expect:
-        comparator.compare(o1, o2) == expectedResult
+        comparator.compare((Component) o1, (Component) o2) == expectedResult
 
         where:
         o1                              | o2                                | expectedResult
