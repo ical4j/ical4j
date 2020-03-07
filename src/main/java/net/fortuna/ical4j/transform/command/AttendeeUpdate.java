@@ -18,9 +18,7 @@ public class AttendeeUpdate implements Transformer<Component> {
     @Override
     public Component transform(Component object) {
         List<Property> attendees = object.getProperties().getProperties(Property.ATTENDEE);
-        if (attendees.contains(attendee)) {
-            attendees.remove(attendee);
-        }
+        attendees.remove(attendee);
         attendees.add(attendee);
         object.getProperties().addAll(attendees);
 

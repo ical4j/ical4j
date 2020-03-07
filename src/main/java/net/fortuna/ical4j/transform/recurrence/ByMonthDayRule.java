@@ -87,7 +87,7 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
                     candidate = withTemporalField(date, DAY_OF_MONTH, numDaysInMonth + 1 + monthDay);
                 }
                 retVal.add(candidate);
-            };
+            }
             return retVal;
         }
     }

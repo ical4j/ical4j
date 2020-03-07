@@ -39,7 +39,7 @@ import java.util.function.Predicate;
 /**
  * @author fortuna
  *
- * @deprecated use {@link PeriodFilter}
+ * @deprecated
  */
 @Deprecated
 public class DateInRangeRule implements Predicate<Date> {

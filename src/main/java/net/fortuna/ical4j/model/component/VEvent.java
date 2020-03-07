@@ -499,7 +499,7 @@ public class VEvent extends CalendarComponent {
         final List<Period<T>> consumedTime = getConsumedTime(new Period<>(date, date));
         for (final Period<T> p : consumedTime) {
             if (p.getStart().equals(date)) {
-                final VEvent occurrence = (VEvent) this.copy();
+                final VEvent occurrence = this.copy();
                 occurrence.getProperties().add(new RecurrenceId<>(date));
                 return occurrence;
             }

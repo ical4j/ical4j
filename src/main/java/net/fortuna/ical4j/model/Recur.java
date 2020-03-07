@@ -87,7 +87,7 @@ public class Recur<T extends Temporal> implements Serializable {
     private static final String WKST = "WKST";
 
     public enum Frequency {
-        SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY;
+        SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY
     }
 
     /**
@@ -202,7 +202,7 @@ public class Recur<T extends Temporal> implements Serializable {
      * @param aValue a string representation of a recurrence.
      * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
      */
-    public Recur(final String aValue) throws ParseException {
+    public Recur(final String aValue) {
         Iterator<String> tokens = Arrays.asList(aValue.split("[;=]")).iterator();
         while (tokens.hasNext()) {
             final String token = tokens.next();

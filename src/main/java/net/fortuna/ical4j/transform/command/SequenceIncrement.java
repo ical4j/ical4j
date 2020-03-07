@@ -15,7 +15,7 @@ public class SequenceIncrement implements Transformer<CalendarComponent> {
     public CalendarComponent transform(CalendarComponent object) {
         PropertyList compProps = object.getProperties();
 
-        Sequence sequence = (Sequence) compProps
+        Sequence sequence = compProps
                 .getProperty(Property.SEQUENCE);
 
         if (sequence == null) {

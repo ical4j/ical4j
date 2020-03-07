@@ -61,7 +61,7 @@ public class Display extends Parameter {
     private static final String PARAMETER_NAME = "DISPLAY";
 
     public enum Value {
-        BADGE, GRAPHIC, FULLSIZE, THUMBNAIL;
+        BADGE, GRAPHIC, FULLSIZE, THUMBNAIL
     }
 
     private final Set<String> values;

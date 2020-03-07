@@ -53,7 +53,7 @@ public class Feature extends Parameter {
     private static final String PARAMETER_NAME = "FEATURE";
 
     public enum Value {
-        AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO;
+        AUDIO, CHAT, FEED, MODERATOR, PHONE, SCREEN, VIDEO
     }
 
     private final Set<String> values;

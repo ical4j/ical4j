@@ -67,7 +67,6 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @param properties a property list
      */
     
-    @SuppressWarnings("unchecked")
     public PropertyList(PropertyList properties) throws URISyntaxException, ParseException {
         super();
         for (Property p: properties) {
@@ -101,7 +100,6 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @param name name of properties to return
      * @return a property list
      */
-    @SuppressWarnings("unchecked")
     public final List<Property> getProperties(final String name) {
         final PropertyList list = new PropertyList();
         for (final Property p : this) {
