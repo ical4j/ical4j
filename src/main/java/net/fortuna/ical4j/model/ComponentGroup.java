@@ -6,9 +6,7 @@ import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Uid;
 
 import java.time.temporal.Temporal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -86,7 +84,8 @@ public class ComponentGroup<C extends Component> {
      * @see Component#calculateRecurrenceSet(Period)
      */
     public <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<T> period) {
-        List<Period<T>> periods = new ArrayList<>();
+        // Use set to exclude duplicates..
+        Set<Period<T>> periods = new HashSet<>();
         List<Component> replacements = new ArrayList<>();
 
         for (Component component : getRevisions()) {
@@ -97,7 +96,7 @@ public class ComponentGroup<C extends Component> {
             }
         }
 
-        List<Period<T>> finalPeriods = periods;
+        List<Period<T>> finalPeriods = new ArrayList<>(periods);
         replacements.forEach(component -> {
             RecurrenceId recurrenceId = component.getProperty(Property.RECURRENCE_ID);
             List<Period> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.getDate()))
@@ -107,6 +106,8 @@ public class ComponentGroup<C extends Component> {
             finalPeriods.addAll(component.calculateRecurrenceSet(period));
         });
 
-        return periods;
+        // Natural sort of final list..
+        Collections.sort(finalPeriods);
+        return finalPeriods;
     }
 }
