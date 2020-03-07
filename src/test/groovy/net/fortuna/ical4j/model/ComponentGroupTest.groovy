@@ -16,7 +16,7 @@ class ComponentGroupTest extends Specification {
 
     Uid uid
 
-    VEvent event, rev1, rev2
+    VEvent event, rev1, rev2, rev3
 
     def setup() {
         uid = builder.uid('1')
@@ -38,11 +38,20 @@ class ComponentGroupTest extends Specification {
 
         rev2 = builder.vevent {
             uid(uid)
-            sequence('1')
+            sequence('2')
             dtstamp(new DtStamp(new DateTime()))
             dtstart('20101113', parameters: parameters() { value('DATE') })
             dtend('20101114', parameters: parameters() { value('DATE') })
             rrule('FREQ=WEEKLY;WKST=MO;INTERVAL=3;BYDAY=MO,TU,SA')
+        }
+
+        rev3 = builder.vevent {
+            uid(uid)
+            sequence('3')
+            recurrenceid('20101129', parameters: parameters() { value('DATE') })
+            dtstamp(new DtStamp(new DateTime()))
+            dtstart('20101130', parameters: parameters() { value('DATE') })
+            dtend('20101201', parameters: parameters() { value('DATE') })
         }
     }
 
@@ -78,5 +87,17 @@ class ComponentGroupTest extends Specification {
 
         then: 'the expected number of recurrences are returned'
         recurrences == event.calculateRecurrenceSet(period).normalise()
+    }
+
+    def "CalculateRecurrenceSetWithException"() {
+        given: 'an event with 2 revisions'
+        def components = new ComponentList<VEvent>([event, rev1, rev2, rev3])
+
+        when: 'recurrence instances are calculated'
+        Period period = ['20101113T120000/P3W']
+        def recurrences = new ComponentGroup(components, uid).calculateRecurrenceSet(period)
+
+        then: 'the expected number of recurrences are returned'
+        recurrences.size() == event.calculateRecurrenceSet(period).normalise().size()
     }
 }

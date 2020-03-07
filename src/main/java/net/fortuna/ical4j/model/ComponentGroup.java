@@ -5,8 +5,11 @@ import net.fortuna.ical4j.filter.HasPropertyRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Uid;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Support for operations applicable to a group of components. Typically this class is used to manage
@@ -83,10 +86,25 @@ public class ComponentGroup<T extends Component> {
      */
     public PeriodList calculateRecurrenceSet(final Period period) {
         PeriodList periods = new PeriodList();
+        List<Component> replacements = new ArrayList<>();
 
         for (Component component : getRevisions()) {
-            periods = periods.add(component.calculateRecurrenceSet(period));
+            if (!component.getProperties(Property.RECURRENCE_ID).isEmpty()) {
+                replacements.add(component);
+            } else {
+                periods = periods.add(component.calculateRecurrenceSet(period));
+            }
         }
+
+        PeriodList finalPeriods = periods;
+        replacements.forEach(component -> {
+            RecurrenceId recurrenceId = component.getProperty(Property.RECURRENCE_ID);
+            List<Period> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.getDate()))
+                    .collect(Collectors.toList());
+            finalPeriods.removeAll(match);
+
+            finalPeriods.addAll(component.calculateRecurrenceSet(period));
+        });
 
         return periods;
     }
