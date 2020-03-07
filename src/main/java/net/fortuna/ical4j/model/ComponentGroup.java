@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Support for operations applicable to a group of components. Typically this class is used to manage
@@ -86,9 +87,26 @@ public class ComponentGroup<C extends Component> {
      */
     public <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<T> period) {
         List<Period<T>> periods = new ArrayList<>();
+        List<Component> replacements = new ArrayList<>();
+
         for (Component component : getRevisions()) {
-            periods.addAll(component.calculateRecurrenceSet(period));
+            if (!component.getProperties(Property.RECURRENCE_ID).isEmpty()) {
+                replacements.add(component);
+            } else {
+                periods.addAll(component.calculateRecurrenceSet(period));
+            }
         }
+
+        List<Period<T>> finalPeriods = periods;
+        replacements.forEach(component -> {
+            RecurrenceId recurrenceId = component.getProperty(Property.RECURRENCE_ID);
+            List<Period> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.getDate()))
+                    .collect(Collectors.toList());
+            finalPeriods.removeAll(match);
+
+            finalPeriods.addAll(component.calculateRecurrenceSet(period));
+        });
+
         return periods;
     }
 }
