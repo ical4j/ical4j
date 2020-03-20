@@ -9,8 +9,8 @@ sudo: false
 dist: bionic
 language: java
 jdk:
-  - jdk8
   - jdk9
+  - jdk12
   - openjdk8
   - openjdk11
 services:
@@ -26,4 +26,4 @@ deploy:
   script: ./gradlew -q -Prelease.customUsername=$GIT_USER -Prelease.customPassword=$GIT_PASSWORD -Prelease.disableChecks -Prelease.pushTagsOnly release && ./gradlew bintrayUpload
   on:
     branch: master
-    jdk: oraclejdk8
+    jdk: openjdk8
