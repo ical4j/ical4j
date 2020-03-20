@@ -9,8 +9,8 @@ sudo: false
 dist: bionic
 language: java
 jdk:
-  - jdk9
-  - jdk12
+  - oraclejdk9
+  - oraclejdk12
   - openjdk8
   - openjdk11
 services:
