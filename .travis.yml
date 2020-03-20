@@ -6,13 +6,13 @@ cache:
     #- $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 sudo: false
-dist: trusty
+dist: bionic
 language: java
 jdk:
-  - oraclejdk8
   - oraclejdk9
+  - oraclejdk12
   - openjdk8
-  - openjdk10
+  - openjdk11
 services:
   - docker
 #before_install:
@@ -23,7 +23,7 @@ after_success:
   - bash <(curl -s https://codecov.io/bash)
 deploy:
   provider: script
-  script: ./gradlew -q -Prelease.customUsername=$GIT_USER -Prelease.customPassword=$GIT_PASSWORD -Prelease.disableChecks -Prelease.pushTagsOnly release && ./gradlew bintrayUpload
+  script: ./gradlew -q -Prelease.customUsername=$GIT_USER -Prelease.customPassword=$GIT_PASSWORD -Prelease.disableChecks -Prelease.pushTagsOnly release && ./gradlew build bintrayUpload
   on:
     branch: master
-    jdk: oraclejdk8
+    jdk: openjdk8
