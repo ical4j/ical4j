@@ -6,7 +6,6 @@ buildscript {
     }
     dependencies {
         classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
-        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:4.2.0'
     }
 }
 
@@ -15,12 +14,12 @@ plugins {
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.8.4"
     id "net.ltgt.errorprone" version "0.8.1"
+    id "biz.aQute.bnd.builder" version "5.0.0"
 }
 
 apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'groovy'
-apply plugin: 'biz.aQute.bnd.builder'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
