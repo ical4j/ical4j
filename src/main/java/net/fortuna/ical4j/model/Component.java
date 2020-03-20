@@ -46,6 +46,20 @@ import java.time.temporal.TemporalAmount;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.ExDate;
+import net.fortuna.ical4j.model.property.ExRule;
+import net.fortuna.ical4j.model.property.RDate;
+import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ValidationException;
+
 /**
  * $Id$ [Apr 5, 2004]
  * <p/>
@@ -145,7 +159,8 @@ public abstract class Component implements Serializable {
     /**
      * {@inheritDoc}
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return BEGIN +
                 ':' +
                 getName() +
@@ -238,7 +253,8 @@ public abstract class Component implements Serializable {
     /**
      * {@inheritDoc}
      */
-    public boolean equals(final Object arg0) {
+    @Override
+	public boolean equals(final Object arg0) {
         if (arg0 instanceof Component) {
             final Component c = (Component) arg0;
             return new EqualsBuilder().append(getName(), c.getName())
@@ -250,7 +266,8 @@ public abstract class Component implements Serializable {
     /**
      * {@inheritDoc}
      */
-    public int hashCode() {
+    @Override
+	public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
                 .toHashCode();
     }
@@ -369,6 +386,9 @@ public abstract class Component implements Serializable {
                 period)).flatMap(List<T>::stream).collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> exRuleDates.contains(recurrence.getStart()));
+
+        // set a link to the origin
+        recurrenceSet.forEach( p -> p.setComponent(this));
 
         return new ArrayList<>(recurrenceSet);
     }

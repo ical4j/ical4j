@@ -44,6 +44,9 @@ import java.time.temporal.TemporalAmount;
 import java.util.Date;
 import java.util.*;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * $Id$ [Apr 14, 2004]
  *
@@ -114,6 +117,8 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
 
     private final T start;
 
+    private Component component;
+
     private final T end;
 
     private final TemporalAmountAdapter duration;
@@ -160,7 +165,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
 
     /**
      * Constructs a new period with the specified start date and duration.
-     * 
+     *
      * @param start the start date of the period
      * @param duration the duration of the period
      */
@@ -227,7 +232,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         TemporalAdapter parsedValue = TemporalAdapter.parse(value.substring(0, value.indexOf('/')));
         return (T) parsedValue.getTemporal();
     }
-    
+
     private static <T extends Temporal> T parseEndDate(String value, boolean resolve) throws DateTimeParseException {
         Temporal end;
         try {
@@ -285,6 +290,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @return true if the specified date occurs within the current period
      * @deprecated use {@link Period#includes(Temporal)} instead.
      */
+    @Deprecated
     public final boolean includes(final Date date, final boolean inclusive) {
         return includes(date.toInstant());
     }
@@ -438,7 +444,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         }
         return b.toString();
     }
-    
+
     /**
      * Decides whether this period intersects with another one.
      *
@@ -480,6 +486,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @return a postive value if this period is greater, negative if the other is
      * greater, or zero if they are equal
      */
+    @Override
     public final int compareTo(final Period<T> period) {
         // Throws documented exception if type is wrong or parameter is null
         if (period == null) {
@@ -511,7 +518,8 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
     /**
      * {@inheritDoc}
      */
-    public final boolean equals(final Object o) {
+    @Override
+	public final boolean equals(final Object o) {
         if (this == o) {
             return true;
         }
@@ -527,7 +535,16 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int hashCode() {
         return new HashCodeBuilder().append(getStart()).append((duration == null) ? getEnd() : duration).toHashCode();
     }
+
+	public Component getComponent() {
+		return component;
+	}
+
+	public void setComponent(Component component) {
+		this.component = component;
+	}
 }
