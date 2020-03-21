@@ -16,11 +16,11 @@ import java.util.function.Supplier;
 
 public class DefaultContentHandler implements ContentHandler {
 
-    private final Supplier<List<ParameterFactory>> parameterFactorySupplier;
+    private final Supplier<List<ParameterFactory<?>>> parameterFactorySupplier;
 
-    private final Supplier<List<PropertyFactory>> propertyFactorySupplier;
+    private final Supplier<List<PropertyFactory<?>>> propertyFactorySupplier;
 
-    private final Supplier<List<ComponentFactory>> componentFactorySupplier;
+    private final Supplier<List<ComponentFactory<?>>> componentFactorySupplier;
 
     private final TimeZoneRegistry tzRegistry;
 
@@ -40,9 +40,9 @@ public class DefaultContentHandler implements ContentHandler {
     }
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry,
-                                 Supplier<List<ParameterFactory>> parameterFactorySupplier,
-                                 Supplier<List<PropertyFactory>> propertyFactorySupplier,
-                                 Supplier<List<ComponentFactory>> componentFactorySupplier) {
+                                 Supplier<List<ParameterFactory<?>>> parameterFactorySupplier,
+                                 Supplier<List<PropertyFactory<?>>> propertyFactorySupplier,
+                                 Supplier<List<ComponentFactory<?>>> componentFactorySupplier) {
 
         this.consumer = consumer;
         this.tzRegistry = tzRegistry;
@@ -139,7 +139,7 @@ public class DefaultContentHandler implements ContentHandler {
         propertyBuilder.parameter(parameter);
     }
 
-    private void assertComponent(ComponentBuilder component) {
+    private void assertComponent(ComponentBuilder<?> component) {
         if (component == null) {
             throw new CalendarException("Expected component not initialised");
         }

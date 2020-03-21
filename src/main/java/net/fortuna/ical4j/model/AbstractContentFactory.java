@@ -52,12 +52,12 @@ public abstract class AbstractContentFactory<T> implements Serializable, Supplie
 
     private final Map<String, T> extendedFactories;
 
-    protected transient ServiceLoader<T> factoryLoader;
+    protected transient ServiceLoader factoryLoader;
 
     /**
      * Default constructor.
      */
-    public AbstractContentFactory(ServiceLoader<T> factoryLoader) {
+    public AbstractContentFactory(ServiceLoader factoryLoader) {
         extendedFactories = new HashMap<>();
         this.factoryLoader = factoryLoader;
     }
@@ -82,7 +82,7 @@ public abstract class AbstractContentFactory<T> implements Serializable, Supplie
     protected final T getFactory(String key) {
         Validate.notBlank(key, "Invalid factory key: [%s]", key);
         T factory = null;
-        for (T candidate : factoryLoader) {
+        for (T candidate : (ServiceLoader<T>) factoryLoader) {
             if (factorySupports(candidate, key)) {
                 factory = candidate;
                 break;
@@ -104,7 +104,7 @@ public abstract class AbstractContentFactory<T> implements Serializable, Supplie
     @Override
     public List<T> get() {
         List<T> factories = new ArrayList<>();
-        for (T candidate : factoryLoader) {
+        for (T candidate : (ServiceLoader<T>) factoryLoader) {
             factories.add(candidate);
         }
         factories.addAll(extendedFactories.values());

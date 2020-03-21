@@ -131,9 +131,9 @@ public class CalendarBuilder implements Consumer<Calendar> {
      * @param parser                   a custom calendar parser
      * @param tzRegistry               a custom timezone registry
      */
-    public CalendarBuilder(CalendarParser parser, Supplier<List<ParameterFactory>> parameterFactorySupplier,
-                           Supplier<List<PropertyFactory>> propertyFactorySupplier,
-                           Supplier<List<ComponentFactory>> componentFactorySupplier,
+    public CalendarBuilder(CalendarParser parser, Supplier<List<ParameterFactory<?>>> parameterFactorySupplier,
+                           Supplier<List<PropertyFactory<?>>> propertyFactorySupplier,
+                           Supplier<List<ComponentFactory<?>>> componentFactorySupplier,
                            TimeZoneRegistry tzRegistry) {
 
         this.parser = parser;

@@ -9,31 +9,31 @@ import java.util.List;
 
 public class ComponentBuilder<T extends Component> extends AbstractContentBuilder {
 
-    private final List<ComponentFactory> factories = new ArrayList<>();
+    private final List<ComponentFactory<?>> factories = new ArrayList<>();
 
     private String name;
 
-    private PropertyList properties = new PropertyList();
+    private PropertyList<Property> properties = new PropertyList<>();
 
-    private ComponentList subComponents = new ComponentList();
+    private ComponentList<Component> subComponents = new ComponentList<>();
 
-    public ComponentBuilder factories(List<ComponentFactory> factories) {
+    public ComponentBuilder<?> factories(List<ComponentFactory<?>> factories) {
         this.factories.addAll(factories);
         return this;
     }
 
-    public ComponentBuilder name(String name) {
+    public ComponentBuilder<?> name(String name) {
         // component names are case-insensitive, but convert to upper case to simplify further processing
         this.name = name.toUpperCase();
         return this;
     }
 
-    public ComponentBuilder property(Property property) {
+    public ComponentBuilder<?> property(Property property) {
         properties.add(property);
         return this;
     }
 
-    public ComponentBuilder subComponent(Component subComponent) {
+    public ComponentBuilder<?> subComponent(Component subComponent) {
         subComponents.add(subComponent);
         return this;
     }
@@ -41,7 +41,7 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
     @SuppressWarnings("unchecked")
     public T build() {
         Component component = null;
-        for (ComponentFactory factory : factories) {
+        for (ComponentFactory<?> factory : factories) {
             if (factory.supports(name)) {
                 if (!subComponents.isEmpty()) {
                     component = factory.createComponent(properties, subComponents);

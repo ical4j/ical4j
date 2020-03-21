@@ -12,13 +12,13 @@ import java.util.List;
  */
 public class ParameterBuilder extends AbstractContentBuilder {
 
-    private List<ParameterFactory> factories = new ArrayList<>();
+    private List<ParameterFactory<?>> factories = new ArrayList<>();
 
     private String name;
 
     private String value;
 
-    public ParameterBuilder factories(List<ParameterFactory> factories) {
+    public ParameterBuilder factories(List<ParameterFactory<?>> factories) {
         this.factories.addAll(factories);
         return this;
     }
@@ -39,7 +39,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
      */
     public Parameter build() throws URISyntaxException {
         Parameter parameter = null;
-        for (ParameterFactory factory : factories) {
+        for (ParameterFactory<?> factory : factories) {
             if (factory.supports(name)) {
                 parameter = factory.createParameter(value);
                 break;
