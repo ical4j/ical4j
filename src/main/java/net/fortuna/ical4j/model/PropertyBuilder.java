@@ -11,7 +11,7 @@ import java.util.List;
 
 public class PropertyBuilder extends AbstractContentBuilder {
 
-    private List<PropertyFactory> factories = new ArrayList<>();
+    private List<PropertyFactory<?>> factories = new ArrayList<>();
 
     private String name;
 
@@ -19,7 +19,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     private ParameterList parameters = new ParameterList();
 
-    public PropertyBuilder factories(List<PropertyFactory> factories) {
+    public PropertyBuilder factories(List<PropertyFactory<?>> factories) {
         this.factories.addAll(factories);
         return this;
     }
@@ -43,7 +43,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     public Property build() throws ParseException, IOException, URISyntaxException {
         Property property = null;
-        for (PropertyFactory factory : factories) {
+        for (PropertyFactory<?> factory : factories) {
             if (factory.supports(name)) {
                 property = factory.createProperty(parameters, value);
                 if (property instanceof Escapable) {

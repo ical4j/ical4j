@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.data;
 
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.property.*;
 
@@ -8,11 +9,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class DefaultPropertyFactorySupplier implements Supplier<List<PropertyFactory>> {
+public class DefaultPropertyFactorySupplier implements Supplier<List<PropertyFactory<? extends Property>>> {
 
     @Override
-    public List<PropertyFactory> get() {
-        List<PropertyFactory> rfc5545 = Arrays.asList(new Acknowledged.Factory(),
+    public List<PropertyFactory<? extends Property>> get() {
+        List<PropertyFactory<? extends Property>> rfc5545 = Arrays.asList(new Acknowledged.Factory(),
                 new Action.Factory(), new Attach.Factory(), new Attendee.Factory(), new BusyType.Factory(),
                 new CalScale.Factory(), new Categories.Factory(), new Clazz.Factory(), new Comment.Factory(),
                 new Completed.Factory(), new Contact.Factory(), new Country.Factory(), new Created.Factory(),
@@ -29,10 +30,10 @@ public class DefaultPropertyFactorySupplier implements Supplier<List<PropertyFac
                 new TzOffsetTo.Factory(), new TzUrl.Factory(), new Uid.Factory(), new Url.Factory(),
                 new Version.Factory());
 
-        List<PropertyFactory> rfc7986 = Arrays.asList(new Color.Factory(), new Conference.Factory(), new Image.Factory(),
+        List<PropertyFactory<? extends Property>> rfc7986 = Arrays.asList(new Color.Factory(), new Conference.Factory(), new Image.Factory(),
                 new RefreshInterval.Factory(), new Source.Factory());
 
-        List<PropertyFactory> factories = new ArrayList<>(rfc5545);
+        List<PropertyFactory<? extends Property>> factories = new ArrayList<>(rfc5545);
         factories.addAll(rfc7986);
         return factories;
     }
