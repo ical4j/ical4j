@@ -13,7 +13,7 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
 
     private String name;
 
-    private PropertyList<Property> properties = new PropertyList<>();
+    private PropertyList properties = new PropertyList();
 
     private ComponentList<Component> subComponents = new ComponentList<>();
 
