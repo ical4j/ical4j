@@ -48,7 +48,7 @@ import java.util.ServiceLoader;
  *         $Id$ [05-Apr-2004]
  */
 @Deprecated
-public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory> {
+public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory<? extends Property>> {
 
     private static final long serialVersionUID = -7174232004486979641L;
 
