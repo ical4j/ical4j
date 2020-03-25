@@ -87,6 +87,9 @@ javadoc {
     if (JavaVersion.current().isJava8Compatible()) {
         options.addStringOption('Xdoclint:none', '-quiet')
     }
+    options {
+        links 'https://docs.oracle.com/javase/8/docs/api/'
+    }
 }
 
 task bundle(type: Bundle) {
