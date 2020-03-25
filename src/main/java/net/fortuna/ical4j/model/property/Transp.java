@@ -32,10 +32,13 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * $Id$
@@ -114,7 +117,7 @@ public class Transp extends Property {
         private static final long serialVersionUID = -6595830107310111996L;
 
         private ImmutableTransp(final String value) {
-            super(new ParameterList(true), value);
+            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
         }
 
         public void setValue(final String aValue) {
@@ -144,7 +147,7 @@ public class Transp extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Transp(final ParameterList aList, final String aValue) {
+    public Transp(final List<Parameter> aList, final String aValue) {
         super(TRANSP, aList, new Factory());
         this.value = aValue;
     }
@@ -180,7 +183,7 @@ public class Transp extends Property {
             super(TRANSP);
         }
 
-        public Transp createProperty(final ParameterList parameters, final String value) {
+        public Transp createProperty(final List<Parameter> parameters, final String value) {
             Transp transp;
             if (OPAQUE.getValue().equals(value)) {
                 transp = OPAQUE;

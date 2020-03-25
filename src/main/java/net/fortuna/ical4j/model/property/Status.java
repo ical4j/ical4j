@@ -32,10 +32,13 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * $Id$
@@ -186,7 +189,7 @@ public class Status extends Property {
         private static final long serialVersionUID = 7771868877237685612L;
 
         private ImmutableStatus(final String value) {
-            super(new ParameterList(true), value);
+            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
         }
 
         public void setValue(final String aValue) {
@@ -216,7 +219,7 @@ public class Status extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Status(final ParameterList aList, final String aValue) {
+    public Status(final List<Parameter> aList, final String aValue) {
         super(STATUS, aList, new Factory());
         this.value = aValue;
     }
@@ -252,7 +255,7 @@ public class Status extends Property {
             super(STATUS);
         }
 
-        public Status createProperty(final ParameterList parameters, final String value) {
+        public Status createProperty(final List<Parameter> parameters, final String value) {
             Status status;
             if (Status.VEVENT_CANCELLED.getValue().equals(value)) {
                 status = Status.VEVENT_CANCELLED;

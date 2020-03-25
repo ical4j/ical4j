@@ -37,7 +37,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -63,7 +65,7 @@ public class LocationType extends Property {
      * Default constructor.
      */
     public LocationType() {
-        super(LOCATION_TYPE, new ParameterList(), new Factory());
+        super(LOCATION_TYPE, new ArrayList<>(), new Factory());
         locationTypes = new LocationTypeList();
     }
 
@@ -71,7 +73,7 @@ public class LocationType extends Property {
      * @param aValue a value string for this component
      */
     public LocationType(final String aValue) {
-        super(LOCATION_TYPE, new ParameterList(), new Factory());
+        super(LOCATION_TYPE, new ArrayList<>(), new Factory());
         setValue(aValue);
     }
 
@@ -79,7 +81,7 @@ public class LocationType extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public LocationType(final ParameterList aList, final String aValue) {
+    public LocationType(final List<Parameter> aList, final String aValue) {
         super(LOCATION_TYPE, aList, new Factory());
         setValue(aValue);
     }
@@ -88,7 +90,7 @@ public class LocationType extends Property {
      * @param cList a list of locationTypes
      */
     public LocationType(final LocationTypeList cList) {
-        super(LOCATION_TYPE, new ParameterList(), new Factory());
+        super(LOCATION_TYPE, new ArrayList<>(), new Factory());
         locationTypes = cList;
     }
 
@@ -96,7 +98,7 @@ public class LocationType extends Property {
      * @param aList a list of parameters for this component
      * @param cList a list of locationTypes
      */
-    public LocationType(final ParameterList aList, final LocationTypeList cList) {
+    public LocationType(final List<Parameter> aList, final LocationTypeList cList) {
         super(LOCATION_TYPE, aList, new Factory());
         locationTypes = cList;
     }
@@ -139,7 +141,7 @@ public class LocationType extends Property {
             super(LOCATION_TYPE);
         }
 
-        public LocationType createProperty(final ParameterList parameters, final String value) {
+        public LocationType createProperty(final List<Parameter> parameters, final String value) {
             return new LocationType(parameters, value);
         }
 

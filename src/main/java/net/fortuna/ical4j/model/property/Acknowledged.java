@@ -8,12 +8,14 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -111,8 +113,8 @@ public class Acknowledged extends DateProperty<Instant> {
      * @param aValue a string representation of a DTSTAMP value
      * @throws ParseException if the specified value is not a valid representation
      */
-    public Acknowledged(final String aValue) throws ParseException {
-        this(new ParameterList(), aValue);
+    public Acknowledged(final String aValue) {
+        this(new ArrayList<>(), aValue);
     }
     
     /**
@@ -120,8 +122,7 @@ public class Acknowledged extends DateProperty<Instant> {
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public Acknowledged(final ParameterList aList, final String aValue)
-            throws ParseException {
+    public Acknowledged(final List<Parameter> aList, final String aValue) {
         super(ACKNOWLEDGED, aList, new Factory());
         setValue(aValue);
     }
@@ -138,7 +139,7 @@ public class Acknowledged extends DateProperty<Instant> {
      * @param aList a list of parameters for this component
      * @param aDate a date representing a date-time
      */
-    public Acknowledged(final ParameterList aList, final Instant aDate) {
+    public Acknowledged(final List<Parameter> aList, final Instant aDate) {
         super(ACKNOWLEDGED, aList, new Factory());
         setDate(aDate);
     }
@@ -155,7 +156,7 @@ public class Acknowledged extends DateProperty<Instant> {
             super(ACKNOWLEDGED);
         }
 
-        public Acknowledged createProperty(final ParameterList parameters, final String value) throws ParseException {
+        public Acknowledged createProperty(final List<Parameter> parameters, final String value) throws ParseException {
             return new Acknowledged(parameters, value);
         }
 

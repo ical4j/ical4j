@@ -1,6 +1,6 @@
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ParameterList
+
 import spock.lang.Specification
 
 class DurationSpec extends Specification {
@@ -9,7 +9,7 @@ class DurationSpec extends Specification {
 
     def 'verify parsing'() {
         expect:
-        Duration duration = factory.createProperty([] as ParameterList, value)
+        Duration duration = factory.createProperty([], value)
         duration.value == expectedValue
 
         where:

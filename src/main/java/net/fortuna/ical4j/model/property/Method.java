@@ -32,10 +32,13 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * $Id$
@@ -106,7 +109,7 @@ public class Method extends Property {
         private static final long serialVersionUID = 5332607957381969713L;
 
         private ImmutableMethod(final String value) {
-            super(new ParameterList(true), value);
+            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
         }
 
         public void setValue(final String aValue) {
@@ -136,7 +139,7 @@ public class Method extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Method(final ParameterList aList, final String aValue) {
+    public Method(final List<Parameter> aList, final String aValue) {
         super(METHOD, aList, new Factory());
         this.value = aValue;
     }
@@ -172,7 +175,7 @@ public class Method extends Property {
             super(METHOD);
         }
 
-        public Method createProperty(final ParameterList parameters, final String value) {
+        public Method createProperty(final List<Parameter> parameters, final String value) {
 
             Method method;
             if (ADD.getValue().equals(value)) {

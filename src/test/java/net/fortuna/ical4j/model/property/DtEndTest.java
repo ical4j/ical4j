@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -75,7 +76,7 @@ public class DtEndTest extends PropertyTest {
         
         TestSuite suite = new TestSuite();
         DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(ZonedDateTime.now());
-        dtEnd.getParameters().replace(Value.DATE_TIME);
+        dtEnd.getParameters().add(Value.DATE_TIME);
 
         // test validation..
         log.info(dtEnd.toString());
@@ -83,7 +84,8 @@ public class DtEndTest extends PropertyTest {
 
         //
         dtEnd = (DtEnd<ZonedDateTime>) dtEnd.copy();
-        dtEnd.getParameters().replace(Value.DATE);
+        dtEnd.getParameters().removeIf(p -> p.getName().equals(Parameter.VALUE));
+        dtEnd.getParameters().add(Value.DATE);
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidationException", dtEnd));
 
@@ -94,7 +96,8 @@ public class DtEndTest extends PropertyTest {
 
         //
         dtEnd = (DtEnd<ZonedDateTime>) dtEnd.copy();
-        dtEnd.getParameters().replace(Value.DATE);
+        dtEnd.getParameters().removeIf(p -> p.getName().equals(Parameter.VALUE));
+        dtEnd.getParameters().add(Value.DATE);
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidation", dtEnd));
 

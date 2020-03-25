@@ -37,7 +37,7 @@ import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Encoding;
@@ -49,6 +49,8 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$
@@ -77,7 +79,7 @@ public class AttachTest extends TestCase {
             i = fin.read();
         }
 
-        ParameterList params = new ParameterList();
+        List<Parameter> params = new ArrayList<>();
         params.add(Encoding.BASE64);
         params.add(Value.BINARY);
 
@@ -93,7 +95,7 @@ public class AttachTest extends TestCase {
         //log.info(attach);
 
         DtStart start = new DtStart<>(LocalDate.now().withMonth(12).withDayOfMonth(25));
-        start.getParameters().replace(Value.DATE);
+        start.getParameters().add(Value.DATE);
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
@@ -144,7 +146,8 @@ public class AttachTest extends TestCase {
         assertEquals(attach, clone);
 
         // set a bogus value to trigger logging..
-        clone.getParameters().replace(new Encoding("BOGUS"));
+        clone.getParameters().removeIf(p -> p.getName().equals(Parameter.ENCODING));
+        clone.getParameters().add(new Encoding("BOGUS"));
         clone.setValue("");
     }
 }

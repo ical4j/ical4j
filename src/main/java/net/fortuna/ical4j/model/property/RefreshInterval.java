@@ -4,6 +4,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.temporal.TemporalAmount;
+import java.util.List;
 
 /**
  * Created by fortuna on 11/09/15.
@@ -20,12 +21,12 @@ public class RefreshInterval extends Property {
         super(PROPERTY_NAME, new Factory());
     }
 
-    public RefreshInterval(ParameterList params, String value) {
+    public RefreshInterval(List<Parameter> params, String value) {
         super(PROPERTY_NAME, params, new Factory());
         setValue(value);
     }
 
-    public RefreshInterval(ParameterList params, TemporalAmount duration) {
+    public RefreshInterval(List<Parameter> params, TemporalAmount duration) {
         super(PROPERTY_NAME, params, new Factory());
         this.duration = new TemporalAmountAdapter(duration);
     }
@@ -59,7 +60,7 @@ public class RefreshInterval extends Property {
             return new RefreshInterval();
         }
 
-        public RefreshInterval createProperty(ParameterList parameters, String value) {
+        public RefreshInterval createProperty(List<Parameter> parameters, String value) {
             RefreshInterval property = new RefreshInterval(parameters, value);
             return property;
         }

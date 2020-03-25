@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
-import net.fortuna.ical4j.model.ParameterList
+
 /**
  * $Id$
  *
@@ -44,9 +44,9 @@ import net.fortuna.ical4j.model.ParameterList
 abstract class AbstractPropertyFactory extends AbstractFactory {
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        ParameterList parameters = attributes.remove('parameters')
+        List<Parameter> parameters = attributes.remove('parameters')
         if (parameters == null) {
-            parameters = new ParameterList()
+            parameters = []
         }
         String propValue = attributes.remove('value')
         if (propValue != null) {
@@ -57,7 +57,7 @@ abstract class AbstractPropertyFactory extends AbstractFactory {
         }
     }
 
-    protected abstract Object newInstance(ParameterList parameters, String value)
+    protected abstract Object newInstance(List<Parameter> parameters, String value)
 
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof Parameter) {

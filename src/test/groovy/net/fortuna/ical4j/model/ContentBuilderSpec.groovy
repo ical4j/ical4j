@@ -97,7 +97,7 @@ class ContentBuilderSpec extends Specification {
 			value 'URI'
 			feature 'AUDIO,VIDEO'
 			label 'Web video chat, access code=76543'
-		} as String == 'CONFERENCE;VALUE=URI;FEATURE="AUDIO,VIDEO";LABEL="Web video chat, access code=76543":https://video-chat.example.com/;group-id=1234\r\n'
+		} as String == 'CONFERENCE;VALUE=URI;FEATURE="VIDEO,AUDIO";LABEL="Web video chat, access code=76543":https://video-chat.example.com/;group-id=1234\r\n'
 
 		and:
 		builder.color('turquoise') as String == 'COLOR:turquoise\r\n'

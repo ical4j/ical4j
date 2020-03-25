@@ -1,10 +1,12 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+
+import java.util.List;
 
 /**
  * Created by fortuna on 11/09/15.
@@ -21,7 +23,7 @@ public class Image extends Property {
         super(PROPERTY_NAME, new Factory());
     }
 
-    public Image(ParameterList params, String value) {
+    public Image(List<Parameter> params, String value) {
         super(PROPERTY_NAME, params, new Factory());
         setValue(value);
     }
@@ -55,7 +57,7 @@ public class Image extends Property {
             return new Image();
         }
 
-        public Image createProperty(ParameterList parameters, String value) {
+        public Image createProperty(List<Parameter> parameters, String value) {
             Image property = new Image(parameters, value);
             return property;
         }

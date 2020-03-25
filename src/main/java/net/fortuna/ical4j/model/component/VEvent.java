@@ -657,7 +657,7 @@ public class VEvent extends CalendarComponent {
             if (tzId.isPresent()) {
                 dtEnd.getParameters().add(tzId.get());
             } else {
-                dtEnd.getParameters().removeAll(Parameter.TZID);
+                dtEnd.getParameters().removeIf(p -> p.getName().equals(Parameter.TZID));
             }
         }
         return dtEnd;

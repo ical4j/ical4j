@@ -38,6 +38,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 
 import java.text.ParseException;
 import java.time.temporal.Temporal;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -65,7 +66,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public ExDate(final ParameterList aList, final String aValue)
+    public ExDate(final List<Parameter> aList, final String aValue)
             throws ParseException {
         super(EXDATE, aList, new Factory());
         setValue(aValue);
@@ -82,7 +83,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * @param aList a list of parameters for this component
      * @param dList a list of dates
      */
-    public ExDate(final ParameterList aList, final DateList<T> dList) {
+    public ExDate(final List<Parameter> aList, final DateList<T> dList) {
         super(EXDATE, aList, dList, new Factory());
     }
 
@@ -126,7 +127,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
             super(EXDATE);
         }
 
-        public ExDate createProperty(final ParameterList parameters, final String value) throws ParseException {
+        public ExDate createProperty(final List<Parameter> parameters, final String value) throws ParseException {
             return new ExDate(parameters, value);
         }
 

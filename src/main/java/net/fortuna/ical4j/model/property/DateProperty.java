@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
@@ -44,6 +47,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -77,7 +81,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * @param name       the property name
      * @param parameters a list of initial parameters
      */
-    public DateProperty(final String name, final ParameterList parameters, PropertyFactory factory) {
+    public DateProperty(final String name, final List<Parameter> parameters, PropertyFactory factory) {
         super(name, parameters, factory);
     }
 

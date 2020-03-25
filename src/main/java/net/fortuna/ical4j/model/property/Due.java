@@ -32,13 +32,14 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
+import java.util.List;
 
 /**
  * $Id$
@@ -113,7 +114,7 @@ public class Due<T extends Temporal> extends DateProperty<T> {
      * @param aValue a value string for this component
      * @throws java.time.format.DateTimeParseException when the specified string is not a valid date/date-time representation
      */
-    public Due(final ParameterList aList, final String aValue) {
+    public Due(final List<Parameter> aList, final String aValue) {
         super(DUE, aList, new Factory());
         setValue(aValue);
     }
@@ -134,7 +135,7 @@ public class Due<T extends Temporal> extends DateProperty<T> {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public Due(final ParameterList aList, final T aDate) {
+    public Due(final List<Parameter> aList, final T aDate) {
         super(DUE, aList, new Factory());
         setDate(aDate);
     }
@@ -151,7 +152,7 @@ public class Due<T extends Temporal> extends DateProperty<T> {
             super(DUE);
         }
 
-        public Due createProperty(final ParameterList parameters, final String value) {
+        public Due createProperty(final List<Parameter> parameters, final String value) {
             return new Due(parameters, value);
         }
 

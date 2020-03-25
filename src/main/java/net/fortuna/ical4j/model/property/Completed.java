@@ -32,12 +32,13 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.util.List;
 
 /**
  * $Id$
@@ -98,7 +99,7 @@ public class Completed extends DateProperty<Instant> {
      * @param aValue a value string for this component
      * @throws ParseException when the specified string is not a valid date-time represenation
      */
-    public Completed(final ParameterList aList, final String aValue)
+    public Completed(final List<Parameter> aList, final String aValue)
             throws ParseException {
         super(COMPLETED, aList, new Factory());
         setValue(aValue);
@@ -116,7 +117,7 @@ public class Completed extends DateProperty<Instant> {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public Completed(final ParameterList aList, final Instant aDate) {
+    public Completed(final List<Parameter> aList, final Instant aDate) {
         super(COMPLETED, aList, new Factory());
         setDate(aDate);
     }
@@ -133,7 +134,7 @@ public class Completed extends DateProperty<Instant> {
             super(COMPLETED);
         }
 
-        public Completed createProperty(final ParameterList parameters, final String value) throws ParseException {
+        public Completed createProperty(final List<Parameter> parameters, final String value) throws ParseException {
             return new Completed(parameters, value);
         }
 

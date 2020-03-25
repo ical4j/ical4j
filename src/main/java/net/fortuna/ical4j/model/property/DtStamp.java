@@ -32,11 +32,13 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$
@@ -99,14 +101,14 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
      * @param aValue a string representation of a DTSTAMP value
      */
     public DtStamp(final String aValue) {
-        this(new ParameterList(), aValue);
+        this(new ArrayList<>(), aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public DtStamp(final ParameterList aList, final String aValue) {
+    public DtStamp(final List<Parameter> aList, final String aValue) {
         super(DTSTAMP, aList, new Factory());
         setValue(aValue);
     }
@@ -123,7 +125,7 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
      * @param aList a list of parameters for this component
      * @param aDate a date representing a date-time
      */
-    public DtStamp(final ParameterList aList, final Instant aDate) {
+    public DtStamp(final List<Parameter> aList, final Instant aDate) {
         super(DTSTAMP, aList, new Factory());
         setDate(aDate);
     }
@@ -145,7 +147,7 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
             super(DTSTAMP);
         }
 
-        public DtStamp createProperty(final ParameterList parameters, final String value) {
+        public DtStamp createProperty(final List<Parameter> parameters, final String value) {
             return new DtStamp(parameters, value);
         }
 

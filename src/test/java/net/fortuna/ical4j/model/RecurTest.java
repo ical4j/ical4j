@@ -639,7 +639,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
 //        TimeZone.setDefault(TimeZone.getTimeZone("America/Los_Angeles"));
 
         start = ZonedDateTime.now(TimeZone.getTimeZone("America/Los_Angeles").toZoneId()).withSecond(0);
-        ParameterList tzParams = new ParameterList();
+        List<Parameter> tzParams = new ArrayList<>();
         tzParams.add(new TzId(start.getZone().getId()));
         DtStart<ZonedDateTime> dtStart = new DtStart<>(tzParams, start);
         end = start.plusMonths(2);

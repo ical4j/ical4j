@@ -32,11 +32,12 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.time.temporal.Temporal;
+import java.util.List;
 
 /**
  * $Id$
@@ -130,7 +131,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * @param aValue a value string for this component
      * @throws java.time.format.DateTimeParseException where the specified value string is not a valid date-time/date representation
      */
-    public DtStart(final ParameterList aList, final String aValue) {
+    public DtStart(final List<Parameter> aList, final String aValue) {
         super(DTSTART, aList, new Factory());
         setValue(aValue);
     }
@@ -164,7 +165,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public DtStart(final ParameterList aList, final T aDate) {
+    public DtStart(final List<Parameter> aList, final T aDate) {
         super(DTSTART, aList, new Factory());
         setDate(aDate);
     }
@@ -181,7 +182,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
             super(DTSTART);
         }
 
-        public DtStart createProperty(final ParameterList parameters, final String value) {
+        public DtStart createProperty(final List<Parameter> parameters, final String value) {
             return new DtStart(parameters, value);
         }
 

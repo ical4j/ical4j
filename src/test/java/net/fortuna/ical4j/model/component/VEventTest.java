@@ -52,6 +52,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.time.*;
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -456,7 +457,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         RRule rRule = new RRule(rRuleRecur);
         event1.getProperties().add(rRule);
 
-        ParameterList parameterList = new ParameterList();
+        List<Parameter> parameterList = new ArrayList<>();
         parameterList.add(Value.DATE);
         ExDate exDate = new ExDate(parameterList, "20050106");
         event1.getProperties().add(exDate);
@@ -561,7 +562,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
 
-        ParameterList tzParams = new ParameterList();
+        List<Parameter> tzParams = new ArrayList<>();
         tzParams.add(new TzId("Australia/Melbourne"));
 
         VEvent weekdayNineToFiveEvents = new VEvent();
@@ -631,7 +632,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         UidGenerator ug = new RandomUidGenerator();
         Uid uid = ug.generateUid();
 
-        ParameterList startParams = new ParameterList();
+        List<Parameter> startParams = new ArrayList<>();
         tzParams.add(new TzId(ZoneId.systemDefault().getId()));
         DtStart<ZonedDateTime> start = new DtStart<>(startParams, ZonedDateTime.now());
 
@@ -646,7 +647,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         event = (VEvent) event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
         start = new DtStart<>(ZonedDateTime.now());
-        start.getParameters().replace(Value.DATE_TIME);
+        start.getParameters().add(Value.DATE_TIME);
         event.getProperties().remove(event.getProperty(Property.DTSTART));
         event.getProperties().add(start);
         suite.addTest(new VEventTest("testValidationException", event));
@@ -654,7 +655,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         // test 1..
         event = (VEvent) event.copy();
         start = event.getProperty(Property.DTSTART);
-        start.getParameters().replace(Value.DATE);
+        start.getParameters().add(Value.DATE);
         suite.addTest(new VEventTest("testValidationException", event));
 
 //        event = (VEvent) event.copy();
@@ -667,9 +668,9 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         // test 2..
         event = (VEvent) event.copy();
         start = event.getProperty(Property.DTSTART);
-        start.getParameters().replace(Value.DATE_TIME);
+        start.getParameters().add(Value.DATE_TIME);
         end = event.getProperty(Property.DTEND);
-        end.getParameters().replace(Value.DATE);
+        end.getParameters().add(Value.DATE);
         suite.addTest(new VEventTest("testValidationException", event));
 
         // test 3..

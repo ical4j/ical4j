@@ -32,11 +32,14 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * $Id$
@@ -154,7 +157,7 @@ public class Priority extends Property {
         private static final long serialVersionUID = 5884973714694108418L;
 
         private ImmutablePriority(final int level) {
-            super(new ParameterList(true), level);
+            super(Collections.unmodifiableList(Collections.EMPTY_LIST), level);
         }
 
         public void setValue(final String aValue) {
@@ -182,7 +185,7 @@ public class Priority extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Priority(final ParameterList aList, final String aValue) {
+    public Priority(final List<Parameter> aList, final String aValue) {
         super(PRIORITY, aList, new Factory());
         try {
             level = Integer.parseInt(aValue);
@@ -207,7 +210,7 @@ public class Priority extends Property {
      * @param aList  a list of parameters for this component
      * @param aLevel an int representation of a priority level
      */
-    public Priority(final ParameterList aList, final int aLevel) {
+    public Priority(final List<Parameter> aList, final int aLevel) {
         super(PRIORITY, aList, new Factory());
         level = aLevel;
     }
@@ -257,7 +260,7 @@ public class Priority extends Property {
             super(PRIORITY);
         }
 
-        public Priority createProperty(final ParameterList parameters, final String value) {
+        public Priority createProperty(final List<Parameter> parameters, final String value) {
             Priority priority;
             if (HIGH.getValue().equals(value)) {
                 priority = HIGH;

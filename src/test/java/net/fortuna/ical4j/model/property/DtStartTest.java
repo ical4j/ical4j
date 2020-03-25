@@ -32,14 +32,16 @@
 package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestCase;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.TimeZones;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * $Id$
@@ -61,8 +63,8 @@ public class DtStartTest extends TestCase {
     /*
      * Test method for 'net.fortuna.ical4j.model.property.DtStart.DtStart(String)'
      */
-    public void testDtStartString() throws ParseException {
-        ParameterList params = new ParameterList();
+    public void testDtStartString() {
+        List<Parameter> params = new ArrayList<>();
         params.add(Value.DATE);
         DtStart dtStart = new DtStart(params, "20060811");
         

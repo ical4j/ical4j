@@ -149,7 +149,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public RDate(final ParameterList aList, final String aValue)
+    public RDate(final List<Parameter> aList, final String aValue)
             throws ParseException {
         super(RDATE, aList, new Factory());
         periods = null;
@@ -172,7 +172,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param aList a list of parameters for this component
      * @param dates a list of dates
      */
-    public RDate(final ParameterList aList, final DateList<T> dates) {
+    public RDate(final List<Parameter> aList, final DateList<T> dates) {
         super(RDATE, aList, dates, new Factory());
         periods = null;
     }
@@ -193,7 +193,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param aList   a list of parameters for this component
      * @param periods a list of periods
      */
-    public RDate(final ParameterList aList, final List<Period<T>> periods) {
+    public RDate(final List<Parameter> aList, final List<Period<T>> periods) {
         super(RDATE, aList, new DateList<>(true), new Factory());
         this.periods = new PeriodList<>(periods);
     }
@@ -271,7 +271,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
             super(RDATE);
         }
 
-        public RDate createProperty(final ParameterList parameters, final String value) throws ParseException {
+        public RDate createProperty(final List<Parameter> parameters, final String value) throws ParseException {
             return new RDate(parameters, value);
         }
 

@@ -32,10 +32,12 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+
+import java.util.List;
 
 /**
  * $Id$
@@ -153,7 +155,7 @@ public class Sequence extends Property implements Comparable<Sequence> {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Sequence(final ParameterList aList, final String aValue) {
+    public Sequence(final List<Parameter> aList, final String aValue) {
         super(SEQUENCE, aList, new Factory());
         setValue(aValue);
     }
@@ -170,7 +172,7 @@ public class Sequence extends Property implements Comparable<Sequence> {
      * @param aList       a list of parameters for this component
      * @param aSequenceNo a sequence number
      */
-    public Sequence(final ParameterList aList, final int aSequenceNo) {
+    public Sequence(final List<Parameter> aList, final int aSequenceNo) {
         super(SEQUENCE, aList, new Factory());
         sequenceNo = aSequenceNo;
     }
@@ -218,7 +220,7 @@ public class Sequence extends Property implements Comparable<Sequence> {
             super(SEQUENCE);
         }
 
-        public Sequence createProperty(final ParameterList parameters, final String value) {
+        public Sequence createProperty(final List<Parameter> parameters, final String value) {
             return new Sequence(parameters, value);
         }
 

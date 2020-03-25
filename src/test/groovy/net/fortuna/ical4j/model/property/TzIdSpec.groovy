@@ -1,6 +1,6 @@
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ParameterList
+
 import spock.lang.Specification
 
 import java.time.DateTimeException
@@ -9,7 +9,7 @@ class TzIdSpec extends Specification {
 
     def 'test successfull instance creation'() {
         expect: 'instance is created successfully'
-        new TzId.Factory().createProperty([] as ParameterList, tzIdString) as String == "TZID:$expectedString\r\n"
+        new TzId.Factory().createProperty([], tzIdString) as String == "TZID:$expectedString\r\n"
 
         where:
         tzIdString              | expectedString
@@ -21,7 +21,7 @@ class TzIdSpec extends Specification {
         given: 'custom zone ids are registered'
 
         expect: 'instance is created successfully'
-        new TzId.Factory().createProperty([] as ParameterList, tzIdString) as String == "TZID:$expectedString\r\n"
+        new TzId.Factory().createProperty([], tzIdString) as String == "TZID:$expectedString\r\n"
 
         where:
         tzIdString                          | expectedString
@@ -31,7 +31,7 @@ class TzIdSpec extends Specification {
 
     def 'test unsuccessfull instance creation'() {
         when: 'attempt to create instance'
-        new TzId.Factory().createProperty([] as ParameterList, tzIdString)
+        new TzId.Factory().createProperty([], tzIdString)
 
         then: 'instance is not created successfully'
         thrown(expectedException)

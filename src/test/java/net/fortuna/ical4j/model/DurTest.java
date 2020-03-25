@@ -42,6 +42,7 @@ import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.*;
 
 /**
  * $Id$
@@ -231,7 +232,7 @@ public class DurTest extends TestCase {
         // test adjacent weeks..
         ZonedDateTime newstart = ZonedDateTime.now(TimeZoneRegistry.getGlobalZoneId("America/Los_Angeles"))
                 .withYear(2005).withMonth(1).withDayOfMonth(1).withHour(12).withMinute(0);
-        ParameterList tzParams = new ParameterList();
+        List<Parameter> tzParams = new ArrayList<>();
         tzParams.add(new TzId(newstart.getZone().getId()));
         DtStart<ZonedDateTime> dtStart = new DtStart<>(tzParams, newstart);
         DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(newstart.withDayOfMonth(2).withHour(11).withMinute(59));

@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
@@ -40,7 +40,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -91,14 +93,14 @@ public class RequestStatus extends Property {
      * Default constructor.
      */
     public RequestStatus() {
-        super(REQUEST_STATUS, new ParameterList(), new Factory());
+        super(REQUEST_STATUS, new ArrayList<>(), new Factory());
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public RequestStatus(final ParameterList aList, final String aValue) {
+    public RequestStatus(final List<Parameter> aList, final String aValue) {
         super(REQUEST_STATUS, aList, new Factory());
         setValue(aValue);
     }
@@ -110,7 +112,7 @@ public class RequestStatus extends Property {
      */
     public RequestStatus(final String aStatusCode, final String aDescription,
                          final String data) {
-        super(REQUEST_STATUS, new ParameterList(), new Factory());
+        super(REQUEST_STATUS, new ArrayList<>(), new Factory());
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
@@ -122,7 +124,7 @@ public class RequestStatus extends Property {
      * @param aDescription a description
      * @param data         a string representation of extension data
      */
-    public RequestStatus(final ParameterList aList, final String aStatusCode,
+    public RequestStatus(final List<Parameter> aList, final String aStatusCode,
                          final String aDescription, final String data) {
         super(REQUEST_STATUS, aList, new Factory());
         statusCode = aStatusCode;
@@ -228,7 +230,7 @@ public class RequestStatus extends Property {
             super(REQUEST_STATUS);
         }
 
-        public RequestStatus createProperty(final ParameterList parameters, final String value) {
+        public RequestStatus createProperty(final List<Parameter> parameters, final String value) {
             return new RequestStatus(parameters, value);
         }
 

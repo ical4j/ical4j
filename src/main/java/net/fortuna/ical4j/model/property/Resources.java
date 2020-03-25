@@ -37,7 +37,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.ALTREP;
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
@@ -65,7 +67,7 @@ public class Resources extends Property {
      * Default constructor.
      */
     public Resources() {
-        super(RESOURCES, new ParameterList(), new Factory());
+        super(RESOURCES, new ArrayList<>(), new Factory());
         resources = new TextList();
     }
 
@@ -73,7 +75,7 @@ public class Resources extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Resources(final ParameterList aList, final String aValue) {
+    public Resources(final List<Parameter> aList, final String aValue) {
         super(RESOURCES, aList, new Factory());
         setValue(aValue);
     }
@@ -82,7 +84,7 @@ public class Resources extends Property {
      * @param rList a list of resources
      */
     public Resources(final TextList rList) {
-        super(RESOURCES, new ParameterList(), new Factory());
+        super(RESOURCES, new ArrayList<>(), new Factory());
         resources = rList;
     }
 
@@ -90,7 +92,7 @@ public class Resources extends Property {
      * @param aList a list of parameters for this component
      * @param rList a list of resources
      */
-    public Resources(final ParameterList aList, final TextList rList) {
+    public Resources(final List<Parameter> aList, final TextList rList) {
         super(RESOURCES, aList, new Factory());
         resources = rList;
     }
@@ -133,7 +135,7 @@ public class Resources extends Property {
             super(RESOURCES);
         }
 
-        public Resources createProperty(final ParameterList parameters, final String value) {
+        public Resources createProperty(final List<Parameter> parameters, final String value) {
             return new Resources(parameters, value);
         }
 

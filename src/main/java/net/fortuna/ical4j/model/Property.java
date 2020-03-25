@@ -41,7 +41,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
@@ -360,7 +363,7 @@ public abstract class Property extends Content {
     
     private final String name;
 
-    private final ParameterList parameters;
+    private final List<Parameter> parameters;
 
     private final PropertyFactory<?> factory;
 
@@ -371,7 +374,7 @@ public abstract class Property extends Content {
      * @param factory the factory used to create the property instance
      */
     protected Property(final String aName, PropertyFactory<?> factory) {
-        this(aName, new ParameterList(), factory);
+        this(aName, new ArrayList<>(), factory);
     }
 
     /**
@@ -388,7 +391,7 @@ public abstract class Property extends Content {
      * @param aList   a list of initial parameters
      * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, final ParameterList aList, PropertyFactory<?> factory) {
+    protected Property(final String aName, final List<Parameter> aList, PropertyFactory<?> factory) {
         this.name = aName;
         this.parameters = aList;
         this.factory = factory;
@@ -407,7 +410,7 @@ public abstract class Property extends Content {
      */
     protected Property(final Property property) throws IOException,
             URISyntaxException, ParseException {
-        this(property.getName(), new ParameterList(property.getParameters(), false),
+        this(property.getName(), new ArrayList<>(property.getParameters()),
                 property.factory);
         setValue(property.getValue());
     }
@@ -418,8 +421,9 @@ public abstract class Property extends Content {
     public final String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getName());
-        if (getParameters() != null) {
-            buffer.append(getParameters());
+        if (getParameters() != null && !getParameters().isEmpty()) {
+            buffer.append(parameters.stream().map(Parameter::toString)
+                    .collect(Collectors.joining(";", ";", "")));
         }
         buffer.append(':');
         boolean needsEscape = false;
@@ -451,7 +455,7 @@ public abstract class Property extends Content {
     /**
      * @return Returns the parameters.
      */
-    public final ParameterList getParameters() {
+    public final List<Parameter> getParameters() {
         return parameters;
     }
 
@@ -461,8 +465,8 @@ public abstract class Property extends Content {
      * @param name name of parameters to retrieve
      * @return a parameter list containing only parameters with the specified name
      */
-    public final ParameterList getParameters(final String name) {
-        return getParameters().getParameters(name);
+    public final List<Parameter> getParameters(final String name) {
+        return getParameters().stream().filter(p -> p.getName().equals(name)).collect(Collectors.toList());
     }
 
     /**
@@ -472,7 +476,8 @@ public abstract class Property extends Content {
      * @return the first parameter from the parameter list with the specified name
      */
     public final <P extends Parameter> Optional<P> getParameter(final String name) {
-        return getParameters().getParameter(name);
+        List<Parameter> parameters = getParameters(name);
+        return parameters.isEmpty() ? Optional.empty() : Optional.of((P) parameters.iterator().next());
     }
 
     /**

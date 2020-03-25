@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
+import java.util.List;
+
 /**
  * $Id$
  * <p/>
@@ -69,7 +71,7 @@ public class ExtendedAddress extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public ExtendedAddress(final ParameterList aList, final String aValue) {
+    public ExtendedAddress(final List<Parameter> aList, final String aValue) {
         super(EXTENDED_ADDRESS, aList, new Factory());
         setValue(aValue);
     }
@@ -105,7 +107,7 @@ public class ExtendedAddress extends Property implements Escapable {
             super(EXTENDED_ADDRESS);
         }
 
-        public ExtendedAddress createProperty(final ParameterList parameters, final String value) {
+        public ExtendedAddress createProperty(final List<Parameter> parameters, final String value) {
             return new ExtendedAddress(parameters, value);
         }
 

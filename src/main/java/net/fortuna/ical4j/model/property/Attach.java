@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.DecoderFactory;
@@ -50,6 +53,7 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -126,7 +130,7 @@ public class Attach extends Property {
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified string is not a valid uri
      */
-    public Attach(final ParameterList aList, final String aValue)
+    public Attach(final List<Parameter> aList, final String aValue)
             throws URISyntaxException {
         super(ATTACH, aList, new Factory());
         setValue(aValue);
@@ -147,7 +151,7 @@ public class Attach extends Property {
      * @param aList a list of parameters for this component
      * @param data  binary data
      */
-    public Attach(final ParameterList aList, final byte[] data) {
+    public Attach(final List<Parameter> aList, final byte[] data) {
         super(ATTACH, aList, new Factory());
         this.binary = data;
     }
@@ -164,7 +168,7 @@ public class Attach extends Property {
      * @param aList a list of parameters for this component
      * @param aUri  a URI
      */
-    public Attach(final ParameterList aList, final URI aUri) {
+    public Attach(final List<Parameter> aList, final URI aUri) {
         super(ATTACH, aList, new Factory());
         this.uri = aUri;
     }
@@ -300,7 +304,7 @@ public class Attach extends Property {
             super(ATTACH);
         }
 
-        public Attach createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
+        public Attach createProperty(final List<Parameter> parameters, final String value) throws URISyntaxException {
             return new Attach(parameters, value);
         }
 

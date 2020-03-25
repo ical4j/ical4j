@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.ZoneOffset;
+import java.util.List;
 
 /**
  * $Id$
@@ -70,7 +71,7 @@ public class TzOffsetFrom extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public TzOffsetFrom(final ParameterList aList, final String aValue) {
+    public TzOffsetFrom(final List<Parameter> aList, final String aValue) {
         super(TZOFFSETFROM, aList, new Factory());
         setValue(aValue);
     }
@@ -96,7 +97,7 @@ public class TzOffsetFrom extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     @Deprecated
-    public TzOffsetFrom(final ParameterList aList, final UtcOffset anOffset) {
+    public TzOffsetFrom(final List<Parameter> aList, final UtcOffset anOffset) {
         this(aList, ZoneOffsetAdapter.from(anOffset));
     }
 
@@ -104,7 +105,7 @@ public class TzOffsetFrom extends Property {
      * @param aList    a list of parameters for this component
      * @param anOffset a timezone offset in milliseconds
      */
-    public TzOffsetFrom(final ParameterList aList, final ZoneOffset anOffset) {
+    public TzOffsetFrom(final List<Parameter> aList, final ZoneOffset anOffset) {
         super(TZOFFSETFROM, aList, new Factory());
         offset = new ZoneOffsetAdapter(anOffset);
     }
@@ -157,7 +158,7 @@ public class TzOffsetFrom extends Property {
             super(TZOFFSETFROM);
         }
 
-        public TzOffsetFrom createProperty(final ParameterList parameters, final String value) {
+        public TzOffsetFrom createProperty(final List<Parameter> parameters, final String value) {
             return new TzOffsetFrom(parameters, value);
         }
 

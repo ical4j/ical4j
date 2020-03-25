@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.Property
 
 /**
@@ -56,8 +56,8 @@ class DefaultPropertyFactory extends AbstractPropertyFactory {
         return property
     }
     
-    protected Object newInstance(ParameterList parameters, String value) {
-		def constructor = klass.getConstructor(ParameterList, String)
+    protected Object newInstance(List<Parameter> parameters, String value) {
+		def constructor = klass.getConstructor(List, String)
         constructor.newInstance(parameters, value)
     }
 }

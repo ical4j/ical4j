@@ -32,11 +32,14 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * $Id$
@@ -67,7 +70,7 @@ public class CalScale extends Property {
          * @param value
          */
         private ImmutableCalScale(final String value) {
-            super(new ParameterList(true), value);
+            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
         }
 
         /**
@@ -100,7 +103,7 @@ public class CalScale extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public CalScale(final ParameterList aList, final String aValue) {
+    public CalScale(final List<Parameter> aList, final String aValue) {
         super(CALSCALE, aList, new Factory());
         this.value = aValue;
     }
@@ -146,7 +149,7 @@ public class CalScale extends Property {
             super(CALSCALE);
         }
 
-        public CalScale createProperty(final ParameterList parameters, final String value) {
+        public CalScale createProperty(final List<Parameter> parameters, final String value) {
             CalScale calScale;
             if (GREGORIAN.getValue().equals(value)) {
                 calScale = GREGORIAN;

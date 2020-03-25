@@ -31,8 +31,7 @@
  */
 package net.fortuna.ical4j.model.property
 
-
-import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.model.Parameter
 
 import java.time.Instant
 
@@ -57,7 +56,7 @@ class DtStampFactory extends AbstractPropertyFactory{
         return dtStamp
     }
     
-    protected Object newInstance(ParameterList parameters, String value) {
+    protected Object newInstance(List<Parameter> parameters, String value) {
         if (value) {
             return new DtStamp(parameters, value)
         }

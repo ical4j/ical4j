@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ParameterList
+import net.fortuna.ical4j.model.Parameter
 
 /**
  * $Id$
@@ -77,7 +77,7 @@ class TranspFactory extends AbstractPropertyFactory{
         return instance
     }
     
-    protected Object newInstance(ParameterList parameters, String value) {
+    protected Object newInstance(List<Parameter> parameters, String value) {
         return new Transp(parameters, value)
     }
 }

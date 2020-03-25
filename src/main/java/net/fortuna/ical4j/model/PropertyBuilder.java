@@ -17,7 +17,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     private String value;
 
-    private ParameterList parameters = new ParameterList();
+    private List<Parameter> parameters = new ArrayList<>();
 
     public PropertyBuilder factories(List<PropertyFactory<?>> factories) {
         this.factories.addAll(factories);

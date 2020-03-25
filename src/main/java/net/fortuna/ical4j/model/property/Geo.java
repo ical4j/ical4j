@@ -32,13 +32,14 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * $Id$
@@ -161,7 +162,7 @@ public class Geo extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Geo(final ParameterList aList, final String aValue) {
+    public Geo(final List<Parameter> aList, final String aValue) {
         super(GEO, aList, new Factory());
         setValue(aValue);
     }
@@ -181,7 +182,7 @@ public class Geo extends Property {
      * @param latitude  a latitudinal value
      * @param longitude a longitudinal value
      */
-    public Geo(final ParameterList aList, final BigDecimal latitude,
+    public Geo(final List<Parameter> aList, final BigDecimal latitude,
                final BigDecimal longitude) {
         super(GEO, aList, new Factory());
         this.latitude = latitude;
@@ -255,7 +256,7 @@ public class Geo extends Property {
             super(GEO);
         }
 
-        public Geo createProperty(final ParameterList parameters, final String value) {
+        public Geo createProperty(final List<Parameter> parameters, final String value) {
             return new Geo(parameters, value);
         }
 

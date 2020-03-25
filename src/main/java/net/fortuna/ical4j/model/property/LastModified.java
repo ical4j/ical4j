@@ -32,12 +32,14 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$
@@ -93,8 +95,8 @@ public class LastModified extends DateProperty<Instant> {
      * @param aValue a date-time value
      * @throws ParseException where the specified string is not a valid date-time
      */
-    public LastModified(final String aValue) throws ParseException {
-        this(new ParameterList(), aValue);
+    public LastModified(final String aValue) {
+        this(new ArrayList<>(), aValue);
     }
 
     /**
@@ -102,7 +104,7 @@ public class LastModified extends DateProperty<Instant> {
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public LastModified(final ParameterList aList, final String aValue) {
+    public LastModified(final List<Parameter> aList, final String aValue) {
         super(LAST_MODIFIED, aList, new Factory());
         setValue(aValue);
     }
@@ -119,7 +121,7 @@ public class LastModified extends DateProperty<Instant> {
      * @param aList a list of parameters for this component
      * @param aDate a date representation of a date-time value
      */
-    public LastModified(final ParameterList aList, final Instant aDate) {
+    public LastModified(final List<Parameter> aList, final Instant aDate) {
         super(LAST_MODIFIED, aList, new Factory());
         setDate(aDate);
     }
@@ -136,7 +138,7 @@ public class LastModified extends DateProperty<Instant> {
             super(LAST_MODIFIED);
         }
 
-        public LastModified createProperty(final ParameterList parameters, final String value) {
+        public LastModified createProperty(final List<Parameter> parameters, final String value) {
             return new LastModified(parameters, value);
         }
 

@@ -37,7 +37,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.ALTREP;
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
@@ -111,14 +113,14 @@ public class Summary extends Property implements Escapable {
      * Default constructor.
      */
     public Summary() {
-        super(SUMMARY, new ParameterList(), new Factory());
+        super(SUMMARY, new ArrayList<>(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Summary(final String aValue) {
-        super(SUMMARY, new ParameterList(), new Factory());
+        super(SUMMARY, new ArrayList<>(), new Factory());
         setValue(aValue);
     }
 
@@ -126,7 +128,7 @@ public class Summary extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Summary(final ParameterList aList, final String aValue) {
+    public Summary(final List<Parameter> aList, final String aValue) {
         super(SUMMARY, aList, new Factory());
         setValue(aValue);
     }
@@ -162,7 +164,7 @@ public class Summary extends Property implements Escapable {
             super(SUMMARY);
         }
 
-        public Summary createProperty(final ParameterList parameters, final String value) {
+        public Summary createProperty(final List<Parameter> parameters, final String value) {
             return new Summary(parameters, value);
         }
 

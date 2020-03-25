@@ -37,7 +37,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.ABBREV;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -72,14 +74,14 @@ public class Region extends Property implements Escapable {
      * @param aValue a value string for this component
      */
     public Region(final String aValue) {
-        this(new ParameterList(), aValue);
+        this(new ArrayList<>(), aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Region(final ParameterList aList, final String aValue) {
+    public Region(final List<Parameter> aList, final String aValue) {
         super(REGION, aList, new Factory());
         setValue(aValue);
     }
@@ -115,7 +117,7 @@ public class Region extends Property implements Escapable {
             super(REGION);
         }
 
-        public Region createProperty(final ParameterList parameters, final String value) {
+        public Region createProperty(final List<Parameter> parameters, final String value) {
             return new Region(parameters, value);
         }
 

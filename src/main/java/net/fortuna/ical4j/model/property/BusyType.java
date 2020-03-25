@@ -32,10 +32,13 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * $Id$
@@ -90,7 +93,7 @@ public class BusyType extends Property {
          * @param value
          */
         private ImmutableBusyType(final String value) {
-            super(new ParameterList(true), value);
+            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
         }
 
         /**
@@ -123,7 +126,7 @@ public class BusyType extends Property {
      * @param aList a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public BusyType(final ParameterList aList, final String aValue) {
+    public BusyType(final List<Parameter> aList, final String aValue) {
         super(BUSYTYPE, aList, new Factory());
         this.value = aValue;
     }
@@ -159,7 +162,7 @@ public class BusyType extends Property {
             super(BUSYTYPE);
         }
 
-        public BusyType createProperty(final ParameterList parameters, final String value) {
+        public BusyType createProperty(final List<Parameter> parameters, final String value) {
             BusyType busyType;
             if (BUSY.getValue().equals(value)) {
                 busyType = BUSY;

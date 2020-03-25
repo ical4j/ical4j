@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.DateList;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.util.Strings;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -92,10 +95,10 @@ public class RDateTest {
     @Test
     @Ignore
     public void testToString() throws Exception {
-        RDate rDate = new RDate(new ParameterList(), "20121212T121212Z");
+        RDate rDate = new RDate(new ArrayList<>(), "20121212T121212Z");
         assertEquals(Property.RDATE + ":20121212T121212Z" + Strings.LINE_SEPARATOR, rDate.toString());
 
-        rDate = new RDate<>(new ParameterList(), DateList.parse("20121212T121212Z,20121213T121212Z"));
+        rDate = new RDate<>(new ArrayList<>(), DateList.parse("20121212T121212Z,20121213T121212Z"));
         assertEquals(Property.RDATE + ":20121212T121212Z,20121213T121212Z" + Strings.LINE_SEPARATOR, rDate.toString());
 
         rDate = new RDate();

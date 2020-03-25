@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
@@ -39,6 +42,7 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
+import java.util.List;
 
 /**
  * $Id$
@@ -146,7 +150,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * @param aValue a value string for this component
      * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public RecurrenceId(final ParameterList aList, final String aValue) {
+    public RecurrenceId(final List<Parameter> aList, final String aValue) {
         super(RECURRENCE_ID, aList, new Factory());
         setValue(aValue);
     }
@@ -167,7 +171,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * @param aList a list of parameters for this component
      * @param aDate a date representation of a date or date-time
      */
-    public RecurrenceId(final ParameterList aList, final T aDate) {
+    public RecurrenceId(final List<Parameter> aList, final T aDate) {
         super(RECURRENCE_ID, aList, new Factory());
         setDate(aDate);
     }
@@ -203,7 +207,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
             super(RECURRENCE_ID);
         }
 
-        public RecurrenceId createProperty(final ParameterList parameters, final String value) {
+        public RecurrenceId createProperty(final List<Parameter> parameters, final String value) {
             return new RecurrenceId(parameters, value);
         }
 

@@ -274,7 +274,8 @@ public class TimeZoneLoader {
             observance.getProperties().add(offsetTo);
 
             for (ZoneOffsetTransition transition : e.getValue()) {
-                RDate rDate = new RDate(new ParameterList(), transition.getDateTimeBefore().format(DateTimeFormatter.ofPattern(DATE_TIME_TPL)));
+                RDate rDate = new RDate(new ArrayList<>(),
+                        transition.getDateTimeBefore().format(DateTimeFormatter.ofPattern(DATE_TIME_TPL)));
                 observance.getProperties().add(rDate);
             }
             result.getObservances().add(observance);

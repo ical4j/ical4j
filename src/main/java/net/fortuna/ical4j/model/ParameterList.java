@@ -45,7 +45,10 @@ import java.util.stream.Collectors;
  * Defines a list of iCalendar parameters. A parameter list may be specified as unmodifiable at instantiation - useful
  * for constant properties that you don't want modified.
  * @author Ben Fortuna
+ *
+ * @deprecated Use standard Java collections.
  */
+@Deprecated
 public class ParameterList implements Serializable, Iterable<Parameter> {
 
     private static final long serialVersionUID = -1913059830016450169L;

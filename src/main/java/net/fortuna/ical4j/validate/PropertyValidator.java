@@ -70,15 +70,15 @@ public final class PropertyValidator implements Validator<Property> {
 
             switch (rule.getType()) {
                 case None:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameter(s).isPresent(),
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.stream().anyMatch(p -> p.getName().equals(s)),
                             ParameterValidator.ASSERT_NONE_MESSAGE, warnOnly, target.getParameters(), s));
                     break;
                 case One:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameters(s).size() != 1,
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.stream().filter(p -> p.getName().equals(s)).count() != 1,
                             ParameterValidator.ASSERT_ONE_MESSAGE, warnOnly, target.getParameters(), s));
                     break;
                 case OneOrLess:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.getParameters(s).size() > 1,
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.stream().filter(p -> p.getName().equals(s)).count() > 1,
                             ParameterValidator.ASSERT_ONE_OR_LESS_MESSAGE, warnOnly, target.getParameters(), s));
                     break;
             }

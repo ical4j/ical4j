@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
@@ -44,6 +44,8 @@ import java.text.ParseException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * $Id$
@@ -104,7 +106,7 @@ public class DatePropertyTest extends PropertyTest {
         suite.addTest(new DatePropertyTest("testCopy", dtStamp));
         suite.addTest(new DatePropertyTest("testHashValue", dtStamp));
 
-        ParameterList tzParams = new ParameterList();
+        List<Parameter> tzParams = new ArrayList<>();
         tzParams.add(new TzId(ZoneId.of("Australia/Melbourne").getId()));
         DtStart dtStart = new DtStart<>(tzParams,
                 ZonedDateTime.now(TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne")));

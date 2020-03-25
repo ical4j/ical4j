@@ -37,7 +37,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.ALTREP;
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
@@ -65,14 +67,14 @@ public class Description extends Property implements Escapable {
      * Default constructor.
      */
     public Description() {
-        super(DESCRIPTION, new ParameterList(), new Factory());
+        super(DESCRIPTION, new ArrayList<>(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Description(final String aValue) {
-        super(DESCRIPTION, new ParameterList(), new Factory());
+        super(DESCRIPTION, new ArrayList<>(), new Factory());
         setValue(aValue);
     }
 
@@ -80,7 +82,7 @@ public class Description extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Description(final ParameterList aList, final String aValue) {
+    public Description(final List<Parameter> aList, final String aValue) {
         super(DESCRIPTION, aList, new Factory());
         setValue(aValue);
     }
@@ -116,7 +118,7 @@ public class Description extends Property implements Escapable {
             super(DESCRIPTION);
         }
 
-        public Description createProperty(final ParameterList parameters, final String value) {
+        public Description createProperty(final List<Parameter> parameters, final String value) {
             return new Description(parameters, value);
         }
 

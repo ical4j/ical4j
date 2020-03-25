@@ -35,6 +35,8 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 
+import java.util.List;
+
 /**
  * $Id$
  * 
@@ -71,7 +73,7 @@ public class XProperty extends Property implements Escapable {
      * @param aList a list of parameters
      * @param aValue a property value
      */
-    public XProperty(final String aName, final ParameterList aList,
+    public XProperty(final String aName, final List<Parameter> aList,
             final String aValue) {
         super(aName, aList, new Factory(aName));
         setValue(aValue);
@@ -122,7 +124,7 @@ public class XProperty extends Property implements Escapable {
             this.name = name;
         }
 
-        public XProperty createProperty(final ParameterList parameters, final String value) {
+        public XProperty createProperty(final List<Parameter> parameters, final String value) {
             return new XProperty(name, parameters, value);
         }
 

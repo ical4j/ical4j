@@ -32,10 +32,13 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * $Id$
@@ -66,7 +69,7 @@ public class Version extends Property {
         private static final long serialVersionUID = -5040679357859594835L;
 
         private ImmutableVersion(final String value) {
-            super(new ParameterList(true), value);
+            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
         }
 
         public void setValue(final String aValue) {
@@ -100,7 +103,7 @@ public class Version extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Version(final ParameterList aList, final String aValue) {
+    public Version(final List<Parameter> aList, final String aValue) {
         super(VERSION, aList, new Factory());
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
@@ -125,7 +128,7 @@ public class Version extends Property {
      * @param aVersion1 a string representation of the minimum version
      * @param aVersion2 a string representation of the maximum version
      */
-    public Version(final ParameterList aList, final String aVersion1,
+    public Version(final List<Parameter> aList, final String aVersion1,
                    final String aVersion2) {
         super(VERSION, aList, new Factory());
         minVersion = aVersion1;
@@ -206,7 +209,7 @@ public class Version extends Property {
             super(VERSION);
         }
 
-        public Version createProperty(final ParameterList parameters, final String value) {
+        public Version createProperty(final List<Parameter> parameters, final String value) {
             Version version;
             if (VERSION_2_0.getValue().equals(value)) {
                 version = VERSION_2_0;

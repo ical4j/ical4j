@@ -37,7 +37,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.RELTYPE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -64,14 +66,14 @@ public class RelatedTo extends Property implements Escapable {
      * Default constructor.
      */
     public RelatedTo() {
-        super(RELATED_TO, new ParameterList(), new Factory());
+        super(RELATED_TO, new ArrayList<>(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public RelatedTo(final String aValue) {
-        super(RELATED_TO, new ParameterList(), new Factory());
+        super(RELATED_TO, new ArrayList<>(), new Factory());
         setValue(aValue);
     }
 
@@ -79,7 +81,7 @@ public class RelatedTo extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public RelatedTo(final ParameterList aList, final String aValue) {
+    public RelatedTo(final List<Parameter> aList, final String aValue) {
         super(RELATED_TO, aList, new Factory());
         setValue(aValue);
     }
@@ -115,7 +117,7 @@ public class RelatedTo extends Property implements Escapable {
             super(RELATED_TO);
         }
 
-        public RelatedTo createProperty(final ParameterList parameters, final String value) {
+        public RelatedTo createProperty(final List<Parameter> parameters, final String value) {
             return new RelatedTo(parameters, value);
         }
 

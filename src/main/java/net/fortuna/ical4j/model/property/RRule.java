@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * $Id$
@@ -75,7 +76,7 @@ public class RRule extends Property {
      * @throws ParseException thrown when the specified string is not a valid representaton of a recurrence
      * @see Recur#Recur(String)
      */
-    public RRule(final ParameterList aList, final String aValue)
+    public RRule(final List<Parameter> aList, final String aValue)
             throws ParseException {
         super(RRULE, aList, new Factory());
         setValue(aValue);
@@ -93,7 +94,7 @@ public class RRule extends Property {
      * @param aList  a list of parameters for this component
      * @param aRecur a recurrence value
      */
-    public RRule(final ParameterList aList, final Recur aRecur) {
+    public RRule(final List<Parameter> aList, final Recur aRecur) {
         super(RRULE, aList, new Factory());
         recur = aRecur;
     }
@@ -136,7 +137,7 @@ public class RRule extends Property {
             super(RRULE);
         }
 
-        public RRule createProperty(final ParameterList parameters, final String value) throws ParseException {
+        public RRule createProperty(final List<Parameter> parameters, final String value) throws ParseException {
             return new RRule(parameters, value);
         }
 

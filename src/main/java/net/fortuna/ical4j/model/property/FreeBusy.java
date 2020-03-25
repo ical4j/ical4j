@@ -133,8 +133,7 @@ public class FreeBusy extends Property {
      * @param aValue a value string for this component
      * @throws ParseException when the specified string is not a valid list of periods
      */
-    public FreeBusy(final ParameterList aList, final String aValue)
-            throws ParseException {
+    public FreeBusy(final List<Parameter> aList, final String aValue) {
         super(FREEBUSY, aList, new Factory());
         setValue(aValue);
     }
@@ -151,7 +150,7 @@ public class FreeBusy extends Property {
      * @param aList a list of parameters for this component
      * @param pList a list of periods
      */
-    public FreeBusy(final ParameterList aList, final List<Period<Instant>> pList) {
+    public FreeBusy(final List<Parameter> aList, final List<Period<Instant>> pList) {
         super(FREEBUSY, aList, new Factory());
         periods = new PeriodList<>(pList);
     }
@@ -205,7 +204,7 @@ public class FreeBusy extends Property {
             super(FREEBUSY);
         }
 
-        public FreeBusy createProperty(final ParameterList parameters, final String value) throws ParseException {
+        public FreeBusy createProperty(final List<Parameter> parameters, final String value) throws ParseException {
             return new FreeBusy(parameters, value);
         }
 

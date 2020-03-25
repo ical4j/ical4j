@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.Uris;
 import net.fortuna.ical4j.validate.ParameterValidator;
@@ -40,6 +43,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * $Id$
@@ -156,7 +160,7 @@ public class Organizer extends Property {
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public Organizer(final ParameterList aList, final String aValue)
+    public Organizer(final List<Parameter> aList, final String aValue)
             throws URISyntaxException {
         super(ORGANIZER, aList, new Factory());
         setValue(aValue);
@@ -174,7 +178,7 @@ public class Organizer extends Property {
      * @param aList a list of parameters for this component
      * @param aUri  a URI representation of a calendar address
      */
-    public Organizer(final ParameterList aList, final URI aUri) {
+    public Organizer(final List<Parameter> aList, final URI aUri) {
         super(ORGANIZER, aList, new Factory());
         calAddress = aUri;
     }
@@ -241,7 +245,7 @@ public class Organizer extends Property {
             super(ORGANIZER);
         }
 
-        public Organizer createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
+        public Organizer createProperty(final List<Parameter> parameters, final String value) throws URISyntaxException {
             return new Organizer(parameters, value);
         }
 

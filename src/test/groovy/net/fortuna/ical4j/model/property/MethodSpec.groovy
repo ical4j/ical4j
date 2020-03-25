@@ -1,6 +1,6 @@
 package net.fortuna.ical4j.model.property
 
-import net.fortuna.ical4j.model.ParameterList
+
 import spock.lang.Specification
 
 class MethodSpec extends Specification {
@@ -9,7 +9,7 @@ class MethodSpec extends Specification {
 
     def 'test factory use of constants'() {
         when: 'factory is invoked with a constant value'
-        def method = factory.createProperty(new ParameterList(), value)
+        def method = factory.createProperty([], value)
 
         then: 'the returned value is the constant instance'
         method.is(constantInstance)

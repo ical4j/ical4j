@@ -50,6 +50,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -165,7 +167,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
                 Instant.ofEpochMilli(0), ZoneId.systemDefault());
         ZonedDateTime endDate = ZonedDateTime.now();
 
-        ParameterList tzParams = new ParameterList();
+        List<Parameter> tzParams = new ArrayList<>();
         tzParams.add(new TzId(startDate.getZone().getId()));
         VEvent event = new VEvent();
         event.getProperties().add(new DtStart<>(tzParams, startDate));
@@ -476,7 +478,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         components = new ComponentList<>();
         ZoneId zoneId = TimeZoneRegistry.getGlobalZoneId("America/Los_Angeles");
         Parameter tzP = new TzId(zoneId.getId());
-        ParameterList pl = new ParameterList();
+        List<Parameter> pl = new ArrayList<>();
         pl.add(tzP);
         DtStart dts = new DtStart<>(pl, TemporalAdapter.parse("20130124T020000").getTemporal());
         dts.getParameters().add(tzP);

@@ -1,7 +1,6 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
-import net.fortuna.ical4j.model.ParameterList
 import net.fortuna.ical4j.model.PropertyFactory
 
 class PropertyFactoryWrapper extends AbstractFactory {
@@ -20,16 +19,16 @@ class PropertyFactoryWrapper extends AbstractFactory {
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, propertyClass)) {
             return value
         }
-        ParameterList parameters = attributes.remove('parameters')
+        List<Parameter> parameters = (List<Parameter>) attributes.remove('parameters')
         if (parameters == null) {
-            parameters = new ParameterList()
+            parameters = []
         }
         String propValue = attributes.remove('value')
         if (propValue != null) {
             return factory.createProperty(parameters, propValue)
         }
         else {
-            return factory.createProperty(parameters, value)
+            return factory.createProperty(parameters, (String) value)
         }
     }
 

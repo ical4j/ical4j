@@ -34,6 +34,8 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
+import java.util.List;
+
 /**
  * $Id$
  * <p/>
@@ -135,7 +137,7 @@ public class Uid extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Uid(final ParameterList aList, final String aValue) {
+    public Uid(final List<Parameter> aList, final String aValue) {
         super(UID, aList, new Factory());
         setValue(aValue);
     }
@@ -171,7 +173,7 @@ public class Uid extends Property implements Escapable {
             super(UID);
         }
 
-        public Uid createProperty(final ParameterList parameters, final String value) {
+        public Uid createProperty(final List<Parameter> parameters, final String value) {
             return new Uid(parameters, value);
         }
 

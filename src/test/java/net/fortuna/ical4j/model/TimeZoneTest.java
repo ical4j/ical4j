@@ -45,7 +45,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 /**
  * $Id$
@@ -303,7 +303,7 @@ public class TimeZoneTest extends TestCase {
                 .getTimeZone("America/Indiana/Indianapolis");
 
         ZonedDateTime dtStart = ZonedDateTime.now(indianaTz.toZoneId()).withHour(10).withMinute(20);
-        ParameterList tzParams = new ParameterList();
+        List<Parameter> tzParams = new ArrayList<>();
         tzParams.add(new TzId(ZoneId.systemDefault().getId()));
         DtStart pDtStart = new DtStart<>(tzParams, dtStart);
         assertFalse(pDtStart.isUtc());

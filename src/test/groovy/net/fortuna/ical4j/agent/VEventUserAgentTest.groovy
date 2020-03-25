@@ -25,17 +25,17 @@ class VEventUserAgentTest extends Specification {
         def vevent = builder.vevent {
             summary 'Spring Equinox'
             dtstamp()
-            dtstart '20090810', parameters: parameters { value 'DATE' }
+            dtstart '20090810', parameters: [value('DATE')]
             action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            attach'http://example.com/attachment', parameters: [value('URI')]
         }
 
         def vevent2 = builder.vevent {
             summary 'Spring Equinox'
             dtstamp()
-            dtstart '20090811', parameters: parameters { value 'DATE' }
+            dtstart '20090811', parameters: [value('DATE')]
             action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: parameters { value 'URI' }
+            attach'http://example.com/attachment', parameters: [value('URI')]
         }
 
         when: 'the events are published'

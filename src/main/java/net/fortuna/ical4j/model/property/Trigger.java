@@ -39,6 +39,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAmount;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -160,7 +161,7 @@ public class Trigger extends DateProperty<Instant> {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Trigger(final ParameterList aList, final String aValue) {
+    public Trigger(final List<Parameter> aList, final String aValue) {
         super(TRIGGER, aList, new Factory());
         setValue(aValue);
     }
@@ -190,7 +191,7 @@ public class Trigger extends DateProperty<Instant> {
      * @param duration a duration in milliseconds
      */
     @Deprecated
-    public Trigger(final ParameterList aList, final Dur duration) {
+    public Trigger(final List<Parameter> aList, final Dur duration) {
         this(aList, TemporalAmountAdapter.from(duration));
     }
 
@@ -198,11 +199,11 @@ public class Trigger extends DateProperty<Instant> {
      * @param aList    a list of parameters for this component
      * @param duration a duration in milliseconds
      */
-    public Trigger(final ParameterList aList, final TemporalAmount duration) {
+    public Trigger(final List<Parameter> aList, final TemporalAmount duration) {
         this(aList, new TemporalAmountAdapter(duration));
     }
 
-    private Trigger(final ParameterList aList, final TemporalAmountAdapter duration) {
+    private Trigger(final List<Parameter> aList, final TemporalAmountAdapter duration) {
         super(TRIGGER, aList, new Factory());
         this.duration = duration;
     }
@@ -219,7 +220,7 @@ public class Trigger extends DateProperty<Instant> {
      * @param aList    a list of parameters for this component
      * @param dateTime a date representation of a date-time
      */
-    public Trigger(final ParameterList aList, final Instant dateTime) {
+    public Trigger(final List<Parameter> aList, final Instant dateTime) {
         super(TRIGGER, aList, new Factory());
         setDate(dateTime);
     }
@@ -292,7 +293,8 @@ public class Trigger extends DateProperty<Instant> {
     public void setDate(final Instant dateTime) {
         super.setDate(dateTime);
         duration = null;
-        getParameters().replace(Value.DATE_TIME);
+        getParameters().removeIf(p -> p.getName().equals(Parameter.VALUE));
+        getParameters().add(Value.DATE_TIME);
     }
 
     /**
@@ -302,9 +304,8 @@ public class Trigger extends DateProperty<Instant> {
         this.duration = new TemporalAmountAdapter(duration);
         super.setDate(null);
         // duration is the default value type for Trigger..
-        if (getParameter(Parameter.VALUE).isPresent()) {
-            getParameters().replace(Value.DURATION);
-        }
+        getParameters().removeIf(p -> p.getName().equals(Parameter.VALUE));
+        getParameters().add(Value.DURATION);
     }
 
     @Override
@@ -312,18 +313,18 @@ public class Trigger extends DateProperty<Instant> {
         return new Factory().createProperty(getParameters(), getValue());
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory {
+    public static class Factory extends Content.Factory implements PropertyFactory<Trigger> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(TRIGGER);
         }
 
-        public Property createProperty(final ParameterList parameters, final String value) {
+        public Trigger createProperty(final List<Parameter> parameters, final String value) {
             return new Trigger(parameters, value);
         }
 
-        public Property createProperty() {
+        public Trigger createProperty() {
             return new Trigger();
         }
     }

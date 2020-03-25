@@ -37,7 +37,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -105,7 +107,7 @@ public class Categories extends Property {
      * Default constructor.
      */
     public Categories() {
-        super(CATEGORIES, new ParameterList(), new Factory());
+        super(CATEGORIES, new ArrayList<>(), new Factory());
         categories = new TextList();
     }
 
@@ -113,7 +115,7 @@ public class Categories extends Property {
      * @param aValue a value string for this component
      */
     public Categories(final String aValue) {
-        super(CATEGORIES, new ParameterList(), new Factory());
+        super(CATEGORIES, new ArrayList<>(), new Factory());
         setValue(aValue);
     }
 
@@ -121,7 +123,7 @@ public class Categories extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Categories(final ParameterList aList, final String aValue) {
+    public Categories(final List<Parameter> aList, final String aValue) {
         super(CATEGORIES, aList, new Factory());
         setValue(aValue);
     }
@@ -130,7 +132,7 @@ public class Categories extends Property {
      * @param cList a list of categories
      */
     public Categories(final TextList cList) {
-        super(CATEGORIES, new ParameterList(), new Factory());
+        super(CATEGORIES, new ArrayList<>(), new Factory());
         categories = cList;
     }
 
@@ -138,7 +140,7 @@ public class Categories extends Property {
      * @param aList a list of parameters for this component
      * @param cList a list of categories
      */
-    public Categories(final ParameterList aList, final TextList cList) {
+    public Categories(final List<Parameter> aList, final TextList cList) {
         super(CATEGORIES, aList, new Factory());
         categories = cList;
     }
@@ -176,7 +178,7 @@ public class Categories extends Property {
             super(CATEGORIES);
         }
 
-        public Categories createProperty(final ParameterList parameters, final String value) {
+        public Categories createProperty(final List<Parameter> parameters, final String value) {
             return new Categories(parameters, value);
         }
 

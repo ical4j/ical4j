@@ -92,8 +92,8 @@ public class CalendarTest {
         ZonedDateTime end = start.plusYears(1);
 
         VEvent week1UserA = new VEvent(start, java.time.Duration.ofHours(8), "Week 1 - User A");
-        week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        week1UserA.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week1UserA.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
         Recur week1UserARecur = new Recur.Builder().frequency(Frequency.WEEKLY)
                 .until(end.toInstant())
@@ -106,8 +106,8 @@ public class CalendarTest {
         end = end.plusWeeks(1);
 
         VEvent week2UserB = new VEvent(start, java.time.Duration.ofHours(8), "Week 2 - User B");
-        week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        week2UserB.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week2UserB.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
         Recur week2UserBRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
                 .until(end.toInstant()).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
@@ -119,8 +119,8 @@ public class CalendarTest {
         end = end.plusWeeks(1);
 
         VEvent week3UserC = new VEvent(start, java.time.Duration.ofHours(8), "Week 3 - User C");
-        week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        week3UserC.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week3UserC.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
         Recur week3UserCRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
                 .until(end.toInstant()).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
@@ -141,8 +141,8 @@ public class CalendarTest {
         end = start.plusYears(1);
 
         week1UserA = new VEvent(start, java.time.Duration.ofHours(8), "Week 1 - User A");
-        week1UserA.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week1UserA.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        week1UserA.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week1UserA.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
         week1UserARecur = new Recur.Builder().frequency(Frequency.WEEKLY)
                 .until(end.toInstant()).interval(3)
@@ -155,8 +155,8 @@ public class CalendarTest {
         end = end.plusWeeks(1);
 
         week2UserB = new VEvent(start, java.time.Duration.ofHours(8), "Week 2 - User B");
-        week2UserB.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week2UserB.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        week2UserB.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week2UserB.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
         week2UserBRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
                 .until(end.toInstant()).interval(3)
@@ -169,8 +169,8 @@ public class CalendarTest {
         end = end.plusWeeks(1);
 
         week3UserC = new VEvent(start, java.time.Duration.ofHours(8), "Week 3 - User C");
-        week3UserC.getProperty(Property.DTSTART).getParameters().replace(tzParam);
-        week3UserC.getProperty(Property.DTSTART).getParameters().replace(Value.DATE);
+        week3UserC.getProperty(Property.DTSTART).getParameters().add(tzParam);
+        week3UserC.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
 
         week3UserCRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
                 .until(end.toInstant()).interval(3)

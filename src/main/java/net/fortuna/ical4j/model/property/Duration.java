@@ -37,6 +37,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
+import java.util.List;
 
 /**
  * $Id$
@@ -120,7 +121,7 @@ public class Duration extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Duration(final ParameterList aList, final String aValue) {
+    public Duration(final List<Parameter> aList, final String aValue) {
         super(DURATION, aList, new Factory());
         setValue(aValue);
     }
@@ -146,7 +147,7 @@ public class Duration extends Property {
      * @param duration a duration value
      */
     @Deprecated
-    public Duration(final ParameterList aList, final Dur duration) {
+    public Duration(final List<Parameter> aList, final Dur duration) {
         this(aList, TemporalAmountAdapter.from(duration).getDuration());
     }
 
@@ -154,7 +155,7 @@ public class Duration extends Property {
      * @param aList    a list of parameters for this component
      * @param duration a duration value
      */
-    public Duration(final ParameterList aList, final TemporalAmount duration) {
+    public Duration(final List<Parameter> aList, final TemporalAmount duration) {
         super(DURATION, aList, new Factory());
         setDuration(duration);
     }
@@ -228,7 +229,7 @@ public class Duration extends Property {
             super(DURATION);
         }
 
-        public Duration createProperty(final ParameterList parameters, final String value) {
+        public Duration createProperty(final List<Parameter> parameters, final String value) {
             return new Duration(parameters, value);
         }
 

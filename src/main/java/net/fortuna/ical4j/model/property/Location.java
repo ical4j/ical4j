@@ -37,7 +37,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -115,14 +117,14 @@ public class Location extends Property implements Escapable {
      * Default constructor.
      */
     public Location() {
-        super(LOCATION, new ParameterList(), new Factory());
+        super(LOCATION, new ArrayList<>(), new Factory());
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Location(final String aValue) {
-        super(LOCATION, new ParameterList(), new Factory());
+        super(LOCATION, new ArrayList<>(), new Factory());
         setValue(aValue);
     }
 
@@ -130,7 +132,7 @@ public class Location extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Location(final ParameterList aList, final String aValue) {
+    public Location(final List<Parameter> aList, final String aValue) {
         super(LOCATION, aList, new Factory());
         setValue(aValue);
     }
@@ -166,7 +168,7 @@ public class Location extends Property implements Escapable {
             super(LOCATION);
         }
 
-        public Location createProperty(final ParameterList parameters, final String value) {
+        public Location createProperty(final List<Parameter> parameters, final String value) {
             return new Location(parameters, value);
         }
 

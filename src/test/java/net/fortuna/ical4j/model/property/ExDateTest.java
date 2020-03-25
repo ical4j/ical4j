@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -122,12 +123,12 @@ public class ExDateTest extends TestCase {
      */
     public void testRelaxedParsing() throws ParseException {
         try {
-            new ExDate(new ParameterList(), "20080315");
+            new ExDate(new ArrayList<>(), "20080315");
             fail("Should throw ParseException");
         } catch (ParseException pe) {
             LOG.trace("Caught exception: " + pe.getMessage());
         }
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
-        new ExDate(new ParameterList(), "20080315");
+        new ExDate(new ArrayList<>(), "20080315");
     }
 }
