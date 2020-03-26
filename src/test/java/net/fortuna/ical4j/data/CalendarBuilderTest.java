@@ -148,7 +148,7 @@ public class CalendarBuilderTest extends TestCase {
         File[] testFiles = null;
 
         // valid tests..
-        testFiles = new File("src/test/resources/samples/valid").listFiles(f -> !f.isDirectory() && f.getName().endsWith(".ics"));
+        testFiles = new File("src/test/resources/samples/valid").listFiles(f -> !f.isDirectory() && f.getName().endsWith("japan_west.ics"));
         for (int i = 0; i < testFiles.length; i++) {
             log.info("Sample [" + testFiles[i] + "]");
             suite.addTest(new CalendarBuilderTest("testBuildValid", testFiles[i].getPath()));
