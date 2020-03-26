@@ -2,9 +2,14 @@ package net.fortuna.ical4j.model
 
 
 import net.fortuna.ical4j.model.parameter.Value
+import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 
 class ParameterBuilderTest extends Specification {
+
+    def setupSpec() {
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, false)
+    }
 
     def 'test build parameter'() {
         given: 'a parameter builder instance'
