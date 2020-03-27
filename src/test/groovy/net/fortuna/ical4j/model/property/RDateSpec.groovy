@@ -57,9 +57,9 @@ class RDateSpec extends Specification {
 		Period period = Period.parse('20110319T140400/20110319T180400')
 		
 		when: 'add period to rdate'
-		RDate rdate = new RDate()
-		rdate.periods.add(period)
-		
+		RDate rdate = new RDate([period])
+		rdate.periods.get().add(period)
+
 		then: 'exception is thrown'
 		thrown(UnsupportedOperationException)
 	}
