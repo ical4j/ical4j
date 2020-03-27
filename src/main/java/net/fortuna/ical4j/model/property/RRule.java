@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.Recur.Frequency;
+import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.text.ParseException;
@@ -122,7 +123,7 @@ public class RRule extends Property {
 
     @Override
     public void validate() throws ValidationException {
-
+        ParameterValidator.assertNone(Parameter.TZID, getParameters());
     }
 
     @Override

@@ -54,9 +54,9 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
         if (property == null) {
             if (isExperimentalName(name)) {
-                return new XProperty(name, parameters, value);
+                property = new XProperty(name, parameters, value);
             } else if (allowIllegalNames()) {
-                return new XProperty(name, parameters, value);
+                property = new XProperty(name, parameters, value);
             } else {
                 throw new IllegalArgumentException("Illegal property [" + name + "]");
             }
