@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
 
@@ -18,6 +19,8 @@ public class PropertyBuilder extends AbstractContentBuilder {
     private String value;
 
     private List<Parameter> parameters = new ArrayList<>();
+
+    private TimeZoneRegistry timeZoneRegistry;
 
     public PropertyBuilder factories(List<PropertyFactory<?>> factories) {
         this.factories.addAll(factories);
@@ -41,6 +44,11 @@ public class PropertyBuilder extends AbstractContentBuilder {
         return this;
     }
 
+    public PropertyBuilder timeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        this.timeZoneRegistry = timeZoneRegistry;
+        return this;
+    }
+
     public Property build() throws ParseException, IOException, URISyntaxException {
         Property property = null;
         for (PropertyFactory<?> factory : factories) {
@@ -48,6 +56,11 @@ public class PropertyBuilder extends AbstractContentBuilder {
                 property = factory.createProperty(parameters, value);
                 if (property instanceof Escapable) {
                     property.setValue(Strings.unescape(value));
+                }
+
+                if (property instanceof DateProperty) {
+                    ((DateProperty<?>) property).setTimeZoneRegistry(timeZoneRegistry);
+                    property.setValue(value);
                 }
             }
         }

@@ -42,15 +42,22 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
 
     private final TzId tzId;
 
+    private transient TimeZoneRegistry timeZoneRegistry;
+
     private transient T temporal;
 
     public TemporalAdapter(TemporalAdapter<T> adapter) {
         this.temporal = adapter.temporal;
         this.valueString = adapter.valueString;
         this.tzId = adapter.tzId;
+        this.timeZoneRegistry = adapter.timeZoneRegistry;
     }
 
     public TemporalAdapter(T temporal) {
+        this(temporal, null);
+    }
+
+    public TemporalAdapter(T temporal, TimeZoneRegistry timeZoneRegistry) {
         Objects.requireNonNull(temporal, "temporal");
         this.temporal = temporal;
         this.valueString = toString(temporal, ZoneId.systemDefault());
@@ -59,6 +66,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         } else {
             this.tzId = null;
         }
+        this.timeZoneRegistry = timeZoneRegistry;
     }
 
     private TemporalAdapter(String valueString) {
@@ -73,8 +81,19 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @param tzId a zone id to apply to the parsed value
      */
     private TemporalAdapter(String value, TzId tzId) {
+        this(value, tzId, null);
+    }
+
+    /**
+     *
+     * @param value a string representation of a floating date/time value
+     * @param tzId a zone id to apply to the parsed value
+     * @param timeZoneRegistry timezone definitions
+     */
+    private TemporalAdapter(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
         this.valueString = value;
         this.tzId = tzId;
+        this.timeZoneRegistry = timeZoneRegistry;
     }
 
     public T getTemporal() {
@@ -82,7 +101,8 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
             synchronized (valueString) {
                 if (temporal == null) {
                     if (tzId != null) {
-                        temporal = (T) CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(valueString, tzId.toZoneId());
+                        temporal = (T) CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(valueString,
+                                tzId.toZoneId(timeZoneRegistry));
                     } else {
                         temporal = (T) PARSE_FORMAT.parse(valueString);
                     }
@@ -186,6 +206,17 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      */
     public static TemporalAdapter<ZonedDateTime> parse(String value, TzId tzId) {
         return new TemporalAdapter<>(value, tzId);
+    }
+
+    /**
+     *
+     * @param value a string representing a floating temporal value
+     * @param tzId a timezone applied to the parsed value
+     * @param timeZoneRegistry timezone definitions
+     * @return
+     */
+    public static TemporalAdapter<ZonedDateTime> parse(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
+        return new TemporalAdapter<>(value, tzId, timeZoneRegistry);
     }
 
     /**

@@ -53,25 +53,14 @@ public class TzId extends Parameter implements Escapable {
 
     private final String value;
 
-    private transient TimeZoneRegistry timeZoneRegistry;
-
     /**
      * @param aValue a string representation of a time zone identifier
      */
     public TzId(final String aValue) {
-        this(aValue, null);
-    }
-
-    public TzId(final String aValue, TimeZoneRegistry timeZoneRegistry) {
         super(TZID);
         // parameter values may be quoted if they contain characters in the
         // set [:;,]..
         this.value = Strings.unquote(aValue);
-        this.timeZoneRegistry = timeZoneRegistry;
-    }
-
-    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
-        this.timeZoneRegistry = timeZoneRegistry;
     }
 
     /**
@@ -81,6 +70,15 @@ public class TzId extends Parameter implements Escapable {
      * @return a zone id represented by this instance
      */
     public ZoneId toZoneId() {
+        return toZoneId(null);
+    }
+
+    /**
+     *
+     * @param timeZoneRegistry
+     * @return
+     */
+    public ZoneId toZoneId(TimeZoneRegistry timeZoneRegistry) {
         if (timeZoneRegistry != null && !timeZoneRegistry.getZoneRules().isEmpty()) {
             return timeZoneRegistry.getZoneId(getValue());
         } else {

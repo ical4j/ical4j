@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.model.TemporalAdapter;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
@@ -77,6 +74,8 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
     private TemporalAdapter<T> date;
 
+    private transient TimeZoneRegistry timeZoneRegistry;
+
     /**
      * @param name       the property name
      * @param parameters a list of initial parameters
@@ -104,7 +103,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         if (date != null) {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
             if (tzId.isPresent()) {
-                return (T) date.toLocalTime(tzId.get().toZoneId());
+                return (T) date.toLocalTime(tzId.get().toZoneId(timeZoneRegistry));
             } else {
                 return date.getTemporal();
             }
@@ -121,7 +120,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      */
     public void setDate(T date) {
         if (date != null) {
-            this.date = new TemporalAdapter<>(date);
+            this.date = new TemporalAdapter<>(date, timeZoneRegistry);
         } else {
             this.date = null;
         }
@@ -142,7 +141,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         // value can be either a date-time or a date..
         if (value != null && !value.isEmpty()) {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
-            this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id))
+            this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id, timeZoneRegistry))
                     .orElseGet(() -> TemporalAdapter.parse(value));
         } else {
             this.date = null;
@@ -155,10 +154,14 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     public String getValue() {
         Optional<TzId> tzId = getParameter(Parameter.TZID);
         if (tzId.isPresent()) {
-            return date.toString(tzId.get().toZoneId());
+            return date.toString(tzId.get().toZoneId(timeZoneRegistry));
         } else {
             return Strings.valueOf(date);
         }
+    }
+
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        this.timeZoneRegistry = timeZoneRegistry;
     }
 
     /**
@@ -222,7 +225,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
                     // ensure tzid matches date-time timezone..
                     final Optional<TzId> tzId = getParameter(Parameter.TZID);
-                    if (!tzId.isPresent() || !tzId.get().toZoneId().equals(dateTime.getZone())) {
+                    if (!tzId.isPresent() || !tzId.get().toZoneId(timeZoneRegistry).equals(dateTime.getZone())) {
                         throw new ValidationException("TZID parameter [" + tzId.get() + "] does not match the timezone ["
                                 + dateTime.getZone() + "]");
                     }

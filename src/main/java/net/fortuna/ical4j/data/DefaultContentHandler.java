@@ -3,7 +3,6 @@ package net.fortuna.ical4j.data;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Constants;
 
 import java.io.IOException;
@@ -96,7 +95,8 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void startProperty(String name) {
-        propertyBuilder = new PropertyBuilder().factories(propertyFactorySupplier.get()).name(name);
+        propertyBuilder = new PropertyBuilder().factories(propertyFactorySupplier.get())
+                .name(name).timeZoneRegistry(tzRegistry);
     }
 
     @Override
@@ -128,13 +128,6 @@ public class DefaultContentHandler implements ContentHandler {
 
         Parameter parameter = new ParameterBuilder().factories(parameterFactorySupplier.get())
                 .name(name).value(value).build();
-
-        if (parameter instanceof TzId && tzRegistry != null) {
-            // VTIMEZONE may be defined later, so so keep
-            // track of dates until all components have been
-            // parsed, and then try again later
-            ((TzId) parameter).setTimeZoneRegistry(tzRegistry);
-        }
 
         propertyBuilder.parameter(parameter);
     }
