@@ -179,8 +179,8 @@ public class TimeZoneTest extends TestCase {
                         String expectedLocalDateTimeStr) throws Exception {
         super(testMethod);
         net.fortuna.ical4j.model.Calendar cal = new CalendarBuilder().build(new StringReader(vtimezoneDef));
-        VTimeZone vtz = (VTimeZone) cal.getComponent(VTimeZone.VTIMEZONE);
-        this.timezone = new TimeZone(vtz);
+        Optional<VTimeZone> vtz = cal.getComponent(VTimeZone.VTIMEZONE);
+        this.timezone = new TimeZone(vtz.get());
         this.zuluDateTimeStr = zuluDateTimeStr;
         this.expectedLocalDateTimeStr = expectedLocalDateTimeStr;
     }

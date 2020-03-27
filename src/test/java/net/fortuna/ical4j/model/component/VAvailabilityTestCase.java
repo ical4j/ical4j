@@ -41,6 +41,7 @@ import org.junit.Assert;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Optional;
 
 
 /**
@@ -54,9 +55,9 @@ public class VAvailabilityTestCase extends TestCase
         String availability = getVAvailabilityICal();
         Reader reader = new StringReader(availability);
         Calendar calendar = calendarBuilder.build(reader);
-        Component availabilityComponent = calendar.getComponent(Component.VAVAILABILITY);
+        Optional<VAvailability> availabilityComponent = calendar.getComponent(Component.VAVAILABILITY);
         Assert.assertNotNull(availabilityComponent);
-        Assert.assertFalse(((VAvailability) availabilityComponent).getAvailable().isEmpty());
+        Assert.assertFalse(availabilityComponent.get().getAvailable().isEmpty());
         String iCalString = calendar.toString();
         Assert.assertTrue(iCalString.contains("BEGIN:AVAILABLE"));
         Assert.assertEquals(iCalString.trim(), availability);

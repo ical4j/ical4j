@@ -31,15 +31,17 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
+
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -74,8 +76,8 @@ public class LocationTest extends PropertyTest {
      */
     public void testQuotedText() throws IOException, ParserException {
         Calendar calendar = Calendars.load(getClass().getResource("/samples/valid/mansour.ics"));
-        Component event = calendar.getComponent(Component.VEVENT);
-        assertEquals("At \"The Terrace\" Complex > Melbourne \"\\,", event.getProperty(Property.LOCATION).getValue());
+        Optional<VEvent> event = calendar.getComponent(Component.VEVENT);
+        assertEquals("At \"The Terrace\" Complex > Melbourne \"\\,", event.get().getProperty(Property.LOCATION).getValue());
     }
     
     /**
@@ -87,8 +89,8 @@ public class LocationTest extends PropertyTest {
     	TestSuite suite = new TestSuite();
     	//testQuotedText..
         Calendar calendar = Calendars.load(LocationTest.class.getResource("/samples/valid/mansour.ics"));
-        Component event = calendar.getComponent(Component.VEVENT);
-        Location location = (Location) event.getProperty(Property.LOCATION);
+		Optional<VEvent> event = calendar.getComponent(Component.VEVENT);
+        Location location = (Location) event.get().getProperty(Property.LOCATION);
         suite.addTest(new LocationTest(location, "At \"The Terrace\" Complex > Melbourne \"\\,"));
     	return suite;
     }

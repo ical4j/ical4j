@@ -89,7 +89,7 @@ public class ComponentValidator<T extends Component> implements Validator<T> {
      * @throws ValidationException where the assertion fails
      */
     public static void assertNone(String componentName, ComponentList<?> components) throws ValidationException {
-        assertFalse(input -> input.getComponent(componentName) != null, ASSERT_NONE_MESSAGE, false,
+        assertFalse(input -> input.getComponent(componentName).isPresent(), ASSERT_NONE_MESSAGE, false,
                 components, componentName);
     }
     

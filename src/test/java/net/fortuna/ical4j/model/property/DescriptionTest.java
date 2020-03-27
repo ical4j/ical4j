@@ -31,15 +31,17 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
+
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Created on 21/08/2007
@@ -65,8 +67,8 @@ public class DescriptionTest extends PropertyTest {
         TestSuite suite = new TestSuite();
         // Test correct parsing of text with tabs.
         Calendar calendar = Calendars.load(DescriptionTest.class.getResource("/samples/valid/mansour.ics"));
-        Component event = calendar.getComponent(Component.VEVENT);
-        suite.addTest(new DescriptionTest(event
+        Optional<VEvent> event = calendar.getComponent(Component.VEVENT);
+        suite.addTest(new DescriptionTest(event.get()
                 .getProperty(Property.DESCRIPTION), "Test\t\ttabs"));
         return suite;
     }

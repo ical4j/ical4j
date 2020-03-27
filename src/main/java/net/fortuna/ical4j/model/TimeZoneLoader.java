@@ -108,13 +108,14 @@ public class TimeZoneLoader {
                 try (InputStream in = resource.openStream()) {
                     final CalendarBuilder builder = new CalendarBuilder();
                     final Calendar calendar = builder.build(in);
-                    final VTimeZone vTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
+                    final Optional<VTimeZone> vTimeZone = calendar.getComponent(Component.VTIMEZONE);
                     // load any available updates for the timezone.. can be explicility enabled via configuration
-                    if ("true".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("false"))) {
-                        return updateDefinition(vTimeZone);
+                    if (vTimeZone.isPresent()
+                            && "true".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("false"))) {
+                        return updateDefinition(vTimeZone.get());
                     }
-                    if (vTimeZone != null) {
-                        cache.putIfAbsent(id, vTimeZone);
+                    if (vTimeZone.isPresent()) {
+                        cache.putIfAbsent(id, vTimeZone.get());
                     }
                 }
             } else {
@@ -149,9 +150,9 @@ public class TimeZoneLoader {
             final CalendarBuilder builder = new CalendarBuilder();
 
             final Calendar calendar = builder.build(connection.getInputStream());
-            final VTimeZone updatedVTimeZone = (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
-            if (updatedVTimeZone != null) {
-                return updatedVTimeZone;
+            final Optional<VTimeZone> updatedVTimeZone = calendar.getComponent(Component.VTIMEZONE);
+            if (updatedVTimeZone.isPresent()) {
+                return updatedVTimeZone.get();
             }
         }
         return vTimeZone;

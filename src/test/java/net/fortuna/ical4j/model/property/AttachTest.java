@@ -51,6 +51,7 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -118,9 +119,9 @@ public class AttachTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar cout = builder.build(new StringReader(sw.toString()));
 
-        VEvent eout = (VEvent) cout.getComponent(Component.VEVENT);
+        Optional<VEvent> eout = cout.getComponent(Component.VEVENT);
 
-        Attach aout = (Attach) eout.getProperty(Property.ATTACH);
+        Attach aout = (Attach) eout.get().getProperty(Property.ATTACH);
         assertNotNull(aout);
         assertEquals(attach, aout);
 

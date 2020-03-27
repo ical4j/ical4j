@@ -36,6 +36,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -96,13 +97,13 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * @param aName name of component to return
      * @return a component or null if no matching component found
      */
-    public final T getComponent(final String aName) {
+    public final Optional<T> getComponent(final String aName) {
         for (final T c : this) {
             if (c.getName().equals(aName)) {
-                return c;
+                return Optional.of(c);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     /**

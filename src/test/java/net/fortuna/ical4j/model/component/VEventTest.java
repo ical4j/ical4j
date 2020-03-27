@@ -55,6 +55,7 @@ import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import static net.fortuna.ical4j.model.WeekDay.*;
 import static org.junit.Assert.assertNotEquals;
@@ -383,12 +384,12 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         net.fortuna.ical4j.model.Calendar calendar = loadCalendar(resource);
 
-        VEvent vev = (VEvent) calendar.getComponent(Component.VEVENT);
+        Optional<VEvent> vev = calendar.getComponent(Component.VEVENT);
 
-        LocalDate start = (LocalDate) vev.getStartDate().getDate();
+        LocalDate start = (LocalDate) vev.get().getStartDate().getDate();
         LocalDate latest = LocalDate.now().plusYears(1);
 
-        List<Period<LocalDate>> pl = vev.getConsumedTime(new Period<>(start, latest));
+        List<Period<LocalDate>> pl = vev.get().getConsumedTime(new Period<>(start, latest));
         assertTrue(!pl.isEmpty());
     }
 
@@ -477,12 +478,12 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         InputStream in = getClass().getResourceAsStream("/samples/valid/friday13.ics");
         net.fortuna.ical4j.model.Calendar calendar = new CalendarBuilder().build(in);
 
-        VEvent event = (VEvent) calendar.getComponent(Component.VEVENT);
+        Optional<VEvent> event = calendar.getComponent(Component.VEVENT);
 
         LocalDate start = LocalDate.now().withYear(1997).withMonth(8).withDayOfMonth(2);
         LocalDate end = start.withDayOfMonth(4);
 
-        List<Period<LocalDate>> periods = event.getConsumedTime(new Period<>(start, end));
+        List<Period<LocalDate>> periods = event.get().getConsumedTime(new Period<>(start, end));
         assertTrue(periods.isEmpty());
     }
 

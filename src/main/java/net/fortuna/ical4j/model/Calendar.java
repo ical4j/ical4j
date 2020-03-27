@@ -47,6 +47,7 @@ import java.io.Serializable;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -144,7 +145,7 @@ public class Calendar implements Serializable {
      * Default constructor.
      */
     public Calendar() {
-        this(new PropertyList(), new ComponentList<CalendarComponent>());
+        this(new PropertyList(), new ComponentList<>());
     }
 
     /**
@@ -225,8 +226,8 @@ public class Calendar implements Serializable {
      * @param name name of the component to retrieve
      * @return the first matching component in the component list with the specified name
      */
-    public final CalendarComponent getComponent(final String name) {
-        return getComponents().getComponent(name);
+    public final <T extends CalendarComponent> Optional<T> getComponent(final String name) {
+        return (Optional<T>) getComponents().getComponent(name);
     }
 
     /**

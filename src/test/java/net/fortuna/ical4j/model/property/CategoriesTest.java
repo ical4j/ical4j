@@ -113,7 +113,7 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        List<Property> categories = calendar.getComponent(Component.VEVENT)
+        List<Property> categories = calendar.getComponent(Component.VEVENT).get()
                 .getProperties(Property.CATEGORIES);
 
         assertEquals(cat1, categories.get(0));
@@ -146,7 +146,7 @@ public class CategoriesTest extends PropertyTest {
 
         // Test escaping of categories string representation..
         Calendar calendar = Calendars.load(CategoriesTest.class.getResource("/samples/valid/categories.ics"));
-        Categories orig = (Categories) calendar.getComponent(Component.VEVENT)
+        Categories orig = (Categories) calendar.getComponent(Component.VEVENT).get()
                 .getProperty(Property.CATEGORIES);
 
         StringWriter tempOut = new StringWriter();
@@ -157,7 +157,7 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        Categories copy = (Categories) calendar.getComponent(Component.VEVENT)
+        Categories copy = (Categories) calendar.getComponent(Component.VEVENT).get()
                 .getProperty(Property.CATEGORIES);
         assertEquals(orig, copy);
         suite.addTest(new CategoriesTest(copy, orig.getValue()));

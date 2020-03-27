@@ -31,15 +31,17 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.io.IOException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
+
+import java.io.IOException;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -76,8 +78,8 @@ public class SummaryTest extends PropertyTest {
     	TestSuite suite = new TestSuite();
     	// Test correct parsing of quoted text..
         Calendar calendar = Calendars.load(SummaryTest.class.getResource("/samples/valid/mansour.ics"));
-        Component event = calendar.getComponent(Component.VEVENT);
-        Summary summary = (Summary) event.getProperty(Property.SUMMARY);
+        Optional<VEvent> event = calendar.getComponent(Component.VEVENT);
+        Summary summary = (Summary) event.get().getProperty(Property.SUMMARY);
         suite.addTest(new SummaryTest(summary, "A colon with spaces on either side : like that"));
         
         suite.addTest(new SummaryTest("testValidation", summary));
