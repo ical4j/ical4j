@@ -310,18 +310,18 @@ public class VFreeBusy extends CalendarComponent {
     public VFreeBusy(final VFreeBusy request, final ComponentList<CalendarComponent> components) {
         this();
         
-        final DtStart start = request.getProperty(Property.DTSTART);
+        final Optional<DtStart<?>> start = request.getProperty(Property.DTSTART);
         
-        final DtEnd end = request.getProperty(Property.DTEND);
+        final Optional<DtEnd<?>> end = request.getProperty(Property.DTEND);
         
-        final Duration duration = request.getProperty(Property.DURATION);
+        final Optional<Duration> duration = request.getProperty(Property.DURATION);
         
         // 4.8.2.4 Date/Time Start:
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
-        getProperties().add(new DtStart<>(start.getDate()));
+        getProperties().add(new DtStart<>(start.get().getDate()));
         
         // 4.8.2.2 Date/Time End
         //
@@ -329,16 +329,16 @@ public class VFreeBusy extends CalendarComponent {
         //    end date and time for the free or busy time information. The time
         //    MUST be specified in the UTC time format. The value MUST be later in
         //    time than the value of the "DTSTART" property.
-        getProperties().add(new DtEnd<>(end.getDate()));
+        getProperties().add(new DtEnd<>(end.get().getDate()));
         
-        if (duration != null) {
-            getProperties().add(new Duration(duration.getDuration()));
+        if (duration.isPresent()) {
+            getProperties().add(new Duration(duration.get().getDuration()));
             // Initialise with all free time of at least the specified duration..
-            final Instant freeStart = Instant.from(start.getDate());
-            final Instant freeEnd = Instant.from(end.getDate());
+            final Instant freeStart = Instant.from(start.get().getDate());
+            final Instant freeEnd = Instant.from(end.get().getDate());
             final FreeBusy fb = new FreeTimeBuilder().start(freeStart)
                 .end(freeEnd)
-                .duration(duration.getDuration())
+                .duration(duration.get().getDuration())
                 .components(components)
                 .build();
             if (fb != null && !fb.getPeriods().isEmpty()) {
@@ -347,8 +347,8 @@ public class VFreeBusy extends CalendarComponent {
         }
         else {
             // initialise with all busy time for the specified period..
-            final Instant busyStart = Instant.from(start.getDate());
-            final Instant busyEnd = Instant.from(end.getDate());
+            final Instant busyStart = Instant.from(start.get().getDate());
+            final Instant busyEnd = Instant.from(end.get().getDate());
             final FreeBusy fb = new BusyTimeBuilder().start(busyStart)
                 .end(busyEnd)
                 .components(components)
@@ -458,7 +458,7 @@ public class VFreeBusy extends CalendarComponent {
                 }
                 
                 if (Instant.from(period.getEnd()).isAfter(lastPeriodEnd)) {
-                    lastPeriodEnd = period.getEnd();
+                    lastPeriodEnd = Instant.from(period.getEnd());
                 }
             }
             return fb;
@@ -520,18 +520,18 @@ public class VFreeBusy extends CalendarComponent {
         Arrays.asList(Property.RRULE, Property.EXRULE, Property.RDATE, Property.EXDATE).forEach(property -> PropertyValidator.assertNone(property, getProperties()));
 
         // DtEnd value must be later in time that DtStart..
-        final DtStart dtStart = getProperty(Property.DTSTART);
+        final Optional<DtStart<?>> dtStart = getProperty(Property.DTSTART);
         
         // 4.8.2.4 Date/Time Start:
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
-        if (dtStart != null && !dtStart.isUtc()) {
+        if (dtStart.isPresent() && !dtStart.get().isUtc()) {
             throw new ValidationException("DTSTART must be specified in UTC time");
         }
         
-        final DtEnd dtEnd = getProperty(Property.DTEND);
+        final Optional<DtEnd<?>> dtEnd = getProperty(Property.DTEND);
         
         // 4.8.2.2 Date/Time End
         //
@@ -539,12 +539,12 @@ public class VFreeBusy extends CalendarComponent {
         //    end date and time for the free or busy time information. The time
         //    MUST be specified in the UTC time format. The value MUST be later in
         //    time than the value of the "DTSTART" property.
-        if (dtEnd != null && !dtEnd.isUtc()) {
+        if (dtEnd.isPresent() && !dtEnd.get().isUtc()) {
             throw new ValidationException("DTEND must be specified in UTC time");
         }
         
-        if (dtStart != null && dtEnd != null
-                && !Instant.from(dtStart.getDate()).isBefore(Instant.from(dtEnd.getDate()))) {
+        if (dtStart.isPresent() && dtEnd.isPresent()
+                && !Instant.from(dtStart.get().getDate()).isBefore(Instant.from(dtEnd.get().getDate()))) {
             throw new ValidationException("Property [" + Property.DTEND
                     + "] must be later in time than [" + Property.DTSTART + "]");
         }
@@ -571,58 +571,74 @@ public class VFreeBusy extends CalendarComponent {
 
     /**
      * @return the CONTACT property or null if not specified
+     * @deprecated use {@link VFreeBusy#getProperty(String)}
      */
-    public final Contact getContact() {
+    @Deprecated
+    public final Optional<Contact> getContact() {
         return getProperty(Property.CONTACT);
     }
 
     /**
      * @return the DTSTART propery or null if not specified
+     * @deprecated use {@link VFreeBusy#getProperty(String)}
      */
-    public final DtStart getStartDate() {
+    @Deprecated
+    public final Optional<DtStart<?>> getStartDate() {
         return getProperty(Property.DTSTART);
     }
 
     /**
      * @return the DTEND property or null if not specified
+     * @deprecated use {@link VFreeBusy#getProperty(String)}
      */
-    public final DtEnd getEndDate() {
+    @Deprecated
+    public final Optional<DtEnd<?>> getEndDate() {
         return getProperty(Property.DTEND);
     }
 
     /**
      * @return the DURATION property or null if not specified
+     * @deprecated use {@link VFreeBusy#getProperty(String)}
      */
-    public final Duration getDuration() {
+    @Deprecated
+    public final Optional<Duration> getDuration() {
         return getProperty(Property.DURATION);
     }
 
     /**
      * @return the DTSTAMP property or null if not specified
+     * @deprecated use {@link VFreeBusy#getProperty(String)}
      */
-    public final DtStamp getDateStamp() {
+    @Deprecated
+    public final Optional<DtStamp> getDateStamp() {
         return getProperty(Property.DTSTAMP);
     }
 
     /**
      * @return the ORGANIZER property or null if not specified
+     * @deprecated use {@link VFreeBusy#getProperty(String)}
      */
-    public final Organizer getOrganizer() {
+    @Deprecated
+    public final Optional<Organizer> getOrganizer() {
         return getProperty(Property.ORGANIZER);
     }
 
     /**
      * @return the URL property or null if not specified
+     * @deprecated use {@link VFreeBusy#getProperty(String)}
      */
-    public final Url getUrl() {
+    @Deprecated
+    public final Optional<Url> getUrl() {
         return getProperty(Property.URL);
     }
 
     /**
      * Returns the UID property of this component if available.
      * @return a Uid instance, or null if no UID property exists
+     * @deprecated use {@link VFreeBusy#getProperty(String)}
      */
-    public final Uid getUid() {
+    @Deprecated
+    public final Optional<Uid> getUid() {
         return getProperty(Property.UID);
     }
 

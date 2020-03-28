@@ -377,10 +377,10 @@ public class VEvent extends CalendarComponent {
                 Property.PRIORITY, Property.DTSTAMP, Property.SEQUENCE, Property.STATUS, Property.SUMMARY,
                 Property.TRANSP, Property.UID, Property.URL, Property.RECURRENCE_ID).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
-        final Status status = getProperty(Property.STATUS);
-        if (status != null && !Status.VEVENT_TENTATIVE.getValue().equals(status.getValue())
-                && !Status.VEVENT_CONFIRMED.getValue().equals(status.getValue())
-                && !Status.VEVENT_CANCELLED.getValue().equals(status.getValue())) {
+        final Optional<Status> status = getProperty(Property.STATUS);
+        if (status.isPresent() && !Status.VEVENT_TENTATIVE.getValue().equals(status.get().getValue())
+                && !Status.VEVENT_CONFIRMED.getValue().equals(status.get().getValue())
+                && !Status.VEVENT_CANCELLED.getValue().equals(status.get().getValue())) {
             throw new ValidationException("Status property ["
                     + status.toString() + "] is not applicable for VEVENT");
         }
@@ -398,7 +398,8 @@ public class VEvent extends CalendarComponent {
                     getProperties());
         }
 
-        if (getProperty(Property.DTEND) != null) {
+        final Optional<DtEnd<?>> end = getProperty(Property.DTEND);
+        if (end.isPresent()) {
 
             /*
              * The "VEVENT" is also the calendar component used to specify an anniversary or daily reminder within a
@@ -407,12 +408,11 @@ public class VEvent extends CalendarComponent {
              * anniversary type of "VEVENT" can span more than one date (i.e, "DTEND" property value is set to a
              * calendar date after the "DTSTART" property value).
              */
-            final DtStart<Temporal> start = getProperty(Property.DTSTART);
-            final DtEnd end = getProperty(Property.DTEND);
+            final Optional<DtStart<Temporal>> start = getProperty(Property.DTSTART);
 
-            if (start != null) {
-                final Optional<Parameter> startValue = start.getParameter(Parameter.VALUE);
-                final Optional<Parameter> endValue = end.getParameter(Parameter.VALUE);
+            if (start.isPresent()) {
+                final Optional<Parameter> startValue = start.get().getParameter(Parameter.VALUE);
+                final Optional<Parameter> endValue = end.get().getParameter(Parameter.VALUE);
                 
                 if (!startValue.equals(endValue)) {
                     throw new ValidationException("Property [" + Property.DTEND
@@ -509,114 +509,146 @@ public class VEvent extends CalendarComponent {
     
     /**
      * @return the optional access classification property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Clazz getClassification() {
+    @Deprecated
+    public final Optional<Clazz> getClassification() {
         return getProperty(Property.CLASS);
     }
 
     /**
      * @return the optional creation-time property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Created getCreated() {
+    @Deprecated
+    public final Optional<Created> getCreated() {
         return getProperty(Property.CREATED);
     }
 
     /**
      * @return the optional description property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Description getDescription() {
+    @Deprecated
+    public final Optional<Description> getDescription() {
         return getProperty(Property.DESCRIPTION);
     }
 
     /**
      * Convenience method to pull the DTSTART out of the property list.
      * @return The DtStart object representation of the start Date
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final DtStart getStartDate() {
+    @Deprecated
+    public final Optional<DtStart<?>> getStartDate() {
         return getProperty(Property.DTSTART);
     }
 
     /**
      * @return the optional geographic position property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Geo getGeographicPos() {
+    @Deprecated
+    public final Optional<Geo> getGeographicPos() {
         return getProperty(Property.GEO);
     }
 
     /**
      * @return the optional last-modified property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final LastModified getLastModified() {
+    @Deprecated
+    public final Optional<LastModified> getLastModified() {
         return getProperty(Property.LAST_MODIFIED);
     }
 
     /**
      * @return the optional location property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Location getLocation() {
+    @Deprecated
+    public final Optional<Location> getLocation() {
         return getProperty(Property.LOCATION);
     }
 
     /**
      * @return the optional organizer property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Organizer getOrganizer() {
+    @Deprecated
+    public final Optional<Organizer> getOrganizer() {
         return getProperty(Property.ORGANIZER);
     }
 
     /**
      * @return the optional priority property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Priority getPriority() {
+    @Deprecated
+    public final Optional<Priority> getPriority() {
         return getProperty(Property.PRIORITY);
     }
 
     /**
      * @return the optional date-stamp property
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final DtStamp getDateStamp() {
+    @Deprecated
+    public final Optional<DtStamp> getDateStamp() {
         return getProperty(Property.DTSTAMP);
     }
 
     /**
      * @return the optional sequence number property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Sequence getSequence() {
+    @Deprecated
+    public final Optional<Sequence> getSequence() {
         return getProperty(Property.SEQUENCE);
     }
 
     /**
      * @return the optional status property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Status getStatus() {
+    @Deprecated
+    public final Optional<Status> getStatus() {
         return getProperty(Property.STATUS);
     }
 
     /**
      * @return the optional summary property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Summary getSummary() {
+    @Deprecated
+    public final Optional<Summary> getSummary() {
         return getProperty(Property.SUMMARY);
     }
 
     /**
      * @return the optional time transparency property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Transp getTransparency() {
+    @Deprecated
+    public final Optional<Transp> getTransparency() {
         return getProperty(Property.TRANSP);
     }
 
     /**
      * @return the optional URL property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Url getUrl() {
+    @Deprecated
+    public final Optional<Url> getUrl() {
         return getProperty(Property.URL);
     }
 
     /**
      * @return the optional recurrence identifier property for an event
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final RecurrenceId getRecurrenceId() {
+    @Deprecated
+    public final Optional<RecurrenceId<?>> getRecurrenceId() {
         return getProperty(Property.RECURRENCE_ID);
     }
 
@@ -625,7 +657,7 @@ public class VEvent extends CalendarComponent {
      * duration.
      * @return a DtEnd instance, or null if one cannot be derived
      */
-    public final DtEnd getEndDate() {
+    public final Optional<DtEnd<?>> getEndDate() {
         return getEndDate(true);
     }
 
@@ -636,28 +668,33 @@ public class VEvent extends CalendarComponent {
      * not found
      * @return The end for this VEVENT.
      */
-    public final DtEnd getEndDate(final boolean deriveFromDuration) {
-        DtEnd dtEnd = getProperty(Property.DTEND);
+    public final Optional<DtEnd<?>> getEndDate(final boolean deriveFromDuration) {
+        Optional<DtEnd<?>> dtEnd = getProperty(Property.DTEND);
         // No DTEND? No problem, we'll use the DURATION.
-        if (dtEnd == null && deriveFromDuration && getStartDate() != null) {
-            final DtStart dtStart = getStartDate();
-            final Duration vEventDuration;
-            if (getDuration() != null) {
-                vEventDuration = getDuration();
-            } else if (dtStart.getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
-                // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
-                vEventDuration = new Duration(java.time.Duration.ZERO);
-            } else {
-                // If "DTSTART" is a DATE, then the event's duration is one day (see: RFC 5545, 3.6.1 Event Component)
-                vEventDuration = new Duration(java.time.Duration.ofDays(1));
-            }
+        if (!dtEnd.isPresent() && deriveFromDuration) {
+            Optional<DtStart<?>> dtStart = getProperty(DTSTART);
+            if (dtStart.isPresent()) {
+                final Duration vEventDuration;
+                Optional<Duration> duration = getProperty(DURATION);
+                if (duration.isPresent()) {
+                    vEventDuration = getDuration().get();
+                } else if (dtStart.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
+                    // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
+                    vEventDuration = new Duration(java.time.Duration.ZERO);
+                } else {
+                    // If "DTSTART" is a DATE, then the event's duration is one day (see: RFC 5545, 3.6.1 Event Component)
+                    vEventDuration = new Duration(java.time.Duration.ofDays(1));
+                }
 
-            dtEnd = new DtEnd<>(dtStart.getDate().plus(vEventDuration.getDuration()));
-            Optional<TzId> tzId = dtStart.getParameter(Parameter.TZID);
-            if (tzId.isPresent()) {
-                dtEnd.getParameters().add(tzId.get());
-            } else {
-                dtEnd.getParameters().removeIf(p -> p.getName().equals(Parameter.TZID));
+                DtEnd<?> newdtEnd = new DtEnd<>(dtStart.get().getDate().plus(vEventDuration.getDuration()));
+                Optional<TzId> tzId = dtStart.get().getParameter(Parameter.TZID);
+                if (tzId.isPresent()) {
+                    newdtEnd.getParameters().add(tzId.get());
+                } else {
+                    newdtEnd.getParameters().removeIf(p -> p.getName().equals(Parameter.TZID));
+                }
+
+                return Optional.of(newdtEnd);
             }
         }
         return dtEnd;
@@ -665,16 +702,20 @@ public class VEvent extends CalendarComponent {
 
     /**
      * @return the optional Duration property
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Duration getDuration() {
+    @Deprecated
+    public final Optional<Duration> getDuration() {
         return getProperty(Property.DURATION);
     }
 
     /**
      * Returns the UID property of this component if available.
      * @return a Uid instance, or null if no UID property exists
+     * @deprecated use {@link VEvent#getProperty(String)}
      */
-    public final Uid getUid() {
+    @Deprecated
+    public final Optional<Uid> getUid() {
         return getProperty(Property.UID);
     }
 

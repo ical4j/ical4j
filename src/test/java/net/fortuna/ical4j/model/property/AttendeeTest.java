@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -103,7 +104,7 @@ public class AttendeeTest extends TestCase {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
         Calendar calendar = Calendars.load(getClass().getResource("/samples/invalid/groupwise.ics"));
         
-        Attendee attendee = calendar.getComponent(Component.VEVENT).get().getProperty(Property.ATTENDEE);
-        assertNotNull(attendee.getCalAddress());
+        Optional<Attendee> attendee = calendar.getComponent(Component.VEVENT).get().getProperty(Property.ATTENDEE);
+        assertNotNull(attendee.get().getCalAddress());
     }
 }

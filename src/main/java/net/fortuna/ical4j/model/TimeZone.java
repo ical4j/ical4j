@@ -43,6 +43,7 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -68,8 +69,12 @@ public class TimeZone extends java.util.TimeZone {
      */
     public TimeZone(final VTimeZone vTimeZone) {
         this.vTimeZone = vTimeZone;
-        final TzId tzId = vTimeZone.getProperty(Property.TZID);
-        setID(tzId.getValue());
+        final Optional<TzId> tzId = vTimeZone.getProperty(Property.TZID);
+        if (tzId.isPresent()) {
+            setID(tzId.get().getValue());
+        } else {
+            throw new IllegalArgumentException("Invalid timezone argument");
+        }
         this.rawOffset = getRawOffset(vTimeZone);
     }
 
@@ -92,8 +97,8 @@ public class TimeZone extends java.util.TimeZone {
         OffsetDateTime date = OffsetDateTime.of(year, month + 1, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.ofTotalSeconds(getRawOffset() / 1000));
         final Observance observance = vTimeZone.getApplicableObservance(date);
         if (observance != null) {
-            final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);
-            return (int) (offset.getOffset().getTotalSeconds() * 1000L);
+            final Optional<TzOffsetTo> offset = observance.getProperty(Property.TZOFFSETTO);
+            return (int) (offset.get().getOffset().getTotalSeconds() * 1000L);
         }
         return 0;
     }
@@ -104,11 +109,11 @@ public class TimeZone extends java.util.TimeZone {
     public int getOffset(long date) {
         final Observance observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
         if (observance != null) {
-            final TzOffsetTo offset = observance.getProperty(Property.TZOFFSETTO);
-            if ((offset.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
+            final Optional<TzOffsetTo> offset = observance.getProperty(Property.TZOFFSETTO);
+            if ((offset.get().getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
                 return getRawOffset();
             } else {
-                return (int) (offset.getOffset().getTotalSeconds() * 1000L);
+                return (int) (offset.get().getOffset().getTotalSeconds() * 1000L);
             }
         }
         return 0;
@@ -186,14 +191,14 @@ public class TimeZone extends java.util.TimeZone {
             latestSeasonalTime = seasonalTimes.get(0);
         }
         if (latestSeasonalTime instanceof Daylight) {
-            final TzOffsetFrom offsetFrom = latestSeasonalTime.getProperty(Property.TZOFFSETFROM);
-            if (offsetFrom != null) {
-                return (int) (offsetFrom.getOffset().getTotalSeconds() * 1000L);
+            final Optional<TzOffsetFrom> offsetFrom = latestSeasonalTime.getProperty(Property.TZOFFSETFROM);
+            if (offsetFrom.isPresent()) {
+                return (int) (offsetFrom.get().getOffset().getTotalSeconds() * 1000L);
             }
         } else if (latestSeasonalTime instanceof Standard) {
-            final TzOffsetTo offsetTo = latestSeasonalTime.getProperty(Property.TZOFFSETTO);
-            if (offsetTo != null) {
-                return (int) (offsetTo.getOffset().getTotalSeconds() * 1000L);
+            final Optional<TzOffsetTo> offsetTo = latestSeasonalTime.getProperty(Property.TZOFFSETTO);
+            if (offsetTo.isPresent()) {
+                return (int) (offsetTo.get().getOffset().getTotalSeconds() * 1000L);
             }
         }
         return 0;

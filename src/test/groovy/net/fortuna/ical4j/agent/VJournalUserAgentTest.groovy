@@ -41,10 +41,10 @@ class VJournalUserAgentTest extends Specification {
         def calendar = userAgent.publish(vjournal, vjournal2)
 
         then: 'the calendar object contains method = PUBLISH'
-        calendar.getProperty(Property.METHOD) == Method.PUBLISH
+        calendar.getProperty(Property.METHOD).get() == Method.PUBLISH
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE) }
+        calendar.components.each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Request"() {
@@ -124,7 +124,7 @@ class VJournalUserAgentTest extends Specification {
         def calendar = userAgent.add(vjournal)
 
         then: 'the calendar object contains method = ADD'
-        calendar.getProperty(Property.METHOD) == Method.ADD
+        calendar.getProperty(Property.METHOD).get() == Method.ADD
     }
 
     def "Cancel"() {
@@ -140,7 +140,7 @@ class VJournalUserAgentTest extends Specification {
         def calendar = userAgent.cancel(vjournal)
 
         then: 'the calendar object contains method = CANCEL'
-        calendar.getProperty(Property.METHOD) == Method.CANCEL
+        calendar.getProperty(Property.METHOD).get() == Method.CANCEL
     }
 
     def "Refresh"() {

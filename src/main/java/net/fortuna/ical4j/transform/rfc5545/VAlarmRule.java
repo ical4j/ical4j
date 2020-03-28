@@ -1,8 +1,11 @@
 package net.fortuna.ical4j.transform.rfc5545;
 
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.Description;
+
+import java.util.Optional;
 
 /**
  * 
@@ -14,13 +17,13 @@ public class VAlarmRule implements Rfc5545ComponentRule<VAlarm> {
 
     @Override
     public void applyTo(VAlarm element) {
-        Action action = element.getAction();
-        if (action == null || !"DISPLAY".equals(action.getValue()) || element.getDescription() != null
-                && element.getDescription().getValue() != null) {
+        Optional<Action> action = element.getProperty(Property.ACTION);
+        Optional<Description> description = element.getProperty(Property.DESCRIPTION);
+        if (!action.isPresent() || !"DISPLAY".equals(action.get().getValue()) || description.isPresent()
+                && description.get().getValue() != null) {
             return;
         }
-        Description description = new Description("display");
-        element.getProperties().add(description);
+        element.getProperties().add(new Description("display"));
     }
 
     @Override

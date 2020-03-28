@@ -49,7 +49,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -232,12 +231,12 @@ public class VFreeBusyTest extends CalendarComponentTest {
         // VEvent event = new VEvent(startDate, cal.getTime(), "Progress
         // Meeting");
         // add timezone information..
-        event.getProperty(Property.DTSTART).getParameters()
+        event.getProperty(Property.DTSTART).get().getParameters()
                 .add(tzParam);
         components.add(event);
 
         // add recurrence..
-        Recur recur = new Recur.Builder().frequency(Recur.Frequency.YEARLY).count(20)
+        Recur<ZonedDateTime> recur = new Recur.Builder<ZonedDateTime>().frequency(Recur.Frequency.YEARLY).count(20)
                 .monthList(new NumberList("1")).monthDayList(new NumberList("26"))
                 .hourList(new NumberList("9")).minuteList(new NumberList("30")).build();
         event.getProperties().add(new RRule(recur));
@@ -331,8 +330,9 @@ public class VFreeBusyTest extends CalendarComponentTest {
      */
     public void testFbType() {
         VFreeBusy result = new VFreeBusy(request, components);
-        FreeBusy fb = result.getProperty(Property.FREEBUSY);
-        assertTrue(fb.getParameter(Parameter.FBTYPE).equals(Optional.of(expectedFbType)));
+        Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
+        assertTrue(fb.isPresent()
+                && fb.get().getParameter(Parameter.FBTYPE).equals(Optional.of(expectedFbType)));
     }
 
     /**
@@ -340,9 +340,10 @@ public class VFreeBusyTest extends CalendarComponentTest {
      */
     public void testPeriodCount() {
         VFreeBusy result = new VFreeBusy(request, components);
-        FreeBusy fb = (FreeBusy) result.getProperty(Property.FREEBUSY);
+        Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
+        assertTrue(fb.isPresent());
         if (expectedPeriodCount > 0) {
-            assertEquals(expectedPeriodCount, fb.getPeriods().size());
+            assertEquals(expectedPeriodCount, fb.get().getPeriods().size());
         } else {
             assertNull(fb);
         }
@@ -353,8 +354,9 @@ public class VFreeBusyTest extends CalendarComponentTest {
      */
     public void testFreeBusyPeriods() {
         VFreeBusy result = new VFreeBusy(request, components);
-        FreeBusy fb = (FreeBusy) result.getProperty(Property.FREEBUSY);
-        assertEquals(expectedPeriods, fb.getPeriods());
+        Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
+        assertTrue(fb.isPresent());
+        assertEquals(expectedPeriods, fb.get().getPeriods());
     }
 
     /**
@@ -378,8 +380,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
         // iTIP PUBLISH validation
         suite.addTest(new VFreeBusyTest("testPublishValidationException", new VFreeBusy()));
         VFreeBusy publishFb = new VFreeBusy();
-        publishFb.getProperties().add(new DtStart("20091212T000000Z"));
-        publishFb.getProperties().add(new DtEnd("20091212T235959Z"));
+        publishFb.getProperties().add(new DtStart<Instant>("20091212T000000Z"));
+        publishFb.getProperties().add(new DtEnd<Instant>("20091212T235959Z"));
         publishFb.getProperties().add(new FreeBusy("20091212T140000Z/PT3H"));
         publishFb.getProperties().add(new Organizer("mailto:joe@example.com"));
         publishFb.getProperties().add(new Uid("12"));
@@ -388,8 +390,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
         // iTIP REPLY validation
         suite.addTest(new VFreeBusyTest("testReplyValidationException", new VFreeBusy()));
         VFreeBusy replyFb = new VFreeBusy();
-        replyFb.getProperties().add(new DtStart("20091212T000000Z"));
-        replyFb.getProperties().add(new DtEnd("20091212T235959Z"));
+        replyFb.getProperties().add(new DtStart<Instant>("20091212T000000Z"));
+        replyFb.getProperties().add(new DtEnd<Instant>("20091212T235959Z"));
         replyFb.getProperties().add(new Organizer("mailto:joe@example.com"));
         replyFb.getProperties().add(new Attendee("mailto:joe@example.com"));
         replyFb.getProperties().add(new Uid("12"));
@@ -427,9 +429,9 @@ public class VFreeBusyTest extends CalendarComponentTest {
 
         //testBusyTime..
         components = new ComponentList<>();
-        event1 = new VEvent((Temporal) TemporalAdapter.parse("20050103T080000Z").getTemporal(),
+        event1 = new VEvent(TemporalAdapter.parse("20050103T080000Z").getTemporal(),
                 java.time.Duration.ofHours(5), "Event 1");
-        Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
+        Recur<Instant> rRuleRecur = new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         RRule rRule = new RRule(rRuleRecur);
         event1.getProperties().add(rRule);
         components.add(event1);

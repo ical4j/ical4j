@@ -287,7 +287,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
     public void testGetDatesTimeZone() {
         List<T> dates = recur.getDates(periodStart, periodEnd);
         dates.forEach(date -> {
-            assertEquals(expectedTimeZone, ((DateTime) date).getTimeZone());
+            assertEquals(expectedTimeZone, ((ZonedDateTime) date).getZone());
         });
     }
     

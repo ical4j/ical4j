@@ -42,10 +42,10 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.publish(vevent, vevent2)
 
         then: 'the calendar object contains method = PUBLISH'
-        calendar.getProperty(Property.METHOD) == Method.PUBLISH
+        calendar.getProperty(Property.METHOD).get() == Method.PUBLISH
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE) }
+        calendar.components.each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Request"() {
@@ -74,10 +74,10 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.request(vevent, vevent2)
 
         then: 'the calendar object contains method = REQUEST'
-        calendar.getProperty(Property.METHOD) == Method.REQUEST
+        calendar.getProperty(Property.METHOD).get() == Method.REQUEST
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE) }
+        calendar.components.each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Delegate"() {
@@ -100,7 +100,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.delegate(request)
 
         then: 'the calendar object contains method = REQUEST'
-        calendar.getProperty(Property.METHOD) == Method.REQUEST
+        calendar.getProperty(Property.METHOD).get() == Method.REQUEST
     }
 
     def "Reply"() {
@@ -123,7 +123,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.reply(request)
 
         then: 'the calendar object contains method = REPLY'
-        calendar.getProperty(Property.METHOD) == Method.REPLY
+        calendar.getProperty(Property.METHOD).get() == Method.REPLY
     }
 
     def "Add"() {
@@ -140,7 +140,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.add(vevent)
 
         then: 'the calendar object contains method = ADD'
-        calendar.getProperty(Property.METHOD) == Method.ADD
+        calendar.getProperty(Property.METHOD).get() == Method.ADD
     }
 
     def "Cancel"() {
@@ -156,7 +156,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.cancel(vevent)
 
         then: 'the calendar object contains method = CANCEL'
-        calendar.getProperty(Property.METHOD) == Method.CANCEL
+        calendar.getProperty(Property.METHOD).get() == Method.CANCEL
     }
 
     def "Refresh"() {
@@ -172,7 +172,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.refresh(vevent)
 
         then: 'the calendar object contains method = REFRESH'
-        calendar.getProperty(Property.METHOD) == Method.REFRESH
+        calendar.getProperty(Property.METHOD).get() == Method.REFRESH
     }
 
     def "Counter"() {
@@ -195,7 +195,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.counter(request)
 
         then: 'the calendar object contains method = COUNTER'
-        calendar.getProperty(Property.METHOD) == Method.COUNTER
+        calendar.getProperty(Property.METHOD).get() == Method.COUNTER
     }
 
     def "DeclineCounter"() {
@@ -214,6 +214,6 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.declineCounter(counter)
 
         then: 'the calendar object contains method = DECLINECOUNTER'
-        calendar.getProperty(Property.METHOD) == Method.DECLINE_COUNTER
+        calendar.getProperty(Property.METHOD).get() == Method.DECLINE_COUNTER
     }
 }

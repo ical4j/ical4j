@@ -36,6 +36,7 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -86,13 +87,13 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @param aName name of property to return
      * @return a property or null if no matching property found
      */
-    public final <T extends Property> T getProperty(final String aName) {
+    public final <T extends Property> Optional<T> getProperty(final String aName) {
         for (final Property p : this) {
             if (p.getName().equalsIgnoreCase(aName)) {
-                return (T) p;
+                return Optional.of((T) p);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     /**

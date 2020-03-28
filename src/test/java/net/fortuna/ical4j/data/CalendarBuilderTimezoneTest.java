@@ -32,10 +32,7 @@
 package net.fortuna.ical4j.data;
 
 import junit.framework.TestCase;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -103,11 +100,10 @@ public class CalendarBuilderTimezoneTest extends TestCase {
         assertTrue("VEVENT not found", comps.size() == 1);
         VEvent vevent = (VEvent) comps.get(0);
 
-        DtStart dtstart = vevent.getStartDate();
-        ZonedDateTime dateTime = (ZonedDateTime) dtstart.getDate();
+        Optional<DtStart> dtstart = vevent.getProperty(Property.DTSTART);
+        ZonedDateTime dateTime = (ZonedDateTime) dtstart.get().getDate();
 
-        assertEquals("date value not correct", "20080624T130000", dtstart
-                .getValue());
+        assertEquals("date value not correct", "20080624T130000", dtstart.get().getValue());
         assertNotNull("timezone not present", dateTime.getZone());
         assertEquals("timezone not correct",
                 "/softwarestudio.org/Tzfile/America/Chicago", builder.getRegistry().getTzId(dateTime.getZone().getId()));
@@ -180,32 +176,32 @@ public class CalendarBuilderTimezoneTest extends TestCase {
         assertEquals("2 VEVENTs not found", 2, comps.size());
         VEvent vevent0 = (VEvent) comps.get(0);
 
-        DtStart<ZonedDateTime> dtstart0 = vevent0.getStartDate();
-        Optional<TzId> dtstart0TzId = dtstart0.getParameter(Parameter.TZID);
+        Optional<DtStart<ZonedDateTime>> dtstart0 = vevent0.getProperty(Property.DTSTART);
+        Optional<TzId> dtstart0TzId = dtstart0.get().getParameter(Parameter.TZID);
 
-        assertEquals("date value not correct", "20200503T173000", dtstart0.getValue());
+        assertEquals("date value not correct", "20200503T173000", dtstart0.get().getValue());
         assertTrue("timezone not present", dtstart0TzId.isPresent());
         assertEquals("timezone not correct", "Europe/Amsterdam", dtstart0TzId.get().getValue());
 
-        DtEnd<ZonedDateTime> dtend0 = vevent0.getEndDate();
-        Optional<TzId> dtend0TzId = dtend0.getParameter(Parameter.TZID);
+        Optional<DtEnd<ZonedDateTime>> dtend0 = vevent0.getProperty(Property.DTEND);
+        Optional<TzId> dtend0TzId = dtend0.get().getParameter(Parameter.TZID);
 
-        assertEquals("date value not correct", "20200503T200000", dtend0.getValue());
+        assertEquals("date value not correct", "20200503T200000", dtend0.get().getValue());
         assertTrue("timezone not present", dtend0TzId.isPresent());
         assertEquals("timezone not correct", "Europe/Amsterdam", dtend0TzId.get().getValue());
 
         VEvent vevent1 = (VEvent) comps.get(1);
-        DtStart<ZonedDateTime> dtstart1 = vevent1.getStartDate();
-        Optional<TzId> dtstart1TzId = dtstart1.getParameter(Parameter.TZID);
+        Optional<DtStart<ZonedDateTime>> dtstart1 = vevent1.getProperty(Property.DTSTART);
+        Optional<TzId> dtstart1TzId = dtstart1.get().getParameter(Parameter.TZID);
 
-        assertEquals("date value not correct", "20191006T190000", dtstart1.getValue());
+        assertEquals("date value not correct", "20191006T190000", dtstart1.get().getValue());
         assertNotNull("timezone not present", dtstart1TzId.isPresent());
         assertEquals("timezone not correct", "Europe/Amsterdam", dtstart1TzId.get().getValue());
 
-        DtEnd<ZonedDateTime> dtend1 = vevent1.getEndDate();
-        Optional<TzId> dtend1TzId = dtend1.getParameter(Parameter.TZID);
+        Optional<DtEnd<ZonedDateTime>> dtend1 = vevent1.getProperty(Property.DTEND);
+        Optional<TzId> dtend1TzId = dtend1.get().getParameter(Parameter.TZID);
 
-        assertEquals("date value not correct", "20191006T203000", dtend1.getValue());
+        assertEquals("date value not correct", "20191006T203000", dtend1.get().getValue());
         assertTrue("timezone not present", dtend1TzId.isPresent());
         assertEquals("timezone not correct", "Europe/Amsterdam", dtend1TzId.get().getValue());
 

@@ -187,8 +187,8 @@ public class VAvailability extends CalendarComponent {
          *      "DATE-TIME" values specified as either date with UTC time or date
          *      with local time and a time zone reference.
          */
-        final DtStart start = getProperty(Property.DTSTART);
-        if (start.getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
+        final Optional<DtStart<?>> start = getProperty(Property.DTSTART);
+        if (start.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
             throw new ValidationException("Property [" + Property.DTSTART
                     + "] must be a " + Value.DATE_TIME);
         }
@@ -197,17 +197,16 @@ public class VAvailability extends CalendarComponent {
          * ; either 'dtend' or 'duration' may appear in ; a 'eventprop', but 'dtend' and 'duration' ; MUST NOT occur in
          * the same 'eventprop' dtend / duration /
          */
-        if (getProperty(Property.DTEND) != null) {
-            PropertyValidator.assertOne(Property.DTEND,
-                    getProperties());
+        Optional<DtEnd<?>> end = getProperty(Property.DTEND);
+        if (end.isPresent()) {
+            PropertyValidator.assertOne(Property.DTEND, getProperties());
             /* Must be DATE_TIME */
-            final DtEnd end = getProperty(Property.DTEND);
-            if (end.getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
+            if (end.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
                 throw new ValidationException("Property [" + Property.DTEND
                         + "] must be a " + Value.DATE_TIME);
             }
 
-            if (getProperty(Property.DURATION) != null) {
+            if (getProperty(Property.DURATION).isPresent()) {
                 throw new ValidationException("Only one of Property [" + Property.DTEND
                         + "] or [" + Property.DURATION +
                         " must appear a VAVAILABILITY");

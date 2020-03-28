@@ -41,7 +41,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 import java.util.List;
@@ -220,6 +219,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
                     throw new ValidationException("VALUE parameter [" + value.get() + "] is invalid for DATE-TIME instance");
                 }
 
+                /* We can allow change to TZID as the date will be resolved with zone id at output (see getValue())
                 if (date.getTemporal() instanceof ZonedDateTime) {
                     ZonedDateTime dateTime = (ZonedDateTime) date.getTemporal();
 
@@ -230,6 +230,8 @@ public abstract class DateProperty<T extends Temporal> extends Property {
                                 + dateTime.getZone() + "]");
                     }
                 }
+
+                 */
             }
         }
     }

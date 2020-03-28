@@ -16,14 +16,14 @@ class ComponentSpec extends Specification {
         }
         and: 'an expected list of periods'
         def expectedPeriods = new PeriodList()
-        expectedPeriods.addAll(expectedResults.collect { new Period(it)})
+        expectedPeriods.addAll(expectedResults.collect { Period.parse(it)})
 
         expect: 'calculate recurrence set returns the expected results'
         component.calculateRecurrenceSet(period) == expectedPeriods
 
         where:
         period    | expectedResults
-        new Period('20140630T000000Z/20150630T000000Z') | ['20140630T000000Z/PT1H','20140730T000000Z/PT1H',
+        Period.parse('20140630T000000Z/20150630T000000Z') | ['20140630T000000Z/PT1H','20140730T000000Z/PT1H',
                                                                    '20140830T000000Z/PT1H',
                                                                    '20140930T000000Z/PT1H',
                                                                    '20141030T000000Z/PT1H',

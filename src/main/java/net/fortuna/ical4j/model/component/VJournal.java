@@ -40,6 +40,7 @@ import java.time.temporal.Temporal;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -185,10 +186,10 @@ public class VJournal extends CalendarComponent {
                 Property.DTSTAMP, Property.LAST_MODIFIED, Property.ORGANIZER, Property.RECURRENCE_ID, Property.SEQUENCE,
                 Property.STATUS, Property.SUMMARY, Property.UID, Property.URL).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
-        final Status status = getProperty(Property.STATUS);
-        if (status != null && !Status.VJOURNAL_DRAFT.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_FINAL.getValue().equals(status.getValue())
-                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.getValue())) {
+        final Optional<Status> status = getProperty(Property.STATUS);
+        if (status.isPresent() && !Status.VJOURNAL_DRAFT.getValue().equals(status.get().getValue())
+                && !Status.VJOURNAL_FINAL.getValue().equals(status.get().getValue())
+                && !Status.VJOURNAL_CANCELLED.getValue().equals(status.get().getValue())) {
             throw new ValidationException("Status property ["
                     + status.toString() + "] may not occur in VJOURNAL");
         }
@@ -220,94 +221,120 @@ public class VJournal extends CalendarComponent {
 
     /**
      * @return the optional access classification property for a journal entry
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final Clazz getClassification() {
+    @Deprecated
+    public final Optional<Clazz> getClassification() {
         return getProperty(Property.CLASS);
     }
 
     /**
      * @return the optional creation-time property for a journal entry
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final Created getCreated() {
+    @Deprecated
+    public final Optional<Created> getCreated() {
         return getProperty(Property.CREATED);
     }
 
     /**
      * @return the optional description property for a journal entry
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final Description getDescription() {
+    @Deprecated
+    public final Optional<Description> getDescription() {
         return getProperty(Property.DESCRIPTION);
     }
 
     /**
      * Convenience method to pull the DTSTART out of the property list.
      * @return The DtStart object representation of the start Date
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final DtStart getStartDate() {
+    @Deprecated
+    public final Optional<DtStart<?>> getStartDate() {
         return getProperty(Property.DTSTART);
     }
 
     /**
      * @return the optional last-modified property for a journal entry
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final LastModified getLastModified() {
+    @Deprecated
+    public final Optional<LastModified> getLastModified() {
         return getProperty(Property.LAST_MODIFIED);
     }
 
     /**
      * @return the optional organizer property for a journal entry
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final Organizer getOrganizer() {
+    @Deprecated
+    public final Optional<Organizer> getOrganizer() {
         return getProperty(Property.ORGANIZER);
     }
 
     /**
      * @return the optional date-stamp property
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final DtStamp getDateStamp() {
+    @Deprecated
+    public final Optional<DtStamp> getDateStamp() {
         return getProperty(Property.DTSTAMP);
     }
 
     /**
      * @return the optional sequence number property for a journal entry
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final Sequence getSequence() {
+    @Deprecated
+    public final Optional<Sequence> getSequence() {
         return getProperty(Property.SEQUENCE);
     }
 
     /**
      * @return the optional status property for a journal entry
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final Status getStatus() {
+    @Deprecated
+    public final Optional<Status> getStatus() {
         return getProperty(Property.STATUS);
     }
 
     /**
      * @return the optional summary property for a journal entry
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final Summary getSummary() {
+    @Deprecated
+    public final Optional<Summary> getSummary() {
         return getProperty(Property.SUMMARY);
     }
 
     /**
      * @return the optional URL property for a journal entry
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final Url getUrl() {
+    @Deprecated
+    public final Optional<Url> getUrl() {
         return getProperty(Property.URL);
     }
 
     /**
      * @return the optional recurrence identifier property for a journal entry
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final RecurrenceId getRecurrenceId() {
+    @Deprecated
+    public final Optional<RecurrenceId<?>> getRecurrenceId() {
         return getProperty(Property.RECURRENCE_ID);
     }
 
     /**
      * Returns the UID property of this component if available.
      * @return a Uid instance, or null if no UID property exists
+     * @deprecated use {@link VJournal#getProperty(String)}
      */
-    public final Uid getUid() {
+    @Deprecated
+    public final Optional<Uid> getUid() {
         return getProperty(Property.UID);
     }
 

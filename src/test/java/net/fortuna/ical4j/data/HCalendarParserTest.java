@@ -31,14 +31,13 @@
  */
 package net.fortuna.ical4j.data;
 
-import java.io.IOException;
-
-import org.junit.Ignore;
-
 import junit.framework.TestCase;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.Calendars;
+import org.junit.Ignore;
+
+import java.io.IOException;
 
 /**
  * $Id$
@@ -64,7 +63,7 @@ public class HCalendarParserTest extends TestCase {
     public void testParseReaderContentHandler() throws IOException, ParserException {
         Calendar icsCalendar = Calendars.load(getClass().getResource("/samples/hcalendar/example1.ics"));
         // remove prod-id which seems to be not handled by hcalendar..
-        icsCalendar.getProperties().remove(icsCalendar.getProperty(Property.PRODID));
+        icsCalendar.getProperties().remove(icsCalendar.getProperty(Property.PRODID).get());
         
         CalendarBuilder builder = new CalendarBuilder(new HCalendarParser());
         Calendar hcalCalendar = builder.build(getClass().getResourceAsStream("/samples/hcalendar/example1.html"));

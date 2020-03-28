@@ -11,6 +11,8 @@ import net.fortuna.ical4j.transform.command.SequenceIncrement;
 import net.fortuna.ical4j.transform.command.UidUpdate;
 import net.fortuna.ical4j.util.UidGenerator;
 
+import java.util.Optional;
+
 public abstract class AbstractMethodTransformer implements Transformer<Calendar> {
 
     private final Method method;
@@ -34,16 +36,16 @@ public abstract class AbstractMethodTransformer implements Transformer<Calendar>
         MethodUpdate methodUpdate = new MethodUpdate(method);
         methodUpdate.transform(object);
 
-        Uid uid = null;
+        Optional<Uid> uid = Optional.empty();
         for (CalendarComponent component : object.getComponents()) {
             uidUpdate.transform(component);
-            if (uid == null) {
+            if (!uid.isPresent()) {
                 uid = component.getProperty(Property.UID);
             } else if (sameUid && !uid.equals(component.getProperty(Property.UID))) {
                 throw new IllegalArgumentException("All components must share the same non-null UID");
             }
 
-            ComponentGroup<CalendarComponent> componentGroup = new ComponentGroup<>(object.getComponents(), uid);
+            ComponentGroup<CalendarComponent> componentGroup = new ComponentGroup<>(object.getComponents(), uid.get());
 
             // if a calendar component has already been published previously
             // update the sequence number..

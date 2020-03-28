@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -146,8 +147,7 @@ public class CategoriesTest extends PropertyTest {
 
         // Test escaping of categories string representation..
         Calendar calendar = Calendars.load(CategoriesTest.class.getResource("/samples/valid/categories.ics"));
-        Categories orig = (Categories) calendar.getComponent(Component.VEVENT).get()
-                .getProperty(Property.CATEGORIES);
+        Optional<Categories> orig = calendar.getComponent(Component.VEVENT).get().getProperty(Property.CATEGORIES);
 
         StringWriter tempOut = new StringWriter();
         CalendarOutputter cout = new CalendarOutputter();
@@ -157,10 +157,9 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        Categories copy = (Categories) calendar.getComponent(Component.VEVENT).get()
-                .getProperty(Property.CATEGORIES);
+        Optional<Categories> copy = calendar.getComponent(Component.VEVENT).get().getProperty(Property.CATEGORIES);
         assertEquals(orig, copy);
-        suite.addTest(new CategoriesTest(copy, orig.getValue()));
+        suite.addTest(new CategoriesTest(copy.get(), orig.get().getValue()));
 
         // other tests..
         suite.addTest(new CategoriesTest("testCommaEscaping", null));

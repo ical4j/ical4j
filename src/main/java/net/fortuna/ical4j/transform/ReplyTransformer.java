@@ -32,8 +32,11 @@
 package net.fortuna.ical4j.transform;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.UidGenerator;
+
+import java.util.Optional;
 
 /**
  * $Id$
@@ -51,7 +54,8 @@ public class ReplyTransformer extends AbstractMethodTransformer {
 
     @Override
     public Calendar transform(Calendar object) {
-        if (!Method.REQUEST.equals(object.getMethod())) {
+        Optional<Method> method = object.getProperty(Property.METHOD);
+        if (!method.isPresent() || !Method.REQUEST.equals(method.get())) {
             throw new IllegalArgumentException("Expecting REQUEST method in source");
         }
         return super.transform(object);

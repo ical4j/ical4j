@@ -6,6 +6,8 @@ import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.transform.Transformer;
 
+import java.util.Optional;
+
 /**
  * Created by fortuna on 19/07/2017.
  */
@@ -21,10 +23,8 @@ public class MethodUpdate implements Transformer<Calendar> {
     public Calendar transform(Calendar object) {
         PropertyList calProps = object.getProperties();
 
-        Property oldMethod = calProps.getProperty(Property.METHOD);
-        if (oldMethod != null) {
-            calProps.remove(oldMethod);
-        }
+        Optional<Method> oldMethod = calProps.getProperty(Property.METHOD);
+        oldMethod.ifPresent(calProps::remove);
         calProps.add(this.newMethod);
 
         return object;

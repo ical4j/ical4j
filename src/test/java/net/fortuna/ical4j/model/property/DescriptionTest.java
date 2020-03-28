@@ -68,8 +68,8 @@ public class DescriptionTest extends PropertyTest {
         // Test correct parsing of text with tabs.
         Calendar calendar = Calendars.load(DescriptionTest.class.getResource("/samples/valid/mansour.ics"));
         Optional<VEvent> event = calendar.getComponent(Component.VEVENT);
-        suite.addTest(new DescriptionTest(event.get()
-                .getProperty(Property.DESCRIPTION), "Test\t\ttabs"));
+        Optional<Description> description = event.get().getProperty(Property.DESCRIPTION);
+        suite.addTest(new DescriptionTest(description.get(), "Test\t\ttabs"));
         return suite;
     }
 }

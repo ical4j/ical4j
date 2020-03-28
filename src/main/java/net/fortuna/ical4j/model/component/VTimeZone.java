@@ -47,6 +47,7 @@ import java.time.OffsetDateTime;
 import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -274,22 +275,28 @@ public class VTimeZone extends CalendarComponent {
 
     /**
      * @return the mandatory timezone identifier property
+     * @deprecated use {@link VTimeZone#getProperty(String)}
      */
-    public final TzId getTimeZoneId() {
+    @Deprecated
+    public final Optional<TzId> getTimeZoneId() {
         return getProperty(Property.TZID);
     }
 
     /**
      * @return the optional last-modified property
+     * @deprecated use {@link VTimeZone#getProperty(String)}
      */
-    public final LastModified getLastModified() {
+    @Deprecated
+    public final Optional<LastModified> getLastModified() {
         return getProperty(Property.LAST_MODIFIED);
     }
 
     /**
      * @return the optional timezone url property
+     * @deprecated use {@link VTimeZone#getProperty(String)}
      */
-    public final TzUrl getTimeZoneUrl() {
+    @Deprecated
+    public final Optional<TzUrl> getTimeZoneUrl() {
         return getProperty(Property.TZURL);
     }
 

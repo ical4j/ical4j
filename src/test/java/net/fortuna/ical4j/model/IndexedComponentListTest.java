@@ -34,12 +34,13 @@ package net.fortuna.ical4j.model;
 import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.component.CalendarComponent;
+import net.fortuna.ical4j.model.property.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * $Id$
@@ -82,12 +83,11 @@ public class IndexedComponentListTest extends TestCase {
         long start = System.currentTimeMillis();
         List<Component> list = new ArrayList<Component>();
         for (Component c : calendar.getComponents()) {
-            if (c.getProperty(Property.LOCATION) != null
-                    && "ABC".equals(c.getProperty(Property.LOCATION).getValue())) {
+            Optional<Location> location = c.getProperty(Property.LOCATION);
+            if (location.isPresent() && "ABC".equals(location.get().getValue())) {
                 list.add(c);
             }
         }
-        LOG.info(list.size() + " programs on ABC."
-                + " (" + (System.currentTimeMillis() - start) + "ms)");
+        LOG.info(list.size() + " programs on ABC. (" + (System.currentTimeMillis() - start) + "ms)");
     }
 }

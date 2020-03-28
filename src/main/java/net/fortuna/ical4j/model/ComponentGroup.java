@@ -98,8 +98,8 @@ public class ComponentGroup<C extends Component> {
 
         List<Period<T>> finalPeriods = new ArrayList<>(periods);
         replacements.forEach(component -> {
-            RecurrenceId recurrenceId = component.getProperty(Property.RECURRENCE_ID);
-            List<Period> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.getDate()))
+            Optional<RecurrenceId<?>> recurrenceId = component.getProperty(Property.RECURRENCE_ID);
+            List<Period<T>> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.get().getDate()))
                     .collect(Collectors.toList());
             finalPeriods.removeAll(match);
 

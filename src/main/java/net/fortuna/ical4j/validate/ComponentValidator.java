@@ -64,7 +64,7 @@ public class ComponentValidator<T extends Component> implements Validator<T> {
 
             switch (rule.getType()) {
                 case None:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.getProperty(s) != null,
+                    rule.getInstances().forEach(s -> assertFalse(input -> input.getProperty(s).isPresent(),
                             PropertyValidator.ASSERT_NONE_MESSAGE, warnOnly, target.getProperties(), s));
                     break;
                 case One:

@@ -124,7 +124,7 @@ public class Available extends Component {
          *      "DATE-TIME" values specified as either date with UTC time or date
          *      with local time and a time zone reference.
          */
-        if (getProperty(Property.DTSTART).getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
+        if (getProperty(Property.DTSTART).get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
             throw new ValidationException("Property [" + Property.DTSTART
                     + "] must be a " + Value.DATE_TIME);
         }
@@ -146,12 +146,12 @@ public class Available extends Component {
          ; 'availableprop', and each MUST NOT occur more
          ; than once
          */
-        if (getProperty(Property.DTEND) != null) {
+        final Optional<DtEnd<?>> end = getProperty(Property.DTEND);
+        if (end.isPresent()) {
             PropertyValidator.assertOne(Property.DTEND,
                     getProperties());
             /* Must be DATE_TIME */
-            final DtEnd end = getProperty(Property.DTEND);
-            if (Value.DATE.equals(end.getParameter(Parameter.VALUE))) {
+            if (Value.DATE.equals(end.get().getParameter(Parameter.VALUE))) {
                 throw new ValidationException("Property [" + Property.DTEND
                         + "] must be a " + Value.DATE_TIME);
             }

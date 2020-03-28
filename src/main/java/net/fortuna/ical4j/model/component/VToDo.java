@@ -44,10 +44,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -292,11 +289,11 @@ public class VToDo extends CalendarComponent {
                 Property.PERCENT_COMPLETE, Property.PRIORITY, Property.RECURRENCE_ID, Property.SEQUENCE, Property.STATUS,
                 Property.SUMMARY, Property.UID, Property.URL).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
-        final Status status = getProperty(Property.STATUS);
-        if (status != null && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.getValue())
-                && !Status.VTODO_COMPLETED.getValue().equals(status.getValue())
-                && !Status.VTODO_IN_PROCESS.getValue().equals(status.getValue())
-                && !Status.VTODO_CANCELLED.getValue().equals(status.getValue())) {
+        final Optional<Status> status = getProperty(Property.STATUS);
+        if (status.isPresent() && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.get().getValue())
+                && !Status.VTODO_COMPLETED.getValue().equals(status.get().getValue())
+                && !Status.VTODO_IN_PROCESS.getValue().equals(status.get().getValue())
+                && !Status.VTODO_CANCELLED.getValue().equals(status.get().getValue())) {
             throw new ValidationException("Status property ["
                     + status.toString() + "] may not occur in VTODO");
         }
@@ -341,143 +338,183 @@ public class VToDo extends CalendarComponent {
 
     /**
      * @return the optional access classification property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Clazz getClassification() {
+    @Deprecated
+    public final Optional<Clazz> getClassification() {
         return getProperty(Property.CLASS);
     }
 
     /**
      * @return the optional date completed property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Completed getDateCompleted() {
+    @Deprecated
+    public final Optional<Completed> getDateCompleted() {
         return getProperty(Property.COMPLETED);
     }
 
     /**
      * @return the optional creation-time property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Created getCreated() {
+    @Deprecated
+    public final Optional<Created> getCreated() {
         return getProperty(Property.CREATED);
     }
 
     /**
      * @return the optional description property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Description getDescription() {
+    @Deprecated
+    public final Optional<Description> getDescription() {
         return getProperty(Property.DESCRIPTION);
     }
 
     /**
      * Convenience method to pull the DTSTART out of the property list.
      * @return The DtStart object representation of the start Date
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final DtStart getStartDate() {
+    @Deprecated
+    public final Optional<DtStart<?>> getStartDate() {
         return getProperty(Property.DTSTART);
     }
 
     /**
      * @return the optional geographic position property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Geo getGeographicPos() {
+    @Deprecated
+    public final Optional<Geo> getGeographicPos() {
         return getProperty(Property.GEO);
     }
 
     /**
      * @return the optional last-modified property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final LastModified getLastModified() {
+    @Deprecated
+    public final Optional<LastModified> getLastModified() {
         return getProperty(Property.LAST_MODIFIED);
     }
 
     /**
      * @return the optional location property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Location getLocation() {
+    @Deprecated
+    public final Optional<Location> getLocation() {
         return getProperty(Property.LOCATION);
     }
 
     /**
      * @return the optional organizer property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Organizer getOrganizer() {
+    @Deprecated
+    public final Optional<Organizer> getOrganizer() {
         return getProperty(Property.ORGANIZER);
     }
 
     /**
      * @return the optional percentage complete property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final PercentComplete getPercentComplete() {
+    @Deprecated
+    public final Optional<PercentComplete> getPercentComplete() {
         return getProperty(Property.PERCENT_COMPLETE);
     }
 
     /**
      * @return the optional priority property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Priority getPriority() {
+    @Deprecated
+    public final Optional<Priority> getPriority() {
         return getProperty(Property.PRIORITY);
     }
 
     /**
      * @return the optional date-stamp property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final DtStamp getDateStamp() {
+    @Deprecated
+    public final Optional<DtStamp> getDateStamp() {
         return getProperty(Property.DTSTAMP);
     }
 
     /**
      * @return the optional sequence number property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Sequence getSequence() {
+    @Deprecated
+    public final Optional<Sequence> getSequence() {
         return getProperty(Property.SEQUENCE);
     }
 
     /**
      * @return the optional status property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Status getStatus() {
+    @Deprecated
+    public final Optional<Status> getStatus() {
         return getProperty(Property.STATUS);
     }
 
     /**
      * @return the optional summary property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Summary getSummary() {
+    @Deprecated
+    public final Optional<Summary> getSummary() {
         return getProperty(Property.SUMMARY);
     }
 
     /**
      * @return the optional URL property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Url getUrl() {
+    @Deprecated
+    public final Optional<Url> getUrl() {
         return getProperty(Property.URL);
     }
 
     /**
      * @return the optional recurrence identifier property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final RecurrenceId getRecurrenceId() {
+    @Deprecated
+    public final Optional<RecurrenceId<?>> getRecurrenceId() {
         return getProperty(Property.RECURRENCE_ID);
     }
 
     /**
      * @return the optional Duration property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Duration getDuration() {
+    @Deprecated
+    public final Optional<Duration> getDuration() {
         return getProperty(Property.DURATION);
     }
 
     /**
      * @return the optional due property
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Due getDue() {
+    @Deprecated
+    public final Optional<Due<?>> getDue() {
         return getProperty(Property.DUE);
     }
 
     /**
      * Returns the UID property of this component if available.
      * @return a Uid instance, or null if no UID property exists
+     * @deprecated use {@link VToDo#getProperty(String)}
      */
-    public final Uid getUid() {
+    @Deprecated
+    public final Optional<Uid> getUid() {
         return getProperty(Property.UID);
     }
 

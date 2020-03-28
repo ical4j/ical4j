@@ -47,10 +47,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -153,14 +150,15 @@ public abstract class Observance extends Component {
      * specified date
      */
     public final OffsetDateTime getLatestOnset(final Temporal date) {
+        Optional<TzOffsetTo> offsetTo = getProperty(Property.TZOFFSETTO);
 
         OffsetDateTime offsetDate = LocalDateTime.ofInstant(Instant.from(date), ZoneOffset.UTC).atOffset(
-                getOffsetTo().getOffset());
+                offsetTo.get().getOffset());
 
         if (initialOnset == null) {
             try {
                 DtStart dtStart = getRequiredProperty(Property.DTSTART);
-                initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(getOffsetTo().getOffset());
+                initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(offsetTo.get().getOffset());
             } catch (ConstraintViolationException e) {
                 Logger log = LoggerFactory.getLogger(Observance.class);
                 log.error("Unexpected error calculating initial onset", e);
@@ -185,19 +183,19 @@ public abstract class Observance extends Component {
         // get first onset without adding TZFROM as this may lead to a day boundary
         // change which would be incompatible with BYDAY RRULES
         // we will have to add the offset to all cacheable onsets
-        Instant initialOnsetUTC = LocalDateTime.from(((DtStart) getProperty(Property.DTSTART)).getDate())
-                .toInstant(onset.getOffset());
+        Optional<DtStart<LocalDateTime>> startDate = getProperty(Property.DTSTART);
 
         // collect all onsets for the purposes of caching..
         final List<OffsetDateTime> cacheableOnsets = new ArrayList<>();
         cacheableOnsets.add(initialOnset);
 
         // check rdates for latest applicable onset..
+        Optional<TzOffsetFrom> offsetFrom = getProperty(Property.TZOFFSETFROM);
         final List<Property> rdates = getProperties(Property.RDATE);
         for (Property rdate : rdates) {
             DateList<LocalDateTime> rdateDates = ((RDate<LocalDateTime>) rdate).getDates();
             for (final LocalDateTime rdateDate : rdateDates.getDates()) {
-                final OffsetDateTime rdateOnset = OffsetDateTime.from(rdateDate.atOffset(getOffsetFrom().getOffset()));
+                final OffsetDateTime rdateOnset = OffsetDateTime.from(rdateDate.atOffset(offsetFrom.get().getOffset()));
                 if (!rdateOnset.isAfter(offsetDate) && rdateOnset.isAfter(onset)) {
                     onset = rdateOnset;
                 }
@@ -217,7 +215,7 @@ public abstract class Observance extends Component {
             final List<Temporal> recurrenceDates = ((RRule) rrule).getRecur().getDates(initialOnset, onsetLimit);
             for (final Temporal recurDate : recurrenceDates) {
                 final OffsetDateTime rruleOnset = OffsetDateTime.from(recurDate).plus(
-                        getOffsetFrom().getOffset().getTotalSeconds(), ChronoUnit.SECONDS);
+                        offsetFrom.get().getOffset().getTotalSeconds(), ChronoUnit.SECONDS);
                 if (!rruleOnset.isAfter(offsetDate) && rruleOnset.isAfter(onset)) {
                     onset = rruleOnset;
                 }
@@ -264,8 +262,10 @@ public abstract class Observance extends Component {
      * Returns the mandatory dtstart property.
      *
      * @return the DTSTART property or null if not specified
+     * @deprecated use {@link Observance#getProperty(String)}
      */
-    public final DtStart<LocalDateTime> getStartDate() {
+    @Deprecated
+    public final Optional<DtStart<LocalDateTime>> getStartDate() {
         return getProperty(Property.DTSTART);
     }
 
@@ -273,8 +273,10 @@ public abstract class Observance extends Component {
      * Returns the mandatory tzoffsetfrom property.
      *
      * @return the TZOFFSETFROM property or null if not specified
+     * @deprecated use {@link Observance#getProperty(String)}
      */
-    public final TzOffsetFrom getOffsetFrom() {
+    @Deprecated
+    public final Optional<TzOffsetFrom> getOffsetFrom() {
         return getProperty(Property.TZOFFSETFROM);
     }
 
@@ -282,8 +284,10 @@ public abstract class Observance extends Component {
      * Returns the mandatory tzoffsetto property.
      *
      * @return the TZOFFSETTO property or null if not specified
+     * @deprecated use {@link Observance#getProperty(String)}
      */
-    public final TzOffsetTo getOffsetTo() {
+    @Deprecated
+    public final Optional<TzOffsetTo> getOffsetTo() {
         return getProperty(Property.TZOFFSETTO);
     }
 }

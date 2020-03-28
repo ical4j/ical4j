@@ -7,10 +7,7 @@ import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by fortuna on 13/09/15.
@@ -59,15 +56,15 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
-            if (!Version.VERSION_2_0.equals(target.getProperty(Property.VERSION))) {
-                throw new ValidationException("Unsupported Version: " + target.getProperty(Property.VERSION).getValue());
+            Optional<Version> version = target.getProperty(Property.VERSION);
+            if (version.isPresent() && !Version.VERSION_2_0.equals(version.get())) {
+                throw new ValidationException("Unsupported Version: " + version.get().getValue());
             }
         }
 
         // must contain at least one component
         if (target.getComponents().isEmpty()) {
-            throw new ValidationException(
-                    "Calendar must contain at least one component");
+            throw new ValidationException("Calendar must contain at least one component");
         }
 
         // validate properties..
@@ -81,37 +78,29 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
 //        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
         // validate method..
-        final Method method = target.getProperty(Property.METHOD);
-        if (Method.PUBLISH.equals(method)) {
-            new PublishValidator().validate(target);
-        }
-        else if (Method.REQUEST.equals(target.getProperty(Property.METHOD))) {
-            new RequestValidator().validate(target);
-        }
-        else if (Method.REPLY.equals(target.getProperty(Property.METHOD))) {
-            new ReplyValidator().validate(target);
-        }
-        else if (Method.ADD.equals(target.getProperty(Property.METHOD))) {
-            new AddValidator().validate(target);
-        }
-        else if (Method.CANCEL.equals(target.getProperty(Property.METHOD))) {
-            new CancelValidator().validate(target);
-        }
-        else if (Method.REFRESH.equals(target.getProperty(Property.METHOD))) {
-            new RefreshValidator().validate(target);
-        }
-        else if (Method.COUNTER.equals(target.getProperty(Property.METHOD))) {
-            new CounterValidator().validate(target);
-        }
-        else if (Method.DECLINE_COUNTER.equals(target.getProperty(Property.METHOD))) {
-            new DeclineCounterValidator().validate(target);
-        }
-//        }
+        final Optional<Method> method = target.getProperty(Property.METHOD);
+        if (method.isPresent()) {
+            if (Method.PUBLISH.equals(method.get())) {
+                new PublishValidator().validate(target);
+            } else if (Method.REQUEST.equals(method.get())) {
+                new RequestValidator().validate(target);
+            } else if (Method.REPLY.equals(method.get())) {
+                new ReplyValidator().validate(target);
+            } else if (Method.ADD.equals(method.get())) {
+                new AddValidator().validate(target);
+            } else if (Method.CANCEL.equals(method.get())) {
+                new CancelValidator().validate(target);
+            } else if (Method.REFRESH.equals(method.get())) {
+                new RefreshValidator().validate(target);
+            } else if (Method.COUNTER.equals(method.get())) {
+                new CounterValidator().validate(target);
+            } else if (Method.DECLINE_COUNTER.equals(method.get())) {
+                new DeclineCounterValidator().validate(target);
+            }
 
-        // perform ITIP validation on components..
-        if (method != null) {
+            // perform ITIP validation on components..
             for (CalendarComponent component : target.getComponents()) {
-                component.validate(method);
+                component.validate(method.get());
             }
         }
     }

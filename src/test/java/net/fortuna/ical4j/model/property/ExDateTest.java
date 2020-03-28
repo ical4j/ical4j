@@ -36,6 +36,7 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,14 +96,15 @@ public class ExDateTest extends TestCase {
         Calendar ical = builder.build(getClass().getResourceAsStream("/samples/valid/dst-only-vtimezone.ics"));
         Optional<VTimeZone> vTZ = ical.getComponent(VTimeZone.VTIMEZONE);
 
-        String id = vTZ.get().getTimeZoneId().getValue();
+        String id = vTZ.get().getProperty(Property.TZID).get().getValue();
         assertEquals("Europe/Berlin", id);
         assertEquals(vTZ.get().getObservances().get(0), vTZ.get().getApplicableObservance(TemporalAdapter.parse("20180403").getTemporal()));
 
         Optional<VEvent> vEvent = ical.getComponent(VEvent.VEVENT);
-        DtStart start = vEvent.get().getStartDate();
-        assertTrue(start.getParameter(Parameter.TZID).equals(Optional.of(vTZ.get().getTimeZoneId())));
-        assertEquals(1522738800000L, Instant.from(start.getDate()).toEpochMilli());
+        Optional<DtStart<?>> start = vEvent.get().getStartDate();
+        Optional<TzId> startTzId = start.get().getParameter(Parameter.TZID);
+        assertTrue(startTzId.equals(vTZ.get().getTimeZoneId().get().getParameter(Parameter.TZID)));
+        assertEquals(1522738800000L, Instant.from(start.get().getDate()).toEpochMilli());
     }
 
     public void testShouldPreserveUtcTimezoneForExDate() throws Exception {

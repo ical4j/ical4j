@@ -39,6 +39,7 @@ import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -270,10 +271,12 @@ public class VAlarm extends CalendarComponent {
         /*
          * ; the following is optional, ; and MAY occur more than once x-prop
          */
-        
-        final Validator actionValidator = actionValidators.get(getAction());
-        if (actionValidator != null) {
-            actionValidator.validate(this);
+        Optional<Action> action = getProperty(ACTION);
+        if (action.isPresent()) {
+            final Validator<VAlarm> actionValidator = actionValidators.get(action.get());
+            if (actionValidator != null) {
+                actionValidator.validate(this);
+            }
         }
         
         if (recurse) {
@@ -291,56 +294,70 @@ public class VAlarm extends CalendarComponent {
     /**
      * Returns the mandatory action property.
      * @return the ACTION property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Action getAction() {
+    @Deprecated
+    public final Optional<Action> getAction() {
         return getProperty(Property.ACTION);
     }
 
     /**
      * Returns the mandatory trigger property.
      * @return the TRIGGER property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Trigger getTrigger() {
+    @Deprecated
+    public final Optional<Trigger> getTrigger() {
         return getProperty(Property.TRIGGER);
     }
 
     /**
      * Returns the optional duration property.
      * @return the DURATION property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Duration getDuration() {
+    @Deprecated
+    public final Optional<Duration> getDuration() {
         return getProperty(Property.DURATION);
     }
 
     /**
      * Returns the optional repeat property.
      * @return the REPEAT property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Repeat getRepeat() {
+    @Deprecated
+    public final Optional<Repeat> getRepeat() {
         return getProperty(Property.REPEAT);
     }
 
     /**
      * Returns the optional attachment property.
      * @return the ATTACH property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Attach getAttachment() {
+    @Deprecated
+    public final Optional<Attach> getAttachment() {
         return getProperty(Property.ATTACH);
     }
 
     /**
      * Returns the optional description property.
      * @return the DESCRIPTION property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Description getDescription() {
+    @Deprecated
+    public final Optional<Description> getDescription() {
         return getProperty(Property.DESCRIPTION);
     }
 
     /**
      * Returns the optional summary property.
      * @return the SUMMARY property or null if not specified
+     * @deprecated use {@link VAlarm#getProperty(String)}
      */
-    public final Summary getSummary() {
+    @Deprecated
+    public final Optional<Summary> getSummary() {
         return getProperty(Property.SUMMARY);
     }
 

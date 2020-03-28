@@ -46,20 +46,6 @@ import java.time.temporal.TemporalAmount;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.ExDate;
-import net.fortuna.ical4j.model.property.ExRule;
-import net.fortuna.ical4j.model.property.RDate;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ValidationException;
-
 /**
  * $Id$ [Apr 5, 2004]
  * <p/>
@@ -202,8 +188,8 @@ public abstract class Component implements Serializable {
      * @param name name of the property to retrieve
      * @return the first matching property in the property list with the specified name
      */
-    public <T extends Property> T getProperty(final String name) {
-        return (T) getProperties().getProperty(name);
+    public <T extends Property> Optional<T> getProperty(final String name) {
+        return getProperties().getProperty(name);
     }
 
     /**
@@ -214,11 +200,8 @@ public abstract class Component implements Serializable {
      * @throws ConstraintViolationException when a property is not found
      */
     protected final <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
-        Property p = getProperties().getProperty(name);
-        if (p == null) {
-            throw new ConstraintViolationException(String.format("Missing %s property", name));
-        }
-        return (T) p;
+        return (T) getProperties().getProperty(name).orElseThrow(() ->
+                new ConstraintViolationException(String.format("Missing %s property", name)));
     }
 
     /**
@@ -301,15 +284,15 @@ public abstract class Component implements Serializable {
 
         final Set<Period<T>> recurrenceSet = new TreeSet<>();
 
-        final DtStart<T> start = getProperty(Property.DTSTART);
-        DateProperty<T> end = getProperty(Property.DTEND);
-        if (end == null) {
+        final Optional<DtStart<T>> start = getProperty(Property.DTSTART);
+        Optional<DateProperty<T>> end = getProperty(Property.DTEND);
+        if (!end.isPresent()) {
             end = getProperty(Property.DUE);
         }
-        Duration duration = getProperty(Property.DURATION);
+        Optional<Duration> duration = getProperty(Property.DURATION);
 
         // if no start date specified return empty list..
-        if (start == null) {
+        if (!start.isPresent()) {
             return Collections.emptyList();
         }
 
@@ -317,12 +300,12 @@ public abstract class Component implements Serializable {
         // periods from the end date..
         TemporalAmount rDuration;
         // if no end or duration specified, end date equals start date..
-        if (end == null && duration == null) {
+        if (!end.isPresent() && !duration.isPresent()) {
             rDuration = java.time.Duration.ZERO;
-        } else if (duration == null) {
-            rDuration = TemporalAmountAdapter.between(start.getDate(), end.getDate()).getDuration();
+        } else if (!duration.isPresent()) {
+            rDuration = TemporalAmountAdapter.between(start.get().getDate(), end.get().getDate()).getDuration();
         } else {
-            rDuration = duration.getDuration();
+            rDuration = duration.get().getDuration();
         }
 
         // add recurrence dates..
@@ -349,24 +332,21 @@ public abstract class Component implements Serializable {
         // add recurrence rules..
         List<Property> rRules = getProperties(Property.RRULE);
         if (!rRules.isEmpty()) {
-            recurrenceSet.addAll(rRules.stream().map(r -> ((RRule) r).getRecur().getDates(start.getDate(),
+            recurrenceSet.addAll(rRules.stream().map(r -> ((RRule) r).getRecur().getDates(start.get().getDate(),
                     startMinusDuration, period.getEnd())).flatMap(List<T>::stream)
                     .map(rruleDate -> new Period<T>(rruleDate, rDuration)).collect(Collectors.toList()));
         } else {
             // add initial instance if intersection with the specified period..
             Period<T> startPeriod;
-            if (end != null) {
-                startPeriod = new Period<>(start.getDate(), end.getDate());
+            if (end.isPresent()) {
+                startPeriod = new Period<>(start.get().getDate(), end.get().getDate());
             } else {
                 /*
                  * PeS: Anniversary type has no DTEND nor DUR, define DUR
                  * locally, otherwise we get NPE
                  */
-                if (duration == null) {
-                    duration = new Duration(rDuration);
-                }
-
-                startPeriod = new Period<>(start.getDate(), duration.getDuration());
+                startPeriod = duration.map(value -> new Period<>(start.get().getDate(), value.getDuration())).orElseGet(
+                        () -> new Period<>(start.get().getDate(), new Duration(rDuration).getDuration()));
             }
             if (period.intersects(startPeriod)) {
                 recurrenceSet.add(startPeriod);
@@ -382,7 +362,7 @@ public abstract class Component implements Serializable {
 
         // subtract exception rules..
         List<Property> exRules = getProperties(Property.EXRULE);
-        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule) e).getRecur().getDates(start.getDate(),
+        List<Object> exRuleDates = exRules.stream().map(e -> ((ExRule) e).getRecur().getDates(start.get().getDate(),
                 period)).flatMap(List<T>::stream).collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> exRuleDates.contains(recurrence.getStart()));

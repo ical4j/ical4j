@@ -92,11 +92,11 @@ public class CalendarTest {
         ZonedDateTime end = start.plusYears(1);
 
         VEvent week1UserA = new VEvent(start, java.time.Duration.ofHours(8), "Week 1 - User A");
-        week1UserA.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week1UserA.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week1UserA.getProperty(Property.DTSTART).get().getParameters().add(tzParam);
+        week1UserA.getProperty(Property.DTSTART).get().getParameters().add(Value.DATE);
 
-        Recur week1UserARecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(end.toInstant())
+        Recur<ZonedDateTime> week1UserARecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end)
                 .interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
                 .hourList(new NumberList("9")).build();
         week1UserA.getProperties().add(new RRule(week1UserARecur));
@@ -106,11 +106,11 @@ public class CalendarTest {
         end = end.plusWeeks(1);
 
         VEvent week2UserB = new VEvent(start, java.time.Duration.ofHours(8), "Week 2 - User B");
-        week2UserB.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week2UserB.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week2UserB.getProperty(Property.DTSTART).get().getParameters().add(tzParam);
+        week2UserB.getProperty(Property.DTSTART).get().getParameters().add(Value.DATE);
 
-        Recur week2UserBRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(end.toInstant()).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
+        Recur<ZonedDateTime> week2UserBRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
                 .hourList(new NumberList("9")).build();
         week2UserB.getProperties().add(new RRule(week2UserBRecur));
         week2UserB.getProperties().add(new Uid("000002@modularity.net.au"));
@@ -119,11 +119,11 @@ public class CalendarTest {
         end = end.plusWeeks(1);
 
         VEvent week3UserC = new VEvent(start, java.time.Duration.ofHours(8), "Week 3 - User C");
-        week3UserC.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week3UserC.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week3UserC.getProperty(Property.DTSTART).get().getParameters().add(tzParam);
+        week3UserC.getProperty(Property.DTSTART).get().getParameters().add(Value.DATE);
 
-        Recur week3UserCRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(end.toInstant()).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
+        Recur<ZonedDateTime> week3UserCRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
                 .hourList(new NumberList("9")).build();
         week3UserC.getProperties().add(new RRule(week3UserCRecur));
         week3UserC.getProperties().add(new Uid("000003@modularity.net.au"));
@@ -141,11 +141,11 @@ public class CalendarTest {
         end = start.plusYears(1);
 
         week1UserA = new VEvent(start, java.time.Duration.ofHours(8), "Week 1 - User A");
-        week1UserA.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week1UserA.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week1UserA.getProperty(Property.DTSTART).get().getParameters().add(tzParam);
+        week1UserA.getProperty(Property.DTSTART).get().getParameters().add(Value.DATE);
 
-        week1UserARecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(end.toInstant()).interval(3)
+        week1UserARecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3)
                 .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
                 .hourList(new NumberList("9")).build();
         week1UserA.getProperties().add(new RRule(week1UserARecur));
@@ -155,11 +155,11 @@ public class CalendarTest {
         end = end.plusWeeks(1);
 
         week2UserB = new VEvent(start, java.time.Duration.ofHours(8), "Week 2 - User B");
-        week2UserB.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week2UserB.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week2UserB.getProperty(Property.DTSTART).get().getParameters().add(tzParam);
+        week2UserB.getProperty(Property.DTSTART).get().getParameters().add(Value.DATE);
 
-        week2UserBRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(end.toInstant()).interval(3)
+        week2UserBRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3)
                 .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
                 .hourList(new NumberList("9")).build();
         week2UserB.getProperties().add(new RRule(week2UserBRecur));
@@ -169,11 +169,11 @@ public class CalendarTest {
         end = end.plusWeeks(1);
 
         week3UserC = new VEvent(start, java.time.Duration.ofHours(8), "Week 3 - User C");
-        week3UserC.getProperty(Property.DTSTART).getParameters().add(tzParam);
-        week3UserC.getProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        week3UserC.getProperty(Property.DTSTART).get().getParameters().add(tzParam);
+        week3UserC.getProperty(Property.DTSTART).get().getParameters().add(Value.DATE);
 
-        week3UserCRecur = new Recur.Builder().frequency(Frequency.WEEKLY)
-                .until(end.toInstant()).interval(3)
+        week3UserCRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
+                .until(end).interval(3)
                 .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
                 .hourList(new NumberList("9")).build();
         week3UserC.getProperties().add(new RRule(week3UserCRecur));

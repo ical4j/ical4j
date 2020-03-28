@@ -12,7 +12,7 @@ class TimeZoneLoaderTest extends Specification {
         def tz = loader.loadVTimeZone(id)
 
         then: 'a non-null instance is returned'
-        tz?.timeZoneId.value == id
+        tz?.timeZoneId.get().value == id
 
         where:
         id << ['Australia/Melbourne', 'Europe/London', 'Asia/Singapore']
@@ -30,7 +30,7 @@ class TimeZoneLoaderTest extends Specification {
         def tz = loader.loadVTimeZone(id)
 
         then: 'a non-null instance is returned'
-        tz?.timeZoneId.value == id
+        tz?.timeZoneId.get().value == id
 
         where:
         id << ['Australia/Melbourne', 'Europe/London', 'Asia/Singapore']

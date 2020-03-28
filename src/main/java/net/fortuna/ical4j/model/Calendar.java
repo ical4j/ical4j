@@ -251,8 +251,8 @@ public class Calendar implements Serializable {
      * @param name name of the property to retrieve
      * @return the first matching property in the property list with the specified name
      */
-    public final <T extends Property> T getProperty(final String name) {
-        return (T) getProperties().getProperty(name);
+    public final <T extends Property> Optional<T> getProperty(final String name) {
+        return getProperties().getProperty(name);
     }
 
     /**
@@ -299,32 +299,40 @@ public class Calendar implements Serializable {
     /**
      * Returns the mandatory prodid property.
      * @return the PRODID property, or null if property doesn't exist
+     * @deprecated use {@link Calendar#getProperty(String)}
      */
-    public final ProdId getProductId() {
+    @Deprecated
+    public final Optional<ProdId> getProductId() {
         return getProperty(Property.PRODID);
     }
 
     /**
      * Returns the mandatory version property.
      * @return the VERSION property, or null if property doesn't exist
+     * @deprecated use {@link Calendar#getProperty(String)}
      */
-    public final Version getVersion() {
+    @Deprecated
+    public final Optional<Version> getVersion() {
         return getProperty(Property.VERSION);
     }
 
     /**
      * Returns the optional calscale property.
      * @return the CALSCALE property, or null if property doesn't exist
+     * @deprecated use {@link Calendar#getProperty(String)}
      */
-    public final CalScale getCalendarScale() {
+    @Deprecated
+    public final Optional<CalScale> getCalendarScale() {
         return getProperty(Property.CALSCALE);
     }
 
     /**
      * Returns the optional method property.
      * @return the METHOD property, or null if property doesn't exist
+     * @deprecated use {@link Calendar#getProperty(String)}
      */
-    public final Method getMethod() {
+    @Deprecated
+    public final Optional<Method> getMethod() {
         return getProperty(Property.METHOD);
     }
 

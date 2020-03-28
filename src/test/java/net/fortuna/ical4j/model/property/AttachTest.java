@@ -121,9 +121,9 @@ public class AttachTest extends TestCase {
 
         Optional<VEvent> eout = cout.getComponent(Component.VEVENT);
 
-        Attach aout = (Attach) eout.get().getProperty(Property.ATTACH);
+        Optional<Attach> aout = eout.get().getProperty(Property.ATTACH);
         assertNotNull(aout);
-        assertEquals(attach, aout);
+        assertEquals(attach, aout.get());
 
         log.info(sw.toString());
     }

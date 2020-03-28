@@ -148,28 +148,29 @@ public final class Calendars {
                 continue;
             }
             
-            final Uid uid = c.getProperty(Property.UID);
-            
-            Calendar uidCal = calendars.get(uid);
-            if (uidCal == null) {
-                uidCal = new Calendar(calendar.getProperties(), new ComponentList<>());
-                // remove METHOD property for split calendars..
-                for (final Property mp : uidCal.getProperties(Property.METHOD)) {
-                    uidCal.getProperties().remove(mp);
+            final Optional<Uid> uid = c.getProperty(Property.UID);
+            if (uid.isPresent()) {
+                Calendar uidCal = calendars.get(uid.get());
+                if (uidCal == null) {
+                    uidCal = new Calendar(calendar.getProperties(), new ComponentList<>());
+                    // remove METHOD property for split calendars..
+                    for (final Property mp : uidCal.getProperties(Property.METHOD)) {
+                        uidCal.getProperties().remove(mp);
+                    }
+                    calendars.put(uid.get(), uidCal);
                 }
-                calendars.put(uid, uidCal);
-            }
-            
-            for (final Property p : c.getProperties()) {
-                final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
-                if (tzid.isPresent()) {
-                    final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
-                    if (!uidCal.getComponents().contains(timezone)) {
-                        uidCal.getComponents().add(timezone);
+
+                for (final Property p : c.getProperties()) {
+                    final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
+                    if (tzid.isPresent()) {
+                        final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
+                        if (!uidCal.getComponents().contains(timezone)) {
+                            uidCal.getComponents().add(timezone);
+                        }
                     }
                 }
+                uidCal.getComponents().add(c);
             }
-            uidCal.getComponents().add(c);
         }
         return calendars.values().toArray(new Calendar[0]);
     }
@@ -205,10 +206,10 @@ public final class Calendars {
     public static String getContentType(Calendar calendar, Charset charset) {
         final StringBuilder b = new StringBuilder("text/calendar");
         
-        final Method method = calendar.getProperty(Property.METHOD);
-        if (method != null) {
+        final Optional<Method> method = calendar.getProperty(Property.METHOD);
+        if (method.isPresent()) {
             b.append("; method=");
-            b.append(method.getValue());
+            b.append(method.get().getValue());
         }
         
         if (charset != null) {

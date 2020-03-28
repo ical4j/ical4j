@@ -138,7 +138,7 @@ public final class PropertyValidator implements Validator<Property> {
      * is found in the list of properties
      */
     public static void assertNone(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperty(propertyName) != null, ASSERT_NONE_MESSAGE, false,
+        assertFalse(input -> input.getProperty(propertyName).isPresent(), ASSERT_NONE_MESSAGE, false,
                 properties, propertyName);
     }
 }

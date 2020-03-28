@@ -130,13 +130,13 @@ public class TimeZoneLoader {
      * @return
      */
     private VTimeZone updateDefinition(VTimeZone vTimeZone) throws IOException, ParserException {
-        final TzUrl tzUrl = vTimeZone.getTimeZoneUrl();
-        if (tzUrl != null) {
+        final Optional<TzUrl> tzUrl = vTimeZone.getProperty(Property.TZURL);
+        if (tzUrl.isPresent()) {
             final int connectTimeout = Configurator.getIntProperty(UPDATE_CONNECT_TIMEOUT).orElse(0);
             final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(0);
 
             URLConnection connection;
-            URL url = tzUrl.getUri().toURL();
+            URL url = tzUrl.get().getUri().toURL();
 
             if ("true".equals(Configurator.getProperty(UPDATE_PROXY_ENABLED).orElse("false")) && proxy != null) {
                 connection = url.openConnection(proxy);

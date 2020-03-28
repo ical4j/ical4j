@@ -234,7 +234,7 @@ public class Trigger extends DateProperty<Instant> {
         final Optional<Parameter> relParam = getParameter(Parameter.RELATED);
         final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
 
-        if (relParam.isPresent() || !Value.DATE_TIME.equals(valueParam.get())) {
+        if (relParam.isPresent() || (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get()))) {
 
             ParameterValidator.assertOneOrLess(Parameter.RELATED, getParameters());
 
