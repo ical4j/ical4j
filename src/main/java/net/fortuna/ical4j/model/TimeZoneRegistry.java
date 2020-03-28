@@ -38,9 +38,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static java.time.ZoneId.getAvailableZoneIds;
-import static java.time.ZoneId.of;
-
 /**
  * $Id$
  *
@@ -58,8 +55,8 @@ public interface TimeZoneRegistry {
 
     static ZoneId getGlobalZoneId(String tzId) {
         // Ensure zone rules are loaded..
-        Set<String> ids = getAvailableZoneIds();
-        return of(ZONE_IDS.entrySet().stream().filter(entry -> entry.getValue().equals(tzId))
+        Set<String> ids = ZoneId.getAvailableZoneIds();
+        return ZoneId.of(ZONE_IDS.entrySet().stream().filter(entry -> entry.getValue().equals(tzId))
                 .findFirst().orElseThrow(() -> new DateTimeException(String.format("Unknown timezone identifier [%s]", tzId))).getKey(),
                 ZONE_ALIASES);
     }
