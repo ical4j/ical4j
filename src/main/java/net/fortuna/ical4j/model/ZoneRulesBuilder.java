@@ -2,7 +2,10 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.Observance;
 import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.TzOffsetFrom;
+import net.fortuna.ical4j.model.property.TzOffsetTo;
 
 import java.time.*;
 import java.time.zone.ZoneOffsetTransition;
@@ -12,6 +15,7 @@ import java.time.zone.ZoneRules;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Construct a {@link java.time.zone.ZoneRules} instance from a {@link net.fortuna.ical4j.model.component.VTimeZone}.
@@ -29,9 +33,17 @@ public class ZoneRulesBuilder {
         List<ZoneOffsetTransition> transitions = new ArrayList<>();
         for (Observance observance : observances) {
             // ignore transitions that have no effect..
-            if (!observance.getOffsetFrom().getOffset().equals(observance.getOffsetTo().getOffset())) {
-                transitions.add(ZoneOffsetTransition.of(observance.getStartDate().getDate(),
-                        observance.getOffsetFrom().getOffset(), observance.getOffsetTo().getOffset()));
+            Optional<TzOffsetFrom> offsetFrom = observance.getProperty(Property.TZOFFSETFROM);
+            Optional<TzOffsetTo> offsetTo = observance.getProperty(Property.TZOFFSETTO);
+
+            if (offsetFrom.isPresent() && !offsetFrom.get().getOffset().equals(offsetTo.get().getOffset())) {
+                Optional<DtStart<LocalDateTime>> startDate = observance.getProperty(Property.DTSTART);
+                if (startDate.isPresent()) {
+                    transitions.add(ZoneOffsetTransition.of(startDate.get().getDate(),
+                            offsetFrom.get().getOffset(), offsetTo.get().getOffset()));
+                } else {
+                    throw new CalendarException("Missing DTSTART property");
+                }
             }
         }
         return transitions;
@@ -40,17 +52,21 @@ public class ZoneRulesBuilder {
     private List<ZoneOffsetTransitionRule> buildTransitionRules(List<Observance> observances, ZoneOffset standardOffset) {
         List<ZoneOffsetTransitionRule> transitionRules = new ArrayList<>();
         for (Observance observance : observances) {
-            RRule rrule = observance.getProperty(Property.RRULE);
-            if (rrule != null) {
-                Month recurMonth = Month.of(rrule.getRecur().getMonthList().get(0));
-                int dayOfMonth = rrule.getRecur().getDayList().get(0).getOffset();
-                DayOfWeek dayOfWeek = WeekDay.getDayOfWeek(rrule.getRecur().getDayList().get(0));
-                LocalTime time = LocalTime.from(observance.getStartDate().getDate());
+            Optional<RRule> rrule = observance.getProperty(Property.RRULE);
+            Optional<TzOffsetFrom> offsetFrom = observance.getProperty(Property.TZOFFSETFROM);
+            Optional<TzOffsetTo> offsetTo = observance.getProperty(Property.TZOFFSETTO);
+            Optional<DtStart<LocalDateTime>> startDate = observance.getProperty(Property.DTSTART);
+
+            if (rrule.isPresent()) {
+                Month recurMonth = Month.of(rrule.get().getRecur().getMonthList().get(0));
+                int dayOfMonth = rrule.get().getRecur().getDayList().get(0).getOffset();
+                DayOfWeek dayOfWeek = WeekDay.getDayOfWeek(rrule.get().getRecur().getDayList().get(0));
+                LocalTime time = LocalTime.from(startDate.get().getDate());
                 boolean endOfDay = false;
                 TimeDefinition timeDefinition = TimeDefinition.UTC;
                 transitionRules.add(ZoneOffsetTransitionRule.of(recurMonth, dayOfMonth, dayOfWeek, time, endOfDay,
-                        timeDefinition, standardOffset, observance.getOffsetFrom().getOffset(),
-                        observance.getOffsetTo().getOffset()));
+                        timeDefinition, standardOffset, offsetFrom.get().getOffset(),
+                        offsetTo.get().getOffset()));
             }
         }
         return transitionRules;
@@ -59,8 +75,18 @@ public class ZoneRulesBuilder {
     public ZoneRules build() {
         Observance current = VTimeZone.getApplicableObservance(Instant.now(),
                 vTimeZone.getObservances().getComponents(Observance.STANDARD));
-        ZoneOffset standardOffset = current.getOffsetTo().getOffset();
-        ZoneOffset wallOffset = current.getOffsetFrom().getOffset();
+
+        // if no standard time use daylight time..
+        if (current == null) {
+            current = VTimeZone.getApplicableObservance(Instant.now(),
+                    vTimeZone.getObservances().getComponents(Observance.DAYLIGHT));
+        }
+
+        Optional<TzOffsetFrom> offsetFrom = current.getProperty(Property.TZOFFSETFROM);
+        Optional<TzOffsetTo> offsetTo = current.getProperty(Property.TZOFFSETTO);
+
+        ZoneOffset standardOffset = offsetTo.get().getOffset();
+        ZoneOffset wallOffset = offsetFrom.get().getOffset();
         List<ZoneOffsetTransition> standardOffsetTransitions = buildTransitions(
                 vTimeZone.getObservances().getComponents(Observance.STANDARD));
         Collections.sort(standardOffsetTransitions);
