@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,9 +56,18 @@ public interface TimeZoneRegistry {
     static ZoneId getGlobalZoneId(String tzId) {
         // Ensure zone rules are loaded..
         Set<String> ids = ZoneId.getAvailableZoneIds();
-        return ZoneId.of(ZONE_IDS.entrySet().stream().filter(entry -> entry.getValue().equals(tzId))
-                .findFirst().orElseThrow(() -> new DateTimeException(String.format("Unknown timezone identifier [%s]", tzId))).getKey(),
-                ZONE_ALIASES);
+        try {
+            Class.forName(TimeZoneRegistryImpl.class.getCanonicalName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        Optional<Map.Entry<String, String>> zoneId = ZONE_IDS.entrySet().stream().filter(entry ->
+                entry.getValue().equals(tzId)).findFirst();
+        if (zoneId.isPresent()) {
+            return ZoneId.of(zoneId.get().getKey());
+        } else {
+            return ZoneId.of(tzId, ZONE_ALIASES);
+        }
     }
 
     /**
