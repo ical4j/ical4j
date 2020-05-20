@@ -53,9 +53,9 @@ import java.text.ParseException;
 import java.time.*;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static net.fortuna.ical4j.model.WeekDay.*;
 import static org.junit.Assert.assertNotEquals;
@@ -255,12 +255,12 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 //                                                      week1EndDate.getTime());
 //        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
 
-        Calendar expectedCal = Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
-        expectedCal.set(2005, Calendar.APRIL, 1, 9, 0, 0);
-        expectedCal.set(Calendar.MILLISECOND, 0);
+        java.util.Calendar expectedCal = java.util.Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
+        expectedCal.set(2005, java.util.Calendar.APRIL, 1, 9, 0, 0);
+        expectedCal.set(java.util.Calendar.MILLISECOND, 0);
         Date expectedStartOfFirstRange = new DateTime(expectedCal.getTime().getTime());
-        expectedCal.set(2005, Calendar.APRIL, 1, 17, 0, 0);
-        expectedCal.set(Calendar.MILLISECOND, 0);
+        expectedCal.set(2005, java.util.Calendar.APRIL, 1, 17, 0, 0);
+        expectedCal.set(java.util.Calendar.MILLISECOND, 0);
         Date expectedEndOfFirstRange = new DateTime(expectedCal.getTime().getTime());
         assertNotNull(weeklyPeriods);
         assertTrue(weeklyPeriods.size() > 0);
@@ -510,7 +510,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
      *
      */
     public void testCalculateRecurrenceSetNotEmpty() {
-        List<Period<T>> recurrenceSet = event.calculateRecurrenceSet(period);
+        Set<Period<T>> recurrenceSet = event.calculateRecurrenceSet(period);
         assertTrue(!recurrenceSet.isEmpty());
     }
 

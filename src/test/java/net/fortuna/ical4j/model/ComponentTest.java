@@ -50,8 +50,8 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.Temporal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * $Id$
@@ -69,7 +69,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
     
     private Period<T> period;
     
-    private List<Period<T>> expectedPeriods;
+    private Set<Period<T>> expectedPeriods;
     
     /**
      * @param component
@@ -85,7 +85,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
      * @param period
      * @param expectedPeriods
      */
-    public ComponentTest(String testMethod, Component component, Period<T> period, List<Period<T>> expectedPeriods) {
+    public ComponentTest(String testMethod, Component component, Period<T> period, Set<Period<T>> expectedPeriods) {
         this(testMethod, component);
         this.period = period;
         this.expectedPeriods = expectedPeriods;
@@ -141,7 +141,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
     }
     
     public void testCalculateRecurrenceSet() {
-        List<Period<T>> periods = component.calculateRecurrenceSet(period);
+        Set<Period<T>> periods = component.calculateRecurrenceSet(period);
         assertEquals("Wrong number of periods", expectedPeriods.size(), periods.size());
         assertEquals(expectedPeriods, periods);
     }
@@ -163,7 +163,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
             }
         };
         suite.addTest(new ComponentTest<>("testCalculateRecurrenceSet", component, new Period<>(LocalDate.now(),
-                java.time.Period.ofDays(1)), new ArrayList<>()));
+                java.time.Period.ofDays(1)), new TreeSet<>()));
         
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
@@ -178,7 +178,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         component.getProperties().add(new DtEnd("20080601T120000Z"));
         Recur recur = new Recur.Builder().frequency(Recur.Frequency.DAILY).count(7).build();
         component.getProperties().add(new RRule(recur));
-        List<Period<Instant>> expectedPeriods = new ArrayList<>();
+        Set<Period<Instant>> expectedPeriods = new TreeSet<>();
         expectedPeriods.add(Period.parse("20080601T100000Z/PT2H"));
         expectedPeriods.add(Period.parse("20080602T100000Z/PT2H"));
         expectedPeriods.add(Period.parse("20080603T100000Z/PT2H"));
@@ -202,7 +202,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         component.getProperties().add(new Due<>((LocalDate) TemporalAdapter.parse("20080602").getTemporal()));
         recur = new Recur.Builder().frequency(Recur.Frequency.WEEKLY).count(5).build();
         component.getProperties().add(new RRule(recur));
-        List<Period<LocalDate>> expectedPeriods2 = new ArrayList<>();
+        Set<Period<LocalDate>> expectedPeriods2 = new TreeSet<>();
         expectedPeriods2.add(Period.parse("20080601/P1D"));
         expectedPeriods2.add(Period.parse("20080608/P1D"));
         expectedPeriods2.add(Period.parse("20080615/P1D"));

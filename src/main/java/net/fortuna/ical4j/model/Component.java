@@ -280,7 +280,7 @@ public abstract class Component implements Serializable {
      * @param period a range that defines the boundary for calculations
      * @return a list of periods representing component occurrences within the specified boundary
      */
-    public final <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<T> period) {
+    public final <T extends Temporal> Set<Period<T>> calculateRecurrenceSet(final Period<T> period) {
 
         final Set<Period<T>> recurrenceSet = new TreeSet<>();
 
@@ -293,7 +293,7 @@ public abstract class Component implements Serializable {
 
         // if no start date specified return empty list..
         if (!start.isPresent()) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
         // if an explicit event duration is not specified, derive a value for recurring
@@ -370,6 +370,6 @@ public abstract class Component implements Serializable {
         // set a link to the origin
         recurrenceSet.forEach( p -> p.setComponent(this));
 
-        return new ArrayList<>(recurrenceSet);
+        return recurrenceSet;
     }
 }

@@ -88,7 +88,7 @@ class ComponentGroupTest extends Specification {
         def recurrences = new ComponentGroup(components, uid).calculateRecurrenceSet(period)
 
         then: 'the expected number of recurrences are returned'
-        recurrences == event.calculateRecurrenceSet(period)
+        recurrences as Set == event.calculateRecurrenceSet(period)
     }
 
     def "CalculateRecurrenceSetWithException"() {

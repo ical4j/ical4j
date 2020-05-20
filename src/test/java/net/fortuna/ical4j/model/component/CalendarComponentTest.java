@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.temporal.Temporal;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Ben
@@ -67,7 +67,7 @@ public class CalendarComponentTest<T extends Temporal> extends ComponentTest<T> 
      * @param expectedPeriods
      */
     public CalendarComponentTest(String testMethod, CalendarComponent component,
-                                 Period<T> period, List<Period<T>> expectedPeriods) {
+                                 Period<T> period, Set<Period<T>> expectedPeriods) {
         super(testMethod, component, period, expectedPeriods);
         this.component = component;
     }

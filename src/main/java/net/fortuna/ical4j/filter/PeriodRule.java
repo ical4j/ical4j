@@ -35,7 +35,7 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Period;
 
 import java.time.temporal.Temporal;
-import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 /**
@@ -81,7 +81,7 @@ public class PeriodRule<C extends Component, T extends Temporal> implements Pred
         */
         
 //        try {
-        final List<Period<T>> recurrenceSet = component.calculateRecurrenceSet(period);
+        final Set<Period<T>> recurrenceSet = component.calculateRecurrenceSet(period);
         return (!recurrenceSet.isEmpty());
 //        }
 //        catch (ValidationException ve) {
