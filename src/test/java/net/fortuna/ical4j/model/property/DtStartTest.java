@@ -39,6 +39,8 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.util.TimeZones;
 
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -66,7 +68,7 @@ public class DtStartTest extends TestCase {
     public void testDtStartString() {
         List<Parameter> params = new ArrayList<>();
         params.add(Value.DATE);
-        DtStart dtStart = new DtStart(params, "20060811");
+        DtStart<LocalDate> dtStart = new DtStart<>(params, "20060811");
         
         Calendar calendar = Calendar.getInstance(TimeZones.getDateTimeZone());
         calendar.clear();
@@ -76,7 +78,7 @@ public class DtStartTest extends TestCase {
         calendar.clear(Calendar.SECOND);
         calendar.clear(Calendar.MILLISECOND);
         
-        assertEquals(dtStart.getDate(), calendar.getTime());
+        assertEquals(dtStart.getDate(), LocalDate.from(calendar.getTime().toInstant().atZone(ZoneId.systemDefault())));
     }
 
     /**

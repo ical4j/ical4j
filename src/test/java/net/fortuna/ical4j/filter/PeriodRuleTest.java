@@ -46,6 +46,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -142,9 +143,9 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         ComponentList<CalendarComponent> components = new ComponentList<>();
         components.add(event);
 
-        LocalDate ruleDate = LocalDate.now().withMonth(1).withDayOfMonth(1);
+        ZonedDateTime ruleDate = LocalDate.now().withMonth(1).withDayOfMonth(1).atStartOfDay().atZone(ZoneId.systemDefault());
         while (ruleDate.getMonth() == Month.JANUARY) {
-            PeriodRule<CalendarComponent, LocalDate> rule = new PeriodRule<>(new Period<>(ruleDate, java.time.Period.ofDays(1),
+            PeriodRule<CalendarComponent, ZonedDateTime> rule = new PeriodRule<>(new Period<>(ruleDate, java.time.Period.ofDays(1),
                     CalendarDateFormat.DATE_FORMAT));
             filter = new Filter<>(rule);
             if (ruleDate.getDayOfMonth() == 25) {
@@ -164,7 +165,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, exCal.getComponents()));
 
         // Test exclusion of particular date patterns..
-        exCal = Calendars.load(PeriodRuleTest.class.getResource("/samples/valid/friday13-NOT.ics"));
+        exCal = Calendars.load(PeriodRuleTest.class.getResource("/samples/invalid/friday13-NOT.ics"));
         period = new Period<>(startDt, java.time.Period.ofWeeks(52));
         filter = new Filter<>(new PeriodRule<>(period));
         suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, exCal.getComponents()));
