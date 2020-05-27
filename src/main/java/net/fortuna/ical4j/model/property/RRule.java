@@ -36,7 +36,6 @@ import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -64,9 +63,8 @@ public class RRule extends Property {
 
     /**
      * @param value a rule string
-     * @throws ParseException where the specified string is not a valid rule
      */
-    public RRule(String value) throws ParseException {
+    public RRule(String value) {
         super(RRULE, new Factory());
         setValue(value);
     }
@@ -74,11 +72,9 @@ public class RRule extends Property {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException thrown when the specified string is not a valid representaton of a recurrence
      * @see Recur#Recur(String)
      */
-    public RRule(final List<Parameter> aList, final String aValue)
-            throws ParseException {
+    public RRule(final List<Parameter> aList, final String aValue) {
         super(RRULE, aList, new Factory());
         setValue(aValue);
     }
@@ -110,7 +106,7 @@ public class RRule extends Property {
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) throws ParseException {
+    public final void setValue(final String aValue) {
         recur = new Recur(aValue);
     }
 
@@ -127,7 +123,7 @@ public class RRule extends Property {
     }
 
     @Override
-    public Property copy() throws ParseException {
+    public Property copy() {
         return new Factory().createProperty(getParameters(), getValue());
     }
 
@@ -138,7 +134,7 @@ public class RRule extends Property {
             super(RRULE);
         }
 
-        public RRule createProperty(final List<Parameter> parameters, final String value) throws ParseException {
+        public RRule createProperty(final List<Parameter> parameters, final String value) {
             return new RRule(parameters, value);
         }
 

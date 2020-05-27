@@ -21,7 +21,6 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.ParseException;
 import java.time.Period;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -97,10 +96,8 @@ public class TimeZoneLoader {
 
     /**
      * Loads an existing VTimeZone from the classpath corresponding to the specified Java timezone.
-     *
-     * @throws ParseException
      */
-    public VTimeZone loadVTimeZone(String id) throws IOException, ParserException, ParseException {
+    public VTimeZone loadVTimeZone(String id) throws IOException, ParserException {
         Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
         if (!cache.containsId(id)) {
             final URL resource = ResourceLoader.getResource(resourcePrefix + id + ".ics");
@@ -158,7 +155,7 @@ public class TimeZoneLoader {
         return vTimeZone;
     }
 
-    private static VTimeZone generateTimezoneForId(String timezoneId) throws ParseException {
+    private static VTimeZone generateTimezoneForId(String timezoneId) {
         if (!ZoneId.getAvailableZoneIds().contains(timezoneId)) {
             return null;
         }
@@ -227,29 +224,24 @@ public class TimeZoneLoader {
 
             String rruleText = String.format(RRULE_TPL, transitionRuleMonthValue, weekdayIndexInMonth, transitionRuleDayOfWeek.name().substring(0, 2));
 
-            try {
-                TzOffsetFrom offsetFrom = new TzOffsetFrom(transitionRule.getOffsetBefore());
-                TzOffsetTo offsetTo = new TzOffsetTo(transitionRule.getOffsetAfter());
-                RRule rrule = new RRule(rruleText);
+            TzOffsetFrom offsetFrom = new TzOffsetFrom(transitionRule.getOffsetBefore());
+            TzOffsetTo offsetTo = new TzOffsetTo(transitionRule.getOffsetAfter());
+            RRule rrule = new RRule(rruleText);
 
-                Observance observance = (transitionRule.getOffsetAfter().getTotalSeconds() > rawTimeZoneOffsetInSeconds) ? new Daylight() : new Standard();
+            Observance observance = (transitionRule.getOffsetAfter().getTotalSeconds() > rawTimeZoneOffsetInSeconds) ? new Daylight() : new Standard();
 
-                observance.getProperties().add(offsetFrom);
-                observance.getProperties().add(offsetTo);
-                observance.getProperties().add(rrule);
-                observance.getProperties().add(new DtStart(startDate.withMonth(transitionRule.getMonth().getValue())
-                        .withDayOfMonth(transitionRule.getDayOfMonthIndicator())
-                        .with(transitionRule.getDayOfWeek()).format(DateTimeFormatter.ofPattern(DATE_TIME_TPL))));
+            observance.getProperties().add(offsetFrom);
+            observance.getProperties().add(offsetTo);
+            observance.getProperties().add(rrule);
+            observance.getProperties().add(new DtStart(startDate.withMonth(transitionRule.getMonth().getValue())
+                    .withDayOfMonth(transitionRule.getDayOfMonthIndicator())
+                    .with(transitionRule.getDayOfWeek()).format(DateTimeFormatter.ofPattern(DATE_TIME_TPL))));
 
-                result.getObservances().add(observance);
-
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
+            result.getObservances().add(observance);
         }
     }
 
-    private static void addTransitions(ZoneId zoneId, VTimeZone result, int rawTimeZoneOffsetInSeconds) throws ParseException {
+    private static void addTransitions(ZoneId zoneId, VTimeZone result, int rawTimeZoneOffsetInSeconds) {
         Map<ZoneOffsetKey, Set<ZoneOffsetTransition>> zoneTransitionsByOffsets = new HashMap<ZoneOffsetKey, Set<ZoneOffsetTransition>>();
 
         for (ZoneOffsetTransition zoneTransitionRule : zoneId.getRules().getTransitions()) {

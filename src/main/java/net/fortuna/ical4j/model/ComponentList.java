@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,11 +65,10 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
     /**
      * Creates a deep copy of the specified component list.
      * @param components a component list to copy
-     * @throws ParseException where component data cannot be parsed
      * @throws URISyntaxException where component data contains an invalid URI
      */
     @SuppressWarnings("unchecked")
-	public ComponentList(ComponentList<? extends T> components) throws ParseException, URISyntaxException {
+	public ComponentList(ComponentList<? extends T> components) throws URISyntaxException {
         for (T c : components) {
             add((T) c.copy());
         }

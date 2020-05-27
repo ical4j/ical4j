@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
@@ -137,7 +136,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             try {
                 // load any available updates for the timezone..
                 timezones.put(timezone.getID(), new TimeZone(timeZoneLoader.loadVTimeZone(timezone.getID())));
-            } catch (IOException | ParserException | ParseException e) {
+            } catch (IOException | ParserException e) {
                 Logger log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
                 log.warn("Error occurred loading VTimeZone", e);
             }
@@ -190,7 +189,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
                                         return getTimeZone(matcher.group());
                                     }
                                 }
-                            } catch (IOException | ParserException | ParseException e) {
+                            } catch (IOException | ParserException e) {
                                 Logger log = LoggerFactory.getLogger(TimeZoneRegistryImpl.class);
                                 log.warn("Error occurred loading VTimeZone", e);
                             }

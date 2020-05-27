@@ -36,7 +36,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
-import java.text.ParseException;
 import java.time.Instant;
 import java.util.List;
 
@@ -91,9 +90,8 @@ public class Created extends DateProperty<Instant> {
 
     /**
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public Created(final String aValue) throws ParseException {
+    public Created(final String aValue) {
         super(CREATED, new Factory());
         setValue(aValue);
     }
@@ -101,10 +99,8 @@ public class Created extends DateProperty<Instant> {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public Created(final List<Parameter> aList, final String aValue)
-            throws ParseException {
+    public Created(final List<Parameter> aList, final String aValue) {
         super(CREATED, aList, new Factory());
         setValue(aValue);
     }
@@ -127,7 +123,7 @@ public class Created extends DateProperty<Instant> {
     }
 
     @Override
-    public Property copy() throws ParseException {
+    public Property copy() {
         return new Factory().createProperty(getParameters(), getValue());
     }
 
@@ -138,7 +134,7 @@ public class Created extends DateProperty<Instant> {
             super(CREATED);
         }
 
-        public Created createProperty(final List<Parameter> parameters, final String value) throws ParseException {
+        public Created createProperty(final List<Parameter> parameters, final String value) {
             return new Created(parameters, value);
         }
 

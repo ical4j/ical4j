@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.time.zone.ZoneRules;
 import java.time.zone.ZoneRulesProvider;
 import java.util.*;
@@ -57,7 +56,7 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
                 VTimeZone vTimeZone = zoneLoader.loadVTimeZone(localZoneId);
                 retVal = new ZoneRulesBuilder().vTimeZone(vTimeZone).build();
                 zoneRulesMap.put(zoneId, retVal);
-            } catch (IOException | ParserException | ParseException e) {
+            } catch (IOException | ParserException e) {
                 LOG.error("Error loading zone rules", e);
             }
         }

@@ -38,7 +38,6 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
@@ -133,8 +132,6 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * {@link DateProperty#setDate(Temporal)}.
      *
      * @param value a string representation of a DATE or DATE-TIME value
-     * @throws ParseException where the specified value is not a valid DATE or DATE-TIME
-     *                        representation
      */
     public void setValue(final String value) throws DateTimeParseException {
         // value can be either a date-time or a date..

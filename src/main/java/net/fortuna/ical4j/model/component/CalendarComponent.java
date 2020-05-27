@@ -153,5 +153,4 @@ public abstract class CalendarComponent extends Component {
     public final void validateDeclineCounter() throws ValidationException {
         validate(Method.DECLINE_COUNTER);
     }
-
 }

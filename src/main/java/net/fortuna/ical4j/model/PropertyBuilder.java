@@ -6,7 +6,6 @@ import net.fortuna.ical4j.util.Strings;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +48,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
         return this;
     }
 
-    public Property build() throws ParseException, IOException, URISyntaxException {
+    public Property build() throws IOException, URISyntaxException {
         Property property = null;
         for (PropertyFactory<?> factory : factories) {
             if (factory.supports(name)) {

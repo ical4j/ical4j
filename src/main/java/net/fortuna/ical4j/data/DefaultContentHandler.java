@@ -7,7 +7,6 @@ import net.fortuna.ical4j.util.Constants;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.zone.ZoneRulesProvider;
 import java.util.List;
 import java.util.function.Consumer;
@@ -105,7 +104,7 @@ public class DefaultContentHandler implements ContentHandler {
     }
 
     @Override
-    public void endProperty(String name) throws URISyntaxException, ParseException, IOException {
+    public void endProperty(String name) throws URISyntaxException, IOException {
         assertProperty(propertyBuilder);
         Property property = propertyBuilder.build();
 

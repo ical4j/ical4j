@@ -158,7 +158,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
             }
 
             @Override
-            public Component copy() throws URISyntaxException, ParseException {
+            public Component copy() {
                 return null;
             }
         };
@@ -169,7 +169,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
             public void validate(boolean recurse) throws ValidationException {
             }
             @Override
-            public Component copy() throws URISyntaxException, ParseException {
+            public Component copy() {
                 return null;
             }
         };
@@ -193,7 +193,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
             public void validate(boolean recurse) throws ValidationException {
             }
             @Override
-            public Component copy() throws URISyntaxException, ParseException {
+            public Component copy() {
                 return null;
             }
         };

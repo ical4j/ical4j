@@ -12,7 +12,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 
-import java.text.ParseException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,7 +110,6 @@ public class Acknowledged extends DateProperty<Instant> {
 
     /**
      * @param aValue a string representation of a DTSTAMP value
-     * @throws ParseException if the specified value is not a valid representation
      */
     public Acknowledged(final String aValue) {
         this(new ArrayList<>(), aValue);
@@ -120,7 +118,6 @@ public class Acknowledged extends DateProperty<Instant> {
     /**
      * @param aList a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
     public Acknowledged(final List<Parameter> aList, final String aValue) {
         super(ACKNOWLEDGED, aList, new Factory());
@@ -145,7 +142,7 @@ public class Acknowledged extends DateProperty<Instant> {
     }
 
     @Override
-    public Property copy() throws ParseException {
+    public Property copy() {
         return new Factory().createProperty(getParameters(), getValue());
     }
 
@@ -156,7 +153,7 @@ public class Acknowledged extends DateProperty<Instant> {
             super(ACKNOWLEDGED);
         }
 
-        public Acknowledged createProperty(final List<Parameter> parameters, final String value) throws ParseException {
+        public Acknowledged createProperty(final List<Parameter> parameters, final String value) {
             return new Acknowledged(parameters, value);
         }
 

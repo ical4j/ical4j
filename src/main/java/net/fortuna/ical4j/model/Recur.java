@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
@@ -200,7 +199,6 @@ public class Recur<T extends Temporal> implements Serializable {
      * Constructs a new instance from the specified string value.
      *
      * @param aValue a string representation of a recurrence.
-     * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
      */
     public Recur(final String aValue) {
         Iterator<String> tokens = Arrays.asList(aValue.split("[;=]")).iterator();

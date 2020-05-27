@@ -38,7 +38,6 @@ import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -172,7 +171,7 @@ public class Available extends Component {
     }
 
     @Override
-    public Available copy() throws URISyntaxException, ParseException {
+    public Available copy() throws URISyntaxException {
         return new Factory().createComponent(getProperties());
     }
 
@@ -188,7 +187,7 @@ public class Available extends Component {
         }
 
         @Override
-        public Available createComponent(PropertyList properties) throws URISyntaxException, ParseException {
+        public Available createComponent(PropertyList properties) throws URISyntaxException {
             return new Available(new PropertyList(properties));
         }
 

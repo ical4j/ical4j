@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +67,7 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @param properties a property list
      */
     
-    public PropertyList(PropertyList properties) throws URISyntaxException, ParseException {
+    public PropertyList(PropertyList properties) throws URISyntaxException {
         super();
         for (Property p: properties) {
             add(p.copy());

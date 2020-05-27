@@ -38,7 +38,6 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Strings;
 
-import java.text.ParseException;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
@@ -120,7 +119,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     /**
      * {@inheritDoc}
      */
-    public void setValue(final String aValue) throws ParseException {
+    public void setValue(final String aValue) {
         dates = DateList.parse(aValue);
     }
 

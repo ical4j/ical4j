@@ -41,8 +41,8 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
 import java.time.Instant;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -123,11 +123,11 @@ public class ExDateTest extends TestCase {
     /**
      * Allow date values by default if relaxed parsing enabled.
      */
-    public void testRelaxedParsing() throws ParseException {
+    public void testRelaxedParsing() throws DateTimeParseException {
         try {
             new ExDate(new ArrayList<>(), "20080315");
-            fail("Should throw ParseException");
-        } catch (ParseException pe) {
+            fail("Should throw DateTimeParseException");
+        } catch (DateTimeParseException pe) {
             LOG.trace("Caught exception: " + pe.getMessage());
         }
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);

@@ -37,7 +37,6 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.text.ParseException;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -147,10 +146,8 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
-    public RDate(final List<Parameter> aList, final String aValue)
-            throws ParseException {
+    public RDate(final List<Parameter> aList, final String aValue) {
         super(RDATE, aList, new Factory());
         periods = null;
         setValue(aValue);
@@ -241,7 +238,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
     /**
      * {@inheritDoc}
      */
-    public final void setValue(final String aValue) throws ParseException {
+    public final void setValue(final String aValue) {
         if (getParameter(Parameter.VALUE).equals(Optional.of(Value.PERIOD))) {
             periods = PeriodList.parse(aValue);
         } else {
@@ -260,7 +257,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
     }
 
     @Override
-    public Property copy() throws ParseException {
+    public Property copy() {
         return new Factory().createProperty(getParameters(), getValue());
     }
 
@@ -271,7 +268,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
             super(RDATE);
         }
 
-        public RDate createProperty(final List<Parameter> parameters, final String value) throws ParseException {
+        public RDate createProperty(final List<Parameter> parameters, final String value) {
             return new RDate(parameters, value);
         }
 

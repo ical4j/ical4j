@@ -40,7 +40,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
@@ -259,7 +258,7 @@ public abstract class Component implements Serializable {
      * Create a (deep) copy of this component.
      * @return the component copy
      */
-    public abstract Component copy() throws URISyntaxException, ParseException;
+    public abstract Component copy() throws URISyntaxException;
 
     /**
      * Calculates the recurrence set for this component using the specified period.

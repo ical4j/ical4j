@@ -40,7 +40,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -404,14 +403,11 @@ public abstract class Property extends Content {
      *
      * @param property a property to copy
      * @throws URISyntaxException where the specified property contains an invalid URI value
-     * @throws ParseException     where the specified property has invalid data
      * @throws IOException        where an error occurs reading data from the specified property
      * @deprecated Use {@link #copy()} instead
      */
-    protected Property(final Property property) throws IOException,
-            URISyntaxException, ParseException {
-        this(property.getName(), new ArrayList<>(property.getParameters()),
-                property.factory);
+    protected Property(final Property property) throws IOException, URISyntaxException {
+        this(property.getName(), new ArrayList<>(property.getParameters()), property.factory);
         setValue(property.getValue());
     }
 
@@ -486,10 +482,8 @@ public abstract class Property extends Content {
      * @param aValue a string representation of the property value
      * @throws IOException        possibly thrown by setting the value of certain properties
      * @throws URISyntaxException possibly thrown by setting the value of certain properties
-     * @throws ParseException     possibly thrown by setting the value of certain properties
      */
-    public abstract void setValue(String aValue) throws IOException,
-            URISyntaxException, ParseException;
+    public abstract void setValue(String aValue) throws IOException, URISyntaxException;
 
     /**
      * Perform validation on a property.
@@ -524,5 +518,5 @@ public abstract class Property extends Content {
      *
      * @return the copy of the property
      */
-    public abstract Property copy() throws URISyntaxException, ParseException;
+    public abstract Property copy() throws URISyntaxException;
 }

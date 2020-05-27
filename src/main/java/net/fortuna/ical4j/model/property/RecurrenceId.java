@@ -38,7 +38,6 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
@@ -138,9 +137,8 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * Creates a new instance initialised with the parsed value.
      *
      * @param value the RECURRENCE_ID value string to parse
-     * @throws ParseException where the specified string is not a valid RECURRENCE_ID value representation
      */
-    public RecurrenceId(final String value) throws ParseException {
+    public RecurrenceId(final String value) {
         super(RECURRENCE_ID, new Factory());
         setValue(value);
     }
@@ -148,7 +146,6 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException where the specified value string is not a valid date-time/date representation
      */
     public RecurrenceId(final List<Parameter> aList, final String aValue) {
         super(RECURRENCE_ID, aList, new Factory());

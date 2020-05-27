@@ -116,15 +116,14 @@ public class PropertyTest extends AbstractPropertyTest {
                 return "";
             }
 
-            public void setValue(String value) throws IOException,
-                    URISyntaxException, ParseException {
+            public void setValue(String value) {
             }
 
             public void validate() throws ValidationException {
             }
 
             @Override
-            public Property copy() throws URISyntaxException, ParseException {
+            public Property copy() {
                 return null;
             }
         };
@@ -213,15 +212,14 @@ public class PropertyTest extends AbstractPropertyTest {
                 return "value";
             }
 
-            public void setValue(String value) throws IOException,
-                    URISyntaxException, ParseException {
+            public void setValue(String value) {
             }
 
             public void validate() throws ValidationException {
             }
 
             @Override
-            public Property copy() throws URISyntaxException, ParseException {
+            public Property copy() {
                 return null;
             }
         };
@@ -232,8 +230,7 @@ public class PropertyTest extends AbstractPropertyTest {
                 return "value";
             }
 
-            public void setValue(String value) throws IOException,
-                    URISyntaxException, ParseException {
+            public void setValue(String value) {
             }
 
             public void validate() throws ValidationException {
@@ -241,7 +238,7 @@ public class PropertyTest extends AbstractPropertyTest {
             }
 
             @Override
-            public Property copy() throws URISyntaxException, ParseException {
+            public Property copy() {
                 return null;
             }
         };

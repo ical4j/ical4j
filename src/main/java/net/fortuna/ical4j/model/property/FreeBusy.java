@@ -35,7 +35,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.text.ParseException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,9 +120,8 @@ public class FreeBusy extends Property {
 
     /**
      * @param aValue a freebusy value
-     * @throws ParseException where the specified string is not a valid freebusy value
      */
-    public FreeBusy(final String aValue) throws ParseException {
+    public FreeBusy(final String aValue) {
         super(FREEBUSY, new Factory());
         setValue(aValue);
     }
@@ -131,7 +129,6 @@ public class FreeBusy extends Property {
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
-     * @throws ParseException when the specified string is not a valid list of periods
      */
     public FreeBusy(final List<Parameter> aList, final String aValue) {
         super(FREEBUSY, aList, new Factory());
@@ -193,7 +190,7 @@ public class FreeBusy extends Property {
     }
 
     @Override
-    public Property copy() throws ParseException {
+    public Property copy() {
         return new Factory().createProperty(getParameters(), getValue());
     }
 
@@ -204,7 +201,7 @@ public class FreeBusy extends Property {
             super(FREEBUSY);
         }
 
-        public FreeBusy createProperty(final List<Parameter> parameters, final String value) throws ParseException {
+        public FreeBusy createProperty(final List<Parameter> parameters, final String value) {
             return new FreeBusy(parameters, value);
         }
 

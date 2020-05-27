@@ -37,7 +37,6 @@ import net.fortuna.ical4j.model.Calendar;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -65,7 +64,7 @@ public class ConcurrencyTest extends TestCase {
                         Calendar calendar = new CalendarBuilder().build(fis);
                         Calendar cal = new Calendar(calendar);
                         size.addAndGet(cal.getComponents().size());
-                    } catch (IOException | ParserException | URISyntaxException | ParseException e) {
+                    } catch (IOException | ParserException | URISyntaxException e) {
                         e.printStackTrace();
                     }
                 }
@@ -94,7 +93,7 @@ public class ConcurrencyTest extends TestCase {
                     try {
                         Calendar cal = new Calendar(calendar);
                         size.addAndGet(cal.getComponents().size());
-                    } catch (ParseException | URISyntaxException e) {
+                    } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
                 }

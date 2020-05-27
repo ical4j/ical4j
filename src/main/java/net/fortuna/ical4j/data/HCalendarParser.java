@@ -285,7 +285,7 @@ public class HCalendarParser implements CalendarParser {
         try {
             handler.propertyValue(Version.VERSION_2_0.getValue());
             handler.endProperty(Property.VERSION);
-        } catch (IOException | ParseException | URISyntaxException e) {
+        } catch (IOException | URISyntaxException e) {
             LOG.warn("Caught exception", e);
         }
 
@@ -443,8 +443,6 @@ public class HCalendarParser implements CalendarParser {
             handler.endProperty(propName);
         } catch (URISyntaxException e) {
             throw new ParserException("Malformed URI value for element '" + className + "'", -1, e);
-        } catch (ParseException e) {
-            throw new ParserException("Malformed value for element '" + className + "'", -1, e);
         } catch (IOException e) {
             throw new CalendarException(e);
         }

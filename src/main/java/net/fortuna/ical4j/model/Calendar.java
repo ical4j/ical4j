@@ -45,7 +45,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.Serializable;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -180,10 +179,9 @@ public class Calendar implements Serializable {
     /**
      * Creates a deep copy of the specified calendar.
      * @param c the calendar to copy
-     * @throws ParseException where calendar parsing fails
      * @throws URISyntaxException where an invalid URI string is encountered
      */
-    public Calendar(Calendar c) throws ParseException, URISyntaxException {
+    public Calendar(Calendar c) throws URISyntaxException {
         
         this(new PropertyList(c.getProperties()),
         		new ComponentList<>(c.getComponents()));
