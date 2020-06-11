@@ -65,7 +65,8 @@ public class RRule extends Property {
 
     /**
      * @param value a rule string
-     * @throws ParseException where the specified string is not a valid rule
+     * @throws ParseException where the if the UNTIL part of the recurrence string is an invalid date representation
+     * @throws IllegalArgumentException where the recurrence string contains an unrecognised token
      */
     public RRule(String value) throws ParseException {
         super(RRULE, new Factory());
