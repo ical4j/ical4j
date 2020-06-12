@@ -14,7 +14,7 @@ class TzIdSpec extends Specification {
         where:
         tzIdString              | expectedString
         'Australia/Melbourne'   | 'Australia/Melbourne'
-        'UTC+10'                | 'UTC+10:00'
+        'UTC+10'                | 'UTC+10'
     }
 
     def 'test custom zone id instance creation'() {
@@ -26,7 +26,7 @@ class TzIdSpec extends Specification {
         where:
         tzIdString                          | expectedString
         '/tzurl.org/Australia/Melbourne'    | '/tzurl.org/Australia/Melbourne'
-        'Canberra, Melbourne, Sydney'       | 'Canberra, Melbourne, Sydney'
+        'Canberra, Melbourne, Sydney'       | 'Canberra\\, Melbourne\\, Sydney'
     }
 
     def 'test unsuccessfull instance creation'() {

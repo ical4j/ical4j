@@ -41,7 +41,6 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -362,8 +361,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
     /**
      * @return
      */
-    public static TestSuite suite() throws ParseException, URISyntaxException,
-            IOException {
+    public static TestSuite suite() throws ParseException, URISyntaxException {
         TestSuite suite = new TestSuite();
 
         suite.addTest(new VFreeBusyTest("testVFreeBusyComponentList"));

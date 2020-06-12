@@ -33,7 +33,6 @@ package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -44,9 +43,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.Temporal;
@@ -150,7 +146,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
      * @return
      */
     @SuppressWarnings("serial")
-	public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException, ParserException  {
+	public static TestSuite suite() throws Exception {
         TestSuite suite = new TestSuite();
         
         Component component = new Component("test") {

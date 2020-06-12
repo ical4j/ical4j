@@ -38,9 +38,7 @@ import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.parameter.TzId;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
@@ -79,8 +77,7 @@ public class DatePropertyTest extends PropertyTest {
     /**
      * 
      */
-    public void testCopy() throws IOException, URISyntaxException,
-            ParseException {
+    public void testCopy() throws URISyntaxException {
         Property copy = property.copy();
         assertEquals(property, copy);
     }

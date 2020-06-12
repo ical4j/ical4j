@@ -22,9 +22,7 @@ class CalendarBuilderSpec extends Specification {
         System.out.println(cal2);
         InputStream stream = new ByteArrayInputStream(cal2.getBytes(Charset.forName("UTF-8")));
         CalendarBuilder builder = new CalendarBuilder();
-        Calendar calendar = null;
-
-        calendar = builder.build(stream);
+        Calendar calendar = builder.build(stream);
 
         then: 'the result is as expected'
         calendar as String == cal2.replaceAll('\n', '\r\n')

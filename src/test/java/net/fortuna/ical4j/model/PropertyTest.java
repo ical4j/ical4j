@@ -135,8 +135,7 @@ public class PropertyTest extends AbstractPropertyTest {
     /**
      * Test deep copy of properties.
      */
-    public void testCopy() throws IOException, URISyntaxException,
-            ParseException {
+    public void testCopy() throws IOException, URISyntaxException {
         Property copy = property.copy();
         assertEquals(property, copy);
 
@@ -180,7 +179,7 @@ public class PropertyTest extends AbstractPropertyTest {
      * @throws ParseException
      */
     @SuppressWarnings("serial")
-	public void testImmutable() throws IOException, URISyntaxException, ParseException {
+	public void testImmutable() throws IOException, URISyntaxException {
         try {
             property.setValue("");
             fail("UnsupportedOperationException should be thrown");

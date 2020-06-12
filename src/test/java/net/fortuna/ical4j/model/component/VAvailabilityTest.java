@@ -65,7 +65,7 @@ public class VAvailabilityTest extends ComponentTest {
      * @return
      * @throws SocketException 
      */
-    public static TestSuite suite() throws SocketException {
+    public static TestSuite suite() {
         TestSuite suite = new TestSuite();
 
         VAvailability a = new VAvailability();

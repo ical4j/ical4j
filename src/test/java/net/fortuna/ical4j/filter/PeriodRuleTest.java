@@ -97,10 +97,9 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
      * Test handling of recurrence rules.
      * @throws ParserException
      * @throws IOException
-     * @throws ParseException
      */
     /*
-    public void testRecurrenceRules() throws ParserException, IOException, ParseException {
+    public void testRecurrenceRules() throws ParserException, IOException {
         Calendar rCal = Calendars.load("etc/samples/valid/LH1.ics");
         Period period = new Period(new DateTime("20060831T000000Z"), new DateTime("20070831T230000Z")); 
         Filter filter = new Filter(new PeriodRule(period)); 

@@ -68,7 +68,7 @@ public class VAlarmTest extends ComponentTest {
      * @throws IOException 
      * @throws ParseException 
      */
-    public static TestSuite suite() throws ParseException, IOException, URISyntaxException {
+    public static TestSuite suite() throws URISyntaxException {
         TestSuite suite = new TestSuite();
         
         VAlarm alarm = new VAlarm();

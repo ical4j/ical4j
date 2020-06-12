@@ -188,7 +188,7 @@ public class Available extends Component {
 
         @Override
         public Available createComponent(PropertyList properties) throws URISyntaxException {
-            return new Available(new PropertyList(properties));
+            return new Available(properties);
         }
 
         @Override

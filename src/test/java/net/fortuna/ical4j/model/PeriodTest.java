@@ -37,7 +37,6 @@ import junit.framework.TestSuite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -413,9 +412,8 @@ public class PeriodTest extends TestCase {
     
     /**
      * @return
-     * @throws ParseException 
      */
-    public static Test suite() throws ParseException {
+    public static Test suite() {
     	TestSuite suite = new TestSuite();
 
         ZonedDateTime past = ZonedDateTime.now().withYear(1980).withMonth(1).withDayOfMonth(23);

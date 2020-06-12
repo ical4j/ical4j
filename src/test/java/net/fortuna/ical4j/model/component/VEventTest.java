@@ -531,7 +531,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
      * @throws IOException
      * @throws ParserException
      */
-    public static TestSuite suite() throws ValidationException, ParseException, IOException, URISyntaxException, ParserException {
+    public static TestSuite suite() throws ValidationException, IOException, ParserException {
         UidGenerator uidGenerator = new RandomUidGenerator();
 
         ZonedDateTime weekday9AM = ZonedDateTime.now().withYear(2005).withMonth(3).withDayOfMonth(7)

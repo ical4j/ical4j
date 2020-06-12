@@ -34,8 +34,6 @@ package net.fortuna.ical4j.model;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import java.text.ParseException;
-
 /**
  * $Id$
  *
@@ -53,7 +51,6 @@ public class DateListTest extends TestCase {
     /**
      * @param value
      * @param expectedSize
-     * @throws ParseException
      */
     public DateListTest(String value, int expectedSize) {
         this(DateList.parse(value), expectedSize);
@@ -78,9 +75,8 @@ public class DateListTest extends TestCase {
     
     /**
      * @return
-     * @throws ParseException 
      */
-    public static TestSuite suite() throws ParseException {
+    public static TestSuite suite() {
         TestSuite suite = new TestSuite();
         suite.addTest(new DateListTest(new DateList(), 0));
         suite.addTest(new DateListTest(new Date().toString(), 1));

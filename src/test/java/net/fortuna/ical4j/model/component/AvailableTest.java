@@ -67,7 +67,7 @@ public class AvailableTest extends ComponentTest {
      * @return
      * @throws SocketException 
      */
-    public static TestSuite suite() throws SocketException {
+    public static TestSuite suite() {
         TestSuite suite = new TestSuite();
 
         Available a = new Available();

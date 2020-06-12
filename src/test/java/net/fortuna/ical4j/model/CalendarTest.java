@@ -40,9 +40,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
@@ -80,7 +78,7 @@ public class CalendarTest {
     }
 
     @Test
-    public void testValid2() throws ParseException, IOException, URISyntaxException {
+    public void testValid2() throws URISyntaxException {
         TzId tzParam = new TzId(TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne").getId());
 
         // Add events, etc..
