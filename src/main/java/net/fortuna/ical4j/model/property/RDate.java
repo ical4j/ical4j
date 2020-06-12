@@ -258,22 +258,24 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
 
     @Override
     public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+        RDate<?> copy = new Factory<T>().createProperty(getParameters(), getValue());
+        copy.setTimeZone(getTimeZone());
+        return copy;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<RDate> {
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<RDate<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RDATE);
         }
 
-        public RDate createProperty(final List<Parameter> parameters, final String value) {
-            return new RDate(parameters, value);
+        public RDate<T> createProperty(final List<Parameter> parameters, final String value) {
+            return new RDate<>(parameters, value);
         }
 
-        public RDate createProperty() {
-            return new RDate();
+        public RDate<T> createProperty() {
+            return new RDate<>();
         }
     }
 

@@ -116,7 +116,7 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * Default constructor. The time value is initialised to the time of instantiation.
      */
     public DtEnd() {
-        super(DTEND, new Factory());
+        super(DTEND, new Factory<T>());
     }
 
     /**
@@ -125,7 +125,7 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * @param value the DTEND value string to parse
      */
     public DtEnd(final String value) {
-        super(DTEND, new Factory());
+        super(DTEND, new Factory<T>());
         setValue(value);
     }
 
@@ -134,7 +134,7 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * @param aValue a value string for this component
      */
     public DtEnd(final List<Parameter> aList, final String aValue) {
-        super(DTEND, aList, new Factory());
+        super(DTEND, aList, new Factory<T>());
         setValue(aValue);
     }
 
@@ -144,7 +144,7 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * @param aDate a date
      */
     public DtEnd(final T aDate) {
-        super(DTEND, new Factory());
+        super(DTEND, new Factory<T>());
         setDate(aDate);
     }
 
@@ -167,27 +167,27 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * @param aDate a date
      */
     public DtEnd(final List<Parameter> aList, final T aDate) {
-        super(DTEND, aList, new Factory());
+        super(DTEND, aList, new Factory<T>());
         setDate(aDate);
     }
 
     @Override
     public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+        return new Factory<T>().createProperty(getParameters(), getValue());
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<DtEnd> {
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<DtEnd<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DTEND);
         }
 
-        public DtEnd createProperty(final List<Parameter> parameters, final String value) {
-            return new DtEnd(parameters, value);
+        public DtEnd<T> createProperty(final List<Parameter> parameters, final String value) {
+            return new DtEnd<>(parameters, value);
         }
 
-        public DtEnd createProperty() {
+        public DtEnd<T> createProperty() {
             return new DtEnd<>();
         }
     }

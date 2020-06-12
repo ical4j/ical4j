@@ -114,22 +114,24 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
 
     @Override
     public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+        ExDate<?> copy = new Factory<T>().createProperty(getParameters(), getValue());
+        copy.setTimeZone(getTimeZone());
+        return copy;
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<ExDate> {
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<ExDate<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(EXDATE);
         }
 
-        public ExDate createProperty(final List<Parameter> parameters, final String value) {
-            return new ExDate(parameters, value);
+        public ExDate<T> createProperty(final List<Parameter> parameters, final String value) {
+            return new ExDate<>(parameters, value);
         }
 
-        public ExDate createProperty() {
-            return new ExDate();
+        public ExDate<T> createProperty() {
+            return new ExDate<>();
         }
     }
 

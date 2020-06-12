@@ -114,7 +114,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * Default constructor. The time value is initialised to the time of instantiation.
      */
     public DtStart() {
-        super(DTSTART, new Factory());
+        super(DTSTART, new Factory<T>());
     }
 
     /**
@@ -122,7 +122,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * @throws java.time.format.DateTimeParseException where the specified value string is not a valid date-time/date representation
      */
     public DtStart(final String aValue) {
-        super(DTSTART, new Factory());
+        super(DTSTART, new Factory<T>());
         setValue(aValue);
     }
 
@@ -132,7 +132,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * @throws java.time.format.DateTimeParseException where the specified value string is not a valid date-time/date representation
      */
     public DtStart(final List<Parameter> aList, final String aValue) {
-        super(DTSTART, aList, new Factory());
+        super(DTSTART, aList, new Factory<T>());
         setValue(aValue);
     }
 
@@ -142,7 +142,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * @param aDate a date
      */
     public DtStart(final T aDate) {
-        super(DTSTART, new Factory());
+        super(DTSTART, new Factory<T>());
         setDate(aDate);
     }
 
@@ -166,27 +166,27 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * @param aDate a date
      */
     public DtStart(final List<Parameter> aList, final T aDate) {
-        super(DTSTART, aList, new Factory());
+        super(DTSTART, aList, new Factory<T>());
         setDate(aDate);
     }
 
     @Override
     public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+        return new Factory<T>().createProperty(getParameters(), getValue());
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<DtStart> {
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<DtStart<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(DTSTART);
         }
 
-        public DtStart createProperty(final List<Parameter> parameters, final String value) {
-            return new DtStart(parameters, value);
+        public DtStart<T> createProperty(final List<Parameter> parameters, final String value) {
+            return new DtStart<>(parameters, value);
         }
 
-        public DtStart createProperty() {
+        public DtStart<T> createProperty() {
             return new DtStart<>();
         }
     }
