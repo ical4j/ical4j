@@ -178,8 +178,10 @@ public class FreeBusy extends Property {
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     public final void setValue(final String aValue) {
-        periods = PeriodList.parse(aValue);
+        periods = new PeriodList<Instant>(PeriodList.parse(aValue).getPeriods(),
+                CalendarDateFormat.UTC_DATE_TIME_FORMAT);
     }
 
     /**
