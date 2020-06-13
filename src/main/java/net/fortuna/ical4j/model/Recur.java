@@ -206,6 +206,7 @@ public class Recur implements Serializable {
      *
      * @param aValue a string representation of a recurrence.
      * @throws ParseException thrown when the specified string contains an invalid representation of an UNTIL date value
+     * @throws IllegalArgumentException where the recurrence string contains an unrecognised token
      */
     public Recur(final String aValue) throws ParseException {
         // default week start is Monday per RFC5545
