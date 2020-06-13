@@ -38,8 +38,6 @@ import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
 import java.util.List;
 
@@ -133,13 +131,17 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
 
     private static final long serialVersionUID = 4456883817126011006L;
 
+    public RecurrenceId() {
+        super(RECURRENCE_ID, new Factory<T>());
+    }
+
     /**
      * Creates a new instance initialised with the parsed value.
      *
      * @param value the RECURRENCE_ID value string to parse
      */
     public RecurrenceId(final String value) {
-        super(RECURRENCE_ID, new Factory());
+        super(RECURRENCE_ID, new Factory<T>());
         setValue(value);
     }
 
@@ -148,7 +150,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * @param aValue a value string for this component
      */
     public RecurrenceId(final List<Parameter> aList, final String aValue) {
-        super(RECURRENCE_ID, aList, new Factory());
+        super(RECURRENCE_ID, aList, new Factory<T>());
         setValue(aValue);
     }
 
@@ -158,7 +160,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * @param aDate a date representation of a date or date-time
      */
     public RecurrenceId(final T aDate) {
-        super(RECURRENCE_ID, new Factory());
+        super(RECURRENCE_ID, new Factory<T>());
         setDate(aDate);
     }
 
@@ -169,7 +171,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * @param aDate a date representation of a date or date-time
      */
     public RecurrenceId(final List<Parameter> aList, final T aDate) {
-        super(RECURRENCE_ID, aList, new Factory());
+        super(RECURRENCE_ID, aList, new Factory<T>());
         setDate(aDate);
     }
 
@@ -194,22 +196,22 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
 
     @Override
     public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+        return new Factory<T>().createProperty(getParameters(), getValue());
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<RecurrenceId> {
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<RecurrenceId<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RECURRENCE_ID);
         }
 
-        public RecurrenceId createProperty(final List<Parameter> parameters, final String value) {
-            return new RecurrenceId(parameters, value);
+        public RecurrenceId<T> createProperty(final List<Parameter> parameters, final String value) {
+            return new RecurrenceId<>(parameters, value);
         }
 
-        public RecurrenceId createProperty() {
-            return new RecurrenceId<>(LocalDateTime.now(ZoneOffset.UTC));
+        public RecurrenceId<T> createProperty() {
+            return new RecurrenceId<>();
         }
     }
 

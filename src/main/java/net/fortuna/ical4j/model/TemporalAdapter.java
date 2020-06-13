@@ -35,14 +35,14 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     /**
      * A formatter capable of parsing to multiple temporal types based on the input string.
      */
-    private static CalendarDateFormat PARSE_FORMAT = new CalendarDateFormat(
+    private static final CalendarDateFormat PARSE_FORMAT = new CalendarDateFormat(
             "yyyyMMdd['T'HHmmss[X]]", Instant::from, LocalDateTime::from, LocalDate::from);
 
     private final String valueString;
 
     private final TzId tzId;
 
-    private transient TimeZoneRegistry timeZoneRegistry;
+    private transient final TimeZoneRegistry timeZoneRegistry;
 
     private transient T temporal;
 
@@ -96,6 +96,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
         this.timeZoneRegistry = timeZoneRegistry;
     }
 
+    @SuppressWarnings("unchecked")
     public T getTemporal() {
         if (temporal == null) {
             synchronized (valueString) {
@@ -180,6 +181,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @return an adapter containing the parsed temporal value and format type
      * @throws DateTimeParseException if the string cannot be parsed
      */
+    @SuppressWarnings("unchecked")
     public static <T extends Temporal> TemporalAdapter<T> parse(String value) throws DateTimeParseException {
         return new TemporalAdapter<>((T) PARSE_FORMAT.parse(value));
     }

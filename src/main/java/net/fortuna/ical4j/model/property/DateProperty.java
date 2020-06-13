@@ -78,14 +78,14 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * @param name       the property name
      * @param parameters a list of initial parameters
      */
-    public DateProperty(final String name, final List<Parameter> parameters, PropertyFactory factory) {
+    public DateProperty(final String name, final List<Parameter> parameters, PropertyFactory<? extends DateProperty<T>> factory) {
         super(name, parameters, factory);
     }
 
     /**
      * @param name the property name
      */
-    public DateProperty(final String name, PropertyFactory factory) {
+    public DateProperty(final String name, PropertyFactory<? extends DateProperty<T>> factory) {
         super(name, factory);
     }
 
@@ -97,6 +97,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      *
      * @return Returns the date.
      */
+    @SuppressWarnings("unchecked")
     public T getDate() {
         if (date != null) {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
@@ -133,6 +134,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      *
      * @param value a string representation of a DATE or DATE-TIME value
      */
+    @SuppressWarnings("unchecked")
     public void setValue(final String value) throws DateTimeParseException {
         // value can be either a date-time or a date..
         if (value != null && !value.isEmpty()) {
