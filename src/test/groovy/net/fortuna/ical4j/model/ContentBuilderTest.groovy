@@ -81,10 +81,8 @@ public class ContentBuilderTest extends GroovyTestCase {
         def builder = new ContentBuilder()
         
         def request = new VFreeBusy(builder.vfreebusy() {
-            dtstart('20080101', parameters: parameters() {
-                value('DATE')})
-            dtend('20100101', parameters: parameters() {
-                value('DATE')})
+            dtstart('20080101T000000Z')
+            dtend('20100101T000000Z')
         }, new ComponentList())
         
         def vfreebusy1 = builder.vfreebusy(request)

@@ -36,6 +36,8 @@ import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.time.LocalDateTime
+
 import static net.fortuna.ical4j.model.WeekDay.*
 
 class RecurSpec extends Specification {
@@ -435,13 +437,14 @@ class RecurSpec extends Specification {
 
     def 'test Recur.getNextDate() with different recurrence rules'() {
         given: 'a recurrence rule'
-        Recur recur = [rule]
+        Recur<LocalDateTime> recur = [rule]
 
         expect: 'recur.getNextDate() returns the expected value'
-        recur.getNextDate(seed, start) == expectedDate
+        TemporalAdapter<LocalDateTime> next = [recur.getNextDate(TemporalAdapter.parse(seed).temporal, TemporalAdapter.parse(start).temporal)]
+        next as String == expectedDate
 
         where:
-        rule	| seed	| start	| expectedDate
-        'FREQ=MONTHLY;COUNT=100;INTERVAL=1'	| CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse('20180329T025959')	| CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse('20170729T030000')	| CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse('20180329T025959')
+        rule	                            | seed	            | start	            | expectedDate
+        'FREQ=MONTHLY;COUNT=100;INTERVAL=1'	| '20180329T025959'	| '20170729T030000'	| '20180329T025959'
     }
 }

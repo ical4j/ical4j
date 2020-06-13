@@ -115,6 +115,6 @@ class TimeZoneSpec extends Specification {
         tz.ID == tzid
 
         where:
-        tzid << ['Australia/Lord_Howe', 'Asia/Rangoon', 'America/Santa_Isabel', 'Pacific/Johnston', 'EST']
+        tzid << ['Australia/Lord_Howe', 'Asia/Rangoon', 'America/Santa_Isabel', 'Pacific/Johnston']
     }
 }

@@ -3,6 +3,8 @@ package net.fortuna.ical4j.model
 import net.fortuna.ical4j.model.component.VEvent
 import spock.lang.Specification
 
+import java.time.Instant
+
 class ComponentSpec extends Specification {
 
     def "test Component.calculateRecurrenceSet"() {
@@ -15,7 +17,7 @@ class ComponentSpec extends Specification {
             }
         }
         and: 'an expected list of periods'
-        def expectedPeriods = new PeriodList()
+        def expectedPeriods = new PeriodList<Instant>(CalendarDateFormat.UTC_DATE_TIME_FORMAT)
         expectedPeriods.addAll(expectedResults.collect { Period.parse(it)})
 
         expect: 'calculate recurrence set returns the expected results'

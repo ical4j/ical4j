@@ -125,7 +125,8 @@ public class ExDateTest extends TestCase {
      */
     public void testRelaxedParsing() throws DateTimeParseException {
         try {
-            new ExDate<Instant>(new ArrayList<>(), "20080315");
+            ExDate<Instant> property = new ExDate<>(new ArrayList<>(), "20080315");
+            property.getDates();
             fail("Should throw DateTimeParseException");
         } catch (DateTimeParseException pe) {
             LOG.trace("Caught exception: " + pe.getMessage());
