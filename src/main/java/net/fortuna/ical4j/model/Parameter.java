@@ -83,9 +83,24 @@ public abstract class Parameter extends Content {
     public static final String DIR = "DIR";
 
     /**
+     * Display format.
+     */
+    public static final String DISPLAY = "DISPLAY";
+    
+    /**
+     * Email address.
+     */
+    public static final String EMAIL = "EMAIL";
+    
+    /**
      * Inline encoding.
      */
     public static final String ENCODING = "ENCODING";
+
+    /**
+     * Feature specification.
+     */
+    public static final String FEATURE = "FEATURE";
 
     /**
      * Format type.
@@ -96,6 +111,11 @@ public abstract class Parameter extends Content {
      * Free/busy time type.
      */
     public static final String FBTYPE = "FBTYPE";
+
+    /**
+     * Label.
+     */
+    public static final String LABEL = "LABEL";
 
     /**
      * Language for text.
