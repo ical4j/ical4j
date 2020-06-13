@@ -225,7 +225,12 @@ public class Calendar implements Serializable {
      * @return the first matching component in the component list with the specified name
      */
     public final <T extends CalendarComponent> Optional<T> getComponent(final String name) {
-        return (Optional<T>) getComponents().getComponent(name);
+        return getComponents().getComponent(name);
+    }
+
+    public final <T extends CalendarComponent> T getRequiredComponent(String name) throws ConstraintViolationException {
+        Optional<T> component = getComponent(name);
+        return component.orElseThrow(() -> new ConstraintViolationException(String.format("Missing %s component", name)));
     }
 
     /**
@@ -251,6 +256,11 @@ public class Calendar implements Serializable {
      */
     public final <T extends Property> Optional<T> getProperty(final String name) {
         return getProperties().getProperty(name);
+    }
+
+    public final <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
+        Optional<T> property = getProperty(name);
+        return property.orElseThrow(() -> new ConstraintViolationException(String.format("Missing %s property", name)));
     }
 
     /**

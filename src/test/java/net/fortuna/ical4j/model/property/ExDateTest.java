@@ -83,8 +83,8 @@ public class ExDateTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE.ics"));
 
-        Optional<VEvent> event = calendar.getComponent(Component.VEVENT);
-        List<Property> exdates = event.get().getProperties(Property.EXDATE);
+        VEvent event = calendar.getRequiredComponent(Component.VEVENT);
+        List<Property> exdates = event.getProperties(Property.EXDATE);
         for (Property exDate : exdates) {
             assertTrue("This EXDATE should have a timezone", exDate.getParameter(Parameter.TZID).isPresent());
         }
@@ -94,25 +94,25 @@ public class ExDateTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
 
         Calendar ical = builder.build(getClass().getResourceAsStream("/samples/valid/dst-only-vtimezone.ics"));
-        Optional<VTimeZone> vTZ = ical.getComponent(VTimeZone.VTIMEZONE);
+        VTimeZone vTZ = ical.getRequiredComponent(VTimeZone.VTIMEZONE);
 
-        String id = vTZ.get().getProperty(Property.TZID).get().getValue();
+        String id = vTZ.getRequiredProperty(Property.TZID).getValue();
         assertEquals("Europe/Berlin", id);
-        assertEquals(vTZ.get().getObservances().get(0), vTZ.get().getApplicableObservance(TemporalAdapter.parse("20180403").getTemporal()));
+        assertEquals(vTZ.getObservances().get(0), vTZ.getApplicableObservance(TemporalAdapter.parse("20180403").getTemporal()));
 
-        Optional<VEvent> vEvent = ical.getComponent(VEvent.VEVENT);
-        Optional<DtStart<?>> start = vEvent.get().getStartDate();
-        Optional<TzId> startTzId = start.get().getParameter(Parameter.TZID);
-        assertTrue(startTzId.equals(vTZ.get().getTimeZoneId().get().getParameter(Parameter.TZID)));
-        assertEquals(1522738800000L, Instant.from(start.get().getDate()).toEpochMilli());
+        VEvent vEvent = ical.getRequiredComponent(VEvent.VEVENT);
+        DtStart<?> start = vEvent.getRequiredProperty("DTSTART");
+        Optional<TzId> startTzId = start.getParameter(Parameter.TZID);
+        assertEquals(startTzId, vTZ.getRequiredProperty("TZID").getParameter(Parameter.TZID));
+        assertEquals(1522738800000L, Instant.from(start.getDate()).toEpochMilli());
     }
 
     public void testShouldPreserveUtcTimezoneForExDate() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar calendar = builder.build(getClass().getResourceAsStream("/samples/valid/EXDATE-IN-UTC.ics"));
 
-        Optional<VEvent> event = calendar.getComponent(Component.VEVENT);
-        List<Property> exdates = event.get().getProperties(Property.EXDATE);
+        VEvent event = calendar.getRequiredComponent(Component.VEVENT);
+        List<Property> exdates = event.getProperties(Property.EXDATE);
         for (Property exDate : exdates) {
             for (Instant dateEx : ((ExDate<Instant>) exDate).getDates().getDates()) {
                 assertNotNull(dateEx);
@@ -125,7 +125,7 @@ public class ExDateTest extends TestCase {
      */
     public void testRelaxedParsing() throws DateTimeParseException {
         try {
-            new ExDate(new ArrayList<>(), "20080315");
+            new ExDate<Instant>(new ArrayList<>(), "20080315");
             fail("Should throw DateTimeParseException");
         } catch (DateTimeParseException pe) {
             LOG.trace("Caught exception: " + pe.getMessage());

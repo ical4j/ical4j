@@ -95,10 +95,10 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * @param aName name of component to return
      * @return a component or null if no matching component found
      */
-    public final Optional<T> getComponent(final String aName) {
+    public final <R extends T> Optional<R> getComponent(final String aName) {
         for (final T c : this) {
             if (c.getName().equals(aName)) {
-                return Optional.of(c);
+                return Optional.of((R) c);
             }
         }
         return Optional.empty();
