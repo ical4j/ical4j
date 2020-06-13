@@ -88,7 +88,7 @@ public class DateList<T extends Temporal> implements Serializable {
      * @param list a list of dates to include in the new list
      */
     public DateList(final List<T> list) {
-        this(list, CalendarDateFormat.FLOATING_DATE_TIME_FORMAT);
+        this(list, CalendarDateFormat.from(list));
     }
 
     public DateList(final List<T> list, CalendarDateFormat dateFormat) {
@@ -106,10 +106,15 @@ public class DateList<T extends Temporal> implements Serializable {
      * @throws DateTimeParseException
      */
     public static <T extends Temporal> DateList<T> parse(String value) {
+        return parse(value, null);
+    }
+
+    public static <T extends Temporal> DateList<T> parse(String value, CalendarDateFormat calendarDateFormat) {
         List<Temporal> dates = Arrays.stream(value.split(",")).map(TemporalAdapter::parse)
                 .map(TemporalAdapter::getTemporal).collect(Collectors.toList());
-        if (!dates.isEmpty()) {
-            return new DateList<>((List<T>) dates, CalendarDateFormat.from(dates.get(0)));
+
+        if (calendarDateFormat != null) {
+            return new DateList<>((List<T>) dates, calendarDateFormat);
         } else {
             return new DateList<>((List<T>) dates);
         }

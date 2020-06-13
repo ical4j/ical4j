@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalQuery;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -223,6 +224,13 @@ public class CalendarDateFormat implements Serializable {
 
     public String format(TemporalAccessor date, ZoneId zoneId) {
         return getFormatter().withZone(zoneId).format(date);
+    }
+
+    public static CalendarDateFormat from(List<? extends Temporal> list) {
+        if (!list.isEmpty()) {
+            return from(list.get(0));
+        }
+        return FLOATING_DATE_TIME_FORMAT;
     }
 
     public static CalendarDateFormat from(Temporal temporal) {

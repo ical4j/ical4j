@@ -166,7 +166,11 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
 
     public ZonedDateTime toLocalTime(ZoneId zoneId) {
         if (isFloating(getTemporal())) {
-            return ((LocalDate) getTemporal()).atStartOfDay().atZone(zoneId);
+            if (getTemporal() instanceof LocalDateTime) {
+                return ((LocalDateTime) getTemporal()).atZone(zoneId);
+            } else {
+                return ((LocalDate) getTemporal()).atStartOfDay().atZone(zoneId);
+            }
         } else if (isUtc(getTemporal())) {
             return ((Instant) getTemporal()).atZone(zoneId);
         } else {
