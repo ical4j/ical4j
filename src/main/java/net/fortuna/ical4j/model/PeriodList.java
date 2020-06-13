@@ -95,8 +95,15 @@ public class PeriodList<T extends Temporal> implements Serializable {
      * @throws java.time.format.DateTimeParseException thrown when an invalid string representation of a period list
      * is provided
      */
-    public static PeriodList parse(final String aValue) {
-        return new PeriodList<>(Arrays.stream(aValue.split(",")).map(Period::parse).collect(Collectors.toList()));
+    public static <T extends Temporal> PeriodList<T> parse(final String aValue) {
+        return parse(aValue, CalendarDateFormat.FLOATING_DATE_TIME_FORMAT);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Temporal> PeriodList<T> parse(final String aValue, CalendarDateFormat calendarDateFormat) {
+        return (PeriodList<T>) new PeriodList<>(
+                Arrays.stream(aValue.split(",")).map(Period::parse).collect(Collectors.toList()),
+                calendarDateFormat);
     }
 
     @Override
