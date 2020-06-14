@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.Date;
 
 /**
@@ -80,7 +81,7 @@ public class TriggerTest extends PropertyTest {
      * @throws ParseException
      */
     public void testSetValue() throws ParseException {
-        trigger.setValue(TemporalAdapter.from(new DateTime(new Date(0).getTime())).toString());
+        trigger.setValue(TemporalAdapter.from(new DateTime(new Date(0).getTime())).toString(ZoneOffset.UTC));
 
         log.info(TemporalAdapter.from(new DateTime(new Date(0).getTime())).toString());
         log.info(trigger.toString());

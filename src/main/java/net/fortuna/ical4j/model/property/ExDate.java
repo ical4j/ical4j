@@ -57,7 +57,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * Default constructor.
      */
     public ExDate() {
-        super(EXDATE, new Factory());
+        super(EXDATE, new Factory<T>());
     }
 
     /**
@@ -65,7 +65,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * @param aValue a value string for this component
      */
     public ExDate(final List<Parameter> aList, final String aValue) {
-        super(EXDATE, aList, new Factory());
+        super(EXDATE, aList, new Factory<T>());
         setValue(aValue);
     }
 
@@ -73,7 +73,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * @param dList a list of dates
      */
     public ExDate(final DateList<T> dList) {
-        super(EXDATE, dList, new Factory());
+        super(EXDATE, dList, new Factory<T>());
     }
 
     /**
@@ -81,7 +81,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * @param dList a list of dates
      */
     public ExDate(final List<Parameter> aList, final DateList<T> dList) {
-        super(EXDATE, aList, dList, new Factory());
+        super(EXDATE, aList, dList, new Factory<T>());
     }
 
     /**

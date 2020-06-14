@@ -34,9 +34,11 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -157,8 +159,20 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         // value can be either a date-time or a date..
         if (value != null && !value.isEmpty()) {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
-            this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id, timeZoneRegistry))
-                    .orElseGet(() -> TemporalAdapter.parse(value, parseFormat));
+            try {
+                this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id, timeZoneRegistry))
+                        .orElseGet(() -> TemporalAdapter.parse(value, parseFormat));
+            } catch (DateTimeParseException dtpe) {
+                if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
+                    LoggerFactory.getLogger(DateProperty.class).warn("Invalid DATE-TIME format", dtpe);
+
+                    // parse with relaxed format..
+                    this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id, timeZoneRegistry))
+                            .orElseGet(() -> TemporalAdapter.parse(value, CalendarDateFormat.DEFAULT_PARSE_FORMAT));
+                } else {
+                    throw dtpe;
+                }
+            }
         } else {
             this.date = null;
         }

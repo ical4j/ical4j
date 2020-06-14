@@ -133,7 +133,9 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
     }
 
     private String toString(T temporal, ZoneId zoneId) {
-        if (!ChronoUnit.SECONDS.isSupportedBy(temporal)) {
+        if (ZoneOffset.UTC.equals(zoneId)) {
+            return toInstantString(temporal);
+        } else if (!ChronoUnit.SECONDS.isSupportedBy(temporal)) {
             return toString(CalendarDateFormat.DATE_FORMAT, temporal);
         } else {
             if (isFloating(getTemporal())) {
@@ -144,6 +146,10 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
                 return toString(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT, zoneId, temporal);
             }
         }
+    }
+
+    private String toInstantString(T temporal) {
+        return toString(CalendarDateFormat.UTC_DATE_TIME_FORMAT, temporal);
     }
 
     private String toString(CalendarDateFormat format, T temporal) {

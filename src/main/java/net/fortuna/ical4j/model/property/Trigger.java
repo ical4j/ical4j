@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
@@ -272,6 +273,7 @@ public class Trigger extends DateProperty<Instant> {
             super.setValue(aValue);
             duration = null;
         } catch (DateTimeParseException pe) {
+            LoggerFactory.getLogger(Trigger.class).warn(String.format("Not a valid DATE-TIME value: %s", aValue));
             duration = TemporalAmountAdapter.parse(aValue);
             super.setDate(null);
         }
