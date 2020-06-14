@@ -162,7 +162,7 @@ public class Trigger extends DateProperty<Instant> {
      * @param aValue a value string for this component
      */
     public Trigger(final List<Parameter> aList, final String aValue) {
-        super(TRIGGER, aList, new Factory());
+        super(TRIGGER, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setValue(aValue);
     }
 
@@ -182,7 +182,7 @@ public class Trigger extends DateProperty<Instant> {
     }
 
     private Trigger(final TemporalAmountAdapter duration) {
-        super(TRIGGER, new Factory());
+        super(TRIGGER, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         this.duration = duration;
     }
 
@@ -204,7 +204,7 @@ public class Trigger extends DateProperty<Instant> {
     }
 
     private Trigger(final List<Parameter> aList, final TemporalAmountAdapter duration) {
-        super(TRIGGER, aList, new Factory());
+        super(TRIGGER, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         this.duration = duration;
     }
 
@@ -212,7 +212,7 @@ public class Trigger extends DateProperty<Instant> {
      * @param dateTime a date representation of a date-time
      */
     public Trigger(final Instant dateTime) {
-        super(TRIGGER, new Factory());
+        super(TRIGGER, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(dateTime);
     }
 
@@ -221,7 +221,7 @@ public class Trigger extends DateProperty<Instant> {
      * @param dateTime a date representation of a date-time
      */
     public Trigger(final List<Parameter> aList, final Instant dateTime) {
-        super(TRIGGER, aList, new Factory());
+        super(TRIGGER, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(dateTime);
     }
 

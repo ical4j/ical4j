@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -102,7 +99,7 @@ public class LastModified extends DateProperty<Instant> {
      * @param aValue a value string for this component
      */
     public LastModified(final List<Parameter> aList, final String aValue) {
-        super(LAST_MODIFIED, aList, new Factory());
+        super(LAST_MODIFIED, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setValue(aValue);
     }
 
@@ -110,7 +107,7 @@ public class LastModified extends DateProperty<Instant> {
      * @param aDate a date representation of a date-time value
      */
     public LastModified(final Instant aDate) {
-        super(LAST_MODIFIED, new Factory());
+        super(LAST_MODIFIED, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(aDate);
     }
 
@@ -119,7 +116,7 @@ public class LastModified extends DateProperty<Instant> {
      * @param aDate a date representation of a date-time value
      */
     public LastModified(final List<Parameter> aList, final Instant aDate) {
-        super(LAST_MODIFIED, aList, new Factory());
+        super(LAST_MODIFIED, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(aDate);
     }
 

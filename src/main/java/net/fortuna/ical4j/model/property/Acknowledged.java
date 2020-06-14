@@ -7,10 +7,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -120,7 +117,7 @@ public class Acknowledged extends DateProperty<Instant> {
      * @param aValue a value string for this component
      */
     public Acknowledged(final List<Parameter> aList, final String aValue) {
-        super(ACKNOWLEDGED, aList, new Factory());
+        super(ACKNOWLEDGED, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setValue(aValue);
     }
 
@@ -128,7 +125,7 @@ public class Acknowledged extends DateProperty<Instant> {
      * @param aDate a date representing a date-time 
      */
     public Acknowledged(final Instant aDate) {
-        super(ACKNOWLEDGED, new Factory());
+        super(ACKNOWLEDGED, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(aDate);
     }
 
@@ -137,7 +134,7 @@ public class Acknowledged extends DateProperty<Instant> {
      * @param aDate a date representing a date-time
      */
     public Acknowledged(final List<Parameter> aList, final Instant aDate) {
-        super(ACKNOWLEDGED, aList, new Factory());
+        super(ACKNOWLEDGED, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(aDate);
     }
 

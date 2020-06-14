@@ -32,12 +32,6 @@ import java.util.Objects;
  */
 public class TemporalAdapter<T extends Temporal> implements Serializable {
 
-    /**
-     * A formatter capable of parsing to multiple temporal types based on the input string.
-     */
-    private static final CalendarDateFormat PARSE_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd['T'HHmmss[X]]", Instant::from, LocalDateTime::from, LocalDate::from);
-
     private final String valueString;
 
     private final TzId tzId;
@@ -105,7 +99,7 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
                         temporal = (T) CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(valueString,
                                 tzId.toZoneId(timeZoneRegistry));
                     } else {
-                        temporal = (T) PARSE_FORMAT.parse(valueString);
+                        temporal = (T) CalendarDateFormat.DEFAULT_PARSE_FORMAT.parse(valueString);
                     }
                     /*
                     temporal = (T) Proxy.newProxyInstance(ChronoZonedDateTime.class.getClassLoader(),
@@ -185,9 +179,13 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
      * @return an adapter containing the parsed temporal value and format type
      * @throws DateTimeParseException if the string cannot be parsed
      */
-    @SuppressWarnings("unchecked")
     public static <T extends Temporal> TemporalAdapter<T> parse(String value) throws DateTimeParseException {
-        return new TemporalAdapter<>((T) PARSE_FORMAT.parse(value));
+        return parse(value, CalendarDateFormat.DEFAULT_PARSE_FORMAT);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Temporal> TemporalAdapter<T> parse(String value, CalendarDateFormat parseFormat) throws DateTimeParseException {
+        return new TemporalAdapter<>((T) parseFormat.parse(value));
     }
 
     /**

@@ -70,6 +70,8 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
     private static final long serialVersionUID = 3160883132732961321L;
 
+    private final CalendarDateFormat parseFormat;
+
     private TemporalAdapter<T> date;
 
     private transient TimeZoneRegistry timeZoneRegistry;
@@ -78,15 +80,31 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * @param name       the property name
      * @param parameters a list of initial parameters
      */
-    public DateProperty(final String name, final List<Parameter> parameters, PropertyFactory<? extends DateProperty<T>> factory) {
+    public DateProperty(final String name, final List<Parameter> parameters,
+                        PropertyFactory<? extends DateProperty<T>> factory) {
+
+        this(name, parameters, factory, CalendarDateFormat.DEFAULT_PARSE_FORMAT);
+    }
+
+    public DateProperty(final String name, final List<Parameter> parameters,
+                        PropertyFactory<? extends DateProperty<T>> factory, CalendarDateFormat parseFormat) {
+
         super(name, parameters, factory);
+        this.parseFormat = parseFormat;
     }
 
     /**
      * @param name the property name
      */
     public DateProperty(final String name, PropertyFactory<? extends DateProperty<T>> factory) {
+        this(name, factory, CalendarDateFormat.DEFAULT_PARSE_FORMAT);
+    }
+    
+    public DateProperty(final String name, PropertyFactory<? extends DateProperty<T>> factory,
+                        CalendarDateFormat parseFormat) {
+
         super(name, factory);
+        this.parseFormat = parseFormat;
     }
 
     /**
@@ -140,7 +158,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
         if (value != null && !value.isEmpty()) {
             Optional<TzId> tzId = getParameter(Parameter.TZID);
             this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id, timeZoneRegistry))
-                    .orElseGet(() -> TemporalAdapter.parse(value));
+                    .orElseGet(() -> TemporalAdapter.parse(value, parseFormat));
         } else {
             this.date = null;
         }

@@ -177,6 +177,15 @@ public class CalendarDateFormat implements Serializable {
     public static final CalendarDateFormat UTC_DATE_TIME_FORMAT = new CalendarDateFormat(
             "yyyyMMdd'T'HHmmss'Z'", (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> Instant.from(d));
 
+    /**
+     * A formatter capable of parsing to multiple temporal types based on the input string.
+     */
+    public static final CalendarDateFormat DEFAULT_PARSE_FORMAT = new CalendarDateFormat(
+            "yyyyMMdd['T'HHmmss[X]]",
+            (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> Instant.from(d),
+            (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> LocalDateTime.from(d),
+            (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> LocalDate.from(d));
+
     private final String pattern;
 
     private transient DateTimeFormatter formatter;
