@@ -39,7 +39,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,7 +138,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * Default constructor.
      */
     public RDate() {
-        super(RDATE, new Factory());
+        super(RDATE, new Factory<>());
         periods = null;
     }
 
@@ -148,7 +147,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param aValue a value string for this component
      */
     public RDate(final List<Parameter> aList, final String aValue) {
-        super(RDATE, aList, new Factory());
+        super(RDATE, aList, new Factory<>());
         periods = null;
         setValue(aValue);
     }
@@ -159,7 +158,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param dates a list of dates
      */
     public RDate(final DateList<T> dates) {
-        super(RDATE, dates, new Factory());
+        super(RDATE, dates, new Factory<>());
         periods = null;
     }
 
@@ -170,7 +169,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param dates a list of dates
      */
     public RDate(final List<Parameter> aList, final DateList<T> dates) {
-        super(RDATE, aList, dates, new Factory());
+        super(RDATE, aList, dates, new Factory<>());
         periods = null;
     }
 
@@ -180,7 +179,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param periods a list of periods
      */
     public RDate(final List<Period<T>> periods) {
-        super(RDATE, new DateList<>(true), new Factory());
+        super(RDATE, new DateList<>(true), new Factory<>());
         this.periods = new PeriodList<>(periods);
     }
 
@@ -191,7 +190,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param periods a list of periods
      */
     public RDate(final List<Parameter> aList, final List<Period<T>> periods) {
-        super(RDATE, aList, new DateList<>(true), new Factory());
+        super(RDATE, aList, new DateList<>(true), new Factory<>());
         this.periods = new PeriodList<>(periods);
     }
 
@@ -229,7 +228,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      */
     public final Optional<List<Period<T>>> getPeriods() {
         if (periods != null) {
-            return Optional.of(Collections.unmodifiableList(new ArrayList<>(periods.getPeriods())));
+            return Optional.of(new ArrayList<>(periods.getPeriods()));
         } else {
             return Optional.empty();
         }

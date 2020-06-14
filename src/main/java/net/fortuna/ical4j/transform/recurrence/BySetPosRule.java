@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.TemporalComparator;
 import net.fortuna.ical4j.transform.Transformer;
 
@@ -18,9 +17,9 @@ public class BySetPosRule<T extends Temporal> implements Transformer<List<T>> {
 
     private static final Comparator<Temporal> ONSET_COMPARATOR = new TemporalComparator();
 
-    private final NumberList setPosList;
+    private final List<Integer> setPosList;
 
-    public BySetPosRule(NumberList setPosList) {
+    public BySetPosRule(List<Integer> setPosList) {
         this.setPosList = setPosList;
     }
 

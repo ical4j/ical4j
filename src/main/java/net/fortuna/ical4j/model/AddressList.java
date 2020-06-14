@@ -90,6 +90,10 @@ public class AddressList implements Serializable, Iterable<URI> {
      * {@inheritDoc}
      */
     public final String toString() {
+        return toString(addresses);
+    }
+
+    public static String toString(List<URI> addresses) {
         return addresses.stream().map(a -> Strings.quote(Uris.decode(Strings.valueOf(a))))
                 .collect(Collectors.joining(","));
     }

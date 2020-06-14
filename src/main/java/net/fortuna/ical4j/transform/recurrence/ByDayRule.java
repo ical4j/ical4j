@@ -25,7 +25,7 @@ import static java.time.temporal.ChronoField.DAY_OF_YEAR;
  */
 public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
-    private final WeekDayList dayList;
+    private final List<WeekDay> dayList;
 
     private final WeekFields weekFields;
 
@@ -43,11 +43,11 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
         }
     }
 
-    public ByDayRule(WeekDayList dayList, Frequency frequency) {
+    public ByDayRule(List<WeekDay> dayList, Frequency frequency) {
         this(dayList, frequency, null);
     }
 
-    public ByDayRule(WeekDayList dayList, Frequency frequency, DayOfWeek firstDayOfWeek) {
+    public ByDayRule(List<WeekDay> dayList, Frequency frequency, DayOfWeek firstDayOfWeek) {
         super(frequency);
         this.dayList = dayList;
         if (firstDayOfWeek != null) {

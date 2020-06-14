@@ -39,6 +39,7 @@ import net.fortuna.ical4j.util.Strings;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,20 +53,20 @@ public class Member extends Parameter {
 
     private static final long serialVersionUID = 287348849443687499L;
 
-    private final AddressList groups;
+    private final List<URI> groups;
 
     /**
      * @param aValue a string representation of a group or list membership
      * @throws URISyntaxException when the specified string is not a valid list of (quoted) cal-addresses
      */
     public Member(final String aValue) throws URISyntaxException {
-        this(new AddressList(Strings.unquote(aValue)));
+        this(new AddressList(Strings.unquote(aValue)).getAddresses());
     }
 
     /**
      * @param aList a list of groups
      */
-    public Member(final AddressList aList) {
+    public Member(final List<URI> aList) {
         super(MEMBER);
         groups = aList;
     }
@@ -74,14 +75,14 @@ public class Member extends Parameter {
      * @return Returns the group addresses.
      */
     public final List<URI> getGroups() {
-        return groups.getAddresses();
+        return new ArrayList<>(groups);
     }
 
     /**
      * {@inheritDoc}
      */
     public final String getValue() {
-        return groups.toString();
+        return AddressList.toString(groups);
     }
 
     /**
@@ -103,5 +104,4 @@ public class Member extends Parameter {
             return new Member(value);
         }
     }
-
 }

@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -96,11 +97,11 @@ public class CalendarBuilderTimezoneTest extends TestCase {
 
         calendar = builder.build(in);
         assertNotNull("Calendar is null", calendar);
-        ComponentList<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
+        List<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
         assertTrue("VEVENT not found", comps.size() == 1);
         VEvent vevent = (VEvent) comps.get(0);
 
-        DtStart dtstart = vevent.getRequiredProperty(Property.DTSTART);
+        DtStart<?> dtstart = vevent.getRequiredProperty(Property.DTSTART);
         ZonedDateTime dateTime = (ZonedDateTime) dtstart.getDate();
 
         assertEquals("date value not correct", "20080624T130000", dtstart.getValue());
@@ -172,7 +173,7 @@ public class CalendarBuilderTimezoneTest extends TestCase {
 
         calendar = builder.build(in);
         assertNotNull("Calendar is null", calendar);
-        ComponentList<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
+        List<CalendarComponent> comps = calendar.getComponents(Component.VEVENT);
         assertEquals("2 VEVENTs not found", 2, comps.size());
         VEvent vevent0 = (VEvent) comps.get(0);
 

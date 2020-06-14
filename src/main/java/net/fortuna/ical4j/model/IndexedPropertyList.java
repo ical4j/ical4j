@@ -31,9 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * $Id$
@@ -45,23 +43,17 @@ import java.util.Map;
  */
 public class IndexedPropertyList {
 
-    private static final PropertyList EMPTY_LIST = new PropertyList();
-    
-    private Map<String, PropertyList> index;
+    private final Map<String, List<Property>> index;
     
     /**
      * Creates a new instance indexed on the parameters with the specified name.
      * @param list a list of properties
      * @param parameterName the name of parameters on which to index
      */
-    public IndexedPropertyList(final PropertyList list, final String parameterName) {
-        final Map<String, PropertyList> indexedProperties = new HashMap<>();
+    public IndexedPropertyList(final List<Property> list, final String parameterName) {
+        final Map<String, List<Property>> indexedProperties = new HashMap<>();
         list.forEach(property -> property.getParameters(parameterName).forEach(parameter -> {
-            PropertyList properties = indexedProperties.get(parameter.getValue());
-            if (properties == null) {
-                properties = new PropertyList();
-                indexedProperties.put(parameter.getValue(), properties);
-            }
+            List<Property> properties = indexedProperties.computeIfAbsent(parameter.getValue(), k -> new ArrayList<>());
             properties.add(property);
         }));
         this.index = Collections.unmodifiableMap(indexedProperties);
@@ -74,10 +66,10 @@ public class IndexedPropertyList {
      * returned properties
      * @return a property list
      */
-    public PropertyList getProperties(final String paramValue) {
-        PropertyList properties = index.get(paramValue);
+    public List<Property> getProperties(final String paramValue) {
+        List<Property> properties = index.get(paramValue);
         if (properties == null) {
-            properties = EMPTY_LIST;
+            properties = Collections.emptyList();
         }
         return properties;
     }
@@ -91,7 +83,7 @@ public class IndexedPropertyList {
      * with the specified value
      */
     public Property getProperty(final String paramValue) {
-        final PropertyList properties = getProperties(paramValue);
+        final List<Property> properties = getProperties(paramValue);
         if (!properties.isEmpty()) {
             return properties.iterator().next();
         }

@@ -87,7 +87,11 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * {@inheritDoc}
      */
     public final String toString() {
-        return stream().map(Component::toString).collect(Collectors.joining(""));
+        return toString(this);
+    }
+
+    public static String toString(List<? extends Component> list) {
+        return list.stream().map(Component::toString).collect(Collectors.joining(""));
     }
 
     /**
@@ -95,13 +99,9 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * @param aName name of component to return
      * @return a component or null if no matching component found
      */
+    @SuppressWarnings("unchecked")
     public final <R extends T> Optional<R> getComponent(final String aName) {
-        for (final T c : this) {
-            if (c.getName().equals(aName)) {
-                return Optional.of((R) c);
-            }
-        }
-        return Optional.empty();
+        return (Optional<R>) stream().filter(c -> c.getName().equalsIgnoreCase(aName)).findFirst();
     }
 
     /**
@@ -110,13 +110,7 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * @return a list of components with the matching name
      */
     @SuppressWarnings("unchecked")
-	public final <C extends T> ComponentList<C> getComponents(final String name) {
-        final ComponentList<C> components = new ComponentList<C>();
-        for (final T c : this) {
-            if (c.getName().equals(name)) {
-                components.add((C) c);
-            }
-        }
-        return components;
+	public final <C extends T> List<C> getComponents(final String name) {
+        return (List<C>) stream().filter(c -> c.getName().equals(name)).collect(Collectors.toList());
     }
 }

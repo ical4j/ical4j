@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur.Frequency;
 
 import java.time.temporal.Temporal;
@@ -19,9 +18,9 @@ import static net.fortuna.ical4j.model.Recur.Frequency.*;
  */
 public class ByHourRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
-    private final NumberList hourList;
+    private final List<Integer> hourList;
 
-    public ByHourRule(NumberList hourList, Frequency frequency) {
+    public ByHourRule(List<Integer> hourList, Frequency frequency) {
         super(frequency);
         this.hourList = hourList;
     }

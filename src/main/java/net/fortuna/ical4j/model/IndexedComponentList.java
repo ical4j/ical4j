@@ -31,9 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * $Id$
@@ -45,24 +43,18 @@ import java.util.Map;
  */
 public class IndexedComponentList<T extends Component> {
 
-    private final ComponentList<T> EMPTY_LIST = new ComponentList<T>();
-    
-    private Map<String, ComponentList<T>> index;
+    private final Map<String, List<T>> index;
     
     /**
      * Creates a new instance indexed on properties with the specified name.
      * @param list a list of components
      * @param propertyName the name of the properties to index on
      */
-    public IndexedComponentList(final ComponentList<T> list, final String propertyName) {
-        final Map<String, ComponentList<T>> indexedComponents = new HashMap<String, ComponentList<T>>();
+    public IndexedComponentList(final List<T> list, final String propertyName) {
+        final Map<String, List<T>> indexedComponents = new HashMap<>();
         for (final T component : list) {
             for (final Property property : component.getProperties(propertyName)) {
-                ComponentList<T> components = indexedComponents.get(property.getValue());
-                if (components == null) {
-                    components = new ComponentList<T>();
-                    indexedComponents.put(property.getValue(), components);
-                }
+                List<T> components = indexedComponents.computeIfAbsent(property.getValue(), k -> new ArrayList<>());
                 components.add(component);
             }
         }
@@ -76,10 +68,10 @@ public class IndexedComponentList<T extends Component> {
      * returned components
      * @return a component list
      */
-    public ComponentList<T> getComponents(final String propertyValue) {
-        ComponentList<T> components = index.get(propertyValue);
+    public List<T> getComponents(final String propertyValue) {
+        List<T> components = index.get(propertyValue);
         if (components == null) {
-            components = EMPTY_LIST;
+            components = Collections.emptyList();
         }
         return components;
     }
@@ -93,7 +85,7 @@ public class IndexedComponentList<T extends Component> {
      * with the specified value
      */
     public T getComponent(final String propertyValue) {
-        final ComponentList<T> components = getComponents(propertyValue);
+        final List<T> components = getComponents(propertyValue);
         if (!components.isEmpty()) {
             return components.get(0);
         }

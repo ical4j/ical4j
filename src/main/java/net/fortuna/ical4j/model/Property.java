@@ -471,9 +471,9 @@ public abstract class Property extends Content {
      * @param name name of the parameter to retrieve
      * @return the first parameter from the parameter list with the specified name
      */
+    @SuppressWarnings("unchecked")
     public final <P extends Parameter> Optional<P> getParameter(final String name) {
-        List<Parameter> parameters = getParameters(name);
-        return parameters.isEmpty() ? Optional.empty() : Optional.of((P) parameters.iterator().next());
+        return (Optional<P>) getParameters().stream().filter(p -> p.getName().equals(name)).findFirst();
     }
 
     /**

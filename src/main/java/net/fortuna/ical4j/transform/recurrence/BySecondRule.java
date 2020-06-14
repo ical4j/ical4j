@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur.Frequency;
 
 import java.time.temporal.Temporal;
@@ -17,9 +16,9 @@ import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
  */
 public class BySecondRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
-    private final NumberList secondList;
+    private final List<Integer> secondList;
 
-    public BySecondRule(NumberList secondList, Frequency frequency) {
+    public BySecondRule(List<Integer> secondList, Frequency frequency) {
         super(frequency);
         this.secondList = secondList;
     }

@@ -215,7 +215,7 @@ public class Calendar implements Serializable {
      * @param name name of components to retrieve
      * @return a component list containing only components with the specified name
      */
-    public final <C extends CalendarComponent> ComponentList<C> getComponents(final String name) {
+    public final <C extends CalendarComponent> List<C> getComponents(final String name) {
         return getComponents().getComponents(name);
     }
 

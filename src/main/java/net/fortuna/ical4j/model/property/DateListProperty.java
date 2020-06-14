@@ -112,8 +112,8 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     /**
      * @return Returns the dates.
      */
-    public final DateList<T> getDates() {
-        return dates;
+    public final List<T> getDates() {
+        return new ArrayList<>(dates.getDates());
     }
 
     /**

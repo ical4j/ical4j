@@ -114,7 +114,7 @@ public class ExDateTest extends TestCase {
         VEvent event = calendar.getRequiredComponent(Component.VEVENT);
         List<Property> exdates = event.getProperties(Property.EXDATE);
         for (Property exDate : exdates) {
-            for (Instant dateEx : ((ExDate<Instant>) exDate).getDates().getDates()) {
+            for (Instant dateEx : ((ExDate<Instant>) exDate).getDates()) {
                 assertNotNull(dateEx);
             }
         }

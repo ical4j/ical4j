@@ -52,7 +52,7 @@ public class ZoneRulesBuilder {
     private List<ZoneOffsetTransitionRule> buildTransitionRules(List<Observance> observances, ZoneOffset standardOffset) throws ConstraintViolationException {
         List<ZoneOffsetTransitionRule> transitionRules = new ArrayList<>();
         for (Observance observance : observances) {
-            Optional<RRule> rrule = observance.getProperty(Property.RRULE);
+            Optional<RRule<?>> rrule = observance.getProperty(Property.RRULE);
             TzOffsetFrom offsetFrom = observance.getRequiredProperty(Property.TZOFFSETFROM);
             TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
             DtStart<LocalDateTime> startDate = observance.getRequiredProperty(Property.DTSTART);

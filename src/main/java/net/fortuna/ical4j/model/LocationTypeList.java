@@ -44,7 +44,9 @@ import java.util.stream.Collectors;
  * Defines a list of iCalendar location types.
  * 
  * @author Ben Fortuna
+ * @deprecated replaced with standard Java collections.
  */
+@Deprecated
 public class LocationTypeList implements Serializable, Iterable<String> {
 
     private static final long serialVersionUID = -9181735547604179160L;

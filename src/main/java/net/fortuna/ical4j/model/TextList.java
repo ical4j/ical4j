@@ -88,6 +88,10 @@ public class TextList implements Serializable, Iterable<String> {
      * {@inheritDoc}
      */
     public final String toString() {
+        return toString(texts);
+    }
+
+    public static String toString(List<String> texts) {
         return texts.stream().map(Strings::escape).collect(Collectors.joining(","));
     }
 
@@ -125,6 +129,10 @@ public class TextList implements Serializable, Iterable<String> {
      */
     public final boolean remove(final String text) {
         return texts.remove(text);
+    }
+
+    public List<String> getTexts() {
+        return texts;
     }
 
     /**

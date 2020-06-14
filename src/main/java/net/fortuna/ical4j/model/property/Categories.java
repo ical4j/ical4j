@@ -38,7 +38,7 @@ import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
@@ -99,16 +99,16 @@ public class Categories extends Property {
 
     private static final long serialVersionUID = -7769987073466681634L;
 
-    private TextList categories;
+    private List<String> categories;
 
-    private Validator<Property> validator = new PropertyValidator(Arrays.asList(
+    private Validator<Property> validator = new PropertyValidator(Collections.singletonList(
             new ValidationRule(OneOrLess, LANGUAGE)));
     /**
      * Default constructor.
      */
     public Categories() {
         super(CATEGORIES, new ArrayList<>(), new Factory());
-        categories = new TextList();
+        categories = new ArrayList<>();
     }
 
     /**
@@ -131,7 +131,7 @@ public class Categories extends Property {
     /**
      * @param cList a list of categories
      */
-    public Categories(final TextList cList) {
+    public Categories(final List<String> cList) {
         super(CATEGORIES, new ArrayList<>(), new Factory());
         categories = cList;
     }
@@ -140,7 +140,7 @@ public class Categories extends Property {
      * @param aList a list of parameters for this component
      * @param cList a list of categories
      */
-    public Categories(final List<Parameter> aList, final TextList cList) {
+    public Categories(final List<Parameter> aList, final List<String> cList) {
         super(CATEGORIES, aList, new Factory());
         categories = cList;
     }
@@ -149,21 +149,21 @@ public class Categories extends Property {
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        categories = new TextList(aValue);
+        categories = new TextList(aValue).getTexts();
     }
 
     /**
      * @return Returns the categories.
      */
-    public final TextList getCategories() {
-        return categories;
+    public final List<String> getCategories() {
+        return new ArrayList<>(categories);
     }
 
     /**
      * {@inheritDoc}
      */
     public final String getValue() {
-        return getCategories().toString();
+        return TextList.toString(categories);
     }
 
     @Override

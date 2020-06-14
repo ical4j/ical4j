@@ -67,7 +67,7 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @param properties a property list
      */
     
-    public PropertyList(PropertyList properties) throws URISyntaxException {
+    public PropertyList(List<Property> properties) throws URISyntaxException {
         super();
         for (Property p: properties) {
             add(p.copy());
@@ -78,7 +78,11 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        return stream().map(Property::toString).collect(Collectors.joining(""));
+        return toString(this);
+    }
+
+    public static String toString(List<Property> list) {
+        return list.stream().map(Property::toString).collect(Collectors.joining(""));
     }
 
     /**
@@ -86,13 +90,9 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @param aName name of property to return
      * @return a property or null if no matching property found
      */
+    @SuppressWarnings("unchecked")
     public final <T extends Property> Optional<T> getProperty(final String aName) {
-        for (final Property p : this) {
-            if (p.getName().equalsIgnoreCase(aName)) {
-                return Optional.of((T) p);
-            }
-        }
-        return Optional.empty();
+        return (Optional<T>) stream().filter(p -> p.getName().equalsIgnoreCase(aName)).findFirst();
     }
 
     /**
@@ -101,33 +101,7 @@ public class PropertyList extends ArrayList<Property> implements Serializable {
      * @return a property list
      */
     public final List<Property> getProperties(final String name) {
-        final PropertyList list = new PropertyList();
-        for (final Property p : this) {
-            if (p.getName().equalsIgnoreCase(name)) {
-                list.add(p);
-            }
-        }
-        return list;
-    }
-
-    /**
-     * Add a property to the list.
-     * @param property the property to add
-     * @return true
-     * @see java.util.List#add(java.lang.Object)
-     */
-    public final boolean add(final Property property) {
-        return super.add(property);
-    }
-
-    /**
-     * Remove a property from the list.
-     * @param property the property to remove
-     * @return true if the list contained the specified property
-     * @see java.util.List#remove(java.lang.Object)
-     */
-    public final boolean remove(final Property property) {
-        return super.remove(property);
+        return stream().filter(p -> p.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
     }
 
     public void replaceAll(Property property) {

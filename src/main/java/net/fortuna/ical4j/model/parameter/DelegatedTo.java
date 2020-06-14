@@ -39,6 +39,7 @@ import net.fortuna.ical4j.util.Strings;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,20 +53,20 @@ public class DelegatedTo extends Parameter {
 
     private static final long serialVersionUID = 567577003350648021L;
 
-    private final AddressList delegatees;
+    private final List<URI> delegatees;
 
     /**
      * @param aValue a string representation of Delegatees
      * @throws URISyntaxException when the specified string is not a valid list of cal-addresses
      */
     public DelegatedTo(final String aValue) throws URISyntaxException {
-        this(new AddressList(Strings.unquote(aValue)));
+        this(new AddressList(Strings.unquote(aValue)).getAddresses());
     }
 
     /**
      * @param aList a list of addresses
      */
-    public DelegatedTo(final AddressList aList) {
+    public DelegatedTo(final List<URI> aList) {
         super(DELEGATED_TO);
         delegatees = aList;
     }
@@ -74,14 +75,14 @@ public class DelegatedTo extends Parameter {
      * @return Returns the delegatees addresses.
      */
     public final List<URI> getDelegatees() {
-        return delegatees.getAddresses();
+        return new ArrayList<>(delegatees);
     }
 
     /**
      * {@inheritDoc}
      */
     public final String getValue() {
-        return delegatees.toString();
+        return AddressList.toString(delegatees);
     }
 
     /**

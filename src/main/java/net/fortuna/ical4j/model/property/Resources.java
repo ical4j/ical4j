@@ -38,7 +38,7 @@ import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.ALTREP;
@@ -58,9 +58,9 @@ public class Resources extends Property {
 
     private static final long serialVersionUID = -848562477226746807L;
 
-    private TextList resources;
+    private List<String> resources;
 
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
+    private final Validator<Property> validator = new PropertyValidator(Collections.singletonList(
             new ValidationRule(OneOrLess, ALTREP, LANGUAGE)));
 
     /**
@@ -68,7 +68,7 @@ public class Resources extends Property {
      */
     public Resources() {
         super(RESOURCES, new ArrayList<>(), new Factory());
-        resources = new TextList();
+        resources = new ArrayList<>();
     }
 
     /**
@@ -83,7 +83,7 @@ public class Resources extends Property {
     /**
      * @param rList a list of resources
      */
-    public Resources(final TextList rList) {
+    public Resources(final List<String> rList) {
         super(RESOURCES, new ArrayList<>(), new Factory());
         resources = rList;
     }
@@ -92,7 +92,7 @@ public class Resources extends Property {
      * @param aList a list of parameters for this component
      * @param rList a list of resources
      */
-    public Resources(final List<Parameter> aList, final TextList rList) {
+    public Resources(final List<Parameter> aList, final List<String> rList) {
         super(RESOURCES, aList, new Factory());
         resources = rList;
     }
@@ -100,7 +100,7 @@ public class Resources extends Property {
     /**
      * @return Returns the resources.
      */
-    public final TextList getResources() {
+    public final List<String> getResources() {
         return resources;
     }
 
@@ -108,14 +108,14 @@ public class Resources extends Property {
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        resources = new TextList(aValue);
+        resources = new TextList(aValue).getTexts();
     }
 
     /**
      * {@inheritDoc}
      */
     public final String getValue() {
-        return getResources().toString();
+        return TextList.toString(resources);
     }
 
     @Override

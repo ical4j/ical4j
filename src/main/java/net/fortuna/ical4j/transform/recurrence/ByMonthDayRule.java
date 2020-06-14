@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import org.slf4j.Logger;
@@ -27,9 +26,9 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
 
     private transient Logger log = LoggerFactory.getLogger(ByMonthDayRule.class);
 
-    private final NumberList monthDayList;
+    private final List<Integer> monthDayList;
 
-    public ByMonthDayRule(NumberList monthDayList, Frequency frequency) {
+    public ByMonthDayRule(List<Integer> monthDayList, Frequency frequency) {
         super(frequency);
         this.monthDayList = monthDayList;
     }

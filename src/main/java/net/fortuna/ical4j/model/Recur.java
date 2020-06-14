@@ -164,23 +164,23 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private Integer interval;
 
-    private final NumberList secondList = new NumberList(0, 59, false);
+    private final List<Integer> secondList = new NumberList(0, 59, false);
 
-    private final NumberList minuteList = new NumberList(0, 59, false);
+    private final List<Integer> minuteList = new NumberList(0, 59, false);
 
-    private final NumberList hourList = new NumberList(0, 23, false);
+    private final List<Integer> hourList = new NumberList(0, 23, false);
 
-    private final WeekDayList dayList = new WeekDayList();
+    private final List<WeekDay> dayList = new WeekDayList();
 
-    private final NumberList monthDayList = new NumberList(1, 31, true);
+    private final List<Integer> monthDayList = new NumberList(1, 31, true);
 
-    private final NumberList yearDayList = new NumberList(1, 366, true);
+    private final List<Integer> yearDayList = new NumberList(1, 366, true);
 
-    private final NumberList weekNoList = new NumberList(1, 53, true);
+    private final List<Integer> weekNoList = new NumberList(1, 53, true);
 
-    private final NumberList monthList = new NumberList(1, 12, false);
+    private final List<Integer> monthList = new NumberList(1, 12, false);
 
-    private final NumberList setPosList = new NumberList(1, 366, true);
+    private final List<Integer> setPosList = new NumberList(1, 366, true);
 
     private WeekDay weekStartDay;
 
@@ -311,7 +311,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return Returns the dayList.
      */
-    public final WeekDayList getDayList() {
+    public final List<WeekDay> getDayList() {
         return dayList;
     }
 
@@ -321,7 +321,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return Returns the hourList.
      */
-    public final NumberList getHourList() {
+    public final List<Integer> getHourList() {
         return hourList;
     }
 
@@ -331,7 +331,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return Returns the minuteList.
      */
-    public final NumberList getMinuteList() {
+    public final List<Integer> getMinuteList() {
         return minuteList;
     }
 
@@ -341,7 +341,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return Returns the monthDayList.
      */
-    public final NumberList getMonthDayList() {
+    public final List<Integer> getMonthDayList() {
         return monthDayList;
     }
 
@@ -351,7 +351,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return Returns the monthList.
      */
-    public final NumberList getMonthList() {
+    public final List<Integer> getMonthList() {
         return monthList;
     }
 
@@ -361,7 +361,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return Returns the secondList.
      */
-    public final NumberList getSecondList() {
+    public final List<Integer> getSecondList() {
         return secondList;
     }
 
@@ -371,7 +371,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return Returns the setPosList.
      */
-    public final NumberList getSetPosList() {
+    public final List<Integer> getSetPosList() {
         return setPosList;
     }
 
@@ -381,7 +381,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return Returns the weekNoList.
      */
-    public final NumberList getWeekNoList() {
+    public final List<Integer> getWeekNoList() {
         return weekNoList;
     }
 
@@ -391,7 +391,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return Returns the yearDayList.
      */
-    public final NumberList getYearDayList() {
+    public final List<Integer> getYearDayList() {
         return yearDayList;
     }
 
@@ -484,55 +484,55 @@ public class Recur<T extends Temporal> implements Serializable {
             b.append(';');
             b.append(BYMONTH);
             b.append('=');
-            b.append(monthList);
+            b.append(NumberList.toString(monthList));
         }
         if (!weekNoList.isEmpty()) {
             b.append(';');
             b.append(BYWEEKNO);
             b.append('=');
-            b.append(weekNoList);
+            b.append(NumberList.toString(weekNoList));
         }
         if (!yearDayList.isEmpty()) {
             b.append(';');
             b.append(BYYEARDAY);
             b.append('=');
-            b.append(yearDayList);
+            b.append(NumberList.toString(yearDayList));
         }
         if (!monthDayList.isEmpty()) {
             b.append(';');
             b.append(BYMONTHDAY);
             b.append('=');
-            b.append(monthDayList);
+            b.append(NumberList.toString(monthDayList));
         }
         if (!dayList.isEmpty()) {
             b.append(';');
             b.append(BYDAY);
             b.append('=');
-            b.append(dayList);
+            b.append(WeekDayList.toString(dayList));
         }
         if (!hourList.isEmpty()) {
             b.append(';');
             b.append(BYHOUR);
             b.append('=');
-            b.append(hourList);
+            b.append(NumberList.toString(hourList));
         }
         if (!minuteList.isEmpty()) {
             b.append(';');
             b.append(BYMINUTE);
             b.append('=');
-            b.append(minuteList);
+            b.append(NumberList.toString(minuteList));
         }
         if (!secondList.isEmpty()) {
             b.append(';');
             b.append(BYSECOND);
             b.append('=');
-            b.append(secondList);
+            b.append(NumberList.toString(secondList));
         }
         if (!setPosList.isEmpty()) {
             b.append(';');
             b.append(BYSETPOS);
             b.append('=');
-            b.append(setPosList);
+            b.append(NumberList.toString(setPosList));
         }
         return b.toString();
     }
@@ -796,7 +796,7 @@ public class Recur<T extends Temporal> implements Serializable {
         } else if (frequency == Frequency.MONTHLY || (frequency == Frequency.YEARLY && yearDayList.isEmpty()
                 && weekNoList.isEmpty() && dayList.isEmpty())) {
 
-            NumberList implicitMonthDayList = new NumberList();
+            List<Integer> implicitMonthDayList = new NumberList();
             // where seed doesn't provide timezone rules derive using system default timezone..
             implicitMonthDayList.add(new TemporalAdapter<>(rootSeed).toLocalTime().getDayOfMonth());
             ByMonthDayRule<T> implicitRule = new ByMonthDayRule<>(implicitMonthDayList, frequency);
@@ -936,23 +936,23 @@ public class Recur<T extends Temporal> implements Serializable {
 
         private Integer interval;
 
-        private NumberList secondList;
+        private List<Integer> secondList;
 
-        private NumberList minuteList;
+        private List<Integer> minuteList;
 
-        private NumberList hourList;
+        private List<Integer> hourList;
 
-        private WeekDayList dayList;
+        private List<WeekDay> dayList;
 
-        private NumberList monthDayList;
+        private List<Integer> monthDayList;
 
-        private NumberList yearDayList;
+        private List<Integer> yearDayList;
 
-        private NumberList weekNoList;
+        private List<Integer> weekNoList;
 
-        private NumberList monthList;
+        private List<Integer> monthList;
 
-        private NumberList setPosList;
+        private List<Integer> setPosList;
 
         private WeekDay weekStartDay;
 
@@ -976,47 +976,47 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
-        public Builder<T> secondList(NumberList secondList) {
+        public Builder<T> secondList(List<Integer> secondList) {
             this.secondList = secondList;
             return this;
         }
 
-        public Builder<T> minuteList(NumberList minuteList) {
+        public Builder<T> minuteList(List<Integer> minuteList) {
             this.minuteList = minuteList;
             return this;
         }
 
-        public Builder<T> hourList(NumberList hourList) {
+        public Builder<T> hourList(List<Integer> hourList) {
             this.hourList = hourList;
             return this;
         }
 
-        public Builder<T> dayList(WeekDayList dayList) {
+        public Builder<T> dayList(List<WeekDay> dayList) {
             this.dayList = dayList;
             return this;
         }
 
-        public Builder<T> monthDayList(NumberList monthDayList) {
+        public Builder<T> monthDayList(List<Integer> monthDayList) {
             this.monthDayList = monthDayList;
             return this;
         }
 
-        public Builder<T> yearDayList(NumberList yearDayList) {
+        public Builder<T> yearDayList(List<Integer> yearDayList) {
             this.yearDayList = yearDayList;
             return this;
         }
 
-        public Builder<T> weekNoList(NumberList weekNoList) {
+        public Builder<T> weekNoList(List<Integer> weekNoList) {
             this.weekNoList = weekNoList;
             return this;
         }
 
-        public Builder<T> monthList(NumberList monthList) {
+        public Builder<T> monthList(List<Integer> monthList) {
             this.monthList = monthList;
             return this;
         }
 
-        public Builder<T> setPosList(NumberList setPosList) {
+        public Builder<T> setPosList(List<Integer> setPosList) {
             this.setPosList = setPosList;
             return this;
         }

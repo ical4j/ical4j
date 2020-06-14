@@ -36,6 +36,7 @@ import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
+import java.time.temporal.Temporal;
 import java.util.List;
 
 /**
@@ -47,25 +48,25 @@ import java.util.List;
  *
  * @author benf
  */
-public class RRule extends Property {
+public class RRule<T extends Temporal> extends Property {
 
     private static final long serialVersionUID = -9188265089143001164L;
 
-    private Recur recur;
+    private Recur<T> recur;
 
     /**
      * Default constructor.
      */
     public RRule() {
-        super(RRULE, new Factory());
-        recur = new Recur(Frequency.DAILY, 1);
+        super(RRULE, new Factory<>());
+        recur = new Recur<>(Frequency.DAILY, 1);
     }
 
     /**
      * @param value a rule string
      */
     public RRule(String value) {
-        super(RRULE, new Factory());
+        super(RRULE, new Factory<>());
         setValue(value);
     }
 
@@ -75,15 +76,15 @@ public class RRule extends Property {
      * @see Recur#Recur(String)
      */
     public RRule(final List<Parameter> aList, final String aValue) {
-        super(RRULE, aList, new Factory());
+        super(RRULE, aList, new Factory<>());
         setValue(aValue);
     }
 
     /**
      * @param aRecur a recurrence value
      */
-    public RRule(final Recur aRecur) {
-        super(RRULE, new Factory());
+    public RRule(final Recur<T> aRecur) {
+        super(RRULE, new Factory<>());
         recur = aRecur;
     }
 
@@ -91,15 +92,15 @@ public class RRule extends Property {
      * @param aList  a list of parameters for this component
      * @param aRecur a recurrence value
      */
-    public RRule(final List<Parameter> aList, final Recur aRecur) {
-        super(RRULE, aList, new Factory());
+    public RRule(final List<Parameter> aList, final Recur<T> aRecur) {
+        super(RRULE, aList, new Factory<>());
         recur = aRecur;
     }
 
     /**
      * @return Returns the recur.
      */
-    public final Recur getRecur() {
+    public final Recur<T> getRecur() {
         return recur;
     }
 
@@ -107,7 +108,7 @@ public class RRule extends Property {
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        recur = new Recur(aValue);
+        recur = new Recur<>(aValue);
     }
 
     /**
@@ -124,22 +125,22 @@ public class RRule extends Property {
 
     @Override
     public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+        return new Factory<>().createProperty(getParameters(), getValue());
     }
 
-    public static class Factory extends Content.Factory implements PropertyFactory<RRule> {
+    public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<RRule<T>> {
         private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(RRULE);
         }
 
-        public RRule createProperty(final List<Parameter> parameters, final String value) {
-            return new RRule(parameters, value);
+        public RRule<T> createProperty(final List<Parameter> parameters, final String value) {
+            return new RRule<>(parameters, value);
         }
 
-        public RRule createProperty() {
-            return new RRule();
+        public RRule<T> createProperty() {
+            return new RRule<>();
         }
     }
 

@@ -33,6 +33,7 @@ package net.fortuna.ical4j.util;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -45,10 +46,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * $Id$
@@ -138,7 +136,7 @@ public final class Calendars {
             return new Calendar[] {calendar};
         }
         
-        final ComponentList<VTimeZone> timezoneList = calendar.getComponents(Component.VTIMEZONE);
+        final List<VTimeZone> timezoneList = calendar.getComponents(Component.VTIMEZONE);
 		final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<VTimeZone>(
         		timezoneList, Property.TZID);
         

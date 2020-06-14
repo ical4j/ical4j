@@ -200,8 +200,8 @@ public abstract class Observance extends Component {
         Optional<TzOffsetFrom> offsetFrom = getProperty(Property.TZOFFSETFROM);
         final List<Property> rdates = getProperties(Property.RDATE);
         for (Property rdate : rdates) {
-            DateList<LocalDateTime> rdateDates = ((RDate<LocalDateTime>) rdate).getDates();
-            for (final LocalDateTime rdateDate : rdateDates.getDates()) {
+            List<LocalDateTime> rdateDates = ((RDate<LocalDateTime>) rdate).getDates();
+            for (final LocalDateTime rdateDate : rdateDates) {
                 final OffsetDateTime rdateOnset = OffsetDateTime.from(rdateDate.atOffset(offsetFrom.get().getOffset()));
                 if (!rdateOnset.isAfter(offsetDate) && rdateOnset.isAfter(onset)) {
                     onset = rdateOnset;

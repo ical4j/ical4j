@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur.Frequency;
 
 import java.time.temporal.Temporal;
@@ -20,9 +19,9 @@ import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
  */
 public class ByMonthRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
-    private final NumberList monthList;
+    private final List<Integer> monthList;
 
-    public ByMonthRule(NumberList monthList, Frequency frequency) {
+    public ByMonthRule(List<Integer> monthList, Frequency frequency) {
         super(frequency);
         this.monthList = monthList;
     }

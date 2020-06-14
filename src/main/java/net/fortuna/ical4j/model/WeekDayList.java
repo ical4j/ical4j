@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -78,6 +79,10 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
      * {@inheritDoc}
      */
     public final String toString() {
-        return stream().map(WeekDay::toString).collect(Collectors.joining(","));
+        return toString(this);
+    }
+
+    public static String toString(List<WeekDay> list) {
+        return list.stream().map(WeekDay::toString).collect(Collectors.joining(","));
     }
 }

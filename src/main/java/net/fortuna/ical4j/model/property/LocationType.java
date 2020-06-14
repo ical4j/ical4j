@@ -31,14 +31,17 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
@@ -57,16 +60,16 @@ public class LocationType extends Property {
 
     private static final long serialVersionUID = -3541686430899510312L;
 
-    private LocationTypeList locationTypes;
+    private List<String> locationTypes;
 
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
+    private final Validator<Property> validator = new PropertyValidator(Collections.singletonList(
             new ValidationRule(OneOrLess, LANGUAGE)));
     /**
      * Default constructor.
      */
     public LocationType() {
         super(LOCATION_TYPE, new ArrayList<>(), new Factory());
-        locationTypes = new LocationTypeList();
+        locationTypes = new ArrayList<>();
     }
 
     /**
@@ -89,7 +92,7 @@ public class LocationType extends Property {
     /**
      * @param cList a list of locationTypes
      */
-    public LocationType(final LocationTypeList cList) {
+    public LocationType(final List<String> cList) {
         super(LOCATION_TYPE, new ArrayList<>(), new Factory());
         locationTypes = cList;
     }
@@ -98,7 +101,7 @@ public class LocationType extends Property {
      * @param aList a list of parameters for this component
      * @param cList a list of locationTypes
      */
-    public LocationType(final List<Parameter> aList, final LocationTypeList cList) {
+    public LocationType(final List<Parameter> aList, final List<String> cList) {
         super(LOCATION_TYPE, aList, new Factory());
         locationTypes = cList;
     }
@@ -107,13 +110,13 @@ public class LocationType extends Property {
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        locationTypes = new LocationTypeList(aValue);
+        locationTypes = Collections.singletonList(aValue);
     }
 
     /**
      * @return Returns the locationTypes.
      */
-    public final LocationTypeList getLocationTypes() {
+    public final List<String> getLocationTypes() {
         return locationTypes;
     }
 
@@ -121,7 +124,7 @@ public class LocationType extends Property {
      * {@inheritDoc}
      */
     public final String getValue() {
-        return getLocationTypes().toString();
+        return String.join(",", locationTypes);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import org.slf4j.Logger;
@@ -25,9 +24,9 @@ public class ByYearDayRule<T extends Temporal> extends AbstractDateExpansionRule
 
     private transient Logger log = LoggerFactory.getLogger(ByYearDayRule.class);
 
-    private final NumberList yearDayList;
+    private final List<Integer> yearDayList;
 
-    public ByYearDayRule(NumberList yearDayList, Frequency frequency) {
+    public ByYearDayRule(List<Integer> yearDayList, Frequency frequency) {
         super(frequency);
         this.yearDayList = yearDayList;
     }

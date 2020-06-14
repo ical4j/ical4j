@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import org.slf4j.Logger;
@@ -22,9 +21,9 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
 
     private transient Logger log = LoggerFactory.getLogger(ByWeekNoRule.class);
 
-    private final NumberList weekNoList;
+    private final List<Integer> weekNoList;
 
-    public ByWeekNoRule(NumberList weekNoList, Frequency frequency) {
+    public ByWeekNoRule(List<Integer> weekNoList, Frequency frequency) {
         super(frequency);
         this.weekNoList = weekNoList;
     }

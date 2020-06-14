@@ -45,6 +45,7 @@ import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -163,7 +164,7 @@ public class TimeZone extends java.util.TimeZone {
      * {@inheritDoc}
      */
     public final boolean useDaylightTime() {
-        final ComponentList<Observance> daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
+        final List<Observance> daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
         return (!daylights.isEmpty());
     }
 
@@ -176,7 +177,7 @@ public class TimeZone extends java.util.TimeZone {
 
     private static int getRawOffset(VTimeZone vt) {
 
-        ComponentList<Observance> seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
+        List<Observance> seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
         // if no standard time use daylight time..
         if (seasonalTimes.isEmpty()) {
             seasonalTimes = vt.getObservances().getComponents(Observance.DAYLIGHT);

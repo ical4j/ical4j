@@ -117,9 +117,9 @@ public abstract class Component implements Serializable {
      */
     public static final String EXPERIMENTAL_PREFIX = "X-";
 
-    private String name;
+    private final String name;
 
-    private PropertyList properties;
+    private final PropertyList properties;
 
     /**
      * Constructs a new component containing no properties.
@@ -314,13 +314,13 @@ public abstract class Component implements Serializable {
                 .collect(Collectors.toList()));
 
         List<Period<T>> calculated = rDates.stream().filter(p -> p.getParameter(Parameter.VALUE).get() == Value.DATE_TIME)
-                .map(p -> ((DateListProperty<T>) p).getDates()).map(DateList::getDates)
+                .map(p -> ((DateListProperty<T>) p).getDates())
                 .flatMap(List<T>::stream).filter(period::includes)
                 .map(rdateTime -> new Period<>(rdateTime, rDuration)).collect(Collectors.toList());
         recurrenceSet.addAll(calculated);
 
         recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE).get() == Value.DATE)
-                .map(p -> ((DateListProperty<T>) p).getDates()).map(DateList::getDates)
+                .map(p -> ((DateListProperty<T>) p).getDates())
                 .flatMap(List<T>::stream).filter(period::includes)
                 .map(rdateDate -> new Period<>(rdateDate, rDuration)).collect(Collectors.toList()));
 
@@ -355,7 +355,7 @@ public abstract class Component implements Serializable {
         // subtract exception dates..
         List<Property> exDateProps = getProperties(Property.EXDATE);
         List<Temporal> exDates = exDateProps.stream().map(p -> ((DateListProperty<T>) p).getDates())
-                .map(DateList::getDates).flatMap(List<T>::stream).collect(Collectors.toList());
+                .flatMap(List<T>::stream).collect(Collectors.toList());
 
         recurrenceSet.removeIf(recurrence -> exDates.contains(recurrence.getStart()));
 
