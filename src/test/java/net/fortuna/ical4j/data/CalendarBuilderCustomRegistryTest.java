@@ -39,7 +39,6 @@ import net.fortuna.ical4j.util.Strings;
 
 import java.io.StringReader;
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 /**
  * $Id: CalendarBuilderCustomRegistryTest.java [Nov 16, 2009]
@@ -119,8 +118,8 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
         Calendar cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
 
-        Optional<VEvent> event = cal.getComponent(Component.VEVENT);
-        VEvent eventBis = event.get().copy();
-        assertEquals(eventBis, event.get());
+        VEvent event = cal.getRequiredComponent(Component.VEVENT);
+        VEvent eventBis = event.copy();
+        assertEquals(eventBis, event);
     }
 }

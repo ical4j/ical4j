@@ -33,15 +33,11 @@ package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyTest;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.Calendars;
 
 import java.io.IOException;
-import java.util.Optional;
 
 /**
  * $Id$
@@ -74,11 +70,11 @@ public class LocationTest extends PropertyTest {
      * @throws IOException
      * @throws ParserException
      */
-    public void testQuotedText() throws IOException, ParserException {
+    public void testQuotedText() throws IOException, ParserException, ConstraintViolationException {
         Calendar calendar = Calendars.load(getClass().getResource("/samples/valid/mansour.ics"));
-        Optional<VEvent> event = calendar.getComponent(Component.VEVENT);
+        VEvent event = calendar.getRequiredComponent(Component.VEVENT);
         assertEquals("At \"The Terrace\" Complex > Melbourne \"\\,",
-				event.get().getProperty(Property.LOCATION).get().getValue());
+				event.getRequiredProperty(Property.LOCATION).getValue());
     }
     
     /**
@@ -86,13 +82,13 @@ public class LocationTest extends PropertyTest {
      * @throws ParserException 
      * @throws IOException 
      */
-    public static TestSuite suite() throws IOException, ParserException {
+    public static TestSuite suite() throws IOException, ParserException, ConstraintViolationException {
     	TestSuite suite = new TestSuite();
     	//testQuotedText..
         Calendar calendar = Calendars.load(LocationTest.class.getResource("/samples/valid/mansour.ics"));
-		Optional<VEvent> event = calendar.getComponent(Component.VEVENT);
-        Optional<Location> location = event.get().getProperty(Property.LOCATION);
-        suite.addTest(new LocationTest(location.get(), "At \"The Terrace\" Complex > Melbourne \"\\,"));
+		VEvent event = calendar.getRequiredComponent(Component.VEVENT);
+        Location location = event.getRequiredProperty(Property.LOCATION);
+        suite.addTest(new LocationTest(location, "At \"The Terrace\" Complex > Melbourne \"\\,"));
     	return suite;
     }
 }

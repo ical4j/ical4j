@@ -35,10 +35,7 @@ import junit.framework.TestCase;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -51,7 +48,6 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * $Id$
@@ -91,7 +87,7 @@ public class AttachTest extends TestCase {
     /*
      * Class under test for void Attach(ParameterList, String)
      */
-    public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException, ParserException {
+    public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException, ParserException, ConstraintViolationException {
 
         //log.info(attach);
 
@@ -119,11 +115,11 @@ public class AttachTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar cout = builder.build(new StringReader(sw.toString()));
 
-        Optional<VEvent> eout = cout.getComponent(Component.VEVENT);
+        VEvent eout = cout.getRequiredComponent(Component.VEVENT);
 
-        Optional<Attach> aout = eout.get().getProperty(Property.ATTACH);
+        Attach aout = eout.getRequiredProperty(Property.ATTACH);
         assertNotNull(aout);
-        assertEquals(attach, aout.get());
+        assertEquals(attach, aout);
 
         log.info(sw.toString());
     }

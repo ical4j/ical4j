@@ -219,7 +219,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         }
     }
 
-    public final void testVFreeBusyComponentList3() {
+    public final void testVFreeBusyComponentList3() throws ConstraintViolationException {
         ComponentList<CalendarComponent> components = new ComponentList<>();
 
         ZonedDateTime eventStart = ZonedDateTime.ofInstant(
@@ -230,7 +230,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         // VEvent event = new VEvent(startDate, cal.getTime(), "Progress
         // Meeting");
         // add timezone information..
-        event.getProperty(Property.DTSTART).get().getParameters()
+        event.getRequiredProperty(Property.DTSTART).getParameters()
                 .add(tzParam);
         components.add(event);
 
