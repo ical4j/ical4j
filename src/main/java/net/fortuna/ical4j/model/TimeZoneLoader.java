@@ -111,9 +111,7 @@ public class TimeZoneLoader {
                             && "true".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("false"))) {
                         return updateDefinition(vTimeZone.get());
                     }
-                    if (vTimeZone.isPresent()) {
-                        cache.putIfAbsent(id, vTimeZone.get());
-                    }
+                    vTimeZone.ifPresent(timeZone -> cache.putIfAbsent(id, timeZone));
                 }
             } else {
                 return generateTimezoneForId(id);

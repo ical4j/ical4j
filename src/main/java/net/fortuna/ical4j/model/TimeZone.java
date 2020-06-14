@@ -38,6 +38,8 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
@@ -58,6 +60,8 @@ import java.util.Optional;
 public class TimeZone extends java.util.TimeZone {
 
     private static final long serialVersionUID = -5620979316746547234L;
+
+    private static final Logger LOG = LoggerFactory.getLogger(TimeZone.class);
 
     private final VTimeZone vTimeZone;
     private final int rawOffset;
@@ -97,8 +101,12 @@ public class TimeZone extends java.util.TimeZone {
         OffsetDateTime date = OffsetDateTime.of(year, month + 1, dayOfMonth, hour, minute, second, ms * 1000, ZoneOffset.ofTotalSeconds(getRawOffset() / 1000));
         final Observance observance = vTimeZone.getApplicableObservance(date);
         if (observance != null) {
-            final Optional<TzOffsetTo> offset = observance.getProperty(Property.TZOFFSETTO);
-            return (int) (offset.get().getOffset().getTotalSeconds() * 1000L);
+            try {
+                final TzOffsetTo offset = observance.getRequiredProperty(Property.TZOFFSETTO);
+                return (int) (offset.getOffset().getTotalSeconds() * 1000L);
+            } catch (ConstraintViolationException cve) {
+                LOG.error("Invalid observance", cve);
+            }
         }
         return 0;
     }
@@ -109,11 +117,15 @@ public class TimeZone extends java.util.TimeZone {
     public int getOffset(long date) {
         final Observance observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
         if (observance != null) {
-            final Optional<TzOffsetTo> offset = observance.getProperty(Property.TZOFFSETTO);
-            if ((offset.get().getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
-                return getRawOffset();
-            } else {
-                return (int) (offset.get().getOffset().getTotalSeconds() * 1000L);
+            try {
+                final TzOffsetTo offset = observance.getRequiredProperty(Property.TZOFFSETTO);
+                if ((offset.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
+                    return getRawOffset();
+                } else {
+                    return (int) (offset.getOffset().getTotalSeconds() * 1000L);
+                }
+            } catch (ConstraintViolationException cve) {
+                LOG.error("Invalid observance", cve);
             }
         }
         return 0;

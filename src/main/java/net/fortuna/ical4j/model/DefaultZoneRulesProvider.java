@@ -56,7 +56,7 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
                 VTimeZone vTimeZone = zoneLoader.loadVTimeZone(localZoneId);
                 retVal = new ZoneRulesBuilder().vTimeZone(vTimeZone).build();
                 zoneRulesMap.put(zoneId, retVal);
-            } catch (IOException | ParserException e) {
+            } catch (IOException | ParserException | ConstraintViolationException e) {
                 LOG.error("Error loading zone rules", e);
             }
         }

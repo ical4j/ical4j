@@ -467,7 +467,8 @@ public class VEvent extends CalendarComponent {
     public final <T extends Temporal> List<Period<T>> getConsumedTime(final Period<T> range, final boolean normalise) {
         PeriodList<T> periods;
         // if component is transparent return empty list..
-        if (!Transp.TRANSPARENT.equals(getProperty(Property.TRANSP))) {
+        Optional<Transp> transp = getProperty(Property.TRANSP);
+        if (!transp.isPresent() || !Transp.TRANSPARENT.equals(transp.get())) {
 
 //          try {
             periods = new PeriodList<>(calculateRecurrenceSet(range));

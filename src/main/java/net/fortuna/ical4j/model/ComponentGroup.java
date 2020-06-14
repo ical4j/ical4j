@@ -99,9 +99,11 @@ public class ComponentGroup<C extends Component> {
         List<Period<T>> finalPeriods = new ArrayList<>(periods);
         replacements.forEach(component -> {
             Optional<RecurrenceId<?>> recurrenceId = component.getProperty(Property.RECURRENCE_ID);
-            List<Period<T>> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.get().getDate()))
-                    .collect(Collectors.toList());
-            finalPeriods.removeAll(match);
+            if (recurrenceId.isPresent()) {
+                List<Period<T>> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.get().getDate()))
+                        .collect(Collectors.toList());
+                finalPeriods.removeAll(match);
+            }
 
             finalPeriods.addAll(component.calculateRecurrenceSet(period));
         });

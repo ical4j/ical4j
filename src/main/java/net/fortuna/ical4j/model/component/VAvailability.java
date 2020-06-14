@@ -187,10 +187,14 @@ public class VAvailability extends CalendarComponent {
          *      "DATE-TIME" values specified as either date with UTC time or date
          *      with local time and a time zone reference.
          */
-        final Optional<DtStart<?>> start = getProperty(Property.DTSTART);
-        if (start.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
-            throw new ValidationException("Property [" + Property.DTSTART
-                    + "] must be a " + Value.DATE_TIME);
+        try {
+            final DtStart<?> start = getRequiredProperty(Property.DTSTART);
+            if (start.getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
+                throw new ValidationException("Property [" + Property.DTSTART
+                        + "] must be a " + Value.DATE_TIME);
+            }
+        } catch (ConstraintViolationException cve) {
+            throw new ValidationException("Missing required property", cve);
         }
 
         /*

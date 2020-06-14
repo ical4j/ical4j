@@ -310,10 +310,16 @@ public class VFreeBusy extends CalendarComponent {
     public VFreeBusy(final VFreeBusy request, final ComponentList<CalendarComponent> components) {
         this();
         
-        final Optional<DtStart<?>> start = request.getProperty(Property.DTSTART);
-        
-        final Optional<DtEnd<?>> end = request.getProperty(Property.DTEND);
-        
+        final DtStart<?> start;
+        final DtEnd<?> end;
+
+        try {
+            start = request.getRequiredProperty(Property.DTSTART);
+            end = request.getRequiredProperty(Property.DTEND);
+        } catch (ConstraintViolationException cve) {
+            throw new ValidationException("Missing required property", cve);
+        }
+
         final Optional<Duration> duration = request.getProperty(Property.DURATION);
         
         // 4.8.2.4 Date/Time Start:
@@ -321,7 +327,7 @@ public class VFreeBusy extends CalendarComponent {
         //    Within the "VFREEBUSY" calendar component, this property defines the
         //    start date and time for the free or busy time information. The time
         //    MUST be specified in UTC time.
-        getProperties().add(new DtStart<>(start.get().getDate()));
+        getProperties().add(new DtStart<>(start.getDate()));
         
         // 4.8.2.2 Date/Time End
         //
@@ -329,13 +335,13 @@ public class VFreeBusy extends CalendarComponent {
         //    end date and time for the free or busy time information. The time
         //    MUST be specified in the UTC time format. The value MUST be later in
         //    time than the value of the "DTSTART" property.
-        getProperties().add(new DtEnd<>(end.get().getDate()));
+        getProperties().add(new DtEnd<>(end.getDate()));
         
         if (duration.isPresent()) {
             getProperties().add(new Duration(duration.get().getDuration()));
             // Initialise with all free time of at least the specified duration..
-            final Instant freeStart = Instant.from(start.get().getDate());
-            final Instant freeEnd = Instant.from(end.get().getDate());
+            final Instant freeStart = Instant.from(start.getDate());
+            final Instant freeEnd = Instant.from(end.getDate());
             final FreeBusy fb = new FreeTimeBuilder().start(freeStart)
                 .end(freeEnd)
                 .duration(duration.get().getDuration())
@@ -347,8 +353,8 @@ public class VFreeBusy extends CalendarComponent {
         }
         else {
             // initialise with all busy time for the specified period..
-            final Instant busyStart = Instant.from(start.get().getDate());
-            final Instant busyEnd = Instant.from(end.get().getDate());
+            final Instant busyStart = Instant.from(start.getDate());
+            final Instant busyEnd = Instant.from(end.getDate());
             final FreeBusy fb = new BusyTimeBuilder().start(busyStart)
                 .end(busyEnd)
                 .components(components)

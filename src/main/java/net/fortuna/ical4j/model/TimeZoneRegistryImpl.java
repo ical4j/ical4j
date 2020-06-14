@@ -144,9 +144,16 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
             timezones.put(timezone.getID(), timezone);
         }
 
-        String globalId = "ical4j~" + UUID.randomUUID().toString();
-        zoneIds.put(globalId, timezone.getID());
-        zoneRules.put(globalId, new ZoneRulesBuilder().vTimeZone(timezones.get(timezone.getID()).getVTimeZone()).build());
+        // use latest timezone definition to build zone rules..
+        try {
+            ZoneRules newZoneRules = new ZoneRulesBuilder().vTimeZone(timezones.get(timezone.getID()).getVTimeZone())
+                    .build();
+            String globalId = "ical4j~" + UUID.randomUUID().toString();
+            zoneIds.put(globalId, timezone.getID());
+            zoneRules.put(globalId, newZoneRules);
+        } catch (ConstraintViolationException cve) {
+            LoggerFactory.getLogger(TimeZoneRegistryImpl.class).error("Invalid timezone definition", cve);
+        }
     }
 
     /**

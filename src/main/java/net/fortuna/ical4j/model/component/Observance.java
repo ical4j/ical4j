@@ -150,15 +150,22 @@ public abstract class Observance extends Component {
      * specified date
      */
     public final OffsetDateTime getLatestOnset(final Temporal date) {
-        Optional<TzOffsetTo> offsetTo = getProperty(Property.TZOFFSETTO);
+        TzOffsetTo offsetTo;
+        try {
+            offsetTo = getRequiredProperty(Property.TZOFFSETTO);
+        } catch (ConstraintViolationException e) {
+            Logger log = LoggerFactory.getLogger(Observance.class);
+            log.error("Unexpected error calculating latest onset", e);
+            return null;
+        }
 
         OffsetDateTime offsetDate = LocalDateTime.ofInstant(Instant.from(date), ZoneOffset.UTC).atOffset(
-                offsetTo.get().getOffset());
+                offsetTo.getOffset());
 
         if (initialOnset == null) {
             try {
                 DtStart dtStart = getRequiredProperty(Property.DTSTART);
-                initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(offsetTo.get().getOffset());
+                initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(offsetTo.getOffset());
             } catch (ConstraintViolationException e) {
                 Logger log = LoggerFactory.getLogger(Observance.class);
                 log.error("Unexpected error calculating initial onset", e);

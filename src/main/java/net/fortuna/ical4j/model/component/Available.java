@@ -123,9 +123,13 @@ public class Available extends Component {
          *      "DATE-TIME" values specified as either date with UTC time or date
          *      with local time and a time zone reference.
          */
-        if (getProperty(Property.DTSTART).get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
-            throw new ValidationException("Property [" + Property.DTSTART
-                    + "] must be a " + Value.DATE_TIME);
+        try {
+            if (getRequiredProperty(Property.DTSTART).getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
+                throw new ValidationException("Property [" + Property.DTSTART
+                        + "] must be a " + Value.DATE_TIME);
+            }
+        } catch (ConstraintViolationException cve) {
+            throw new ValidationException("Missing required property", cve);
         }
 
         /*
