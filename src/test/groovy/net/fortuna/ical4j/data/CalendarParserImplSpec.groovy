@@ -49,7 +49,7 @@ class CalendarParserImplSpec extends Specification {
 		
 		expect:
 		Calendar calendar = builder.build(new StringReader(input))
-		assert calendar.components[0].properties[0] as String == expectedProperty
+		assert calendar.components.all[0].properties.all[0] as String == expectedProperty
 		
 		where:
 		contentLines																								| expectedProperty
@@ -62,7 +62,7 @@ class CalendarParserImplSpec extends Specification {
 		
 		expect:
 		Calendar calendar = builder.build(new StringReader(input))
-		assert calendar.properties[0] as String == expectedProperty
+		assert calendar.properties.all[0] as String == expectedProperty
 		
 		where:
 		contentLines																																			| expectedProperty
@@ -99,7 +99,7 @@ class CalendarParserImplSpec extends Specification {
 
 		expect:
 		Calendar calendar = builder.build(new StringReader(input))
-		assert calendar.components[0].properties.size() == 24
+		assert calendar.components.all[0].properties.size() == 24
 
 		cleanup:
 		compatibilityHints.each {

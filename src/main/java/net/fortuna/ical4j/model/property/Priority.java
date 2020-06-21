@@ -31,15 +31,9 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * $Id$
@@ -152,22 +146,40 @@ public class Priority extends Property {
     /**
      * @author Ben Fortuna An immutable instance of Priority.
      */
-    private static final class ImmutablePriority extends Priority {
+    private static final class ImmutablePriority extends Priority implements ImmutableContent {
 
         private static final long serialVersionUID = 5884973714694108418L;
 
         private ImmutablePriority(final int level) {
-            super(Collections.unmodifiableList(Collections.EMPTY_LIST), level);
+            super(level);
         }
 
         public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
+            throwException();
         }
 
         public void setLevel(final int level) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
+            throwException();
+        }
+
+        @Override
+        public void add(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void remove(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void removeAll(String parameterName) {
+            throwException();
+        }
+
+        @Override
+        public void replace(Parameter parameter) {
+            throwException();
         }
     }
 
@@ -177,7 +189,7 @@ public class Priority extends Property {
      * Default constructor.
      */
     public Priority() {
-        super(PRIORITY, new Factory());
+        super(PRIORITY);
         level = UNDEFINED.getLevel();
     }
 
@@ -185,8 +197,8 @@ public class Priority extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Priority(final List<Parameter> aList, final String aValue) {
-        super(PRIORITY, aList, new Factory());
+    public Priority(final ParameterList aList, final String aValue) {
+        super(PRIORITY, aList);
         try {
             level = Integer.parseInt(aValue);
         } catch (NumberFormatException e) {
@@ -202,7 +214,7 @@ public class Priority extends Property {
      * @param aLevel an int representation of a priority level
      */
     public Priority(final int aLevel) {
-        super(PRIORITY, new Factory());
+        super(PRIORITY);
         level = aLevel;
     }
 
@@ -210,8 +222,8 @@ public class Priority extends Property {
      * @param aList  a list of parameters for this component
      * @param aLevel an int representation of a priority level
      */
-    public Priority(final List<Parameter> aList, final int aLevel) {
-        super(PRIORITY, aList, new Factory());
+    public Priority(final ParameterList aList, final int aLevel) {
+        super(PRIORITY, aList);
         level = aLevel;
     }
 
@@ -249,8 +261,8 @@ public class Priority extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Priority> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Priority> {
@@ -260,7 +272,7 @@ public class Priority extends Property {
             super(PRIORITY);
         }
 
-        public Priority createProperty(final List<Parameter> parameters, final String value) {
+        public Priority createProperty(final ParameterList parameters, final String value) {
             Priority priority;
             if (HIGH.getValue().equals(value)) {
                 priority = HIGH;

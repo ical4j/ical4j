@@ -35,7 +35,6 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.ZoneOffset;
-import java.util.List;
 
 /**
  * $Id$
@@ -56,14 +55,14 @@ public class TzOffsetFrom extends Property {
      * Default constructor.
      */
     public TzOffsetFrom() {
-        super(TZOFFSETFROM, new Factory());
+        super(TZOFFSETFROM);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzOffsetFrom(final String aValue) {
-        super(TZOFFSETFROM, new Factory());
+        super(TZOFFSETFROM);
         setValue(aValue);
     }
 
@@ -71,8 +70,8 @@ public class TzOffsetFrom extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public TzOffsetFrom(final List<Parameter> aList, final String aValue) {
-        super(TZOFFSETFROM, aList, new Factory());
+    public TzOffsetFrom(final ParameterList aList, final String aValue) {
+        super(TZOFFSETFROM, aList);
         setValue(aValue);
     }
 
@@ -88,7 +87,7 @@ public class TzOffsetFrom extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     public TzOffsetFrom(final ZoneOffset anOffset) {
-        super(TZOFFSETFROM, new Factory());
+        super(TZOFFSETFROM);
         offset = new ZoneOffsetAdapter(anOffset);
     }
 
@@ -97,7 +96,7 @@ public class TzOffsetFrom extends Property {
      * @param anOffset a timezone offset in milliseconds
      */
     @Deprecated
-    public TzOffsetFrom(final List<Parameter> aList, final UtcOffset anOffset) {
+    public TzOffsetFrom(final ParameterList aList, final UtcOffset anOffset) {
         this(aList, ZoneOffsetAdapter.from(anOffset));
     }
 
@@ -105,8 +104,8 @@ public class TzOffsetFrom extends Property {
      * @param aList    a list of parameters for this component
      * @param anOffset a timezone offset in milliseconds
      */
-    public TzOffsetFrom(final List<Parameter> aList, final ZoneOffset anOffset) {
-        super(TZOFFSETFROM, aList, new Factory());
+    public TzOffsetFrom(final ParameterList aList, final ZoneOffset anOffset) {
+        super(TZOFFSETFROM, aList);
         offset = new ZoneOffsetAdapter(anOffset);
     }
 
@@ -147,8 +146,8 @@ public class TzOffsetFrom extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<TzOffsetFrom> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<TzOffsetFrom> {
@@ -158,7 +157,7 @@ public class TzOffsetFrom extends Property {
             super(TZOFFSETFROM);
         }
 
-        public TzOffsetFrom createProperty(final List<Parameter> parameters, final String value) {
+        public TzOffsetFrom createProperty(final ParameterList parameters, final String value) {
             return new TzOffsetFrom(parameters, value);
         }
 

@@ -138,7 +138,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * Default constructor.
      */
     public RDate() {
-        super(RDATE, new Factory<>());
+        super(RDATE);
         periods = null;
     }
 
@@ -146,8 +146,8 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public RDate(final List<Parameter> aList, final String aValue) {
-        super(RDATE, aList, new Factory<>());
+    public RDate(final ParameterList aList, final String aValue) {
+        super(RDATE, aList);
         periods = null;
         setValue(aValue);
     }
@@ -158,7 +158,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param dates a list of dates
      */
     public RDate(final DateList<T> dates) {
-        super(RDATE, dates, new Factory<>());
+        super(RDATE, dates);
         periods = null;
     }
 
@@ -168,8 +168,8 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param aList a list of parameters for this component
      * @param dates a list of dates
      */
-    public RDate(final List<Parameter> aList, final DateList<T> dates) {
-        super(RDATE, aList, dates, new Factory<>());
+    public RDate(final ParameterList aList, final DateList<T> dates) {
+        super(RDATE, aList, dates);
         periods = null;
     }
 
@@ -179,7 +179,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param periods a list of periods
      */
     public RDate(final List<Period<T>> periods) {
-        super(RDATE, new DateList<>(true), new Factory<>());
+        super(RDATE, new DateList<>(true));
         this.periods = new PeriodList<>(periods);
     }
 
@@ -189,8 +189,8 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param aList   a list of parameters for this component
      * @param periods a list of periods
      */
-    public RDate(final List<Parameter> aList, final List<Period<T>> periods) {
-        super(RDATE, aList, new DateList<>(true), new Factory<>());
+    public RDate(final ParameterList aList, final List<Period<T>> periods) {
+        super(RDATE, aList, new DateList<>(true));
         this.periods = new PeriodList<>(periods);
     }
 
@@ -203,8 +203,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE" /
          * "PERIOD")) / (";" tzidparam) /
          */
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                getParameters());
+        ParameterValidator.assertOneOrLess(Parameter.VALUE, getParameters().getAll());
 
         final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
 
@@ -215,8 +214,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
                     + "] is invalid");
         }
 
-        ParameterValidator.assertOneOrLess(Parameter.TZID,
-                getParameters());
+        ParameterValidator.assertOneOrLess(Parameter.TZID, getParameters().getAll());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
@@ -256,10 +254,8 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
     }
 
     @Override
-    public Property copy() {
-        RDate<?> copy = new Factory<T>().createProperty(getParameters(), getValue());
-        copy.setTimeZone(getTimeZone());
-        return copy;
+    protected PropertyFactory<RDate<T>> newFactory() {
+        return new Factory<>();
     }
 
     public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<RDate<T>> {
@@ -269,7 +265,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
             super(RDATE);
         }
 
-        public RDate<T> createProperty(final List<Parameter> parameters, final String value) {
+        public RDate<T> createProperty(final ParameterList parameters, final String value) {
             return new RDate<>(parameters, value);
         }
 

@@ -1,6 +1,6 @@
 package net.fortuna.ical4j.model.property
 
-
+import net.fortuna.ical4j.model.ParameterList
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 
@@ -10,7 +10,7 @@ class PrioritySpec extends Specification {
 
     def 'test factory use of constants'() {
         when: 'factory is invoked with a constant value'
-        def priority = factory.createProperty([], value)
+        def priority = factory.createProperty(new ParameterList(), value)
 
         then: 'the returned value is the constant instance'
         priority.is(constantInstance)
@@ -27,7 +27,7 @@ class PrioritySpec extends Specification {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true)
 
         and: 'factory is invoked with invalid value'
-        def priority = factory.createProperty([], value)
+        def priority = factory.createProperty(new ParameterList(), value)
 
         then: 'the returned priority is UNDEFINED'
         priority == Priority.UNDEFINED

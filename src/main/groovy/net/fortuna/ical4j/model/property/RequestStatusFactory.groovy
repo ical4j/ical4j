@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
+import net.fortuna.ical4j.model.ParameterList
 
 /**
  * $Id$
@@ -62,6 +63,6 @@ class RequestStatusFactory extends AbstractPropertyFactory{
     }
     
     protected Object newInstance(List<Parameter> parameters, String value) {
-        return new RequestStatus(parameters, value)
+        return new RequestStatus(new ParameterList(parameters), value)
     }
 }

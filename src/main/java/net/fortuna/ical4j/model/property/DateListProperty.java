@@ -33,16 +33,14 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
-import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Strings;
 
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * $Id$
@@ -78,24 +76,24 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     /**
      * @param name the property name
      */
-    public DateListProperty(final String name, PropertyFactory<?> factory) {
-        this(name, new DateList<>(), factory);
+    public DateListProperty(final String name) {
+        this(name, new DateList<>());
     }
 
     /**
      * @param name       the property name
      * @param parameters property parameters
      */
-    public DateListProperty(final String name, final List<Parameter> parameters, PropertyFactory<?> factory) {
-        super(name, parameters, factory);
+    public DateListProperty(final String name, final ParameterList parameters) {
+        super(name, parameters);
     }
 
     /**
      * @param name  the property name
      * @param dates a list of initial dates for the property
      */
-    public DateListProperty(final String name, final DateList<T> dates, PropertyFactory<?> factory) {
-        this(name, new ArrayList<>(), dates, factory);
+    public DateListProperty(final String name, final DateList<T> dates) {
+        this(name, new ParameterList(), dates);
     }
 
     /**
@@ -103,9 +101,8 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      * @param parameters property parameters
      * @param dates      a list of initial dates for the property
      */
-    public DateListProperty(final String name, final List<Parameter> parameters, final DateList<T> dates,
-                            PropertyFactory<?> factory) {
-        super(name, parameters, factory);
+    public DateListProperty(final String name, final ParameterList parameters, final DateList<T> dates) {
+        super(name, parameters);
         this.dates = dates;
     }
 
@@ -137,14 +134,12 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      */
     public void setTimeZone(final ZoneId timezone) {
         if (dates == null) {
-            throw new UnsupportedOperationException(
-                    "TimeZone is not applicable to current value");
+            throw new UnsupportedOperationException("TimeZone is not applicable to current value");
         }
         this.timeZone = timezone;
         if (timezone != null) {
             final net.fortuna.ical4j.model.parameter.TzId tzId = new net.fortuna.ical4j.model.parameter.TzId(timezone.getId());
-            getParameters().removeIf(p -> p.getName().equals(Parameter.TZID));
-            getParameters().add(tzId);
+            setParameters((ParameterList) getParameters().replace(tzId));
         } else {
             // use setUtc() to reset timezone..
             setUtc(false);
@@ -170,8 +165,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
             throw new UnsupportedOperationException("TimeZone is not applicable to current value");
         }
         if (utc) {
-            Optional<TzId> tzId = getParameter(Parameter.TZID);
-            tzId.ifPresent(p -> getParameters().remove(p));
+            setParameters((ParameterList) getParameters().removeAll(Parameter.TZID));
         }
     }
 }

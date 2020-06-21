@@ -34,8 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.util.List;
-
 /**
  * $Id$
  * <p/>
@@ -114,14 +112,14 @@ public class TzId extends Property implements Escapable {
      * Default constructor.
      */
     public TzId() {
-        super(TZID, new Factory());
+        super(TZID);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzId(final String aValue) {
-        super(TZID, new Factory());
+        super(TZID);
         setValue(aValue);
     }
 
@@ -129,8 +127,8 @@ public class TzId extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public TzId(final List<Parameter> aList, final String aValue) {
-        super(TZID, aList, new Factory());
+    public TzId(final ParameterList aList, final String aValue) {
+        super(TZID, aList);
         setValue(aValue);
     }
 
@@ -154,8 +152,8 @@ public class TzId extends Property implements Escapable {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<TzId> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<TzId> {
@@ -165,7 +163,7 @@ public class TzId extends Property implements Escapable {
             super(TZID);
         }
 
-        public TzId createProperty(final List<Parameter> parameters, final String value) {
+        public TzId createProperty(final ParameterList parameters, final String value) {
             return new TzId(parameters, value);
         }
 

@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
+import net.fortuna.ical4j.model.ParameterList
 
 /**
  * $Id$
@@ -64,7 +65,7 @@ class XPropertyFactory extends AbstractPropertyFactory{
     }
     
     protected static Object newInstance(String name, List<Parameter> parameters, String value) {
-        return new XProperty(name, parameters, value)
+        return new XProperty(name, new ParameterList(parameters), value)
     }
     
     protected Object newInstance(List<Parameter> parameters, String value) {

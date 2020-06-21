@@ -32,12 +32,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.time.temporal.Temporal;
-import java.util.List;
 
 /**
  * $Id$
@@ -114,7 +112,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * Default constructor. The time value is initialised to the time of instantiation.
      */
     public DtStart() {
-        super(DTSTART, new Factory<T>());
+        super(DTSTART);
     }
 
     /**
@@ -122,7 +120,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * @throws java.time.format.DateTimeParseException where the specified value string is not a valid date-time/date representation
      */
     public DtStart(final String aValue) {
-        super(DTSTART, new Factory<T>());
+        super(DTSTART);
         setValue(aValue);
     }
 
@@ -131,8 +129,8 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * @param aValue a value string for this component
      * @throws java.time.format.DateTimeParseException where the specified value string is not a valid date-time/date representation
      */
-    public DtStart(final List<Parameter> aList, final String aValue) {
-        super(DTSTART, aList, new Factory<T>());
+    public DtStart(final ParameterList aList, final String aValue) {
+        super(DTSTART, aList);
         setValue(aValue);
     }
 
@@ -142,7 +140,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * @param aDate a date
      */
     public DtStart(final T aDate) {
-        super(DTSTART, new Factory<T>());
+        super(DTSTART);
         setDate(aDate);
     }
 
@@ -165,14 +163,14 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public DtStart(final List<Parameter> aList, final T aDate) {
-        super(DTSTART, aList, new Factory<T>());
+    public DtStart(final ParameterList aList, final T aDate) {
+        super(DTSTART, aList);
         setDate(aDate);
     }
 
     @Override
-    public Property copy() {
-        return new Factory<T>().createProperty(getParameters(), getValue());
+    protected PropertyFactory<DtStart<T>> newFactory() {
+        return new Factory<>();
     }
 
     public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<DtStart<T>> {
@@ -182,7 +180,7 @@ public class DtStart<T extends Temporal> extends DateProperty<T> {
             super(DTSTART);
         }
 
-        public DtStart<T> createProperty(final List<Parameter> parameters, final String value) {
+        public DtStart<T> createProperty(final ParameterList parameters, final String value) {
             return new DtStart<>(parameters, value);
         }
 

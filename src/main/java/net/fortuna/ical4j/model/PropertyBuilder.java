@@ -52,7 +52,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
         Property property = null;
         for (PropertyFactory<?> factory : factories) {
             if (factory.supports(name)) {
-                property = factory.createProperty(parameters, value);
+                property = factory.createProperty(new ParameterList(parameters), value);
                 if (property instanceof Escapable) {
                     property.setValue(Strings.unescape(value));
                 }
@@ -66,9 +66,9 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
         if (property == null) {
             if (isExperimentalName(name)) {
-                property = new XProperty(name, parameters, value);
+                property = new XProperty(name, new ParameterList(parameters), value);
             } else if (allowIllegalNames()) {
-                property = new XProperty(name, parameters, value);
+                property = new XProperty(name, new ParameterList(parameters), value);
             } else {
                 throw new IllegalArgumentException("Illegal property [" + name + "]");
             }

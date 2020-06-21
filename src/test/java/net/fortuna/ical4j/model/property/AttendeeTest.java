@@ -104,7 +104,7 @@ public class AttendeeTest extends TestCase {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
         Calendar calendar = Calendars.load(getClass().getResource("/samples/invalid/groupwise.ics"));
         
-        Attendee attendee = calendar.getRequiredComponent(Component.VEVENT).getRequiredProperty(Property.ATTENDEE);
+        Attendee attendee = calendar.getComponents().getRequired(Component.VEVENT).getProperties().getRequired(Property.ATTENDEE);
         assertNotNull(attendee.getCalAddress());
     }
 }

@@ -31,14 +31,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * $Id$
@@ -112,18 +106,39 @@ public class Transp extends Property {
     /**
      * @author Ben Fortuna An immutable instance of Transp.
      */
-    private static final class ImmutableTransp extends Transp {
+    private static final class ImmutableTransp extends Transp implements ImmutableContent {
 
         private static final long serialVersionUID = -6595830107310111996L;
 
         private ImmutableTransp(final String value) {
-            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
+            super(value);
         }
 
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
+
+        @Override
+        public void add(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void remove(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void removeAll(String parameterName) {
+            throwException();
+        }
+
+        @Override
+        public void replace(Parameter parameter) {
+            throwException();
+        }
+
     }
 
     private String value;
@@ -132,14 +147,14 @@ public class Transp extends Property {
      * Default constructor.
      */
     public Transp() {
-        super(TRANSP, new Factory());
+        super(TRANSP);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Transp(final String aValue) {
-        super(TRANSP, new Factory());
+        super(TRANSP);
         this.value = aValue;
     }
 
@@ -147,8 +162,8 @@ public class Transp extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Transp(final List<Parameter> aList, final String aValue) {
-        super(TRANSP, aList, new Factory());
+    public Transp(final ParameterList aList, final String aValue) {
+        super(TRANSP, aList);
         this.value = aValue;
     }
 
@@ -172,8 +187,8 @@ public class Transp extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Transp> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Transp> {
@@ -183,7 +198,7 @@ public class Transp extends Property {
             super(TRANSP);
         }
 
-        public Transp createProperty(final List<Parameter> parameters, final String value) {
+        public Transp createProperty(final ParameterList parameters, final String value) {
             Transp transp;
             if (OPAQUE.getValue().equals(value)) {
                 transp = OPAQUE;

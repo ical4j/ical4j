@@ -36,6 +36,7 @@ import junit.framework.TestSuite;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Attendee;
@@ -45,6 +46,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Predicate;
 
@@ -121,23 +123,20 @@ public class FilterTest<T extends Component> extends TestCase {
         Attendee a2 = new Attendee(new URI("Mailto:C@example.com"));
         
         VEvent e1 = new VEvent();
-        e1.getProperties().add(organizer);
-        e1.getProperties().add(a1);
+        e1.add(organizer);
+        e1.add(a1);
         
         VEvent e2 = new VEvent();
-        e2.getProperties().add(organizer);
-        e2.getProperties().add(a2);
+        e2.add(organizer);
+        e2.add(a2);
         
         VEvent e3 = new VEvent();
-        e3.getProperties().add(organizer);
-        e3.getProperties().add(a1);
-        e3.getProperties().add(a2);
+        e3.add(organizer);
+        e3.add(a1);
+        e3.add(a2);
         
-        Calendar calendar = new Calendar();
-        calendar.getComponents().add(e1);
-        calendar.getComponents().add(e2);
-        calendar.getComponents().add(e3);
-        
+        Calendar calendar = new Calendar(new ComponentList<>(Arrays.asList(e1, e2, e3)));
+
         Predicate<Component> organiserRuleMatch = new HasPropertyRule<>(organizer);
         Predicate<Component> attendee1RuleMatch = new HasPropertyRule<>(a1);
 
@@ -147,23 +146,23 @@ public class FilterTest<T extends Component> extends TestCase {
         TestSuite suite = new TestSuite();
         //testFilterMatchAll..
         Filter<CalendarComponent> filter = new Filter<>(new Predicate[] {organiserRuleMatch, attendee1RuleMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 2));
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents().getAll(), 2));
 
         filter = new Filter<>(new Predicate[] {organiserRuleNoMatch, attendee1RuleMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest<>("testFilteredIsEmpty", filter, calendar.getComponents()));
+        suite.addTest(new FilterTest<>("testFilteredIsEmpty", filter, calendar.getComponents().getAll()));
 
         filter = new Filter<>(new Predicate[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ALL);
-        suite.addTest(new FilterTest<>("testFilteredIsEmpty", filter, calendar.getComponents()));
+        suite.addTest(new FilterTest<>("testFilteredIsEmpty", filter, calendar.getComponents().getAll()));
         
         //testFilterMatchAny..
         filter = new Filter<>(new Predicate[] {organiserRuleMatch, attendee1RuleMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 3));
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents().getAll(), 3));
 
         filter = new Filter<>(new Predicate[] {organiserRuleNoMatch, attendee1RuleMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 2));
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents().getAll(), 2));
 
         filter = new Filter<>(new Predicate[] {organiserRuleMatch, attendeeRuleNoMatch}, Filter.MATCH_ANY);
-        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents(), 3));
+        suite.addTest(new FilterTest<>("testFilteredSize", filter, calendar.getComponents().getAll(), 3));
         return suite;
     }
 }

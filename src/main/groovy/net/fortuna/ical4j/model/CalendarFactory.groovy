@@ -53,12 +53,7 @@ class CalendarFactory extends AbstractFactory {
     }
  
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-        if (child instanceof Property) {
-            parent.properties.add(child)
-        }
-        else if (child instanceof Component) {
-            parent.components.add(child)
-        }
+        parent.add(child)
     }
 }
 

@@ -31,15 +31,9 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * $Id$
@@ -62,7 +56,7 @@ public class CalScale extends Property {
     /**
      * @author Ben Fortuna An immutable instance of CalScale.
      */
-    private static final class ImmutableCalScale extends CalScale {
+    private static final class ImmutableCalScale extends CalScale implements ImmutableContent {
 
         private static final long serialVersionUID = 1750949550694413878L;
 
@@ -70,7 +64,17 @@ public class CalScale extends Property {
          * @param value
          */
         private ImmutableCalScale(final String value) {
-            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
+            super(value);
+        }
+
+        @Override
+        public void add(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void remove(Parameter parameter) {
+            throwException();
         }
 
         /**
@@ -80,6 +84,17 @@ public class CalScale extends Property {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
+
+        @Override
+        public void removeAll(String parameterName) {
+            throwException();
+        }
+
+        @Override
+        public void replace(Parameter parameter) {
+            throwException();
+        }
+
     }
 
     private String value;
@@ -88,14 +103,14 @@ public class CalScale extends Property {
      * Default constructor.
      */
     public CalScale() {
-        super(CALSCALE, new Factory());
+        super(CALSCALE);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public CalScale(final String aValue) {
-        super(CALSCALE, new Factory());
+        super(CALSCALE);
         this.value = aValue;
     }
 
@@ -103,8 +118,8 @@ public class CalScale extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public CalScale(final List<Parameter> aList, final String aValue) {
-        super(CALSCALE, aList, new Factory());
+    public CalScale(final ParameterList aList, final String aValue) {
+        super(CALSCALE, aList);
         this.value = aValue;
     }
 
@@ -138,8 +153,8 @@ public class CalScale extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<CalScale> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<CalScale> {
@@ -149,7 +164,7 @@ public class CalScale extends Property {
             super(CALSCALE);
         }
 
-        public CalScale createProperty(final List<Parameter> parameters, final String value) {
+        public CalScale createProperty(final ParameterList parameters, final String value) {
             CalScale calScale;
             if (GREGORIAN.getValue().equals(value)) {
                 calScale = GREGORIAN;

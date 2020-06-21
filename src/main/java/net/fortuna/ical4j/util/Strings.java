@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.util;
 
+import java.net.URI;
 import java.util.regex.Pattern;
 
 /**
@@ -144,6 +145,10 @@ public final class Strings {
             return "\"" + aValue + "\"";
         }
         return "\"\"";
+    }
+
+    public static String quote(URI uri) {
+        return quote(Uris.decode(Strings.valueOf(uri)));
     }
 
     /**

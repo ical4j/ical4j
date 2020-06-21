@@ -41,6 +41,7 @@ import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VToDoValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jooq.lambda.Unchecked;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
@@ -544,6 +545,11 @@ public class VToDo extends CalendarComponent {
      */
     public VToDo copy() {
         return new Factory().createComponent(getProperties(), getAlarms());
+    }
+
+    @Override
+    protected ComponentFactory<VToDo> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VToDo> {

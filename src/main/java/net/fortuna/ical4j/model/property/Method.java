@@ -31,14 +31,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * $Id$
@@ -104,17 +98,36 @@ public class Method extends Property {
     /**
      * @author Ben Fortuna An immutable instance of Method.
      */
-    private static final class ImmutableMethod extends Method {
+    private static final class ImmutableMethod extends Method implements ImmutableContent {
 
         private static final long serialVersionUID = 5332607957381969713L;
 
         private ImmutableMethod(final String value) {
-            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
+            super(value);
         }
 
         public void setValue(final String aValue) {
-            throw new UnsupportedOperationException(
-                    "Cannot modify constant instances");
+            throw new UnsupportedOperationException("Cannot modify constant instances");
+        }
+
+        @Override
+        public void add(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void remove(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void removeAll(String parameterName) {
+            throwException();
+        }
+
+        @Override
+        public void replace(Parameter parameter) {
+            throwException();
         }
     }
 
@@ -124,14 +137,14 @@ public class Method extends Property {
      * Default constructor.
      */
     public Method() {
-        super(METHOD, new Factory());
+        super(METHOD);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Method(final String aValue) {
-        super(METHOD, new Factory());
+        super(METHOD);
         this.value = aValue;
     }
 
@@ -139,8 +152,8 @@ public class Method extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Method(final List<Parameter> aList, final String aValue) {
-        super(METHOD, aList, new Factory());
+    public Method(final ParameterList aList, final String aValue) {
+        super(METHOD, aList);
         this.value = aValue;
     }
 
@@ -164,8 +177,8 @@ public class Method extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Method> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Method> {
@@ -175,7 +188,7 @@ public class Method extends Property {
             super(METHOD);
         }
 
-        public Method createProperty(final List<Parameter> parameters, final String value) {
+        public Method createProperty(final ParameterList parameters, final String value) {
 
             Method method;
             if (ADD.getValue().equals(value)) {

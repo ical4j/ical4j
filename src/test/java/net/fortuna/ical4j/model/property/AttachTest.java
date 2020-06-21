@@ -46,8 +46,8 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * $Id$
@@ -76,9 +76,7 @@ public class AttachTest extends TestCase {
             i = fin.read();
         }
 
-        List<Parameter> params = new ArrayList<>();
-        params.add(Encoding.BASE64);
-        params.add(Value.BINARY);
+        ParameterList params = new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY));
 
 //        Attach attach = new Attach(params, Base64.encodeBytes(bout.toByteArray(), Base64.DONT_BREAK_LINES));
         attach = new Attach(params, bout.toByteArray());
@@ -90,23 +88,23 @@ public class AttachTest extends TestCase {
     public void testAttachParameterListString() throws IOException, URISyntaxException, ValidationException, ParserException, ConstraintViolationException {
 
         //log.info(attach);
-
-        DtStart start = new DtStart<>(LocalDate.now().withMonth(12).withDayOfMonth(25));
-        start.getParameters().add(Value.DATE);
+        ParameterList startParams = new ParameterList(Collections.singletonList(Value.DATE));
+        DtStart start = new DtStart<>(startParams, LocalDate.now().withMonth(12).withDayOfMonth(25));
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
         VEvent christmas = new VEvent();
-        christmas.getProperties().add(start);
-        christmas.getProperties().add(summary);
-        christmas.getProperties().add(attach);
-        christmas.getProperties().add(new Uid("000001@modularity.net.au"));
+        christmas.add(start);
+        christmas.add(summary);
+        christmas.add(attach);
+        christmas.add(new Uid("000001@modularity.net.au"));
 
-        Calendar calendar = new Calendar();
-        calendar.getProperties().add(new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"));
-        calendar.getProperties().add(Version.VERSION_2_0);
-        calendar.getProperties().add(CalScale.GREGORIAN);
-        calendar.getComponents().add(christmas);
+        PropertyList props = new PropertyList(Arrays.asList(
+                new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"),
+                Version.VERSION_2_0,
+                CalScale.GREGORIAN
+        ));
+        Calendar calendar = new Calendar(props, new ComponentList<>(Collections.singletonList(christmas)));
 
         StringWriter sw = new StringWriter();
         CalendarOutputter out = new CalendarOutputter();
@@ -115,9 +113,9 @@ public class AttachTest extends TestCase {
         CalendarBuilder builder = new CalendarBuilder();
         Calendar cout = builder.build(new StringReader(sw.toString()));
 
-        VEvent eout = cout.getRequiredComponent(Component.VEVENT);
+        VEvent eout = cout.getComponents().getRequired(Component.VEVENT);
 
-        Attach aout = eout.getRequiredProperty(Property.ATTACH);
+        Attach aout = eout.getProperties().getRequired(Property.ATTACH);
         assertNotNull(aout);
         assertEquals(attach, aout);
 
@@ -143,8 +141,8 @@ public class AttachTest extends TestCase {
         assertEquals(attach, clone);
 
         // set a bogus value to trigger logging..
-        clone.getParameters().removeIf(p -> p.getName().equals(Parameter.ENCODING));
-        clone.getParameters().add(new Encoding("BOGUS"));
-        clone.setValue("");
+//        clone.getParameters().removeIf(p -> p.getName().equals(Parameter.ENCODING));
+//        clone.getParameters().add(new Encoding("BOGUS"));
+//        clone.setValue("");
     }
 }

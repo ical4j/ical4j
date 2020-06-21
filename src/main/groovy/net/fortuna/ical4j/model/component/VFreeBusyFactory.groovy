@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.component
 
+import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.PropertyList
 
 /**
@@ -51,7 +52,7 @@ class VFreeBusyFactory extends AbstractComponentFactory{
          return freeBusy
      }
      
-     protected Object newInstance(PropertyList properties) {
-         return new VFreeBusy(properties)
+     protected Object newInstance(List<Property> properties) {
+         return new VFreeBusy(new PropertyList(properties))
      }
 }

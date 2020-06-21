@@ -40,7 +40,7 @@ import java.time.temporal.Temporal
 
 class RDateSpec extends Specification {
 
-	def 'should add date-time value to list'() {
+	def 'should not add date-time value to list'() {
 		setup: 'create new date-time'
 		Temporal date = TemporalAdapter.parse('20110319T140400').temporal
 		
@@ -49,7 +49,7 @@ class RDateSpec extends Specification {
 		rdate.dates.add(date)
 		
 		expect: 'rdate list contains date-time'
-		rdate.dates.dates == [date]
+		rdate.dates == []
 	}
 	
 	def 'should throw exception when trying to add period value to default rdate instance'() {

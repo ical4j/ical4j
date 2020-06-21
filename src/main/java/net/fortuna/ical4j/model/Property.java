@@ -40,10 +40,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Defines an iCalendar property. Subclasses of this class provide additional validation and typed values for specific
@@ -362,38 +360,24 @@ public abstract class Property extends Content {
     
     private final String name;
 
-    private final List<Parameter> parameters;
-
-    private final PropertyFactory<?> factory;
+    private ParameterList parameters;
 
     /**
      * Constructor.
      *
      * @param aName   property name
-     * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, PropertyFactory<?> factory) {
-        this(aName, new ArrayList<>(), factory);
+    protected Property(final String aName) {
+        this(aName, new ParameterList());
     }
-
-    /**
-     * Constructor made protected to enforce the use of <code>PropertyFactory</code> for property instantiation.
-     * @param aName property name
-     * @param aList a list of parameters
-     */
-//    protected Property(final String aName, final ParameterList aList) {
-//        this(aName, aList, new Factory());
-//    }
 
     /**
      * @param aName   a property identifier
      * @param aList   a list of initial parameters
-     * @param factory the factory used to create the property instance
      */
-    protected Property(final String aName, final List<Parameter> aList, PropertyFactory<?> factory) {
+    protected Property(final String aName, final ParameterList aList) {
         this.name = aName;
         this.parameters = aList;
-        this.factory = factory;
     }
 
     /**
@@ -404,12 +388,13 @@ public abstract class Property extends Content {
      * @param property a property to copy
      * @throws URISyntaxException where the specified property contains an invalid URI value
      * @throws IOException        where an error occurs reading data from the specified property
-     * @deprecated Use {@link #copy()} instead
      */
-    protected Property(final Property property) throws IOException, URISyntaxException {
-        this(property.getName(), new ArrayList<>(property.getParameters()), property.factory);
-        setValue(property.getValue());
-    }
+//    protected Property(final Property property) throws IOException, URISyntaxException {
+//        this.name = property.name;
+//        this.parameters = property.parameters;
+//        this.factory = property.factory;
+//        setValue(property.getValue());
+//    }
 
     /**
      * {@inheritDoc}
@@ -417,9 +402,8 @@ public abstract class Property extends Content {
     public final String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getName());
-        if (getParameters() != null && !getParameters().isEmpty()) {
-            buffer.append(parameters.stream().map(Parameter::toString)
-                    .collect(Collectors.joining(";", ";", "")));
+        if (getParameters() != null) {
+            buffer.append(parameters);
         }
         buffer.append(':');
         boolean needsEscape = false;
@@ -451,8 +435,28 @@ public abstract class Property extends Content {
     /**
      * @return Returns the parameters.
      */
-    public final List<Parameter> getParameters() {
+    public final ParameterList getParameters() {
         return parameters;
+    }
+
+    protected void setParameters(ParameterList parameters) {
+        this.parameters = parameters;
+    }
+
+    public void add(Parameter parameter) {
+        setParameters((ParameterList) parameters.add(parameter));
+    }
+
+    public void remove(Parameter parameter) {
+        setParameters((ParameterList) parameters.remove(parameter));
+    }
+
+    public void removeAll(String parameterName) {
+        setParameters((ParameterList) parameters.removeAll(parameterName));
+    }
+
+    public void replace(Parameter parameter) {
+        setParameters((ParameterList) parameters.replace(parameter));
     }
 
     /**
@@ -460,9 +464,12 @@ public abstract class Property extends Content {
      *
      * @param name name of parameters to retrieve
      * @return a parameter list containing only parameters with the specified name
+     *
+     * @deprecated use {@link ParameterList#get(String)}
      */
+    @Deprecated
     public final List<Parameter> getParameters(final String name) {
-        return getParameters().stream().filter(p -> p.getName().equals(name)).collect(Collectors.toList());
+        return getParameters().get(name);
     }
 
     /**
@@ -470,10 +477,12 @@ public abstract class Property extends Content {
      *
      * @param name name of the parameter to retrieve
      * @return the first parameter from the parameter list with the specified name
+     *
+     * @deprecated use {@link ParameterList#getFirst(String)}
      */
-    @SuppressWarnings("unchecked")
+    @Deprecated
     public final <P extends Parameter> Optional<P> getParameter(final String name) {
-        return (Optional<P>) getParameters().stream().filter(p -> p.getName().equals(name)).findFirst();
+        return getParameters().getFirst(name);
     }
 
     /**
@@ -499,7 +508,8 @@ public abstract class Property extends Content {
         if (arg0 instanceof Property) {
             final Property p = (Property) arg0;
             return getName().equals(p.getName())
-                    && new EqualsBuilder().append(getValue(), p.getValue()).append(getParameters(), p.getParameters()).isEquals();
+                    && new EqualsBuilder().append(getValue(), p.getValue()).append(getParameters(),
+                    p.getParameters()).isEquals();
         }
         return super.equals(arg0);
     }
@@ -514,9 +524,17 @@ public abstract class Property extends Content {
     }
 
     /**
+     * Returns a new property factory used to create deep copies.
+     * @return a property factory instance
+     */
+    protected abstract PropertyFactory<?> newFactory();
+
+    /**
      * Create a (deep) copy of this property.
      *
      * @return the copy of the property
      */
-    public abstract Property copy() throws URISyntaxException;
+    public final Property copy() throws URISyntaxException {
+        return newFactory().createProperty(parameters, getValue());
+    }
 }

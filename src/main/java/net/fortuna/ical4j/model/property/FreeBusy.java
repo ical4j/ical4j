@@ -114,7 +114,7 @@ public class FreeBusy extends Property {
      * Default constructor.
      */
     public FreeBusy() {
-        super(FREEBUSY, new Factory());
+        super(FREEBUSY);
         periods = new PeriodList<>();
     }
 
@@ -122,7 +122,7 @@ public class FreeBusy extends Property {
      * @param aValue a freebusy value
      */
     public FreeBusy(final String aValue) {
-        super(FREEBUSY, new Factory());
+        super(FREEBUSY);
         setValue(aValue);
     }
 
@@ -130,8 +130,8 @@ public class FreeBusy extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public FreeBusy(final List<Parameter> aList, final String aValue) {
-        super(FREEBUSY, aList, new Factory());
+    public FreeBusy(final ParameterList aList, final String aValue) {
+        super(FREEBUSY, aList);
         setValue(aValue);
     }
 
@@ -139,7 +139,7 @@ public class FreeBusy extends Property {
      * @param pList a list of periods
      */
     public FreeBusy(final List<Period<Instant>> pList) {
-        super(FREEBUSY, new Factory());
+        super(FREEBUSY);
         periods = new PeriodList<>(pList);
     }
 
@@ -147,8 +147,8 @@ public class FreeBusy extends Property {
      * @param aList a list of parameters for this component
      * @param pList a list of periods
      */
-    public FreeBusy(final List<Parameter> aList, final List<Period<Instant>> pList) {
-        super(FREEBUSY, aList, new Factory());
+    public FreeBusy(final ParameterList aList, final List<Period<Instant>> pList) {
+        super(FREEBUSY, aList);
         periods = new PeriodList<>(pList);
     }
 
@@ -160,8 +160,7 @@ public class FreeBusy extends Property {
         /*
          * ; the following is optional, ; but MUST NOT occur more than once (";" fbtypeparam) /
          */
-        ParameterValidator.assertOneOrLess(Parameter.FBTYPE,
-                getParameters());
+        ParameterValidator.assertOneOrLess(Parameter.FBTYPE, getParameters().getAll());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
@@ -190,8 +189,8 @@ public class FreeBusy extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<FreeBusy> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<FreeBusy> {
@@ -201,7 +200,7 @@ public class FreeBusy extends Property {
             super(FREEBUSY);
         }
 
-        public FreeBusy createProperty(final List<Parameter> parameters, final String value) {
+        public FreeBusy createProperty(final ParameterList parameters, final String value) {
             return new FreeBusy(parameters, value);
         }
 

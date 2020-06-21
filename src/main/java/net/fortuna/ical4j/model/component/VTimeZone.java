@@ -42,6 +42,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jooq.lambda.Unchecked;
 
 import java.time.OffsetDateTime;
 import java.time.temporal.Temporal;
@@ -164,6 +165,14 @@ public class VTimeZone extends CalendarComponent {
     public VTimeZone(final PropertyList properties, final ComponentList<Observance> observances) {
         super(VTIMEZONE, properties);
         this.observances = observances;
+    }
+
+    /**
+     * Add an observance definition to the timezone.
+     * @param observance the definition to add
+     */
+    public void add(Observance observance) {
+        this.observances = (ComponentList<Observance>) observances.add(observance);
     }
 
     /**
@@ -327,6 +336,11 @@ public class VTimeZone extends CalendarComponent {
      */
     public VTimeZone copy() {
         return new Factory().createComponent(getProperties(), getObservances());
+    }
+
+    @Override
+    protected ComponentFactory<VTimeZone> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VTimeZone> {

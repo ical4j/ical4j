@@ -70,7 +70,8 @@ public class IndexedComponentListTest extends TestCase {
      */
     public void testIndexing() {
         long start = System.currentTimeMillis();
-        IndexedComponentList<CalendarComponent> list = new IndexedComponentList<CalendarComponent>(calendar.getComponents(),
+        IndexedComponentList<CalendarComponent> list = new IndexedComponentList<CalendarComponent>(
+                calendar.getComponents().getAll(),
                 Property.LOCATION);
         LOG.info(list.getComponents("ABC").size() + " programs on ABC."
                 + " (" + (System.currentTimeMillis() - start) + "ms)");
@@ -82,7 +83,7 @@ public class IndexedComponentListTest extends TestCase {
     public void testManualIndexing() {
         long start = System.currentTimeMillis();
         List<Component> list = new ArrayList<Component>();
-        for (Component c : calendar.getComponents()) {
+        for (Component c : calendar.getComponents().getAll()) {
             Optional<Location> location = c.getProperty(Property.LOCATION);
             if (location.isPresent() && "ABC".equals(location.get().getValue())) {
                 list.add(c);

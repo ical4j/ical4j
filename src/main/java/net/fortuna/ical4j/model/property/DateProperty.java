@@ -44,7 +44,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -82,30 +81,25 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * @param name       the property name
      * @param parameters a list of initial parameters
      */
-    public DateProperty(final String name, final List<Parameter> parameters,
-                        PropertyFactory<? extends DateProperty<T>> factory) {
+    public DateProperty(final String name, final ParameterList parameters) {
 
-        this(name, parameters, factory, CalendarDateFormat.DEFAULT_PARSE_FORMAT);
+        this(name, parameters, CalendarDateFormat.DEFAULT_PARSE_FORMAT);
     }
 
-    public DateProperty(final String name, final List<Parameter> parameters,
-                        PropertyFactory<? extends DateProperty<T>> factory, CalendarDateFormat parseFormat) {
-
-        super(name, parameters, factory);
+    public DateProperty(final String name, final ParameterList parameters, CalendarDateFormat parseFormat) {
+        super(name, parameters);
         this.parseFormat = parseFormat;
     }
 
     /**
      * @param name the property name
      */
-    public DateProperty(final String name, PropertyFactory<? extends DateProperty<T>> factory) {
-        this(name, factory, CalendarDateFormat.DEFAULT_PARSE_FORMAT);
+    public DateProperty(final String name) {
+        this(name, CalendarDateFormat.DEFAULT_PARSE_FORMAT);
     }
-    
-    public DateProperty(final String name, PropertyFactory<? extends DateProperty<T>> factory,
-                        CalendarDateFormat parseFormat) {
 
-        super(name, factory);
+    public DateProperty(final String name, CalendarDateFormat parseFormat) {
+        super(name);
         this.parseFormat = parseFormat;
     }
 
@@ -120,7 +114,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     @SuppressWarnings("unchecked")
     public T getDate() {
         if (date != null) {
-            Optional<TzId> tzId = getParameter(Parameter.TZID);
+            Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
             if (tzId.isPresent()) {
                 return (T) date.toLocalTime(tzId.get().toZoneId(timeZoneRegistry));
             } else {
@@ -158,7 +152,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     public void setValue(final String value) throws DateTimeParseException {
         // value can be either a date-time or a date..
         if (value != null && !value.isEmpty()) {
-            Optional<TzId> tzId = getParameter(Parameter.TZID);
+            Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
             try {
                 this.date = tzId.map(id -> (TemporalAdapter<T>) TemporalAdapter.parse(value, id, timeZoneRegistry))
                         .orElseGet(() -> TemporalAdapter.parse(value, parseFormat));
@@ -182,7 +176,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * {@inheritDoc}
      */
     public String getValue() {
-        Optional<TzId> tzId = getParameter(Parameter.TZID);
+        Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
         if (tzId.isPresent()) {
             return date.toString(tzId.get().toZoneId(timeZoneRegistry));
         } else {
@@ -225,18 +219,15 @@ public abstract class DateProperty<T extends Temporal> extends Property {
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
 
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                getParameters());
+        ParameterValidator.assertOneOrLess(Parameter.VALUE, getParameters().getAll());
 
         if (isUtc()) {
-            ParameterValidator.assertNone(Parameter.TZID,
-                    getParameters());
+            ParameterValidator.assertNone(Parameter.TZID, getParameters().getAll());
         } else {
-            ParameterValidator.assertOneOrLess(Parameter.TZID,
-                    getParameters());
+            ParameterValidator.assertOneOrLess(Parameter.TZID, getParameters().getAll());
         }
 
-        final Optional<Value> value = getParameter(Parameter.VALUE);
+        final Optional<Value> value = getParameters().getFirst(Parameter.VALUE);
 
         if (date != null) {
             if (date.getTemporal() instanceof LocalDate) {

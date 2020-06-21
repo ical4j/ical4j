@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.component
 
+import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.PropertyList
 
 /**
@@ -51,13 +52,13 @@ class VToDoFactory extends AbstractComponentFactory{
          return toDo
      }
      
-     protected Object newInstance(PropertyList properties) {
-         return new VToDo(properties)
+     protected Object newInstance(List<Property> properties) {
+         return new VToDo(new PropertyList(properties))
      }
 
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
 		if (child instanceof VAlarm) {
-			parent.alarms.add child
+			parent.add(child)
 		}
 		else {
 			super.setChild(build, parent, child)

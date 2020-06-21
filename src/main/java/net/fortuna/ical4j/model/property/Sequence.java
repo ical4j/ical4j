@@ -32,12 +32,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.List;
 
 /**
  * $Id$
@@ -139,7 +137,7 @@ public class Sequence extends Property implements Comparable<Sequence> {
      * Default constructor.
      */
     public Sequence() {
-        super(SEQUENCE, new Factory());
+        super(SEQUENCE);
         sequenceNo = 0;
     }
 
@@ -147,7 +145,7 @@ public class Sequence extends Property implements Comparable<Sequence> {
      * @param aValue a value string for this component
      */
     public Sequence(final String aValue) {
-        super(SEQUENCE, new Factory());
+        super(SEQUENCE);
         setValue(aValue);
     }
 
@@ -155,8 +153,8 @@ public class Sequence extends Property implements Comparable<Sequence> {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Sequence(final List<Parameter> aList, final String aValue) {
-        super(SEQUENCE, aList, new Factory());
+    public Sequence(final ParameterList aList, final String aValue) {
+        super(SEQUENCE, aList);
         setValue(aValue);
     }
 
@@ -164,7 +162,7 @@ public class Sequence extends Property implements Comparable<Sequence> {
      * @param aSequenceNo a sequence number
      */
     public Sequence(final int aSequenceNo) {
-        super(SEQUENCE, new Factory());
+        super(SEQUENCE);
         sequenceNo = aSequenceNo;
     }
 
@@ -172,8 +170,8 @@ public class Sequence extends Property implements Comparable<Sequence> {
      * @param aList       a list of parameters for this component
      * @param aSequenceNo a sequence number
      */
-    public Sequence(final List<Parameter> aList, final int aSequenceNo) {
-        super(SEQUENCE, aList, new Factory());
+    public Sequence(final ParameterList aList, final int aSequenceNo) {
+        super(SEQUENCE, aList);
         sequenceNo = aSequenceNo;
     }
 
@@ -209,8 +207,8 @@ public class Sequence extends Property implements Comparable<Sequence> {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Sequence> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Sequence> {
@@ -220,7 +218,7 @@ public class Sequence extends Property implements Comparable<Sequence> {
             super(SEQUENCE);
         }
 
-        public Sequence createProperty(final List<Parameter> parameters, final String value) {
+        public Sequence createProperty(final ParameterList parameters, final String value) {
             return new Sequence(parameters, value);
         }
 

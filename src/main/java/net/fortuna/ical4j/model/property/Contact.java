@@ -37,9 +37,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.ALTREP;
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
@@ -66,14 +64,14 @@ public class Contact extends Property implements Escapable {
      * Default constructor.
      */
     public Contact() {
-        super(CONTACT, new ArrayList<>(), new Factory());
+        super(CONTACT);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Contact(final String aValue) {
-        super(CONTACT, new ArrayList<>(), new Factory());
+        super(CONTACT);
         setValue(aValue);
     }
 
@@ -81,8 +79,8 @@ public class Contact extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Contact(final List<Parameter> aList, final String aValue) {
-        super(CONTACT, aList, new Factory());
+    public Contact(final ParameterList aList, final String aValue) {
+        super(CONTACT, aList);
         setValue(aValue);
     }
 
@@ -106,8 +104,8 @@ public class Contact extends Property implements Escapable {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Contact> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Contact> {
@@ -117,7 +115,7 @@ public class Contact extends Property implements Escapable {
             super(CONTACT);
         }
 
-        public Contact createProperty(final List<Parameter> parameters, final String value) {
+        public Contact createProperty(final ParameterList parameters, final String value) {
             return new Contact(parameters, value);
         }
 

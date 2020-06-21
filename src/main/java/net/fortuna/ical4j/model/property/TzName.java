@@ -37,9 +37,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -66,14 +64,14 @@ public class TzName extends Property implements Escapable {
      * Default constructor.
      */
     public TzName() {
-        super(TZNAME, new ArrayList<>(), new Factory());
+        super(TZNAME);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public TzName(final String aValue) {
-        super(TZNAME, new ArrayList<>(), new Factory());
+        super(TZNAME);
         setValue(aValue);
     }
 
@@ -81,8 +79,8 @@ public class TzName extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public TzName(final List<Parameter> aList, final String aValue) {
-        super(TZNAME, aList, new Factory());
+    public TzName(final ParameterList aList, final String aValue) {
+        super(TZNAME, aList);
         setValue(aValue);
     }
 
@@ -106,8 +104,8 @@ public class TzName extends Property implements Escapable {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<TzName> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<TzName> {
@@ -117,7 +115,7 @@ public class TzName extends Property implements Escapable {
             super(TZNAME);
         }
 
-        public TzName createProperty(final List<Parameter> parameters, final String value) {
+        public TzName createProperty(final ParameterList parameters, final String value) {
             return new TzName(parameters, value);
         }
 

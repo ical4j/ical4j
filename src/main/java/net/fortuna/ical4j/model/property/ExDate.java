@@ -37,7 +37,6 @@ import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.temporal.Temporal;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -51,21 +50,19 @@ import java.util.Optional;
  */
 public class ExDate<T extends Temporal> extends DateListProperty<T> {
 
-    private static final long serialVersionUID = 2635730172243974463L;
-
     /**
      * Default constructor.
      */
     public ExDate() {
-        super(EXDATE, new Factory<T>());
+        super(EXDATE);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public ExDate(final List<Parameter> aList, final String aValue) {
-        super(EXDATE, aList, new Factory<T>());
+    public ExDate(final ParameterList aList, final String aValue) {
+        super(EXDATE, aList);
         setValue(aValue);
     }
 
@@ -73,15 +70,15 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * @param dList a list of dates
      */
     public ExDate(final DateList<T> dList) {
-        super(EXDATE, dList, new Factory<T>());
+        super(EXDATE, dList);
     }
 
     /**
      * @param aList a list of parameters for this component
      * @param dList a list of dates
      */
-    public ExDate(final List<Parameter> aList, final DateList<T> dList) {
-        super(EXDATE, aList, dList, new Factory<T>());
+    public ExDate(final ParameterList aList, final DateList<T> dList) {
+        super(EXDATE, aList, dList);
     }
 
     /**
@@ -93,8 +90,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
          * (";" tzidparam) /
          */
-        ParameterValidator.assertOneOrLess(Parameter.VALUE,
-                getParameters());
+        ParameterValidator.assertOneOrLess(Parameter.VALUE, getParameters().getAll());
 
         final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
 
@@ -104,8 +100,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
                     + "] is invalid");
         }
 
-        ParameterValidator.assertOneOrLess(Parameter.TZID,
-                getParameters());
+        ParameterValidator.assertOneOrLess(Parameter.TZID, getParameters().getAll());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
@@ -113,20 +108,17 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
     }
 
     @Override
-    public Property copy() {
-        ExDate<?> copy = new Factory<T>().createProperty(getParameters(), getValue());
-        copy.setTimeZone(getTimeZone());
-        return copy;
+    protected PropertyFactory<ExDate<T>> newFactory() {
+        return new Factory<>();
     }
 
     public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<ExDate<T>> {
-        private static final long serialVersionUID = 1L;
 
         public Factory() {
             super(EXDATE);
         }
 
-        public ExDate<T> createProperty(final List<Parameter> parameters, final String value) {
+        public ExDate<T> createProperty(final ParameterList parameters, final String value) {
             return new ExDate<>(parameters, value);
         }
 

@@ -48,14 +48,14 @@ class VFreeBusyUserAgentTest extends Specification {
         }
 
         when: 'the result is generated and published'
-        def result = new VFreeBusy(vfreeBusy, source.components)
+        def result = new VFreeBusy(vfreeBusy, source.components.all)
         def calendar = userAgent.publish(result)
 
         then: 'the calendar object contains method = PUBLISH'
-        calendar.getRequiredProperty(Property.METHOD) == Method.PUBLISH
+        calendar.getProperties().getRequired(Property.METHOD) == Method.PUBLISH
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE).isPresent() }
+        calendar.components.all.each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Request"() {
@@ -84,10 +84,10 @@ class VFreeBusyUserAgentTest extends Specification {
         def calendar = userAgent.request(vfreeBusy, vfreeBusy2)
 
         then: 'the calendar object contains method = REQUEST'
-        calendar.getRequiredProperty(Property.METHOD) == Method.REQUEST
+        calendar.getProperties().getRequired(Property.METHOD) == Method.REQUEST
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE).isPresent() }
+        calendar.components.all.each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Delegate"() {
@@ -130,7 +130,7 @@ class VFreeBusyUserAgentTest extends Specification {
         def calendar = userAgent.reply(request)
 
         then: 'the calendar object contains method = REPLY'
-        calendar.getRequiredProperty(Property.METHOD) == Method.REPLY
+        calendar.getProperties().getRequired(Property.METHOD) == Method.REPLY
     }
 
     def "Add"() {

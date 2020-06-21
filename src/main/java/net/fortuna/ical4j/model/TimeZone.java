@@ -74,7 +74,7 @@ public class TimeZone extends java.util.TimeZone {
      */
     public TimeZone(final VTimeZone vTimeZone) {
         this.vTimeZone = vTimeZone;
-        final Optional<TzId> tzId = vTimeZone.getProperty(Property.TZID);
+        final Optional<TzId> tzId = vTimeZone.getProperties().getFirst(Property.TZID);
         if (tzId.isPresent()) {
             setID(tzId.get().getValue());
         } else {
@@ -103,7 +103,7 @@ public class TimeZone extends java.util.TimeZone {
         final Observance observance = vTimeZone.getApplicableObservance(date);
         if (observance != null) {
             try {
-                final TzOffsetTo offset = observance.getRequiredProperty(Property.TZOFFSETTO);
+                final TzOffsetTo offset = observance.getProperties().getRequired(Property.TZOFFSETTO);
                 return (int) (offset.getOffset().getTotalSeconds() * 1000L);
             } catch (ConstraintViolationException cve) {
                 LOG.error("Invalid observance", cve);
@@ -119,7 +119,7 @@ public class TimeZone extends java.util.TimeZone {
         final Observance observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
         if (observance != null) {
             try {
-                final TzOffsetTo offset = observance.getRequiredProperty(Property.TZOFFSETTO);
+                final TzOffsetTo offset = observance.getProperties().getRequired(Property.TZOFFSETTO);
                 if ((offset.getOffset().getTotalSeconds() * 1000L) < getRawOffset()) {
                     return getRawOffset();
                 } else {

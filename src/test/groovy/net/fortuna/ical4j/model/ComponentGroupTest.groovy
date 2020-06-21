@@ -62,7 +62,7 @@ class ComponentGroupTest extends Specification {
         def components = new ComponentList<VEvent>([event, rev1])
 
         when: 'retrieving revisions from component group'
-        def revisions = new ComponentGroup(components, uid).revisions
+        def revisions = new ComponentGroup(components.all, uid).revisions
 
         then: 'the expected revisions are returned'
         revisions == [event, rev1]
@@ -73,7 +73,7 @@ class ComponentGroupTest extends Specification {
         def components = new ComponentList<VEvent>([event, rev1, rev2])
 
         when: 'retrieving the latest revision from component group'
-        def revision = new ComponentGroup(components, uid).latestRevision
+        def revision = new ComponentGroup(components.all, uid).latestRevision
 
         then: 'the expected revision is returned'
         revision == rev2
@@ -85,7 +85,7 @@ class ComponentGroupTest extends Specification {
 
         when: 'recurrence instances are calculated'
         Period period = Period.parse('20101113/P3W')
-        def recurrences = new ComponentGroup(components, uid).calculateRecurrenceSet(period)
+        def recurrences = new ComponentGroup(components.all, uid).calculateRecurrenceSet(period)
 
         then: 'the expected number of recurrences are returned'
         recurrences as Set == event.calculateRecurrenceSet(period)
@@ -97,7 +97,7 @@ class ComponentGroupTest extends Specification {
 
         when: 'recurrence instances are calculated'
         Period period = Period.parse '20101113T000000/P3W'
-        def recurrences = new ComponentGroup(components, uid).calculateRecurrenceSet(period)
+        def recurrences = new ComponentGroup(components.all, uid).calculateRecurrenceSet(period)
 
         then: 'the expected number of recurrences are returned'
         recurrences.size() == event.calculateRecurrenceSet(period).size()

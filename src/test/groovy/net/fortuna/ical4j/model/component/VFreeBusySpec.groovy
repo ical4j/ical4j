@@ -58,7 +58,7 @@ class VFreeBusySpec extends Specification {
 			duration(dur)
 		}
 		
-		VFreeBusy result = [request, calendar.components]
+		VFreeBusy result = [request, calendar.components.all]
 		println result
 		
 		where:

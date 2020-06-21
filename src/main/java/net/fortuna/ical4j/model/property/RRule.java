@@ -37,7 +37,6 @@ import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.temporal.Temporal;
-import java.util.List;
 
 /**
  * $Id$
@@ -58,7 +57,7 @@ public class RRule<T extends Temporal> extends Property {
      * Default constructor.
      */
     public RRule() {
-        super(RRULE, new Factory<>());
+        super(RRULE);
         recur = new Recur<>(Frequency.DAILY, 1);
     }
 
@@ -66,7 +65,7 @@ public class RRule<T extends Temporal> extends Property {
      * @param value a rule string
      */
     public RRule(String value) {
-        super(RRULE, new Factory<>());
+        super(RRULE);
         setValue(value);
     }
 
@@ -75,8 +74,8 @@ public class RRule<T extends Temporal> extends Property {
      * @param aValue a value string for this component
      * @see Recur#Recur(String)
      */
-    public RRule(final List<Parameter> aList, final String aValue) {
-        super(RRULE, aList, new Factory<>());
+    public RRule(final ParameterList aList, final String aValue) {
+        super(RRULE, aList);
         setValue(aValue);
     }
 
@@ -84,7 +83,7 @@ public class RRule<T extends Temporal> extends Property {
      * @param aRecur a recurrence value
      */
     public RRule(final Recur<T> aRecur) {
-        super(RRULE, new Factory<>());
+        super(RRULE);
         recur = aRecur;
     }
 
@@ -92,8 +91,8 @@ public class RRule<T extends Temporal> extends Property {
      * @param aList  a list of parameters for this component
      * @param aRecur a recurrence value
      */
-    public RRule(final List<Parameter> aList, final Recur<T> aRecur) {
-        super(RRULE, aList, new Factory<>());
+    public RRule(final ParameterList aList, final Recur<T> aRecur) {
+        super(RRULE, aList);
         recur = aRecur;
     }
 
@@ -120,12 +119,12 @@ public class RRule<T extends Temporal> extends Property {
 
     @Override
     public void validate() throws ValidationException {
-        ParameterValidator.assertNone(Parameter.TZID, getParameters());
+        ParameterValidator.assertNone(Parameter.TZID, getParameters().getAll());
     }
 
     @Override
-    public Property copy() {
-        return new Factory<>().createProperty(getParameters(), getValue());
+    protected PropertyFactory<RRule<T>> newFactory() {
+        return new Factory<>();
     }
 
     public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<RRule<T>> {
@@ -135,7 +134,7 @@ public class RRule<T extends Temporal> extends Property {
             super(RRULE);
         }
 
-        public RRule<T> createProperty(final List<Parameter> parameters, final String value) {
+        public RRule<T> createProperty(final ParameterList parameters, final String value) {
             return new RRule<>(parameters, value);
         }
 

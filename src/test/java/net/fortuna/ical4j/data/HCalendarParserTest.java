@@ -64,14 +64,14 @@ public class HCalendarParserTest extends TestCase {
     public void testParseReaderContentHandler() throws IOException, ParserException, ConstraintViolationException {
         Calendar icsCalendar = Calendars.load(getClass().getResource("/samples/hcalendar/example1.ics"));
         // remove prod-id which seems to be not handled by hcalendar..
-        icsCalendar.getProperties().remove(icsCalendar.getRequiredProperty(Property.PRODID));
+        icsCalendar.getProperties().remove(icsCalendar.getProperties().getRequired(Property.PRODID));
         
         CalendarBuilder builder = new CalendarBuilder(new HCalendarParser());
         Calendar hcalCalendar = builder.build(getClass().getResourceAsStream("/samples/hcalendar/example1.html"));
         
 //        assertEquals(icsCalendar, hcalCalendar);
-        assertEquals(icsCalendar.getProperties().size(), hcalCalendar.getProperties().size());
-        assertEquals(icsCalendar.getComponents().size(), hcalCalendar.getComponents().size());
+        assertEquals(icsCalendar.getProperties().getAll().size(), hcalCalendar.getProperties().getAll().size());
+        assertEquals(icsCalendar.getComponents().getAll().size(), hcalCalendar.getComponents().getAll().size());
     }
 
 }

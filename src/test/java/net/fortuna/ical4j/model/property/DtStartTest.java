@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestCase;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Strings;
@@ -41,9 +41,9 @@ import net.fortuna.ical4j.util.TimeZones;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * $Id$
@@ -66,8 +66,7 @@ public class DtStartTest extends TestCase {
      * Test method for 'net.fortuna.ical4j.model.property.DtStart.DtStart(String)'
      */
     public void testDtStartString() {
-        List<Parameter> params = new ArrayList<>();
-        params.add(Value.DATE);
+        ParameterList params = new ParameterList(Collections.singletonList(Value.DATE));
         DtStart<LocalDate> dtStart = new DtStart<>(params, "20060811");
         
         Calendar calendar = Calendar.getInstance(TimeZones.getDateTimeZone());
@@ -85,11 +84,9 @@ public class DtStartTest extends TestCase {
      * Test non-utc timezone works.
      */
     public void testNonUtcTimezone() throws ParseException {
-        DtStart start = new DtStart();
-        start.getParameters().add(Value.DATE_TIME);
-        start.getParameters().add(new TzId("GMT"));
-        start.setValue("20070101T080000");
-        
+        ParameterList dtstartParams = new ParameterList(Arrays.asList(Value.DATE_TIME, new TzId("GMT")));
+        DtStart start = new DtStart(dtstartParams, "20070101T080000");
+
         assertEquals("DTSTART;VALUE=DATE-TIME;TZID=GMT:20070101T080000" + Strings.LINE_SEPARATOR,
                 start.toString());
     }

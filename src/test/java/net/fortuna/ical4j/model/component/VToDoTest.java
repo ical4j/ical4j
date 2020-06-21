@@ -31,11 +31,12 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import java.net.URISyntaxException;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.property.Attendee;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.Uid;
+
+import java.net.URISyntaxException;
 
 /**
  * $Id$
@@ -66,15 +67,15 @@ public class VToDoTest extends CalendarComponentTest {
         // iCalendar validation
         suite.addTest(new VToDoTest("testValidationException", td));
         VToDo validTd = new VToDo();
-        validTd.getProperties().add(new Uid("12"));
+        validTd.add(new Uid("12"));
         suite.addTest(new VToDoTest("testValidation", validTd));
 
         // iTIP REPLY validation
         suite.addTest(new VToDoTest("testReplyValidationException", new VToDo()));
         VToDo replyTd = new VToDo();
-        replyTd.getProperties().add(new Attendee("mailto:jane@example.com"));
-        replyTd.getProperties().add(new Organizer("mailto:joe@example.com"));
-        replyTd.getProperties().add(new Uid("12"));
+        replyTd.add(new Attendee("mailto:jane@example.com"));
+        replyTd.add(new Organizer("mailto:joe@example.com"));
+        replyTd.add(new Uid("12"));
         suite.addTest(new VToDoTest("testReplyValidation", replyTd));
 
         return suite;

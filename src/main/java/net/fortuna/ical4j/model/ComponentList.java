@@ -31,11 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -44,34 +40,15 @@ import java.util.stream.Collectors;
  * Defines a list of iCalendar components.
  * @author Ben Fortuna
  */
-public class ComponentList<T extends Component> extends ArrayList<T> implements Serializable {
+public class ComponentList<T extends Component> implements ContentContainer<T> {
 
-    private static final long serialVersionUID = 7308557606558767449L;
+    private final List<T> components;
 
     /**
      * Default constructor.
      */
     public ComponentList() {
-    }
-
-    /**
-     * Creates a new instance with the specified initial capacity.
-     * @param initialCapacity the initial capacity of the list
-     */
-    public ComponentList(final int initialCapacity) {
-        super(initialCapacity);
-    }
-
-    /**
-     * Creates a deep copy of the specified component list.
-     * @param components a component list to copy
-     * @throws URISyntaxException where component data contains an invalid URI
-     */
-    @SuppressWarnings("unchecked")
-	public ComponentList(ComponentList<? extends T> components) throws URISyntaxException {
-        for (T c : components) {
-            add((T) c.copy());
-        }
+        this(Collections.emptyList());
     }
 
     /**
@@ -80,37 +57,93 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
      * @param components
      */
     public ComponentList(List<? extends T> components) {
-        addAll(components);
+        this.components = Collections.unmodifiableList(components);
+    }
+
+    @Override
+    public ContentContainer<T> add(T content) {
+        List<T> copy = new ArrayList<>(components);
+        copy.add(content);
+        return new ComponentList<>(copy);
+    }
+
+    @Override
+    public ContentContainer<T> addAll(Collection<T> content) {
+        List<T> copy = new ArrayList<>(components);
+        copy.addAll(content);
+        return new ComponentList<>(copy);
+    }
+
+    @Override
+    public ContentContainer<T> remove(T content) {
+        List<T> copy = new ArrayList<>(components);
+        copy.remove(content);
+        return new ComponentList<>(copy);
+    }
+
+    @Override
+    public ContentContainer<T> removeAll(String... name) {
+        List<String> names = Arrays.asList(name);
+        List<T> copy = new ArrayList<>(components);
+        copy.removeIf(c -> names.contains(c.getName()));
+        return new ComponentList<>(copy);
+    }
+
+    @Override
+    public ContentContainer<T> replace(T content) {
+        List<T> copy = new ArrayList<>(components);
+        copy.removeIf(c -> c.getName().equals(content.getName()));
+        copy.add(content);
+        return new ComponentList<>(copy);
+    }
+
+    @Override
+    public List<T> getAll() {
+        return components;
     }
 
     /**
      * {@inheritDoc}
      */
     public final String toString() {
-        return toString(this);
-    }
-
-    public static String toString(List<? extends Component> list) {
-        return list.stream().map(Component::toString).collect(Collectors.joining(""));
+        return components.stream().map(Component::toString).collect(Collectors.joining(""));
     }
 
     /**
      * Returns the first component of specified name.
      * @param aName name of component to return
      * @return a component or null if no matching component found
+     *
+     * @deprecated use {@link ComponentList#getFirst(String)}
      */
-    @SuppressWarnings("unchecked")
+    @Deprecated
     public final <R extends T> Optional<R> getComponent(final String aName) {
-        return (Optional<R>) stream().filter(c -> c.getName().equalsIgnoreCase(aName)).findFirst();
+        return getFirst(aName);
     }
 
     /**
      * Returns a list containing all components with specified name.
      * @param name name of components to return
      * @return a list of components with the matching name
+     *
+     * @deprecated use {@link ComponentList#get(String)}
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
 	public final <C extends T> List<C> getComponents(final String name) {
-        return (List<C>) stream().filter(c -> c.getName().equals(name)).collect(Collectors.toList());
+        return (List<C>) get(name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ComponentList<?> that = (ComponentList<?>) o;
+        return Objects.equals(components, that.components);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(components);
     }
 }

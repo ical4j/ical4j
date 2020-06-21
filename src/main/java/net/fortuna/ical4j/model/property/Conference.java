@@ -1,12 +1,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.List;
 
 /**
  * Created by fortuna on 11/09/15.
@@ -20,11 +18,11 @@ public class Conference extends Property {
     private String value;
 
     public Conference() {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
     }
 
-    public Conference(List<Parameter> params, String value) {
-        super(PROPERTY_NAME, params, new Factory());
+    public Conference(ParameterList params, String value) {
+        super(PROPERTY_NAME, params);
         setValue(value);
     }
 
@@ -44,8 +42,8 @@ public class Conference extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Conference> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Conference> {
@@ -57,7 +55,7 @@ public class Conference extends Property {
             return new Conference();
         }
 
-        public Conference createProperty(List<Parameter> parameters, String value) {
+        public Conference createProperty(ParameterList parameters, String value) {
             Conference property = new Conference(parameters, value);
             return property;
         }

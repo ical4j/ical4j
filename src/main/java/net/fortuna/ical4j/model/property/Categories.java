@@ -37,7 +37,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -99,7 +98,7 @@ public class Categories extends Property {
 
     private static final long serialVersionUID = -7769987073466681634L;
 
-    private List<String> categories;
+    private TextList categories;
 
     private Validator<Property> validator = new PropertyValidator(Collections.singletonList(
             new ValidationRule(OneOrLess, LANGUAGE)));
@@ -107,32 +106,32 @@ public class Categories extends Property {
      * Default constructor.
      */
     public Categories() {
-        super(CATEGORIES, new ArrayList<>(), new Factory());
-        categories = new ArrayList<>();
+        super(CATEGORIES);
+        categories = new TextList();
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Categories(final String aValue) {
-        super(CATEGORIES, new ArrayList<>(), new Factory());
-        setValue(aValue);
+        super(CATEGORIES);
+        categories = new TextList(aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Categories(final List<Parameter> aList, final String aValue) {
-        super(CATEGORIES, aList, new Factory());
-        setValue(aValue);
+    public Categories(final ParameterList aList, final String aValue) {
+        super(CATEGORIES, aList);
+        categories = new TextList(aValue);
     }
 
     /**
      * @param cList a list of categories
      */
-    public Categories(final List<String> cList) {
-        super(CATEGORIES, new ArrayList<>(), new Factory());
+    public Categories(final TextList cList) {
+        super(CATEGORIES);
         categories = cList;
     }
 
@@ -140,35 +139,43 @@ public class Categories extends Property {
      * @param aList a list of parameters for this component
      * @param cList a list of categories
      */
-    public Categories(final List<Parameter> aList, final List<String> cList) {
-        super(CATEGORIES, aList, new Factory());
+    public Categories(final ParameterList aList, TextList cList) {
+        super(CATEGORIES, aList);
         categories = cList;
+    }
+
+    public void addCategory(String category) {
+        this.categories = categories.add(category);
+    }
+
+    public void removeCategory(String category) {
+        this.categories = categories.remove(category);
     }
 
     /**
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        categories = new TextList(aValue).getTexts();
+        categories = new TextList(aValue);
     }
 
     /**
      * @return Returns the categories.
      */
     public final List<String> getCategories() {
-        return new ArrayList<>(categories);
+        return categories.getTexts();
     }
 
     /**
      * {@inheritDoc}
      */
     public final String getValue() {
-        return TextList.toString(categories);
+        return categories.toString();
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Categories> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Categories> {
@@ -178,7 +185,7 @@ public class Categories extends Property {
             super(CATEGORIES);
         }
 
-        public Categories createProperty(final List<Parameter> parameters, final String value) {
+        public Categories createProperty(final ParameterList parameters, final String value) {
             return new Categories(parameters, value);
         }
 

@@ -33,13 +33,12 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.temporal.Temporal;
-import java.util.List;
 
 /**
  * $Id$
@@ -132,7 +131,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
     private static final long serialVersionUID = 4456883817126011006L;
 
     public RecurrenceId() {
-        super(RECURRENCE_ID, new Factory<T>());
+        super(RECURRENCE_ID);
     }
 
     /**
@@ -141,7 +140,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * @param value the RECURRENCE_ID value string to parse
      */
     public RecurrenceId(final String value) {
-        super(RECURRENCE_ID, new Factory<T>());
+        super(RECURRENCE_ID);
         setValue(value);
     }
 
@@ -149,8 +148,8 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public RecurrenceId(final List<Parameter> aList, final String aValue) {
-        super(RECURRENCE_ID, aList, new Factory<T>());
+    public RecurrenceId(final ParameterList aList, final String aValue) {
+        super(RECURRENCE_ID, aList);
         setValue(aValue);
     }
 
@@ -160,7 +159,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * @param aDate a date representation of a date or date-time
      */
     public RecurrenceId(final T aDate) {
-        super(RECURRENCE_ID, new Factory<T>());
+        super(RECURRENCE_ID);
         setDate(aDate);
     }
 
@@ -170,8 +169,8 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
      * @param aList a list of parameters for this component
      * @param aDate a date representation of a date or date-time
      */
-    public RecurrenceId(final List<Parameter> aList, final T aDate) {
-        super(RECURRENCE_ID, aList, new Factory<T>());
+    public RecurrenceId(final ParameterList aList, final T aDate) {
+        super(RECURRENCE_ID, aList);
         setDate(aDate);
     }
 
@@ -186,8 +185,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
          * (";" tzidparam) / (";" rangeparam) /
          */
 
-        ParameterValidator.assertOneOrLess(Parameter.RANGE,
-                getParameters());
+        ParameterValidator.assertOneOrLess(Parameter.RANGE, getParameters().getAll());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
@@ -195,8 +193,8 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
     }
 
     @Override
-    public Property copy() {
-        return new Factory<T>().createProperty(getParameters(), getValue());
+    protected PropertyFactory<RecurrenceId<T>> newFactory() {
+        return new Factory<>();
     }
 
     public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<RecurrenceId<T>> {
@@ -206,7 +204,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
             super(RECURRENCE_ID);
         }
 
-        public RecurrenceId<T> createProperty(final List<Parameter> parameters, final String value) {
+        public RecurrenceId<T> createProperty(final ParameterList parameters, final String value) {
             return new RecurrenceId<>(parameters, value);
         }
 

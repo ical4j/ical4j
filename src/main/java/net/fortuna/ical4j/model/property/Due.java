@@ -31,12 +31,14 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.TemporalAdapter;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.Temporal;
-import java.util.List;
 
 /**
  * $Id$
@@ -102,7 +104,7 @@ public class Due<T extends Temporal> extends DateProperty<T> {
      * @throws java.time.format.DateTimeParseException where the specified string is not a valid DUE value representation
      */
     public Due(final String value) {
-        super(DUE, new Factory<T>());
+        super(DUE);
         setValue(value);
     }
 
@@ -111,8 +113,8 @@ public class Due<T extends Temporal> extends DateProperty<T> {
      * @param aValue a value string for this component
      * @throws java.time.format.DateTimeParseException when the specified string is not a valid date/date-time representation
      */
-    public Due(final List<Parameter> aList, final String aValue) {
-        super(DUE, aList, new Factory<T>());
+    public Due(final ParameterList aList, final String aValue) {
+        super(DUE, aList);
         setValue(aValue);
     }
 
@@ -122,7 +124,7 @@ public class Due<T extends Temporal> extends DateProperty<T> {
      * @param aDate a date
      */
     public Due(final T aDate) {
-        super(DUE, new Factory<T>());
+        super(DUE);
         setDate(aDate);
     }
 
@@ -132,14 +134,14 @@ public class Due<T extends Temporal> extends DateProperty<T> {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public Due(final List<Parameter> aList, final T aDate) {
-        super(DUE, aList, new Factory<T>());
+    public Due(final ParameterList aList, final T aDate) {
+        super(DUE, aList);
         setDate(aDate);
     }
 
     @Override
-    public Property copy() {
-        return new Factory<T>().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Due<T>> newFactory() {
+        return new Factory<>();
     }
 
     public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<Due<T>> {
@@ -149,7 +151,7 @@ public class Due<T extends Temporal> extends DateProperty<T> {
             super(DUE);
         }
 
-        public Due<T> createProperty(final List<Parameter> parameters, final String value) {
+        public Due<T> createProperty(final ParameterList parameters, final String value) {
             return new Due<>(parameters, value);
         }
 

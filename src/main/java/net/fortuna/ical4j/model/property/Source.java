@@ -1,12 +1,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.List;
 
 /**
  * Created by fortuna on 11/09/15.
@@ -20,11 +18,11 @@ public class Source extends Property {
     private String value;
 
     public Source() {
-        super(PROPERTY_NAME, new Factory());
+        super(PROPERTY_NAME);
     }
 
-    public Source(List<Parameter> params, String value) {
-        super(PROPERTY_NAME, params, new Factory());
+    public Source(ParameterList params, String value) {
+        super(PROPERTY_NAME, params);
         setValue(value);
     }
 
@@ -44,8 +42,8 @@ public class Source extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Source> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Source> {
@@ -57,7 +55,7 @@ public class Source extends Property {
             return new Source();
         }
 
-        public Source createProperty(List<Parameter> parameters, String value) {
+        public Source createProperty(ParameterList parameters, String value) {
             Source property = new Source(parameters, value);
             return property;
         }

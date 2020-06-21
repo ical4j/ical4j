@@ -2,7 +2,6 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.XComponent;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +11,9 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
 
     private String name;
 
-    private PropertyList properties = new PropertyList();
+    private List<Property> properties = new ArrayList<>();
 
-    private ComponentList<Component> subComponents = new ComponentList<>();
+    private List<Component> subComponents = new ArrayList<>();
 
     public ComponentBuilder<?> factories(List<ComponentFactory<?>> factories) {
         this.factories.addAll(factories);
@@ -43,22 +42,19 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
         for (ComponentFactory<?> factory : factories) {
             if (factory.supports(name)) {
                 if (!subComponents.isEmpty()) {
-                    component = factory.createComponent(properties, subComponents);
+                    component = factory.createComponent(new PropertyList(properties),
+                            new ComponentList<>(subComponents));
                 } else {
-                    try {
-                        component = factory.createComponent(properties);
-                    } catch (URISyntaxException e) {
-                        throw new IllegalArgumentException("Invalid content", e);
-                    }
+                    component = factory.createComponent(new PropertyList(properties));
                 }
             }
         }
 
         if (component == null) {
             if (isExperimentalName(name)) {
-                component = new XComponent(name, properties);
+                component = new XComponent(name, new PropertyList(properties));
             } else if (allowIllegalNames()) {
-                component = new XComponent(name, properties);
+                component = new XComponent(name, new PropertyList(properties));
             } else {
                 throw new IllegalArgumentException("Unsupported component [" + name + "]");
             }

@@ -111,7 +111,7 @@ public class VAvailability extends CalendarComponent {
 
     public VAvailability(boolean initialise) {
         super(VAVAILABILITY);
-        this.available = new ComponentList<Available>();
+        this.available = new ComponentList<>();
         if (initialise) {
             getProperties().add(new DtStamp());
         }
@@ -123,7 +123,7 @@ public class VAvailability extends CalendarComponent {
      */
     public VAvailability(final PropertyList properties) {
         super(VAVAILABILITY, properties);
-        this.available = new ComponentList<Available>();
+        this.available = new ComponentList<>();
     }
 
     /**
@@ -248,6 +248,11 @@ public class VAvailability extends CalendarComponent {
     @Override
     public Component copy() {
         return new Factory().createComponent(getProperties());
+    }
+
+    @Override
+    protected ComponentFactory<VAvailability> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VAvailability> {

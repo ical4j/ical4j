@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.component
 
 import net.fortuna.ical4j.model.Property
-import net.fortuna.ical4j.model.PropertyList
 
 /**
  * $Id$
@@ -45,18 +44,18 @@ import net.fortuna.ical4j.model.PropertyList
 abstract class AbstractComponentFactory extends AbstractFactory {
 
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        PropertyList properties = attributes.remove('properties')
+        List<Property> properties = attributes.remove('properties')
         if (properties == null) {
-            properties = new PropertyList()
+            properties = []
         }
         return newInstance(properties)
     }
 
-    protected abstract Object newInstance(PropertyList properties)
+    protected abstract Object newInstance(List<Property> properties)
 
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof Property) {
-            parent.properties.add(child)
+            parent.add(child)
         }
     }
 }

@@ -37,9 +37,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.TYPE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -67,14 +65,14 @@ public class Tel extends Property implements Escapable {
      * Default constructor.
      */
     public Tel() {
-        super(TEL, new ArrayList<>(), new Factory());
+        super(TEL);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Tel(final String aValue) {
-        super(TEL, new ArrayList<>(), new Factory());
+        super(TEL);
         setValue(aValue);
     }
 
@@ -82,8 +80,8 @@ public class Tel extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Tel(final List<Parameter> aList, final String aValue) {
-        super(TEL, aList, new Factory());
+    public Tel(final ParameterList aList, final String aValue) {
+        super(TEL, aList);
         setValue(aValue);
     }
 
@@ -107,8 +105,8 @@ public class Tel extends Property implements Escapable {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Tel> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Tel> {
@@ -118,7 +116,7 @@ public class Tel extends Property implements Escapable {
             super(TEL);
         }
 
-        public Tel createProperty(final List<Parameter> parameters, final String value) {
+        public Tel createProperty(final ParameterList parameters, final String value) {
             return new Tel(parameters, value);
         }
 

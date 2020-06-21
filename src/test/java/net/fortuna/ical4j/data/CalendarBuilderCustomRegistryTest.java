@@ -118,7 +118,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
 
         Calendar cal = builder.build(new StringReader(VEVENT_WITH_SCHEDULE_STATUS));
 
-        VEvent event = cal.getRequiredComponent(Component.VEVENT);
+        VEvent event = cal.getComponents().getRequired(Component.VEVENT);
         VEvent eventBis = event.copy();
         assertEquals(eventBis, event);
     }

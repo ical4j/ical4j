@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 
 /**
  * $Id$
@@ -75,36 +77,34 @@ public class DtEndTest extends PropertyTest {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
         
         TestSuite suite = new TestSuite();
-        DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(ZonedDateTime.now());
-        dtEnd.getParameters().add(Value.DATE_TIME);
+        ParameterList dtendParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
+        DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(dtendParams, ZonedDateTime.now());
 
         // test validation..
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidation", dtEnd));
 
         //
-        dtEnd = (DtEnd<ZonedDateTime>) dtEnd.copy();
-        dtEnd.getParameters().removeIf(p -> p.getName().equals(Parameter.VALUE));
-        dtEnd.getParameters().add(Value.DATE);
+        ParameterList newParams;
+        newParams = (ParameterList) dtEnd.getParameters().replace(Value.DATE);
+        dtEnd = new DtEnd<>(newParams, dtEnd.getDate());
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidationException", dtEnd));
 
         //
-        dtEnd = (DtEnd<ZonedDateTime>) dtEnd.copy();
+        dtEnd = new DtEnd<>(dtEnd.getParameters(), dtEnd.getDate());
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidation", dtEnd));
 
         //
-        dtEnd = (DtEnd<ZonedDateTime>) dtEnd.copy();
-        dtEnd.getParameters().removeIf(p -> p.getName().equals(Parameter.VALUE));
-        dtEnd.getParameters().add(Value.DATE);
+        newParams = (ParameterList) dtEnd.getParameters().replace(Value.DATE);
+        dtEnd = new DtEnd<>(newParams, dtEnd.getDate());
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidation", dtEnd));
 
         //
-        dtEnd = (DtEnd<ZonedDateTime>) dtEnd.copy();
-        dtEnd.setDate(ZonedDateTime.now());
-        dtEnd.getParameters().remove(Value.DATE);
+        newParams = (ParameterList) dtEnd.getParameters().removeAll(Parameter.VALUE);
+        dtEnd = new DtEnd<>(newParams, ZonedDateTime.now());
         log.info(dtEnd.toString());
         suite.addTest(new DtEndTest("testValidationException", dtEnd));
         

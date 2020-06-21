@@ -33,7 +33,7 @@ package net.fortuna.ical4j.model.component;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -44,8 +44,7 @@ import net.fortuna.ical4j.util.UidGenerator;
 import java.net.SocketException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * $Id$
@@ -76,13 +75,12 @@ public class AvailableTest extends ComponentTest {
         
         UidGenerator g = new RandomUidGenerator();
         a = new Available();
-        a.getProperties().add(g.generateUid());
+        a.add(g.generateUid());
 
-        List<Parameter> tzParams = new ArrayList<>();
-        tzParams.add(new TzId(ZoneId.systemDefault().getId()));
-        a.getProperties().add(new DtStart<>(tzParams, ZonedDateTime.now()));
-        a.getProperties().add(new DtStamp());
-        a.getProperties().add(new Duration(java.time.Period.ofWeeks(1)));
+        ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId(ZoneId.systemDefault().getId())));
+        a.add(new DtStart<>(tzParams, ZonedDateTime.now()));
+        a.add(new DtStamp());
+        a.add(new Duration(java.time.Period.ofWeeks(1)));
         suite.addTest(new AvailableTest("testValidation", a));
         return suite;
     }

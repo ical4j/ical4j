@@ -43,6 +43,7 @@ import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VEventValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jooq.lambda.Unchecked;
 
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
@@ -315,6 +316,14 @@ public class VEvent extends CalendarComponent {
      */
     public final ComponentList<VAlarm> getAlarms() {
         return alarms;
+    }
+
+    /**
+     * Add a new alarm to the event.
+     * @param alarm the alarm to add
+     */
+    public void add(VAlarm alarm) {
+        this.alarms = (ComponentList<VAlarm>) alarms.add(alarm);
     }
 
     /**
@@ -746,6 +755,11 @@ public class VEvent extends CalendarComponent {
      */
     public VEvent copy() {
         return new Factory().createComponent(getProperties(), getAlarms());
+    }
+
+    @Override
+    protected ComponentFactory<VEvent> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VEvent> {

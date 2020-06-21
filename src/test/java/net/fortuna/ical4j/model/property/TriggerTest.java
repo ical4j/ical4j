@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.property;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyTest;
 import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.model.parameter.Value;
@@ -43,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -105,15 +107,18 @@ public class TriggerTest extends PropertyTest {
     /**
      * Unit test on a date-time trigger.
      */
-    public void testTriggerDateTime() throws ValidationException {
+    public void testTriggerDateTime() {
         assertNull(trigger.getDuration());
         assertNotNull(trigger.getDate());
         trigger.validate();
+    }
 
-        trigger.getParameters().add(Value.DURATION);
+    public void testTriggerDateTimeInvalid() throws ValidationException {
+        assertNull(trigger.getDuration());
+        assertNotNull(trigger.getDate());
         assertValidationException(trigger);
     }
-    
+
     /**
      * @return
      */
@@ -127,7 +132,11 @@ public class TriggerTest extends PropertyTest {
         
     	trigger = new Trigger(Instant.now());
     	suite.addTest(new TriggerTest("testTriggerDateTime", trigger));
-        
+
+    	ParameterList triggerParams = new ParameterList(Collections.singletonList(Value.DURATION));
+    	trigger = new Trigger(triggerParams, Instant.now());
+    	suite.addTest(new TriggerTest("testTriggerDateTimeInvalid", trigger));
+
     	return suite;
     }
 }

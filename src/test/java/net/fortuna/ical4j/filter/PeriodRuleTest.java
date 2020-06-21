@@ -50,6 +50,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.TimeZone;
 
 /**
@@ -131,7 +132,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         Filter<CalendarComponent> filter = new Filter<>(new PeriodRule<>(period));
 //        ComponentList filtered = (ComponentList) filter.filter(calendar.getComponents());
 //        assertTrue(!filtered.isEmpty());
-        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents()));
+        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, calendar.getComponents().getAll()));
 
         //testFilteringAllDayEvents..
         LocalDate jan25 = LocalDate.now().withMonth(1).withDayOfMonth(25);
@@ -139,8 +140,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
 
         VEvent event = new VEvent(jan25, jan26, "mid jan event");
 
-        ComponentList<CalendarComponent> components = new ComponentList<>();
-        components.add(event);
+        ComponentList<CalendarComponent> components = new ComponentList<>(Collections.singletonList(event));
 
         ZonedDateTime ruleDate = LocalDate.now().withMonth(1).withDayOfMonth(1).atStartOfDay().atZone(ZoneId.systemDefault());
         while (ruleDate.getMonth() == Month.JANUARY) {
@@ -148,9 +148,9 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
                     CalendarDateFormat.DATE_FORMAT));
             filter = new Filter<>(rule);
             if (ruleDate.getDayOfMonth() == 25) {
-                suite.addTest(new PeriodRuleTest("testFilteredSize", filter, components, 1));
+                suite.addTest(new PeriodRuleTest("testFilteredSize", filter, components.getAll(), 1));
             } else {
-                suite.addTest(new PeriodRuleTest("testFilteredSize", filter, components, 0));
+                suite.addTest(new PeriodRuleTest("testFilteredSize", filter, components.getAll(), 0));
             }
             ruleDate = ruleDate.plusDays(1);
         }
@@ -161,13 +161,13 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
                 .withHour(9).withMinute(0).withSecond(0);
         period = new Period<>(startDt, java.time.Period.ofWeeks(1));
         filter = new Filter<>(new PeriodRule<>(period));
-        suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, exCal.getComponents()));
+        suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, exCal.getComponents().getAll()));
 
         // Test exclusion of particular date patterns..
         exCal = Calendars.load(PeriodRuleTest.class.getResource("/samples/invalid/friday13-NOT.ics"));
         period = new Period<>(startDt, java.time.Period.ofWeeks(52));
         filter = new Filter<>(new PeriodRule<>(period));
-        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, exCal.getComponents()));
+        suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, exCal.getComponents().getAll()));
 
         // Asia/Singapore test..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);

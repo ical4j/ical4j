@@ -60,8 +60,8 @@ public class ContentBuilderTest extends GroovyTestCase {
         }
         calendar.validate()
         
-        assert calendar.properties.size() == 2
-        assert calendar.components.size() == 1
+        assert calendar.properties.all.size() == 2
+        assert calendar.components.all.size() == 1
         
         println(calendar)
     }
@@ -83,7 +83,7 @@ public class ContentBuilderTest extends GroovyTestCase {
         def request = new VFreeBusy(builder.vfreebusy() {
             dtstart('20080101T000000Z')
             dtend('20100101T000000Z')
-        }, new ComponentList())
+        }, [])
         
         def vfreebusy1 = builder.vfreebusy(request)
         

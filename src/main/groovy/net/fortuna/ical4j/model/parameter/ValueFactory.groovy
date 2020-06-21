@@ -41,54 +41,8 @@ class ValueFactory extends AbstractParameterFactory {
         Value valueParam
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, Value)) {
             valueParam = value
-        }
-        else {
-			switch (value) {
-				case Value.BINARY.value:
-					valueParam = Value.BINARY
-					break
-				case Value.BOOLEAN.value:
-		            valueParam = Value.BOOLEAN
-					break
-		        case Value.CAL_ADDRESS.value:
-		            valueParam = Value.CAL_ADDRESS
-					break
-		        case Value.DATE.value:
-		            valueParam = Value.DATE
-					break
-		        case Value.DATE_TIME.value:
-		            valueParam = Value.DATE_TIME
-					break
-		        case Value.DURATION.value:
-		            valueParam = Value.DURATION
-					break
-		        case Value.FLOAT.value:
-		            valueParam = Value.FLOAT
-					break
-		        case Value.INTEGER.value:
-		            valueParam = Value.INTEGER
-					break
-		        case Value.PERIOD.value:
-		            valueParam = Value.PERIOD
-					break
-		        case Value.RECUR.value:
-		            valueParam = Value.RECUR
-					break
-		        case Value.TEXT.value:
-		            valueParam = Value.TEXT
-					break
-		        case Value.TIME.value:
-		            valueParam = Value.TIME
-					break
-		        case Value.URI.value:
-		            valueParam = Value.URI
-					break
-		        case Value.UTC_OFFSET.value:
-		            valueParam = Value.UTC_OFFSET
-					break
-		        default:
-		            valueParam = [value]
-	        }
+        } else {
+			valueParam = new Value.Factory().createParameter(value)
         }
         return valueParam
     }

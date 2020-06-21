@@ -34,8 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.util.List;
-
 /**
  * $Id$
  * <p/>
@@ -56,14 +54,14 @@ public class Locality extends Property implements Escapable {
      * Default constructor.
      */
     public Locality() {
-        super(LOCALITY, new Factory());
+        super(LOCALITY);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Locality(final String aValue) {
-        super(LOCALITY, new Factory());
+        super(LOCALITY);
         setValue(aValue);
     }
 
@@ -71,8 +69,8 @@ public class Locality extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Locality(final List<Parameter> aList, final String aValue) {
-        super(LOCALITY, aList, new Factory());
+    public Locality(final ParameterList aList, final String aValue) {
+        super(LOCALITY, aList);
         setValue(aValue);
     }
 
@@ -96,8 +94,8 @@ public class Locality extends Property implements Escapable {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Locality> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Locality> {
@@ -107,7 +105,7 @@ public class Locality extends Property implements Escapable {
             super(LOCALITY);
         }
 
-        public Locality createProperty(final List<Parameter> parameters, final String value) {
+        public Locality createProperty(final ParameterList parameters, final String value) {
             return new Locality(parameters, value);
         }
 

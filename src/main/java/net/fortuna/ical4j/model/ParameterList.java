@@ -31,69 +31,74 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.io.Serializable;
-import java.net.URISyntaxException;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
  *
- * Defines a list of iCalendar parameters. A parameter list may be specified as unmodifiable at instantiation - useful
- * for constant properties that you don't want modified.
+ * Accessor implementation for a list of iCalendar parameters.
  * @author Ben Fortuna
- *
- * @deprecated Use standard Java collections.
  */
-@Deprecated
-public class ParameterList implements Serializable, Iterable<Parameter> {
-
-    private static final long serialVersionUID = -1913059830016450169L;
+public class ParameterList implements ContentContainer<Parameter> {
 
     private final List<Parameter> parameters;
 
     /**
-     * Default constructor. Creates a modifiable parameter list.
+     * Default constructor. Creates an empty parameter list.
      */
     public ParameterList() {
-        this(false);
+        this(Collections.emptyList());
     }
 
     /**
-     * Constructor.
-     * @param unmodifiable indicates whether the list should be mutable
-     */
-    public ParameterList(final boolean unmodifiable) {
-        if (unmodifiable) {
-            parameters = Collections.emptyList();
-        }
-        else {
-            parameters = new CopyOnWriteArrayList<Parameter>();
-        }
-    }
-
-    /**
-     * Creates a deep copy of the specified parameter list. That is, copies of all parameters in the specified list are
-     * added to this list.
+     * Creates an unmodifiable copy of the specified parameter list.
      * @param list a parameter list to copy parameters from
-     * @param unmodifiable indicates whether the list should be mutable
-     * @throws URISyntaxException where a parameter in the list specifies an invalid URI value
      */
-    public ParameterList(final ParameterList list, final boolean unmodifiable) {
-    	
-        final List<Parameter> parameterList = new CopyOnWriteArrayList<Parameter>();
-        list.forEach(parameter -> {
-            parameterList.add(parameter);
-        });
-        if (unmodifiable) {
-            parameters = Collections.unmodifiableList(parameterList);
-        }
-        else {
-        	parameters = parameterList;
-        }
+    public ParameterList(List<Parameter> list) {
+        this.parameters = Collections.unmodifiableList(list);
+    }
+
+    @Override
+    public ContentContainer<Parameter> add(Parameter content) {
+        List<Parameter> copy = new ArrayList<>(parameters);
+        copy.add(content);
+        return new ParameterList(copy);
+    }
+
+    @Override
+    public ContentContainer<Parameter> addAll(Collection<Parameter> content) {
+        List<Parameter> copy = new ArrayList<>(parameters);
+        copy.addAll(content);
+        return new ParameterList(copy);
+    }
+
+    @Override
+    public ContentContainer<Parameter> remove(Parameter content) {
+        List<Parameter> copy = new ArrayList<>(parameters);
+        copy.remove(content);
+        return new ParameterList(copy);
+    }
+
+    @Override
+    public ContentContainer<Parameter> removeAll(String... name) {
+        List<String> names = Arrays.asList(name);
+        List<Parameter> copy = new ArrayList<>(parameters);
+        copy.removeIf(p -> names.contains(p.getName()));
+        return new ParameterList(copy);
+    }
+
+    @Override
+    public ContentContainer<Parameter> replace(Parameter content) {
+        List<Parameter> copy = new ArrayList<>(parameters);
+        copy.removeIf(p -> p.getName().equals(content.getName()));
+        copy.add(content);
+        return new ParameterList(copy);
+    }
+
+    @Override
+    public List<Parameter> getAll() {
+        return parameters;
     }
 
     /**
@@ -111,116 +116,37 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
      * Returns the first parameter with the specified name.
      * @param aName name of the parameter
      * @return the first matching parameter or null if no matching parameters
+     *
+     * @deprecated use {@link ParameterList#getFirst(String)}
      */
+    @Deprecated
     public final <T extends Parameter> Optional<T> getParameter(final String aName) {
-        for (final Parameter p : parameters) {
-            if (aName.equalsIgnoreCase(p.getName())) {
-                return Optional.of((T) p);
-            }
-        }
-        return Optional.empty();
+        return getFirst(aName);
     }
 
     /**
      * Returns a list of parameters with the specified name.
      * @param name name of parameters to return
      * @return a parameter list
+     *
+     * @deprecated use {@link ParameterList#get(String)}
      */
+    @Deprecated
     public final ParameterList getParameters(final String name) {
-        final ParameterList list = new ParameterList();
-        for (final Parameter p : parameters) {
-            if (p.getName().equalsIgnoreCase(name)) {
-                list.add(p);
-            }
-        }
+        final ParameterList list = new ParameterList(get(name));
         return list;
     }
 
-    /**
-     * Add a parameter to the list. Note that this method will not remove existing parameters of the same type. To
-     * achieve this use {
-     * @link ParameterList#replace(Parameter) }
-     * @param parameter the parameter to add
-     * @return true
-     * @see List#add(java.lang.Object)
-     */
-    public final boolean add(final Parameter parameter) {
-        if (parameter == null) {
-            throw new IllegalArgumentException("Trying to add null Parameter");
-        }
-        return parameters.add(parameter);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ParameterList that = (ParameterList) o;
+        return Objects.equals(parameters, that.parameters);
     }
 
-    /**
-     * Replace any parameters of the same type with the one specified.
-     * @param parameter parameter to add to this list in place of all others with the same name
-     * @return true if successfully added to this list
-     */
-    public final boolean replace(final Parameter parameter) {
-        for (Parameter parameter1 : getParameters(parameter.getName())) {
-            remove(parameter1);
-        }
-        return add(parameter);
-    }
-
-    /**
-     * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
-     */
-    public final boolean isEmpty() {
-        return parameters.isEmpty();
-    }
-
-    /**
-     * @return an iterator
-     * @see List#iterator()
-     */
-    public final Iterator<Parameter> iterator() {
-        return parameters.iterator();
-    }
-
-    /**
-     * Remove a parameter from the list.
-     * @param parameter the parameter to remove
-     * @return true if the list contained the specified parameter
-     * @see List#remove(java.lang.Object)
-     */
-    public final boolean remove(final Parameter parameter) {
-        return parameters.remove(parameter);
-    }
-
-    /**
-     * Remove all parameters with the specified name.
-     * @param paramName the name of parameters to remove
-     */
-    public final void removeAll(final String paramName) {
-        final ParameterList params = getParameters(paramName);
-        parameters.removeAll(params.parameters);
-    }
-    
-    /**
-     * @return the number of parameters in the list
-     * @see List#size()
-     */
-    public final int size() {
-        return parameters.size();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final boolean equals(final Object arg0) {
-        if (arg0 instanceof ParameterList) {
-            final ParameterList p = (ParameterList) arg0;
-            return Objects.equals(parameters, p.parameters);
-        }
-        return super.equals(arg0);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public final int hashCode() {
-        return new HashCodeBuilder().append(parameters).toHashCode();
+    @Override
+    public int hashCode() {
+        return Objects.hash(parameters);
     }
 }

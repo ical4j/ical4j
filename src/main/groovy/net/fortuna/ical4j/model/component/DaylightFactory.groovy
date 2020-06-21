@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.component
 
+import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.PropertyList
 
 /**
@@ -51,7 +52,7 @@ class DaylightFactory extends AbstractComponentFactory{
          return daylight
      }
      
-     protected Object newInstance(PropertyList properties) {
-         return new Daylight(properties)
+     protected Object newInstance(List<Property> properties) {
+         return new Daylight(new PropertyList(properties))
      }
 }

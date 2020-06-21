@@ -32,12 +32,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.time.temporal.Temporal;
-import java.util.List;
 
 /**
  * $Id$
@@ -116,7 +114,7 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * Default constructor. The time value is initialised to the time of instantiation.
      */
     public DtEnd() {
-        super(DTEND, new Factory<T>());
+        super(DTEND);
     }
 
     /**
@@ -125,7 +123,7 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * @param value the DTEND value string to parse
      */
     public DtEnd(final String value) {
-        super(DTEND, new Factory<T>());
+        super(DTEND);
         setValue(value);
     }
 
@@ -133,8 +131,8 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public DtEnd(final List<Parameter> aList, final String aValue) {
-        super(DTEND, aList, new Factory<T>());
+    public DtEnd(final ParameterList aList, final String aValue) {
+        super(DTEND, aList);
         setValue(aValue);
     }
 
@@ -144,7 +142,7 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * @param aDate a date
      */
     public DtEnd(final T aDate) {
-        super(DTEND, new Factory<T>());
+        super(DTEND);
         setDate(aDate);
     }
 
@@ -166,14 +164,14 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public DtEnd(final List<Parameter> aList, final T aDate) {
-        super(DTEND, aList, new Factory<T>());
+    public DtEnd(final ParameterList aList, final T aDate) {
+        super(DTEND, aList);
         setDate(aDate);
     }
 
     @Override
-    public Property copy() {
-        return new Factory<T>().createProperty(getParameters(), getValue());
+    protected PropertyFactory<DtEnd<T>> newFactory() {
+        return new Factory<>();
     }
 
     public static class Factory<T extends Temporal> extends Content.Factory implements PropertyFactory<DtEnd<T>> {
@@ -183,7 +181,7 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
             super(DTEND);
         }
 
-        public DtEnd<T> createProperty(final List<Parameter> parameters, final String value) {
+        public DtEnd<T> createProperty(final ParameterList parameters, final String value) {
             return new DtEnd<>(parameters, value);
         }
 

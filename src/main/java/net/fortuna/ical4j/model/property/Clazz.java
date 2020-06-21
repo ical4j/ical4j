@@ -31,14 +31,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * $Id$
@@ -117,7 +111,7 @@ public class Clazz extends Property {
     /**
      * @author Ben Fortuna An immutable instance of Clazz.
      */
-    private static final class ImmutableClazz extends Clazz {
+    private static final class ImmutableClazz extends Clazz implements ImmutableContent {
 
         private static final long serialVersionUID = 5978394762293365042L;
 
@@ -125,7 +119,17 @@ public class Clazz extends Property {
          * @param value
          */
         private ImmutableClazz(final String value) {
-            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
+            super(value);
+        }
+
+        @Override
+        public void add(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void remove(Parameter parameter) {
+            throwException();
         }
 
         /**
@@ -135,6 +139,16 @@ public class Clazz extends Property {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
+
+        @Override
+        public void removeAll(String parameterName) {
+            throwException();
+        }
+
+        @Override
+        public void replace(Parameter parameter) {
+            throwException();
+        }
     }
 
     private String value;
@@ -143,14 +157,14 @@ public class Clazz extends Property {
      * Default constructor.
      */
     public Clazz() {
-        super(CLASS, new Factory());
+        super(CLASS);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Clazz(final String aValue) {
-        super(CLASS, new Factory());
+        super(CLASS);
         this.value = aValue;
     }
 
@@ -158,8 +172,8 @@ public class Clazz extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Clazz(final List<Parameter> aList, final String aValue) {
-        super(CLASS, aList, new Factory());
+    public Clazz(final ParameterList aList, final String aValue) {
+        super(CLASS, aList);
         this.value = aValue;
     }
 
@@ -178,8 +192,8 @@ public class Clazz extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Clazz> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Clazz> {
@@ -189,7 +203,7 @@ public class Clazz extends Property {
             super(CLASS);
         }
 
-        public Clazz createProperty(final List<Parameter> parameters, final String value) {
+        public Clazz createProperty(final ParameterList parameters, final String value) {
             Clazz clazz;
             if (CONFIDENTIAL.getValue().equals(value)) {
                 clazz = CONFIDENTIAL;

@@ -36,7 +36,6 @@ import net.fortuna.ical4j.model.Calendar;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -63,8 +62,8 @@ public class ConcurrencyTest extends TestCase {
                     try(FileInputStream fis = new FileInputStream("src/test/resources/samples/valid/lotr.ics");) {
                         Calendar calendar = new CalendarBuilder().build(fis);
                         Calendar cal = new Calendar(calendar);
-                        size.addAndGet(cal.getComponents().size());
-                    } catch (IOException | ParserException | URISyntaxException e) {
+                        size.addAndGet(cal.getComponents().getAll().size());
+                    } catch (IOException | ParserException e) {
                         e.printStackTrace();
                     }
                 }
@@ -90,12 +89,8 @@ public class ConcurrencyTest extends TestCase {
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        Calendar cal = new Calendar(calendar);
-                        size.addAndGet(cal.getComponents().size());
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
-                    }
+                    Calendar cal = new Calendar(calendar);
+                    size.addAndGet(cal.getComponents().getAll().size());
                 }
             });
         }

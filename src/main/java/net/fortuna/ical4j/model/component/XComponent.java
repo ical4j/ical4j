@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentFactory;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
@@ -95,7 +95,7 @@ public class XComponent extends CalendarComponent {
     }
 
     @Override
-    public Component copy() {
-        return new XComponent(getName(), getProperties());
+    protected ComponentFactory<XComponent> newFactory() {
+        throw new UnsupportedOperationException("Cannot provide factory for non-standard components");
     }
 }

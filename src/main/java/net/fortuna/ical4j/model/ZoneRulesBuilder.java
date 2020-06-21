@@ -53,9 +53,9 @@ public class ZoneRulesBuilder {
         List<ZoneOffsetTransitionRule> transitionRules = new ArrayList<>();
         for (Observance observance : observances) {
             Optional<RRule<?>> rrule = observance.getProperty(Property.RRULE);
-            TzOffsetFrom offsetFrom = observance.getRequiredProperty(Property.TZOFFSETFROM);
-            TzOffsetTo offsetTo = observance.getRequiredProperty(Property.TZOFFSETTO);
-            DtStart<LocalDateTime> startDate = observance.getRequiredProperty(Property.DTSTART);
+            TzOffsetFrom offsetFrom = observance.getProperties().getRequired(Property.TZOFFSETFROM);
+            TzOffsetTo offsetTo = observance.getProperties().getRequired(Property.TZOFFSETTO);
+            DtStart<LocalDateTime> startDate = observance.getProperties().getRequired(Property.DTSTART);
 
             if (rrule.isPresent()) {
                 Month recurMonth = Month.of(rrule.get().getRecur().getMonthList().get(0));
@@ -81,8 +81,8 @@ public class ZoneRulesBuilder {
                     vTimeZone.getObservances().getComponents(Observance.DAYLIGHT));
         }
 
-        TzOffsetFrom offsetFrom = current.getRequiredProperty(Property.TZOFFSETFROM);
-        TzOffsetTo offsetTo = current.getRequiredProperty(Property.TZOFFSETTO);
+        TzOffsetFrom offsetFrom = current.getProperties().getRequired(Property.TZOFFSETFROM);
+        TzOffsetTo offsetTo = current.getProperties().getRequired(Property.TZOFFSETTO);
 
         ZoneOffset standardOffset = offsetTo.getOffset();
         ZoneOffset wallOffset = offsetFrom.getOffset();
@@ -93,7 +93,7 @@ public class ZoneRulesBuilder {
                 vTimeZone.getObservances().getComponents(Observance.DAYLIGHT));
         Collections.sort(offsetTransitions);
         List<ZoneOffsetTransitionRule> transitionRules = buildTransitionRules(
-                vTimeZone.getObservances(), standardOffset);
+                vTimeZone.getObservances().getAll(), standardOffset);
 
         return ZoneRules.of(standardOffset, wallOffset, standardOffsetTransitions, offsetTransitions, transitionRules);
     }

@@ -37,7 +37,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
-import java.util.List;
 
 /**
  * $Id$
@@ -114,15 +113,15 @@ public class Duration extends Property {
      * Default constructor.
      */
     public Duration() {
-        super(DURATION, new Factory());
+        super(DURATION);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Duration(final List<Parameter> aList, final String aValue) {
-        super(DURATION, aList, new Factory());
+    public Duration(final ParameterList aList, final String aValue) {
+        super(DURATION, aList);
         setValue(aValue);
     }
 
@@ -138,7 +137,7 @@ public class Duration extends Property {
      * @param duration a duration  value
      */
     public Duration(final TemporalAmount duration) {
-        super(DURATION, new Factory());
+        super(DURATION);
         this.duration = new TemporalAmountAdapter(duration);
     }
 
@@ -147,7 +146,7 @@ public class Duration extends Property {
      * @param duration a duration value
      */
     @Deprecated
-    public Duration(final List<Parameter> aList, final Dur duration) {
+    public Duration(final ParameterList aList, final Dur duration) {
         this(aList, TemporalAmountAdapter.from(duration).getDuration());
     }
 
@@ -155,8 +154,8 @@ public class Duration extends Property {
      * @param aList    a list of parameters for this component
      * @param duration a duration value
      */
-    public Duration(final List<Parameter> aList, final TemporalAmount duration) {
-        super(DURATION, aList, new Factory());
+    public Duration(final ParameterList aList, final TemporalAmount duration) {
+        super(DURATION, aList);
         setDuration(duration);
     }
 
@@ -169,7 +168,7 @@ public class Duration extends Property {
      */
     @Deprecated
     public Duration(final Date start, final Date end) {
-        super(DURATION, new Factory());
+        super(DURATION);
         setDuration(TemporalAmountAdapter.fromDateRange(start, end).getDuration());
     }
 
@@ -180,7 +179,7 @@ public class Duration extends Property {
      * @param end   the end time for the duration
      */
     public Duration(final Temporal start, final Temporal end) {
-        super(DURATION, new Factory());
+        super(DURATION);
         setDuration(TemporalAmountAdapter.from(start, end).getDuration());
     }
 
@@ -218,8 +217,8 @@ public class Duration extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Duration> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Duration> {
@@ -229,7 +228,7 @@ public class Duration extends Property {
             super(DURATION);
         }
 
-        public Duration createProperty(final List<Parameter> parameters, final String value) {
+        public Duration createProperty(final ParameterList parameters, final String value) {
             return new Duration(parameters, value);
         }
 

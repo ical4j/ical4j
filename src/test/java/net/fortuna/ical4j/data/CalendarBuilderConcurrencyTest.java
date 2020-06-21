@@ -61,7 +61,7 @@ public class CalendarBuilderConcurrencyTest extends TestCase {
                     try {
                         fis = new FileInputStream("src/test/resources/samples/valid/lotr.ics");
                         Calendar calendar = new CalendarBuilder().build(fis);
-                        size.addAndGet(calendar.getComponents().size());
+                        size.addAndGet(calendar.getComponents().getAll().size());
                     } catch (Exception e) {
                         throw new RuntimeException(e.getMessage(), e);
                     } finally {

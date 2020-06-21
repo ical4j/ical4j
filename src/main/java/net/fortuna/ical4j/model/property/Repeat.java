@@ -32,12 +32,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.List;
 
 /**
  * $Id$
@@ -58,15 +56,15 @@ public class Repeat extends Property {
      * Default constructor.
      */
     public Repeat() {
-        super(REPEAT, new Factory());
+        super(REPEAT);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Repeat(final List<Parameter> aList, final String aValue) {
-        super(REPEAT, aList, new Factory());
+    public Repeat(final ParameterList aList, final String aValue) {
+        super(REPEAT, aList);
         setValue(aValue);
     }
 
@@ -74,7 +72,7 @@ public class Repeat extends Property {
      * @param aCount a repetition count
      */
     public Repeat(final int aCount) {
-        super(REPEAT, new Factory());
+        super(REPEAT);
         count = aCount;
     }
 
@@ -82,8 +80,8 @@ public class Repeat extends Property {
      * @param aList  a list of parameters for this component
      * @param aCount a repetition count
      */
-    public Repeat(final List<Parameter> aList, final int aCount) {
-        super(REPEAT, aList, new Factory());
+    public Repeat(final ParameterList aList, final int aCount) {
+        super(REPEAT, aList);
         count = aCount;
     }
 
@@ -121,8 +119,8 @@ public class Repeat extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Repeat> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Repeat> {
@@ -132,7 +130,7 @@ public class Repeat extends Property {
             super(REPEAT);
         }
 
-        public Repeat createProperty(final List<Parameter> parameters, final String value) {
+        public Repeat createProperty(final ParameterList parameters, final String value) {
             return new Repeat(parameters, value);
         }
 

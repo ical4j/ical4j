@@ -96,20 +96,22 @@ public final class Calendars {
      * @return a Calendar instance containing all properties and components from both of the specified calendars
      */
     public static Calendar merge(final Calendar c1, final Calendar c2) {
-        final Calendar result = new Calendar();
-        result.getProperties().addAll(c1.getProperties());
-        for (final Property p : c2.getProperties()) {
-            if (!result.getProperties().contains(p)) {
-                result.getProperties().add(p);
+        List<Property> mergedProperties = new ArrayList<>();
+        List<CalendarComponent> mergedComponents = new ArrayList<>();
+        mergedProperties.addAll(c1.getProperties().getAll());
+        for (final Property p : c2.getProperties().getAll()) {
+            if (!mergedProperties.contains(p)) {
+                mergedProperties.add(p);
             }
         }
-        result.getComponents().addAll(c1.getComponents());
-        for (final CalendarComponent c : c2.getComponents()) {
-            if (!result.getComponents().contains(c)) {
-                result.getComponents().add(c);
+        mergedComponents.addAll(c1.getComponents().getAll());
+        for (final CalendarComponent c : c2.getComponents().getAll()) {
+            if (!mergedComponents.contains(c)) {
+                mergedComponents.add(c);
             }
         }
-        return result;
+        return new Calendar(new PropertyList(mergedProperties),
+                new ComponentList<>(mergedComponents));
     }
 
     /**
@@ -118,8 +120,12 @@ public final class Calendars {
      * @return a calendar containing the specified component
      */
     public static Calendar wrap(final CalendarComponent... component) {
+        return wrap(new PropertyList(), component);
+    }
+
+    public static Calendar wrap(PropertyList properties, final CalendarComponent... component) {
         final ComponentList<CalendarComponent> components = new ComponentList<>(Arrays.asList(component));
-        return new Calendar(components);
+        return new Calendar(properties, components);
     }
     
     /**
@@ -131,8 +137,8 @@ public final class Calendars {
     public static Calendar[] split(final Calendar calendar) {
         // if calendar contains one component or less, or is composed entirely of timezone
         // definitions, return the original calendar unmodified..
-        if (calendar.getComponents().size() <= 1
-                || calendar.getComponents(Component.VTIMEZONE).size() == calendar.getComponents().size()) {
+        if (calendar.getComponents().getAll().size() <= 1
+                || calendar.getComponents(Component.VTIMEZONE).size() == calendar.getComponents().getAll().size()) {
             return new Calendar[] {calendar};
         }
         
@@ -141,33 +147,31 @@ public final class Calendars {
         		timezoneList, Property.TZID);
         
         final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
-        for (final CalendarComponent c : calendar.getComponents()) {
+        for (final CalendarComponent c : calendar.getComponents().getAll()) {
             if (c instanceof VTimeZone) {
                 continue;
             }
             
-            final Optional<Uid> uid = c.getProperty(Property.UID);
+            final Optional<Uid> uid = c.getProperties().getFirst(Property.UID);
             if (uid.isPresent()) {
                 Calendar uidCal = calendars.get(uid.get());
                 if (uidCal == null) {
-                    uidCal = new Calendar(calendar.getProperties(), new ComponentList<>());
                     // remove METHOD property for split calendars..
-                    for (final Property mp : uidCal.getProperties(Property.METHOD)) {
-                        uidCal.getProperties().remove(mp);
-                    }
+                    PropertyList splitProps = (PropertyList) calendar.getProperties().removeAll(Property.METHOD);
+                    uidCal = new Calendar(splitProps, new ComponentList<>());
                     calendars.put(uid.get(), uidCal);
                 }
 
-                for (final Property p : c.getProperties()) {
-                    final Optional<TzId> tzid = p.getParameter(Parameter.TZID);
+                for (final Property p : c.getProperties().getAll()) {
+                    final Optional<TzId> tzid = p.getParameters().getFirst(Parameter.TZID);
                     if (tzid.isPresent()) {
                         final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
-                        if (!uidCal.getComponents().contains(timezone)) {
-                            uidCal.getComponents().add(timezone);
+                        if (!uidCal.getComponents().getAll().contains(timezone)) {
+                            uidCal.add(timezone);
                         }
                     }
                 }
-                uidCal.getComponents().add(c);
+                uidCal.add(c);
             }
         }
         return calendars.values().toArray(new Calendar[0]);
@@ -181,8 +185,8 @@ public final class Calendars {
      */
     public static Uid getUid(final Calendar calendar) throws ConstraintViolationException {
         Uid uid = null;
-        for (final Component c : calendar.getComponents()) {
-            for (final Property foundUid : c.getProperties(Property.UID)) {
+        for (final Component c : calendar.getComponents().getAll()) {
+            for (final Property foundUid : c.getProperties().get(Property.UID)) {
                 if (uid != null && !uid.equals(foundUid)) {
                     throw new ConstraintViolationException("More than one UID found in calendar");
                 }
@@ -204,7 +208,7 @@ public final class Calendars {
     public static String getContentType(Calendar calendar, Charset charset) {
         final StringBuilder b = new StringBuilder("text/calendar");
         
-        final Optional<Method> method = calendar.getProperty(Property.METHOD);
+        final Optional<Method> method = calendar.getProperties().getFirst(Property.METHOD);
         if (method.isPresent()) {
             b.append("; method=");
             b.append(method.get().getValue());

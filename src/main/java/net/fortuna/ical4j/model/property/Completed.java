@@ -31,10 +31,12 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.CalendarDateFormat;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.time.Instant;
-import java.util.List;
 
 /**
  * $Id$
@@ -85,7 +87,7 @@ public class Completed extends DateProperty<Instant> {
      * @param aValue a value string for this component
      */
     public Completed(final String aValue) {
-        super(COMPLETED, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(COMPLETED, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setValue(aValue);
     }
 
@@ -93,8 +95,8 @@ public class Completed extends DateProperty<Instant> {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Completed(final List<Parameter> aList, final String aValue) {
-        super(COMPLETED, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+    public Completed(final ParameterList aList, final String aValue) {
+        super(COMPLETED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setValue(aValue);
     }
 
@@ -102,7 +104,7 @@ public class Completed extends DateProperty<Instant> {
      * @param aDate a date
      */
     public Completed(final Instant aDate) {
-        super(COMPLETED, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(COMPLETED, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(aDate);
     }
 
@@ -110,14 +112,14 @@ public class Completed extends DateProperty<Instant> {
      * @param aList a list of parameters for this component
      * @param aDate a date
      */
-    public Completed(final List<Parameter> aList, final Instant aDate) {
-        super(COMPLETED, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+    public Completed(final ParameterList aList, final Instant aDate) {
+        super(COMPLETED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(aDate);
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Completed> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Completed> {
@@ -127,7 +129,7 @@ public class Completed extends DateProperty<Instant> {
             super(COMPLETED);
         }
 
-        public Completed createProperty(final List<Parameter> parameters, final String value) {
+        public Completed createProperty(final ParameterList parameters, final String value) {
             return new Completed(parameters, value);
         }
 

@@ -52,7 +52,8 @@ import java.net.URL;
 import java.text.ParseException;
 import java.time.*;
 import java.time.temporal.Temporal;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -164,14 +165,14 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         LocalDate christmasDay = LocalDate.now().withMonth(12).withDayOfMonth(25);
 
         DtStart<LocalDate> start = new DtStart<>(christmasDay);
-        start.getParameters().add(tzParam);
-        start.getParameters().add(Value.DATE);
+        start.add(tzParam);
+        start.add(Value.DATE);
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
         VEvent christmas = new VEvent();
-        christmas.getProperties().add(start);
-        christmas.getProperties().add(summary);
+        christmas.add(start);
+        christmas.add(summary);
 
         log.info(christmas.toString());
     }
@@ -195,10 +196,10 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         VEvent christmas = new VEvent(christmasDay, "Christmas Day");
 
         // initialise as an all-day event..
-        christmas.getRequiredProperty(Property.DTSTART).getParameters().add(Value.DATE);
+        christmas.getProperties().getRequired(Property.DTSTART).add(Value.DATE);
 
         // add timezone information..
-        christmas.getRequiredProperty(Property.DTSTART).getParameters().add(tzParam);
+        christmas.getProperties().getRequired(Property.DTSTART).add(tzParam);
 
         log.info(christmas.toString());
     }
@@ -210,7 +211,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         VEvent meeting = new VEvent(tomorrow, java.time.Duration.ofHours(1), "Progress Meeting");
 
         // add timezone information..
-        meeting.getRequiredProperty(Property.DTSTART).getParameters().add(tzParam);
+        meeting.getProperties().getRequired(Property.DTSTART).add(tzParam);
 
         log.info(meeting.toString());
     }
@@ -367,7 +368,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         LocalDate end = start.plusWeeks(4);
 
         //Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
-        calendar.getComponents().forEach(calendarComponent -> {
+        calendar.getComponents().getAll().forEach(calendarComponent -> {
             if (calendarComponent instanceof VEvent) {
                 List<Period<LocalDate>> consumed = ((VEvent) calendarComponent).getConsumedTime(
                         new Period<>(start, end));
@@ -383,7 +384,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         net.fortuna.ical4j.model.Calendar calendar = loadCalendar(resource);
 
-        VEvent vev = calendar.getRequiredComponent(Component.VEVENT);
+        VEvent vev = calendar.getComponents().getRequired(Component.VEVENT);
 
         LocalDate start = (LocalDate) vev.getStartDate().get().getDate();
         LocalDate latest = LocalDate.now().plusYears(1);
@@ -407,7 +408,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         RRule rrule = new RRule(recur);
         VEvent event = new VEvent(start, end, "Test recurrence COUNT");
-        event.getProperties().add(rrule);
+        event.add(rrule);
         log.info(event.toString());
 
         ZonedDateTime rangeStart = ZonedDateTime.now();
@@ -455,12 +456,11 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         RRule rRule = new RRule(rRuleRecur);
-        event1.getProperties().add(rRule);
+        event1.add(rRule);
 
-        List<Parameter> parameterList = new ArrayList<>();
-        parameterList.add(Value.DATE);
+        ParameterList parameterList = new ParameterList(Collections.singletonList(Value.DATE));
         ExDate exDate = new ExDate(parameterList, "20050106");
-        event1.getProperties().add(exDate);
+        event1.add(exDate);
 
         TemporalAdapter start = TemporalAdapter.parse("20050106");
         TemporalAdapter end = TemporalAdapter.parse("20050107");
@@ -474,10 +474,10 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
      * @throws ParseException
      */
     public void testGetConsumedTimeWithExDate2() throws IOException, ParserException, ConstraintViolationException {
-        InputStream in = getClass().getResourceAsStream("/samples/valid/friday13.ics");
+        InputStream in = getClass().getResourceAsStream("/samples/invalid/friday13.ics");
         net.fortuna.ical4j.model.Calendar calendar = new CalendarBuilder().build(in);
 
-        VEvent event = calendar.getRequiredComponent(Component.VEVENT);
+        VEvent event = calendar.getComponents().getRequired(Component.VEVENT);
 
         LocalDate start = LocalDate.now().withYear(1997).withMonth(8).withDayOfMonth(2);
         LocalDate end = start.withDayOfMonth(4);
@@ -491,16 +491,14 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
      */
     public void testEquals() {
         String summary = "test event";
-        PropertyList props = new PropertyList();
-        props.add(new DtStart<>(Instant.now()));
-        props.add(new Summary(summary));
+        PropertyList props = new PropertyList(Arrays.asList(new DtStart<>(Instant.now()), new Summary(summary)));
 
         VEvent e1 = new VEvent(props);
         VEvent e2 = new VEvent(props);
 
         assertEquals(e1, e2);
 
-        e2.getAlarms().add(new VAlarm());
+        e2.add(new VAlarm());
 
         assertNotEquals(e1, e2);
     }
@@ -562,49 +560,48 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
 
-        List<Parameter> tzParams = new ArrayList<>();
-        tzParams.add(new TzId("Australia/Melbourne"));
+        ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId("Australia/Melbourne")));
 
         VEvent weekdayNineToFiveEvents = new VEvent();
-        weekdayNineToFiveEvents.getProperties().add(rruleWeekly);
-        weekdayNineToFiveEvents.getProperties().add(summary);
+        weekdayNineToFiveEvents.add(rruleWeekly);
+        weekdayNineToFiveEvents.add(summary);
         DtStart dtStart = new DtStart<>(tzParams, weekday9AM);
 //        dtStart.getParameters().add(Value.DATE);
-        weekdayNineToFiveEvents.getProperties().add(dtStart);
+        weekdayNineToFiveEvents.add(dtStart);
         DtEnd dtEnd = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd.getParameters().add(Value.DATE);
-        weekdayNineToFiveEvents.getProperties().add(dtEnd);
-        weekdayNineToFiveEvents.getProperties().add(uidGenerator.generateUid());
+        weekdayNineToFiveEvents.add(dtEnd);
+        weekdayNineToFiveEvents.add(uidGenerator.generateUid());
         // ensure event is valid..
         weekdayNineToFiveEvents.validate();
 
         summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY");
 
         VEvent dailyWeekdayEvents = new VEvent();
-        dailyWeekdayEvents.getProperties().add(rruleDaily);
-        dailyWeekdayEvents.getProperties().add(summary);
+        dailyWeekdayEvents.add(rruleDaily);
+        dailyWeekdayEvents.add(summary);
         DtStart dtStart2 = new DtStart<>(tzParams, weekday9AM);
 //        dtStart2.getParameters().add(Value.DATE);
-        dailyWeekdayEvents.getProperties().add(dtStart2);
+        dailyWeekdayEvents.add(dtStart2);
         DtEnd dtEnd2 = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd2.getParameters().add(Value.DATE);
-        dailyWeekdayEvents.getProperties().add(dtEnd2);
-        dailyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
+        dailyWeekdayEvents.add(dtEnd2);
+        dailyWeekdayEvents.add(uidGenerator.generateUid());
         // ensure event is valid..
         dailyWeekdayEvents.validate();
 
         summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY");
 
         VEvent monthlyWeekdayEvents = new VEvent();
-        monthlyWeekdayEvents.getProperties().add(rruleMonthly);
-        monthlyWeekdayEvents.getProperties().add(summary);
+        monthlyWeekdayEvents.add(rruleMonthly);
+        monthlyWeekdayEvents.add(summary);
         DtStart dtStart3 = new DtStart<>(tzParams, weekday9AM);
 //        dtStart3.getParameters().add(Value.DATE);
-        monthlyWeekdayEvents.getProperties().add(dtStart3);
+        monthlyWeekdayEvents.add(dtStart3);
         DtEnd dtEnd3 = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd3.getParameters().add(Value.DATE);
-        monthlyWeekdayEvents.getProperties().add(dtEnd3);
-        monthlyWeekdayEvents.getProperties().add(uidGenerator.generateUid());
+        monthlyWeekdayEvents.add(dtEnd3);
+        monthlyWeekdayEvents.add(uidGenerator.generateUid());
         // ensure event is valid..
         monthlyWeekdayEvents.validate();
 
@@ -624,54 +621,57 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
                 weekdayNineToFiveEvents.getStartDate().get().getDate()));
 
         //testGetConsumedTime..
-        suite.addTest(new VEventTest("testGetConsumedTime", weekdayNineToFiveEvents));
-        suite.addTest(new VEventTest("testGetConsumedTimeDaily", dailyWeekdayEvents));
-        suite.addTest(new VEventTest("testGetConsumedTimeMonthly", monthlyWeekdayEvents));
+        suite.addTest(new VEventTest<>("testGetConsumedTime", weekdayNineToFiveEvents));
+        suite.addTest(new VEventTest<>("testGetConsumedTimeDaily", dailyWeekdayEvents));
+        suite.addTest(new VEventTest<>("testGetConsumedTimeMonthly", monthlyWeekdayEvents));
 
         //test event validation..
         UidGenerator ug = new RandomUidGenerator();
         Uid uid = ug.generateUid();
 
-        List<Parameter> startParams = new ArrayList<>();
-        tzParams.add(new TzId(ZoneId.systemDefault().getId()));
+        ParameterList startParams = new ParameterList(Collections.singletonList(new TzId(ZoneId.systemDefault().getId())));
         DtStart<ZonedDateTime> start = new DtStart<>(startParams, ZonedDateTime.now());
 
         DtEnd<ZonedDateTime> end = new DtEnd<>(ZonedDateTime.now());
         VEvent event = new VEvent();
 
-        event.getProperties().add(uid);
-        event.getProperties().add(start);
-        event.getProperties().add(end);
-        suite.addTest(new VEventTest("testValidation", event));
+        event.add(uid);
+        event.add(start);
+        event.add(end);
+        suite.addTest(new VEventTest<>("testValidation", event));
 
-        event = (VEvent) event.copy();
+        event = event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
-        start = new DtStart<>(ZonedDateTime.now());
-        start.getParameters().add(Value.DATE_TIME);
-        event.getProperties().remove(event.getRequiredProperty(Property.DTSTART));
-        event.getProperties().add(start);
-        suite.addTest(new VEventTest("testValidationException", event));
+        startParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
+        start = new DtStart<>(startParams, ZonedDateTime.now());
+        event.getProperties().remove(event.getProperties().getRequired(Property.DTSTART));
+        event.add(start);
+        suite.addTest(new VEventTest<>("testValidationException", event));
 
         // test 1..
-        event = (VEvent) event.copy();
-        start = event.getRequiredProperty(Property.DTSTART);
-        start.getParameters().add(Value.DATE);
-        suite.addTest(new VEventTest("testValidationException", event));
+        event = event.copy();
+        startParams = new ParameterList(Collections.singletonList(Value.DATE));
+        start = new DtStart<>(startParams, event.getProperties().getRequired(Property.DTSTART).getValue());
+        event.replace(start);
+        suite.addTest(new VEventTest<>("testValidationException", event));
 
 //        event = (VEvent) event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
 //        start.getParameters().remove(Value.DATE_TIME);
 //        end = (DtEnd) event.getProperty(Property.DTEND);
 //        end.getParameters().replace(Value.DATE_TIME);
-//        suite.addTest(new VEventTest("testValidation", event));
+//        suite.addTest(new VEventTest<>("testValidation", event));
 
         // test 2..
         event = event.copy();
-        start = event.getRequiredProperty(Property.DTSTART);
-        start.getParameters().add(Value.DATE_TIME);
-        end = event.getRequiredProperty(Property.DTEND);
-        end.getParameters().add(Value.DATE);
-        suite.addTest(new VEventTest("testValidationException", event));
+        startParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
+        start = new DtStart<>(startParams, event.getProperties().getRequired(Property.DTSTART).getValue());
+        event.replace(start);
+
+        ParameterList endParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
+        end = new DtEnd<>(endParams, event.getProperties().getRequired(Property.DTEND).getValue());
+        event.replace(end);
+        suite.addTest(new VEventTest<>("testValidationException", event));
 
         // test 3..
 //        event = (VEvent) event.copy();
@@ -679,22 +679,22 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 //        start.getParameters().remove(Value.DATE);
 //        end = (DtEnd) event.getProperty(Property.DTEND);
 //        end.getParameters().replace(Value.DATE);
-//        suite.addTest(new VEventTest("testValidationException", event));
+//        suite.addTest(new VEventTest<>("testValidationException", event));
 
         // disable relaxed parsing after copying invalid events..
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
 
-        suite.addTest(new VEventTest("testChristmas"));
-        suite.addTest(new VEventTest("testMelbourneCup"));
-        suite.addTest(new VEventTest("testGetConsumedTime2"));
-        suite.addTest(new VEventTest("testGetConsumedTime3"));
-        suite.addTest(new VEventTest("testGetConsumedTimeByCount"));
-        suite.addTest(new VEventTest("testEventEndDate"));
-        suite.addTest(new VEventTest("testGetConsumedTimeWithExDate"));
-        suite.addTest(new VEventTest("testGetConsumedTimeWithExDate2"));
-        suite.addTest(new VEventTest("testIsCalendarComponent", event));
-        suite.addTest(new VEventTest("testEquals"));
-//        suite.addTest(new VEventTest("testValidation"));
+        suite.addTest(new VEventTest<>("testChristmas"));
+        suite.addTest(new VEventTest<>("testMelbourneCup"));
+        suite.addTest(new VEventTest<>("testGetConsumedTime2"));
+        suite.addTest(new VEventTest<>("testGetConsumedTime3"));
+        suite.addTest(new VEventTest<>("testGetConsumedTimeByCount"));
+        suite.addTest(new VEventTest<>("testEventEndDate"));
+        suite.addTest(new VEventTest<>("testGetConsumedTimeWithExDate"));
+        suite.addTest(new VEventTest<>("testGetConsumedTimeWithExDate2"));
+        suite.addTest(new VEventTest<>("testIsCalendarComponent", event));
+        suite.addTest(new VEventTest<>("testEquals"));
+//        suite.addTest(new VEventTest<>("testValidation"));
 
         // use relaxed unfolding for samples..
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
@@ -706,13 +706,13 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         for (URL testFile : testFiles) {
             log.info("Sample [" + testFile + "]");
             net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFile);
-            if (Method.PUBLISH.equals(calendar.getRequiredProperty(Property.METHOD))) {
+            if (Method.PUBLISH.equals(calendar.getProperties().getRequired(Property.METHOD))) {
                 calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
-                    suite.addTest(new VEventTest("testPublishValidation", (VEvent) calendarComponent));
+                    suite.addTest(new VEventTest<>("testPublishValidation", (VEvent) calendarComponent));
                 });
-            } else if (Method.REQUEST.equals(calendar.getRequiredProperty(Property.METHOD))) {
+            } else if (Method.REQUEST.equals(calendar.getProperties().getRequired(Property.METHOD))) {
                 calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
-                    suite.addTest(new VEventTest("testRequestValidation", (VEvent) calendarComponent));
+                    suite.addTest(new VEventTest<>("testRequestValidation", (VEvent) calendarComponent));
                 });
             }
         }

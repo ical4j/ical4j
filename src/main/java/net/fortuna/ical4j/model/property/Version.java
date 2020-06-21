@@ -31,14 +31,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * $Id$
@@ -48,7 +42,7 @@ import java.util.List;
  * Defines a VERSION iCalendar property. When creating a new calendar you should always add a version property with
  * value "2.0". There is actually a constant defined in the Version class for this. e.g:
  * <code>    Calendar calendar = new Calendar();</code>
- * <code>    calendar.getProperties().add(Version.VERSION_2_0);</code>
+ * <code>    calendar.add(Version.VERSION_2_0);</code>
  *
  * @author Ben Fortuna
  */
@@ -64,12 +58,12 @@ public class Version extends Property {
     /**
      * @author Ben Fortuna An immutable instance of Version.
      */
-    private static final class ImmutableVersion extends Version {
+    private static final class ImmutableVersion extends Version implements ImmutableContent {
 
         private static final long serialVersionUID = -5040679357859594835L;
 
         private ImmutableVersion(final String value) {
-            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
+            super(new ParameterList(), value);
         }
 
         public void setValue(final String aValue) {
@@ -86,6 +80,26 @@ public class Version extends Property {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
+
+        @Override
+        public void add(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void remove(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void removeAll(String parameterName) {
+            throwException();
+        }
+
+        @Override
+        public void replace(Parameter parameter) {
+            throwException();
+        }
     }
 
     private String minVersion;
@@ -96,15 +110,15 @@ public class Version extends Property {
      * Default constructor.
      */
     public Version() {
-        super(VERSION, new Factory());
+        super(VERSION);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Version(final List<Parameter> aList, final String aValue) {
-        super(VERSION, aList, new Factory());
+    public Version(final ParameterList aList, final String aValue) {
+        super(VERSION, aList);
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
             this.maxVersion = aValue.substring(aValue.indexOf(';'));
@@ -118,7 +132,7 @@ public class Version extends Property {
      * @param maxVersion a string representation of the maximum version
      */
     public Version(final String minVersion, final String maxVersion) {
-        super(VERSION, new Factory());
+        super(VERSION);
         this.minVersion = minVersion;
         this.maxVersion = maxVersion;
     }
@@ -128,9 +142,9 @@ public class Version extends Property {
      * @param aVersion1 a string representation of the minimum version
      * @param aVersion2 a string representation of the maximum version
      */
-    public Version(final List<Parameter> aList, final String aVersion1,
+    public Version(final ParameterList aList, final String aVersion1,
                    final String aVersion2) {
-        super(VERSION, aList, new Factory());
+        super(VERSION, aList);
         minVersion = aVersion1;
         maxVersion = aVersion2;
     }
@@ -198,8 +212,8 @@ public class Version extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Version> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Version> {
@@ -209,7 +223,7 @@ public class Version extends Property {
             super(VERSION);
         }
 
-        public Version createProperty(final List<Parameter> parameters, final String value) {
+        public Version createProperty(final ParameterList parameters, final String value) {
             Version version;
             if (VERSION_2_0.getValue().equals(value)) {
                 version = VERSION_2_0;

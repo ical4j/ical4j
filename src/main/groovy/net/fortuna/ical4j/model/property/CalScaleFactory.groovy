@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
+import net.fortuna.ical4j.model.ParameterList
 
 /**
  * $Id$
@@ -72,6 +73,6 @@ class CalScaleFactory extends AbstractPropertyFactory{
     }
     
     protected Object newInstance(List<Parameter> parameters, String value) {
-        return new CalScale(parameters, value)
+        return new CalScale(new ParameterList(parameters), value)
     }
 }

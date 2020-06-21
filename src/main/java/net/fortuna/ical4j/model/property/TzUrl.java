@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -41,7 +41,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 /**
  * $Id$
@@ -97,7 +96,7 @@ public class TzUrl extends Property {
      * Default constructor.
      */
     public TzUrl() {
-        super(TZURL, new Factory());
+        super(TZURL);
     }
 
     /**
@@ -105,9 +104,8 @@ public class TzUrl extends Property {
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public TzUrl(final List<Parameter> aList, final String aValue)
-            throws URISyntaxException {
-        super(TZURL, aList, new Factory());
+    public TzUrl(final ParameterList aList, final String aValue) throws URISyntaxException {
+        super(TZURL, aList);
         setValue(aValue);
     }
 
@@ -115,7 +113,7 @@ public class TzUrl extends Property {
      * @param aUri a URI
      */
     public TzUrl(final URI aUri) {
-        super(TZURL, new Factory());
+        super(TZURL);
         uri = aUri;
     }
 
@@ -123,8 +121,8 @@ public class TzUrl extends Property {
      * @param aList a list of parameters for this component
      * @param aUri  a URI
      */
-    public TzUrl(final List<Parameter> aList, final URI aUri) {
-        super(TZURL, aList, new Factory());
+    public TzUrl(final ParameterList aList, final URI aUri) {
+        super(TZURL, aList);
         uri = aUri;
     }
 
@@ -162,8 +160,8 @@ public class TzUrl extends Property {
     }
 
     @Override
-    public Property copy() throws URISyntaxException {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<TzUrl> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<TzUrl> {
@@ -173,7 +171,7 @@ public class TzUrl extends Property {
             super(TZURL);
         }
 
-        public TzUrl createProperty(final List<Parameter> parameters, final String value) throws URISyntaxException {
+        public TzUrl createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
             return new TzUrl(parameters, value);
         }
 

@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
+import net.fortuna.ical4j.model.ParameterList
 
 /**
  * $Id$
@@ -114,6 +115,6 @@ class MethodFactory extends AbstractPropertyFactory{
     }
     
     protected Object newInstance(List<Parameter> parameters, String value) {
-        return new Method(parameters, value)
+        return new Method(new ParameterList(parameters), value)
     }
 }

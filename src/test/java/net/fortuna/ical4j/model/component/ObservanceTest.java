@@ -58,10 +58,10 @@ public class ObservanceTest extends TestCase {
      */
     protected void setUp() throws Exception {
         observance = new Standard();
-        observance.getProperties().add(new DtStart("16010101T030000"));
-        observance.getProperties().add(new TzOffsetFrom("+0200"));
-        observance.getProperties().add(new TzOffsetTo("+0100"));
-        observance.getProperties().add(new RRule("FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU"));
+        observance.add(new DtStart("16010101T030000"));
+        observance.add(new TzOffsetFrom("+0200"));
+        observance.add(new TzOffsetTo("+0100"));
+        observance.add(new RRule("FREQ=YEARLY;WKST=MO;INTERVAL=1;BYMONTH=10;BYDAY=-1SU"));
     }
 
     /**

@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.PropertyValidator;
@@ -40,9 +40,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -93,15 +91,15 @@ public class RequestStatus extends Property {
      * Default constructor.
      */
     public RequestStatus() {
-        super(REQUEST_STATUS, new ArrayList<>(), new Factory());
+        super(REQUEST_STATUS);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public RequestStatus(final List<Parameter> aList, final String aValue) {
-        super(REQUEST_STATUS, aList, new Factory());
+    public RequestStatus(final ParameterList aList, final String aValue) {
+        super(REQUEST_STATUS, aList);
         setValue(aValue);
     }
 
@@ -112,7 +110,7 @@ public class RequestStatus extends Property {
      */
     public RequestStatus(final String aStatusCode, final String aDescription,
                          final String data) {
-        super(REQUEST_STATUS, new ArrayList<>(), new Factory());
+        super(REQUEST_STATUS);
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
@@ -124,9 +122,9 @@ public class RequestStatus extends Property {
      * @param aDescription a description
      * @param data         a string representation of extension data
      */
-    public RequestStatus(final List<Parameter> aList, final String aStatusCode,
+    public RequestStatus(final ParameterList aList, final String aStatusCode,
                          final String aDescription, final String data) {
-        super(REQUEST_STATUS, aList, new Factory());
+        super(REQUEST_STATUS, aList);
         statusCode = aStatusCode;
         description = aDescription;
         exData = data;
@@ -219,8 +217,8 @@ public class RequestStatus extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<RequestStatus> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<RequestStatus> {
@@ -230,7 +228,7 @@ public class RequestStatus extends Property {
             super(REQUEST_STATUS);
         }
 
-        public RequestStatus createProperty(final List<Parameter> parameters, final String value) {
+        public RequestStatus createProperty(final ParameterList parameters, final String value) {
             return new RequestStatus(parameters, value);
         }
 

@@ -8,6 +8,7 @@ import net.fortuna.ical4j.util.Constants;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.zone.ZoneRulesProvider;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -30,7 +31,9 @@ public class DefaultContentHandler implements ContentHandler {
 
     private ComponentBuilder<Component> subComponentBuilder;
 
-    private Calendar calendar;
+    private List<Property> calendarProperties;
+
+    private List<CalendarComponent> calendarComponents;
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry) {
         this(consumer, tzRegistry, new DefaultParameterFactorySupplier(), new DefaultPropertyFactorySupplier(),
@@ -51,13 +54,15 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void startCalendar() {
-        calendar = new Calendar();
+        calendarProperties = new ArrayList<>();
+        calendarComponents = new ArrayList<>();
     }
 
     @Override
     public void endCalendar() {
         ZoneRulesProvider.registerProvider(new ZoneRulesProviderImpl(tzRegistry));
-        consumer.accept(calendar);
+        consumer.accept(new Calendar(new PropertyList(calendarProperties),
+                new ComponentList<>(calendarComponents)));
     }
 
     @Override
@@ -82,7 +87,7 @@ public class DefaultContentHandler implements ContentHandler {
             subComponentBuilder = null;
         } else {
             CalendarComponent component = componentBuilder.build();
-            calendar.getComponents().add(component);
+            calendarComponents.add(component);
             if (component instanceof VTimeZone && tzRegistry != null) {
                 // register the timezone for use with iCalendar objects..
                 tzRegistry.register(new TimeZone((VTimeZone) component));
@@ -116,8 +121,8 @@ public class DefaultContentHandler implements ContentHandler {
             } else {
                 componentBuilder.property(property);
             }
-        } else if (calendar != null) {
-            calendar.getProperties().add(property);
+        } else if (calendarProperties != null) {
+            calendarProperties.add(property);
         }
     }
 

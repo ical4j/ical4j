@@ -31,7 +31,10 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.ComponentFactory;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.PropertyList;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -84,8 +87,8 @@ public class Standard extends Observance {
     }
 
     @Override
-    public Component copy() {
-        return new Factory().createComponent(getProperties());
+    protected ComponentFactory<Standard> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<Standard> {
@@ -105,7 +108,7 @@ public class Standard extends Observance {
         }
 
         @Override
-        public Standard createComponent(PropertyList properties, ComponentList subComponents) {
+        public Standard createComponent(PropertyList properties, ComponentList<?> subComponents) {
             throw new UnsupportedOperationException(String.format("%s does not support sub-components", STANDARD));
         }
     }

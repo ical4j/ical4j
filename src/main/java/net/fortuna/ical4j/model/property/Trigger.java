@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAmount;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -162,8 +161,8 @@ public class Trigger extends DateProperty<Instant> {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Trigger(final List<Parameter> aList, final String aValue) {
-        super(TRIGGER, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+    public Trigger(final ParameterList aList, final String aValue) {
+        super(TRIGGER, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setValue(aValue);
     }
 
@@ -183,7 +182,7 @@ public class Trigger extends DateProperty<Instant> {
     }
 
     private Trigger(final TemporalAmountAdapter duration) {
-        super(TRIGGER, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(TRIGGER, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         this.duration = duration;
     }
 
@@ -192,7 +191,7 @@ public class Trigger extends DateProperty<Instant> {
      * @param duration a duration in milliseconds
      */
     @Deprecated
-    public Trigger(final List<Parameter> aList, final Dur duration) {
+    public Trigger(final ParameterList aList, final Dur duration) {
         this(aList, TemporalAmountAdapter.from(duration));
     }
 
@@ -200,12 +199,12 @@ public class Trigger extends DateProperty<Instant> {
      * @param aList    a list of parameters for this component
      * @param duration a duration in milliseconds
      */
-    public Trigger(final List<Parameter> aList, final TemporalAmount duration) {
+    public Trigger(final ParameterList aList, final TemporalAmount duration) {
         this(aList, new TemporalAmountAdapter(duration));
     }
 
-    private Trigger(final List<Parameter> aList, final TemporalAmountAdapter duration) {
-        super(TRIGGER, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+    private Trigger(final ParameterList aList, final TemporalAmountAdapter duration) {
+        super(TRIGGER, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         this.duration = duration;
     }
 
@@ -213,7 +212,7 @@ public class Trigger extends DateProperty<Instant> {
      * @param dateTime a date representation of a date-time
      */
     public Trigger(final Instant dateTime) {
-        super(TRIGGER, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(TRIGGER, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(dateTime);
     }
 
@@ -221,8 +220,8 @@ public class Trigger extends DateProperty<Instant> {
      * @param aList    a list of parameters for this component
      * @param dateTime a date representation of a date-time
      */
-    public Trigger(final List<Parameter> aList, final Instant dateTime) {
-        super(TRIGGER, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+    public Trigger(final ParameterList aList, final Instant dateTime) {
+        super(TRIGGER, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(dateTime);
     }
 
@@ -237,17 +236,17 @@ public class Trigger extends DateProperty<Instant> {
 
         if (relParam.isPresent() || (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get()))) {
 
-            ParameterValidator.assertOneOrLess(Parameter.RELATED, getParameters());
+            ParameterValidator.assertOneOrLess(Parameter.RELATED, getParameters().getAll());
 
-            ParameterValidator.assertNullOrEqual(Value.DURATION, getParameters());
+            ParameterValidator.assertNullOrEqual(Value.DURATION, getParameters().getAll());
 
             if (getDuration() == null) {
                 throw new ValidationException("Duration value not specified");
             }
         } else {
-            ParameterValidator.assertOne(Parameter.VALUE, getParameters());
+            ParameterValidator.assertOne(Parameter.VALUE, getParameters().getAll());
 
-            ParameterValidator.assertNullOrEqual(Value.DATE_TIME, getParameters());
+            ParameterValidator.assertNullOrEqual(Value.DATE_TIME, getParameters().getAll());
 
             if (getDate() == null) {
                 throw new ValidationException("DATE-TIME value not specified");
@@ -295,8 +294,8 @@ public class Trigger extends DateProperty<Instant> {
     public void setDate(final Instant dateTime) {
         super.setDate(dateTime);
         duration = null;
-        getParameters().removeIf(p -> p.getName().equals(Parameter.VALUE));
-        getParameters().add(Value.DATE_TIME);
+
+        setParameters((ParameterList) getParameters().replace(Value.DATE_TIME));
     }
 
     /**
@@ -306,13 +305,12 @@ public class Trigger extends DateProperty<Instant> {
         this.duration = new TemporalAmountAdapter(duration);
         super.setDate(null);
         // duration is the default value type for Trigger..
-        getParameters().removeIf(p -> p.getName().equals(Parameter.VALUE));
-        getParameters().add(Value.DURATION);
+        setParameters((ParameterList) getParameters().replace(Value.DURATION));
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Trigger> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Trigger> {
@@ -322,7 +320,7 @@ public class Trigger extends DateProperty<Instant> {
             super(TRIGGER);
         }
 
-        public Trigger createProperty(final List<Parameter> parameters, final String value) {
+        public Trigger createProperty(final ParameterList parameters, final String value) {
             return new Trigger(parameters, value);
         }
 

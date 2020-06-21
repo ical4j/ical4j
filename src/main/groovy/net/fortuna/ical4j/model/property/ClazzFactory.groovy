@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
+import net.fortuna.ical4j.model.ParameterList
 
 /**
  * $Id$
@@ -84,6 +85,6 @@ class ClazzFactory extends AbstractPropertyFactory{
     }
     
     protected Object newInstance(List<Parameter> parameters, String value) {
-        return new Clazz(parameters, value)
+        return new Clazz(new ParameterList(parameters), value)
     }
 }

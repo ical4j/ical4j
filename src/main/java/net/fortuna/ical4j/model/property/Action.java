@@ -31,14 +31,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * $Id$
@@ -54,29 +48,36 @@ public class Action extends Property {
     private static final long serialVersionUID = -2353353838411753712L;
 
     /**
-     * Constant action for playing an audible sound.
+     * Constant actions for playing an audible sound.
      */
-    public static final Action AUDIO = new ImmutableAction("AUDIO");
+    public static final Action AUDIO;
 
     /**
      * Constant action for displaying a visible notification.
      */
-    public static final Action DISPLAY = new ImmutableAction("DISPLAY");
+    public static final Action DISPLAY;
 
     /**
      * Constant action for sending an email.
      */
-    public static final Action EMAIL = new ImmutableAction("EMAIL");
+    public static final Action EMAIL;
 
     /**
      * Constant action for a procedure.
      */
-    public static final Action PROCEDURE = new ImmutableAction("PROCEDURE");
+    public static final Action PROCEDURE;
+
+    static {
+        AUDIO = new ImmutableAction("AUDIO");
+        DISPLAY = new ImmutableAction("DISPLAY");
+        EMAIL = new ImmutableAction("EMAIL");
+        PROCEDURE = new ImmutableAction("PROCEDURE");
+    }
 
     /**
      * @author Ben Fortuna An immutable instance of Action.
      */
-    private static final class ImmutableAction extends Action {
+    private static final class ImmutableAction extends Action implements ImmutableContent {
 
         private static final long serialVersionUID = -2752235951243969905L;
 
@@ -84,7 +85,17 @@ public class Action extends Property {
          * @param value
          */
         private ImmutableAction(final String value) {
-            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
+            super(value);
+        }
+
+        @Override
+        public void add(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void remove(Parameter parameter) {
+            throwException();
         }
 
         /**
@@ -94,6 +105,17 @@ public class Action extends Property {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
+
+        @Override
+        public void removeAll(String parameterName) {
+            throwException();
+        }
+
+        @Override
+        public void replace(Parameter parameter) {
+            throwException();
+        }
+
     }
 
     private String value;
@@ -102,14 +124,14 @@ public class Action extends Property {
      * Default constructor.
      */
     public Action() {
-        super(ACTION, new Factory());
+        super(ACTION);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Action(final String aValue) {
-        super(ACTION, new Factory());
+        super(ACTION);
         this.value = aValue;
     }
 
@@ -117,8 +139,8 @@ public class Action extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Action(final List<Parameter> aList, final String aValue) {
-        super(ACTION, aList, new Factory());
+    public Action(final ParameterList aList, final String aValue) {
+        super(ACTION, aList);
         this.value = aValue;
     }
 
@@ -142,8 +164,8 @@ public class Action extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Action> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Action> {
@@ -153,7 +175,7 @@ public class Action extends Property {
             super(ACTION);
         }
 
-        public Action createProperty(final List<Parameter> parameters, final String value) {
+        public Action createProperty(final ParameterList parameters, final String value) {
             Action action;
             if (AUDIO.getValue().equals(value)) {
                 action = AUDIO;
@@ -176,5 +198,4 @@ public class Action extends Property {
             return new Action();
         }
     }
-
 }

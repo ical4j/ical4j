@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model.component
 
+import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.PropertyList
 
 /**
@@ -51,8 +52,8 @@ class StandardFactory extends AbstractComponentFactory{
          return standard
      }
      
-     protected Object newInstance(PropertyList properties) {
-         return new Standard(properties)
+     protected Object newInstance(List<Property> properties) {
+         return new Standard(new PropertyList(properties))
      }
 }
 

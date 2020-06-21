@@ -37,7 +37,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -58,25 +57,25 @@ public class Resources extends Property {
 
     private static final long serialVersionUID = -848562477226746807L;
 
-    private List<String> resources;
+    private TextList resources;
 
     private final Validator<Property> validator = new PropertyValidator(Collections.singletonList(
-            new ValidationRule(OneOrLess, ALTREP, LANGUAGE)));
+            new ValidationRule<>(OneOrLess, ALTREP, LANGUAGE)));
 
     /**
      * Default constructor.
      */
     public Resources() {
-        super(RESOURCES, new ArrayList<>(), new Factory());
-        resources = new ArrayList<>();
+        super(RESOURCES);
+        resources = new TextList();
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Resources(final List<Parameter> aList, final String aValue) {
-        super(RESOURCES, aList, new Factory());
+    public Resources(final ParameterList aList, final String aValue) {
+        super(RESOURCES, aList);
         setValue(aValue);
     }
 
@@ -84,38 +83,38 @@ public class Resources extends Property {
      * @param rList a list of resources
      */
     public Resources(final List<String> rList) {
-        super(RESOURCES, new ArrayList<>(), new Factory());
-        resources = rList;
+        super(RESOURCES);
+        resources = new TextList(rList);
     }
 
     /**
      * @param aList a list of parameters for this component
      * @param rList a list of resources
      */
-    public Resources(final List<Parameter> aList, final List<String> rList) {
-        super(RESOURCES, aList, new Factory());
-        resources = rList;
+    public Resources(final ParameterList aList, final List<String> rList) {
+        super(RESOURCES, aList);
+        resources = new TextList(rList);
     }
 
     /**
      * @return Returns the resources.
      */
     public final List<String> getResources() {
-        return resources;
+        return resources.getTexts();
     }
 
     /**
      * {@inheritDoc}
      */
     public final void setValue(final String aValue) {
-        resources = new TextList(aValue).getTexts();
+        resources = new TextList(aValue);
     }
 
     /**
      * {@inheritDoc}
      */
     public final String getValue() {
-        return TextList.toString(resources);
+        return resources.toString();
     }
 
     @Override
@@ -124,8 +123,8 @@ public class Resources extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Resources> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Resources> {
@@ -135,7 +134,7 @@ public class Resources extends Property {
             super(RESOURCES);
         }
 
-        public Resources createProperty(final List<Parameter> parameters, final String value) {
+        public Resources createProperty(final ParameterList parameters, final String value) {
             return new Resources(parameters, value);
         }
 

@@ -34,8 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.util.List;
-
 /**
  * $Id$
  * <p/>
@@ -56,14 +54,14 @@ public class ExtendedAddress extends Property implements Escapable {
      * Default constructor.
      */
     public ExtendedAddress() {
-        super(EXTENDED_ADDRESS, new Factory());
+        super(EXTENDED_ADDRESS);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public ExtendedAddress(final String aValue) {
-        super(EXTENDED_ADDRESS, new Factory());
+        super(EXTENDED_ADDRESS);
         setValue(aValue);
     }
 
@@ -71,8 +69,8 @@ public class ExtendedAddress extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public ExtendedAddress(final List<Parameter> aList, final String aValue) {
-        super(EXTENDED_ADDRESS, aList, new Factory());
+    public ExtendedAddress(final ParameterList aList, final String aValue) {
+        super(EXTENDED_ADDRESS, aList);
         setValue(aValue);
     }
 
@@ -96,8 +94,8 @@ public class ExtendedAddress extends Property implements Escapable {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<ExtendedAddress> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<ExtendedAddress> {
@@ -107,7 +105,7 @@ public class ExtendedAddress extends Property implements Escapable {
             super(EXTENDED_ADDRESS);
         }
 
-        public ExtendedAddress createProperty(final List<Parameter> parameters, final String value) {
+        public ExtendedAddress createProperty(final ParameterList parameters, final String value) {
             return new ExtendedAddress(parameters, value);
         }
 

@@ -33,6 +33,7 @@ package net.fortuna.ical4j.model.component;
 
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.ComponentTest;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.parameter.FmtType;
 import net.fortuna.ical4j.model.property.*;
 
@@ -41,6 +42,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.Instant;
+import java.util.Collections;
 
 /**
  * $Id$
@@ -72,26 +74,26 @@ public class VAlarmTest extends ComponentTest {
         TestSuite suite = new TestSuite();
         
         VAlarm alarm = new VAlarm();
-        alarm.getProperties().add(new Trigger(Instant.now()));
+        alarm.add(new Trigger(Instant.now()));
         
         suite.addTest(new VAlarmTest("testIsCalendarComponent", alarm));
         suite.addTest(new VAlarmTest("testValidationException", alarm));
 
         alarm = (VAlarm) alarm.copy();
-        alarm.getProperties().add(Action.DISPLAY);
-        alarm.getProperties().add(new Description("Testing display"));
+        alarm.add(Action.DISPLAY);
+        alarm.add(new Description("Testing display"));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
         // Test duration/repeat validation..
         alarm = new VAlarm(java.time.Duration.ofHours(2));
-        alarm.getProperties().add(Action.DISPLAY);
-        alarm.getProperties().add(new Description("Testing display"));
+        alarm.add(Action.DISPLAY);
+        alarm.add(new Description("Testing display"));
         Duration duration = new Duration(java.time.Duration.ofMinutes(2));
-        alarm.getProperties().add(duration);
+        alarm.add(duration);
         suite.addTest(new VAlarmTest("testValidationException", alarm));
         
         alarm = (VAlarm) alarm.copy();
-        alarm.getProperties().add(new Repeat(2));
+        alarm.add(new Repeat(2));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
         alarm = (VAlarm) alarm.copy();
@@ -100,16 +102,18 @@ public class VAlarmTest extends ComponentTest {
         
         //testValidationEmail..
         alarm = new VAlarm(java.time.Duration.ofDays(-2));
-        alarm.getProperties().add(Action.EMAIL);
-        alarm.getProperties().add(new Attendee("mailto:john_doe@example.com"));
-        alarm.getProperties().add(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"));
-        alarm.getProperties().add(new Description("A draft agenda needs to be sent out to the attendees " 
+        alarm.add(Action.EMAIL);
+        alarm.add(new Attendee("mailto:john_doe@example.com"));
+        alarm.add(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"));
+        alarm.add(new Description("A draft agenda needs to be sent out to the attendees "
                     + "to the weekly managers meeting (MGR-LIST). Attached is a " 
                     + "pointer the document template for the agenda file."));
 
-        Attach attachment = new Attach(new URI("http://example.com/templates/agenda.doc"));
-        attachment.getParameters().add(new FmtType("application/msword"));
-        alarm.getProperties().add(attachment);
+        ParameterList attachParams = new ParameterList(Collections.singletonList(
+                new FmtType("application/msword")));
+        Attach attachment = new Attach(attachParams,
+                new URI("http://example.com/templates/agenda.doc"));
+        alarm.add(attachment);
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
         return suite;

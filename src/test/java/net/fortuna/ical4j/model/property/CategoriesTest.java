@@ -43,6 +43,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -95,12 +96,11 @@ public class CategoriesTest extends PropertyTest {
         Categories cat3 = new Categories("test1,test2,test 1\\,2\\,3");
 
         VEvent event = new VEvent();
-        event.getProperties().add(cat1);
-        event.getProperties().add(cat2);
-        event.getProperties().add(cat3);
+        event.add(cat1);
+        event.add(cat2);
+        event.add(cat3);
 
-        Calendar calendar = new Calendar();
-        calendar.getComponents().add(event);
+        Calendar calendar = new Calendar(new ComponentList<>(Collections.singletonList(event)));
 
         StringWriter tempOut = new StringWriter();
         CalendarOutputter cout = new CalendarOutputter(false);
@@ -110,8 +110,8 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        List<Property> categories = calendar.getRequiredComponent(Component.VEVENT)
-                .getProperties(Property.CATEGORIES);
+        List<Property> categories = calendar.getComponents().getRequired(Component.VEVENT)
+                .getProperties().get(Property.CATEGORIES);
 
         assertEquals(cat1, categories.get(0));
         assertEquals(cat2, categories.get(1));
@@ -143,7 +143,7 @@ public class CategoriesTest extends PropertyTest {
 
         // Test escaping of categories string representation..
         Calendar calendar = Calendars.load(CategoriesTest.class.getResource("/samples/valid/categories.ics"));
-        Categories orig = calendar.getRequiredComponent(Component.VEVENT).getRequiredProperty(Property.CATEGORIES);
+        Categories orig = calendar.getComponents().getRequired(Component.VEVENT).getProperties().getRequired(Property.CATEGORIES);
 
         StringWriter tempOut = new StringWriter();
         CalendarOutputter cout = new CalendarOutputter();
@@ -153,7 +153,7 @@ public class CategoriesTest extends PropertyTest {
         calendar = builder.build(new StringReader(tempOut.getBuffer()
                 .toString()));
 
-        Categories copy = calendar.getRequiredComponent(Component.VEVENT).getRequiredProperty(Property.CATEGORIES);
+        Categories copy = calendar.getComponents().getRequired(Component.VEVENT).getProperties().getRequired(Property.CATEGORIES);
         assertEquals(orig, copy);
         suite.addTest(new CategoriesTest(copy, orig.getValue()));
 

@@ -31,14 +31,8 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.Collections;
-import java.util.List;
 
 /**
  * $Id$
@@ -184,18 +178,39 @@ public class Status extends Property {
     /**
      * @author Ben Fortuna An immutable instance of Status.
      */
-    private static final class ImmutableStatus extends Status {
+    private static final class ImmutableStatus extends Status implements ImmutableContent {
 
         private static final long serialVersionUID = 7771868877237685612L;
 
         private ImmutableStatus(final String value) {
-            super(Collections.unmodifiableList(Collections.EMPTY_LIST), value);
+            super(value);
         }
 
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
+
+        @Override
+        public void add(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void remove(Parameter parameter) {
+            throwException();
+        }
+
+        @Override
+        public void removeAll(String parameterName) {
+            throwException();
+        }
+
+        @Override
+        public void replace(Parameter parameter) {
+            throwException();
+        }
+
     }
 
     private String value;
@@ -204,14 +219,14 @@ public class Status extends Property {
      * Default constructor.
      */
     public Status() {
-        super(STATUS, new Factory());
+        super(STATUS);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Status(final String aValue) {
-        super(STATUS, new Factory());
+        super(STATUS);
         this.value = aValue;
     }
 
@@ -219,8 +234,8 @@ public class Status extends Property {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Status(final List<Parameter> aList, final String aValue) {
-        super(STATUS, aList, new Factory());
+    public Status(final ParameterList aList, final String aValue) {
+        super(STATUS, aList);
         this.value = aValue;
     }
 
@@ -244,8 +259,8 @@ public class Status extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Status> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Status> {
@@ -255,7 +270,7 @@ public class Status extends Property {
             super(STATUS);
         }
 
-        public Status createProperty(final List<Parameter> parameters, final String value) {
+        public Status createProperty(final ParameterList parameters, final String value) {
             Status status;
             if (Status.VEVENT_CANCELLED.getValue().equals(value)) {
                 status = Status.VEVENT_CANCELLED;

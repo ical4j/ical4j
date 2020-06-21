@@ -31,11 +31,12 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.CalendarDateFormat;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.PropertyFactory;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * $Id$
@@ -98,15 +99,15 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
      * @param aValue a string representation of a DTSTAMP value
      */
     public DtStamp(final String aValue) {
-        this(new ArrayList<>(), aValue);
+        this(new ParameterList(), aValue);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public DtStamp(final List<Parameter> aList, final String aValue) {
-        super(DTSTAMP, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+    public DtStamp(final ParameterList aList, final String aValue) {
+        super(DTSTAMP, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setValue(aValue);
     }
 
@@ -114,7 +115,7 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
      * @param aDate a date representing a date-time
      */
     public DtStamp(final Instant aDate) {
-        super(DTSTAMP, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(DTSTAMP, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(aDate);
     }
 
@@ -122,8 +123,8 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
      * @param aList a list of parameters for this component
      * @param aDate a date representing a date-time
      */
-    public DtStamp(final List<Parameter> aList, final Instant aDate) {
-        super(DTSTAMP, aList, new Factory(), CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+    public DtStamp(final ParameterList aList, final Instant aDate) {
+        super(DTSTAMP, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
         setDate(aDate);
     }
 
@@ -133,8 +134,8 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<DtStamp> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<DtStamp> {
@@ -144,7 +145,7 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
             super(DTSTAMP);
         }
 
-        public DtStamp createProperty(final List<Parameter> parameters, final String value) {
+        public DtStamp createProperty(final ParameterList parameters, final String value) {
             return new DtStamp(parameters, value);
         }
 

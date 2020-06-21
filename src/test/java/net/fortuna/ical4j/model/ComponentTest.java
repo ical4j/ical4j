@@ -154,7 +154,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
             }
 
             @Override
-            public Component copy() {
+            protected ComponentFactory<?> newFactory() {
                 return null;
             }
         };
@@ -164,16 +164,17 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
             }
+
             @Override
-            public Component copy() {
+            protected ComponentFactory<?> newFactory() {
                 return null;
             }
         };
         // 10am-12pm for 7 days..
-        component.getProperties().add(new DtStart("20080601T100000Z"));
-        component.getProperties().add(new DtEnd("20080601T120000Z"));
+        component.add(new DtStart("20080601T100000Z"));
+        component.add(new DtEnd("20080601T120000Z"));
         Recur recur = new Recur.Builder().frequency(Recur.Frequency.DAILY).count(7).build();
-        component.getProperties().add(new RRule(recur));
+        component.add(new RRule(recur));
         Set<Period<Instant>> expectedPeriods = new TreeSet<>();
         expectedPeriods.add(Period.parse("20080601T100000Z/PT2H"));
         expectedPeriods.add(Period.parse("20080602T100000Z/PT2H"));
@@ -188,16 +189,17 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         component = new Component("test") {
             public void validate(boolean recurse) throws ValidationException {
             }
+
             @Override
-            public Component copy() {
+            protected ComponentFactory<?> newFactory() {
                 return null;
             }
         };
         // weekly for 5 instances using DATE format and due date.
-        component.getProperties().add(new DtStart<>((LocalDate) TemporalAdapter.parse("20080601").getTemporal()));
-        component.getProperties().add(new Due<>((LocalDate) TemporalAdapter.parse("20080602").getTemporal()));
+        component.add(new DtStart<>((LocalDate) TemporalAdapter.parse("20080601").getTemporal()));
+        component.add(new Due<>((LocalDate) TemporalAdapter.parse("20080602").getTemporal()));
         recur = new Recur.Builder().frequency(Recur.Frequency.WEEKLY).count(5).build();
-        component.getProperties().add(new RRule(recur));
+        component.add(new RRule(recur));
         Set<Period<LocalDate>> expectedPeriods2 = new TreeSet<>();
         expectedPeriods2.add(Period.parse("20080601/P1D"));
         expectedPeriods2.add(Period.parse("20080608/P1D"));

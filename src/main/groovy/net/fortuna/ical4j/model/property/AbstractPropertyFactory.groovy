@@ -61,7 +61,7 @@ abstract class AbstractPropertyFactory extends AbstractFactory {
 
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof Parameter) {
-            parent.parameters.add(child)
+            parent.add(child)
         }
     }
 }

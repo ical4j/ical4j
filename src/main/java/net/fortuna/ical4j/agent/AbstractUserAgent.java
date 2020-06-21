@@ -10,6 +10,7 @@ import net.fortuna.ical4j.transform.*;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.UidGenerator;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,9 +38,8 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     @SafeVarargs
     protected final Calendar wrap(Method method, T... component) {
-        Calendar calendar = Calendars.wrap(component);
-        calendar.getProperties().add(prodId);
-        calendar.getProperties().add(Version.VERSION_2_0);
+        PropertyList props = new PropertyList(Arrays.asList(prodId, Version.VERSION_2_0));
+        Calendar calendar = Calendars.wrap(props, component);
         return transform(method, calendar);
     }
 

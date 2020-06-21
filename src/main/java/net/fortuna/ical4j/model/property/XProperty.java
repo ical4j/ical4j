@@ -31,11 +31,12 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.Escapable;
+import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.List;
 
 /**
  * $Id$
@@ -56,7 +57,7 @@ public class XProperty extends Property implements Escapable {
      * @param name a non-standard property name
      */
     public XProperty(final String name) {
-        super(name, new Factory(name));
+        super(name);
     }
 
     /**
@@ -64,7 +65,7 @@ public class XProperty extends Property implements Escapable {
      * @param aValue a property value
      */
     public XProperty(final String aName, final String aValue) {
-        super(aName, new Factory(aName));
+        super(aName);
         setValue(aValue);
     }
 
@@ -73,9 +74,9 @@ public class XProperty extends Property implements Escapable {
      * @param aList a list of parameters
      * @param aValue a property value
      */
-    public XProperty(final String aName, final List<Parameter> aList,
+    public XProperty(final String aName, final ParameterList aList,
             final String aValue) {
-        super(aName, aList, new Factory(aName));
+        super(aName, aList);
         setValue(aValue);
     }
 
@@ -110,26 +111,7 @@ public class XProperty extends Property implements Escapable {
     }
 
     @Override
-    public Property copy() {
-        return new Factory(getName()).createProperty(getParameters(), getValue());
-    }
-
-    public static class Factory extends Content.Factory implements PropertyFactory<XProperty> {
-        private static final long serialVersionUID = 1L;
-
-        private final String name;
-
-        public Factory(String name) {
-            super(name);
-            this.name = name;
-        }
-
-        public XProperty createProperty(final List<Parameter> parameters, final String value) {
-            return new XProperty(name, parameters, value);
-        }
-
-        public XProperty createProperty() {
-            return new XProperty(name);
-        }
+    protected PropertyFactory<XProperty> newFactory() {
+        throw new UnsupportedOperationException("Factory not supported for custom properties");
     }
 }

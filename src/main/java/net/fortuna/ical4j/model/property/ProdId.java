@@ -34,8 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.util.List;
-
 /**
  * $Id$
  * <p/>
@@ -55,14 +53,14 @@ public class ProdId extends Property implements Escapable {
      * Default constructor.
      */
     public ProdId() {
-        super(PRODID, new Factory());
+        super(PRODID);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public ProdId(final String aValue) {
-        super(PRODID, new Factory());
+        super(PRODID);
         setValue(aValue);
     }
 
@@ -70,8 +68,8 @@ public class ProdId extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public ProdId(final List<Parameter> aList, final String aValue) {
-        super(PRODID, aList, new Factory());
+    public ProdId(final ParameterList aList, final String aValue) {
+        super(PRODID, aList);
         setValue(aValue);
     }
 
@@ -97,8 +95,8 @@ public class ProdId extends Property implements Escapable {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<ProdId> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<ProdId> {
@@ -109,7 +107,7 @@ public class ProdId extends Property implements Escapable {
         }
 
         @Override
-        public ProdId createProperty(final List<Parameter> parameters, final String value) {
+        public ProdId createProperty(final ParameterList parameters, final String value) {
             return new ProdId(parameters, value);
         }
 

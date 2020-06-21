@@ -123,7 +123,7 @@ public class PropertyTest extends AbstractPropertyTest {
             }
 
             @Override
-            public Property copy() {
+            protected PropertyFactory<?> newFactory() {
                 return null;
             }
         };
@@ -139,7 +139,7 @@ public class PropertyTest extends AbstractPropertyTest {
         Property copy = property.copy();
         assertEquals(property, copy);
 
-        copy.getParameters().add(Value.BOOLEAN);
+        copy.add(Value.BOOLEAN);
         assertFalse(property.equals(copy));
         assertFalse(copy.equals(property));
     }
@@ -188,7 +188,7 @@ public class PropertyTest extends AbstractPropertyTest {
         }
 
         try {
-            property.getParameters().add(new Parameter("name") {
+            property.add(new Parameter("name") {
                 public String getValue() {
                     return null;
                 }
@@ -218,7 +218,7 @@ public class PropertyTest extends AbstractPropertyTest {
             }
 
             @Override
-            public Property copy() {
+            protected PropertyFactory<?> newFactory() {
                 return null;
             }
         };
@@ -237,7 +237,7 @@ public class PropertyTest extends AbstractPropertyTest {
             }
 
             @Override
-            public Property copy() {
+            protected PropertyFactory<?> newFactory() {
                 return null;
             }
         };

@@ -66,10 +66,11 @@ public class TzIdTest extends TestCase {
 
         Map<String, ZoneRules> zoneRulesMap = builder.getRegistry().getZoneRules();
 
-        calendar.getComponents().forEach(calendarComponent -> {
-            calendarComponent.getProperties().forEach(property -> {
-                Optional<TzId> tzId = property.getParameter(Parameter.TZID);
-                tzId.ifPresent(id -> assertTrue(zoneRulesMap.containsKey(builder.getRegistry().getZoneId(id.getValue()).getId())));
+        calendar.getComponents().getAll().forEach(calendarComponent -> {
+            calendarComponent.getProperties().getAll().forEach(property -> {
+                Optional<TzId> tzId = property.getParameters().getFirst(Parameter.TZID);
+                tzId.ifPresent(id -> assertTrue(
+                        zoneRulesMap.containsKey(builder.getRegistry().getZoneId(id.getValue()).getId())));
             });
         });
     }

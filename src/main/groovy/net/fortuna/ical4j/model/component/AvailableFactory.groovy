@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model.component
 
-import net.fortuna.ical4j.model.PropertyList
+import net.fortuna.ical4j.model.Property
 
 /**
  * @author fortuna
@@ -51,7 +51,7 @@ class AvailableFactory extends AbstractComponentFactory{
          return available
      }
      
-     protected Object newInstance(PropertyList properties) {
+     protected Object newInstance(List<Property> properties) {
          return new Available(properties)
      }
 }

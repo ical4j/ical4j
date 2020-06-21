@@ -4,7 +4,10 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
-public class ValidationRule implements Serializable {
+/**
+ * Provides a template for validating presence (or absence) of properties, parameters or components in a list.
+ */
+public class ValidationRule<T> implements Serializable {
 
     public enum ValidationType { None,  One, OneOrLess, OneOrMore }
 
@@ -14,11 +17,28 @@ public class ValidationRule implements Serializable {
 
     private final boolean relaxedModeSupported;
 
+    /**
+     * @param type rule type
+     * @param instances list of identifiers to check (parameter, property, component, etc.)
+     */
     public ValidationRule(ValidationType type, String...instances) {
-        this(type, false, instances);
+        this(type, (Predicate<T> & Serializable) (T p) -> true, instances);
     }
 
+    public ValidationRule(ValidationType type, Predicate<T> predicate, String...instances) {
+        this(type, predicate, false, instances);
+    }
+
+    /**
+     * @param type rule type
+     * @param relaxedModeSupported indicates if rule can be ignored when relaxed mode is enabled
+     * @param instances list of identifiers to check (parameter, property, component, etc.)
+     */
     public ValidationRule(ValidationType type, boolean relaxedModeSupported, String...instances) {
+        this(type, (Predicate<T> & Serializable) (T p) -> true, relaxedModeSupported, instances);
+    }
+
+    public ValidationRule(ValidationType type, Predicate<T> predicate, boolean relaxedModeSupported, String...instances) {
         this.type = type;
         this.instances = Arrays.asList(instances);
         this.relaxedModeSupported = relaxedModeSupported;

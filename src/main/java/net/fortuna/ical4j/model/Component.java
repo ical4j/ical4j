@@ -37,9 +37,9 @@ import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jooq.lambda.Unchecked;
 
 import java.io.Serializable;
-import java.net.URISyntaxException;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
  *
  * @author Ben Fortuna
  */
-public abstract class Component implements Serializable {
+public abstract class Component extends Content implements Serializable {
 
     private static final long serialVersionUID = 4943193483665822201L;
 
@@ -119,7 +119,7 @@ public abstract class Component implements Serializable {
 
     private final String name;
 
-    private final PropertyList properties;
+    protected PropertyList properties;
 
     /**
      * Constructs a new component containing no properties.
@@ -164,6 +164,11 @@ public abstract class Component implements Serializable {
         return name;
     }
 
+    @Override
+    public String getValue() {
+        return properties.toString();
+    }
+
     /**
      * @return Returns the properties.
      */
@@ -172,13 +177,52 @@ public abstract class Component implements Serializable {
     }
 
     /**
+     * Add a property to the component.
+     * @param property the property to add
+     */
+    public void add(Property property) {
+        setProperties((PropertyList) properties.add(property));
+    }
+
+    /**
+     * Remove a property from the component.
+     * @param property the property to remove
+     */
+    public void remove(Property property) {
+        setProperties((PropertyList) properties.remove(property));
+    }
+
+    /**
+     * Remove multiple properties from the component.
+     * @param propertyName the name of properties to remove
+     */
+    public void removeAll(String... propertyName) {
+        setProperties((PropertyList) properties.removeAll(propertyName));
+    }
+
+    /**
+     * Replace existing properties with a new property.
+     * @param property the new property
+     */
+    public void replace(Property property) {
+        setProperties((PropertyList) properties.replace(property));
+    }
+
+    /**
      * Convenience method for retrieving a list of named properties.
      *
      * @param name name of properties to retrieve
      * @return a property list containing only properties with the specified name
+     *
+     * @deprecated use {@link PropertyList#get(String)}
      */
+    @Deprecated
     public final List<Property> getProperties(final String name) {
-        return getProperties().getProperties(name);
+        return properties.get(name);
+    }
+
+    protected void setProperties(PropertyList properties) {
+        this.properties = properties;
     }
 
     /**
@@ -186,9 +230,12 @@ public abstract class Component implements Serializable {
      *
      * @param name name of the property to retrieve
      * @return the first matching property in the property list with the specified name
+     *
+     * @deprecated use {@link PropertyList#getFirst(String)}
      */
+    @Deprecated
     public <T extends Property> Optional<T> getProperty(final String name) {
-        return getProperties().getProperty(name);
+        return properties.getFirst(name);
     }
 
     /**
@@ -197,10 +244,12 @@ public abstract class Component implements Serializable {
      * @param name name of the property to retrieve
      * @return the first matching property in the property list with the specified name
      * @throws ConstraintViolationException when a property is not found
+     *
+     * @deprecated use {@link PropertyList#getRequired(String)}
      */
+    @Deprecated
     public final <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
-        Optional<T> property = getProperty(name);
-        return property.orElseThrow(() -> new ConstraintViolationException(String.format("Missing %s property", name)));
+        return properties.getRequired(name);
     }
 
     /**
@@ -218,8 +267,7 @@ public abstract class Component implements Serializable {
      * @param recurse indicates whether to validate the component's properties
      * @throws ValidationException where the component is not in a valid state
      */
-    public abstract void validate(final boolean recurse)
-            throws ValidationException;
+    public abstract void validate(final boolean recurse) throws ValidationException;
 
     /**
      * Invoke validation on the component properties in its current state.
@@ -227,7 +275,7 @@ public abstract class Component implements Serializable {
      * @throws ValidationException where any of the component properties is not in a valid state
      */
     protected final void validateProperties() throws ValidationException {
-        for (final Property property : getProperties()) {
+        for (final Property property : getProperties().getAll()) {
             property.validate();
         }
     }
@@ -255,10 +303,19 @@ public abstract class Component implements Serializable {
     }
 
     /**
+     * Returns a new component factory used to create deep copies.
+     * @return a component factory instance
+     */
+    protected abstract ComponentFactory<?> newFactory();
+
+    /**
      * Create a (deep) copy of this component.
      * @return the component copy
      */
-    public abstract Component copy() throws URISyntaxException;
+    public Component copy() {
+        return newFactory().createComponent(new PropertyList(properties.getAll().stream()
+                .map(Unchecked.function(Property::copy)).collect(Collectors.toList())));
+    }
 
     /**
      * Calculates the recurrence set for this component using the specified period.

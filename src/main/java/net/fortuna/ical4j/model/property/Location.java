@@ -37,9 +37,7 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -117,14 +115,14 @@ public class Location extends Property implements Escapable {
      * Default constructor.
      */
     public Location() {
-        super(LOCATION, new ArrayList<>(), new Factory());
+        super(LOCATION);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Location(final String aValue) {
-        super(LOCATION, new ArrayList<>(), new Factory());
+        super(LOCATION);
         setValue(aValue);
     }
 
@@ -132,8 +130,8 @@ public class Location extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Location(final List<Parameter> aList, final String aValue) {
-        super(LOCATION, aList, new Factory());
+    public Location(final ParameterList aList, final String aValue) {
+        super(LOCATION, aList);
         setValue(aValue);
     }
 
@@ -157,8 +155,8 @@ public class Location extends Property implements Escapable {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Location> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Location> {
@@ -168,7 +166,7 @@ public class Location extends Property implements Escapable {
             super(LOCATION);
         }
 
-        public Location createProperty(final List<Parameter> parameters, final String value) {
+        public Location createProperty(final ParameterList parameters, final String value) {
             return new Location(parameters, value);
         }
 

@@ -54,9 +54,9 @@ public class VAvailabilityTestCase extends TestCase
         String availability = getVAvailabilityICal();
         Reader reader = new StringReader(availability);
         Calendar calendar = calendarBuilder.build(reader);
-        VAvailability availabilityComponent = calendar.getRequiredComponent(Component.VAVAILABILITY);
+        VAvailability availabilityComponent = calendar.getComponents().getRequired(Component.VAVAILABILITY);
         Assert.assertNotNull(availabilityComponent);
-        Assert.assertFalse(availabilityComponent.getAvailable().isEmpty());
+        Assert.assertFalse(availabilityComponent.getAvailable().getAll().isEmpty());
         String iCalString = calendar.toString();
         Assert.assertTrue(iCalString.contains("BEGIN:AVAILABLE"));
         Assert.assertEquals(iCalString.trim(), availability);

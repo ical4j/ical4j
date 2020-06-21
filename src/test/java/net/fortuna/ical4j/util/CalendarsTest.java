@@ -162,13 +162,13 @@ public class CalendarsTest extends TestCase {
         }
 
         for (int i = 0; i < calendars.length; i++) {
-            for (Property p : calendars[i].getProperties()) {
+            for (Property p : calendars[i].getProperties().getAll()) {
                 assertTrue("Property [" + p + "] not found in merged calendar",
-                        result.getProperties().contains(p));
+                        result.getProperties().getAll().contains(p));
             }
-            for (Component c : calendars[i].getComponents()) {
+            for (Component c : calendars[i].getComponents().getAll()) {
                 assertTrue("Component [" + c + "] not found in merged calendar",
-                        result.getComponents().contains(c));
+                        result.getComponents().getAll().contains(c));
             }
         }
     }
@@ -227,7 +227,7 @@ public class CalendarsTest extends TestCase {
         Calendar calendar = Calendars.load(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics"));
         suite.addTest(new CalendarsTest("testSplit", calendar, 10));
 
-        suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar"));
+        suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
 
         calendar = Calendars.load(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics"));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));

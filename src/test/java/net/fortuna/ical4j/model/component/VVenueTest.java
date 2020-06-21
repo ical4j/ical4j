@@ -68,7 +68,7 @@ public class VVenueTest extends ComponentTest {
         
         UidGenerator g = new RandomUidGenerator();
         vv = new VVenue();
-        vv.getProperties().add(g.generateUid());
+        vv.add(g.generateUid());
         suite.addTest(new VVenueTest("testValidation", vv));
         
         return suite;

@@ -32,7 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -41,7 +41,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 /**
  * $Id$
@@ -97,7 +96,7 @@ public class Url extends Property {
      * Default constructor.
      */
     public Url() {
-        super(URL, new Factory());
+        super(URL);
     }
 
     /**
@@ -105,9 +104,9 @@ public class Url extends Property {
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified value string is not a valid uri
      */
-    public Url(final List<Parameter> aList, final String aValue)
+    public Url(final ParameterList aList, final String aValue)
             throws URISyntaxException {
-        super(URL, aList, new Factory());
+        super(URL, aList);
         setValue(aValue);
     }
 
@@ -115,7 +114,7 @@ public class Url extends Property {
      * @param aUri a URI
      */
     public Url(final URI aUri) {
-        super(URL, new Factory());
+        super(URL);
         uri = aUri;
     }
 
@@ -123,8 +122,8 @@ public class Url extends Property {
      * @param aList a list of parameters for this component
      * @param aUri  a URI
      */
-    public Url(final List<Parameter> aList, final URI aUri) {
-        super(URL, aList, new Factory());
+    public Url(final ParameterList aList, final URI aUri) {
+        super(URL, aList);
         uri = aUri;
     }
 
@@ -162,8 +161,8 @@ public class Url extends Property {
     }
 
     @Override
-    public Property copy() throws URISyntaxException {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Url> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Url> {
@@ -173,7 +172,7 @@ public class Url extends Property {
             super(URL);
         }
 
-        public Url createProperty(final List<Parameter> parameters, final String value) throws URISyntaxException {
+        public Url createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
             return new Url(parameters, value);
         }
 

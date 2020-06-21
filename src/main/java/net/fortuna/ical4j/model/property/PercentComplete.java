@@ -32,12 +32,10 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.validate.ValidationException;
-
-import java.util.List;
 
 /**
  * $Id$
@@ -58,15 +56,15 @@ public class PercentComplete extends Property {
      * Default constructor.
      */
     public PercentComplete() {
-        super(PERCENT_COMPLETE, new Factory());
+        super(PERCENT_COMPLETE);
     }
 
     /**
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public PercentComplete(final List<Parameter> aList, final String aValue) {
-        super(PERCENT_COMPLETE, aList, new Factory());
+    public PercentComplete(final ParameterList aList, final String aValue) {
+        super(PERCENT_COMPLETE, aList);
         setValue(aValue);
     }
 
@@ -74,7 +72,7 @@ public class PercentComplete extends Property {
      * @param aPercentage an int representation of a percentage
      */
     public PercentComplete(final int aPercentage) {
-        super(PERCENT_COMPLETE, new Factory());
+        super(PERCENT_COMPLETE);
         percentage = aPercentage;
     }
 
@@ -82,8 +80,8 @@ public class PercentComplete extends Property {
      * @param aList       a list of parameters for this component
      * @param aPercentage an int representation of a percentage
      */
-    public PercentComplete(final List<Parameter> aList, final int aPercentage) {
-        super(PERCENT_COMPLETE, aList, new Factory());
+    public PercentComplete(final ParameterList aList, final int aPercentage) {
+        super(PERCENT_COMPLETE, aList);
         percentage = aPercentage;
     }
 
@@ -125,8 +123,8 @@ public class PercentComplete extends Property {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<PercentComplete> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<PercentComplete> {
@@ -136,7 +134,7 @@ public class PercentComplete extends Property {
             super(PERCENT_COMPLETE);
         }
 
-        public PercentComplete createProperty(final List<Parameter> parameters, final String value) {
+        public PercentComplete createProperty(final ParameterList parameters, final String value) {
             return new PercentComplete(parameters, value);
         }
 

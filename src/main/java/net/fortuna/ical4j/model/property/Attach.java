@@ -31,10 +31,7 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Encoding;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.DecoderFactory;
@@ -53,7 +50,7 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -122,7 +119,7 @@ public class Attach extends Property {
      * Default constructor.
      */
     public Attach() {
-        super(ATTACH, new Factory());
+        super(ATTACH);
     }
 
     /**
@@ -130,9 +127,8 @@ public class Attach extends Property {
      * @param aValue a value string for this component
      * @throws URISyntaxException where the specified string is not a valid uri
      */
-    public Attach(final List<Parameter> aList, final String aValue)
-            throws URISyntaxException {
-        super(ATTACH, aList, new Factory());
+    public Attach(final ParameterList aList, final String aValue) throws URISyntaxException {
+        super(ATTACH, aList);
         setValue(aValue);
     }
 
@@ -140,37 +136,36 @@ public class Attach extends Property {
      * @param data binary data
      */
     public Attach(final byte[] data) {
-        super(ATTACH, new Factory());
-        // add required parameters..
-        getParameters().add(Encoding.BASE64);
-        getParameters().add(Value.BINARY);
-        this.binary = data;
+        this(new ParameterList(Arrays.asList(Encoding.BASE64, Value.BINARY)), data);
     }
 
     /**
      * @param aList a list of parameters for this component
      * @param data  binary data
      */
-    public Attach(final List<Parameter> aList, final byte[] data) {
-        super(ATTACH, aList, new Factory());
+    public Attach(final ParameterList aList, final byte[] data) {
+        super(ATTACH, aList);
         this.binary = data;
+        this.uri = null;
     }
 
     /**
      * @param aUri a URI
      */
     public Attach(final URI aUri) {
-        super(ATTACH, new Factory());
+        super(ATTACH);
         this.uri = aUri;
+        this.binary = null;
     }
 
     /**
      * @param aList a list of parameters for this component
      * @param aUri  a URI
      */
-    public Attach(final List<Parameter> aList, final URI aUri) {
-        super(ATTACH, aList, new Factory());
+    public Attach(final ParameterList aList, final URI aUri) {
+        super(ATTACH, aList);
         this.uri = aUri;
+        this.binary = null;
     }
 
     /**
@@ -181,8 +176,7 @@ public class Attach extends Property {
         /*
          * ; the following is optional, ; but MUST NOT occur more than once (";" fmttypeparam) /
          */
-        ParameterValidator.assertOneOrLess(Parameter.FMTTYPE,
-                getParameters());
+        ParameterValidator.assertOneOrLess(Parameter.FMTTYPE, getParameters().getAll());
 
         /*
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
@@ -192,12 +186,10 @@ public class Attach extends Property {
          * If the value type parameter is ";VALUE=BINARY", then the inline encoding parameter MUST be specified with the
          * value ";ENCODING=BASE64".
          */
-        if (getParameter(Parameter.VALUE).equals(Optional.of(Value.BINARY))) {
-            ParameterValidator.assertOne(Parameter.ENCODING,
-                    getParameters());
-            if (!getParameter(Parameter.ENCODING).equals(Optional.of(Encoding.BASE64))) {
-                throw new ValidationException(
-                        "If the value type parameter is [BINARY], the inline"
+        if (getParameters().getFirst(Parameter.VALUE).equals(Optional.of(Value.BINARY))) {
+            ParameterValidator.assertOne(Parameter.ENCODING, getParameters().getAll());
+            if (!getParameters().getFirst(Parameter.ENCODING).equals(Optional.of(Encoding.BASE64))) {
+                throw new ValidationException("If the value type parameter is [BINARY], the inline"
                                 + "encoding parameter MUST be specified with the value [BASE64]"
                 );
             }
@@ -262,7 +254,7 @@ public class Attach extends Property {
         } else if (getBinary() != null) {
             // return Base64.encodeBytes(getBinary(), Base64.DONT_BREAK_LINES);
             try {
-                Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
+                Optional<Encoding> encoding = getParameters().getFirst(Parameter.ENCODING);
                 final BinaryEncoder encoder = EncoderFactory.getInstance()
                         .createBinaryEncoder(encoding.get());
                 return new String(encoder.encode(getBinary()));
@@ -293,8 +285,8 @@ public class Attach extends Property {
     }
 
     @Override
-    public Property copy() throws URISyntaxException {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Attach> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Attach> {
@@ -304,7 +296,7 @@ public class Attach extends Property {
             super(ATTACH);
         }
 
-        public Attach createProperty(final List<Parameter> parameters, final String value) throws URISyntaxException {
+        public Attach createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
             return new Attach(parameters, value);
         }
 
@@ -312,5 +304,4 @@ public class Attach extends Property {
             return new Attach();
         }
     }
-
 }

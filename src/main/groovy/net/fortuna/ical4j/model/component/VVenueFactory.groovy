@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model.component
 
+
+import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.PropertyList
 
 /**
@@ -51,7 +53,7 @@ class VVenueFactory extends AbstractComponentFactory{
          return venue
      }
      
-     protected Object newInstance(PropertyList properties) {
-         return new VVenue(properties)
+     protected Object newInstance(List<Property> properties) {
+         return new VVenue(new PropertyList(properties))
      }
 }

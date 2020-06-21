@@ -31,80 +31,118 @@
  */
 package net.fortuna.ical4j.model;
 
-import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
  *
- * Defines a list of iCalendar properties.
+ * Accessor implementation for a list of iCalendar properties.
  * @author Ben Fortuna
  */
-public class PropertyList extends ArrayList<Property> implements Serializable {
+public class PropertyList implements ContentContainer<Property> {
 
-    private static final long serialVersionUID = -8875923766224921031L;
+    private final List<Property> properties;
 
     /**
      * Default constructor.
      */
     public PropertyList() {
+        this(Collections.emptyList());
     }
 
     /**
-     * Creates a new instance with the specified initial capacity.
-     * @param initialCapacity the initial capacity of the list
-     */
-    public PropertyList(final int initialCapacity) {
-        super(initialCapacity);
-    }
-
-    /**
-     * Creates a deep copy of the specified property list.
+     * Creates an unmodifiable copy of the specified property list.
      * @param properties a property list
      */
     
-    public PropertyList(List<Property> properties) throws URISyntaxException {
-        super();
-        for (Property p: properties) {
-            add(p.copy());
-        }
+    public PropertyList(List<Property> properties) {
+        this.properties = Collections.unmodifiableList(properties);
+    }
+
+    @Override
+    public ContentContainer<Property> add(Property content) {
+        List<Property> copy = new ArrayList<>(properties);
+        copy.add(content);
+        return new PropertyList(copy);
+    }
+
+    @Override
+    public ContentContainer<Property> addAll(Collection<Property> content) {
+        List<Property> copy = new ArrayList<>(properties);
+        copy.addAll(content);
+        return new PropertyList(copy);
+    }
+
+    @Override
+    public ContentContainer<Property> remove(Property content) {
+        List<Property> copy = new ArrayList<>(properties);
+        copy.remove(content);
+        return new PropertyList(copy);
+    }
+
+    @Override
+    public ContentContainer<Property> removeAll(String... name) {
+        List<String> names = Arrays.asList(name);
+        List<Property> copy = new ArrayList<>(properties);
+        copy.removeIf(p -> names.contains(p.getName()));
+        return new PropertyList(copy);
+    }
+
+    @Override
+    public ContentContainer<Property> replace(Property content) {
+        List<Property> copy = new ArrayList<>(properties);
+        copy.removeIf(p -> p.getName().equals(content.getName()));
+        copy.add(content);
+        return new PropertyList(copy);
+    }
+
+    @Override
+    public List<Property> getAll() {
+        return properties;
     }
 
     /**
      * {@inheritDoc}
      */
     public final String toString() {
-        return toString(this);
-    }
-
-    public static String toString(List<Property> list) {
-        return list.stream().map(Property::toString).collect(Collectors.joining(""));
+        return properties.stream().map(Property::toString).collect(Collectors.joining(""));
     }
 
     /**
      * Returns the first property of specified name.
      * @param aName name of property to return
      * @return a property or null if no matching property found
+     *
+     * @deprecated use {@link PropertyList#getFirst(String)}
      */
-    @SuppressWarnings("unchecked")
+    @Deprecated
     public final <T extends Property> Optional<T> getProperty(final String aName) {
-        return (Optional<T>) stream().filter(p -> p.getName().equalsIgnoreCase(aName)).findFirst();
+        return getFirst(aName);
     }
 
     /**
      * Returns a list of properties with the specified name.
      * @param name name of properties to return
      * @return a property list
+     *
+     * @deprecated use {@link PropertyList#get(String)}
      */
+    @Deprecated
     public final List<Property> getProperties(final String name) {
-        return stream().filter(p -> p.getName().equalsIgnoreCase(name)).collect(Collectors.toList());
+        return get(name);
     }
 
-    public void replaceAll(Property property) {
-        replaceAll(p -> p.getName().equals(property.getName()) ? property : p);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PropertyList that = (PropertyList) o;
+        return Objects.equals(properties, that.properties);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(properties);
     }
 }

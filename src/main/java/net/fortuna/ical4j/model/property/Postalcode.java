@@ -34,8 +34,6 @@ package net.fortuna.ical4j.model.property;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.validate.ValidationException;
 
-import java.util.List;
-
 /**
  * $Id$
  * <p/>
@@ -56,14 +54,14 @@ public class Postalcode extends Property implements Escapable {
      * Default constructor.
      */
     public Postalcode() {
-        super(POSTALCODE, new Factory());
+        super(POSTALCODE);
     }
 
     /**
      * @param aValue a value string for this component
      */
     public Postalcode(final String aValue) {
-        super(POSTALCODE, new Factory());
+        super(POSTALCODE);
         setValue(aValue);
     }
 
@@ -71,8 +69,8 @@ public class Postalcode extends Property implements Escapable {
      * @param aList  a list of parameters for this component
      * @param aValue a value string for this component
      */
-    public Postalcode(final List<Parameter> aList, final String aValue) {
-        super(POSTALCODE, aList, new Factory());
+    public Postalcode(final ParameterList aList, final String aValue) {
+        super(POSTALCODE, aList);
         setValue(aValue);
     }
 
@@ -96,8 +94,8 @@ public class Postalcode extends Property implements Escapable {
     }
 
     @Override
-    public Property copy() {
-        return new Factory().createProperty(getParameters(), getValue());
+    protected PropertyFactory<Postalcode> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory<Postalcode> {
@@ -107,7 +105,7 @@ public class Postalcode extends Property implements Escapable {
             super(POSTALCODE);
         }
 
-        public Postalcode createProperty(final List<Parameter> parameters, final String value) {
+        public Postalcode createProperty(final ParameterList parameters, final String value) {
             return new Postalcode(parameters, value);
         }
 

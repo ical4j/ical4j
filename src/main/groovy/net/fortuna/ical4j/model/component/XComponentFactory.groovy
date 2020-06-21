@@ -51,22 +51,22 @@ class XComponentFactory extends AbstractFactory {
              if (componentName == null) {
                  componentName = value
              }
-             PropertyList properties = attributes.remove('properties')
+             List<Property> properties = attributes.remove('properties')
              if (properties == null) {
-                 properties = new PropertyList()
+                 properties = []
              }
              component = newInstance(componentName, properties)
          }
          return component
      }
      
-     protected static Object newInstance(String name, PropertyList properties) {
-         return new XComponent(name, properties)
+     protected static Object newInstance(String name, List<Property> properties) {
+         return new XComponent(name, new PropertyList(properties))
      }
      
      void setChild(FactoryBuilderSupport build, Object parent, Object child) {
          if (child instanceof Property) {
-             parent.properties.add(child)
+             parent.add(child)
          }
      }
 }
