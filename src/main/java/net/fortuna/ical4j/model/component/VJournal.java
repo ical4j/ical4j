@@ -31,13 +31,17 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.ComponentFactory;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.validate.*;
+import net.fortuna.ical4j.validate.ComponentValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.Validator;
 
 import java.time.temporal.Temporal;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -99,7 +103,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  *         tzParam);
  *
  * // add description..
- * minutes.getProperties().add(new Description(&quot;1. Agenda.., 2. Action Items..&quot;));
+ * minutes.add(new Description(&quot;1. Agenda.., 2. Action Items..&quot;));
  * </code></pre>
  *
  * @author Ben Fortuna
@@ -122,7 +126,13 @@ public class VJournal extends CalendarComponent {
                         SUMMARY, URL),
                 new ValidationRule(None, ATTENDEE)));
     }
-    
+
+    private final Validator<VJournal> validator = new ComponentValidator<>(
+            new ValidationRule<>(One, true, UID, DTSTAMP),
+            new ValidationRule<>(OneOrLess, CLASS, CREATED, DESCRIPTION, DTSTART, DTSTAMP, LAST_MODIFIED, ORGANIZER,
+                    RECURRENCE_ID, SEQUENCE, STATUS, SUMMARY, UID, URL)
+    );
+
     /**
      * Default constructor.
      */
@@ -133,7 +143,7 @@ public class VJournal extends CalendarComponent {
     public VJournal(boolean initialise) {
         super(VJOURNAL);
         if (initialise) {
-            getProperties().add(new DtStamp());
+            add(new DtStamp());
         }
     }
 
@@ -152,41 +162,22 @@ public class VJournal extends CalendarComponent {
      */
     public VJournal(final Temporal start, final String summary) {
         this();
-        getProperties().add(new DtStart(start));
-        getProperties().add(new Summary(summary));
+        add(new DtStart(start));
+        add(new Summary(summary));
     }
 
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
-
-        if (!CompatibilityHints
-                .isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-
-            // From "4.8.4.7 Unique Identifier":
-            // Conformance: The property MUST be specified in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.UID,
-                    getProperties());
-
-            // From "4.8.7.2 Date/Time Stamp":
-            // Conformance: This property MUST be included in the "VEVENT", "VTODO",
-            // "VJOURNAL" or "VFREEBUSY" calendar components.
-            PropertyValidator.assertOne(Property.DTSTAMP,
-                    getProperties());
-        }
+    public final void validate(final boolean recurse) throws ValidationException {
+        validator.validate(this);
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once class / created / description / dtstart /
          * dtstamp / last-mod / organizer / recurid / seq / status / summary / uid / url /
          */
-        Arrays.asList(Property.CLASS, Property.CREATED, Property.DESCRIPTION, Property.DTSTART,
-                Property.DTSTAMP, Property.LAST_MODIFIED, Property.ORGANIZER, Property.RECURRENCE_ID, Property.SEQUENCE,
-                Property.STATUS, Property.SUMMARY, Property.UID, Property.URL).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
-        final Optional<Status> status = getProperty(Property.STATUS);
+        final Optional<Status> status = getProperty(STATUS);
         if (status.isPresent() && !Status.VJOURNAL_DRAFT.getValue().equals(status.get().getValue())
                 && !Status.VJOURNAL_FINAL.getValue().equals(status.get().getValue())
                 && !Status.VJOURNAL_CANCELLED.getValue().equals(status.get().getValue())) {
@@ -225,7 +216,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Clazz> getClassification() {
-        return getProperty(Property.CLASS);
+        return getProperty(CLASS);
     }
 
     /**
@@ -234,7 +225,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Created> getCreated() {
-        return getProperty(Property.CREATED);
+        return getProperty(CREATED);
     }
 
     /**
@@ -243,7 +234,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Description> getDescription() {
-        return getProperty(Property.DESCRIPTION);
+        return getProperty(DESCRIPTION);
     }
 
     /**
@@ -253,7 +244,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<DtStart<?>> getStartDate() {
-        return getProperty(Property.DTSTART);
+        return getProperty(DTSTART);
     }
 
     /**
@@ -262,7 +253,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<LastModified> getLastModified() {
-        return getProperty(Property.LAST_MODIFIED);
+        return getProperty(LAST_MODIFIED);
     }
 
     /**
@@ -271,7 +262,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Organizer> getOrganizer() {
-        return getProperty(Property.ORGANIZER);
+        return getProperty(ORGANIZER);
     }
 
     /**
@@ -280,7 +271,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<DtStamp> getDateStamp() {
-        return getProperty(Property.DTSTAMP);
+        return getProperty(DTSTAMP);
     }
 
     /**
@@ -289,7 +280,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Sequence> getSequence() {
-        return getProperty(Property.SEQUENCE);
+        return getProperty(SEQUENCE);
     }
 
     /**
@@ -298,7 +289,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Status> getStatus() {
-        return getProperty(Property.STATUS);
+        return getProperty(STATUS);
     }
 
     /**
@@ -307,7 +298,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Summary> getSummary() {
-        return getProperty(Property.SUMMARY);
+        return getProperty(SUMMARY);
     }
 
     /**
@@ -316,7 +307,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Url> getUrl() {
-        return getProperty(Property.URL);
+        return getProperty(URL);
     }
 
     /**
@@ -325,7 +316,7 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<RecurrenceId<?>> getRecurrenceId() {
-        return getProperty(Property.RECURRENCE_ID);
+        return getProperty(RECURRENCE_ID);
     }
 
     /**
@@ -335,12 +326,12 @@ public class VJournal extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Uid> getUid() {
-        return getProperty(Property.UID);
+        return getProperty(UID);
     }
 
     @Override
-    public Component copy() {
-        return new Factory().createComponent(getProperties());
+    protected ComponentFactory<VJournal> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VJournal> {
@@ -360,7 +351,7 @@ public class VJournal extends CalendarComponent {
         }
 
         @Override
-        public VJournal createComponent(PropertyList properties, ComponentList subComponents) {
+        public VJournal createComponent(PropertyList properties, ComponentList<?> subComponents) {
             throw new UnsupportedOperationException(String.format("%s does not support sub-components", VJOURNAL));
         }
     }

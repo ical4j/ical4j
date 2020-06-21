@@ -143,6 +143,7 @@ class ContentBuilderSpec extends Specification {
 				uid '1'
 				dtstamp()
 				dtstart '20090810', parameters: parameters { value 'DATE' }
+				duration 'P1D'
 				action 'DISPLAY'
 				attach'http://example.com/attachment', parameters: parameters { value 'URI' }
 			}

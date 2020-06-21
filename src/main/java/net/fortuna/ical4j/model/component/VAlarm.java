@@ -31,9 +31,15 @@
  */
 package net.fortuna.ical4j.model.component;
 
-import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.ComponentFactory;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.property.*;
-import net.fortuna.ical4j.validate.*;
+import net.fortuna.ical4j.validate.ComponentValidator;
+import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.Validator;
 
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
@@ -183,12 +189,12 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * VAlarm reminder = new VAlarm(new Dur(0, -1, 0, 0));
  *
  * // repeat reminder four (4) more times every fifteen (15) minutes..
- * reminder.getProperties().add(new Repeat(4));
- * reminder.getProperties().add(new Duration(new Dur(0, 0, 15, 0)));
+ * reminder.add(new Repeat(4));
+ * reminder.add(new Duration(new Dur(0, 0, 15, 0)));
  *
  * // display a message..
- * reminder.getProperties().add(Action.DISPLAY);
- * reminder.getProperties().add(new Description(&quot;Progress Meeting at 9:30am&quot;));
+ * reminder.add(Action.DISPLAY);
+ * reminder.add(new Description(&quot;Progress Meeting at 9:30am&quot;));
  * </code></pre>
  *
  * @author Ben Fortuna
@@ -206,6 +212,13 @@ public class VAlarm extends CalendarComponent {
         actionValidators.put(Action.PROCEDURE, new ComponentValidator<VAlarm>(new ValidationRule(One, ATTACH),
                 new ValidationRule(OneOrLess, DESCRIPTION)));
     }
+
+    private Validator<VAlarm> vAlarmValidator = new ComponentValidator<>(
+            new ValidationRule<>(One, ACTION, TRIGGER),
+            new ValidationRule<>(OneOrLess, DURATION, REPEAT),
+            // DURATION and REPEAT must both be present or both absent
+            new ValidationRule<>(One, p->p.getProperties().getFirst(DURATION).isPresent(), REPEAT)
+    );
 
     /**
      * Default constructor.
@@ -228,7 +241,7 @@ public class VAlarm extends CalendarComponent {
      */
     public VAlarm(final Instant trigger) {
         this();
-        getProperties().add(new Trigger(trigger));
+        add(new Trigger(trigger));
     }
 
     /**
@@ -237,7 +250,7 @@ public class VAlarm extends CalendarComponent {
      */
     public VAlarm(final TemporalAmount trigger) {
         this();
-        getProperties().add(new Trigger(trigger));
+        add(new Trigger(trigger));
     }
 
     /**
@@ -249,25 +262,12 @@ public class VAlarm extends CalendarComponent {
         /*
          * ; 'action' and 'trigger' are both REQUIRED, ; but MUST NOT occur more than once action / trigger /
          */
-        PropertyValidator.assertOne(Property.ACTION, getProperties());
-        PropertyValidator.assertOne(Property.TRIGGER, getProperties());
 
         /*
          * ; 'duration' and 'repeat' are both optional, ; and MUST NOT occur more than once each, ; but if one occurs,
          * so MUST the other duration / repeat /
          */
-        PropertyValidator.assertOneOrLess(Property.DURATION, getProperties());
-        PropertyValidator.assertOneOrLess(Property.REPEAT, getProperties());
 
-        try {
-            PropertyValidator.assertNone(Property.DURATION, getProperties());
-            PropertyValidator.assertNone(Property.REPEAT, getProperties());
-        }
-        catch (ValidationException ve) {
-            PropertyValidator.assertOne(Property.DURATION, getProperties());
-            PropertyValidator.assertOne(Property.REPEAT, getProperties());
-        }
-        
         /*
          * ; the following is optional, ; and MAY occur more than once x-prop
          */
@@ -298,7 +298,7 @@ public class VAlarm extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Action> getAction() {
-        return getProperty(Property.ACTION);
+        return getProperty(ACTION);
     }
 
     /**
@@ -308,7 +308,7 @@ public class VAlarm extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Trigger> getTrigger() {
-        return getProperty(Property.TRIGGER);
+        return getProperty(TRIGGER);
     }
 
     /**
@@ -318,7 +318,7 @@ public class VAlarm extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Duration> getDuration() {
-        return getProperty(Property.DURATION);
+        return getProperty(DURATION);
     }
 
     /**
@@ -328,7 +328,7 @@ public class VAlarm extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Repeat> getRepeat() {
-        return getProperty(Property.REPEAT);
+        return getProperty(REPEAT);
     }
 
     /**
@@ -338,7 +338,7 @@ public class VAlarm extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Attach> getAttachment() {
-        return getProperty(Property.ATTACH);
+        return getProperty(ATTACH);
     }
 
     /**
@@ -348,7 +348,7 @@ public class VAlarm extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Description> getDescription() {
-        return getProperty(Property.DESCRIPTION);
+        return getProperty(DESCRIPTION);
     }
 
     /**
@@ -358,12 +358,12 @@ public class VAlarm extends CalendarComponent {
      */
     @Deprecated
     public final Optional<Summary> getSummary() {
-        return getProperty(Property.SUMMARY);
+        return getProperty(SUMMARY);
     }
 
     @Override
-    public Component copy() {
-        return new Factory().createComponent(getProperties());
+    protected ComponentFactory<VAlarm> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VAlarm> {
@@ -383,7 +383,7 @@ public class VAlarm extends CalendarComponent {
         }
 
         @Override
-        public VAlarm createComponent(PropertyList properties, ComponentList subComponents) {
+        public VAlarm createComponent(PropertyList properties, ComponentList<?> subComponents) {
             throw new UnsupportedOperationException(String.format("%s does not support sub-components", VALARM));
         }
     }

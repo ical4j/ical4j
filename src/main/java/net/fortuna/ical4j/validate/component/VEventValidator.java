@@ -14,7 +14,8 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
 
 public class VEventValidator extends ComponentValidator<VEvent> {
 
-    private final Validator<VAlarm> itipValidator = new ComponentValidator<>(new ValidationRule(One, ACTION, TRIGGER),
+    private final Validator<VAlarm> itipValidator = new ComponentValidator<>(
+            new ValidationRule(One, ACTION, TRIGGER),
             new ValidationRule(OneOrLess, DESCRIPTION, DURATION, REPEAT, SUMMARY));
 
     private final boolean alarmsAllowed;
@@ -33,9 +34,10 @@ public class VEventValidator extends ComponentValidator<VEvent> {
         super.validate(target);
 
         if (alarmsAllowed) {
-            target.getAlarms().forEach(itipValidator::validate);
+            target.getAlarms().getAll().forEach(itipValidator::validate);
         } else {
-            ComponentValidator.assertNone(VALARM, target.getAlarms());
+            Validator.assertFalse(input -> input.stream().anyMatch(c -> c.getName().equals(VALARM)),
+                    ASSERT_NONE_MESSAGE, false, target.getAlarms().getAll(), VALARM);
         }
     }
 }

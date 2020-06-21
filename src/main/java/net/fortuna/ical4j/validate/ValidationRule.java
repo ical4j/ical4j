@@ -3,6 +3,7 @@ package net.fortuna.ical4j.validate;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Provides a template for validating presence (or absence) of properties, parameters or components in a list.
@@ -12,6 +13,8 @@ public class ValidationRule<T> implements Serializable {
     public enum ValidationType { None,  One, OneOrLess, OneOrMore }
 
     private final ValidationType type;
+
+    private final Predicate<T> predicate;
 
     private final List<String> instances;
 
@@ -40,12 +43,17 @@ public class ValidationRule<T> implements Serializable {
 
     public ValidationRule(ValidationType type, Predicate<T> predicate, boolean relaxedModeSupported, String...instances) {
         this.type = type;
+        this.predicate = predicate;
         this.instances = Arrays.asList(instances);
         this.relaxedModeSupported = relaxedModeSupported;
     }
 
     public ValidationType getType() {
         return type;
+    }
+
+    public Predicate<T> getPredicate() {
+        return predicate;
     }
 
     public List<String> getInstances() {

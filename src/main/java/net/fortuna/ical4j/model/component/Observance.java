@@ -34,8 +34,10 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.TimeZones;
-import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +50,9 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.*;
+
+import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -73,6 +78,10 @@ public abstract class Observance extends Component {
      * Token for daylight observance.
      */
     public static final String DAYLIGHT = "DAYLIGHT";
+
+    private Validator<Observance> validator = new ComponentValidator<>(
+            new ValidationRule<>(One, TZOFFSETFROM, TZOFFSETTO, DTSTART)
+    );
 
     // TODO: clear cache when observance definition changes (??)
     private long[] onsetsMillisec;
@@ -118,20 +127,19 @@ public abstract class Observance extends Component {
      */
     public final void validate(final boolean recurse) throws ValidationException {
 
+        validator.validate(this);
+
         // From "4.8.3.3 Time Zone Offset From":
         // Conformance: This property MUST be specified in a "VTIMEZONE"
         // calendar component.
-        PropertyValidator.assertOne(Property.TZOFFSETFROM, getProperties());
 
         // From "4.8.3.4 Time Zone Offset To":
         // Conformance: This property MUST be specified in a "VTIMEZONE"
         // calendar component.
-        PropertyValidator.assertOne(Property.TZOFFSETTO, getProperties());
 
         /*
          * ; the following are each REQUIRED, ; but MUST NOT occur more than once dtstart / tzoffsetto / tzoffsetfrom /
          */
-        PropertyValidator.assertOne(Property.DTSTART, getProperties());
 
         /*
          * ; the following are optional, ; and MAY occur more than once comment / rdate / rrule / tzname / x-prop
@@ -152,7 +160,7 @@ public abstract class Observance extends Component {
     public final OffsetDateTime getLatestOnset(final Temporal date) {
         TzOffsetTo offsetTo;
         try {
-            offsetTo = getRequiredProperty(Property.TZOFFSETTO);
+            offsetTo = getProperties().getRequired(TZOFFSETTO);
         } catch (ConstraintViolationException e) {
             Logger log = LoggerFactory.getLogger(Observance.class);
             log.error("Unexpected error calculating latest onset", e);
@@ -164,7 +172,7 @@ public abstract class Observance extends Component {
 
         if (initialOnset == null) {
             try {
-                DtStart dtStart = getRequiredProperty(Property.DTSTART);
+                DtStart dtStart = getProperties().getRequired(DTSTART);
                 initialOnset = LocalDateTime.from(dtStart.getDate()).atOffset(offsetTo.getOffset());
             } catch (ConstraintViolationException e) {
                 Logger log = LoggerFactory.getLogger(Observance.class);
@@ -190,15 +198,15 @@ public abstract class Observance extends Component {
         // get first onset without adding TZFROM as this may lead to a day boundary
         // change which would be incompatible with BYDAY RRULES
         // we will have to add the offset to all cacheable onsets
-        Optional<DtStart<LocalDateTime>> startDate = getProperty(Property.DTSTART);
+        Optional<DtStart<LocalDateTime>> startDate = getProperty(DTSTART);
 
         // collect all onsets for the purposes of caching..
         final List<OffsetDateTime> cacheableOnsets = new ArrayList<>();
         cacheableOnsets.add(initialOnset);
 
         // check rdates for latest applicable onset..
-        Optional<TzOffsetFrom> offsetFrom = getProperty(Property.TZOFFSETFROM);
-        final List<Property> rdates = getProperties(Property.RDATE);
+        Optional<TzOffsetFrom> offsetFrom = getProperty(TZOFFSETFROM);
+        final List<Property> rdates = getProperties(RDATE);
         for (Property rdate : rdates) {
             List<LocalDateTime> rdateDates = ((RDate<LocalDateTime>) rdate).getDates();
             for (final LocalDateTime rdateDate : rdateDates) {
@@ -215,7 +223,7 @@ public abstract class Observance extends Component {
         }
 
         // check recurrence rules for latest applicable onset..
-        final List<Property> rrules = getProperties(Property.RRULE);
+        final List<Property> rrules = getProperties(RRULE);
         for (Property rrule : rrules) {
             // include future onsets to determine onset period..
             onsetLimit = Instant.from(offsetDate.plus(10, ChronoUnit.YEARS));
@@ -273,7 +281,7 @@ public abstract class Observance extends Component {
      */
     @Deprecated
     public final Optional<DtStart<LocalDateTime>> getStartDate() {
-        return getProperty(Property.DTSTART);
+        return getProperty(DTSTART);
     }
 
     /**
@@ -284,7 +292,7 @@ public abstract class Observance extends Component {
      */
     @Deprecated
     public final Optional<TzOffsetFrom> getOffsetFrom() {
-        return getProperty(Property.TZOFFSETFROM);
+        return getProperty(TZOFFSETFROM);
     }
 
     /**
@@ -295,6 +303,6 @@ public abstract class Observance extends Component {
      */
     @Deprecated
     public final Optional<TzOffsetTo> getOffsetTo() {
-        return getProperty(Property.TZOFFSETTO);
+        return getProperty(TZOFFSETTO);
     }
 }

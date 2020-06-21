@@ -26,26 +26,28 @@ class VEventUserAgentTest extends Specification {
             summary 'Spring Equinox'
             dtstamp()
             dtstart '20090810', parameters: [value('DATE')]
+            dtend '20090811', parameters: [value('DATE')]
             action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: [value('URI')]
+            attach 'http://example.com/attachment', parameters: [value('URI')]
         }
 
         def vevent2 = builder.vevent {
             summary 'Spring Equinox'
             dtstamp()
             dtstart '20090811', parameters: [value('DATE')]
+            dtend '20090812', parameters: [value('DATE')]
             action 'DISPLAY'
-            attach'http://example.com/attachment', parameters: [value('URI')]
+            attach 'http://example.com/attachment', parameters: [value('URI')]
         }
 
         when: 'the events are published'
         def calendar = userAgent.publish(vevent, vevent2)
 
         then: 'the calendar object contains method = PUBLISH'
-        calendar.getRequiredProperty(Property.METHOD) == Method.PUBLISH
+        calendar.getProperties().getRequired(Property.METHOD) == Method.PUBLISH
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE).isPresent() }
+        calendar.components.all.each { it.getProperties().getFirst(Property.SEQUENCE).isPresent() }
     }
 
     def "Request"() {
@@ -55,6 +57,7 @@ class VEventUserAgentTest extends Specification {
             summary 'Spring Equinox'
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
+            dtend '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
             attendee 'mailto:org@example.com'
@@ -65,6 +68,7 @@ class VEventUserAgentTest extends Specification {
             summary 'Spring Equinox'
             dtstamp()
             dtstart '20090811', parameters: parameters { value 'DATE' }
+            dtend '20090812', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
             attendee 'mailto:org@example.com'
@@ -74,10 +78,10 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.request(vevent, vevent2)
 
         then: 'the calendar object contains method = REQUEST'
-        calendar.getRequiredProperty(Property.METHOD) == Method.REQUEST
+        calendar.getProperties().getRequired(Property.METHOD) == Method.REQUEST
 
         and: 'the sequence property is present on all components'
-        calendar.components.each { it.getProperty(Property.SEQUENCE).isPresent() }
+        calendar.components.all.each { it.getProperty(Property.SEQUENCE).isPresent() }
     }
 
     def "Delegate"() {
@@ -90,6 +94,7 @@ class VEventUserAgentTest extends Specification {
                 summary 'Spring Equinox'
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
+                dtend '20090811', parameters: parameters { value 'DATE' }
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
                 attendee 'mailto:org@example.com'
@@ -100,7 +105,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.delegate(request)
 
         then: 'the calendar object contains method = REQUEST'
-        calendar.getRequiredProperty(Property.METHOD) == Method.REQUEST
+        calendar.getProperties().getRequired(Property.METHOD) == Method.REQUEST
     }
 
     def "Reply"() {
@@ -113,6 +118,7 @@ class VEventUserAgentTest extends Specification {
                 organizer 'mailto:org@example.com'
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
+                dtend '20090811', parameters: parameters { value 'DATE' }
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
                 attendee 'mailto:org@example.com'
@@ -123,7 +129,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.reply(request)
 
         then: 'the calendar object contains method = REPLY'
-        calendar.getRequiredProperty(Property.METHOD) == Method.REPLY
+        calendar.getProperties().getRequired(Property.METHOD) == Method.REPLY
     }
 
     def "Add"() {
@@ -132,6 +138,7 @@ class VEventUserAgentTest extends Specification {
             summary('Spring Equinox')
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
+            dtend '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
@@ -140,7 +147,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.add(vevent)
 
         then: 'the calendar object contains method = ADD'
-        calendar.getRequiredProperty(Property.METHOD) == Method.ADD
+        calendar.getProperties().getRequired(Property.METHOD) == Method.ADD
     }
 
     def "Cancel"() {
@@ -148,6 +155,7 @@ class VEventUserAgentTest extends Specification {
         def vevent = builder.vevent {
             dtstamp()
             dtstart '20090810', parameters: parameters { value 'DATE' }
+            dtend '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attach'http://example.com/attachment', parameters: parameters { value 'URI' }
         }
@@ -156,7 +164,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.cancel(vevent)
 
         then: 'the calendar object contains method = CANCEL'
-        calendar.getRequiredProperty(Property.METHOD) == Method.CANCEL
+        calendar.getProperties().getRequired(Property.METHOD) == Method.CANCEL
     }
 
     def "Refresh"() {
@@ -164,6 +172,8 @@ class VEventUserAgentTest extends Specification {
         def vevent = builder.vevent {
             organizer 'mailto:org@example.com'
             dtstamp()
+            dtstart '20090810', parameters: parameters { value 'DATE' }
+            dtend '20090811', parameters: parameters { value 'DATE' }
             action 'DISPLAY'
             attendee 'mailto:org@example.com'
         }
@@ -172,7 +182,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.refresh(vevent)
 
         then: 'the calendar object contains method = REFRESH'
-        calendar.getRequiredProperty(Property.METHOD) == Method.REFRESH
+        calendar.getProperties().getRequired(Property.METHOD) == Method.REFRESH
     }
 
     def "Counter"() {
@@ -185,6 +195,7 @@ class VEventUserAgentTest extends Specification {
                 organizer 'mailto:org@example.com'
                 dtstamp()
                 dtstart '20090810', parameters: parameters { value 'DATE' }
+                dtend '20090811', parameters: parameters { value 'DATE' }
                 action 'DISPLAY'
                 attach'http://example.com/attachment', parameters: parameters { value 'URI' }
                 sequence '0'
@@ -195,7 +206,7 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.counter(request)
 
         then: 'the calendar object contains method = COUNTER'
-        calendar.getRequiredProperty(Property.METHOD) == Method.COUNTER
+        calendar.getProperties().getRequired(Property.METHOD) == Method.COUNTER
     }
 
     def "DeclineCounter"() {
@@ -206,6 +217,8 @@ class VEventUserAgentTest extends Specification {
             method(Method.COUNTER)
             vevent {
                 dtstamp()
+                dtstart '20090810', parameters: parameters { value 'DATE' }
+                dtend '20090811', parameters: parameters { value 'DATE' }
                 action 'DISPLAY'
             }
         }
@@ -214,6 +227,6 @@ class VEventUserAgentTest extends Specification {
         def calendar = userAgent.declineCounter(counter)
 
         then: 'the calendar object contains method = DECLINECOUNTER'
-        calendar.getRequiredProperty(Property.METHOD) == Method.DECLINE_COUNTER
+        calendar.getProperties().getRequired(Property.METHOD) == Method.DECLINE_COUNTER
     }
 }

@@ -34,12 +34,15 @@ package net.fortuna.ical4j.model.component;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.Validator;
 
-import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.Optional;
+
+import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$ [05-Apr-2004]
@@ -91,6 +94,16 @@ public class Available extends Component {
 
     private static final long serialVersionUID = -2494710612002978763L;
 
+    private final Validator<Available> validator = new ComponentValidator<>(
+        new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
+        new ValidationRule<>(OneOrLess, CREATED, LAST_MODIFIED, RECURRENCE_ID, RRULE, SUMMARY),
+        // can't have both DTEND and DURATION..
+        new ValidationRule<>(One, p->!p.getProperties().getFirst(DURATION).isPresent(), DTEND),
+        new ValidationRule<>(None, p->p.getProperties().getFirst(DTEND).isPresent(), DURATION),
+        new ValidationRule<>(One, p->!p.getProperties().getFirst(DTEND).isPresent(), DURATION),
+        new ValidationRule<>(None, p->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
+    );
+
     /**
      * Default constructor.
      */
@@ -110,13 +123,12 @@ public class Available extends Component {
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
+    public final void validate(final boolean recurse) throws ValidationException {
 
+        validator.validate(this);
         /*
          * ; dtstamp / dtstart / uid are required, but MUST NOT occur more than once /
          */
-        Arrays.asList(Property.DTSTART, Property.DTSTAMP, Property.UID).forEach(property -> PropertyValidator.assertOne(property, getProperties()));
 
         /*       If specified, the "DTSTART" and "DTEND" properties in
          *      "VAVAILABILITY" components and "AVAILABLE" sub-components MUST be
@@ -124,9 +136,9 @@ public class Available extends Component {
          *      with local time and a time zone reference.
          */
         try {
-            if (getRequiredProperty(Property.DTSTART).getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
-                throw new ValidationException("Property [" + Property.DTSTART
-                        + "] must be a " + Value.DATE_TIME);
+            if (getProperties().getRequired(DTSTART).getParameters().getFirst(Parameter.VALUE)
+                    .equals(Optional.of(Value.DATE))) {
+                throw new ValidationException("Property [" + DTSTART + "] must be a " + Value.DATE_TIME);
             }
         } catch (ConstraintViolationException cve) {
             throw new ValidationException("Missing required property", cve);
@@ -139,8 +151,6 @@ public class Available extends Component {
          *               created / last-mod / recurid / rrule /
          *               summary /
          */
-        Arrays.asList(Property.CREATED, Property.LAST_MODIFIED, Property.RECURRENCE_ID,
-                Property.RRULE, Property.SUMMARY).forEach(property -> PropertyValidator.assertOneOrLess(property, getProperties()));
 
         /*
          ; either a 'dtend' or a 'duration' is required
@@ -149,18 +159,12 @@ public class Available extends Component {
          ; 'availableprop', and each MUST NOT occur more
          ; than once
          */
-        final Optional<DtEnd<?>> end = getProperty(Property.DTEND);
+        final Optional<DtEnd<?>> end = getProperties().getFirst(DTEND);
         if (end.isPresent()) {
-            PropertyValidator.assertOne(Property.DTEND,
-                    getProperties());
             /* Must be DATE_TIME */
-            if (Value.DATE.equals(end.get().getParameter(Parameter.VALUE))) {
-                throw new ValidationException("Property [" + Property.DTEND
-                        + "] must be a " + Value.DATE_TIME);
+            if (Optional.of(Value.DATE).equals(end.get().getParameters().getFirst(Parameter.VALUE))) {
+                throw new ValidationException("Property [" + DTEND + "] must be a " + Value.DATE_TIME);
             }
-        } else {
-            PropertyValidator.assertOne(Property.DURATION,
-                    getProperties());
         }
 
         /*
@@ -175,8 +179,8 @@ public class Available extends Component {
     }
 
     @Override
-    public Available copy() throws URISyntaxException {
-        return new Factory().createComponent(getProperties());
+    protected ComponentFactory<Available> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<Available> {
@@ -191,12 +195,12 @@ public class Available extends Component {
         }
 
         @Override
-        public Available createComponent(PropertyList properties) throws URISyntaxException {
+        public Available createComponent(PropertyList properties) {
             return new Available(properties);
         }
 
         @Override
-        public Available createComponent(PropertyList properties, ComponentList subComponents) {
+        public Available createComponent(PropertyList properties, ComponentList<?> subComponents) {
             throw new UnsupportedOperationException(String.format("%s does not support sub-components", AVAILABLE));
         }
     }

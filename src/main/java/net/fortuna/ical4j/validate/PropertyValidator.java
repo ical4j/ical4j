@@ -31,13 +31,11 @@
  */
 package net.fortuna.ical4j.validate;
 
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.util.List;
-
-import static net.fortuna.ical4j.validate.Validator.assertFalse;
 
 /**
  * $Id$ [15-May-2004]
@@ -46,99 +44,33 @@ import static net.fortuna.ical4j.validate.Validator.assertFalse;
  *
  * @author Ben Fortuna
  */
-public final class PropertyValidator implements Validator<Property> {
+public final class PropertyValidator implements Validator<Property>, ContentValidator<Parameter> {
 
-    public static final String ASSERT_NONE_MESSAGE = "Property [{0}] is not applicable";
+    private final List<ValidationRule<Property>> rules;
 
-    public static final String ASSERT_ONE_OR_LESS_MESSAGE = "Property [{0}] must only be specified once";
-
-    public static final String ASSERT_ONE_MESSAGE = "Property [{0}] must be specified once";
-
-    public static final String ASSERT_ONE_OR_MORE_MESSAGE = "Property [{0}] must be specified at least once";
-
-    private final List<ValidationRule> rules;
-
-    public PropertyValidator(List<ValidationRule> rules) {
+    public PropertyValidator(List<ValidationRule<Property>> rules) {
         this.rules = rules;
     }
 
     @Override
     public void validate(Property target) throws ValidationException {
-        for (ValidationRule rule : rules) {
+        for (ValidationRule<Property> rule : rules) {
             boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                     && rule.isRelaxedModeSupported();
 
-            switch (rule.getType()) {
-                case None:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.stream().anyMatch(p -> p.getName().equals(s)),
-                            ParameterValidator.ASSERT_NONE_MESSAGE, warnOnly, target.getParameters(), s));
-                    break;
-                case One:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.stream().filter(p -> p.getName().equals(s)).count() != 1,
-                            ParameterValidator.ASSERT_ONE_MESSAGE, warnOnly, target.getParameters(), s));
-                    break;
-                case OneOrLess:
-                    rule.getInstances().forEach(s -> assertFalse(input -> input.stream().filter(p -> p.getName().equals(s)).count() > 1,
-                            ParameterValidator.ASSERT_ONE_OR_LESS_MESSAGE, warnOnly, target.getParameters(), s));
-                    break;
+            if (rule.getPredicate().test(target)) {
+                switch (rule.getType()) {
+                    case None:
+                        rule.getInstances().forEach(s -> assertNone(s, target.getParameters().getAll(), warnOnly));
+                        break;
+                    case One:
+                        rule.getInstances().forEach(s -> assertOne(s, target.getParameters().getAll(), warnOnly));
+                        break;
+                    case OneOrLess:
+                        rule.getInstances().forEach(s -> assertOneOrLess(s, target.getParameters().getAll(), warnOnly));
+                        break;
+                }
             }
         }
-    }
-
-    /**
-     * Ensure a property occurs no more than once.
-     *
-     * @param propertyName
-     *            the property name
-     * @param properties
-     *            a list of properties to query
-     * @throws ValidationException
-     *             when the specified property occurs more than once
-     */
-    public static void assertOneOrLess(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperties(propertyName).size() > 1, ASSERT_ONE_OR_LESS_MESSAGE, false,
-                properties, propertyName);
-    }
-
-    /**
-     * Ensure a property occurs at least once.
-     *
-     * @param propertyName
-     *            the property name
-     * @param properties
-     *            a list of properties to query
-     * @throws ValidationException
-     *             when the specified property occurs more than once
-     */
-    public static void assertOneOrMore(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperties(propertyName).size() < 1, ASSERT_ONE_OR_MORE_MESSAGE, false,
-                properties, propertyName);
-    }
-
-    /**
-     * Ensure a property occurs once.
-     *
-     * @param propertyName
-     *            the property name
-     * @param properties
-     *            a list of properties to query
-     * @throws ValidationException
-     *             when the specified property does not occur once
-     */
-    public static void assertOne(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperties(propertyName).size() != 1, ASSERT_ONE_MESSAGE, false,
-                properties, propertyName);
-    }
-    
-    /**
-     * Ensure a property doesn't occur in the specified list.
-     * @param propertyName the name of a property
-     * @param properties a list of properties
-     * @throws ValidationException thrown when the specified property
-     * is found in the list of properties
-     */
-    public static void assertNone(final String propertyName, final PropertyList properties) throws ValidationException {
-        assertFalse(input -> input.getProperty(propertyName).isPresent(), ASSERT_NONE_MESSAGE, false,
-                properties, propertyName);
     }
 }

@@ -37,8 +37,9 @@ import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.TzId;
 import net.fortuna.ical4j.model.property.TzUrl;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.PropertyValidator;
+import net.fortuna.ical4j.validate.ComponentValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 import net.fortuna.ical4j.validate.component.VTimeZoneValidator;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -49,6 +50,11 @@ import java.time.temporal.Temporal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static net.fortuna.ical4j.model.Property.*;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.One;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -128,7 +134,12 @@ public class VTimeZone extends CalendarComponent {
     private static final long serialVersionUID = 5629679741050917815L;
 
     private final Validator itipValidator = new VTimeZoneValidator();
-    
+
+    private final Validator<VTimeZone> validator = new ComponentValidator<>(
+            new ValidationRule<>(One, TZID),
+            new ValidationRule<>(OneOrLess, LAST_MODIFIED, TZURL)
+    );
+
     private ComponentList<Observance> observances;
 
     /**
@@ -194,22 +205,16 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
+    public final void validate(final boolean recurse) throws ValidationException {
+        validator.validate(this);
 
         /*
          * ; 'tzid' is required, but MUST NOT occur more ; than once tzid /
          */
-        PropertyValidator.assertOne(Property.TZID,
-                getProperties());
 
         /*
          * ; 'last-mod' and 'tzurl' are optional, but MUST NOT occur more than once last-mod / tzurl /
          */
-        PropertyValidator.assertOneOrLess(Property.LAST_MODIFIED,
-                getProperties());
-        PropertyValidator.assertOneOrLess(Property.TZURL,
-                getProperties());
 
         /*
          * ; one of 'standardc' or 'daylightc' MUST occur ..; and each MAY occur more than once. standardc / daylightc /
@@ -221,7 +226,7 @@ public class VTimeZone extends CalendarComponent {
                     + "] must be specified at least once");
         }
 
-        for (final Observance observance : getObservances()) {
+        for (final Observance observance : getObservances().getAll()) {
             observance.validate(recurse);
         }
         
@@ -259,7 +264,7 @@ public class VTimeZone extends CalendarComponent {
      * observances
      */
     public final Observance getApplicableObservance(final Temporal date) {
-        return getApplicableObservance(date, getObservances());
+        return getApplicableObservance(date, getObservances().getAll());
     }
 
     /**
@@ -288,7 +293,7 @@ public class VTimeZone extends CalendarComponent {
      */
     @Deprecated
     public final Optional<TzId> getTimeZoneId() {
-        return getProperty(Property.TZID);
+        return getProperty(TZID);
     }
 
     /**
@@ -297,7 +302,7 @@ public class VTimeZone extends CalendarComponent {
      */
     @Deprecated
     public final Optional<LastModified> getLastModified() {
-        return getProperty(Property.LAST_MODIFIED);
+        return getProperty(LAST_MODIFIED);
     }
 
     /**
@@ -306,7 +311,7 @@ public class VTimeZone extends CalendarComponent {
      */
     @Deprecated
     public final Optional<TzUrl> getTimeZoneUrl() {
-        return getProperty(Property.TZURL);
+        return getProperty(TZURL);
     }
 
     /**
@@ -335,7 +340,11 @@ public class VTimeZone extends CalendarComponent {
      * @see net.fortuna.ical4j.model.Component#copy()
      */
     public VTimeZone copy() {
-        return new Factory().createComponent(getProperties(), getObservances());
+        return newFactory().createComponent(
+                new PropertyList(properties.getAll().stream()
+                        .map(Unchecked.function(Property::copy)).collect(Collectors.toList())),
+                new ComponentList<>(observances.getAll().stream()
+                        .map(Unchecked.function(Observance::copy)).collect(Collectors.toList())));
     }
 
     @Override
@@ -359,9 +368,9 @@ public class VTimeZone extends CalendarComponent {
             return new VTimeZone(properties);
         }
 
-        @Override
-        public VTimeZone createComponent(PropertyList properties, ComponentList subComponents) {
-            return new VTimeZone(properties, subComponents);
+        @Override @SuppressWarnings("unchecked")
+        public VTimeZone createComponent(PropertyList properties, ComponentList<?> subComponents) {
+            return new VTimeZone(properties, (ComponentList<Observance>) subComponents);
         }
     }
 }

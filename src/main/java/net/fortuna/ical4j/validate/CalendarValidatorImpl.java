@@ -12,13 +12,13 @@ import java.util.*;
 /**
  * Created by fortuna on 13/09/15.
  */
-public class CalendarValidatorImpl implements Validator<Calendar> {
+public class CalendarValidatorImpl implements Validator<Calendar>, ContentValidator<Property> {
 
     protected final List<Class<? extends Property>> calendarProperties = new ArrayList<>();
 
-    private final List<ValidationRule> rules;
+    private final List<ValidationRule<Calendar>> rules;
 
-    public CalendarValidatorImpl(ValidationRule... rules) {
+    public CalendarValidatorImpl(ValidationRule<Calendar>... rules) {
         this.rules = Arrays.asList(rules);
 
         Collections.addAll(calendarProperties, CalScale.class, Method.class, ProdId.class, Version.class,
@@ -28,29 +28,25 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
     @Override
     public void validate(Calendar target) throws ValidationException {
-        for (ValidationRule rule : rules) {
-            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
-                    && rule.isRelaxedModeSupported()) {
-                continue;
-            }
+        for (ValidationRule<Calendar> rule : rules) {
+            boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
+                    && rule.isRelaxedModeSupported();
 
-            switch (rule.getType()) {
-                case None:
-                    rule.getInstances().forEach(s -> PropertyValidator.assertNone(s,
-                            target.getProperties()));
-                    break;
-                case One:
-                    rule.getInstances().forEach(s -> PropertyValidator.assertOne(s,
-                            target.getProperties()));
-                    break;
-                case OneOrLess:
-                    rule.getInstances().forEach(s -> PropertyValidator.assertOneOrLess(s,
-                            target.getProperties()));
-                    break;
-                case OneOrMore:
-                    rule.getInstances().forEach(s -> PropertyValidator.assertOneOrMore(s,
-                            target.getProperties()));
-                    break;
+            if (rule.getPredicate().test(target)) {
+                switch (rule.getType()) {
+                    case None:
+                        rule.getInstances().forEach(s -> assertNone(s, target.getProperties().getAll(), warnOnly));
+                        break;
+                    case One:
+                        rule.getInstances().forEach(s -> assertOne(s, target.getProperties().getAll(), warnOnly));
+                        break;
+                    case OneOrLess:
+                        rule.getInstances().forEach(s -> assertOneOrLess(s, target.getProperties().getAll(), warnOnly));
+                        break;
+                    case OneOrMore:
+                        rule.getInstances().forEach(s -> assertOneOrMore(s, target.getProperties().getAll(), warnOnly));
+                        break;
+                }
             }
         }
 
@@ -63,12 +59,12 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
         }
 
         // must contain at least one component
-        if (target.getComponents().isEmpty()) {
+        if (target.getComponents().getAll().isEmpty()) {
             throw new ValidationException("Calendar must contain at least one component");
         }
 
         // validate properties..
-        for (final Property property : target.getProperties()) {
+        for (final Property property : target.getProperties().getAll()) {
             boolean isCalendarProperty = calendarProperties.stream().anyMatch(calProp -> calProp.isInstance(property));
 
             if (!(property instanceof XProperty) && !isCalendarProperty) {
@@ -78,7 +74,7 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
 
 //        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
         // validate method..
-        final Optional<Method> method = target.getProperty(Property.METHOD);
+        final Optional<Method> method = target.getProperties().getFirst(Property.METHOD);
         if (method.isPresent()) {
             if (Method.PUBLISH.equals(method.get())) {
                 new PublishValidator().validate(target);
@@ -99,201 +95,200 @@ public class CalendarValidatorImpl implements Validator<Calendar> {
             }
 
             // perform ITIP validation on components..
-            for (CalendarComponent component : target.getComponents()) {
+            for (CalendarComponent component : target.getComponents().getAll()) {
                 component.validate(method.get());
             }
         }
     }
 
-    public static class PublishValidator implements Validator<Calendar> {
+    public static class PublishValidator implements Validator<Calendar>, ContentValidator<CalendarComponent> {
 
         @Override
         public void validate(Calendar target) throws ValidationException {
-            if (target.getComponent(Component.VEVENT).isPresent()) {
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
+            if (target.getComponents().getFirst(Component.VEVENT).isPresent()) {
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
 
-                if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
-                    ComponentValidator.assertNone(Component.VTODO, target.getComponents());
-                }
+                boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
+                assertNone(Component.VTODO, target.getComponents().getAll(), warnOnly);
             }
-            else if (target.getComponent(Component.VFREEBUSY).isPresent()) {
-                ComponentValidator.assertNone(Component.VTODO, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTIMEZONE, target.getComponents());
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VFREEBUSY).isPresent()) {
+                assertNone(Component.VTODO, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTIMEZONE, target.getComponents().getAll(), false);
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VTODO).isPresent()) {
-//                    ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                    ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VTODO).isPresent()) {
+//                    assertNone(Component.VFREEBUSY, target.getComponents());
+//                    assertNone(Component.VEVENT, target.getComponents());
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
             }
-//                else if (target.getComponent(Component.VJOURNAL) != null) {
-//                    ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                    ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-//                    ComponentValidator.assertNone(Component.VTODO, target.getComponents());
+//                else if (target.getComponents().getFirst(Component.VJOURNAL) != null) {
+//                    assertNone(Component.VFREEBUSY, target.getComponents());
+//                    assertNone(Component.VEVENT, target.getComponents());
+//                    assertNone(Component.VTODO, target.getComponents());
 //                }
         }
     }
 
-    public static class RequestValidator implements Validator<Calendar> {
+    public static class RequestValidator implements Validator<Calendar>, ContentValidator<CalendarComponent> {
 
         @Override
         public void validate(Calendar target) throws ValidationException {
-            if (target.getComponent(Component.VEVENT).isPresent()) {
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTODO, target.getComponents());
+            if (target.getComponents().getFirst(Component.VEVENT).isPresent()) {
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTODO, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VFREEBUSY).isPresent()) {
-                ComponentValidator.assertNone(Component.VTODO, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTIMEZONE, target.getComponents());
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VFREEBUSY).isPresent()) {
+                assertNone(Component.VTODO, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTIMEZONE, target.getComponents().getAll(), false);
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VTODO).isPresent()) {
-//                  ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VTODO).isPresent()) {
+//                  assertNone(Component.VFREEBUSY, target.getComponents());
+//                  assertNone(Component.VEVENT, target.getComponents());
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
             }
         }
     }
 
-    public static class ReplyValidator implements Validator<Calendar> {
+    public static class ReplyValidator implements Validator<Calendar>, ContentValidator<CalendarComponent> {
 
         @Override
         public void validate(Calendar target) throws ValidationException {
-            if (target.getComponent(Component.VEVENT).isPresent()) {
-                ComponentValidator.assertOneOrLess(Component.VTIMEZONE, target.getComponents());
+            if (target.getComponents().getFirst(Component.VEVENT).isPresent()) {
+                assertOneOrLess(Component.VTIMEZONE, target.getComponents().getAll(), false);
 
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTODO, target.getComponents());
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTODO, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VFREEBUSY).isPresent()) {
-                ComponentValidator.assertNone(Component.VTODO, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTIMEZONE, target.getComponents());
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VFREEBUSY).isPresent()) {
+                assertNone(Component.VTODO, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTIMEZONE, target.getComponents().getAll(), false);
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VTODO).isPresent()) {
-                ComponentValidator.assertOneOrLess(Component.VTIMEZONE, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VTODO).isPresent()) {
+                assertOneOrLess(Component.VTIMEZONE, target.getComponents().getAll(), false);
 
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
+//                  assertNone(Component.VFREEBUSY, target.getComponents());
+//                  assertNone(Component.VEVENT, target.getComponents());
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
             }
         }
     }
 
-    public static class AddValidator implements Validator<Calendar> {
+    public static class AddValidator implements Validator<Calendar>, ContentValidator<CalendarComponent> {
 
         @Override
         public void validate(Calendar target) throws ValidationException {
-            if (target.getComponent(Component.VEVENT).isPresent()) {
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTODO, target.getComponents());
+            if (target.getComponents().getFirst(Component.VEVENT).isPresent()) {
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTODO, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VTODO).isPresent()) {
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VTODO).isPresent()) {
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+//                  assertNone(Component.VEVENT, target.getComponents());
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VJOURNAL).isPresent()) {
-                ComponentValidator.assertOneOrLess(Component.VTIMEZONE, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VJOURNAL).isPresent()) {
+                assertOneOrLess(Component.VTIMEZONE, target.getComponents().getAll(), false);
 
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VTODO, target.getComponents());
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+//                  assertNone(Component.VEVENT, target.getComponents());
+//                  assertNone(Component.VTODO, target.getComponents());
             }
         }
     }
 
-    public static class CancelValidator implements Validator<Calendar> {
+    public static class CancelValidator implements Validator<Calendar>, ContentValidator<CalendarComponent> {
 
         @Override
         public void validate(Calendar target) throws ValidationException {
-            if (target.getComponent(Component.VEVENT).isPresent()) {
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTODO, target.getComponents());
+            if (target.getComponents().getFirst(Component.VEVENT).isPresent()) {
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTODO, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VTODO).isPresent()) {
-                ComponentValidator.assertOneOrLess(Component.VTIMEZONE, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VTODO).isPresent()) {
+                assertOneOrLess(Component.VTIMEZONE, target.getComponents().getAll(), false);
 
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+//                  assertNone(Component.VEVENT, target.getComponents());
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VJOURNAL).isPresent()) {
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VTODO, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VJOURNAL).isPresent()) {
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+//                  assertNone(Component.VEVENT, target.getComponents());
+//                  assertNone(Component.VTODO, target.getComponents());
             }
         }
     }
 
-    public static class RefreshValidator implements Validator<Calendar> {
+    public static class RefreshValidator implements Validator<Calendar>, ContentValidator<CalendarComponent> {
 
         @Override
         public void validate(Calendar target) throws ValidationException {
-            if (target.getComponent(Component.VEVENT).isPresent()) {
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTODO, target.getComponents());
+            if (target.getComponents().getFirst(Component.VEVENT).isPresent()) {
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTODO, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VTODO).isPresent()) {
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTIMEZONE, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VTODO).isPresent()) {
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+//                  assertNone(Component.VEVENT, target.getComponents());
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTIMEZONE, target.getComponents().getAll(), false);
             }
         }
     }
 
-    public static class CounterValidator implements Validator<Calendar> {
+    public static class CounterValidator implements Validator<Calendar>, ContentValidator<CalendarComponent> {
 
         @Override
         public void validate(Calendar target) throws ValidationException {
-            if (target.getComponent(Component.VEVENT).isPresent()) {
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTODO, target.getComponents());
+            if (target.getComponents().getFirst(Component.VEVENT).isPresent()) {
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTODO, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VTODO).isPresent()) {
-                ComponentValidator.assertOneOrLess(Component.VTIMEZONE, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VTODO).isPresent()) {
+                assertOneOrLess(Component.VTIMEZONE, target.getComponents().getAll(), false);
 
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+//                  assertNone(Component.VEVENT, target.getComponents());
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
             }
         }
     }
 
-    public static class DeclineCounterValidator implements Validator<Calendar> {
+    public static class DeclineCounterValidator implements Validator<Calendar>, ContentValidator<CalendarComponent> {
 
         @Override
         public void validate(Calendar target) throws ValidationException {
-            if (target.getComponent(Component.VEVENT).isPresent()) {
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
-                ComponentValidator.assertNone(Component.VTODO, target.getComponents());
-                ComponentValidator.assertNone(Component.VTIMEZONE, target.getComponents());
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
+            if (target.getComponents().getFirst(Component.VEVENT).isPresent()) {
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
+                assertNone(Component.VTODO, target.getComponents().getAll(), false);
+                assertNone(Component.VTIMEZONE, target.getComponents().getAll(), false);
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
             }
-            else if (target.getComponent(Component.VTODO).isPresent()) {
-                ComponentValidator.assertNone(Component.VALARM, target.getComponents());
-                ComponentValidator.assertNone(Component.VFREEBUSY, target.getComponents());
-//                  ComponentValidator.assertNone(Component.VEVENT, target.getComponents());
-                ComponentValidator.assertNone(Component.VJOURNAL, target.getComponents());
+            else if (target.getComponents().getFirst(Component.VTODO).isPresent()) {
+                assertNone(Component.VALARM, target.getComponents().getAll(), false);
+                assertNone(Component.VFREEBUSY, target.getComponents().getAll(), false);
+//                  assertNone(Component.VEVENT, target.getComponents());
+                assertNone(Component.VJOURNAL, target.getComponents().getAll(), false);
             }
         }
     }
