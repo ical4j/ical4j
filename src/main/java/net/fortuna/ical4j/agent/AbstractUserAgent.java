@@ -1,12 +1,14 @@
 package net.fortuna.ical4j.agent;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Version;
-import net.fortuna.ical4j.transform.*;
+import net.fortuna.ical4j.transform.Transformer;
+import net.fortuna.ical4j.transform.calendar.*;
 import net.fortuna.ical4j.util.Calendars;
 import net.fortuna.ical4j.util.UidGenerator;
 
@@ -21,19 +23,20 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
 
     private final ProdId prodId;
 
-    private final Map<Method, Transformer<Calendar>> transformers;
+    private final Map<Method, Transformer<Calendar>> methodTransformers;
 
     public AbstractUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
         this.prodId = prodId;
-        transformers = new HashMap<>();
-        transformers.put(Method.PUBLISH, new PublishTransformer(organizer, uidGenerator,true));
-        transformers.put(Method.REQUEST, new RequestTransformer(organizer, uidGenerator));
-        transformers.put(Method.ADD, new AddTransformer(organizer, uidGenerator));
-        transformers.put(Method.CANCEL, new CancelTransformer(organizer, uidGenerator));
-        transformers.put(Method.REPLY, new ReplyTransformer(uidGenerator));
-        transformers.put(Method.REFRESH, new RefreshTransformer(uidGenerator));
-        transformers.put(Method.COUNTER, new CounterTransformer(uidGenerator));
-        transformers.put(Method.DECLINE_COUNTER, new DeclineCounterTransformer(organizer, uidGenerator));
+
+        methodTransformers = new HashMap<>();
+        methodTransformers.put(Method.PUBLISH, new PublishTransformer(organizer, uidGenerator,true));
+        methodTransformers.put(Method.REQUEST, new RequestTransformer(organizer, uidGenerator));
+        methodTransformers.put(Method.ADD, new AddTransformer(organizer, uidGenerator));
+        methodTransformers.put(Method.CANCEL, new CancelTransformer(organizer, uidGenerator));
+        methodTransformers.put(Method.REPLY, new ReplyTransformer(uidGenerator));
+        methodTransformers.put(Method.REFRESH, new RefreshTransformer(uidGenerator));
+        methodTransformers.put(Method.COUNTER, new CounterTransformer(uidGenerator));
+        methodTransformers.put(Method.DECLINE_COUNTER, new DeclineCounterTransformer(organizer, uidGenerator));
     }
 
     @SafeVarargs
@@ -44,7 +47,7 @@ public abstract class AbstractUserAgent<T extends CalendarComponent> implements 
     }
 
     protected Calendar transform(Method method, Calendar calendar) {
-        Transformer<Calendar> transformer = transformers.get(method);
+        Transformer<Calendar> transformer = methodTransformers.get(method);
         transformer.transform(calendar);
         return calendar;
     }

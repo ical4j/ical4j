@@ -1,4 +1,0 @@
-net.fortuna.ical4j.transform.rfc5545.DatePropertyRule
-net.fortuna.ical4j.transform.rfc5545.DateListPropertyRule
-net.fortuna.ical4j.transform.rfc5545.TzIdRule
-net.fortuna.ical4j.transform.rfc5545.AttendeePropertyRule

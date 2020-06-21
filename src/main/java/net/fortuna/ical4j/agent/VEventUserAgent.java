@@ -5,7 +5,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.transform.RequestTransformer;
+import net.fortuna.ical4j.transform.calendar.RequestTransformer;
 import net.fortuna.ical4j.util.UidGenerator;
 
 public class VEventUserAgent extends AbstractUserAgent<VEvent> {
@@ -96,7 +96,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
 
     @Override
     public Calendar delegate(Calendar request) {
-        Calendar delegated = delegateTransformer.transform(request);
+        Calendar delegated = delegateTransformer.transform(request.copy());
         delegated.validate();
         return delegated;
     }
@@ -144,7 +144,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar reply(Calendar request) {
-        Calendar reply = transform(Method.REPLY, request);
+        Calendar reply = transform(Method.REPLY, request.copy());
         reply.validate();
         return reply;
     }
@@ -235,7 +235,8 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar refresh(VEvent component) {
-        Calendar refresh = wrap(Method.REFRESH, component);
+        Calendar refresh = wrap(Method.REFRESH, component.copy());
+//        componentTransformers.get(Method.REFRESH).transform(refresh.getComponents().getAll());
         refresh.validate();
         return refresh;
     }
@@ -263,7 +264,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar counter(Calendar request) {
-        Calendar counter = transform(Method.COUNTER, request);
+        Calendar counter = transform(Method.COUNTER, request.copy());
         counter.validate();
         return counter;
     }
@@ -281,7 +282,7 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar declineCounter(Calendar counter) {
-        Calendar declineCounter = transform(Method.DECLINE_COUNTER, counter);
+        Calendar declineCounter = transform(Method.DECLINE_COUNTER, counter.copy());
         declineCounter.validate();
         return declineCounter;
     }
