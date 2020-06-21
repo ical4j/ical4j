@@ -94,8 +94,7 @@ public class AddressList implements Serializable, Iterable<URI> {
     }
 
     public static String toString(List<URI> addresses) {
-        return addresses.stream().map(a -> Strings.quote(Uris.decode(Strings.valueOf(a))))
-                .collect(Collectors.joining(","));
+        return addresses.stream().map(Strings::quote).collect(Collectors.joining(","));
     }
 
     /**

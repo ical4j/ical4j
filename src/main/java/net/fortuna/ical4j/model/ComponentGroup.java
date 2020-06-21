@@ -32,15 +32,15 @@ import java.util.stream.Collectors;
  */
 public class ComponentGroup<C extends Component> {
 
-    private final ComponentList<C> components;
+    private final List<C> components;
 
     private final Filter<C> componentFilter;
 
-    public ComponentGroup(ComponentList<C> components, Uid uid) {
+    public ComponentGroup(List<C> components, Uid uid) {
         this(components, uid, null);
     }
 
-    public ComponentGroup(ComponentList<C> components, Uid uid, RecurrenceId recurrenceId) {
+    public ComponentGroup(List<C> components, Uid uid, RecurrenceId recurrenceId) {
         this.components = components;
 
         Predicate<C> componentPredicate;
@@ -58,8 +58,8 @@ public class ComponentGroup<C extends Component> {
      *
      * @return
      */
-    public ComponentList<C> getRevisions() {
-        return (ComponentList<C>) componentFilter.filter(components);
+    public List<C> getRevisions() {
+        return (List<C>) componentFilter.filter(components);
     }
 
     /**
@@ -68,7 +68,7 @@ public class ComponentGroup<C extends Component> {
      * @return
      */
     public C getLatestRevision() {
-        ComponentList<C> revisions = getRevisions();
+        List<C> revisions = getRevisions();
         revisions.sort(new ComponentSequenceComparator());
         Collections.reverse(revisions);
         return revisions.iterator().next();
@@ -89,7 +89,7 @@ public class ComponentGroup<C extends Component> {
         List<Component> replacements = new ArrayList<>();
 
         for (Component component : getRevisions()) {
-            if (!component.getProperties(Property.RECURRENCE_ID).isEmpty()) {
+            if (component.getProperties().getFirst(Property.RECURRENCE_ID).isPresent()) {
                 replacements.add(component);
             } else {
                 periods.addAll(component.calculateRecurrenceSet(period));
@@ -97,19 +97,20 @@ public class ComponentGroup<C extends Component> {
         }
 
         List<Period<T>> finalPeriods = new ArrayList<>(periods);
-        replacements.forEach(component -> {
-            Optional<RecurrenceId<?>> recurrenceId = component.getProperty(Property.RECURRENCE_ID);
-            if (recurrenceId.isPresent()) {
-                List<Period<T>> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.get().getDate()))
-                        .collect(Collectors.toList());
-                finalPeriods.removeAll(match);
-            }
-
-            finalPeriods.addAll(component.calculateRecurrenceSet(period));
-        });
+        replacements.forEach(component -> calculateReplacements(period, component, finalPeriods));
 
         // Natural sort of final list..
         Collections.sort(finalPeriods);
         return finalPeriods;
+    }
+
+    private <T extends Temporal> void calculateReplacements(Period<T> period, Component component, List<Period<T>> finalPeriods) {
+        Optional<RecurrenceId<?>> recurrenceId = component.getProperties().getFirst(Property.RECURRENCE_ID);
+        if (recurrenceId.isPresent()) {
+            List<Period<T>> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.get().getDate()))
+                    .collect(Collectors.toList());
+            finalPeriods.removeAll(match);
+        }
+        finalPeriods.addAll(component.calculateRecurrenceSet(period));
     }
 }
