@@ -42,11 +42,12 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.Validator;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.jooq.lambda.Unchecked;
 
 import java.io.Serializable;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -106,9 +107,9 @@ import java.util.Optional;
  * 
  * <pre><code>
  * Calendar calendar = new Calendar();
- * calendar.getProperties().add(new ProdId(&quot;-//Ben Fortuna//iCal4j 1.0//EN&quot;));
- * calendar.getProperties().add(Version.VERSION_2_0);
- * calendar.getProperties().add(CalScale.GREGORIAN);
+ * calendar.add(new ProdId(&quot;-//Ben Fortuna//iCal4j 1.0//EN&quot;));
+ * calendar.add(Version.VERSION_2_0);
+ * calendar.add(CalScale.GREGORIAN);
  * 
  * // Add events, etc..
  * </code></pre>
@@ -134,9 +135,9 @@ public class Calendar implements Serializable {
      */
     public static final String END = "END";
 
-    private final PropertyList properties;
+    private PropertyList properties;
 
-    private final ComponentList<CalendarComponent> components;
+    private ComponentList<CalendarComponent> components;
 
     private final Validator<Calendar> validator;
 
@@ -177,14 +178,11 @@ public class Calendar implements Serializable {
     }
 
     /**
-     * Creates a deep copy of the specified calendar.
+     * Creates a shallow copy of the specified calendar.
      * @param c the calendar to copy
-     * @throws URISyntaxException where an invalid URI string is encountered
      */
-    public Calendar(Calendar c) throws URISyntaxException {
-        
-        this(new PropertyList(c.getProperties()),
-        		new ComponentList<>(c.getComponents()));
+    public Calendar(Calendar c) {
+        this(c.getProperties(), c.getComponents());
     }
 
     /**
@@ -210,27 +208,45 @@ public class Calendar implements Serializable {
         return components;
     }
 
+    protected void setComponents(ComponentList<CalendarComponent> components) {
+        this.components = components;
+    }
+
+    public void add(CalendarComponent component) {
+        setComponents((ComponentList<CalendarComponent>) components.add(component));
+    }
+
+    public void remove(CalendarComponent component) {
+        setComponents((ComponentList<CalendarComponent>) components.remove(component));
+    }
+
+    public void replace(CalendarComponent component) {
+        setComponents((ComponentList<CalendarComponent>) components.replace(component));
+    }
+
     /**
      * Convenience method for retrieving a list of named components.
      * @param name name of components to retrieve
      * @return a component list containing only components with the specified name
+     *
+     * @deprecated use {@link ComponentList#get(String)}
      */
+    @Deprecated
+    @SuppressWarnings("unchecked")
     public final <C extends CalendarComponent> List<C> getComponents(final String name) {
-        return getComponents().getComponents(name);
+        return (List<C>) components.get(name);
     }
 
     /**
      * Convenience method for retrieving a named component.
      * @param name name of the component to retrieve
      * @return the first matching component in the component list with the specified name
+     *
+     * @deprecated use {@link ComponentList#getFirst(String)}
      */
+    @Deprecated
     public final <T extends CalendarComponent> Optional<T> getComponent(final String name) {
-        return getComponents().getComponent(name);
-    }
-
-    public final <T extends CalendarComponent> T getRequiredComponent(String name) throws ConstraintViolationException {
-        Optional<T> component = getComponent(name);
-        return component.orElseThrow(() -> new ConstraintViolationException(String.format("Missing %s component", name)));
+        return components.getFirst(name);
     }
 
     /**
@@ -240,27 +256,44 @@ public class Calendar implements Serializable {
         return properties;
     }
 
+    protected void setProperties(PropertyList properties) {
+        this.properties = properties;
+    }
+
+    public void add(Property property) {
+        setProperties((PropertyList) properties.add(property));
+    }
+
+    public void remove(Property property) {
+        setProperties((PropertyList) properties.remove(property));
+    }
+
+    public void replace(Property property) {
+        setProperties((PropertyList) properties.replace(property));
+    }
+
     /**
      * Convenience method for retrieving a list of named properties.
      * @param name name of properties to retrieve
      * @return a property list containing only properties with the specified name
+     *
+     * @deprecated use {@link PropertyList#get(String)}
      */
+    @Deprecated
     public final List<Property> getProperties(final String name) {
-        return getProperties().getProperties(name);
+        return properties.get(name);
     }
 
     /**
      * Convenience method for retrieving a named property.
      * @param name name of the property to retrieve
      * @return the first matching property in the property list with the specified name
+     *
+     * @deprecated use {@link PropertyList#getFirst(String)}
      */
+    @Deprecated
     public final <T extends Property> Optional<T> getProperty(final String name) {
-        return getProperties().getProperty(name);
-    }
-
-    public final <T extends Property> T getRequiredProperty(String name) throws ConstraintViolationException {
-        Optional<T> property = getProperty(name);
-        return property.orElseThrow(() -> new ConstraintViolationException(String.format("Missing %s property", name)));
+        return properties.getFirst(name);
     }
 
     /**
@@ -289,7 +322,7 @@ public class Calendar implements Serializable {
      * @throws ValidationException where any of the calendar properties is not in a valid state
      */
     private void validateProperties() throws ValidationException {
-        for (final Property property : getProperties()) {
+        for (final Property property : properties.getAll()) {
             property.validate();
         }
     }
@@ -299,9 +332,24 @@ public class Calendar implements Serializable {
      * @throws ValidationException where any of the calendar components is not in a valid state
      */
     private void validateComponents() throws ValidationException {
-        for (Component component : getComponents()) {
-            component.validate();
+        Optional<Method> method = getProperties().getFirst(Property.METHOD);
+        if (method.isPresent()) {
+            components.getAll().forEach(c -> c.validate(method.get()));
+        } else {
+            components.getAll().forEach(Component::validate);
         }
+    }
+
+    /**
+     * Creates a deep copy of the calendar.
+     * @return a new calendar instance that protects against mutation of the source calendar
+     */
+    public final Calendar copy() {
+        return new Calendar(
+                new PropertyList(properties.getAll().stream()
+                        .map(Unchecked.function(Property::copy)).collect(Collectors.toList())),
+                new ComponentList<>(components.getAll().stream()
+                    .map(Unchecked.function(c -> (CalendarComponent) c.copy())).collect(Collectors.toList())));
     }
 
     /**

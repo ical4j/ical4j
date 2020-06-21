@@ -55,11 +55,11 @@ public class TimeZoneLoader {
         NO_TRANSITIONS = new Standard();
         TzOffsetFrom offsetFrom = new TzOffsetFrom(ZoneOffset.UTC);
         TzOffsetTo offsetTo = new TzOffsetTo(ZoneOffset.UTC);
-        NO_TRANSITIONS.getProperties().add(offsetFrom);
-        NO_TRANSITIONS.getProperties().add(offsetTo);
-        DtStart start = new DtStart();
+        NO_TRANSITIONS.add(offsetFrom);
+        NO_TRANSITIONS.add(offsetTo);
+        DtStart<Instant> start = new DtStart<>();
         start.setDate(Instant.EPOCH);
-        NO_TRANSITIONS.getProperties().add(start);
+        NO_TRANSITIONS.add(start);
 
         // Proxy configuration..
         try {
@@ -105,7 +105,7 @@ public class TimeZoneLoader {
                 try (InputStream in = resource.openStream()) {
                     final CalendarBuilder builder = new CalendarBuilder();
                     final Calendar calendar = builder.build(in);
-                    final Optional<VTimeZone> vTimeZone = calendar.getComponent(Component.VTIMEZONE);
+                    final Optional<VTimeZone> vTimeZone = calendar.getComponents().getFirst(Component.VTIMEZONE);
                     // load any available updates for the timezone.. can be explicility enabled via configuration
                     if (vTimeZone.isPresent()
                             && "true".equals(Configurator.getProperty(UPDATE_ENABLED).orElse("false"))) {
@@ -145,7 +145,7 @@ public class TimeZoneLoader {
             final CalendarBuilder builder = new CalendarBuilder();
 
             final Calendar calendar = builder.build(connection.getInputStream());
-            final Optional<VTimeZone> updatedVTimeZone = calendar.getComponent(Component.VTIMEZONE);
+            final Optional<VTimeZone> updatedVTimeZone = calendar.getComponents().getFirst(Component.VTIMEZONE);
             if (updatedVTimeZone.isPresent()) {
                 return updatedVTimeZone.get();
             }
@@ -165,14 +165,14 @@ public class TimeZoneLoader {
 
         VTimeZone timezone = new VTimeZone();
 
-        timezone.getProperties().add(new TzId(timezoneId));
+        timezone.add(new TzId(timezoneId));
 
         addTransitions(zoneId, timezone, rawTimeZoneOffsetInSeconds);
 
         addTransitionRules(zoneId, rawTimeZoneOffsetInSeconds, timezone);
 
-        if (timezone.getObservances() == null || timezone.getObservances().isEmpty()) {
-            timezone.getObservances().add(NO_TRANSITIONS);
+        if (timezone.getObservances() == null || timezone.getObservances().getAll().isEmpty()) {
+            timezone.add(NO_TRANSITIONS);
         }
 
         return timezone;
@@ -228,14 +228,14 @@ public class TimeZoneLoader {
 
             Observance observance = (transitionRule.getOffsetAfter().getTotalSeconds() > rawTimeZoneOffsetInSeconds) ? new Daylight() : new Standard();
 
-            observance.getProperties().add(offsetFrom);
-            observance.getProperties().add(offsetTo);
-            observance.getProperties().add(rrule);
-            observance.getProperties().add(new DtStart(startDate.withMonth(transitionRule.getMonth().getValue())
+            observance.add(offsetFrom);
+            observance.add(offsetTo);
+            observance.add(rrule);
+            observance.add(new DtStart<LocalDateTime>(startDate.withMonth(transitionRule.getMonth().getValue())
                     .withDayOfMonth(transitionRule.getDayOfMonthIndicator())
                     .with(transitionRule.getDayOfWeek()).format(DateTimeFormatter.ofPattern(DATE_TIME_TPL))));
 
-            result.getObservances().add(observance);
+            result.add(observance);
         }
     }
 
@@ -260,16 +260,16 @@ public class TimeZoneLoader {
             TzOffsetFrom offsetFrom = new TzOffsetFrom(e.getKey().offsetBefore);
             TzOffsetTo offsetTo = new TzOffsetTo(e.getKey().offsetAfter);
 
-            observance.getProperties().add(dtStart);
-            observance.getProperties().add(offsetFrom);
-            observance.getProperties().add(offsetTo);
+            observance.add(dtStart);
+            observance.add(offsetFrom);
+            observance.add(offsetTo);
 
             for (ZoneOffsetTransition transition : e.getValue()) {
-                RDate rDate = new RDate(new ArrayList<>(),
+                RDate rDate = new RDate(new ParameterList(),
                         transition.getDateTimeBefore().format(DateTimeFormatter.ofPattern(DATE_TIME_TPL)));
-                observance.getProperties().add(rDate);
+                observance.add(rDate);
             }
-            result.getObservances().add(observance);
+            result.add(observance);
         }
     }
 
