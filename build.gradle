@@ -13,7 +13,7 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.10.2'
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.8.4"
-    id "net.ltgt.errorprone" version "0.8.1"
+    id "net.ltgt.errorprone" version "0.8.1" apply false
     id "biz.aQute.bnd.builder" version "5.0.0"
 }
 
@@ -46,14 +46,15 @@ repositories {
 }
 
 dependencies {
-    errorprone "com.google.errorprone:error_prone_core:2.3.3"
-    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+//    errorprone "com.google.errorprone:error_prone_core:2.3.3"
+//    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
 
     api "org.slf4j:slf4j-api:$slf4jVersion",
             'commons-codec:commons-codec:1.11',
             'org.apache.commons:commons-lang3:3.8.1',
             'org.apache.commons:commons-collections4:4.1',
-            'org.threeten:threeten-extra:1.5.0'
+            'org.threeten:threeten-extra:1.5.0',
+            'org.jooq:jool-java-8:0.9.13'
     
     implementation 'javax.cache:cache-api:1.1.1', optional
     implementation "org.codehaus.groovy:groovy-all:$groovyVersion", optional
