@@ -92,7 +92,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
          */
         ParameterValidator.assertOneOrLess(Parameter.VALUE, getParameters().getAll());
 
-        final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
+        final Optional<Parameter> valueParam = getParameters().getFirst(Parameter.VALUE);
 
         if (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get())
                 && !Value.DATE.equals(valueParam.get())) {

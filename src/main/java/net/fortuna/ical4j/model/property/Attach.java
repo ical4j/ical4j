@@ -224,7 +224,7 @@ public class Attach extends Property {
 
         // determine if ATTACH is a URI or an embedded
         // binary..
-        Optional<Encoding> encoding = getParameter(Parameter.ENCODING);
+        Optional<Encoding> encoding = getParameters().getFirst(Parameter.ENCODING);
         if (encoding.isPresent()) {
             // binary = Base64.decode(aValue);
             try {

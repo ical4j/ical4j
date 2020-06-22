@@ -84,7 +84,7 @@ public class IndexedComponentListTest extends TestCase {
         long start = System.currentTimeMillis();
         List<Component> list = new ArrayList<Component>();
         for (Component c : calendar.getComponents().getAll()) {
-            Optional<Location> location = c.getProperty(Property.LOCATION);
+            Optional<Location> location = c.getProperties().getFirst(Property.LOCATION);
             if (location.isPresent() && "ABC".equals(location.get().getValue())) {
                 list.add(c);
             }

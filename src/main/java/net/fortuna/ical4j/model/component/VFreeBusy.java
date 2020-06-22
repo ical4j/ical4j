@@ -328,7 +328,7 @@ public class VFreeBusy extends CalendarComponent {
             throw new ValidationException("Missing required property", cve);
         }
 
-        final Optional<Duration> duration = request.getProperty(DURATION);
+        final Optional<Duration> duration = request.getProperties().getFirst(DURATION);
         
         // 4.8.2.4 Date/Time Start:
         //
@@ -518,7 +518,7 @@ public class VFreeBusy extends CalendarComponent {
          */
 
         // DtEnd value must be later in time that DtStart..
-        final Optional<DtStart<?>> dtStart = getProperty(DTSTART);
+        final Optional<DtStart<?>> dtStart = getProperties().getFirst(DTSTART);
         
         // 4.8.2.4 Date/Time Start:
         //
@@ -529,7 +529,7 @@ public class VFreeBusy extends CalendarComponent {
             throw new ValidationException("DTSTART must be specified in UTC time");
         }
         
-        final Optional<DtEnd<?>> dtEnd = getProperty(DTEND);
+        final Optional<DtEnd<?>> dtEnd = getProperties().getFirst(DTEND);
         
         // 4.8.2.2 Date/Time End
         //

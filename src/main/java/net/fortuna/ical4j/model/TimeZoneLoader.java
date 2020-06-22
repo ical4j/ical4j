@@ -125,7 +125,7 @@ public class TimeZoneLoader {
      * @return
      */
     private VTimeZone updateDefinition(VTimeZone vTimeZone) throws IOException, ParserException {
-        final Optional<TzUrl> tzUrl = vTimeZone.getProperty(Property.TZURL);
+        final Optional<TzUrl> tzUrl = vTimeZone.getProperties().getFirst(Property.TZURL);
         if (tzUrl.isPresent()) {
             final int connectTimeout = Configurator.getIntProperty(UPDATE_CONNECT_TIMEOUT).orElse(0);
             final int readTimeout = Configurator.getIntProperty(UPDATE_READ_TIMEOUT).orElse(0);

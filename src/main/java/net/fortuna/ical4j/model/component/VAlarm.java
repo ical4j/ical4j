@@ -271,7 +271,7 @@ public class VAlarm extends CalendarComponent {
         /*
          * ; the following is optional, ; and MAY occur more than once x-prop
          */
-        Optional<Action> action = getProperty(ACTION);
+        Optional<Action> action = getProperties().getFirst(ACTION);
         if (action.isPresent()) {
             final Validator<VAlarm> actionValidator = actionValidators.get(action.get());
             if (actionValidator != null) {

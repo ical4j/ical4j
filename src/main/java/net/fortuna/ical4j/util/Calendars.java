@@ -138,12 +138,12 @@ public final class Calendars {
         // if calendar contains one component or less, or is composed entirely of timezone
         // definitions, return the original calendar unmodified..
         if (calendar.getComponents().getAll().size() <= 1
-                || calendar.getComponents(Component.VTIMEZONE).size() == calendar.getComponents().getAll().size()) {
+                || calendar.getComponents().get(Component.VTIMEZONE).size() == calendar.getComponents().getAll().size()) {
             return new Calendar[] {calendar};
         }
         
         final List<VTimeZone> timezoneList = calendar.getComponents(Component.VTIMEZONE);
-		final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<VTimeZone>(
+		final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<>(
         		timezoneList, Property.TZID);
         
         final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();

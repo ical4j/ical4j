@@ -177,7 +177,7 @@ public class VJournal extends CalendarComponent {
          * dtstamp / last-mod / organizer / recurid / seq / status / summary / uid / url /
          */
 
-        final Optional<Status> status = getProperty(STATUS);
+        final Optional<Status> status = getProperties().getFirst(STATUS);
         if (status.isPresent() && !Status.VJOURNAL_DRAFT.getValue().equals(status.get().getValue())
                 && !Status.VJOURNAL_FINAL.getValue().equals(status.get().getValue())
                 && !Status.VJOURNAL_CANCELLED.getValue().equals(status.get().getValue())) {

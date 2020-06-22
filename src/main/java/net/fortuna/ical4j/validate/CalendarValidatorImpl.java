@@ -52,7 +52,7 @@ public class CalendarValidatorImpl implements Validator<Calendar>, ContentValida
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             // require VERSION:2.0 for RFC2445..
-            Optional<Version> version = target.getProperty(Property.VERSION);
+            Optional<Version> version = target.getProperties().getFirst(Property.VERSION);
             if (version.isPresent() && !Version.VERSION_2_0.equals(version.get())) {
                 throw new ValidationException("Unsupported Version: " + version.get().getValue());
             }

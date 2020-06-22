@@ -33,11 +33,11 @@ public class ZoneRulesBuilder {
         List<ZoneOffsetTransition> transitions = new ArrayList<>();
         for (Observance observance : observances) {
             // ignore transitions that have no effect..
-            Optional<TzOffsetFrom> offsetFrom = observance.getProperty(Property.TZOFFSETFROM);
-            Optional<TzOffsetTo> offsetTo = observance.getProperty(Property.TZOFFSETTO);
+            Optional<TzOffsetFrom> offsetFrom = observance.getProperties().getFirst(Property.TZOFFSETFROM);
+            Optional<TzOffsetTo> offsetTo = observance.getProperties().getFirst(Property.TZOFFSETTO);
 
             if (offsetFrom.isPresent() && !offsetFrom.get().getOffset().equals(offsetTo.get().getOffset())) {
-                Optional<DtStart<LocalDateTime>> startDate = observance.getProperty(Property.DTSTART);
+                Optional<DtStart<LocalDateTime>> startDate = observance.getProperties().getFirst(Property.DTSTART);
                 if (startDate.isPresent()) {
                     transitions.add(ZoneOffsetTransition.of(startDate.get().getDate(),
                             offsetFrom.get().getOffset(), offsetTo.get().getOffset()));
@@ -52,7 +52,7 @@ public class ZoneRulesBuilder {
     private List<ZoneOffsetTransitionRule> buildTransitionRules(List<Observance> observances, ZoneOffset standardOffset) throws ConstraintViolationException {
         List<ZoneOffsetTransitionRule> transitionRules = new ArrayList<>();
         for (Observance observance : observances) {
-            Optional<RRule<?>> rrule = observance.getProperty(Property.RRULE);
+            Optional<RRule<?>> rrule = observance.getProperties().getFirst(Property.RRULE);
             TzOffsetFrom offsetFrom = observance.getProperties().getRequired(Property.TZOFFSETFROM);
             TzOffsetTo offsetTo = observance.getProperties().getRequired(Property.TZOFFSETTO);
             DtStart<LocalDateTime> startDate = observance.getProperties().getRequired(Property.DTSTART);
@@ -73,12 +73,12 @@ public class ZoneRulesBuilder {
 
     public ZoneRules build() throws ConstraintViolationException {
         Observance current = VTimeZone.getApplicableObservance(Instant.now(),
-                vTimeZone.getObservances().getComponents(Observance.STANDARD));
+                vTimeZone.getObservances().get(Observance.STANDARD));
 
         // if no standard time use daylight time..
         if (current == null) {
             current = VTimeZone.getApplicableObservance(Instant.now(),
-                    vTimeZone.getObservances().getComponents(Observance.DAYLIGHT));
+                    vTimeZone.getObservances().get(Observance.DAYLIGHT));
         }
 
         TzOffsetFrom offsetFrom = current.getProperties().getRequired(Property.TZOFFSETFROM);
@@ -87,10 +87,10 @@ public class ZoneRulesBuilder {
         ZoneOffset standardOffset = offsetTo.getOffset();
         ZoneOffset wallOffset = offsetFrom.getOffset();
         List<ZoneOffsetTransition> standardOffsetTransitions = buildTransitions(
-                vTimeZone.getObservances().getComponents(Observance.STANDARD));
+                vTimeZone.getObservances().get(Observance.STANDARD));
         Collections.sort(standardOffsetTransitions);
         List<ZoneOffsetTransition> offsetTransitions = buildTransitions(
-                vTimeZone.getObservances().getComponents(Observance.DAYLIGHT));
+                vTimeZone.getObservances().get(Observance.DAYLIGHT));
         Collections.sort(offsetTransitions);
         List<ZoneOffsetTransitionRule> transitionRules = buildTransitionRules(
                 vTimeZone.getObservances().getAll(), standardOffset);

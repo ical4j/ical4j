@@ -366,17 +366,17 @@ public abstract class Component extends Content implements Serializable {
 
         // add recurrence dates..
         List<Property> rDates = getProperties(Property.RDATE);
-        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE).get() == Value.PERIOD)
+        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameters().getFirst(Parameter.VALUE).get() == Value.PERIOD)
                 .map(p -> ((RDate<T>) p).getPeriods().get()).flatMap(List<Period<T>>::stream).filter(period::intersects)
                 .collect(Collectors.toList()));
 
-        List<Period<T>> calculated = rDates.stream().filter(p -> p.getParameter(Parameter.VALUE).get() == Value.DATE_TIME)
+        List<Period<T>> calculated = rDates.stream().filter(p -> p.getParameters().getFirst(Parameter.VALUE).get() == Value.DATE_TIME)
                 .map(p -> ((DateListProperty<T>) p).getDates())
                 .flatMap(List<T>::stream).filter(period::includes)
                 .map(rdateTime -> new Period<>(rdateTime, rDuration)).collect(Collectors.toList());
         recurrenceSet.addAll(calculated);
 
-        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameter(Parameter.VALUE).get() == Value.DATE)
+        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameters().getFirst(Parameter.VALUE).get() == Value.DATE)
                 .map(p -> ((DateListProperty<T>) p).getDates())
                 .flatMap(List<T>::stream).filter(period::includes)
                 .map(rdateDate -> new Period<>(rdateDate, rDuration)).collect(Collectors.toList()));

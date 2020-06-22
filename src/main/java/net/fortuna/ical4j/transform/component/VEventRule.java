@@ -26,9 +26,9 @@ public class VEventRule implements Rfc5545ComponentRule<VEvent> {
     @Override
     public void applyTo(VEvent element) {
 
-        Optional<DtStart<?>> start = element.getProperty(Property.DTSTART);
-        Optional<DtEnd<Temporal>> end = element.getProperty(Property.DTEND);
-        Optional<Duration> duration = element.getProperty(Property.DURATION);
+        Optional<DtStart<?>> start = element.getProperties().getFirst(Property.DTSTART);
+        Optional<DtEnd<Temporal>> end = element.getProperties().getFirst(Property.DTEND);
+        Optional<Duration> duration = element.getProperties().getFirst(Property.DURATION);
         
         /*
          *     ; Either 'dtend' or 'duration' MAY appear in
@@ -44,8 +44,8 @@ public class VEventRule implements Rfc5545ComponentRule<VEvent> {
          *      so we add 1 day to the end date
          */  
         if (start.isPresent() && end.isPresent()){
-            Optional<Parameter> startType = start.get().getParameter(Parameter.VALUE);
-            Optional<Parameter> endType = end.get().getParameter(Parameter.VALUE);
+            Optional<Parameter> startType = start.get().getParameters().getFirst(Parameter.VALUE);
+            Optional<Parameter> endType = end.get().getParameters().getFirst(Parameter.VALUE);
             if (startType.isPresent() && endType.isPresent() &&
                     startType.get().getValue().equals(Value.DATE.getValue()) &&
                     endType.get().getValue().equals(Value.DATE.getValue()) &&
@@ -55,7 +55,7 @@ public class VEventRule implements Rfc5545ComponentRule<VEvent> {
             }
         }
         
-        List<?> dtStamps = element.getProperties(Property.DTSTAMP);
+        List<?> dtStamps = element.getProperties().get(Property.DTSTAMP);
         if (dtStamps.isEmpty()) {
             element.add(new DtStamp());
         }     

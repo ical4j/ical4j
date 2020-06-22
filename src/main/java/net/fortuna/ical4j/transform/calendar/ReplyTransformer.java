@@ -54,7 +54,7 @@ public class ReplyTransformer extends AbstractMethodTransformer {
 
     @Override
     public Calendar transform(Calendar object) {
-        Optional<Method> method = object.getProperty(Property.METHOD);
+        Optional<Method> method = object.getProperties().getFirst(Property.METHOD);
         if (!method.isPresent() || !Method.REQUEST.equals(method.get())) {
             throw new IllegalArgumentException("Expecting REQUEST method in source");
         }

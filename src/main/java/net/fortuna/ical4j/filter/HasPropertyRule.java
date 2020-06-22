@@ -77,7 +77,7 @@ public class HasPropertyRule<T extends Component> implements Predicate<T> {
      */
     public final boolean test(final Component component) {
         boolean match = false;
-        final List<Property> properties = component.getProperties(property.getName());
+        final List<Property> properties = component.getProperties().get(property.getName());
         for (final Property p : properties) {
             if (matchEquals && property.equals(p)) {
                 match = true;

@@ -204,7 +204,7 @@ public class VAvailability extends CalendarComponent {
          */
         try {
             final DtStart<?> start = getProperties().getRequired(DTSTART);
-            if (start.getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
+            if (start.getParameters().getFirst(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
                 throw new ValidationException("Property [" + DTSTART + "] must be a " + Value.DATE_TIME);
             }
         } catch (ConstraintViolationException cve) {
@@ -218,7 +218,7 @@ public class VAvailability extends CalendarComponent {
         Optional<DtEnd<?>> end = getProperties().getFirst(DTEND);
         if (end.isPresent()) {
             /* Must be DATE_TIME */
-            if (end.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
+            if (end.get().getParameters().getFirst(Parameter.VALUE).equals(Optional.of(Value.DATE))) {
                 throw new ValidationException("Property [" + DTEND + "] must be a " + Value.DATE_TIME);
             }
 

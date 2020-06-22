@@ -164,7 +164,7 @@ public class TimeZone extends java.util.TimeZone {
      * {@inheritDoc}
      */
     public final boolean useDaylightTime() {
-        final List<Observance> daylights = vTimeZone.getObservances().getComponents(Observance.DAYLIGHT);
+        final List<Observance> daylights = vTimeZone.getObservances().get(Observance.DAYLIGHT);
         return (!daylights.isEmpty());
     }
 
@@ -177,10 +177,10 @@ public class TimeZone extends java.util.TimeZone {
 
     private static int getRawOffset(VTimeZone vt) {
 
-        List<Observance> seasonalTimes = vt.getObservances().getComponents(Observance.STANDARD);
+        List<Observance> seasonalTimes = vt.getObservances().get(Observance.STANDARD);
         // if no standard time use daylight time..
         if (seasonalTimes.isEmpty()) {
-            seasonalTimes = vt.getObservances().getComponents(Observance.DAYLIGHT);
+            seasonalTimes = vt.getObservances().get(Observance.DAYLIGHT);
             if (seasonalTimes.isEmpty()) {
                 return 0;
             }
@@ -204,12 +204,12 @@ public class TimeZone extends java.util.TimeZone {
             latestSeasonalTime = seasonalTimes.get(0);
         }
         if (latestSeasonalTime instanceof Daylight) {
-            final Optional<TzOffsetFrom> offsetFrom = latestSeasonalTime.getProperty(Property.TZOFFSETFROM);
+            final Optional<TzOffsetFrom> offsetFrom = latestSeasonalTime.getProperties().getFirst(Property.TZOFFSETFROM);
             if (offsetFrom.isPresent()) {
                 return (int) (offsetFrom.get().getOffset().getTotalSeconds() * 1000L);
             }
         } else if (latestSeasonalTime instanceof Standard) {
-            final Optional<TzOffsetTo> offsetTo = latestSeasonalTime.getProperty(Property.TZOFFSETTO);
+            final Optional<TzOffsetTo> offsetTo = latestSeasonalTime.getProperties().getFirst(Property.TZOFFSETTO);
             if (offsetTo.isPresent()) {
                 return (int) (offsetTo.get().getOffset().getTotalSeconds() * 1000L);
             }

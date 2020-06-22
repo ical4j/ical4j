@@ -51,19 +51,19 @@ public class PeriodListTest extends TestCase {
 
     private Logger log = LoggerFactory.getLogger(PeriodListTest.class);
 
-    private PeriodList periodList;
+    private PeriodList<ZonedDateTime> periodList;
 
-    private PeriodList expectedPeriodList;
+    private PeriodList<ZonedDateTime> expectedPeriodList;
     
     private int expectedSize;
     
-    private Period expectedPeriod;
+    private Period<ZonedDateTime> expectedPeriod;
     
     /**
      * @param periodList
      * @param periodList2
      */
-    public PeriodListTest(PeriodList periodList, PeriodList expectedPeriodList) {
+    public PeriodListTest(PeriodList<ZonedDateTime> periodList, PeriodList<ZonedDateTime> expectedPeriodList) {
         super("testEquals");
         this.periodList = periodList;
         this.expectedPeriodList = expectedPeriodList;
@@ -73,7 +73,7 @@ public class PeriodListTest extends TestCase {
      * @param periodList
      * @param expectedSize
      */
-    public PeriodListTest(PeriodList periodList, int expectedSize) {
+    public PeriodListTest(PeriodList<ZonedDateTime> periodList, int expectedSize) {
         super("testSize");
         this.periodList = periodList;
         this.expectedSize = expectedSize;
@@ -83,7 +83,7 @@ public class PeriodListTest extends TestCase {
      * @param periodList
      * @param expectedFirstPeriod
      */
-    public PeriodListTest(String testMethod, PeriodList periodList, Period expectedPeriod) {
+    public PeriodListTest(String testMethod, PeriodList<ZonedDateTime> periodList, Period<ZonedDateTime> expectedPeriod) {
         super(testMethod);
         this.periodList = periodList;
         this.expectedPeriod = expectedPeriod;
@@ -93,7 +93,7 @@ public class PeriodListTest extends TestCase {
      * @param testMethod
      * @param periodList
      */
-    public PeriodListTest(String testMethod, PeriodList periodList) {
+    public PeriodListTest(String testMethod, PeriodList<ZonedDateTime> periodList) {
     	super(testMethod);
     	this.periodList = periodList;
     }
@@ -218,7 +218,7 @@ public class PeriodListTest extends TestCase {
         /*
          * SortedSet normalizedSet = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
          */
-        PeriodList sum = periodList1.add(periodList2);
+        PeriodList<ZonedDateTime> sum = periodList1.add(periodList2);
         suite.addTest(new PeriodListTest(sum, 2));
 //        Period lonePeriod = (Period) sum.toArray()[0];
 //        assertEquals(lonePeriod.getStart(), jul1994);
@@ -294,14 +294,14 @@ public class PeriodListTest extends TestCase {
          * SortedSet normalizedSet1 = normalizer.addDateRanges(dateRangeSet1, dateRangeSet2); SortedSet normalizedSet2 =
          * normalizer.addDateRanges(dateRangeSet1, dateRangeSet2);
          */
-        PeriodList sum1 = periodList1.add(periodList2);
+        PeriodList<ZonedDateTime> sum1 = periodList1.add(periodList2);
         suite.addTest(new PeriodListTest(sum1, 1));
 //        Period lonePeriod1 = (Period) sum1.toArray()[0];
 //        assertEquals(lonePeriod1.getStart(), oct1994);
 //        assertEquals(lonePeriod1.getEnd(), end1994);
         suite.addTest(new PeriodListTest("testFirstPeriodEquals", sum1, new Period<>(oct1994, end1994)));
 
-        PeriodList sum2 = periodList1.add(periodList2);
+        PeriodList<ZonedDateTime> sum2 = periodList1.add(periodList2);
         suite.addTest(new PeriodListTest(sum2, 1));
 //        Period lonePeriod2 = (Period) sum2.toArray()[0];
 //        assertEquals(lonePeriod2.getStart(), oct1994);
@@ -330,7 +330,7 @@ public class PeriodListTest extends TestCase {
         suite.addTest(new PeriodListTest("testFirstPeriodEquals", sum, new Period<>(sep1994, oct1994)));
 
         // FIXME: don't use asserts here..
-        Period lonePeriod2 = (Period) sum.getPeriods().toArray()[1];
+        Period<ZonedDateTime> lonePeriod2 = sum.getPeriods().iterator().next();
         assertEquals(lonePeriod2.getStart(), dec1994);
         assertEquals(lonePeriod2.getEnd(), end1994);
 

@@ -231,8 +231,8 @@ public class Trigger extends DateProperty<Instant> {
     public final void validate() throws ValidationException {
         super.validate();
 
-        final Optional<Parameter> relParam = getParameter(Parameter.RELATED);
-        final Optional<Parameter> valueParam = getParameter(Parameter.VALUE);
+        final Optional<Parameter> relParam = getParameters().getFirst(Parameter.RELATED);
+        final Optional<Parameter> valueParam = getParameters().getFirst(Parameter.VALUE);
 
         if (relParam.isPresent() || (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get()))) {
 

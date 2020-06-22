@@ -43,10 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.*;
@@ -158,6 +155,10 @@ public abstract class Observance extends Component {
      * specified date
      */
     public final OffsetDateTime getLatestOnset(final Temporal date) {
+        if (date instanceof LocalDate) {
+            throw new UnsupportedOperationException("Unable to get timezone observance for date-only temporal.");
+        }
+
         TzOffsetTo offsetTo;
         try {
             offsetTo = getProperties().getRequired(TZOFFSETTO);
@@ -198,15 +199,15 @@ public abstract class Observance extends Component {
         // get first onset without adding TZFROM as this may lead to a day boundary
         // change which would be incompatible with BYDAY RRULES
         // we will have to add the offset to all cacheable onsets
-        Optional<DtStart<LocalDateTime>> startDate = getProperty(DTSTART);
+        Optional<DtStart<LocalDateTime>> startDate = getProperties().getFirst(DTSTART);
 
         // collect all onsets for the purposes of caching..
         final List<OffsetDateTime> cacheableOnsets = new ArrayList<>();
         cacheableOnsets.add(initialOnset);
 
         // check rdates for latest applicable onset..
-        Optional<TzOffsetFrom> offsetFrom = getProperty(TZOFFSETFROM);
-        final List<Property> rdates = getProperties(RDATE);
+        Optional<TzOffsetFrom> offsetFrom = getProperties().getFirst(TZOFFSETFROM);
+        final List<Property> rdates = getProperties().get(RDATE);
         for (Property rdate : rdates) {
             List<LocalDateTime> rdateDates = ((RDate<LocalDateTime>) rdate).getDates();
             for (final LocalDateTime rdateDate : rdateDates) {
@@ -223,7 +224,7 @@ public abstract class Observance extends Component {
         }
 
         // check recurrence rules for latest applicable onset..
-        final List<Property> rrules = getProperties(RRULE);
+        final List<Property> rrules = getProperties().get(RRULE);
         for (Property rrule : rrules) {
             // include future onsets to determine onset period..
             onsetLimit = Instant.from(offsetDate.plus(10, ChronoUnit.YEARS));

@@ -707,11 +707,11 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
             log.info("Sample [" + testFile + "]");
             net.fortuna.ical4j.model.Calendar calendar = Calendars.load(testFile);
             if (Method.PUBLISH.equals(calendar.getProperties().getRequired(Property.METHOD))) {
-                calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
+                calendar.getComponents().get(Component.VEVENT).forEach(calendarComponent -> {
                     suite.addTest(new VEventTest<>("testPublishValidation", (VEvent) calendarComponent));
                 });
             } else if (Method.REQUEST.equals(calendar.getProperties().getRequired(Property.METHOD))) {
-                calendar.getComponents(Component.VEVENT).forEach(calendarComponent -> {
+                calendar.getComponents().get(Component.VEVENT).forEach(calendarComponent -> {
                     suite.addTest(new VEventTest<>("testRequestValidation", (VEvent) calendarComponent));
                 });
             }

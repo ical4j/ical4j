@@ -286,7 +286,7 @@ public class VToDo extends CalendarComponent {
          * summary / uid / url /
          */
 
-        final Optional<Status> status = getProperty(STATUS);
+        final Optional<Status> status = getProperties().getFirst(STATUS);
         if (status.isPresent() && !Status.VTODO_NEEDS_ACTION.getValue().equals(status.get().getValue())
                 && !Status.VTODO_COMPLETED.getValue().equals(status.get().getValue())
                 && !Status.VTODO_IN_PROCESS.getValue().equals(status.get().getValue())

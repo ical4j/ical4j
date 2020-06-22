@@ -390,7 +390,7 @@ public class VEvent extends CalendarComponent {
          * recurid /
          */
 
-        final Optional<Status> status = getProperty(STATUS);
+        final Optional<Status> status = getProperties().getFirst(STATUS);
         if (status.isPresent() && !Status.VEVENT_TENTATIVE.getValue().equals(status.get().getValue())
                 && !Status.VEVENT_CONFIRMED.getValue().equals(status.get().getValue())
                 && !Status.VEVENT_CANCELLED.getValue().equals(status.get().getValue())) {
@@ -403,7 +403,7 @@ public class VEvent extends CalendarComponent {
          * the same 'eventprop' dtend / duration /
          */
 
-        final Optional<DtEnd<?>> end = getProperty(DTEND);
+        final Optional<DtEnd<?>> end = getProperties().getFirst(DTEND);
         if (end.isPresent()) {
 
             /*
@@ -413,11 +413,11 @@ public class VEvent extends CalendarComponent {
              * anniversary type of "VEVENT" can span more than one date (i.e, "DTEND" property value is set to a
              * calendar date after the "DTSTART" property value).
              */
-            final Optional<DtStart<Temporal>> start = getProperty(DTSTART);
+            final Optional<DtStart<Temporal>> start = getProperties().getFirst(DTSTART);
 
             if (start.isPresent()) {
-                final Optional<Parameter> startValue = start.get().getParameter(Parameter.VALUE);
-                final Optional<Parameter> endValue = end.get().getParameter(Parameter.VALUE);
+                final Optional<Parameter> startValue = start.get().getParameters().getFirst(Parameter.VALUE);
+                final Optional<Parameter> endValue = end.get().getParameters().getFirst(Parameter.VALUE);
                 
                 if (!startValue.equals(endValue)) {
                     throw new ValidationException("Property [" + DTEND
@@ -472,7 +472,7 @@ public class VEvent extends CalendarComponent {
     public final <T extends Temporal> List<Period<T>> getConsumedTime(final Period<T> range, final boolean normalise) {
         PeriodList<T> periods;
         // if component is transparent return empty list..
-        Optional<Transp> transp = getProperty(TRANSP);
+        Optional<Transp> transp = getProperties().getFirst(TRANSP);
         if (!transp.isPresent() || !Transp.TRANSPARENT.equals(transp.get())) {
 
 //          try {
@@ -675,16 +675,16 @@ public class VEvent extends CalendarComponent {
      * @return The end for this VEVENT.
      */
     public final Optional<DtEnd<?>> getEndDate(final boolean deriveFromDuration) {
-        Optional<DtEnd<?>> dtEnd = getProperty(DTEND);
+        Optional<DtEnd<?>> dtEnd = getProperties().getFirst(DTEND);
         // No DTEND? No problem, we'll use the DURATION.
         if (!dtEnd.isPresent() && deriveFromDuration) {
-            Optional<DtStart<?>> dtStart = getProperty(DTSTART);
+            Optional<DtStart<?>> dtStart = getProperties().getFirst(DTSTART);
             if (dtStart.isPresent()) {
                 final Duration vEventDuration;
-                Optional<Duration> duration = getProperty(DURATION);
+                Optional<Duration> duration = getProperties().getFirst(DURATION);
                 if (duration.isPresent()) {
                     vEventDuration = getDuration().get();
-                } else if (dtStart.get().getParameter(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
+                } else if (dtStart.get().getParameters().getFirst(Parameter.VALUE).equals(Optional.of(Value.DATE_TIME))) {
                     // If "DTSTART" is a DATE-TIME, then the event's duration is zero (see: RFC 5545, 3.6.1 Event Component)
                     vEventDuration = new Duration(java.time.Duration.ZERO);
                 } else {
@@ -692,7 +692,7 @@ public class VEvent extends CalendarComponent {
                     vEventDuration = new Duration(java.time.Duration.ofDays(1));
                 }
 
-                Optional<TzId> tzId = dtStart.get().getParameter(Parameter.TZID);
+                Optional<TzId> tzId = dtStart.get().getParameters().getFirst(Parameter.TZID);
                 DtEnd<?> newdtEnd;
                 if (tzId.isPresent()) {
                     ParameterList dtendParams = new ParameterList(Collections.singletonList(tzId.get()));

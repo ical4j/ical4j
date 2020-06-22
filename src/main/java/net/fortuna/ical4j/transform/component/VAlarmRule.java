@@ -17,8 +17,8 @@ public class VAlarmRule implements Rfc5545ComponentRule<VAlarm> {
 
     @Override
     public void applyTo(VAlarm element) {
-        Optional<Action> action = element.getProperty(Property.ACTION);
-        Optional<Description> description = element.getProperty(Property.DESCRIPTION);
+        Optional<Action> action = element.getProperties().getFirst(Property.ACTION);
+        Optional<Description> description = element.getProperties().getFirst(Property.DESCRIPTION);
         if (!action.isPresent() || !"DISPLAY".equals(action.get().getValue()) || description.isPresent()
                 && description.get().getValue() != null) {
             return;

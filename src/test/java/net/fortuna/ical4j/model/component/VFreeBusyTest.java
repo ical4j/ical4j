@@ -314,9 +314,9 @@ public class VFreeBusyTest extends CalendarComponentTest {
      */
     public void testFbType() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
-        Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
+        Optional<FreeBusy> fb = result.getProperties().getFirst(Property.FREEBUSY);
         assertTrue(fb.isPresent()
-                && fb.get().getParameter(Parameter.FBTYPE).equals(Optional.of(expectedFbType)));
+                && fb.get().getParameters().getFirst(Parameter.FBTYPE).equals(Optional.of(expectedFbType)));
     }
 
     /**
@@ -324,7 +324,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      */
     public void testPeriodCount() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
-        Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
+        Optional<FreeBusy> fb = result.getProperties().getFirst(Property.FREEBUSY);
         assertTrue(fb.isPresent());
         if (expectedPeriodCount > 0) {
             assertEquals(expectedPeriodCount, fb.get().getPeriods().size());
@@ -338,7 +338,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      */
     public void testFreeBusyPeriods() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
-        Optional<FreeBusy> fb = result.getProperty(Property.FREEBUSY);
+        Optional<FreeBusy> fb = result.getProperties().getFirst(Property.FREEBUSY);
         assertTrue(fb.isPresent());
         assertEquals(expectedPeriods, fb.get().getPeriods());
     }
