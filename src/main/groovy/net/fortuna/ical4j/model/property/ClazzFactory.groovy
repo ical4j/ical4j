@@ -52,33 +52,9 @@ class ClazzFactory extends AbstractPropertyFactory{
         else {
             String clazzValue = attributes.remove('value')
             if (clazzValue != null) {
-                if (Clazz.CONFIDENTIAL.getValue().equals(clazzValue)) {
-                    clazz = Clazz.CONFIDENTIAL
-                }
-                else if (Clazz.PRIVATE.getValue().equals(clazzValue)) {
-                    clazz = Clazz.PRIVATE
-                }
-                else if (Clazz.PUBLIC.getValue().equals(clazzValue)) {
-                    clazz = Clazz.PUBLIC
-                }
-                else {
-                    attributes.put('value', clazzValue)
-                    clazz = super.newInstance(builder, name, value, attributes)
-                }
-            }
-            else {
-                if (Clazz.CONFIDENTIAL.getValue().equals(value)) {
-                    clazz = Clazz.CONFIDENTIAL
-                }
-                else if (Clazz.PRIVATE.getValue().equals(value)) {
-                    clazz = Clazz.PRIVATE
-                }
-                else if (Clazz.PUBLIC.getValue().equals(value)) {
-                    clazz = Clazz.PUBLIC
-                }
-                else {
-                    clazz = super.newInstance(builder, name, value, attributes)
-                }
+                clazz = new Clazz.Factory().createProperty(clazzValue)
+            } else {
+                clazz = new Clazz.Factory().createProperty(value)
             }
         }
         return clazz

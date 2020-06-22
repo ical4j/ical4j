@@ -52,63 +52,9 @@ class MethodFactory extends AbstractPropertyFactory{
         else {
             String instanceValue = attributes.remove('value')
             if (instanceValue != null) {
-                if (Method.ADD.getValue().equals(instanceValue)) {
-                    instance = Method.ADD
-                }
-                else if (Method.CANCEL.getValue().equals(instanceValue)) {
-                    instance = Method.CANCEL
-                }
-                else if (Method.COUNTER.getValue().equals(instanceValue)) {
-                    instance = Method.COUNTER
-                }
-                else if (Method.DECLINE_COUNTER.getValue().equals(instanceValue)) {
-                    instance = Method.DECLINE_COUNTER
-                }
-                else if (Method.PUBLISH.getValue().equals(instanceValue)) {
-                    instance = Method.PUBLISH
-                }
-                else if (Method.REFRESH.getValue().equals(instanceValue)) {
-                    instance = Method.REFRESH
-                }
-                else if (Method.REPLY.getValue().equals(instanceValue)) {
-                    instance = Method.REPLY
-                }
-                else if (Method.REQUEST.getValue().equals(instanceValue)) {
-                    instance = Method.REQUEST
-                }
-                else {
-                    attributes.put('value', instanceValue)
-                    instance = super.newInstance(builder, name, value, attributes)
-                }
-            }
-            else {
-                if (Method.ADD.getValue().equals(value)) {
-                    instance = Method.ADD
-                }
-                else if (Method.CANCEL.getValue().equals(value)) {
-                    instance = Method.CANCEL
-                }
-                else if (Method.COUNTER.getValue().equals(value)) {
-                    instance = Method.COUNTER
-                }
-                else if (Method.DECLINE_COUNTER.getValue().equals(value)) {
-                    instance = Method.DECLINE_COUNTER
-                }
-                else if (Method.PUBLISH.getValue().equals(value)) {
-                    instance = Method.PUBLISH
-                }
-                else if (Method.REFRESH.getValue().equals(value)) {
-                    instance = Method.REFRESH
-                }
-                else if (Method.REPLY.getValue().equals(value)) {
-                    instance = Method.REPLY
-                }
-                else if (Method.REQUEST.getValue().equals(value)) {
-                    instance = Method.REQUEST
-                }
-                else {
-                    instance = super.newInstance(builder, name, value, attributes)
-                }
+                instance = new Method.Factory().createProperty(instanceValue)
+            } else {
+                instance = new Method.Factory().createProperty(value)
             }
         }
         return instance

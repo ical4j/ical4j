@@ -52,21 +52,9 @@ class VersionFactory extends AbstractPropertyFactory{
         else {
             String versionValue = attributes.remove('value')
             if (versionValue != null) {
-                if (Version.VERSION_2_0.getValue().equals(versionValue)) {
-                    version = Version.VERSION_2_0
-                }
-                else {
-                    attributes.put('value', versionValue)
-                    version = super.newInstance(builder, name, value, attributes)
-                }
-            }
-            else {
-                if (Version.VERSION_2_0.getValue().equals(value)) {
-                    version = Version.VERSION_2_0
-                }
-                else {
-                    version = super.newInstance(builder, name, value, attributes)
-                }
+                version = new Version.Factory().createProperty(versionValue)
+            } else {
+                version = new Version.Factory().createProperty(value)
             }
         }
         return version

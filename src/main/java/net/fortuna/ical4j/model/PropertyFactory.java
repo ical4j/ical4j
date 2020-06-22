@@ -54,6 +54,16 @@ public interface PropertyFactory<T extends Property> extends Serializable {
     T createProperty();
 
     /**
+     * Creates a property instance with no parameters.
+     * @param value the property value
+     * @return a new property instance
+     * @throws URISyntaxException some properties may throw this exception when parsing the property value
+     */
+    default T createProperty(String value) throws URISyntaxException {
+        return createProperty(new ParameterList(), value);
+    }
+
+    /**
      * @param parameters a list of property parameters
      * @param value      a property value
      * @return a new instance of the specified property

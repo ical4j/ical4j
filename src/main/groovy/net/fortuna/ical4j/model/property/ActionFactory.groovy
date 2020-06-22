@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
+import net.fortuna.ical4j.model.ParameterList
 
 /**
  * $Id$
@@ -51,45 +52,15 @@ class ActionFactory extends AbstractPropertyFactory{
         else {
             String actionValue = attributes.remove('value')
             if (actionValue != null) {
-                if (Action.AUDIO.getValue().equals(actionValue)) {
-                    action = Action.AUDIO
-                }
-                else if (Action.DISPLAY.getValue().equals(actionValue)) {
-                    action = Action.DISPLAY
-                }
-                else if (Action.EMAIL.getValue().equals(actionValue)) {
-                    action = Action.EMAIL
-                }
-                else if (Action.PROCEDURE.getValue().equals(actionValue)) {
-                    action = Action.PROCEDURE
-                }
-                else {
-                    attributes.put('value', actionValue)
-                    action = super.newInstance(builder, name, value, attributes)
-                }
-            }
-            else {
-                if (Action.AUDIO.getValue().equals(value)) {
-                    action = Action.AUDIO
-                }
-                else if (Action.DISPLAY.getValue().equals(value)) {
-                    action = Action.DISPLAY
-                }
-                else if (Action.EMAIL.getValue().equals(value)) {
-                    action = Action.EMAIL
-                }
-                else if (Action.PROCEDURE.getValue().equals(value)) {
-                    action = Action.PROCEDURE
-                }
-                else {
-                    action = super.newInstance(builder, name, value, attributes)
-                }
+                action = new Action.Factory().createProperty(actionValue)
+            } else {
+                action = new Action.Factory().createProperty(value)
             }
         }
         return action
     }
     
     protected Object newInstance(List<Parameter> parameters, String value) {
-        return new Action(parameters, value)
+        return new Action(new ParameterList(parameters), value)
     }
 }

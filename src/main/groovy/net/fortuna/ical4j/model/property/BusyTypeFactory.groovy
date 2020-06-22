@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.Parameter
+import net.fortuna.ical4j.model.ParameterList
 
 /**
  * $Id$
@@ -51,39 +52,15 @@ class BusyTypeFactory extends AbstractPropertyFactory{
         else {
             String busyTypeValue = attributes.remove('value')
             if (busyTypeValue != null) {
-                if (BusyType.BUSY.getValue().equals(busyTypeValue)) {
-                    busyType = BusyType.BUSY
-                }
-                else if (BusyType.BUSY_TENTATIVE.getValue().equals(busyTypeValue)) {
-                    busyType = BusyType.BUSY_TENTATIVE
-                }
-                else if (BusyType.BUSY_UNAVAILABLE.getValue().equals(busyTypeValue)) {
-                    busyType = BusyType.BUSY_UNAVAILABLE
-                }
-                else {
-                    attributes.put('value', busyTypeValue)
-                    busyType = super.newInstance(builder, name, value, attributes)
-                }
-            }
-            else {
-                if (BusyType.BUSY.getValue().equals(value)) {
-                    busyType = BusyType.BUSY
-                }
-                else if (BusyType.BUSY_TENTATIVE.getValue().equals(value)) {
-                    busyType = BusyType.BUSY_TENTATIVE
-                }
-                else if (BusyType.BUSY_UNAVAILABLE.getValue().equals(value)) {
-                    busyType = BusyType.BUSY_UNAVAILABLE
-                }
-                else {
-                    busyType = super.newInstance(builder, name, value, attributes)
-                }
+                busyType = new BusyType.Factory().createProperty(busyTypeValue)
+            } else {
+                busyType = new BusyType.Factory().createProperty(value)
             }
         }
         return busyType
     }
     
     protected Object newInstance(List<Parameter> parameters, String value) {
-        return new BusyType(parameters, value)
+        return new BusyType(new ParameterList(parameters), value)
     }
 }

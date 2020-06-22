@@ -52,21 +52,9 @@ class CalScaleFactory extends AbstractPropertyFactory{
         else {
             String calScaleValue = attributes.remove('value')
             if (calScaleValue != null) {
-                if (CalScale.GREGORIAN.getValue().equals(calScaleValue)) {
-                    calScale = CalScale.GREGORIAN
-                }
-                else {
-                    attributes.put('value', calScaleValue)
-                    calScale = super.newInstance(builder, name, value, attributes)
-                }
-            }
-            else {
-                if (CalScale.GREGORIAN.getValue().equals(value)) {
-                    calScale = CalScale.GREGORIAN
-                }
-                else {
-                    calScale = super.newInstance(builder, name, value, attributes)
-                }
+                calScale = new CalScale.Factory().createProperty(calScaleValue)
+            } else {
+                calScale = new CalScale.Factory().createProperty(value)
             }
         }
         return calScale

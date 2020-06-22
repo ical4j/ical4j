@@ -52,39 +52,9 @@ class PriorityFactory extends AbstractPropertyFactory{
         else {
             String instanceValue = attributes.remove('value')
             if (instanceValue != null) {
-                if (Priority.HIGH.getValue().equals(instanceValue)) {
-                    instance = Priority.HIGH
-                }
-                else if (Priority.MEDIUM.getValue().equals(instanceValue)) {
-                    instance = Priority.MEDIUM
-                }
-                else if (Priority.LOW.getValue().equals(instanceValue)) {
-                    instance = Priority.LOW
-                }
-                else if (Priority.UNDEFINED.getValue().equals(instanceValue)) {
-                    instance = Priority.UNDEFINED
-                }
-                else {
-                    attributes.put('value', instanceValue)
-                    instance = super.newInstance(builder, name, value, attributes)
-                }
-            }
-            else {
-                if (Priority.HIGH.getValue().equals(value)) {
-                    instance = Priority.HIGH
-                }
-                else if (Priority.MEDIUM.getValue().equals(value)) {
-                    instance = Priority.MEDIUM
-                }
-                else if (Priority.LOW.getValue().equals(value)) {
-                    instance = Priority.LOW
-                }
-                else if (Priority.UNDEFINED.getValue().equals(value)) {
-                    instance = Priority.UNDEFINED
-                }
-                else {
-                    instance = super.newInstance(builder, name, value, attributes)
-                }
+                instance = new Priority.Factory().createProperty(instanceValue)
+            } else {
+                instance = new Priority.Factory().createProperty(value)
             }
         }
         return instance

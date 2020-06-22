@@ -52,27 +52,9 @@ class TranspFactory extends AbstractPropertyFactory{
         else {
             String instanceValue = attributes.remove('value')
             if (instanceValue != null) {
-                if (Transp.OPAQUE.getValue().equals(instanceValue)) {
-                    instance = Transp.OPAQUE
-                }
-                else if (Transp.TRANSPARENT.getValue().equals(instanceValue)) {
-                    instance = Transp.TRANSPARENT
-                }
-                else {
-                    attributes.put('value', instanceValue)
-                    instance = super.newInstance(builder, name, value, attributes)
-                }
-            }
-            else {
-                if (Transp.OPAQUE.getValue().equals(value)) {
-                    instance = Transp.OPAQUE
-                }
-                else if (Transp.TRANSPARENT.getValue().equals(value)) {
-                    instance = Transp.TRANSPARENT
-                }
-                else {
-                    instance = super.newInstance(builder, name, value, attributes)
-                }
+                instance = new Transp.Factory().createProperty(instanceValue)
+            } else {
+                instance = new Transp.Factory().createProperty(value)
             }
         }
         return instance
