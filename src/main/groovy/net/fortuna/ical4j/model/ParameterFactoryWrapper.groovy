@@ -1,4 +1,4 @@
-package net.fortuna.ical4j.model.parameter
+package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.ParameterFactory
 

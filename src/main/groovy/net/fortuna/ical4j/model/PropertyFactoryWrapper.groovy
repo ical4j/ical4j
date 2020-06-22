@@ -1,4 +1,4 @@
-package net.fortuna.ical4j.model.property
+package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.Parameter
 import net.fortuna.ical4j.model.ParameterList
@@ -28,8 +28,10 @@ class PropertyFactoryWrapper extends AbstractFactory {
         if (propValue != null) {
             return factory.createProperty(new ParameterList(parameters), propValue)
         }
-        else {
+        else if (value != null) {
             return factory.createProperty(new ParameterList(parameters), (String) value)
+        } else {
+            return factory.createProperty()
         }
     }
 

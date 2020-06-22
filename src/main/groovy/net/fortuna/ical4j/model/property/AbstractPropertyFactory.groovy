@@ -59,6 +59,7 @@ abstract class AbstractPropertyFactory extends AbstractFactory {
 
     protected abstract Object newInstance(List<Parameter> parameters, String value)
 
+    @Override
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
         if (child instanceof Parameter) {
             parent.add(child)

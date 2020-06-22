@@ -35,8 +35,9 @@ package net.fortuna.ical4j.model.parameter
  * @author fortuna
  *
  */
-class XParameterFactory extends AbstractParameterFactory {
+class XParameterFactory extends AbstractFactory {
 
+    @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
         XParameter parameter
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XParameter)) {
@@ -51,6 +52,11 @@ class XParameterFactory extends AbstractParameterFactory {
             parameter = [paramName, paramValue]
         }
         return parameter
+    }
+
+    @Override
+    boolean isLeaf() {
+        return true
     }
 }
 
