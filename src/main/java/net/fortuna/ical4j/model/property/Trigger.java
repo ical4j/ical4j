@@ -39,10 +39,12 @@ import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static net.fortuna.ical4j.model.Parameter.RELATED;
 import static net.fortuna.ical4j.model.Parameter.VALUE;
@@ -159,7 +161,7 @@ public class Trigger extends DateProperty<Instant> {
 
     private Validator<Trigger> validator = new PropertyValidator<>(
             new ValidationRule<>(OneOrLess, VALUE),
-            new ValidationRule<>(None, Trigger::isAbsolute, RELATED)
+            new ValidationRule<>(None, (Predicate<Trigger> & Serializable) Trigger::isAbsolute, RELATED)
     );
 
     /**

@@ -172,9 +172,7 @@ public class VToDo extends CalendarComponent {
                     LAST_MODIFIED, LOCATION, ORGANIZER, PERCENT_COMPLETE, PRIORITY, RECURRENCE_ID, SEQUENCE, STATUS,
                     SUMMARY, UID, URL),
             // can't have both DUE and DURATION..
-            new ValidationRule<>(One, p->!p.getProperties().getFirst(DURATION).isPresent(), DUE),
             new ValidationRule<>(None, p->p.getProperties().getFirst(DUE).isPresent(), DURATION),
-            new ValidationRule<>(One, p->!p.getProperties().getFirst(DUE).isPresent(), DURATION),
             new ValidationRule<>(None, p->p.getProperties().getFirst(DURATION).isPresent(), DUE)
     );
 

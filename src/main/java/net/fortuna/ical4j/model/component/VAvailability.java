@@ -44,7 +44,9 @@ import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 import org.jooq.lambda.Unchecked;
 
+import java.io.Serializable;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static net.fortuna.ical4j.model.Property.*;
@@ -109,8 +111,10 @@ public class VAvailability extends CalendarComponent {
             new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
             new ValidationRule<>(OneOrLess, BUSYTYPE, CREATED, LAST_MODIFIED, ORGANIZER, SEQUENCE, SUMMARY, URL),
             // can't have both DTEND and DURATION..
-            new ValidationRule<>(None, p->p.getProperties().getFirst(DTEND).isPresent(), DURATION),
-            new ValidationRule<>(None, p->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
+            new ValidationRule<>(None,
+                    (Predicate<VAvailability> & Serializable) p->p.getProperties().getFirst(DTEND).isPresent(), DURATION),
+            new ValidationRule<>(None,
+                    (Predicate<VAvailability> & Serializable) p->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
     );
 
 	private ComponentList<Available> available;

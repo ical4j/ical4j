@@ -36,15 +36,22 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.Validator;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 import java.util.Optional;
+import java.util.function.Predicate;
+
+import static net.fortuna.ical4j.model.Parameter.VALUE;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
 
 /**
  * $Id$
@@ -76,6 +83,13 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     private TemporalAdapter<T> date;
 
     private transient TimeZoneRegistry timeZoneRegistry;
+
+    private final Validator<DateProperty<T>> validator = new PropertyValidator<>(
+            new ValidationRule<>(OneOrLess, VALUE),
+            new ValidationRule<>(One, (Predicate<DateProperty<T>> & Serializable) p -> p.getDate() instanceof LocalDate, VALUE),
+            new ValidationRule<>(None, (Predicate<DateProperty<T>> & Serializable) DateProperty::isUtc, TZID),
+            new ValidationRule<>(OneOrLess, (Predicate<DateProperty<T>> & Serializable) p -> !p.isUtc(), TZID)
+    );
 
     /**
      * @param name       the property name
@@ -209,7 +223,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      * {@inheritDoc}
      */
     public void validate() throws ValidationException {
-
+        validator.validate(this);
         /*
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /
          * (";" tzidparam) /
@@ -219,41 +233,17 @@ public abstract class DateProperty<T extends Temporal> extends Property {
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
 
-        ParameterValidator.assertOneOrLess(Parameter.VALUE, getParameters().getAll());
-
-        if (isUtc()) {
-            ParameterValidator.assertNone(Parameter.TZID, getParameters().getAll());
-        } else {
-            ParameterValidator.assertOneOrLess(Parameter.TZID, getParameters().getAll());
-        }
-
-        final Optional<Value> value = getParameters().getFirst(Parameter.VALUE);
+        final Optional<Value> value = getParameters().getFirst(VALUE);
 
         if (date != null) {
             if (date.getTemporal() instanceof LocalDate) {
-                if (!value.isPresent()) {
-                    throw new ValidationException("VALUE parameter [" + Value.DATE + "] must be specified for DATE instance");
-                } else if (!Value.DATE.equals(value.get())) {
+                if (value.isPresent() && !Value.DATE.equals(value.get())) {
                     throw new ValidationException("VALUE parameter [" + value.get() + "] is invalid for DATE instance");
                 }
             } else {
                 if (value.isPresent() && !Value.DATE_TIME.equals(value.get())) {
                     throw new ValidationException("VALUE parameter [" + value.get() + "] is invalid for DATE-TIME instance");
                 }
-
-                /* We can allow change to TZID as the date will be resolved with zone id at output (see getValue())
-                if (date.getTemporal() instanceof ZonedDateTime) {
-                    ZonedDateTime dateTime = (ZonedDateTime) date.getTemporal();
-
-                    // ensure tzid matches date-time timezone..
-                    final Optional<TzId> tzId = getParameter(Parameter.TZID);
-                    if (!tzId.isPresent() || !tzId.get().toZoneId(timeZoneRegistry).equals(dateTime.getZone())) {
-                        throw new ValidationException("TZID parameter [" + tzId.get() + "] does not match the timezone ["
-                                + dateTime.getZone() + "]");
-                    }
-                }
-
-                 */
             }
         }
     }

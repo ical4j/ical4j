@@ -41,11 +41,13 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.time.temporal.TemporalAmount;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -217,7 +219,8 @@ public class VAlarm extends CalendarComponent {
             new ValidationRule<>(One, ACTION, TRIGGER),
             new ValidationRule<>(OneOrLess, DURATION, REPEAT),
             // DURATION and REPEAT must both be present or both absent
-            new ValidationRule<>(One, p->p.getProperties().getFirst(DURATION).isPresent(), REPEAT)
+            new ValidationRule<>(One,
+                    (Predicate<VAlarm> & Serializable) p->p.getProperties().getFirst(DURATION).isPresent(), REPEAT)
     );
 
     /**

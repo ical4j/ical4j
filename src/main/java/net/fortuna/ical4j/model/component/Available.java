@@ -39,7 +39,9 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
+import java.io.Serializable;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import static net.fortuna.ical4j.model.Property.*;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
@@ -98,10 +100,10 @@ public class Available extends Component {
         new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
         new ValidationRule<>(OneOrLess, CREATED, LAST_MODIFIED, RECURRENCE_ID, RRULE, SUMMARY),
         // can't have both DTEND and DURATION..
-        new ValidationRule<>(One, p->!p.getProperties().getFirst(DURATION).isPresent(), DTEND),
-        new ValidationRule<>(None, p->p.getProperties().getFirst(DTEND).isPresent(), DURATION),
-        new ValidationRule<>(One, p->!p.getProperties().getFirst(DTEND).isPresent(), DURATION),
-        new ValidationRule<>(None, p->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
+        new ValidationRule<>(None,
+                (Predicate<Available> & Serializable) p->p.getProperties().getFirst(DTEND).isPresent(), DURATION),
+        new ValidationRule<>(None,
+                (Predicate<Available> & Serializable) p->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
     );
 
     /**
