@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -44,17 +45,17 @@ import java.util.List;
  *
  * @author Ben Fortuna
  */
-public final class PropertyValidator implements Validator<Property>, ContentValidator<Parameter> {
+public final class PropertyValidator<T extends Property> implements Validator<T>, ContentValidator<Parameter> {
 
-    private final List<ValidationRule<Property>> rules;
+    private final List<ValidationRule<T>> rules;
 
-    public PropertyValidator(List<ValidationRule<Property>> rules) {
-        this.rules = rules;
+    public PropertyValidator(ValidationRule<T>... rules) {
+        this.rules = Arrays.asList(rules);;
     }
 
     @Override
-    public void validate(Property target) throws ValidationException {
-        for (ValidationRule<Property> rule : rules) {
+    public void validate(T target) throws ValidationException {
+        for (ValidationRule<T> rule : rules) {
             boolean warnOnly = CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
                     && rule.isRelaxedModeSupported();
 

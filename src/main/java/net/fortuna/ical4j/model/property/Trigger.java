@@ -33,14 +33,21 @@ package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.validate.ParameterValidator;
+import net.fortuna.ical4j.validate.PropertyValidator;
 import net.fortuna.ical4j.validate.ValidationException;
+import net.fortuna.ical4j.validate.ValidationRule;
+import net.fortuna.ical4j.validate.Validator;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAmount;
 import java.util.Optional;
+
+import static net.fortuna.ical4j.model.Parameter.RELATED;
+import static net.fortuna.ical4j.model.Parameter.VALUE;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.None;
+import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
 /**
  * $Id$
@@ -150,6 +157,11 @@ public class Trigger extends DateProperty<Instant> {
 
     private TemporalAmountAdapter duration;
 
+    private Validator<Trigger> validator = new PropertyValidator<>(
+            new ValidationRule<>(OneOrLess, VALUE),
+            new ValidationRule<>(None, Trigger::isAbsolute, RELATED)
+    );
+
     /**
      * Default constructor.
      */
@@ -226,32 +238,20 @@ public class Trigger extends DateProperty<Instant> {
     }
 
     /**
+     * Indicates whether the trigger is relative or absolute.
+     * @return true if the trigger is absolute
+     */
+    public boolean isAbsolute() {
+        return Optional.of(Value.DATE_TIME).equals(getParameters().getFirst(VALUE));
+    }
+
+    /**
      * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
         super.validate();
 
-        final Optional<Parameter> relParam = getParameters().getFirst(Parameter.RELATED);
-        final Optional<Parameter> valueParam = getParameters().getFirst(Parameter.VALUE);
-
-        if (relParam.isPresent() || (valueParam.isPresent() && !Value.DATE_TIME.equals(valueParam.get()))) {
-
-            ParameterValidator.assertOneOrLess(Parameter.RELATED, getParameters().getAll());
-
-            ParameterValidator.assertNullOrEqual(Value.DURATION, getParameters().getAll());
-
-            if (getDuration() == null) {
-                throw new ValidationException("Duration value not specified");
-            }
-        } else {
-            ParameterValidator.assertOne(Parameter.VALUE, getParameters().getAll());
-
-            ParameterValidator.assertNullOrEqual(Value.DATE_TIME, getParameters().getAll());
-
-            if (getDate() == null) {
-                throw new ValidationException("DATE-TIME value not specified");
-            }
-        }
+        validator.validate(this);
     }
 
     /**

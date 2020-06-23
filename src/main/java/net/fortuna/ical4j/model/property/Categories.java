@@ -37,7 +37,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.Collections;
 import java.util.List;
 
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
@@ -100,8 +99,7 @@ public class Categories extends Property {
 
     private TextList categories;
 
-    private Validator<Property> validator = new PropertyValidator(Collections.singletonList(
-            new ValidationRule(OneOrLess, LANGUAGE)));
+    private Validator<Categories> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, LANGUAGE));
     /**
      * Default constructor.
      */

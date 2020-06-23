@@ -37,8 +37,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.Arrays;
-
 import static net.fortuna.ical4j.model.Parameter.RELTYPE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
@@ -57,8 +55,7 @@ public class RelatedTo extends Property implements Escapable {
 
     private String value;
 
-    private Validator<Property> validator = new PropertyValidator(Arrays.asList(
-            new ValidationRule(OneOrLess, RELTYPE)));
+    private Validator<RelatedTo> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, RELTYPE));
 
     /**
      * Default constructor.

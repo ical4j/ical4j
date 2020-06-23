@@ -251,11 +251,7 @@ public class VEvent extends CalendarComponent {
             new ValidationRule<>(OneOrLess, CLASS, CREATED, DESCRIPTION, DTSTART, GEO, LAST_MODIFIED, LOCATION,
                     ORGANIZER, PRIORITY, DTSTAMP, SEQUENCE, STATUS, SUMMARY, TRANSP, UID, URL, RECURRENCE_ID),
             // can't have both DTEND and DURATION..
-            new ValidationRule<>(One,
-                    (Predicate<VEvent> & Serializable) (VEvent p)->!p.getProperties().getFirst(DURATION).isPresent(),
-                    DTEND),
             new ValidationRule<>(None, (Predicate<VEvent> & Serializable) (VEvent p)->p.getProperties().getFirst(DTEND).isPresent(), DURATION),
-            new ValidationRule<>(One, (Predicate<VEvent> & Serializable) (VEvent p)->!p.getProperties().getFirst(DTEND).isPresent(), DURATION),
             new ValidationRule<>(None, (Predicate<VEvent> & Serializable) (VEvent p)->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
     );
 

@@ -40,8 +40,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.Arrays;
-
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
@@ -84,8 +82,8 @@ public class RequestStatus extends Property {
 
     private String exData;
 
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
-            new ValidationRule(OneOrLess, LANGUAGE)));
+    private final Validator<RequestStatus> validator = new PropertyValidator<>(
+            new ValidationRule<>(OneOrLess, LANGUAGE));
 
     /**
      * Default constructor.

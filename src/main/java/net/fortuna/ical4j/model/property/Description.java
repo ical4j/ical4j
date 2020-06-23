@@ -37,8 +37,6 @@ import net.fortuna.ical4j.validate.ValidationException;
 import net.fortuna.ical4j.validate.ValidationRule;
 import net.fortuna.ical4j.validate.Validator;
 
-import java.util.Arrays;
-
 import static net.fortuna.ical4j.model.Parameter.ALTREP;
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -58,8 +56,8 @@ public class Description extends Property implements Escapable {
 
     private String value;
 
-    private Validator<Property> validator = new PropertyValidator(Arrays.asList(
-            new ValidationRule(OneOrLess, ALTREP, LANGUAGE)));
+    private Validator<Description> validator = new PropertyValidator<>(
+            new ValidationRule<>(OneOrLess, ALTREP, LANGUAGE));
 
     /**
      * Default constructor.

@@ -62,8 +62,9 @@ public class LocationType extends Property {
 
     private List<String> locationTypes;
 
-    private final Validator<Property> validator = new PropertyValidator(Collections.singletonList(
-            new ValidationRule(OneOrLess, LANGUAGE)));
+    private final Validator<LocationType> validator = new PropertyValidator<>(
+            new ValidationRule<>(OneOrLess, LANGUAGE));
+
     /**
      * Default constructor.
      */

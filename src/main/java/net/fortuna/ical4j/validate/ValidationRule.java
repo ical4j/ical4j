@@ -10,7 +10,7 @@ import java.util.function.Predicate;
  */
 public class ValidationRule<T> implements Serializable {
 
-    public enum ValidationType { None,  One, OneOrLess, OneOrMore }
+    public enum ValidationType { None, One, OneOrLess, OneOrMore }
 
     private final ValidationType type;
 

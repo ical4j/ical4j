@@ -109,9 +109,7 @@ public class VAvailability extends CalendarComponent {
             new ValidationRule<>(One, DTSTART, DTSTAMP, UID),
             new ValidationRule<>(OneOrLess, BUSYTYPE, CREATED, LAST_MODIFIED, ORGANIZER, SEQUENCE, SUMMARY, URL),
             // can't have both DTEND and DURATION..
-            new ValidationRule<>(One, p->!p.getProperties().getFirst(DURATION).isPresent(), DTEND),
             new ValidationRule<>(None, p->p.getProperties().getFirst(DTEND).isPresent(), DURATION),
-            new ValidationRule<>(One, p->!p.getProperties().getFirst(DTEND).isPresent(), DURATION),
             new ValidationRule<>(None, p->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
     );
 
