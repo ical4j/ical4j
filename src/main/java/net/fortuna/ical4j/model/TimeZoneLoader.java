@@ -53,13 +53,9 @@ public class TimeZoneLoader {
 
     static {
         NO_TRANSITIONS = new Standard();
-        TzOffsetFrom offsetFrom = new TzOffsetFrom(ZoneOffset.UTC);
-        TzOffsetTo offsetTo = new TzOffsetTo(ZoneOffset.UTC);
-        NO_TRANSITIONS.add(offsetFrom);
-        NO_TRANSITIONS.add(offsetTo);
-        DtStart<Instant> start = new DtStart<>();
-        start.setDate(Instant.EPOCH);
-        NO_TRANSITIONS.add(start);
+        NO_TRANSITIONS.add(new TzOffsetFrom(ZoneOffset.UTC));
+        NO_TRANSITIONS.add(new TzOffsetTo(ZoneOffset.UTC));
+        NO_TRANSITIONS.add(new DtStart<>(Instant.EPOCH));
 
         // Proxy configuration..
         try {

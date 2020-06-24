@@ -408,7 +408,7 @@ public abstract class Property extends Content {
         buffer.append(':');
         boolean needsEscape = false;
         if (this instanceof XProperty) {
-            Optional<Value> valParam = getParameter(Parameter.VALUE);
+            Optional<Value> valParam = getParameters().getFirst(Parameter.VALUE);
             if (!valParam.isPresent() || valParam.get().equals(Value.TEXT)) {
                 needsEscape = true;
             }

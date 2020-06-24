@@ -259,8 +259,7 @@ public class VAlarm extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
-    public final void validate(final boolean recurse)
-            throws ValidationException {
+    public final void validate(final boolean recurse) throws ValidationException {
 
         /*
          * ; 'action' and 'trigger' are both REQUIRED, ; but MUST NOT occur more than once action / trigger /
