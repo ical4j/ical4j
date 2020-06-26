@@ -18,7 +18,7 @@ class ParameterFactoryWrapper extends AbstractFactory {
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, parameterClass)) {
             return value
         }
-        return factory.createParameter(value)
+        return factory.createParameter((String) value)
     }
 
     boolean isLeaf() {

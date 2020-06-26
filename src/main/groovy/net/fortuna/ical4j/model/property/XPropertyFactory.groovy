@@ -46,7 +46,7 @@ class XPropertyFactory extends AbstractFactory{
 
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        XProperty instance
+        def instance
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XProperty.class)) {
             instance = (XProperty) value
         }
@@ -56,7 +56,7 @@ class XPropertyFactory extends AbstractFactory{
                 propertyName = value
             }
             String propertyValue = attributes.remove('value')
-            List<Parameter> parameters = attributes.remove('parameters')
+            def parameters = attributes.remove('parameters')
             if (parameters == null) {
                 parameters = []
             }
@@ -65,8 +65,8 @@ class XPropertyFactory extends AbstractFactory{
         return instance
     }
     
-    Object newInstance(String name, List<Parameter> parameters, String value) {
-        return new XProperty(name, new ParameterList(parameters), value)
+    static Object newInstance(def name, def parameters, String value) {
+        return new XProperty(name, new ParameterList((List) parameters), value)
     }
 
     @Override

@@ -39,7 +39,7 @@ class XParameterFactory extends AbstractFactory {
 
     @Override
     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-        XParameter parameter
+        def parameter
         if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XParameter)) {
             parameter = value
         }

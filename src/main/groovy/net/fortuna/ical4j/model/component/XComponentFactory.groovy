@@ -42,7 +42,7 @@ class XComponentFactory extends AbstractFactory {
 
 
      Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
-         XComponent component
+         def component
          if (FactoryBuilderSupport.checkValueIsTypeNotString(value, name, XComponent.class)) {
              component = (XComponent) value
          }
@@ -51,7 +51,7 @@ class XComponentFactory extends AbstractFactory {
              if (componentName == null) {
                  componentName = value
              }
-             List<Property> properties = attributes.remove('properties')
+             def properties = attributes.remove('properties')
              if (properties == null) {
                  properties = []
              }
@@ -60,8 +60,8 @@ class XComponentFactory extends AbstractFactory {
          return component
      }
      
-     protected static Object newInstance(String name, List<Property> properties) {
-         return new XComponent(name, new PropertyList(properties))
+     protected static Object newInstance(def name, def properties) {
+         return new XComponent((String) name, new PropertyList((List) properties))
      }
      
      void setChild(FactoryBuilderSupport build, Object parent, Object child) {

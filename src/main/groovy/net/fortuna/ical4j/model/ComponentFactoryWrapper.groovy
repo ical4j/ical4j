@@ -24,7 +24,6 @@ class ComponentFactoryWrapper extends AbstractFactory {
         if (properties == null) {
             properties = []
         }
-        String compValue = attributes.remove('value')
         return factory.createComponent(new PropertyList(properties))
     }
 
