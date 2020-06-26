@@ -7,7 +7,7 @@ import java.util.ServiceLoader;
  */
 public abstract class AbstractCalendarValidatorFactory {
 
-    private static CalendarValidatorFactory instance;
+    private static final CalendarValidatorFactory instance;
     static {
         instance = ServiceLoader.load(CalendarValidatorFactory.class, DefaultCalendarValidatorFactory.class.getClassLoader()).iterator().next();
     }

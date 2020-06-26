@@ -117,7 +117,7 @@ public class VAvailability extends CalendarComponent {
                     (Predicate<VAvailability> & Serializable) p->p.getProperties().getFirst(DURATION).isPresent(), DTEND)
     );
 
-	private ComponentList<Available> available;
+	private final ComponentList<Available> available;
 
     /**
      * Default constructor.

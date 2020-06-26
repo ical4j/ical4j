@@ -77,7 +77,7 @@ public class AltRepTest extends TestCase {
             // test success.
         }
 
-        AltRep ar = (AltRep) new AltRep.Factory().createParameter("mailto:valid@test.com");
+        AltRep ar = new AltRep.Factory().createParameter("mailto:valid@test.com");
         
         assertNotNull(ar.getUri());
     }

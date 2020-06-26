@@ -56,7 +56,7 @@ import java.util.Arrays;
  */
 public class UnfoldingReader extends PushbackReader {
 
-    private Logger log = LoggerFactory.getLogger(UnfoldingReader.class);
+    private final Logger log = LoggerFactory.getLogger(UnfoldingReader.class);
 
     /**
      * The pattern used to identify a fold in an iCalendar data stream.
@@ -78,9 +78,9 @@ public class UnfoldingReader extends PushbackReader {
      */
     private static final char[] RELAXED_FOLD_PATTERN_2 = {'\n', '\t'};
 
-    private char[][] patterns;
+    private final char[][] patterns;
 
-    private char[][] buffers;
+    private final char[][] buffers;
 
     private int linesUnfolded;
 

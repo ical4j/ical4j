@@ -60,8 +60,8 @@ public class Rfc5545Transformer implements Transformer<Calendar> {
 
     private enum CountableProperties{
         STATUS(Property.STATUS, 1);
-        private int maxApparitionNumber;
-        private String name;
+        private final int maxApparitionNumber;
+        private final String name;
 
         CountableProperties(String name, int maxApparitionNumber){
             this.maxApparitionNumber = maxApparitionNumber;

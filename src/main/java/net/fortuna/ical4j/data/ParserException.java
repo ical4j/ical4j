@@ -47,7 +47,7 @@ public class ParserException extends Exception {
 
     private static final String ERROR_MESSAGE_PATTERN = "Error at line {0}:";
 
-    private int lineNo;
+    private final int lineNo;
 
     /**
      * @param lineNo line number where parsing error ocurred

@@ -55,7 +55,7 @@ public class RelatedTo extends Property implements Escapable {
 
     private String value;
 
-    private Validator<RelatedTo> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, RELTYPE));
+    private final Validator<RelatedTo> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, RELTYPE));
 
     /**
      * Default constructor.

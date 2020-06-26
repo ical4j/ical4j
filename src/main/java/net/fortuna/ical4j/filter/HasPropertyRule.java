@@ -48,9 +48,9 @@ import java.util.function.Predicate;
  */
 public class HasPropertyRule<T extends Component> implements Predicate<T> {
 
-    private Property property;
+    private final Property property;
 
-    private boolean matchEquals;
+    private final boolean matchEquals;
 
     /**
      * Constructs a new instance with the specified property. Ignores any parameters matching only on the value of the

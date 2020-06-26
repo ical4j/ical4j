@@ -54,7 +54,7 @@ public class AddressList implements Serializable, Iterable<URI> {
 
     private static final long serialVersionUID = 81383256078213569L;
 
-    private List<URI> addresses;
+    private final List<URI> addresses;
 
     /**
      * Default constructor.

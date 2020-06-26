@@ -65,7 +65,7 @@ public class CalendarParserImpl implements CalendarParser {
 
     private static final String UNEXPECTED_TOKEN_MESSAGE = "Expected [{0}], read [{1}]";
 
-    private Logger log = LoggerFactory.getLogger(CalendarParserImpl.class);
+    private final Logger log = LoggerFactory.getLogger(CalendarParserImpl.class);
 
     private final ComponentListParser componentListParser = new ComponentListParser();
 

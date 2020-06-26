@@ -99,7 +99,7 @@ public class Categories extends Property {
 
     private TextList categories;
 
-    private Validator<Categories> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, LANGUAGE));
+    private final Validator<Categories> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, LANGUAGE));
     /**
      * Default constructor.
      */

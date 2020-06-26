@@ -59,7 +59,7 @@ public abstract class CalendarParserFactory implements Supplier<CalendarParser> 
      */
     public static final String KEY_FACTORY_CLASS = "net.fortuna.ical4j.parser";
 
-    private static Supplier<CalendarParser> instance;
+    private static final Supplier<CalendarParser> instance;
     static {
         Optional<Supplier<CalendarParser>> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
         instance = property.orElse(CalendarParserImpl::new);

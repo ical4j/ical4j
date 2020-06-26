@@ -76,7 +76,7 @@ public abstract class Observance extends Component {
      */
     public static final String DAYLIGHT = "DAYLIGHT";
 
-    private Validator<Observance> validator = new ComponentValidator<>(
+    private final Validator<Observance> validator = new ComponentValidator<>(
             new ValidationRule<>(One, TZOFFSETFROM, TZOFFSETTO, DTSTART)
     );
 

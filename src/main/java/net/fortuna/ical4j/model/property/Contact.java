@@ -56,7 +56,7 @@ public class Contact extends Property implements Escapable {
 
     private String value;
 
-    private Validator<Contact> validator = new PropertyValidator<>(
+    private final Validator<Contact> validator = new PropertyValidator<>(
             new ValidationRule<>(OneOrLess, ALTREP, LANGUAGE));
 
     /**

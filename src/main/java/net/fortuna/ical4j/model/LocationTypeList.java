@@ -51,7 +51,7 @@ public class LocationTypeList implements Serializable, Iterable<String> {
 
     private static final long serialVersionUID = -9181735547604179160L;
 
-    private List<String> locationTypes;
+    private final List<String> locationTypes;
 
     /**
      * Default constructor.

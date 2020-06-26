@@ -11,13 +11,13 @@ import java.util.List;
 
 public class PropertyBuilder extends AbstractContentBuilder {
 
-    private List<PropertyFactory<?>> factories = new ArrayList<>();
+    private final List<PropertyFactory<?>> factories = new ArrayList<>();
 
     private String name;
 
     private String value;
 
-    private List<Parameter> parameters = new ArrayList<>();
+    private final List<Parameter> parameters = new ArrayList<>();
 
     private TimeZoneRegistry timeZoneRegistry;
 

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class ParameterBuilder extends AbstractContentBuilder {
 
-    private List<ParameterFactory<?>> factories = new ArrayList<>();
+    private final List<ParameterFactory<?>> factories = new ArrayList<>();
 
     private String name;
 

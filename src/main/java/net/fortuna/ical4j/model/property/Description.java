@@ -56,7 +56,7 @@ public class Description extends Property implements Escapable {
 
     private String value;
 
-    private Validator<Description> validator = new PropertyValidator<>(
+    private final Validator<Description> validator = new PropertyValidator<>(
             new ValidationRule<>(OneOrLess, ALTREP, LANGUAGE));
 
     /**

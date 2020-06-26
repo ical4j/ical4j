@@ -225,8 +225,8 @@ public class Geo extends Property {
      * {@inheritDoc}
      */
     public final String getValue() {
-        return String.valueOf(getLatitude()) + ";"
-                + String.valueOf(getLongitude());
+        return getLatitude() + ";"
+                + getLongitude();
     }
 
     /**

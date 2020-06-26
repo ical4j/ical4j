@@ -60,11 +60,11 @@ public abstract class Iso8601 extends Date {
     private static final long serialVersionUID = -4290728005713946811L;
     private static final java.util.TimeZone GMT = TimeZone.getTimeZone(TimeZones.GMT_ID);
 
-    private DateFormat format;
+    private final DateFormat format;
     
     private DateFormat gmtFormat;
     
-    private int precision;
+    private final int precision;
 
     /**
      * @param time a time value in milliseconds

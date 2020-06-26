@@ -11,9 +11,9 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
 
     private String name;
 
-    private List<Property> properties = new ArrayList<>();
+    private final List<Property> properties = new ArrayList<>();
 
-    private List<Component> subComponents = new ArrayList<>();
+    private final List<Component> subComponents = new ArrayList<>();
 
     public ComponentBuilder<?> factories(List<ComponentFactory<?>> factories) {
         this.factories.addAll(factories);

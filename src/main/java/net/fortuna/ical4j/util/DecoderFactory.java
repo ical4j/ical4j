@@ -55,7 +55,7 @@ public abstract class DecoderFactory {
      */
     public static final String KEY_FACTORY_CLASS = "net.fortuna.ical4j.factory.decoder";
 
-    private static DecoderFactory instance;
+    private static final DecoderFactory instance;
     static {
         Optional<DecoderFactory> property = Configurator.getObjectProperty(KEY_FACTORY_CLASS);
         instance = property.orElse(new DefaultDecoderFactory());

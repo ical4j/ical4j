@@ -146,7 +146,7 @@ public class Recur<T extends Temporal> implements Serializable {
      */
     public static final String KEY_MAX_INCREMENT_COUNT = "net.fortuna.ical4j.recur.maxincrementcount";
 
-    private static int maxIncrementCount;
+    private static final int maxIncrementCount;
 
     static {
         maxIncrementCount = Configurator.getIntProperty(KEY_MAX_INCREMENT_COUNT).orElse(1000);
@@ -184,7 +184,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private WeekDay weekStartDay;
 
-    private Map<String, String> experimentalValues = new HashMap<String, String>();
+    private final Map<String, String> experimentalValues = new HashMap<String, String>();
 
     // Temporal field we increment based on frequency.
     private TemporalUnit calIncField;

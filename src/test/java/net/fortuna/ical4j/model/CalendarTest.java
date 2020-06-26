@@ -69,8 +69,7 @@ public class CalendarTest {
             Version.VERSION_2_0,
             CalScale.GREGORIAN));
 
-        VEvent vEvent = new VEvent();
-        vEvent.add(new Uid("1"));
+        VEvent vEvent = new VEvent().add(new Uid("1"));
         calendar = new Calendar(props, new ComponentList<>(Collections.singletonList(vEvent)));
     }
 
@@ -100,8 +99,7 @@ public class CalendarTest {
                 .until(end)
                 .interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
                 .hourList(new NumberList("9")).build();
-        week1UserA.add(new RRule(week1UserARecur));
-        week1UserA.add(new Uid("000001@modularity.net.au"));
+        week1UserA.add(new RRule(week1UserARecur)).add(new Uid("000001@modularity.net.au"));
 
         start = start.plusWeeks(1);
         end = end.plusWeeks(1);
@@ -113,8 +111,7 @@ public class CalendarTest {
         Recur<ZonedDateTime> week2UserBRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
                 .until(end).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
                 .hourList(new NumberList("9")).build();
-        week2UserB.add(new RRule(week2UserBRecur));
-        week2UserB.add(new Uid("000002@modularity.net.au"));
+        week2UserB.add(new RRule(week2UserBRecur)).add(new Uid("000002@modularity.net.au"));
 
         start = start.plusWeeks(1);
         end = end.plusWeeks(1);
@@ -126,12 +123,9 @@ public class CalendarTest {
         Recur<ZonedDateTime> week3UserCRecur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY)
                 .until(end).interval(3).dayList(new WeekDayList(MO, TU, WE, TH, FR))
                 .hourList(new NumberList("9")).build();
-        week3UserC.add(new RRule(week3UserCRecur));
-        week3UserC.add(new Uid("000003@modularity.net.au"));
+        week3UserC.add(new RRule(week3UserCRecur)).add(new Uid("000003@modularity.net.au"));
 
-        copyCalendar.add(week1UserA);
-        copyCalendar.add(week2UserB);
-        copyCalendar.add(week3UserC);
+        copyCalendar.add(week1UserA).add(week2UserB).add(week3UserC);
 
         // test event date ranges..
         copyCalendar = new Calendar(calendar);
@@ -149,8 +143,7 @@ public class CalendarTest {
                 .until(end).interval(3)
                 .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
                 .hourList(new NumberList("9")).build();
-        week1UserA.add(new RRule(week1UserARecur));
-        week1UserA.add(new Uid("000001@modularity.net.au"));
+        week1UserA.add(new RRule(week1UserARecur)).add(new Uid("000001@modularity.net.au"));
 
         start = start.plusWeeks(1);
         end = end.plusWeeks(1);
@@ -163,8 +156,7 @@ public class CalendarTest {
                 .until(end).interval(3)
                 .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
                 .hourList(new NumberList("9")).build();
-        week2UserB.add(new RRule(week2UserBRecur));
-        week2UserB.add(new Uid("000002@modularity.net.au"));
+        week2UserB.add(new RRule(week2UserBRecur)).add(new Uid("000002@modularity.net.au"));
 
         start = start.plusWeeks(1);
         end = end.plusWeeks(1);
@@ -177,13 +169,9 @@ public class CalendarTest {
                 .until(end).interval(3)
                 .dayList(new WeekDayList(new WeekDay(MO, 0), new WeekDay(TU, 0), new WeekDay(WE, 0), new WeekDay(TH, 0), new WeekDay(FR, 0)))
                 .hourList(new NumberList("9")).build();
-        week3UserC.add(new RRule(week3UserCRecur));
-        week3UserC.add(new Uid("000003@modularity.net.au"));
+        week3UserC.add(new RRule(week3UserCRecur)).add(new Uid("000003@modularity.net.au"));
 
-        copyCalendar.add(week1UserA);
-        copyCalendar.add(week2UserB);
-        copyCalendar.add(week3UserC);
-        copyCalendar.validate();
+        copyCalendar.add(week1UserA).add(week2UserB).add(week3UserC).validate();
 
     }
 }

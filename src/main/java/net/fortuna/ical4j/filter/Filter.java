@@ -68,7 +68,7 @@ public class Filter<T> {
 
     private List<Predicate<T>> rules;
 
-    private int type;
+    private final int type;
 
     /**
      * @param rules one or more rules that are applied by this filter

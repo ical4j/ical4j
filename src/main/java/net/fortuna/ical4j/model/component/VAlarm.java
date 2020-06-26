@@ -215,7 +215,7 @@ public class VAlarm extends CalendarComponent {
                 new ValidationRule(OneOrLess, DESCRIPTION)));
     }
 
-    private Validator<VAlarm> vAlarmValidator = new ComponentValidator<>(
+    private final Validator<VAlarm> vAlarmValidator = new ComponentValidator<>(
             new ValidationRule<>(One, ACTION, TRIGGER),
             new ValidationRule<>(OneOrLess, DURATION, REPEAT),
             // DURATION and REPEAT must both be present or both absent

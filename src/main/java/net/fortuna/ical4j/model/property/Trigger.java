@@ -159,7 +159,7 @@ public class Trigger extends DateProperty<Instant> {
 
     private TemporalAmountAdapter duration;
 
-    private Validator<Trigger> validator = new PropertyValidator<>(
+    private final Validator<Trigger> validator = new PropertyValidator<>(
             new ValidationRule<>(OneOrLess, VALUE),
             new ValidationRule<>(None, (Predicate<Trigger> & Serializable) Trigger::isAbsolute, RELATED)
     );
