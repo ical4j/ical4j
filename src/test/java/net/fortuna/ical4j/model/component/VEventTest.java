@@ -164,15 +164,11 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         // create event start date..
         LocalDate christmasDay = LocalDate.now().withMonth(12).withDayOfMonth(25);
 
-        DtStart<LocalDate> start = new DtStart<>(christmasDay);
-        start.add(tzParam);
-        start.add(Value.DATE);
+        DtStart<LocalDate> start = new DtStart<>(christmasDay).add(tzParam).add(Value.DATE);
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
-        VEvent christmas = new VEvent();
-        christmas.add(start);
-        christmas.add(summary);
+        VEvent christmas = new VEvent().add(start).add(summary);
 
         log.info(christmas.toString());
     }
@@ -562,46 +558,37 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId("Australia/Melbourne")));
 
-        VEvent weekdayNineToFiveEvents = new VEvent();
-        weekdayNineToFiveEvents.add(rruleWeekly);
-        weekdayNineToFiveEvents.add(summary);
+        VEvent weekdayNineToFiveEvents = new VEvent().add(rruleWeekly).add(summary);
         DtStart dtStart = new DtStart<>(tzParams, weekday9AM);
 //        dtStart.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.add(dtStart);
         DtEnd dtEnd = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd.getParameters().add(Value.DATE);
-        weekdayNineToFiveEvents.add(dtEnd);
-        weekdayNineToFiveEvents.add(uidGenerator.generateUid());
+        weekdayNineToFiveEvents.add(dtEnd).add(uidGenerator.generateUid());
         // ensure event is valid..
         weekdayNineToFiveEvents.validate();
 
         summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY");
 
-        VEvent dailyWeekdayEvents = new VEvent();
-        dailyWeekdayEvents.add(rruleDaily);
-        dailyWeekdayEvents.add(summary);
+        VEvent dailyWeekdayEvents = new VEvent().add(rruleDaily).add(summary);
         DtStart dtStart2 = new DtStart<>(tzParams, weekday9AM);
 //        dtStart2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.add(dtStart2);
         DtEnd dtEnd2 = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd2.getParameters().add(Value.DATE);
-        dailyWeekdayEvents.add(dtEnd2);
-        dailyWeekdayEvents.add(uidGenerator.generateUid());
+        dailyWeekdayEvents.add(dtEnd2).add(uidGenerator.generateUid());
         // ensure event is valid..
         dailyWeekdayEvents.validate();
 
         summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY");
 
-        VEvent monthlyWeekdayEvents = new VEvent();
-        monthlyWeekdayEvents.add(rruleMonthly);
-        monthlyWeekdayEvents.add(summary);
+        VEvent monthlyWeekdayEvents = new VEvent().add(rruleMonthly).add(summary);
         DtStart dtStart3 = new DtStart<>(tzParams, weekday9AM);
 //        dtStart3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.add(dtStart3);
         DtEnd dtEnd3 = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd3.getParameters().add(Value.DATE);
-        monthlyWeekdayEvents.add(dtEnd3);
-        monthlyWeekdayEvents.add(uidGenerator.generateUid());
+        monthlyWeekdayEvents.add(dtEnd3).add(uidGenerator.generateUid());
         // ensure event is valid..
         monthlyWeekdayEvents.validate();
 
@@ -633,19 +620,14 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         DtStart<ZonedDateTime> start = new DtStart<>(startParams, ZonedDateTime.now());
 
         DtEnd<ZonedDateTime> end = new DtEnd<>(ZonedDateTime.now());
-        VEvent event = new VEvent();
-
-        event.add(uid);
-        event.add(start);
-        event.add(end);
+        VEvent event = new VEvent().add(uid).add(start).add(end);
         suite.addTest(new VEventTest<>("testValidation", event));
 
         event = event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
         startParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
         start = new DtStart<>(startParams, ZonedDateTime.now());
-        event.getProperties().remove(event.getProperties().getRequired(Property.DTSTART));
-        event.add(start);
+        event.replace(start);
         suite.addTest(new VEventTest<>("testValidationException", event));
 
         // test 1..

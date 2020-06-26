@@ -212,16 +212,34 @@ public class Calendar implements Serializable {
         this.components = components;
     }
 
-    public void add(CalendarComponent component) {
+    /**
+     * Add a component to the calendar's component list.
+     * @param component the component to add
+     * @return a reference to the calendar to support method chaining
+     */
+    public Calendar add(CalendarComponent component) {
         setComponents((ComponentList<CalendarComponent>) components.add(component));
+        return this;
     }
 
-    public void remove(CalendarComponent component) {
+    /**
+     * Remove a component from the calendar's component list.
+     * @param component the component to remove
+     * @return a reference to the calendar to support method chaining
+     */
+    public Calendar remove(CalendarComponent component) {
         setComponents((ComponentList<CalendarComponent>) components.remove(component));
+        return this;
     }
 
-    public void replace(CalendarComponent component) {
+    /**
+     * Add a component to the calendar's component list whilst removing all other components with the same component name.
+     * @param component the component to add
+     * @return a reference to the calendar to support method chaining
+     */
+    public Calendar replace(CalendarComponent component) {
         setComponents((ComponentList<CalendarComponent>) components.replace(component));
+        return this;
     }
 
     /**
@@ -260,16 +278,34 @@ public class Calendar implements Serializable {
         this.properties = properties;
     }
 
-    public void add(Property property) {
+    /**
+     * Add a property to the calendar's property list.
+     * @param property the property to add
+     * @return a reference to the calendar to support method chaining
+     */
+    public Calendar add(Property property) {
         setProperties((PropertyList) properties.add(property));
+        return this;
     }
 
-    public void remove(Property property) {
+    /**
+     * Remove a property from the calendar's property list.
+     * @param property the property to remove
+     * @return a reference to the calendar to support method chaining
+     */
+    public Calendar remove(Property property) {
         setProperties((PropertyList) properties.remove(property));
+        return this;
     }
 
-    public void replace(Property property) {
+    /**
+     * Add a property to the calendar's property list whilst removing all other properties with the same property name.
+     * @param property the property to add
+     * @return a reference to the calendar to support method chaining
+     */
+    public Calendar replace(Property property) {
         setProperties((PropertyList) properties.replace(property));
+        return this;
     }
 
     /**

@@ -69,19 +69,19 @@ public class AvailableTest extends ComponentTest {
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
 
-        Available a = new Available();
-        suite.addTest(new AvailableTest("testIsNotCalendarComponent", a));
-        suite.addTest(new AvailableTest("testValidationException", a));
-        
-        UidGenerator g = new RandomUidGenerator();
-        a = new Available();
-        a.add(g.generateUid());
+        Available available = new Available();
+        suite.addTest(new AvailableTest("testIsNotCalendarComponent", available));
+        suite.addTest(new AvailableTest("testValidationException", available));
 
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId(ZoneId.systemDefault().getId())));
-        a.add(new DtStart<>(tzParams, ZonedDateTime.now()));
-        a.add(new DtStamp());
-        a.add(new Duration(java.time.Period.ofWeeks(1)));
-        suite.addTest(new AvailableTest("testValidation", a));
+        UidGenerator g = new RandomUidGenerator();
+
+        available = new Available().add(g.generateUid())
+                .add(new DtStart<>(tzParams, ZonedDateTime.now()))
+                .add(new DtStamp())
+                .add(new Duration(java.time.Period.ofWeeks(1)));
+
+        suite.addTest(new AvailableTest("testValidation", available));
         return suite;
     }
 }

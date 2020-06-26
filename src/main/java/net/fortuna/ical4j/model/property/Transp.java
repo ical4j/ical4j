@@ -120,23 +120,27 @@ public class Transp extends Property {
         }
 
         @Override
-        public void add(Parameter parameter) {
+        public ImmutableTransp add(Parameter parameter) {
             throwException();
+            return null;
         }
 
         @Override
-        public void remove(Parameter parameter) {
+        public ImmutableTransp remove(Parameter parameter) {
             throwException();
+            return null;
         }
 
         @Override
-        public void removeAll(String parameterName) {
+        public ImmutableTransp removeAll(String parameterName) {
             throwException();
+            return null;
         }
 
         @Override
-        public void replace(Parameter parameter) {
+        public ImmutableTransp replace(Parameter parameter) {
             throwException();
+            return null;
         }
 
     }

@@ -111,23 +111,27 @@ public class Method extends Property {
         }
 
         @Override
-        public void add(Parameter parameter) {
+        public ImmutableMethod add(Parameter parameter) {
             throwException();
+            return null;
         }
 
         @Override
-        public void remove(Parameter parameter) {
+        public ImmutableMethod remove(Parameter parameter) {
             throwException();
+            return null;
         }
 
         @Override
-        public void removeAll(String parameterName) {
+        public ImmutableMethod removeAll(String parameterName) {
             throwException();
+            return null;
         }
 
         @Override
-        public void replace(Parameter parameter) {
+        public ImmutableMethod replace(Parameter parameter) {
             throwException();
+            return null;
         }
     }
 

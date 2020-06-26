@@ -72,8 +72,7 @@ public class VAvailabilityTest extends ComponentTest {
         suite.addTest(new VAvailabilityTest("testValidationException", a));
         
         UidGenerator g = new RandomUidGenerator();
-        a = new VAvailability();
-        a.add(g.generateUid());
+        a = new VAvailability().add(g.generateUid());
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId(ZoneId.systemDefault().getId())));
         a.add(new DtStart<>(tzParams, ZonedDateTime.now()));
         suite.addTest(new VAvailabilityTest("testValidation", a));

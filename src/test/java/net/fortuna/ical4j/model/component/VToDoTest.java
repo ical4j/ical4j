@@ -66,16 +66,14 @@ public class VToDoTest extends CalendarComponentTest {
 
         // iCalendar validation
         suite.addTest(new VToDoTest("testValidationException", td));
-        VToDo validTd = new VToDo();
-        validTd.add(new Uid("12"));
+        VToDo validTd = new VToDo().add(new Uid("12"));
         suite.addTest(new VToDoTest("testValidation", validTd));
 
         // iTIP REPLY validation
         suite.addTest(new VToDoTest("testReplyValidationException", new VToDo()));
-        VToDo replyTd = new VToDo();
-        replyTd.add(new Attendee("mailto:jane@example.com"));
-        replyTd.add(new Organizer("mailto:joe@example.com"));
-        replyTd.add(new Uid("12"));
+        VToDo replyTd = new VToDo().add(new Attendee("mailto:jane@example.com"))
+                .add(new Organizer("mailto:joe@example.com"))
+                .add(new Uid("12"));
         suite.addTest(new VToDoTest("testReplyValidation", replyTd));
 
         return suite;

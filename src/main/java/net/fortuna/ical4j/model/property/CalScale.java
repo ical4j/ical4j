@@ -68,13 +68,15 @@ public class CalScale extends Property {
         }
 
         @Override
-        public void add(Parameter parameter) {
+        public ImmutableCalScale add(Parameter parameter) {
             throwException();
+            return null;
         }
 
         @Override
-        public void remove(Parameter parameter) {
+        public ImmutableCalScale remove(Parameter parameter) {
             throwException();
+            return null;
         }
 
         /**
@@ -86,13 +88,15 @@ public class CalScale extends Property {
         }
 
         @Override
-        public void removeAll(String parameterName) {
+        public ImmutableCalScale removeAll(String parameterName) {
             throwException();
+            return null;
         }
 
         @Override
-        public void replace(Parameter parameter) {
+        public ImmutableCalScale replace(Parameter parameter) {
             throwException();
+            return null;
         }
 
     }

@@ -163,23 +163,27 @@ public class Priority extends Property {
         }
 
         @Override
-        public void add(Parameter parameter) {
+        public ImmutablePriority add(Parameter parameter) {
             throwException();
+            return null;
         }
 
         @Override
-        public void remove(Parameter parameter) {
+        public ImmutablePriority remove(Parameter parameter) {
             throwException();
+            return null;
         }
 
         @Override
-        public void removeAll(String parameterName) {
+        public ImmutablePriority removeAll(String parameterName) {
             throwException();
+            return null;
         }
 
         @Override
-        public void replace(Parameter parameter) {
+        public ImmutablePriority replace(Parameter parameter) {
             throwException();
+            return null;
         }
     }
 

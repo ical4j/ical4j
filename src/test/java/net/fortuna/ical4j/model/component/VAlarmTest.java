@@ -73,39 +73,32 @@ public class VAlarmTest extends ComponentTest {
     public static TestSuite suite() throws URISyntaxException {
         TestSuite suite = new TestSuite();
         
-        VAlarm alarm = new VAlarm();
-        alarm.add(new Trigger(Instant.now()));
+        VAlarm alarm = new VAlarm().add(new Trigger(Instant.now()));
         
         suite.addTest(new VAlarmTest("testIsCalendarComponent", alarm));
         suite.addTest(new VAlarmTest("testValidationException", alarm));
 
-        alarm = (VAlarm) alarm.copy();
-        alarm.add(Action.DISPLAY);
-        alarm.add(new Description("Testing display"));
+        alarm = alarm.copy().add(Action.DISPLAY).add(new Description("Testing display"));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
         // Test duration/repeat validation..
-        alarm = new VAlarm(java.time.Duration.ofHours(2));
-        alarm.add(Action.DISPLAY);
-        alarm.add(new Description("Testing display"));
+        alarm = new VAlarm(java.time.Duration.ofHours(2)).add(Action.DISPLAY)
+                .add(new Description("Testing display"));
         Duration duration = new Duration(java.time.Duration.ofMinutes(2));
         alarm.add(duration);
         suite.addTest(new VAlarmTest("testValidationException", alarm));
         
-        alarm = (VAlarm) alarm.copy();
-        alarm.add(new Repeat(2));
+        alarm = alarm.copy().add(new Repeat(2));
         suite.addTest(new VAlarmTest("testValidation", alarm));
         
-        alarm = (VAlarm) alarm.copy();
-        alarm.getProperties().remove(duration);
+        alarm = alarm.copy().remove(duration);
         suite.addTest(new VAlarmTest("testValidationException", alarm));
         
         //testValidationEmail..
-        alarm = new VAlarm(java.time.Duration.ofDays(-2));
-        alarm.add(Action.EMAIL);
-        alarm.add(new Attendee("mailto:john_doe@example.com"));
-        alarm.add(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"));
-        alarm.add(new Description("A draft agenda needs to be sent out to the attendees "
+        alarm = new VAlarm(java.time.Duration.ofDays(-2)).add(Action.EMAIL)
+                .add(new Attendee("mailto:john_doe@example.com"))
+                .add(new Summary("*** REMINDER: SEND AGENDA FOR WEEKLY STAFF MEETING ***"))
+                .add(new Description("A draft agenda needs to be sent out to the attendees "
                     + "to the weekly managers meeting (MGR-LIST). Attached is a " 
                     + "pointer the document template for the agenda file."));
 

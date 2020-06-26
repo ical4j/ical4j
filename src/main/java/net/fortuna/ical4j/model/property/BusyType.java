@@ -98,23 +98,27 @@ public class BusyType extends Property {
         }
 
         @Override
-        public void add(Parameter parameter) {
+        public ImmutableBusyType add(Parameter parameter) {
             throwException();
+            return null;
         }
 
         @Override
-        public void remove(Parameter parameter) {
+        public ImmutableBusyType remove(Parameter parameter) {
             throwException();
+            return null;
         }
 
         @Override
-        public void removeAll(String parameterName) {
+        public ImmutableBusyType removeAll(String parameterName) {
             throwException();
+            return null;
         }
 
         @Override
-        public void replace(Parameter parameter) {
+        public ImmutableBusyType replace(Parameter parameter) {
             throwException();
+            return null;
         }
     }
 

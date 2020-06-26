@@ -177,35 +177,47 @@ public abstract class Component extends Content implements Serializable {
     }
 
     /**
-     * Add a property to the component.
+     * Add a property to the component's property list.
      * @param property the property to add
+     * @return a reference to the component to support method chaining
      */
-    public void add(Property property) {
+    @SuppressWarnings("unchecked")
+    public <T extends Component> T add(Property property) {
         setProperties((PropertyList) properties.add(property));
+        return (T) this;
     }
 
     /**
-     * Remove a property from the component.
+     * Remove a property from the component's property list.
      * @param property the property to remove
+     * @return a reference to the component to support method chaining
      */
-    public void remove(Property property) {
+    @SuppressWarnings("unchecked")
+    public <T extends Component> T remove(Property property) {
         setProperties((PropertyList) properties.remove(property));
+        return (T) this;
     }
 
     /**
-     * Remove multiple properties from the component.
-     * @param propertyName the name of properties to remove
+     * Remove all properties from the component's property list with the matching property name.
+     * @param propertyName name of the properties to remove
+     * @return a reference to the component to support method chaining
      */
-    public void removeAll(String... propertyName) {
+    @SuppressWarnings("unchecked")
+    public <T extends Component> T removeAll(String... propertyName) {
         setProperties((PropertyList) properties.removeAll(propertyName));
+        return (T) this;
     }
 
     /**
-     * Replace existing properties with a new property.
-     * @param property the new property
+     * Add a property to the component's property list whilst removing all other properties with the same property name.
+     * @param property the property to add
+     * @return a reference to the component to support method chaining
      */
-    public void replace(Property property) {
+    @SuppressWarnings("unchecked")
+    public <T extends Component> T replace(Property property) {
         setProperties((PropertyList) properties.replace(property));
+        return (T) this;
     }
 
     /**

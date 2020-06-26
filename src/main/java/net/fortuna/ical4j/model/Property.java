@@ -443,20 +443,48 @@ public abstract class Property extends Content {
         this.parameters = parameters;
     }
 
-    public void add(Parameter parameter) {
+    /**
+     * Add a parameter to the property's parameter list.
+     * @param parameter the parameter to add
+     * @return a reference to the property to support method chaining
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Property> T add(Parameter parameter) {
         setParameters((ParameterList) parameters.add(parameter));
+        return (T) this;
     }
 
-    public void remove(Parameter parameter) {
+    /**
+     * Remove a parameter from the property's parameter list.
+     * @param parameter the parameter to remove
+     * @return a reference to the property to support method chaining
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Property> T remove(Parameter parameter) {
         setParameters((ParameterList) parameters.remove(parameter));
+        return (T) this;
     }
 
-    public void removeAll(String parameterName) {
+    /**
+     * Remove all parameters with the specified name from the property's parameter list.
+     * @param parameterName the name of parameters to remove
+     * @return a reference to the property to support method chaining
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Property> T removeAll(String parameterName) {
         setParameters((ParameterList) parameters.removeAll(parameterName));
+        return (T) this;
     }
 
-    public void replace(Parameter parameter) {
+    /**
+     * Add a parameter to the property's parameter list whilst removing all other parameters with the same name.
+     * @param parameter the parameter to add
+     * @return a reference to the property to support method chaining
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Property> T replace(Parameter parameter) {
         setParameters((ParameterList) parameters.replace(parameter));
+        return (T) this;
     }
 
     /**

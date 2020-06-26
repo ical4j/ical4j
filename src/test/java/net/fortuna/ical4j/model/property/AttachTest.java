@@ -93,11 +93,10 @@ public class AttachTest extends TestCase {
 
         Summary summary = new Summary("Christmas Day; \n this is a, test\\");
 
-        VEvent christmas = new VEvent();
-        christmas.add(start);
-        christmas.add(summary);
-        christmas.add(attach);
-        christmas.add(new Uid("000001@modularity.net.au"));
+        VEvent christmas = new VEvent().add(start)
+                .add(summary)
+                .add(attach)
+                .add(new Uid("000001@modularity.net.au"));
 
         PropertyList props = new PropertyList(Arrays.asList(
                 new ProdId("-//Ben Fortuna//iCal4j 1.0//EN"),

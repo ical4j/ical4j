@@ -123,13 +123,15 @@ public class Clazz extends Property {
         }
 
         @Override
-        public void add(Parameter parameter) {
+        public ImmutableClazz add(Parameter parameter) {
             throwException();
+            return null;
         }
 
         @Override
-        public void remove(Parameter parameter) {
+        public ImmutableClazz remove(Parameter parameter) {
             throwException();
+            return null;
         }
 
         /**
@@ -141,13 +143,15 @@ public class Clazz extends Property {
         }
 
         @Override
-        public void removeAll(String parameterName) {
+        public ImmutableClazz removeAll(String parameterName) {
             throwException();
+            return null;
         }
 
         @Override
-        public void replace(Parameter parameter) {
+        public ImmutableClazz replace(Parameter parameter) {
             throwException();
+            return null;
         }
     }
 
