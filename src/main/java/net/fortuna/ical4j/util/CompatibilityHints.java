@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.util;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -124,6 +125,6 @@ public final class CompatibilityHints {
         if (HINTS.get(key) != null) {
             return HINTS.get(key);
         }
-        return "true".equals(Configurator.getProperty(key));
+        return Optional.of("true").equals(Configurator.getProperty(key));
     }
 }
