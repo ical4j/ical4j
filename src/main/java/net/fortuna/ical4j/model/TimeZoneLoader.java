@@ -182,12 +182,7 @@ public class TimeZoneLoader {
                     Comparator.comparing(ZoneOffsetTransition::getDateTimeBefore));
         }
 
-        LocalDateTime startDate = null;
-        if (zoneOffsetTransition != null) {
-            startDate = zoneOffsetTransition.getDateTimeBefore();
-        } else {
-            startDate = LocalDateTime.now(zoneId);
-        }
+        LocalDateTime startDate = LocalDateTime.now(zoneId);;
 
         for (ZoneOffsetTransitionRule transitionRule : zoneId.getRules().getTransitionRules()) {
             int transitionRuleMonthValue = transitionRule.getMonth().getValue();

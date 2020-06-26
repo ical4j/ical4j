@@ -149,9 +149,6 @@ public class CalendarParserImpl implements CalendarParser {
 
             if (e instanceof IOException) {
                 throw (IOException) e;
-            }
-            if (e instanceof ParserException) {
-                throw (ParserException) e;
             } else {
                 throw new ParserException(e.getMessage(), getLineNumber(tokeniser, in), e);
             }
@@ -348,7 +345,7 @@ public class CalendarParserImpl implements CalendarParser {
                     nextToken = nextToken(tokeniser, in);
                 }
                 tokeniser.pushBack();
-            } else if (tokeniser.sval == null) {
+            } else { //if (tokeniser.sval == null) {
                 tokeniser.pushBack();
             }
 

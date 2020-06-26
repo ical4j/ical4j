@@ -45,9 +45,9 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
                 }
                 T candidate;
                 if (weekNo > 0) {
-                    if (numWeeksInYear < weekNo) {
-                        continue;
-                    }
+//                    if (numWeeksInYear < weekNo) {
+//                        continue;
+//                    }
                     candidate = withTemporalField(date, ALIGNED_WEEK_OF_YEAR, weekNo);
                 } else {
                     if (numWeeksInYear < -weekNo) {

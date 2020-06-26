@@ -75,9 +75,9 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
                 }
                 T candidate;
                 if (monthDay > 0) {
-                    if (numDaysInMonth < monthDay) {
-                        continue;
-                    }
+//                    if (numDaysInMonth < monthDay) {
+//                        continue;
+//                    }
                     candidate = withTemporalField(date, DAY_OF_MONTH, monthDay);
                 } else {
                     if (numDaysInMonth < -monthDay) {
