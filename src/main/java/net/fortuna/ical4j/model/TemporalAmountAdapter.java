@@ -92,11 +92,17 @@ public class TemporalAmountAdapter implements Serializable {
                 if (hours > 0) {
                     if (seconds > 0) {
                         retVal = String.format("P%dDT%dH%dM%dS", days, hours, minutes, seconds);
+                    } else if (minutes > 0) {
+                        retVal = String.format("P%dDT%dH%dM", days, hours, minutes);
                     } else {
                         retVal = String.format("P%dDT%dH", days, hours);
                     }
                 } else if (minutes > 0) {
-                    retVal = String.format("P%dDT%dM", days, minutes);
+                    if (seconds > 0) {
+                        retVal = String.format("P%dDT%dM%dS", days, minutes, seconds);
+                    } else {
+                        retVal = String.format("P%dDT%dM", days, minutes);
+                    }
                 } else if (seconds > 0) {
                     retVal = String.format("P%dDT%dS", days, seconds);
                 }

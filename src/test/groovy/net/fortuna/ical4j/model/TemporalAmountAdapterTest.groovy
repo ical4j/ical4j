@@ -181,4 +181,7 @@ class TemporalAmountAdapterTest extends Specification {
         adapter1.duration == -adapter2.duration
     }
 
+    def 'testTemporalAmountAdapter_durationToString_DropsMinutes'() {
+        expect: "P1DT1H4M" == TemporalAmountAdapter.parse("P1DT1H4M") as String
+    }
 }
