@@ -7,7 +7,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.Serializable;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
 
@@ -28,11 +31,14 @@ public class TemporalAmountAdapter implements Serializable {
 
     @Override
     public String toString() {
-        String retVal = null;
+        return toString(LocalDateTime.now());
+    }
+    public String toString(Temporal seed) {
+        String retVal;
         if (Duration.ZERO.equals(duration) || Period.ZERO.equals(duration)) {
             retVal = duration.toString();
         } else if (duration instanceof Period) {
-            retVal = periodToString(((Period) duration).normalized());
+            retVal = periodToString(((Period) duration).normalized(), seed);
         } else {
             retVal = durationToString((Duration) duration);
         }
@@ -46,22 +52,22 @@ public class TemporalAmountAdapter implements Serializable {
      * @param period a period instance
      * @return a string representation of the period that is compliant with the RFC5545 specification.
      */
-    private String periodToString(Period period) {
+    private String periodToString(Period period, Temporal seed) {
         String retVal;
-        Period absPeriod = period.isNegative() ? period.negated() : period;
-        if (absPeriod.getYears() != 0) {
-            int weeks = absPeriod.getYears() * 52;
+        Temporal adjustedSeed = seed.plus(period);
+        if (period.getYears() != 0) {
+            long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
             retVal = String.format("P%dW", weeks);
-        } else if (absPeriod.getMonths() != 0) {
-            int weeks = absPeriod.getMonths() * 4;
+        } else if (period.getMonths() != 0) {
+            long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
             retVal = String.format("P%dW", weeks);
-        } else if (absPeriod.getDays() % 7 == 0) {
-            int weeks = absPeriod.getDays() / 7;
+        } else if (period.getDays() % 7 == 0) {
+            long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
             retVal = String.format("P%dW", weeks);
         } else {
-            retVal = absPeriod.toString();
+            retVal = period.toString();
         }
-        if (period.isNegative()) {
+        if (period.isNegative() && !retVal.startsWith("-")) {
             return "-" + retVal;
         } else {
             return retVal;
@@ -92,11 +98,17 @@ public class TemporalAmountAdapter implements Serializable {
                 if (hours > 0) {
                     if (seconds > 0) {
                         retVal = String.format("P%dDT%dH%dM%dS", days, hours, minutes, seconds);
+                    } else if (minutes > 0) {
+                        retVal = String.format("P%dDT%dH%dM", days, hours, minutes);
                     } else {
                         retVal = String.format("P%dDT%dH", days, hours);
                     }
                 } else if (minutes > 0) {
-                    retVal = String.format("P%dDT%dM", days, minutes);
+                    if (seconds > 0) {
+                        retVal = String.format("P%dDT%dM%dS", days, minutes, seconds);
+                    } else {
+                        retVal = String.format("P%dDT%dM", days, minutes);
+                    }
                 } else if (seconds > 0) {
                     retVal = String.format("P%dDT%dS", days, seconds);
                 }
