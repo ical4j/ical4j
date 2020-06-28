@@ -88,23 +88,9 @@ public class WeekDay implements Serializable {
      */
     public static final WeekDay SA = new WeekDay(Day.SA, 0);
 
-    public enum Day {
-        SU(WeekDay.SU),
-        MO(WeekDay.MO),
-        TU(WeekDay.TU),
-        WE(WeekDay.WE),
-        TH(WeekDay.TH),
-        FR(WeekDay.FR),
-        SA(WeekDay.SA);
+    public enum Day { SU, MO, TU, WE, TH, FR, SA }
 
-        public WeekDay weekDay;
-
-        Day(WeekDay weekDay) {
-            this.weekDay = weekDay;
-        }
-    }
-
-    private final Day day;
+    private Day day;
     
     private final int offset;
     
@@ -166,6 +152,19 @@ public class WeekDay implements Serializable {
         }
         b.append(getDay());
         return b.toString();
+    }
+
+    public static WeekDay getWeekDay(Day day) {
+        switch (day) {
+            case SU: return SU;
+            case MO: return MO;
+            case TU: return TU;
+            case WE: return WE;
+            case TH: return TH;
+            case FR: return FR;
+            case SA: return SA;
+            default: return null;
+        }
     }
 
     /**
@@ -267,7 +266,7 @@ public class WeekDay implements Serializable {
         if (weekday == null) {
             return null;
         }
-        
+
         switch (weekday.day) {
             case SU: return DayOfWeek.SUNDAY;
             case MO: return DayOfWeek.MONDAY;

@@ -232,7 +232,7 @@ public class Recur<T extends Temporal> implements Serializable {
             } else if (BYSETPOS.equals(token)) {
                 setPosList.addAll(NumberList.parse(nextToken(tokens, token)));
             } else if (WKST.equals(token)) {
-                weekStartDay = WeekDay.Day.valueOf(nextToken(tokens, token)).weekDay;
+                weekStartDay = WeekDay.getWeekDay(WeekDay.Day.valueOf(nextToken(tokens, token)));
             } else {
                 if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
                     // assume experimental value..
