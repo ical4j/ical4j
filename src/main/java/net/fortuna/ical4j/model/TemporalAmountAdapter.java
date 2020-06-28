@@ -54,21 +54,20 @@ public class TemporalAmountAdapter implements Serializable {
      */
     private String periodToString(Period period, Temporal seed) {
         String retVal;
-        Period absPeriod = period.isNegative() ? period.negated() : period;
-        Temporal adjustedSeed = seed.plus(absPeriod);
-        if (absPeriod.getYears() != 0) {
-            long weeks = seed.until(adjustedSeed, ChronoUnit.WEEKS);
+        Temporal adjustedSeed = seed.plus(period);
+        if (period.getYears() != 0) {
+            long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
             retVal = String.format("P%dW", weeks);
-        } else if (absPeriod.getMonths() != 0) {
-            long weeks = seed.until(adjustedSeed, ChronoUnit.WEEKS);
+        } else if (period.getMonths() != 0) {
+            long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
             retVal = String.format("P%dW", weeks);
-        } else if (absPeriod.getDays() % 7 == 0) {
-            long weeks = seed.until(adjustedSeed, ChronoUnit.WEEKS);
+        } else if (period.getDays() % 7 == 0) {
+            long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
             retVal = String.format("P%dW", weeks);
         } else {
-            retVal = absPeriod.toString();
+            retVal = period.toString();
         }
-        if (period.isNegative()) {
+        if (period.isNegative() && !retVal.startsWith("-")) {
             return "-" + retVal;
         } else {
             return retVal;
