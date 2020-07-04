@@ -151,7 +151,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
     public final PeriodList<T> normalise() {
         Period<T> prevPeriod = null;
         Period<T> period;
-        final PeriodList<T> newList = new PeriodList<>();
+        final PeriodList<T> newList = new PeriodList<>(dateFormat);
         boolean normalised = false;
         for (Period<T> period1 : periods) {
             period = period1;
@@ -208,7 +208,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
      */
     public final PeriodList<T> add(final PeriodList<T> periods) {
         if (periods != null) {
-            final PeriodList<T> newList = new PeriodList<>();
+            final PeriodList<T> newList = new PeriodList<>(dateFormat);
             newList.getPeriods().addAll(this.periods);
             newList.getPeriods().addAll(this.periods);
             return newList.normalise();
@@ -231,7 +231,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
         }
         
         PeriodList<T> result = this;
-        PeriodList<T> tmpResult = new PeriodList<>();
+        PeriodList<T> tmpResult = new PeriodList<>(dateFormat);
 
         for (final Period<T> subtraction : subtractions.getPeriods()) {
             for (final Period<T> period : result.getPeriods()) {

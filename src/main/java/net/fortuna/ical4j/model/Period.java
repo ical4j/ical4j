@@ -44,9 +44,6 @@ import java.time.temporal.TemporalAmount;
 import java.util.Date;
 import java.util.*;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 /**
  * $Id$ [Apr 14, 2004]
  *
@@ -363,7 +360,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         Interval thatInterval = TemporalAdapter.isFloating(getStart()) ? period.toInterval(ZoneId.systemDefault()) : period.toInterval();
         
         if (thatInterval.encloses(thisInterval)) {
-            return new PeriodList<>();
+            return new PeriodList<>(period.dateFormat);
         } else if (thatInterval.overlaps(thisInterval)) {
             return new PeriodList<>(Collections.singletonList(this));
         }

@@ -115,7 +115,7 @@ public class FreeBusy extends Property {
      */
     public FreeBusy() {
         super(FREEBUSY);
-        periods = new PeriodList<>();
+        periods = new PeriodList<>(CalendarDateFormat.UTC_DATE_TIME_FORMAT);
     }
 
     /**
@@ -140,7 +140,7 @@ public class FreeBusy extends Property {
      */
     public FreeBusy(final List<Period<Instant>> pList) {
         super(FREEBUSY);
-        periods = new PeriodList<>(pList);
+        periods = new PeriodList<>(pList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
     }
 
     /**
@@ -149,7 +149,7 @@ public class FreeBusy extends Property {
      */
     public FreeBusy(final ParameterList aList, final List<Period<Instant>> pList) {
         super(FREEBUSY, aList);
-        periods = new PeriodList<>(pList);
+        periods = new PeriodList<>(pList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
     }
 
     /**
