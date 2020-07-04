@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.util.Numbers;
 
 import java.io.Serializable;
+import java.time.temporal.ValueRange;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,9 +51,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
     
     private static final long serialVersionUID = -1667481795613729889L;
 
-    private final int minValue;
-    
-    private final int maxValue;
+    private final ValueRange range;
 
     private final boolean allowsNegativeValues;
     
@@ -70,8 +69,11 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * @param allowsNegativeValues indicates whether negative values are allowed
      */
     public NumberList(int minValue, int maxValue, boolean allowsNegativeValues) {
-    	this.minValue = minValue;
-    	this.maxValue = maxValue;
+        this(ValueRange.of(minValue, maxValue), allowsNegativeValues);
+    }
+
+    public NumberList(ValueRange range, boolean allowsNegativeValues) {
+        this.range = range;
         this.allowsNegativeValues = allowsNegativeValues;
     }
 
@@ -106,9 +108,9 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
             }
             abs = Math.abs(abs);
         }
-    	if (abs < minValue || abs > maxValue) {
+        if (!range.isValidIntValue(abs)) {
     		throw new IllegalArgumentException(
-    		        "Value not in range [" + minValue + ".." + maxValue + "]: " + aNumber);
+    		        "Value not in range [" + range.getMinimum() + ".." + range.getMaximum() + "]: " + aNumber);
     	}
         return super.add(aNumber);
     }

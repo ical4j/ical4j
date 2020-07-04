@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalUnit;
@@ -164,21 +165,21 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private Integer interval;
 
-    private final List<Integer> secondList = new NumberList(0, 59, false);
+    private final List<Integer> secondList = new NumberList(ChronoField.SECOND_OF_MINUTE.range(), false);
 
-    private final List<Integer> minuteList = new NumberList(0, 59, false);
+    private final List<Integer> minuteList = new NumberList(ChronoField.MINUTE_OF_HOUR.range(), false);
 
-    private final List<Integer> hourList = new NumberList(0, 23, false);
+    private final List<Integer> hourList = new NumberList(ChronoField.HOUR_OF_DAY.range(), false);
 
     private final List<WeekDay> dayList = new WeekDayList();
 
-    private final List<Integer> monthDayList = new NumberList(1, 31, true);
+    private final List<Integer> monthDayList = new NumberList(ChronoField.DAY_OF_MONTH.range(), true);
 
-    private final List<Integer> yearDayList = new NumberList(1, 366, true);
+    private final List<Integer> yearDayList = new NumberList(ChronoField.DAY_OF_YEAR.range(), true);
 
-    private final List<Integer> weekNoList = new NumberList(1, 53, true);
+    private final List<Integer> weekNoList = new NumberList(ChronoField.ALIGNED_WEEK_OF_YEAR.range(), true);
 
-    private final List<Integer> monthList = new NumberList(1, 12, false);
+    private final List<Integer> monthList = new NumberList(ChronoField.MONTH_OF_YEAR.range(), false);
 
     private final List<Integer> setPosList = new NumberList(1, 366, true);
 
