@@ -29,13 +29,13 @@ public class DefaultZoneRulesProvider extends ZoneRulesProvider {
     private final Map<String, ZoneRules> zoneRulesMap;
 
     public DefaultZoneRulesProvider() {
-        this(new TimeZoneLoader(DEFAULT_RESOURCE_PREFIX));
+        this(new TimeZoneLoader(DEFAULT_RESOURCE_PREFIX), TimeZoneRegistry.ZONE_IDS);
     }
 
-    public DefaultZoneRulesProvider(TimeZoneLoader timeZoneLoader) {
+    public DefaultZoneRulesProvider(TimeZoneLoader timeZoneLoader, Map<String, String> zoneIdMap) {
         this.zoneLoader = timeZoneLoader;
         for (String id : zoneLoader.getAvailableIDs()) {
-            TimeZoneRegistry.ZONE_IDS.put("ical4j~" + UUID.randomUUID().toString(), id);
+            zoneIdMap.put("ical4j~" + UUID.randomUUID().toString(), id);
         }
         this.zoneRulesMap = new ConcurrentHashMap<>();
     }

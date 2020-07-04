@@ -134,6 +134,7 @@ abstract class AbstractDateExpansionRule<T extends Temporal> implements Transfor
         }
     }
 
+    @SuppressWarnings("unchecked")
     T withTemporalField(T date, TemporalField field, int value) {
         if (date.isSupported(field)) {
             return (T) date.with(field, value);

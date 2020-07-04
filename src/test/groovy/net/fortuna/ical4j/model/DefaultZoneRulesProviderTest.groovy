@@ -8,7 +8,7 @@ class DefaultZoneRulesProviderTest extends Specification {
 
     def 'asset new instance available ids'() {
         given: 'a zone rules provider'
-        DefaultZoneRulesProvider provider = []
+        DefaultZoneRulesProvider provider = [new TimeZoneLoader(TimeZoneRegistryImpl.DEFAULT_RESOURCE_PREFIX), new HashMap<String, String>()]
 
         when: 'requesting available ids'
         def availableIds = provider.provideZoneIds()
