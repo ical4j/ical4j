@@ -36,6 +36,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.Arrays;
@@ -155,6 +156,9 @@ public class PeriodList<T extends Temporal> implements Serializable {
         boolean normalised = false;
         for (Period<T> period1 : periods) {
             period = period1;
+            if (period.getStart() instanceof LocalDate) {
+                continue;
+            }
             if (period.isEmpty()) {
                 period = prevPeriod;
                 normalised = true;
@@ -210,7 +214,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
         if (periods != null) {
             final PeriodList<T> newList = new PeriodList<>(dateFormat);
             newList.getPeriods().addAll(this.periods);
-            newList.getPeriods().addAll(this.periods);
+            newList.getPeriods().addAll(periods.periods);
             return newList.normalise();
         }
         return this;
@@ -234,8 +238,13 @@ public class PeriodList<T extends Temporal> implements Serializable {
         PeriodList<T> tmpResult = new PeriodList<>(dateFormat);
 
         for (final Period<T> subtraction : subtractions.getPeriods()) {
-            for (final Period<T> period : result.getPeriods()) {
-                tmpResult.addAll(period.subtract(subtraction).getPeriods());
+            if (subtraction.getStart() instanceof LocalDate) {
+                tmpResult.addAll(result.getPeriods().stream()
+                        .filter(p -> !p.equals(subtraction)).collect(Collectors.toList()));
+            } else {
+                for (final Period<T> period : result.getPeriods()) {
+                    tmpResult.addAll(period.subtract(subtraction).getPeriods());
+                }
             }
             result = tmpResult;
             tmpResult = new PeriodList<>();

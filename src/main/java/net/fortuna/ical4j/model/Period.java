@@ -259,7 +259,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public final TemporalAmount getDuration() {
         if (duration == null) {
-            return TemporalAmountAdapter.from(getStart(), getEnd()).getDuration();
+            return TemporalAmountAdapter.from(start, end).getDuration();
         }
         return duration.getDuration();
     }
@@ -301,7 +301,8 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public final boolean includes(final Temporal date) {
         Objects.requireNonNull(date, "date");
-        return toInterval().encloses(Interval.of(Instant.from(date), Duration.ZERO));
+        return start.equals(date) || end.equals(date)
+                || toInterval().encloses(Interval.of(Instant.from(date), Duration.ZERO));
     }
 
     /**
@@ -348,7 +349,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * If the specified period is completely contained in this period, the resulting list will contain two periods.
      * Otherwise it will contain one.
      *
-     * If the specified period does not interest this period a list containing this period is returned.
+     * If the specified period does not intersect this period a list containing this period is returned.
      *
      * If this period is completely contained within the specified period an empty period list is returned.
      *
@@ -356,12 +357,23 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @return a list containing zero, one or two periods.
      */
     public final PeriodList<T> subtract(final Period<T> period) {
-        Interval thisInterval = TemporalAdapter.isFloating(getStart()) ? toInterval(ZoneId.systemDefault()) : toInterval();
-        Interval thatInterval = TemporalAdapter.isFloating(getStart()) ? period.toInterval(ZoneId.systemDefault()) : period.toInterval();
+        if (period.equals(this)) {
+            return new PeriodList<>(dateFormat);
+        } else if (!period.intersects(this) || start instanceof LocalDate) {
+            return new PeriodList<>(Collections.singletonList(this), dateFormat);
+        }
+        return subtractInterval(period);
+    }
+
+    private PeriodList<T> subtractInterval(Period<T> period) {
+        Interval thisInterval = TemporalAdapter.isFloating(getStart())
+                ? toInterval(ZoneId.systemDefault()) : toInterval();
+        Interval thatInterval = TemporalAdapter.isFloating(getStart())
+                ? period.toInterval(ZoneId.systemDefault()) : period.toInterval();
         
         if (thatInterval.encloses(thisInterval)) {
             return new PeriodList<>(period.dateFormat);
-        } else if (thatInterval.overlaps(thisInterval)) {
+        } else if (!thatInterval.overlaps(thisInterval)) {
             return new PeriodList<>(Collections.singletonList(this));
         }
 
@@ -369,10 +381,10 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
 
         T newPeriodStart;
         T newPeriodEnd;
-        if (thatInterval.getStart().isBefore(thisInterval.getStart())) {
+        if (!thatInterval.getStart().isAfter(thisInterval.getStart())) {
             newPeriodStart = period.getEnd();
             newPeriodEnd = getEnd();
-        } else if (thatInterval.getEnd().isAfter(thisInterval.getEnd())) {
+        } else if (!thatInterval.getEnd().isBefore(thisInterval.getEnd())) {
             newPeriodStart = getStart();
             newPeriodEnd = period.getStart();
         } else {
@@ -394,6 +406,9 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      * @return true if this period consumes no time, otherwise false
      */
     public final boolean isEmpty() {
+        if (start instanceof LocalDate) {
+            return start.equals(end);
+        }
         return toInterval().isEmpty();
     }
 
@@ -460,8 +475,7 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
     public Interval toInterval(ZoneId zoneId) {
         if (start instanceof LocalDate) {
             throw new UnsupportedOperationException("Unable to create Interval from date-only temporal.");
-        }
-        else if (start instanceof Instant) {
+        } else if (start instanceof Instant) {
             return Interval.of((Instant) start, (Instant) end);
         } else {
             // calculate zone offset based on current applicable rules

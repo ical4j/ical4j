@@ -168,8 +168,14 @@ public class TemporalAmountAdapter implements Serializable {
     }
 
     public static TemporalAmountAdapter from(Temporal start, Temporal end) {
-        TemporalAmount duration = Duration.between(start, end);
-        return new TemporalAmountAdapter(duration);
+        if (start instanceof LocalDate) {
+            return from((LocalDate) start, (LocalDate) end);
+        }
+        return new TemporalAmountAdapter(Duration.between(start, end));
+    }
+
+    public static TemporalAmountAdapter from(LocalDate start, LocalDate end) {
+        return new TemporalAmountAdapter(Period.between(start, end));
     }
 
     public static TemporalAmountAdapter fromDateRange(Date start, Date end) {

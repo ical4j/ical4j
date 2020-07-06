@@ -416,30 +416,6 @@ public class PeriodTest extends TestCase {
     public static Test suite() {
     	TestSuite suite = new TestSuite();
 
-        ZonedDateTime past = ZonedDateTime.now().withYear(1980).withMonth(1).withDayOfMonth(23);
-        ZonedDateTime future = past.withYear(2022).withMonth(2);
-        ZonedDateTime begin1994 = future.withYear(1994).withMonth(1).withDayOfMonth(1);
-        ZonedDateTime end1994 = begin1994.withMonth(12).withDayOfMonth(31);
-        ZonedDateTime mar1994 = end1994.withMonth(3).withDayOfMonth(4);
-        ZonedDateTime apr1994 = mar1994.withMonth(4).withDayOfMonth(12);
-        ZonedDateTime may1994 = apr1994.withMonth(5).withDayOfMonth(19);
-        ZonedDateTime jun1994 = may1994.withMonth(6).withDayOfMonth(22);
-        ZonedDateTime jul1994 = jun1994.withMonth(7).withDayOfMonth(29);
-
-        Period<ZonedDateTime> year1994 = new Period<>(begin1994, end1994);
-        Period<ZonedDateTime> monthMarch = new Period<>(mar1994, apr1994);
-        Period<ZonedDateTime> monthApril = new Period<>(apr1994, may1994);
-        Period<ZonedDateTime> monthMay = new Period<>(may1994, jun1994);
-        Period<ZonedDateTime> firstHalf = new Period<>(begin1994, jun1994);
-        Period<ZonedDateTime> lastHalf = new Period<>(may1994, end1994);
-        Period<ZonedDateTime> winter = new Period<>(begin1994, apr1994);
-        Period<ZonedDateTime> spring = new Period<>(apr1994, jul1994);
-        Period<ZonedDateTime> marchToMay = new Period<>(mar1994, jun1994);
-        Period<ZonedDateTime> marchToApril = new Period<>(mar1994, may1994);
-//        Period duplicateRange = new Period(begin1994, end1994);
-    	
-        Period testPeriod;
-
         /*
         long testMillis;
         long todayMillis;
@@ -464,10 +440,6 @@ public class PeriodTest extends TestCase {
                 (todayMillis - testMillis) < 5000);
         */
 
-        testPeriod = new Period<>(past, future);
-        suite.addTest(new PeriodTest("testGetStart", testPeriod, past));
-        suite.addTest(new PeriodTest("testGetEnd", testPeriod, future));
-
         /*
         testRange = new DateRange();
         testRange.setEndDate(future);
@@ -484,75 +456,20 @@ public class PeriodTest extends TestCase {
         assertEquals(future, testRange.getEndDate());
         */
 
-        suite.addTest(new PeriodTest("testNotIncludes", year1994, past));
-        suite.addTest(new PeriodTest("testIncludes", year1994, mar1994));
-        suite.addTest(new PeriodTest("testNotIncludes", year1994, future));
-        suite.addTest(new PeriodTest("testIncludes", year1994, begin1994));
-        suite.addTest(new PeriodTest("testIncludes", year1994, end1994));
-        
-        suite.addTest(new PeriodTest("testBefore", monthMarch, monthMay));
-        suite.addTest(new PeriodTest("testNotBefore", monthMay, monthMarch));
-        suite.addTest(new PeriodTest("testNotBefore", winter, monthMarch));
-        suite.addTest(new PeriodTest("testNotBefore", monthMarch, winter));
-        suite.addTest(new PeriodTest("testNotBefore", firstHalf, lastHalf));
-        suite.addTest(new PeriodTest("testNotBefore", lastHalf, firstHalf));
-        // because month march end is same as month april start, march is not
-        // before april..
-        suite.addTest(new PeriodTest("testNotBefore", monthMarch, monthApril));
-        suite.addTest(new PeriodTest("testNotBefore", monthApril, monthMarch));
-        
-        suite.addTest(new PeriodTest("testNotAfter", monthMarch, monthMay));
-        suite.addTest(new PeriodTest("testAfter", monthMay, monthMarch));
-        suite.addTest(new PeriodTest("testNotAfter", winter, monthMarch));
-        suite.addTest(new PeriodTest("testNotAfter", monthMarch, winter));
-        suite.addTest(new PeriodTest("testNotAfter", firstHalf, lastHalf));
-        suite.addTest(new PeriodTest("testNotAfter", lastHalf, firstHalf));
-        suite.addTest(new PeriodTest("testNotAfter", monthMarch, monthApril));
-        // because month march end is same as month april start, april is not
-        // after march..
-        suite.addTest(new PeriodTest("testNotAfter", monthApril, monthMarch));
-    	
-        suite.addTest(new PeriodTest("testNotIntersects", monthMarch, monthMay));
-        suite.addTest(new PeriodTest("testNotIntersects", monthMay, monthMarch));
-        suite.addTest(new PeriodTest("testNotIntersects", monthMarch, monthApril));
-        suite.addTest(new PeriodTest("testNotIntersects", monthApril, monthMarch));
-        suite.addTest(new PeriodTest("testIntersects", firstHalf, lastHalf));
-        suite.addTest(new PeriodTest("testIntersects", lastHalf, firstHalf));
-        suite.addTest(new PeriodTest("testIntersects", winter, monthMarch));
-        suite.addTest(new PeriodTest("testIntersects", monthMarch, winter));
-    	
-        suite.addTest(new PeriodTest("testNotContains", monthMarch, monthMay));
-        suite.addTest(new PeriodTest("testNotContains", monthMay, monthMarch));
-        suite.addTest(new PeriodTest("testNotContains", monthMarch, monthApril));
-        suite.addTest(new PeriodTest("testNotContains", monthApril, monthMarch));
-        suite.addTest(new PeriodTest("testNotContains", firstHalf, lastHalf));
-        suite.addTest(new PeriodTest("testNotContains", lastHalf, firstHalf));
-        suite.addTest(new PeriodTest("testContains", winter, monthMarch));
-        suite.addTest(new PeriodTest("testNotContains", monthMarch, winter));
-        
-        suite.addTest(new PeriodTest("testEquals", monthMarch.add(monthMay), marchToMay));
-        suite.addTest(new PeriodTest("testEquals", monthMay.add(monthMarch), marchToMay));
-        suite.addTest(new PeriodTest("testEquals", monthMarch.add(monthApril), marchToApril));
-        suite.addTest(new PeriodTest("testEquals", monthApril.add(monthMarch), marchToApril));
-        suite.addTest(new PeriodTest("testEquals", firstHalf.add(lastHalf), year1994));
-        suite.addTest(new PeriodTest("testEquals", lastHalf.add(firstHalf), year1994));
-        suite.addTest(new PeriodTest("testEquals", winter.add(monthMarch), winter));
-        suite.addTest(new PeriodTest("testEquals",  monthMarch.add(winter), winter));
-        
         // test period contained by subtraction..
-        suite.addTest(new PeriodListTest("testIsEmpty", firstHalf.subtract(year1994)));
-        suite.addTest(new PeriodListTest("testIsEmpty", winter.subtract(winter)));
+//        suite.addTest(new PeriodListTest("testIsEmpty", firstHalf.subtract(year1994)));
+//        suite.addTest(new PeriodListTest("testIsEmpty", winter.subtract(winter)));
         
         // test non-intersecting periods..
-        suite.addTest(new PeriodListTest("testContains", winter.subtract(spring), winter));
-        suite.addTest(new PeriodListTest(winter.subtract(spring), 1));
+//        suite.addTest(new PeriodListTest("testContains", winter.subtract(spring), winter));
+//        suite.addTest(new PeriodListTest(winter.subtract(spring), 1));
         
         // test intersecting periods..
-        PeriodList<ZonedDateTime> aprToMay = marchToMay.subtract(marchToApril);
-        suite.addTest(new PeriodListTest(aprToMay, 1));
+//        PeriodList<ZonedDateTime> aprToMay = marchToMay.subtract(marchToApril);
+//        suite.addTest(new PeriodListTest(aprToMay, 1));
         
         // test subtraction contained by period..
-        suite.addTest(new PeriodListTest(year1994.subtract(monthApril), 2));
+//        suite.addTest(new PeriodListTest(year1994.subtract(monthApril), 2));
 
         ZoneId zoneId = TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne");
         ZonedDateTime start = ((LocalDateTime) TemporalAdapter.parse("20081115T163800").getTemporal())
