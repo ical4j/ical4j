@@ -328,6 +328,9 @@ public class VFreeBusy extends CalendarComponent {
             throw new ValidationException("Missing required property", cve);
         }
 
+        // ensure the request is valid..
+        request.validate();
+
         final Optional<Duration> duration = request.getProperties().getFirst(DURATION);
         
         // 4.8.2.4 Date/Time Start:
