@@ -276,6 +276,10 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
             return ((LocalDate) date1).isBefore((LocalDate) date2);
         } else if (date1 instanceof LocalDateTime && date2 instanceof LocalDateTime) {
             return ((LocalDateTime) date1).isBefore((LocalDateTime) date2);
+        } else if (date2 instanceof LocalDate) {
+            return (Instant.from(date1).isAfter(((LocalDate) date2).atStartOfDay(ZoneId.systemDefault()).toInstant()));
+//        } else if (date2 instanceof LocalDateTime) {
+//            return (Instant.from(date1).isAfter(((LocalDateTime) date2).atZone(ZoneId.systemDefault()).toInstant()));
         }
         return Instant.from(date1).isBefore(Instant.from(date2));
     }
@@ -285,6 +289,8 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
             return ((LocalDate) date1).isAfter((LocalDate) date2);
         } else if (date1 instanceof LocalDateTime && date2 instanceof LocalDateTime) {
             return ((LocalDateTime) date1).isAfter((LocalDateTime) date2);
+        } else if (date2 instanceof LocalDate) {
+            return (Instant.from(date1).isAfter(((LocalDate) date2).atStartOfDay(ZoneId.systemDefault()).toInstant()));
         }
         return Instant.from(date1).isAfter(Instant.from(date2));
     }

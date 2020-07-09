@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 
@@ -87,9 +88,9 @@ public class DtEndTest extends PropertyTest {
         //
         ParameterList newParams;
         newParams = (ParameterList) dtEnd.getParameters().replace(Value.DATE);
-        dtEnd = new DtEnd<>(newParams, dtEnd.getDate());
-        log.info(dtEnd.toString());
-        suite.addTest(new DtEndTest("testValidationException", dtEnd));
+        DtEnd<LocalDate> dtEndLocalDate = new DtEnd<>(newParams, dtEnd.getDate().toLocalDate());
+        log.info(dtEndLocalDate.toString());
+        suite.addTest(new DtEndTest("testValidationException", dtEndLocalDate));
 
         //
         dtEnd = new DtEnd<>(dtEnd.getParameters(), dtEnd.getDate());
@@ -98,9 +99,9 @@ public class DtEndTest extends PropertyTest {
 
         //
         newParams = (ParameterList) dtEnd.getParameters().replace(Value.DATE);
-        dtEnd = new DtEnd<>(newParams, dtEnd.getDate());
-        log.info(dtEnd.toString());
-        suite.addTest(new DtEndTest("testValidation", dtEnd));
+        dtEndLocalDate = new DtEnd<>(newParams, dtEnd.getDate().toLocalDate());
+        log.info(dtEndLocalDate.toString());
+        suite.addTest(new DtEndTest("testValidation", dtEndLocalDate));
 
         //
         newParams = (ParameterList) dtEnd.getParameters().removeAll(Parameter.VALUE);

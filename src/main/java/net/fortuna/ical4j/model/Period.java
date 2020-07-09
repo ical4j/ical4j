@@ -474,7 +474,9 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
 
     public Interval toInterval(ZoneId zoneId) {
         if (start instanceof LocalDate) {
-            throw new UnsupportedOperationException("Unable to create Interval from date-only temporal.");
+            return Interval.of(((LocalDate) start).atStartOfDay(zoneId).toInstant(),
+                    ((LocalDate) end).atStartOfDay(zoneId).toInstant());
+//            throw new UnsupportedOperationException("Unable to create Interval from date-only temporal.");
         } else if (start instanceof Instant) {
             return Interval.of((Instant) start, (Instant) end);
         } else {

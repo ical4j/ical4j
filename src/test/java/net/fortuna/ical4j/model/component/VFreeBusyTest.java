@@ -171,7 +171,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         VEvent event2 = new VEvent().add(new DtStart<>(tzParams, startDate))
                 .add(new DtEnd<>(endDate));
 
-        VFreeBusy request = new VFreeBusy(startDate, endDate);
+        VFreeBusy request = new VFreeBusy(startDate.toInstant(), endDate.toInstant());
 
         ComponentList<CalendarComponent> components = new ComponentList<>(Arrays.asList(event, event2));
         VFreeBusy fb = new VFreeBusy(request, components.getAll());
@@ -233,9 +233,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
             log.debug("\n==\n" + event.toString());
         }
 
-        ZonedDateTime requestEnd = ZonedDateTime.now();
-
-        VFreeBusy request = new VFreeBusy(eventStart, requestEnd);
+        VFreeBusy request = new VFreeBusy(eventStart.toInstant(), Instant.now());
 
         ComponentList<CalendarComponent> components = new ComponentList<>(Collections.singletonList(event));
         VFreeBusy fb = new VFreeBusy(request, components.getAll());
@@ -271,19 +269,19 @@ public class VFreeBusyTest extends CalendarComponentTest {
 
         // add an event
         LocalDate start = LocalDate.now();
-        LocalDate end = start.plusDays(-1);
+        LocalDate end = start.plusDays(1);
 
         VEvent dteEnd = new VEvent(start, end, "DATE END INCLUDED");
 
-        VEvent duration = new VEvent(start, java.time.Duration.ofHours(1), "DURATION");
+        VEvent duration = new VEvent(start, java.time.Period.ofDays(1), "DURATION");
 
         freeBusyTest.add(dteEnd).add(duration);
 
         Instant dtstart = Instant.now();
-        Instant dtend = ZonedDateTime.now().plusDays(-2).toInstant();
+        Instant dtend = ZonedDateTime.now().plusDays(2).toInstant();
 
         VFreeBusy getBusy = new VFreeBusy(dtstart, dtend);
-        VFreeBusy requestFree = new VFreeBusy(dtstart, dtend, java.time.Duration.ofMinutes(30));
+        VFreeBusy requestFree = new VFreeBusy(dtstart, dtend, java.time.Period.ofDays(30));
 
         log.debug("GET BUSY: \n" + getBusy.toString());
         log.debug("REQUEST FREE: \n" + requestFree.toString());

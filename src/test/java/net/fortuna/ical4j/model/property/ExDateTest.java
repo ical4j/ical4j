@@ -36,15 +36,14 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * $Id$
@@ -97,12 +96,11 @@ public class ExDateTest extends TestCase {
 
         String id = vTZ.getProperties().getRequired(Property.TZID).getValue();
         assertEquals("Europe/Berlin", id);
-        assertEquals(vTZ.getObservances().getAll().get(0), vTZ.getApplicableObservance(TemporalAdapter.parse("20180403").getTemporal()));
+        assertEquals(vTZ.getObservances().getAll().get(0),
+                vTZ.getApplicableObservance(TemporalAdapter.parse("20180403T000000Z").getTemporal()));
 
         VEvent vEvent = ical.getComponents().getRequired(VEvent.VEVENT);
-        DtStart<?> start = vEvent.getProperties().getRequired("DTSTART");
-        Optional<TzId> startTzId = start.getParameters().getFirst(Parameter.TZID);
-        assertEquals(startTzId, vTZ.getProperties().getRequired("TZID").getParameters().getFirst(Parameter.TZID));
+        DtStart<ZonedDateTime> start = vEvent.getProperties().getRequired("DTSTART");
         assertEquals(1522738800000L, Instant.from(start.getDate()).toEpochMilli());
     }
 
