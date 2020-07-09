@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.component.VFreeBusy
+import net.fortuna.ical4j.model.parameter.XParameter
 import net.fortuna.ical4j.model.property.Version
 import net.fortuna.ical4j.util.RandomUidGenerator
 
@@ -81,6 +82,8 @@ public class ContentBuilderTest extends GroovyTestCase {
         def builder = new ContentBuilder()
         
         def request = new VFreeBusy(builder.vfreebusy() {
+            uid('1')
+            dtstamp()
             dtstart('20080101T000000Z')
             dtend('20100101T000000Z')
         }, [])
@@ -156,7 +159,7 @@ public class ContentBuilderTest extends GroovyTestCase {
     }
     
     void testBuildXParameter() {
-        def xparameter = new ContentBuilder().xparameter('test')
+        XParameter xparameter = new ContentBuilder().xparameter('test')
         assert xparameter.name == 'test'
         
         xparameter = new ContentBuilder().xparameter(name: 'test')

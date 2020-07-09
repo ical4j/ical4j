@@ -99,7 +99,7 @@ class CalendarParserImplSpec extends Specification {
 
 		expect:
 		Calendar calendar = builder.build(new StringReader(input))
-		assert calendar.components.all[0].properties.size() == 24
+		assert calendar.components.all[0].properties.all.size() == 24
 
 		cleanup:
 		compatibilityHints.each {
