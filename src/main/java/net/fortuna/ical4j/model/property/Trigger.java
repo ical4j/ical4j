@@ -274,7 +274,7 @@ public class Trigger extends DateProperty<Instant> {
             super.setValue(aValue);
             duration = null;
         } catch (DateTimeParseException pe) {
-            LoggerFactory.getLogger(Trigger.class).warn(String.format("Not a valid DATE-TIME value: %s", aValue));
+            LoggerFactory.getLogger(Trigger.class).debug(String.format("Not a valid DATE-TIME value: %s", aValue));
             duration = TemporalAmountAdapter.parse(aValue);
             super.setDate(null);
         }
