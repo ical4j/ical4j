@@ -133,7 +133,7 @@ public class VTimeZone extends CalendarComponent {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
-    private final Validator itipValidator = new VTimeZoneValidator();
+    private final Validator<VTimeZone> itipValidator = new VTimeZoneValidator();
 
     private final Validator<VTimeZone> validator = new ComponentValidator<>(
             new ValidationRule<>(One, TZID),
@@ -241,13 +241,7 @@ public class VTimeZone extends CalendarComponent {
 
     @Override
     public void validate(Method method) throws ValidationException {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    protected Validator<CalendarComponent> getValidator(Method method) {
-        return itipValidator;
+        itipValidator.validate(this);
     }
 
     /**

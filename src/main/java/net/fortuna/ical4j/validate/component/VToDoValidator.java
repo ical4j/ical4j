@@ -15,16 +15,16 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
 public class VToDoValidator extends ComponentValidator<VToDo> {
 
     private final Validator<VAlarm> itipValidator = new ComponentValidator<>(
-            new ValidationRule(One, ACTION, TRIGGER),
-            new ValidationRule(OneOrLess, DESCRIPTION, DURATION, REPEAT, SUMMARY));
+            new ValidationRule<>(One, ACTION, TRIGGER),
+            new ValidationRule<>(OneOrLess, DESCRIPTION, DURATION, REPEAT, SUMMARY));
 
     private final boolean alarmsAllowed;
 
-    public VToDoValidator(ValidationRule... rules) {
+    public VToDoValidator(ValidationRule<VToDo>... rules) {
         this(true, rules);
     }
 
-    public VToDoValidator(boolean alarmsAllowed, ValidationRule... rules) {
+    public VToDoValidator(boolean alarmsAllowed, ValidationRule<VToDo>... rules) {
         super(rules);
         this.alarmsAllowed = alarmsAllowed;
     }
