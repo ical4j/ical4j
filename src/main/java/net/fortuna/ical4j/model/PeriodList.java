@@ -257,9 +257,6 @@ public class PeriodList<T extends Temporal> implements Serializable {
         return periods;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean addAll(Collection<Period<T>> arg0) {
         for (Period<T> p : arg0) {
             add(p);
@@ -267,9 +264,6 @@ public class PeriodList<T extends Temporal> implements Serializable {
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isEmpty() {
         return periods.isEmpty();
     }

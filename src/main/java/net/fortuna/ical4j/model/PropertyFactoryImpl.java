@@ -63,9 +63,6 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory<
         return factory.supports(key);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Property createProperty(final String name) {
         final PropertyFactory factory = getFactory(name);
         if (factory != null) {
@@ -80,9 +77,6 @@ public class PropertyFactoryImpl extends AbstractContentFactory<PropertyFactory<
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Property createProperty(final String name,
                                    final ParameterList parameters, final String value)
             throws IOException, URISyntaxException {
