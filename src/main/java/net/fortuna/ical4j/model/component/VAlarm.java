@@ -285,13 +285,6 @@ public class VAlarm extends CalendarComponent {
             validateProperties();
         }
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    protected Validator<CalendarComponent> getValidator(Method method) {
-        throw new UnsupportedOperationException("VALARM validation included in VEVENT or VTODO method validator.");
-    }
 
     /**
      * Returns the mandatory action property.

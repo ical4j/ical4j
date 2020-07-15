@@ -33,10 +33,8 @@ package net.fortuna.ical4j.model.component;
 
 import net.fortuna.ical4j.model.ComponentFactory;
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
-import net.fortuna.ical4j.validate.Validator;
 
 /**
  * $Id$
@@ -83,14 +81,6 @@ public class XComponent extends CalendarComponent {
         if (recurse) {
             validateProperties();
         }
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    protected Validator<CalendarComponent> getValidator(Method method) {
-        // No method validation required.. 
-        return EMPTY_VALIDATOR;
     }
 
     @Override
