@@ -382,7 +382,7 @@ public class VFreeBusy extends CalendarComponent {
      * returned. If no valid busy periods are identified in the component an empty FREEBUSY property is returned (i.e.
      * empty period list).
      */
-    private class BusyTimeBuilder {
+    private static class BusyTimeBuilder {
         
         private Instant start;
         
@@ -422,7 +422,7 @@ public class VFreeBusy extends CalendarComponent {
      * bounds of the start and end dates, null is returned. If no valid busy periods are identified in the component an
      * empty FREEBUSY property is returned (i.e. empty period list).
      */
-    private class FreeTimeBuilder {
+    private static class FreeTimeBuilder {
         
         private Instant start;
         
@@ -489,7 +489,7 @@ public class VFreeBusy extends CalendarComponent {
      * @param components
      * @return
      */
-    private <T extends Temporal> List<Period<T>> getConsumedTime(final List<CalendarComponent> components,
+    private static <T extends Temporal> List<Period<T>> getConsumedTime(final List<CalendarComponent> components,
                                                                  final Period<T> range) {
         
         final PeriodList<T> periods = new PeriodList<>();
@@ -668,6 +668,5 @@ public class VFreeBusy extends CalendarComponent {
         public VFreeBusy createComponent(PropertyList properties, ComponentList<?> subComponents) {
             throw new UnsupportedOperationException(String.format("%s does not support sub-components", VFREEBUSY));
         }
-
     }
 }
