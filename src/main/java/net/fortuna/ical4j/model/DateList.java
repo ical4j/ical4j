@@ -31,9 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
 import java.io.Serializable;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
@@ -65,21 +62,7 @@ public class DateList<T extends Temporal> implements Serializable {
     }
 
     public DateList(CalendarDateFormat dateFormat) {
-    	this(false, dateFormat);
-    }
-
-    public DateList(final boolean unmodifiable) {
-        this(unmodifiable, CalendarDateFormat.FLOATING_DATE_TIME_FORMAT);
-    }
-
-    public DateList(final boolean unmodifiable, CalendarDateFormat dateFormat) {
-        Objects.requireNonNull(dateFormat, "dateFormat");
-        if (unmodifiable) {
-        	dates = Collections.emptyList();
-        } else {
-            dates = new ArrayList<>();
-        }
-        this.dateFormat = dateFormat;
+    	this(Collections.emptyList(), dateFormat);
     }
 
     /**
@@ -93,7 +76,7 @@ public class DateList<T extends Temporal> implements Serializable {
 
     public DateList(final List<T> list, CalendarDateFormat dateFormat) {
         Objects.requireNonNull(dateFormat, "dateFormat");
-        this.dates = new ArrayList<>(list);
+        this.dates = Collections.unmodifiableList(list);
         this.dateFormat = dateFormat;
     }
 
@@ -143,12 +126,16 @@ public class DateList<T extends Temporal> implements Serializable {
      * @return true
      * @see List#add(java.lang.Object)
      */
-    public final boolean add(final T date) {
-        return dates.add(date);
+    public final DateList<T> add(final T date) {
+        List<T> copy = new ArrayList<>(dates);
+        copy.add(date);
+        return new DateList<>(copy, dateFormat);
     }
 
-    public final boolean addAll(Collection<? extends T> arg0) {
-        return dates.addAll(arg0);
+    public final DateList<T> addAll(Collection<? extends T> arg0) {
+        List<T> copy = new ArrayList<>(dates);
+        copy.addAll(arg0);
+        return new DateList<>(copy);
     }
 
     public List<T> getDates() {
@@ -156,16 +143,16 @@ public class DateList<T extends Temporal> implements Serializable {
     }
 
     @Override
-	public final boolean equals(Object obj) {
-		if (!getClass().isAssignableFrom(obj.getClass())) {
-			return false;
-		}
-		final DateList rhs = (DateList) obj;
-		return new EqualsBuilder().append(dates, rhs.dates).isEquals();
-	}
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DateList<?> dateList = (DateList<?>) o;
+        return Objects.equals(dates, dateList.dates) &&
+                dateFormat.equals(dateList.dateFormat);
+    }
 
     @Override
-	public final int hashCode() {
-		return new HashCodeBuilder().append(dates).toHashCode();
-	}
+    public int hashCode() {
+        return Objects.hash(dates, dateFormat);
+    }
 }

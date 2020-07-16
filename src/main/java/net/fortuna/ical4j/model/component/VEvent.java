@@ -481,7 +481,7 @@ public class VEvent extends CalendarComponent {
 
             // if periods already specified through recurrence, return..
             // ..also normalise before returning.
-            if (!periods.isEmpty() && normalise) {
+            if (!periods.getPeriods().isEmpty() && normalise) {
                 periods = periods.normalise();
             }
         } else {

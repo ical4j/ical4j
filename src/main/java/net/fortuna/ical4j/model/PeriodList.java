@@ -31,18 +31,13 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -85,7 +80,8 @@ public class PeriodList<T extends Temporal> implements Serializable {
     }
 
     public PeriodList(Collection<Period<T>> periods, CalendarDateFormat dateFormat) {
-        this.periods = new TreeSet<>(periods);
+        Objects.requireNonNull(dateFormat, "dateFormat");
+        this.periods = Collections.unmodifiableSet(new TreeSet<>(periods));
         this.dateFormat = dateFormat;
     }
 
@@ -124,8 +120,10 @@ public class PeriodList<T extends Temporal> implements Serializable {
      * @return true
      * @see java.util.List#add(java.lang.Object)
      */
-    public final boolean add(final Period<T> period) {
-        return periods.add(period);
+    public final PeriodList<T> add(final Period<T> period) {
+        Set<Period<T>> copy = new TreeSet<>(periods);
+        copy.add(period);
+        return new PeriodList<>(copy, dateFormat);
     }
 
     /**
@@ -136,8 +134,10 @@ public class PeriodList<T extends Temporal> implements Serializable {
      * @return true if the list contained the specified period
      * @see java.util.List#remove(java.lang.Object)
      */
-    public final boolean remove(final Object period) {
-        return periods.remove(period);
+    public final PeriodList<T> remove(final Object period) {
+        Set<Period<T>> copy = new TreeSet<>(periods);
+        copy.remove(period);
+        return new PeriodList<>(copy, dateFormat);
     }
 
     /**
@@ -152,7 +152,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
     public final PeriodList<T> normalise() {
         Period<T> prevPeriod = null;
         Period<T> period;
-        final PeriodList<T> newList = new PeriodList<>(dateFormat);
+        PeriodList<T> newList = new PeriodList<>(dateFormat);
         boolean normalised = false;
         for (Period<T> period1 : periods) {
             period = period1;
@@ -181,14 +181,14 @@ public class PeriodList<T extends Temporal> implements Serializable {
                     // if current period is recognised as distinct
                     // from previous period, add the previous period
                     // to the list..
-                    newList.add(prevPeriod);
+                    newList = newList.add(prevPeriod);
                 }
             }
             prevPeriod = period;
         }
         // remember to add the last period to the list..
         if (prevPeriod != null) {
-            newList.add(prevPeriod);
+            newList = newList.add(prevPeriod);
         }
         // only return new list if normalisation
         // has ocurred..
@@ -212,10 +212,8 @@ public class PeriodList<T extends Temporal> implements Serializable {
      */
     public final PeriodList<T> add(final PeriodList<T> periods) {
         if (periods != null) {
-            final PeriodList<T> newList = new PeriodList<>(dateFormat);
-            newList.getPeriods().addAll(this.periods);
-            newList.getPeriods().addAll(periods.periods);
-            return newList.normalise();
+            PeriodList<T> newList = new PeriodList<>(this.periods, dateFormat);
+            return newList.addAll(periods.periods).normalise();
         }
         return this;
     }
@@ -230,7 +228,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
      * @return a period list
      */
     public final PeriodList<T> subtract(final PeriodList<T> subtractions) {
-        if (subtractions == null || subtractions.isEmpty()) {
+        if (subtractions == null || subtractions.periods.isEmpty()) {
             return this;
         }
         
@@ -239,15 +237,15 @@ public class PeriodList<T extends Temporal> implements Serializable {
 
         for (final Period<T> subtraction : subtractions.getPeriods()) {
             if (subtraction.getStart() instanceof LocalDate) {
-                tmpResult.addAll(result.getPeriods().stream()
+                tmpResult = tmpResult.addAll(result.getPeriods().stream()
                         .filter(p -> !p.equals(subtraction)).collect(Collectors.toList()));
             } else {
                 for (final Period<T> period : result.getPeriods()) {
-                    tmpResult.addAll(period.subtract(subtraction).getPeriods());
+                    tmpResult = tmpResult.addAll(period.subtract(subtraction).getPeriods());
                 }
             }
             result = tmpResult;
-            tmpResult = new PeriodList<>();
+            tmpResult = new PeriodList<>(dateFormat);
         }
 
         return result;
@@ -257,28 +255,23 @@ public class PeriodList<T extends Temporal> implements Serializable {
         return periods;
     }
 
-    public boolean addAll(Collection<Period<T>> arg0) {
-        for (Period<T> p : arg0) {
-            add(p);
-        }
-        return true;
+    public PeriodList<T> addAll(Collection<Period<T>> arg0) {
+        Set<Period<T>> copy = new TreeSet<>(periods);
+        copy.addAll(arg0);
+        return new PeriodList<>(copy, dateFormat);
     }
 
-    public boolean isEmpty() {
-        return periods.isEmpty();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PeriodList<?> that = (PeriodList<?>) o;
+        return Objects.equals(periods, that.periods) &&
+                dateFormat.equals(that.dateFormat);
     }
 
-	public boolean equals(Object obj) {
-		if (!(obj instanceof PeriodList)) {
-			return false;
-		}
-		final PeriodList rhs = (PeriodList) obj;
-		return new EqualsBuilder().append(periods, rhs.periods)
-			.isEquals();
-	}
-	
-	public int hashCode() {
-		return new HashCodeBuilder().append(periods)
-			.toHashCode();
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(periods, dateFormat);
+    }
 }

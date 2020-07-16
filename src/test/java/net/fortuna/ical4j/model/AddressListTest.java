@@ -99,7 +99,7 @@ public class AddressListTest extends TestCase {
      */
     public void testSize() throws URISyntaxException {
     	AddressList addresses = new AddressList(value);
-        assertEquals(expectedSize, addresses.size());
+        assertEquals(expectedSize, addresses.getAddresses().size());
     }
     
     /**

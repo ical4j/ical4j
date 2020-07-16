@@ -39,9 +39,8 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -50,7 +49,7 @@ import java.util.stream.Collectors;
  * Defines a list of iCalendar addresses.
  * @author Ben Fortuna
  */
-public class AddressList implements Serializable, Iterable<URI> {
+public class AddressList implements Serializable {
 
     private static final long serialVersionUID = 81383256078213569L;
 
@@ -60,7 +59,7 @@ public class AddressList implements Serializable, Iterable<URI> {
      * Default constructor.
      */
     public AddressList() {
-        addresses = new CopyOnWriteArrayList<>();
+        addresses = Collections.emptyList();
     }
 
     /**
@@ -69,10 +68,10 @@ public class AddressList implements Serializable, Iterable<URI> {
      * @throws URISyntaxException where the specified string is not a valid representation
      */
     public AddressList(final String aValue) throws URISyntaxException {
-        addresses = new CopyOnWriteArrayList<>();
+        List<URI> values = new ArrayList<>();
         for (String a : aValue.split(",")) {
             try {
-                addresses.add(new URI(Uris.encode(Strings.unquote(a))));
+                values.add(new URI(Uris.encode(Strings.unquote(a))));
             } catch (URISyntaxException use) {
                 // ignore invalid addresses if relaxed parsing is enabled..
                 if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING)) {
@@ -80,10 +79,15 @@ public class AddressList implements Serializable, Iterable<URI> {
                 }
             }
         }
+        addresses = Collections.unmodifiableList(values);
     }
 
+    public AddressList(List<URI> addresses) {
+        this.addresses = Collections.unmodifiableList(addresses);
+    }
+    
     public List<URI> getAddresses() {
-        return new ArrayList<>(addresses);
+        return addresses;
     }
 
     /**
@@ -103,25 +107,10 @@ public class AddressList implements Serializable, Iterable<URI> {
      * @return true
      * @see List#add(java.lang.Object)
      */
-    public final boolean add(final URI address) {
-        return addresses.add(address);
-    }
-
-    /**
-     * @return boolean indicates if the list is empty
-     * @see List#isEmpty()
-     */
-    public final boolean isEmpty() {
-        return addresses.isEmpty();
-    }
-
-    /**
-     * @return an iterator
-     * @see List#iterator()
-     */
-    @Override
-    public final Iterator<URI> iterator() {
-        return addresses.iterator();
+    public final AddressList add(final URI address) {
+        List<URI> newlist = new ArrayList<>(addresses);
+        newlist.add(address);
+        return new AddressList(newlist);
     }
 
     /**
@@ -130,15 +119,9 @@ public class AddressList implements Serializable, Iterable<URI> {
      * @return true if the list contained the specified address
      * @see List#remove(java.lang.Object)
      */
-    public final boolean remove(final URI address) {
-        return addresses.remove(address);
-    }
-
-    /**
-     * @return the number of addresses in the list
-     * @see List#size()
-     */
-    public final int size() {
-        return addresses.size();
+    public final AddressList remove(final URI address) {
+        List<URI> newlist = new ArrayList<>(addresses);
+        newlist.remove(address);
+        return new AddressList(newlist);
     }
 }

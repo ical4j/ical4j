@@ -126,7 +126,7 @@ public class PeriodListTest extends TestCase {
      * 
      */
     public void testIsEmpty() {
-    	assertTrue(periodList.isEmpty());
+    	assertTrue(periodList.getPeriods().isEmpty());
     }
     
     /**
@@ -318,6 +318,6 @@ public class PeriodListTest extends TestCase {
         periods.add(new Period<>(start, start));
         periods.add(new Period<>(start, start));
         
-        assertTrue(periods.normalise().isEmpty());
+        assertTrue(periods.normalise().getPeriods().isEmpty());
     }
 }
