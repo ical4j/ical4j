@@ -77,16 +77,22 @@ public class PropertyList implements ContentContainer<Property> {
     @Override
     public ContentContainer<Property> remove(Property content) {
         List<Property> copy = new ArrayList<>(properties);
-        copy.remove(content);
-        return new PropertyList(copy);
+        if (copy.remove(content)) {
+            return new PropertyList(copy);
+        } else {
+            return this;
+        }
     }
 
     @Override
     public ContentContainer<Property> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
         List<Property> copy = new ArrayList<>(properties);
-        copy.removeIf(p -> names.contains(p.getName()));
-        return new PropertyList(copy);
+        if (copy.removeIf(p -> names.contains(p.getName()))) {
+            return new PropertyList(copy);
+        } else {
+            return this;
+        }
     }
 
     @Override

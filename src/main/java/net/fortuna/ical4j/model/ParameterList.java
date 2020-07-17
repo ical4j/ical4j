@@ -76,16 +76,22 @@ public class ParameterList implements ContentContainer<Parameter> {
     @Override
     public ContentContainer<Parameter> remove(Parameter content) {
         List<Parameter> copy = new ArrayList<>(parameters);
-        copy.remove(content);
-        return new ParameterList(copy);
+        if (copy.remove(content)) {
+            return new ParameterList(copy);
+        } else {
+            return this;
+        }
     }
 
     @Override
     public ContentContainer<Parameter> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
         List<Parameter> copy = new ArrayList<>(parameters);
-        copy.removeIf(p -> names.contains(p.getName()));
-        return new ParameterList(copy);
+        if (copy.removeIf(p -> names.contains(p.getName()))) {
+            return new ParameterList(copy);
+        } else {
+            return this;
+        }
     }
 
     @Override

@@ -136,8 +136,11 @@ public class PeriodList<T extends Temporal> implements Serializable {
      */
     public final PeriodList<T> remove(final Object period) {
         Set<Period<T>> copy = new TreeSet<>(periods);
-        copy.remove(period);
-        return new PeriodList<>(copy, dateFormat);
+        if (copy.remove(period)) {
+            return new PeriodList<>(copy, dateFormat);
+        } else {
+            return this;
+        }
     }
 
     /**

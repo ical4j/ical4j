@@ -121,7 +121,10 @@ public class AddressList implements Serializable {
      */
     public final AddressList remove(final URI address) {
         List<URI> newlist = new ArrayList<>(addresses);
-        newlist.remove(address);
-        return new AddressList(newlist);
+        if (newlist.remove(address)) {
+            return new AddressList(newlist);
+        } else {
+            return this;
+        }
     }
 }

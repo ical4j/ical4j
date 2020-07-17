@@ -77,16 +77,22 @@ public class ComponentList<T extends Component> implements ContentContainer<T> {
     @Override
     public ContentContainer<T> remove(T content) {
         List<T> copy = new ArrayList<>(components);
-        copy.remove(content);
-        return new ComponentList<>(copy);
+        if (copy.remove(content)) {
+            return new ComponentList<>(copy);
+        } else {
+            return this;
+        }
     }
 
     @Override
     public ContentContainer<T> removeAll(String... name) {
         List<String> names = Arrays.asList(name);
         List<T> copy = new ArrayList<>(components);
-        copy.removeIf(c -> names.contains(c.getName()));
-        return new ComponentList<>(copy);
+        if (copy.removeIf(c -> names.contains(c.getName()))) {
+            return new ComponentList<>(copy);
+        } else {
+            return this;
+        }
     }
 
     @Override

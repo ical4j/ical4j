@@ -115,8 +115,11 @@ public class TextList implements Serializable {
      */
     public final TextList remove(final String text) {
         List<String> newlist = new ArrayList<>(texts);
-        newlist.remove(text);
-        return new TextList(newlist);
+        if (newlist.remove(text)) {
+            return new TextList(newlist);
+        } else {
+            return this;
+        }
     }
 
     public List<String> getTexts() {
