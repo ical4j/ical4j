@@ -39,7 +39,6 @@ import net.fortuna.ical4j.util.Strings;
 
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -110,7 +109,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      * @return Returns the dates.
      */
     public final List<T> getDates() {
-        return new ArrayList<>(dates.getDates());
+        return dates.getDates();
     }
 
     /**

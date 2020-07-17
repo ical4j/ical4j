@@ -38,9 +38,9 @@ import net.fortuna.ical4j.validate.ParameterValidator;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.temporal.Temporal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * $Id$
@@ -224,9 +224,9 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
     /**
      * @return Returns the period list.
      */
-    public final Optional<List<Period<T>>> getPeriods() {
+    public final Optional<Set<Period<T>>> getPeriods() {
         if (periods != null) {
-            return Optional.of(new ArrayList<>(periods.getPeriods()));
+            return Optional.of(periods.getPeriods());
         } else {
             return Optional.empty();
         }

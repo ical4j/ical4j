@@ -378,20 +378,16 @@ public abstract class Component extends Content implements Serializable {
 
         // add recurrence dates..
         List<Property> rDates = getProperties(Property.RDATE);
-        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameters().getFirst(Parameter.VALUE).get() == Value.PERIOD)
-                .map(p -> ((RDate<T>) p).getPeriods().get()).flatMap(List<Period<T>>::stream).filter(period::intersects)
-                .collect(Collectors.toList()));
-
-        List<Period<T>> calculated = rDates.stream().filter(p -> p.getParameters().getFirst(Parameter.VALUE).get() == Value.DATE_TIME)
-                .map(p -> ((DateListProperty<T>) p).getDates())
-                .flatMap(List<T>::stream).filter(period::includes)
-                .map(rdateTime -> new Period<>(rdateTime, rDuration)).collect(Collectors.toList());
-        recurrenceSet.addAll(calculated);
-
-        recurrenceSet.addAll(rDates.stream().filter(p -> p.getParameters().getFirst(Parameter.VALUE).get() == Value.DATE)
-                .map(p -> ((DateListProperty<T>) p).getDates())
-                .flatMap(List<T>::stream).filter(period::includes)
-                .map(rdateDate -> new Period<>(rdateDate, rDuration)).collect(Collectors.toList()));
+        for (Property p : rDates) {
+            Optional<Value> value = p.getParameters().getFirst(Parameter.VALUE);
+            if (value.equals(Optional.of(Value.PERIOD))) {
+                recurrenceSet.addAll(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()).stream()
+                        .filter(period::intersects).collect(Collectors.toList()));
+            } else {
+                recurrenceSet.addAll(((DateListProperty<T>) p).getDates().stream()
+                        .filter(period::includes).map(d -> new Period<>(d, rDuration)).collect(Collectors.toList()));
+            }
+        }
 
         // allow for recurrence rules that start prior to the specified period
         // but still intersect with it..

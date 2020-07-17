@@ -32,7 +32,6 @@
 package net.fortuna.ical4j.model.property
 
 
-import net.fortuna.ical4j.model.Period
 import net.fortuna.ical4j.model.TemporalAdapter
 import spock.lang.Specification
 
@@ -44,24 +43,20 @@ class RDateSpec extends Specification {
 		setup: 'create new date-time'
 		Temporal date = TemporalAdapter.parse('20110319T140400').temporal
 		
-		and: 'add date-time to rdate'
+		when: 'add date-time to rdate'
 		RDate rdate = new RDate()
 		rdate.dates.add(date)
-		
-		expect: 'rdate list contains date-time'
-		rdate.dates == []
-	}
-	
-	def 'should throw exception when trying to add period value to default rdate instance'() {
-		setup: 'create new period'
-		Period period = Period.parse('20110319T140400/20110319T180400')
-		
-		when: 'add period to rdate'
-		RDate rdate = new RDate([period])
-		rdate.periods.get().add(period)
 
 		then: 'exception is thrown'
 		thrown(UnsupportedOperationException)
+	}
+	
+	def 'should not be able to add periods to default rdate instance'() {
+		setup: 'create new rdate instance'
+		RDate rdate = new RDate()
+
+		expect: 'periods not available'
+		!rdate.periods.isPresent()
 	}
 	
 	def 'should throw exception when trying to add date value to period rdate instance'() {
