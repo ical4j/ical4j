@@ -347,32 +347,24 @@ public class VFreeBusy extends CalendarComponent {
         //    MUST be specified in the UTC time format. The value MUST be later in
         //    time than the value of the "DTSTART" property.
         add(new DtEnd<>(end.getDate()));
-        
+
+        final Instant fbStart = Instant.from(start.getDate());
+        final Instant fbEnd = Instant.from(end.getDate());
+        FreeBusy fb;
+
         if (duration.isPresent()) {
             add(new Duration(duration.get().getDuration()));
             // Initialise with all free time of at least the specified duration..
-            final Instant freeStart = Instant.from(start.getDate());
-            final Instant freeEnd = Instant.from(end.getDate());
-            final FreeBusy fb = new FreeTimeBuilder().start(freeStart)
-                .end(freeEnd)
-                .duration(duration.get().getDuration())
-                .components(components)
-                .build();
-            if (fb != null && !fb.getPeriods().isEmpty()) {
-                add(fb);
-            }
-        }
-        else {
+            fb = new FreeTimeBuilder().start(fbStart).end(fbEnd).duration(duration.get().getDuration())
+                .components(components).build();
+        } else {
             // initialise with all busy time for the specified period..
-            final Instant busyStart = Instant.from(start.getDate());
-            final Instant busyEnd = Instant.from(end.getDate());
-            final FreeBusy fb = new BusyTimeBuilder().start(busyStart)
-                .end(busyEnd)
-                .components(components)
-                .build();
-            if (fb != null && !fb.getPeriods().isEmpty()) {
-                add(fb);
-            }
+            fb = new BusyTimeBuilder().start(fbStart).end(fbEnd)
+                .components(components).build();
+        }
+
+        if (!fb.getPeriods().isEmpty()) {
+            add(fb);
         }
     }
 
@@ -492,11 +484,11 @@ public class VFreeBusy extends CalendarComponent {
     private static <T extends Temporal> List<Period<T>> getConsumedTime(final List<CalendarComponent> components,
                                                                  final Period<T> range) {
         
-        final PeriodList<T> periods = new PeriodList<>();
+        List<Period<T>> periods = new ArrayList<>();
         // only events consume time..
         components.stream().filter(c -> c.getName().equals(Component.VEVENT)).forEach(
                 c -> periods.addAll(((VEvent) c).getConsumedTime(range, false)));
-        return new ArrayList<>(periods.normalise().getPeriods());
+        return new ArrayList<>(new PeriodList(periods).normalise().getPeriods());
     }
 
     /**
