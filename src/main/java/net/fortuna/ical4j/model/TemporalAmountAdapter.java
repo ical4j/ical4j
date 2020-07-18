@@ -53,6 +53,7 @@ public class TemporalAmountAdapter implements Serializable {
     public String toString() {
         return toString(LocalDateTime.now());
     }
+
     public String toString(Temporal seed) {
         String retVal;
         if (Duration.ZERO.equals(duration) || Period.ZERO.equals(duration)) {
@@ -60,7 +61,7 @@ public class TemporalAmountAdapter implements Serializable {
         } else if (duration instanceof Period) {
             retVal = periodToString(((Period) duration).normalized(), seed);
         } else {
-            retVal = durationToString((Duration) duration);
+            retVal = durationToString((Duration) duration, seed);
         }
         return  retVal;
     }
@@ -101,20 +102,27 @@ public class TemporalAmountAdapter implements Serializable {
      * @param duration a duration instance
      * @return a string representation of the duration that is compliant with the RFC5545 specification.
      */
-    private String durationToString(Duration duration) {
+    private String durationToString(Duration duration, Temporal seed) {
         String retVal = null;
         Duration absDuration = duration.abs();
-        int days = 0;
-        if (absDuration.getSeconds() != 0) {
-            days = (int) absDuration.getSeconds() / (24 * 60 * 60);
+        Temporal adjustedSeed = seed.plus(absDuration);
+        long days = 0;
+        if (duration.getSeconds() != 0) {
+            days = seed.until(adjustedSeed, ChronoUnit.DAYS);
         }
 
         if (days != 0) {
             Duration durationMinusDays = absDuration.minusDays(days);
             if (durationMinusDays.getSeconds() != 0) {
-                int hours = (int) durationMinusDays.getSeconds() / (60 * 60);
-                int minutes = (int) durationMinusDays.minusHours(hours).getSeconds() / 60;
-                int seconds = (int) durationMinusDays.minusHours(hours).minusMinutes(minutes).getSeconds();
+                adjustedSeed = seed.plus(durationMinusDays);
+                long hours = seed.until(adjustedSeed, ChronoUnit.HOURS);
+
+                adjustedSeed = seed.plus(durationMinusDays.minusHours(hours));
+                long minutes = seed.until(adjustedSeed, ChronoUnit.MINUTES);
+
+                adjustedSeed = seed.plus(durationMinusDays.minusHours(hours).minusMinutes(minutes));
+                long seconds = seed.until(adjustedSeed, ChronoUnit.SECONDS);
+
                 if (hours > 0) {
                     if (seconds > 0) {
                         retVal = String.format("P%dDT%dH%dM%dS", days, hours, minutes, seconds);
@@ -150,7 +158,9 @@ public class TemporalAmountAdapter implements Serializable {
         if (duration instanceof Duration) {
             return (Duration) duration;
         } else {
-            return Duration.ofDays(getTotalWeeks() * 7);
+            Temporal seed = LocalDateTime.now();
+            long days = seed.until(seed.plus(duration), ChronoUnit.DAYS);
+            return Duration.ofDays(days);
         }
     }
 
