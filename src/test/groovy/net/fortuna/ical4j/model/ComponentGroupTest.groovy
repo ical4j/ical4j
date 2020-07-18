@@ -96,7 +96,7 @@ class ComponentGroupTest extends Specification {
         def components = new ComponentList<VEvent>([event, rev1, rev2, rev3])
 
         when: 'recurrence instances are calculated'
-        Period period = Period.parse '20101113T000000/P3W'
+        Period period = Period.parse '20101113/P3W'
         def recurrences = new ComponentGroup(components.all, uid).calculateRecurrenceSet(period)
 
         then: 'the expected number of recurrences are returned'
