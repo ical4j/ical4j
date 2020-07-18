@@ -31,8 +31,6 @@
  */
 package net.fortuna.ical4j.model;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.threeten.extra.Interval;
 
 import java.io.Serializable;
@@ -226,16 +224,15 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
     }
 
     private static <T extends Temporal> T parseStartDate(String value) throws DateTimeParseException {
-        TemporalAdapter parsedValue = TemporalAdapter.parse(value.substring(0, value.indexOf('/')));
-        return (T) parsedValue.getTemporal();
+        TemporalAdapter<T> parsedValue = TemporalAdapter.parse(value.substring(0, value.indexOf('/')));
+        return parsedValue.getTemporal();
     }
 
     private static <T extends Temporal> T parseEndDate(String value, boolean resolve) throws DateTimeParseException {
         Temporal end;
         try {
             end = TemporalAdapter.parse(value.substring(value.indexOf('/') + 1)).getTemporal();
-        }
-        catch (DateTimeParseException e) {
+        } catch (DateTimeParseException e) {
             if (resolve) {
                 final TemporalAmount duration = parseDuration(value).getDuration();
                 end = parseStartDate(value).plus(duration);
@@ -465,7 +462,9 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
      */
     public boolean intersects(Period<?> other) {
         Objects.requireNonNull(other, "other");
-        return toInterval().overlaps(other.toInterval());
+        Interval thisInterval = toInterval();
+        Interval thatInterval = other.toInterval();
+        return thisInterval.overlaps(thatInterval);
     }
 
     public Interval toInterval() {
@@ -528,32 +527,22 @@ public class Period<T extends Temporal> implements Comparable<Period<T>>, Serial
         return new TemporalAmountComparator().compare(getDuration(), period.getDuration());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-	public final boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Period)) {
-            return false;
-        }
-
-        final Period<?> period = (Period<?>) o;
-        return new EqualsBuilder().append(getStart(), period.getStart()).append((duration == null) ? getEnd() : duration,
-                    (period.duration == null) ? period.getEnd() : period.duration).isEquals();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Period<?> period = (Period<?>) o;
+        return start.equals(period.start) &&
+                Objects.equals(end, period.end) &&
+                Objects.equals(duration, period.duration);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public final int hashCode() {
-        return new HashCodeBuilder().append(getStart()).append((duration == null) ? getEnd() : duration).toHashCode();
+    public int hashCode() {
+        return Objects.hash(start, end, duration);
     }
 
-	public Component getComponent() {
+    public Component getComponent() {
 		return component;
 	}
 
