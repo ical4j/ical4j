@@ -40,6 +40,7 @@ class ByWeekNoRuleTest extends Specification {
 
         where:
         byWeekNoPart     | dates                                   | expectedResult
-        '2,52,53'       | [LocalDate.parse('20110101', dateFormat)]  | [LocalDate.parse('20110108', dateFormat), LocalDate.parse('20111224', dateFormat)]
+        // due to ISO 8601 definition '2011-01-01' is in the 52nd week of 2010..
+        '2,52,53'       | [LocalDate.parse('20110101', dateFormat)]  | [LocalDate.parse('20100116', dateFormat), LocalDate.parse('20110101', dateFormat)]
     }
 }

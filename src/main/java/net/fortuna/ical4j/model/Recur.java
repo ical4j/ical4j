@@ -40,10 +40,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalUnit;
+import java.time.temporal.*;
 import java.util.*;
 
 /**
@@ -177,7 +174,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private final List<Integer> yearDayList = new NumberList(ChronoField.DAY_OF_YEAR.range(), true);
 
-    private final List<Integer> weekNoList = new NumberList(ChronoField.ALIGNED_WEEK_OF_YEAR.range(), true);
+    private final List<Integer> weekNoList = new NumberList(IsoFields.WEEK_OF_WEEK_BASED_YEAR.range(), true);
 
     private final List<Integer> monthList = new NumberList(ChronoField.MONTH_OF_YEAR.range(), false);
 

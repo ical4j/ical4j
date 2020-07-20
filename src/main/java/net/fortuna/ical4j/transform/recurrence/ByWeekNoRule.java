@@ -11,8 +11,6 @@ import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.time.temporal.ChronoField.ALIGNED_WEEK_OF_YEAR;
-
 /**
  * Applies BYWEEKNO rules specified in this Recur instance to the specified date list. If no BYWEEKNO rules are
  * specified the date list is returned unmodified.
@@ -48,12 +46,12 @@ public class ByWeekNoRule<T extends Temporal> extends AbstractDateExpansionRule<
 //                    if (numWeeksInYear < weekNo) {
 //                        continue;
 //                    }
-                    candidate = withTemporalField(date, ALIGNED_WEEK_OF_YEAR, weekNo);
+                    candidate = withTemporalField(date, IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNo);
                 } else {
                     if (numWeeksInYear < -weekNo) {
                         continue;
                     }
-                    candidate = withTemporalField(date, ALIGNED_WEEK_OF_YEAR, numWeeksInYear + 1 + weekNo);
+                    candidate = withTemporalField(date, IsoFields.WEEK_OF_WEEK_BASED_YEAR, numWeeksInYear + 1 + weekNo);
                 }
                 weekNoDates.add(candidate);
             }
