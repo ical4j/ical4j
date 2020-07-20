@@ -20,10 +20,12 @@ public class VToDoValidator extends ComponentValidator<VToDo> {
 
     private final boolean alarmsAllowed;
 
+    @SafeVarargs
     public VToDoValidator(ValidationRule<VToDo>... rules) {
         this(true, rules);
     }
 
+    @SafeVarargs
     public VToDoValidator(boolean alarmsAllowed, ValidationRule<VToDo>... rules) {
         super(rules);
         this.alarmsAllowed = alarmsAllowed;

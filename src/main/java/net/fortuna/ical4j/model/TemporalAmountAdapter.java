@@ -29,26 +29,6 @@ public class TemporalAmountAdapter implements Serializable {
         return duration;
     }
 
-    private int getTotalWeeks() {
-        int totalWeeks = 0;
-        if (duration instanceof Period) {
-            Period period = (Period) duration;
-            if (period.getYears() != 0) {
-                totalWeeks += Math.abs(period.getYears()) * 52;
-            }
-            if (period.getMonths() != 0) {
-                totalWeeks += Math.abs(period.getMonths()) * 4;
-            }
-            if (period.getDays() % 7 == 0) {
-                totalWeeks += Math.abs(period.getDays()) / 7;
-            }
-            if (period.isNegative()) {
-                totalWeeks = -totalWeeks;
-            }
-        }
-        return totalWeeks;
-    }
-
     @Override
     public String toString() {
         return toString(LocalDateTime.now());

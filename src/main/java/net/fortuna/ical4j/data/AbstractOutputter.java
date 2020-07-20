@@ -60,7 +60,7 @@ public abstract class AbstractOutputter {
     /**
      * The maximum line length allowed.
      */
-    protected int foldLength;
+    protected final int foldLength;
 
     /**
      * Default constructor.

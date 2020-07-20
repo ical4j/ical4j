@@ -13,7 +13,7 @@ public class JCacheTimeZoneCache implements TimeZoneCache {
 
     public JCacheTimeZoneCache() {
         CacheManager cacheManager = Caching.getCachingProvider().getCacheManager();
-        Cache cache = cacheManager.getCache("ical4j.timezones", String.class, VTimeZone.class);
+        Cache<String, VTimeZone> cache = cacheManager.getCache("ical4j.timezones", String.class, VTimeZone.class);
         if (cache == null) {
             synchronized (JCacheTimeZoneCache.class) {
                 cache = cacheManager.getCache("ical4j.timezones", String.class, VTimeZone.class);

@@ -90,7 +90,7 @@ public class WeekDay implements Serializable {
 
     public enum Day { SU, MO, TU, WE, TH, FR, SA }
 
-    private Day day;
+    private final Day day;
     
     private final int offset;
     

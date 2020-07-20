@@ -17,6 +17,7 @@ public class VTimeZoneValidator extends ComponentValidator<VTimeZone> {
             new ValidationRule<>(One, DTSTART, TZOFFSETFROM, TZOFFSETTO),
             new ValidationRule<>(OneOrLess, TZNAME));
 
+    @SafeVarargs
     public VTimeZoneValidator(ValidationRule<VTimeZone>... rules) {
         super(rules);
     }

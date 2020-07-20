@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAccessor;
 import java.time.temporal.TemporalQuery;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -168,23 +169,60 @@ import java.util.Objects;
  */
 public class CalendarDateFormat implements Serializable {
 
-    public static final CalendarDateFormat DATE_FORMAT = new CalendarDateFormat("yyyyMMdd",
-            (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> LocalDate.from(d));
+    private static class LocalDateTemporalQuery implements TemporalQuery<LocalDate>, Serializable {
+        @Override
+        public LocalDate queryFrom(TemporalAccessor temporal) {
+            return LocalDate.from(temporal);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            return obj != null && getClass() == obj.getClass();
+        }
+    }
+
+    private static class LocalDateTimeTemporalQuery implements TemporalQuery<LocalDateTime>, Serializable {
+        @Override
+        public LocalDateTime queryFrom(TemporalAccessor temporal) {
+            return LocalDateTime.from(temporal);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            return obj != null && getClass() == obj.getClass();
+        }
+    }
+
+    private static class InstantTemporalQuery implements TemporalQuery<Instant>, Serializable {
+        @Override
+        public Instant queryFrom(TemporalAccessor temporal) {
+            return Instant.from(temporal);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            return obj != null && getClass() == obj.getClass();
+        }
+    }
+
+    public static final CalendarDateFormat DATE_FORMAT = new CalendarDateFormat(
+            "yyyyMMdd", new LocalDateTemporalQuery());
 
     public static final CalendarDateFormat FLOATING_DATE_TIME_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd'T'HHmmss", (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> LocalDateTime.from(d));
+            "yyyyMMdd'T'HHmmss", new LocalDateTimeTemporalQuery());
 
     public static final CalendarDateFormat UTC_DATE_TIME_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd'T'HHmmss'Z'", (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> Instant.from(d));
+            "yyyyMMdd'T'HHmmss'Z'", new InstantTemporalQuery());
 
     /**
      * A formatter capable of parsing to multiple temporal types based on the input string.
      */
     public static final CalendarDateFormat DEFAULT_PARSE_FORMAT = new CalendarDateFormat(
-            "yyyyMMdd['T'HHmmss[X]]",
-            (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> Instant.from(d),
-            (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> LocalDateTime.from(d),
-            (TemporalQuery<? extends TemporalAccessor> & Serializable)(TemporalAccessor d) -> LocalDate.from(d));
+            "yyyyMMdd['T'HHmmss[X]]", new InstantTemporalQuery(), new LocalDateTimeTemporalQuery(),
+            new LocalDateTemporalQuery());
 
     private final String pattern;
 
@@ -250,5 +288,21 @@ public class CalendarDateFormat implements Serializable {
         } else {
             return FLOATING_DATE_TIME_FORMAT;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CalendarDateFormat that = (CalendarDateFormat) o;
+        return pattern.equals(that.pattern) &&
+                Arrays.equals(parsers, that.parsers);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(pattern);
+        result = 31 * result + Arrays.hashCode(parsers);
+        return result;
     }
 }

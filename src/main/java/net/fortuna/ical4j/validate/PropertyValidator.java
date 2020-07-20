@@ -49,6 +49,7 @@ public final class PropertyValidator<T extends Property> implements Validator<T>
 
     private final List<ValidationRule<T>> rules;
 
+    @SafeVarargs
     public PropertyValidator(ValidationRule<T>... rules) {
         this.rules = Arrays.asList(rules);
     }

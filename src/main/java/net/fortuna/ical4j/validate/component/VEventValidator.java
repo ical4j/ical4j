@@ -20,10 +20,12 @@ public class VEventValidator extends ComponentValidator<VEvent> {
 
     private final boolean alarmsAllowed;
 
+    @SafeVarargs
     public VEventValidator(ValidationRule<VEvent>... rules) {
         this(true, rules);
     }
 
+    @SafeVarargs
     public VEventValidator(boolean alarmsAllowed, ValidationRule<VEvent>... rules) {
         super(rules);
         this.alarmsAllowed = alarmsAllowed;

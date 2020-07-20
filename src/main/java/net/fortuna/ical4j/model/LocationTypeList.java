@@ -36,7 +36,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 /**
  * $Id LocationTypeList.java $ [23-Apr-2004]
@@ -75,7 +74,7 @@ public class LocationTypeList implements Serializable, Iterable<String> {
      * {@inheritDoc}
      */
     public final String toString() {
-        return locationTypes.stream().collect(Collectors.joining(","));
+        return String.join(",", locationTypes);
     }
 
     /**

@@ -18,6 +18,7 @@ public class CalendarValidatorImpl implements Validator<Calendar>, ContentValida
 
     private final List<ValidationRule<Calendar>> rules;
 
+    @SafeVarargs
     public CalendarValidatorImpl(ValidationRule<Calendar>... rules) {
         this.rules = Arrays.asList(rules);
 

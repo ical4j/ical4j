@@ -46,6 +46,7 @@ public class ComponentValidator<T extends Component> implements Validator<T>, Co
 
     private final List<ValidationRule<T>> rules;
 
+    @SafeVarargs
     public ComponentValidator(ValidationRule<T>... rules) {
         this.rules = Arrays.asList(rules);
     }
