@@ -13,8 +13,9 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.10.2'
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.8.4"
-    id "net.ltgt.errorprone" version "0.8.1" apply false
-    id "biz.aQute.bnd.builder" version "5.0.0"
+    id "net.ltgt.errorprone" version "1.2.1" apply false
+    id "biz.aQute.bnd.builder" version "5.1.1"
+    id 'org.javamodularity.moduleplugin' version '1.7.0' apply false
 }
 
 apply plugin: 'java'
@@ -36,9 +37,11 @@ A Java library for reading and writing iCalendar (*.ics) files
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+//modularity.mixedJavaRelease 8
+
 ext {
-    slf4jVersion = '1.7.25'
-    groovyVersion = '2.5.4'
+    slf4jVersion = '1.7.30'
+    groovyVersion = '3.0.4'
 }
 
 repositories {
@@ -50,30 +53,26 @@ dependencies {
 //    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
 
     api "org.slf4j:slf4j-api:$slf4jVersion",
-            'commons-codec:commons-codec:1.11',
-            'org.apache.commons:commons-lang3:3.8.1',
-            'org.apache.commons:commons-collections4:4.1',
+            'commons-codec:commons-codec:1.14',
+            'org.apache.commons:commons-lang3:3.10',
+            'org.apache.commons:commons-collections4:4.4',
             'org.threeten:threeten-extra:1.5.0',
-            'org.jooq:jool-java-8:0.9.13'
+            'org.jooq:jool-java-8:0.9.14'
     
     implementation 'javax.cache:cache-api:1.1.1', optional
-    implementation "org.codehaus.groovy:groovy-all:$groovyVersion", optional
+    implementation "org.codehaus.groovy:groovy:$groovyVersion", optional
     implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion", optional
 
-    compileOnly 'biz.aQute.bnd:bndlib:2.3.0'
+    compileOnly 'biz.aQute.bnd:biz.aQute.bndlib:5.1.1'
 
-    testImplementation "org.codehaus.groovy:groovy-all:$groovyVersion",
-        'org.spockframework:spock-core:1.1-groovy-2.4',
+    testImplementation "org.codehaus.groovy:groovy:$groovyVersion",
+            "org.codehaus.groovy:groovy-xml:$groovyVersion",
+            "org.codehaus.groovy:groovy-test:$groovyVersion",
+        'org.spockframework:spock-core:2.0-M3-groovy-3.0',
+        'junit:junit:4.13',
         'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
         "org.slf4j:slf4j-log4j12:$slf4jVersion",
         'org.cache2k:cache2k-jcache:1.2.4.Final'
-}
-
-tasks.withType(JavaCompile).configureEach {
-    if (JavaVersion.current().isJava12Compatible()) {
-        // TODO: Remove when resolved https://github.com/google/error-prone/issues/1106
-        options.errorprone.disable("Finally")
-    }
 }
 
 jacocoTestReport {
@@ -115,6 +114,13 @@ artifacts {
     archives bundle
     archives javadocJar
     archives sourcesJar
+}
+
+configurations {
+    [apiElements, runtimeElements].each {
+        it.outgoing.artifacts.removeIf { it.buildDependencies.getDependencies(null).contains(jar) }
+        it.outgoing.artifact(bundle)
+    }
 }
 
 scmVersion {
