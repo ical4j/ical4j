@@ -84,6 +84,7 @@ public class XProperty extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -91,6 +92,7 @@ public class XProperty extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -98,6 +100,7 @@ public class XProperty extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
         
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)
@@ -121,11 +124,13 @@ public class XProperty extends Property implements Escapable {
             this.name = name;
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new XProperty(name, parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new XProperty(name);
         }

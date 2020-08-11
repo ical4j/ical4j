@@ -66,6 +66,7 @@ public class TzId extends Parameter implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -77,6 +78,7 @@ public class TzId extends Parameter implements Escapable {
             super(TZID);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             return new TzId(Strings.unescape(value));
         }

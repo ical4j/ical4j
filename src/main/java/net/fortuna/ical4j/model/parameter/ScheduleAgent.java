@@ -73,6 +73,7 @@ public class ScheduleAgent extends Parameter {
      * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -87,6 +88,7 @@ public class ScheduleAgent extends Parameter {
             super(SCHEDULE_AGENT);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             final ScheduleAgent parameter = new ScheduleAgent(value);
             if (ScheduleAgent.SERVER.equals(parameter)) {

@@ -63,6 +63,7 @@ public class Abbrev extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -74,6 +75,7 @@ public class Abbrev extends Parameter {
             super(ABBREV);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             return new Abbrev(value);
         }

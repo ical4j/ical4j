@@ -134,11 +134,13 @@ public class LastModified extends UtcProperty {
             super(LAST_MODIFIED);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new LastModified(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new LastModified();
         }

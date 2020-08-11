@@ -112,6 +112,7 @@ public class VVenue extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return BEGIN +
                 ':' +
@@ -127,6 +128,7 @@ public class VVenue extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse)
             throws ValidationException {
 
@@ -161,6 +163,7 @@ public class VVenue extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         // No method validation required.. 
         return EMPTY_VALIDATOR;

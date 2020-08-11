@@ -147,6 +147,7 @@ public class Uid extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -154,6 +155,7 @@ public class Uid extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -170,11 +172,13 @@ public class Uid extends Property implements Escapable {
             super(UID);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Uid(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new Uid();
         }
