@@ -53,6 +53,7 @@ public class UidGeneratorTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         generator = new FixedUidGenerator("1");
     }
@@ -66,6 +67,7 @@ public class UidGeneratorTest extends TestCase {
         Thread[] threads = new Thread[10];
         for (int i = 0; i < 10; i++) {
             threads[i] = new Thread(new Runnable() {
+                @Override
                 public void run() {
                     for (int i = 0; i < 10; i++) {
                         synchronized(uids) {

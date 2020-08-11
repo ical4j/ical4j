@@ -55,7 +55,8 @@ public class UrisTest extends TestCase {
         this.testString = testString;
         this.expectedValue = expectedValue;
     }
-    
+
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         CompatibilityHints.setHintEnabled(
@@ -63,7 +64,8 @@ public class UrisTest extends TestCase {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_NOTES_COMPATIBILITY, true);
     }
-    
+
+    @Override
     protected void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);
@@ -73,7 +75,8 @@ public class UrisTest extends TestCase {
     public void testCreateUri() throws Exception {
         assertEquals("create failed", expectedValue, Uris.create(testString).toString());
     }
-    
+
+    @Override
     public String getName() {
         if (testString != null) {
             return super.getName() + " [" + testString + "]";

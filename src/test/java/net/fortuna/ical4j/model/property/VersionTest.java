@@ -73,6 +73,7 @@ public class VersionTest extends PropertyTest {
     /*
      * Test that the constant VERSION_2_0 is immutable.
      */
+    @Override
     public void testImmutable() throws IOException, URISyntaxException, ParseException {
         super.testImmutable();
         

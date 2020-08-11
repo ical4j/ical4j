@@ -88,6 +88,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
