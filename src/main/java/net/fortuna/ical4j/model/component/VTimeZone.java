@@ -189,6 +189,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return BEGIN +
                 ':' +
@@ -205,6 +206,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse) throws ValidationException {
         validator.validate(this);
 
@@ -311,6 +313,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VTimeZone) {
             return super.equals(arg0)
@@ -323,6 +326,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
                 .append(getObservances()).toHashCode();
@@ -333,6 +337,7 @@ public class VTimeZone extends CalendarComponent {
      * @return a copy of the instance
      * @see net.fortuna.ical4j.model.Component#copy()
      */
+    @Override
     public VTimeZone copy() {
         return newFactory().createComponent(
                 new PropertyList(properties.getAll().stream()

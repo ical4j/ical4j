@@ -169,6 +169,7 @@ public class VJournal extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse) throws ValidationException {
         validator.validate(this);
 
@@ -200,6 +201,7 @@ public class VJournal extends CalendarComponent {
      * @param method the applicable method
      * @throws ValidationException where the component does not comply with RFC2446
      */
+    @Override
     public void validate(Method method) throws ValidationException {
         final Validator<VJournal> validator = methodValidators.get(method);
         if (validator != null) {
