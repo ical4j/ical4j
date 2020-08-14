@@ -103,6 +103,7 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         if (!parameters.isEmpty()) {
             return parameters.stream().map(Parameter::toString)
@@ -179,6 +180,7 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
      * @return an iterator
      * @see List#iterator()
      */
+    @Override
     public final Iterator<Parameter> iterator() {
         return parameters.iterator();
     }
@@ -213,6 +215,7 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof ParameterList) {
             final ParameterList p = (ParameterList) arg0;
@@ -224,6 +227,7 @@ public class ParameterList implements Serializable, Iterable<Parameter> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int hashCode() {
         return new HashCodeBuilder().append(parameters).toHashCode();
     }

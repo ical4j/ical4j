@@ -219,6 +219,7 @@ public abstract class Parameter extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         final StringBuilder b = new StringBuilder();
         b.append(getName());
@@ -244,6 +245,7 @@ public abstract class Parameter extends Content {
     /**
      * @return Returns the name.
      */
+    @Override
     public final String getName() {
         return name;
     }
@@ -251,6 +253,7 @@ public abstract class Parameter extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Parameter) {
             final Parameter p = (Parameter) arg0;
@@ -263,6 +266,7 @@ public abstract class Parameter extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int hashCode() {
         // as parameter name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
