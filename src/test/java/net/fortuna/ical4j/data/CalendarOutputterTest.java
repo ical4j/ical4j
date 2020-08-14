@@ -69,6 +69,7 @@ public class CalendarOutputterTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected final void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
     }
@@ -76,6 +77,7 @@ public class CalendarOutputterTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected final void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING);
     }
@@ -142,6 +144,7 @@ public class CalendarOutputterTest extends TestCase {
     /**
      * Overridden to return the current iCalendar file under test.
      */
+    @Override
     public final String getName() {
         return super.getName() + " [" + filename + "]";
     }
