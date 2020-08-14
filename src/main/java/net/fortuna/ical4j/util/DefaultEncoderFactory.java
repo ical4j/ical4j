@@ -56,6 +56,7 @@ public class DefaultEncoderFactory extends EncoderFactory {
     /**
      * {@inheritDoc}
      */
+    @Override
     public BinaryEncoder createBinaryEncoder(final Encoding encoding)
             throws UnsupportedEncodingException {
 
@@ -72,6 +73,7 @@ public class DefaultEncoderFactory extends EncoderFactory {
     /**
      * {@inheritDoc}
      */
+    @Override
     public StringEncoder createStringEncoder(final Encoding encoding)
             throws UnsupportedEncodingException {
 
