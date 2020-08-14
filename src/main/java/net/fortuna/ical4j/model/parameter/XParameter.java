@@ -62,6 +62,7 @@ public class XParameter extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -75,6 +76,7 @@ public class XParameter extends Parameter {
             this.name = name;
         }
 
+        @Override
         public Parameter createParameter(final String value)
                 throws URISyntaxException {
             return new XParameter(name, value);

@@ -60,6 +60,7 @@ public class ScheduleStatus extends Parameter {
      * (non-Javadoc)
      * @see net.fortuna.ical4j.model.Parameter#getValue()
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -71,6 +72,7 @@ public class ScheduleStatus extends Parameter {
             super(SCHEDULE_STATUS);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             return new ScheduleStatus(value);
         }
