@@ -86,6 +86,7 @@ public class FoldingWriter extends FilterWriter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void write(final int c) throws IOException {
 
         /*
@@ -98,6 +99,7 @@ public class FoldingWriter extends FilterWriter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void write(final char[] buffer, final int offset,
                             final int length) throws IOException {
         final int maxIndex = offset + length - 1;
@@ -131,6 +133,7 @@ public class FoldingWriter extends FilterWriter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void write(final String str, final int off, final int len)
             throws IOException {
         write(str.toCharArray(), off, len);
