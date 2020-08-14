@@ -86,6 +86,7 @@ public class TimeZone extends java.util.TimeZone {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int getOffset(final int era, final int year, final int month, final int dayOfMonth,
                                final int dayOfWeek, final int milliseconds) {
 
@@ -115,6 +116,7 @@ public class TimeZone extends java.util.TimeZone {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int getOffset(long date) {
         final Observance observance = vTimeZone.getApplicableObservance(Instant.ofEpochMilli(date));
         if (observance != null) {
@@ -135,6 +137,7 @@ public class TimeZone extends java.util.TimeZone {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int getRawOffset() {
         return rawOffset;
     }
@@ -148,6 +151,7 @@ public class TimeZone extends java.util.TimeZone {
      * @param date a date instance
      * @return true if the specified date is in daylight time, otherwise false
      */
+    @Override
     public final boolean inDaylightTime(final Date date) {
         final Observance observance = vTimeZone.getApplicableObservance(date.toInstant());
         return (observance instanceof Daylight);
@@ -156,6 +160,7 @@ public class TimeZone extends java.util.TimeZone {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setRawOffset(final int offsetMillis) {
         throw new UnsupportedOperationException("Updates to the VTIMEZONE object must be performed directly");
     }
@@ -163,6 +168,7 @@ public class TimeZone extends java.util.TimeZone {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean useDaylightTime() {
         final List<Observance> daylights = vTimeZone.getObservances().get(Observance.DAYLIGHT);
         return (!daylights.isEmpty());
@@ -217,6 +223,7 @@ public class TimeZone extends java.util.TimeZone {
         return 0;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -227,6 +234,7 @@ public class TimeZone extends java.util.TimeZone {
                 && !(vTimeZone != null ? !vTimeZone.equals(timeZone.vTimeZone) : timeZone.vTimeZone != null);
     }
 
+    @Override
     public int hashCode() {
         int result = vTimeZone != null ? vTimeZone.hashCode() : 0;
         result = 31 * result + rawOffset;

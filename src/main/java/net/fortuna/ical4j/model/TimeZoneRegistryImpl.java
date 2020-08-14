@@ -123,6 +123,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void register(final TimeZone timezone) {
         // for now we only apply updates to included definitions by default..
         register(timezone, false);
@@ -131,6 +132,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void register(final TimeZone timezone, boolean update) {
         if (update) {
             try {
@@ -159,6 +161,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void clear() {
         timezones.clear();
     }
@@ -166,6 +169,7 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final TimeZone getTimeZone(final String id) {
         Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
 

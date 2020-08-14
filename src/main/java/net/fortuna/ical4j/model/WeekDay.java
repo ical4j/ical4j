@@ -145,6 +145,7 @@ public class WeekDay implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         final StringBuilder b = new StringBuilder();
         if (getOffset() != 0) {
@@ -282,6 +283,7 @@ public class WeekDay implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 == null) {
             return false;
@@ -297,6 +299,7 @@ public class WeekDay implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int hashCode() {
         return new HashCodeBuilder().append(getDay()).append(getOffset()).toHashCode();
     }

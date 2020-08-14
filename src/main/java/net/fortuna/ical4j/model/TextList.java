@@ -91,6 +91,7 @@ public class TextList implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return texts.stream().map(Strings::escape).collect(Collectors.joining(","));
     }

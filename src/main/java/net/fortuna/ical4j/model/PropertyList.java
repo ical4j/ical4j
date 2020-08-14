@@ -111,6 +111,7 @@ public class PropertyList implements ContentContainer<Property> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return properties.stream().map(Property::toString).collect(Collectors.joining(""));
     }

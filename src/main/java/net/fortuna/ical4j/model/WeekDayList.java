@@ -78,6 +78,7 @@ public class WeekDayList extends ArrayList<WeekDay> implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return toString(this);
     }

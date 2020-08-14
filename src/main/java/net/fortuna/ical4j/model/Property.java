@@ -399,6 +399,7 @@ public abstract class Property extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append(getName());
@@ -428,6 +429,7 @@ public abstract class Property extends Content {
     /**
      * @return Returns the name.
      */
+    @Override
     public final String getName() {
         return name;
     }
@@ -532,6 +534,7 @@ public abstract class Property extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Property) {
             final Property p = (Property) arg0;
@@ -545,6 +548,7 @@ public abstract class Property extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         // as property name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(
