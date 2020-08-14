@@ -61,6 +61,7 @@ public class InetAddressHostInfo implements HostInfo {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getHostName() {
         return hostAddress.getHostName();
     }
