@@ -168,6 +168,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return BEGIN +
                 ':' +
@@ -184,6 +185,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse)
             throws ValidationException {
 
@@ -227,6 +229,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         return itipValidator;
     }
@@ -282,6 +285,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VTimeZone) {
             return super.equals(arg0)
@@ -294,6 +298,7 @@ public class VTimeZone extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
                 .append(getObservances()).toHashCode();
@@ -307,6 +312,7 @@ public class VTimeZone extends CalendarComponent {
      * @throws URISyntaxException where an invalid URI is encountered
      * @see net.fortuna.ical4j.model.Component#copy()
      */
+    @Override
     public Component copy() throws ParseException, IOException, URISyntaxException {
         final VTimeZone copy = (VTimeZone) super.copy();
         copy.observances = new ComponentList<Observance>(observances);
