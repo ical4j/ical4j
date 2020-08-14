@@ -193,6 +193,7 @@ public class Status extends Property {
             super(new ParameterList(true), value);
         }
 
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -228,6 +229,7 @@ public class Status extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -235,6 +237,7 @@ public class Status extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -251,6 +254,7 @@ public class Status extends Property {
             super(STATUS);
         }
 
+        @Override
         public Status createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
@@ -281,6 +285,7 @@ public class Status extends Property {
             return status;
         }
 
+        @Override
         public Status createProperty() {
             return new Status();
         }

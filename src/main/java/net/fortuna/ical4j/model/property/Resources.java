@@ -108,6 +108,7 @@ public class Resources extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         resources = new TextList(aValue);
     }
@@ -115,6 +116,7 @@ public class Resources extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getResources().toString();
     }
@@ -131,11 +133,13 @@ public class Resources extends Property {
             super(RESOURCES);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Resources(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new Resources();
         }
