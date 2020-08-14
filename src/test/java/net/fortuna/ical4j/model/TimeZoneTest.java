@@ -331,6 +331,7 @@ public class TimeZoneTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#getName()
      */
+    @Override
     public String getName() {
         if (timezone != null) {
             return super.getName() + " [" + timezone.getID() + "]";
