@@ -91,6 +91,7 @@ public class ComponentList<T extends Component> extends ArrayList<T> implements 
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return stream().map(Component::toString).collect(Collectors.joining(""));
     }
