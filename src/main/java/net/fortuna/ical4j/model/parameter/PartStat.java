@@ -111,6 +111,7 @@ public class PartStat extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -122,6 +123,7 @@ public class PartStat extends Parameter {
             super(PARTSTAT);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             PartStat parameter = new PartStat(value);
             if (PartStat.NEEDS_ACTION.equals(parameter)) {
