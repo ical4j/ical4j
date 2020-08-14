@@ -117,38 +117,47 @@ public final class CalendarDateFormatFactory {
             this.pattern = pattern;
         }
 
+        @Override
         public java.util.TimeZone getTimeZone() {
             return this.timeZone;
         }
 
+        @Override
         public void setTimeZone(java.util.TimeZone tz) {
             this.timeZone = tz;
         }
 
+        @Override
         public void setLenient(boolean lenient) {
             this.lenient = lenient;
         }
 
+        @Override
         public boolean isLenient() {
             return lenient;
         }
 
+        @Override
         public java.util.Calendar getCalendar() {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public void setCalendar(java.util.Calendar c) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public NumberFormat getNumberFormat() {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public void setNumberFormat(NumberFormat n) {
             throw new UnsupportedOperationException();
         }
 
+        @Override
         public Object clone() {
             // don't call super.clone()
             final CalendarDateFormat f = (CalendarDateFormat) CalendarDateFormatFactory.getInstance(pattern);
@@ -157,6 +166,7 @@ public final class CalendarDateFormatFactory {
             return f;
         }
 
+        @Override
         public boolean equals(Object o) {
             if (this == o) {
                 return true;
@@ -173,6 +183,7 @@ public final class CalendarDateFormatFactory {
             return lenient == that.lenient && pattern.equals(that.pattern) && timeZone.equals(that.timeZone);
         }
 
+        @Override
         public int hashCode() {
             int result = super.hashCode();
             result = 31 * result + pattern.hashCode();
@@ -205,6 +216,7 @@ public final class CalendarDateFormatFactory {
             patternEndsWithZ = pattern.endsWith("'Z'");
         }
 
+        @Override
         public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
             final java.util.Calendar cal = new GregorianCalendar(getTimeZone());
             cal.setTimeInMillis(date.getTime());
@@ -225,6 +237,7 @@ public final class CalendarDateFormatFactory {
             return toAppendTo;
         }
 
+        @Override
         public Date parse(String source, ParsePosition pos) {
             // if lenient ignore superfluous input..
             if (patternEndsWithZ) {
@@ -283,6 +296,7 @@ public final class CalendarDateFormatFactory {
             super(pattern);
         }
 
+        @Override
         public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
             final java.util.Calendar cal = java.util.Calendar.getInstance(getTimeZone());
             cal.setTimeInMillis(date.getTime());
@@ -294,6 +308,7 @@ public final class CalendarDateFormatFactory {
             return toAppendTo;
         }
 
+        @Override
         public Date parse(String source, ParsePosition pos) {
             // if lenient ignore superfluous input..
             if (source.length() > DATE_PATTERN.length() && !isLenient()) {
@@ -338,6 +353,7 @@ public final class CalendarDateFormatFactory {
             patternEndsWithZ = pattern.endsWith("'Z'");
         }
 
+        @Override
         public StringBuffer format(Date date, StringBuffer toAppendTo, FieldPosition fieldPosition) {
             final java.util.Calendar cal = new GregorianCalendar(getTimeZone());
             cal.setTimeInMillis(date.getTime());
@@ -353,6 +369,7 @@ public final class CalendarDateFormatFactory {
             return toAppendTo;
         }
 
+        @Override
         public Date parse(String source, ParsePosition pos) {
             // if lenient ignore superfluous input..
             if (patternEndsWithZ) {

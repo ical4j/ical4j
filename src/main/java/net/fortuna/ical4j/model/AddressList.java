@@ -93,6 +93,7 @@ public class AddressList implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return toString(addresses);
     }

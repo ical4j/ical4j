@@ -100,6 +100,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * @param aNumber a number to add to the list
      * @return true if the number was added, otherwise false
      */
+    @Override
     public final boolean add(final Integer aNumber) {
         int abs = aNumber;
         if ((abs >> 31 | -abs >>> 31) < 0) {
@@ -118,6 +119,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return toString(this);
     }

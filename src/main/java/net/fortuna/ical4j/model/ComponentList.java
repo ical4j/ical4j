@@ -111,6 +111,7 @@ public class ComponentList<T extends Component> implements ContentContainer<T> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return components.stream().map(Component::toString).collect(Collectors.joining(""));
     }

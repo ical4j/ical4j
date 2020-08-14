@@ -424,6 +424,7 @@ public class DateTime extends Date {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final void setTime(final long time) {
 		super.setTime(time);
 		// need to check for null time due to Android java.util.Date(long)
@@ -500,6 +501,7 @@ public class DateTime extends Date {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public final String toString() {
 		return super.toString() + 'T' +
 				time.toString();
@@ -508,6 +510,7 @@ public class DateTime extends Date {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean equals(final Object arg0) {
 		// TODO: what about compareTo, before, after, etc.?
 
@@ -521,6 +524,7 @@ public class DateTime extends Date {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public int hashCode() {
 		return super.hashCode();
 	}

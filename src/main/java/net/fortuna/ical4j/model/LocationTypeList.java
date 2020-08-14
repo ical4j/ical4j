@@ -73,6 +73,7 @@ public class LocationTypeList implements Serializable, Iterable<String> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return String.join(",", locationTypes);
     }
@@ -100,6 +101,7 @@ public class LocationTypeList implements Serializable, Iterable<String> {
      * @return an iterator
      * @see List#iterator()
      */
+    @Override
     public final Iterator<String> iterator() {
         return locationTypes.iterator();
     }

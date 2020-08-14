@@ -188,6 +188,7 @@ public class Calendar implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return BEGIN +
                 ':' +
@@ -431,6 +432,7 @@ public class Calendar implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Calendar) {
             final Calendar calendar = (Calendar) arg0;
@@ -443,6 +445,7 @@ public class Calendar implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int hashCode() {
         return new HashCodeBuilder().append(getProperties()).append(
                 getComponents()).toHashCode();
