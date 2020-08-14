@@ -163,6 +163,7 @@ public class VAvailability extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return BEGIN +
                 ':' +
@@ -179,6 +180,7 @@ public class VAvailability extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse) throws ValidationException {
 
         validator.validate(this);

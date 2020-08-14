@@ -259,6 +259,7 @@ public class VAlarm extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse) throws ValidationException {
 
         /*

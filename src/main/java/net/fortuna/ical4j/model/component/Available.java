@@ -125,6 +125,7 @@ public class Available extends Component {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse) throws ValidationException {
 
         validator.validate(this);
