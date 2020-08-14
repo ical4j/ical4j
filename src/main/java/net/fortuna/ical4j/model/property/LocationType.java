@@ -107,6 +107,7 @@ public class LocationType extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         locationTypes = new LocationTypeList(aValue);
     }
@@ -121,6 +122,7 @@ public class LocationType extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getLocationTypes().toString();
     }
@@ -137,11 +139,13 @@ public class LocationType extends Property {
             super(LOCATION_TYPE);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new LocationType(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new LocationType();
         }
