@@ -146,6 +146,7 @@ public class VAvailability extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return BEGIN +
                 ':' +
@@ -162,6 +163,7 @@ public class VAvailability extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse)
             throws ValidationException {
 
@@ -236,6 +238,7 @@ public class VAvailability extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         // TODO Auto-generated method stub
         return null;

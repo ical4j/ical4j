@@ -484,6 +484,7 @@ public class VFreeBusy extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse) throws ValidationException {
 
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
@@ -557,6 +558,7 @@ public class VFreeBusy extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         return methodValidators.get(method);
     }
