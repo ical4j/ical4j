@@ -157,6 +157,7 @@ public class VJournal extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse)
             throws ValidationException {
 
@@ -205,6 +206,7 @@ public class VJournal extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         return methodValidators.get(method);
     }
