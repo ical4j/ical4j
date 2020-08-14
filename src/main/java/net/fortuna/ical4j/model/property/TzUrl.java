@@ -136,6 +136,7 @@ public class TzUrl extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws URISyntaxException {
         uri = Uris.create(aValue);
     }
@@ -143,6 +144,7 @@ public class TzUrl extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getUri()));
     }
@@ -166,11 +168,13 @@ public class TzUrl extends Property {
             super(TZURL);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new TzUrl(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new TzUrl();
         }

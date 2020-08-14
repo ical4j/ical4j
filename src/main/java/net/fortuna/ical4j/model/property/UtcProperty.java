@@ -91,6 +91,7 @@ public abstract class UtcProperty extends DateProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setTimeZone(TimeZone timezone) {
         throw new UnsupportedOperationException("Cannot set timezone for UTC properties");
     }
@@ -98,6 +99,7 @@ public abstract class UtcProperty extends DateProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void validate() throws ValidationException {
         super.validate();
 
