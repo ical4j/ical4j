@@ -60,6 +60,7 @@ public class DateInRangeRule implements Predicate<Date> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean test(Date date) {
         return range.includes(date, inclusiveMask);
     }

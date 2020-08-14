@@ -185,6 +185,7 @@ public class HCalendarParser implements CalendarParser {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void parse(InputStream in, ContentHandler handler) throws IOException, ParserException {
         parse(new InputSource(in), handler);
     }
@@ -192,6 +193,7 @@ public class HCalendarParser implements CalendarParser {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void parse(Reader in, ContentHandler handler) throws IOException, ParserException {
         parse(new InputSource(in), handler);
     }

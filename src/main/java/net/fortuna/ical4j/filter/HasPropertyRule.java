@@ -75,6 +75,7 @@ public class HasPropertyRule<T extends Component> implements Predicate<T> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean test(final Component component) {
         boolean match = false;
         final List<Property> properties = component.getProperties().get(property.getName());

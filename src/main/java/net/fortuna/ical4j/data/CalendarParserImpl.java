@@ -82,6 +82,7 @@ public class CalendarParserImpl implements CalendarParser {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void parse(final InputStream in, final ContentHandler handler)
             throws IOException, ParserException {
         parse(new InputStreamReader(in), handler);
@@ -127,6 +128,7 @@ public class CalendarParserImpl implements CalendarParser {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void parse(final Reader in, final ContentHandler handler)
             throws IOException, ParserException {
 

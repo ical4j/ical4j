@@ -61,6 +61,7 @@ public class PeriodRule<C extends Component, T extends Temporal> implements Pred
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean test(final Component component) {
 
         /*
