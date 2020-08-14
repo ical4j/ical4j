@@ -92,6 +92,7 @@ public class DateTimeTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // ensure relaxing parsing is disabled for these tests..
@@ -218,6 +219,7 @@ public class DateTimeTest extends TestCase {
         assertFalse(date5.isUtc());
     }
 
+    @Override
     public String getName() {
         if (StringUtils.isNotEmpty(expectedToString)) {
             return super.getName() + " [" + expectedToString + "]";
