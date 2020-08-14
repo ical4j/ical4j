@@ -110,6 +110,7 @@ public abstract class Iso8601 extends Date {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String toString() {
         // if time is floating avoid daylight saving rules when generating
         // string representation of date..
@@ -143,6 +144,7 @@ public abstract class Iso8601 extends Date {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setTime(final long time) {
         // need to check for null format due to Android java.util.Date(long) constructor
         // calling this method..
