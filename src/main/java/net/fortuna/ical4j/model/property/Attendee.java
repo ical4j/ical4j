@@ -105,6 +105,7 @@ public class Attendee extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws URISyntaxException {
         calAddress = Uris.create(aValue);
     }
@@ -112,6 +113,7 @@ public class Attendee extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
 
         /*
@@ -144,6 +146,7 @@ public class Attendee extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getCalAddress()));
     }
@@ -158,6 +161,7 @@ public class Attendee extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final Property copy() {
         // URI are immutable
         return new Attendee(new ParameterList(getParameters(), false), calAddress);
@@ -170,11 +174,13 @@ public class Attendee extends Property {
             super(ATTENDEE);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Attendee(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new Attendee();
         }

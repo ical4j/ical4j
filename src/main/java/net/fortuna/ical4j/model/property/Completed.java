@@ -130,11 +130,13 @@ public class Completed extends UtcProperty {
             super(COMPLETED);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Completed(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new Completed();
         }
