@@ -174,7 +174,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private final List<Integer> yearDayList = new NumberList(ChronoField.DAY_OF_YEAR.range(), true);
 
-    private final List<Integer> weekNoList = new NumberList(IsoFields.WEEK_OF_WEEK_BASED_YEAR.range(), true);
+    private final List<Integer> weekNoList = new NumberList(WeekFields.ISO.weekOfWeekBasedYear().range(), true);
 
     private final List<Integer> monthList = new NumberList(ChronoField.MONTH_OF_YEAR.range(), false);
 
@@ -770,7 +770,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         if (!weekNoList.isEmpty()) {
-            dates = new ByWeekNoRule<T>(weekNoList, frequency).transform(dates);
+            dates = new ByWeekNoRule<T>(weekNoList, frequency, WeekDay.getDayOfWeek(weekStartDay)).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYWEEKNO processing: " + dates);
