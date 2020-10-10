@@ -87,6 +87,7 @@ public class TextList implements Serializable, Iterable<String> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return texts.stream().map(t -> Strings.escape(t)).collect(Collectors.joining(","));
     }
@@ -113,6 +114,7 @@ public class TextList implements Serializable, Iterable<String> {
      * @return an iterator
      * @see List#iterator()
      */
+    @Override
     public final Iterator<String> iterator() {
         return texts.iterator();
     }

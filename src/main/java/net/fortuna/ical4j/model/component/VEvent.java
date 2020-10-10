@@ -325,6 +325,7 @@ public class VEvent extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return BEGIN +
                 ':' +
@@ -341,6 +342,7 @@ public class VEvent extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse) throws ValidationException {
 
         // validate that getAlarms() only contains VAlarm components
@@ -455,6 +457,7 @@ public class VEvent extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         return methodValidators.get(method);
     }
@@ -702,6 +705,7 @@ public class VEvent extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean equals(final Object arg0) {
         if (arg0 instanceof VEvent) {
             return super.equals(arg0)
@@ -713,6 +717,7 @@ public class VEvent extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int hashCode() {
         return new HashCodeBuilder().append(getName()).append(getProperties())
                 .append(getAlarms()).toHashCode();
@@ -726,6 +731,7 @@ public class VEvent extends CalendarComponent {
      * @throws URISyntaxException where an invalid URI value is encountered in the instance
      * @see net.fortuna.ical4j.model.Component#copy()
      */
+    @Override
     public Component copy() throws ParseException, IOException,
             URISyntaxException {
         final VEvent copy = (VEvent) super.copy();

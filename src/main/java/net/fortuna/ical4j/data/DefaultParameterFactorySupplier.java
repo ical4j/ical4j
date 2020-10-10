@@ -27,6 +27,6 @@ public class DefaultParameterFactorySupplier implements Supplier<List<ParameterF
         List<ParameterFactory<? extends Parameter>> factories = new ArrayList<>(rfc5545);
         factories.addAll(rfc7986);
 
-        return rfc5545;
+        return factories;
     }
 }

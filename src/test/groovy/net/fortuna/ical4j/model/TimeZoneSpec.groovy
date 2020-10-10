@@ -111,9 +111,14 @@ class TimeZoneSpec extends Specification {
         def tz = tzRegistry.getTimeZone(tzid)
 
         and: 'the timezone id matches the specified id'
-        tz.ID == tzid
+        tz.ID == expectedId
 
         where:
-        tzid << ['Australia/Lord_Howe', 'Asia/Rangoon', 'America/Santa_Isabel', 'Pacific/Johnston', 'EST']
+		tzid					| expectedId
+		'Australia/Lord_Howe'	| 'Australia/Lord_Howe'
+		'Asia/Rangoon'			| 'Asia/Yangon'
+		'America/Santa_Isabel'	| 'America/Tijuana'
+		'Pacific/Johnston'		| 'Pacific/Honolulu'
+		'EST'					| 'EST'
     }
 }

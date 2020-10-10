@@ -89,9 +89,24 @@ public abstract class Parameter extends Content {
     public static final String DIR = "DIR";
 
     /**
+     * Display format.
+     */
+    public static final String DISPLAY = "DISPLAY";
+    
+    /**
+     * Email address.
+     */
+    public static final String EMAIL = "EMAIL";
+    
+    /**
      * Inline encoding.
      */
     public static final String ENCODING = "ENCODING";
+
+    /**
+     * Feature specification.
+     */
+    public static final String FEATURE = "FEATURE";
 
     /**
      * Format type.
@@ -102,6 +117,11 @@ public abstract class Parameter extends Content {
      * Free/busy time type.
      */
     public static final String FBTYPE = "FBTYPE";
+
+    /**
+     * Label.
+     */
+    public static final String LABEL = "LABEL";
 
     /**
      * Language for text.
@@ -199,6 +219,7 @@ public abstract class Parameter extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         final StringBuilder b = new StringBuilder();
         b.append(getName());
@@ -224,6 +245,7 @@ public abstract class Parameter extends Content {
     /**
      * @return Returns the name.
      */
+    @Override
     public final String getName() {
         return name;
     }
@@ -231,6 +253,7 @@ public abstract class Parameter extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof Parameter) {
             final Parameter p = (Parameter) arg0;
@@ -243,6 +266,7 @@ public abstract class Parameter extends Content {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int hashCode() {
         // as parameter name is case-insensitive generate hash for uppercase..
         return new HashCodeBuilder().append(getName().toUpperCase()).append(

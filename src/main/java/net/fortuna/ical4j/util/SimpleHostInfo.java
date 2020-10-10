@@ -49,6 +49,7 @@ public class SimpleHostInfo implements HostInfo {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getHostName() {
         return hostName;
     }
