@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.agent
 
+
+import io.opentracing.mock.MockTracer
 import net.fortuna.ical4j.model.ContentBuilder
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.model.property.Method
@@ -12,11 +14,12 @@ import spock.lang.Specification
 
 class VEventUserAgentTest extends Specification {
 
+    MockTracer tracer = []
     ProdId prodId = ['-//Ben Fortuna//iCal4j 2.0//EN']
     UidGenerator uidGenerator = new RandomUidGenerator()
     Organizer org = []
 
-    VEventUserAgent userAgent = [prodId, org, uidGenerator]
+    VEventUserAgent userAgent = [prodId, org, uidGenerator, tracer]
 
     ContentBuilder builder = []
 
@@ -48,6 +51,10 @@ class VEventUserAgentTest extends Specification {
 
         and: 'the sequence property is present on all components'
         calendar.components.all.each { it.getProperties().getFirst(Property.SEQUENCE).isPresent() }
+
+        and: 'tracing completed as expected'
+        tracer.finishedSpans().size() == 1
+        tracer.finishedSpans()[0].operationName() == 'veventPublish'
     }
 
     def "Request"() {
@@ -82,6 +89,10 @@ class VEventUserAgentTest extends Specification {
 
         and: 'the sequence property is present on all components'
         calendar.components.all.each { it.getProperties().getFirst(Property.SEQUENCE).isPresent() }
+
+        and: 'tracing completed as expected'
+        tracer.finishedSpans().size() == 1
+        tracer.finishedSpans()[0].operationName() == 'veventRequest'
     }
 
     def "Delegate"() {
@@ -106,6 +117,10 @@ class VEventUserAgentTest extends Specification {
 
         then: 'the calendar object contains method = REQUEST'
         calendar.getProperties().getRequired(Property.METHOD) == Method.REQUEST
+
+        and: 'tracing completed as expected'
+        tracer.finishedSpans().size() == 1
+        tracer.finishedSpans()[0].operationName() == 'veventDelegate'
     }
 
     def "Reply"() {
@@ -130,6 +145,10 @@ class VEventUserAgentTest extends Specification {
 
         then: 'the calendar object contains method = REPLY'
         calendar.getProperties().getRequired(Property.METHOD) == Method.REPLY
+
+        and: 'tracing completed as expected'
+        tracer.finishedSpans().size() == 1
+        tracer.finishedSpans()[0].operationName() == 'veventReply'
     }
 
     def "Add"() {
@@ -148,6 +167,10 @@ class VEventUserAgentTest extends Specification {
 
         then: 'the calendar object contains method = ADD'
         calendar.getProperties().getRequired(Property.METHOD) == Method.ADD
+
+        and: 'tracing completed as expected'
+        tracer.finishedSpans().size() == 1
+        tracer.finishedSpans()[0].operationName() == 'veventAdd'
     }
 
     def "Cancel"() {
@@ -165,6 +188,10 @@ class VEventUserAgentTest extends Specification {
 
         then: 'the calendar object contains method = CANCEL'
         calendar.getProperties().getRequired(Property.METHOD) == Method.CANCEL
+
+        and: 'tracing completed as expected'
+        tracer.finishedSpans().size() == 1
+        tracer.finishedSpans()[0].operationName() == 'veventCancel'
     }
 
     def "Refresh"() {
@@ -183,6 +210,10 @@ class VEventUserAgentTest extends Specification {
 
         then: 'the calendar object contains method = REFRESH'
         calendar.getProperties().getRequired(Property.METHOD) == Method.REFRESH
+
+        and: 'tracing completed as expected'
+        tracer.finishedSpans().size() == 1
+        tracer.finishedSpans()[0].operationName() == 'veventRefresh'
     }
 
     def "Counter"() {
@@ -207,6 +238,10 @@ class VEventUserAgentTest extends Specification {
 
         then: 'the calendar object contains method = COUNTER'
         calendar.getProperties().getRequired(Property.METHOD) == Method.COUNTER
+
+        and: 'tracing completed as expected'
+        tracer.finishedSpans().size() == 1
+        tracer.finishedSpans()[0].operationName() == 'veventCounter'
     }
 
     def "DeclineCounter"() {
@@ -228,5 +263,9 @@ class VEventUserAgentTest extends Specification {
 
         then: 'the calendar object contains method = DECLINECOUNTER'
         calendar.getProperties().getRequired(Property.METHOD) == Method.DECLINE_COUNTER
+
+        and: 'tracing completed as expected'
+        tracer.finishedSpans().size() == 1
+        tracer.finishedSpans()[0].operationName() == 'veventDeclineCounter'
     }
 }

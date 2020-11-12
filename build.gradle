@@ -42,6 +42,7 @@ targetCompatibility = 1.8
 ext {
     slf4jVersion = '1.7.30'
     groovyVersion = '3.0.4'
+    openTracingVersion = '0.33.0'
 }
 
 repositories {
@@ -57,7 +58,8 @@ dependencies {
             'org.apache.commons:commons-lang3:3.10',
             'org.apache.commons:commons-collections4:4.4',
             'org.threeten:threeten-extra:1.5.0',
-            'org.jooq:jool-java-8:0.9.14'
+            'org.jooq:jool-java-8:0.9.14',
+            "io.opentracing:opentracing-util:$openTracingVersion"
     
     implementation 'javax.cache:cache-api:1.1.1', optional
     implementation "org.codehaus.groovy:groovy:$groovyVersion", optional
@@ -72,7 +74,8 @@ dependencies {
         'junit:junit:4.13',
         'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
         "org.slf4j:slf4j-log4j12:$slf4jVersion",
-        'org.cache2k:cache2k-jcache:1.2.4.Final'
+        'org.cache2k:cache2k-jcache:1.2.4.Final',
+            "io.opentracing:opentracing-mock:$openTracingVersion"
 }
 
 jacocoTestReport {
