@@ -1,7 +1,5 @@
 package net.fortuna.ical4j.agent;
 
-import io.opentracing.Tracer;
-import io.opentracing.noop.NoopTracerFactory;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.CalendarComponent;
@@ -17,26 +15,18 @@ import net.fortuna.ical4j.util.UidGenerator;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Created by fortuna on 19/07/2017.
  */
 public abstract class AbstractUserAgent<T extends CalendarComponent> implements UserAgent<T> {
 
-    protected final Tracer tracer;
-
     private final ProdId prodId;
 
     private final Map<Method, Transformer<Calendar>> methodTransformers;
 
     public AbstractUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
-        this(prodId, organizer, uidGenerator, null);
-    }
-
-    public AbstractUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator, Tracer tracer) {
         this.prodId = prodId;
-        this.tracer = Optional.ofNullable(tracer).orElse(NoopTracerFactory.create());
 
         methodTransformers = new HashMap<>();
         methodTransformers.put(Method.PUBLISH, new PublishTransformer(organizer, uidGenerator,true));

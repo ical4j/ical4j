@@ -1,8 +1,5 @@
 package net.fortuna.ical4j.agent;
 
-import io.opentracing.Scope;
-import io.opentracing.Span;
-import io.opentracing.Tracer;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Method;
@@ -17,11 +14,6 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
 
     public VEventUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator) {
         super(prodId, organizer, uidGenerator);
-        delegateTransformer = new RequestTransformer(uidGenerator);
-    }
-
-    public VEventUserAgent(ProdId prodId, Organizer organizer, UidGenerator uidGenerator, Tracer tracer) {
-        super(prodId, organizer, uidGenerator, tracer);
         delegateTransformer = new RequestTransformer(uidGenerator);
     }
 
@@ -42,14 +34,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar publish(VEvent... component) {
-        Span span = tracer.buildSpan("veventPublish").start();
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Calendar published = wrap(Method.PUBLISH, component);
-            published.validate();
-            return published;
-        } finally {
-            span.finish();
-        }
+        Calendar published = wrap(Method.PUBLISH, component);
+        published.validate();
+        return published;
     }
 
     /**
@@ -102,26 +89,16 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar request(VEvent... component) {
-        Span span = tracer.buildSpan("veventRequest").start();
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Calendar request = wrap(Method.REQUEST, component);
-            request.validate();
-            return request;
-        } finally {
-            span.finish();
-        }
+        Calendar request = wrap(Method.REQUEST, component);
+        request.validate();
+        return request;
     }
 
     @Override
     public Calendar delegate(Calendar request) {
-        Span span = tracer.buildSpan("veventDelegate").start();
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Calendar delegated = delegateTransformer.transform(request.copy());
-            delegated.validate();
-            return delegated;
-        } finally {
-            span.finish();
-        }
+        Calendar delegated = delegateTransformer.transform(request.copy());
+        delegated.validate();
+        return delegated;
     }
 
     /**
@@ -167,14 +144,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar reply(Calendar request) {
-        Span span = tracer.buildSpan("veventReply").start();
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Calendar reply = transform(Method.REPLY, request.copy());
-            reply.validate();
-            return reply;
-        } finally {
-            span.finish();
-        }
+        Calendar reply = transform(Method.REPLY, request.copy());
+        reply.validate();
+        return reply;
     }
 
     /**
@@ -200,14 +172,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar add(VEvent component) {
-        Span span = tracer.buildSpan("veventAdd").start();
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Calendar add = wrap(Method.ADD, component);
-            add.validate();
-            return add;
-        } finally {
-            span.finish();
-        }
+        Calendar add = wrap(Method.ADD, component);
+        add.validate();
+        return add;
     }
 
     /**
@@ -248,14 +215,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar cancel(VEvent... component) {
-        Span span = tracer.buildSpan("veventCancel").start();
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Calendar cancel = wrap(Method.CANCEL, component);
-            cancel.validate();
-            return cancel;
-        } finally {
-            span.finish();
-        }
+        Calendar cancel = wrap(Method.CANCEL, component);
+        cancel.validate();
+        return cancel;
     }
 
     /**
@@ -273,15 +235,10 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar refresh(VEvent component) {
-        Span span = tracer.buildSpan("veventRefresh").start();
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Calendar refresh = wrap(Method.REFRESH, component.copy());
+        Calendar refresh = wrap(Method.REFRESH, component.copy());
 //        componentTransformers.get(Method.REFRESH).transform(refresh.getComponents().getAll());
-            refresh.validate();
-            return refresh;
-        } finally {
-            span.finish();
-        }
+        refresh.validate();
+        return refresh;
     }
 
     /**
@@ -307,14 +264,9 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar counter(Calendar request) {
-        Span span = tracer.buildSpan("veventCounter").start();
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Calendar counter = transform(Method.COUNTER, request.copy());
-            counter.validate();
-            return counter;
-        } finally {
-            span.finish();
-        }
+        Calendar counter = transform(Method.COUNTER, request.copy());
+        counter.validate();
+        return counter;
     }
 
     /**
@@ -330,13 +282,8 @@ public class VEventUserAgent extends AbstractUserAgent<VEvent> {
      */
     @Override
     public Calendar declineCounter(Calendar counter) {
-        Span span = tracer.buildSpan("veventDeclineCounter").start();
-        try (Scope scope = tracer.scopeManager().activate(span)) {
-            Calendar declineCounter = transform(Method.DECLINE_COUNTER, counter.copy());
-            declineCounter.validate();
-            return declineCounter;
-        } finally {
-            span.finish();
-        }
+        Calendar declineCounter = transform(Method.DECLINE_COUNTER, counter.copy());
+        declineCounter.validate();
+        return declineCounter;
     }
 }
