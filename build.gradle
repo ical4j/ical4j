@@ -13,8 +13,8 @@ plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.10.2'
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.8.4"
-    id "net.ltgt.errorprone" version "0.8.1"
-    id "biz.aQute.bnd.builder" version "5.0.0"
+    id "net.ltgt.errorprone" version "1.2.1"
+    id "biz.aQute.bnd.builder" version "5.1.1"
 }
 
 apply plugin: 'java'
