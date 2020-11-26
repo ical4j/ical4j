@@ -46,8 +46,8 @@ repositories {
 }
 
 dependencies {
-    errorprone "com.google.errorprone:error_prone_core:2.3.3"
-    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
+//    errorprone "com.google.errorprone:error_prone_core:2.3.3"
+//    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
 
     api "org.slf4j:slf4j-api:$slf4jVersion",
             'commons-codec:commons-codec:1.11',
