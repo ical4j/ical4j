@@ -81,6 +81,7 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return stream().map(Property::toString).collect(Collectors.joining(""));
     }
@@ -121,6 +122,7 @@ public class PropertyList<T extends Property> extends ArrayList<T> implements Se
      * @return true
      * @see java.util.List#add(java.lang.Object)
      */
+    @Override
     public final boolean add(final T property) {
         return super.add(property);
     }

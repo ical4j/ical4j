@@ -149,6 +149,7 @@ public class UnfoldingReader extends PushbackReader {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int read() throws IOException {
         final int c = super.read();
         boolean doUnfold = false;
@@ -172,6 +173,7 @@ public class UnfoldingReader extends PushbackReader {
     /**
      * {@inheritDoc}
      */
+    @Override
     public int read(final char[] cbuf, final int off, final int len) throws IOException {
         final int read = super.read(cbuf, off, len);
         boolean doUnfold = false;

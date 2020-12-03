@@ -241,6 +241,7 @@ public class VAlarm extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse)
             throws ValidationException {
 
@@ -283,6 +284,7 @@ public class VAlarm extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         throw new UnsupportedOperationException("VALARM validation included in VEVENT or VTODO method validator.");
     }

@@ -60,6 +60,7 @@ public class PeriodRule<T extends Component> implements Predicate<T> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean test(final Component component) {
 
         /*
