@@ -100,7 +100,7 @@ public class Method extends Property {
      * Used by the "Organizer" to decline the proposed counter-proprosal. [RFC 2446]
      */
     public static final Method DECLINE_COUNTER = new ImmutableMethod(
-            "DECLINE-COUNTER");
+            "DECLINECOUNTER");
 
     /**
      * @author Ben Fortuna An immutable instance of Method.
