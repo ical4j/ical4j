@@ -91,6 +91,7 @@ public class AddressList implements Serializable, Iterable<URI> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return addresses.stream().map(a -> Strings.quote(Uris.decode(Strings.valueOf(a))))
                 .collect(Collectors.joining(","));

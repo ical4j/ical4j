@@ -127,6 +127,7 @@ public class UtcOffset implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         final StringBuilder b = new StringBuilder();
         long remainder = Math.abs(offset);
@@ -159,6 +160,7 @@ public class UtcOffset implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final boolean equals(final Object arg0) {
         if (arg0 instanceof UtcOffset) {
             return getOffset() == ((UtcOffset) arg0).getOffset();
@@ -169,6 +171,7 @@ public class UtcOffset implements Serializable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final int hashCode() {
         return new HashCodeBuilder().append(getOffset()).toHashCode();
     }

@@ -167,6 +167,7 @@ public class DateList implements List<Date>, Serializable, Iterable<Date> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String toString() {
         return stream().map(Iso8601::toString).collect(Collectors.joining(","));
     }
@@ -179,6 +180,7 @@ public class DateList implements List<Date>, Serializable, Iterable<Date> {
      * @return true
      * @see List#add(java.lang.Object)
      */
+    @Override
     public final boolean add(final Date date) {
         if (!this.isUtc() && this.getTimeZone() == null) {
             /* If list hasn't been initialized yet use defaults from the first added date element */

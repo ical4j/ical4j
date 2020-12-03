@@ -69,6 +69,7 @@ public class XComponent extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse)
             throws ValidationException {
         
@@ -88,6 +89,7 @@ public class XComponent extends CalendarComponent {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected Validator getValidator(Method method) {
         // No method validation required.. 
         return EMPTY_VALIDATOR;

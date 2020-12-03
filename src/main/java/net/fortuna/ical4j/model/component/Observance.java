@@ -117,6 +117,7 @@ public abstract class Observance extends Component {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate(final boolean recurse) throws ValidationException {
 
         // From "4.8.3.3 Time Zone Offset From":
