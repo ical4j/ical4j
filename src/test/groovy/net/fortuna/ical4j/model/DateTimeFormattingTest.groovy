@@ -29,16 +29,14 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model
 
-import java.text.SimpleDateFormat;
-
-import groovy.util.GroovyTestCase;
+import java.text.SimpleDateFormat
 
 class DateTimeFormattingTest extends GroovyTestCase {
 
 	void testDateTimeFormatting() {
 		def df = new SimpleDateFormat('h:mma')
-		assert '3:00PM' == df.format(new ContentBuilder().dtstart('20090810T150000').date)
+		assert '3:00pm' == df.format(new ContentBuilder().dtstart('20090810T150000').date)
 	}
 }
