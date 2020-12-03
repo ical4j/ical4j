@@ -88,6 +88,7 @@ class CalendarParserImplSpec extends Specification {
 		resource							| compatibilityHints
 		'/samples/valid/bhav23-1.ics'	| []
 		'/samples/invalid/bhav23-2.ics'	| [KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]
+		'/samples/valid/blankTzid.ics'  | []
 	}
 
 	def 'verify parsing empty lines'() {
