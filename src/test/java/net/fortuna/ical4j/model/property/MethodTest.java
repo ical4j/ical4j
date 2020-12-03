@@ -31,10 +31,10 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import java.text.ParseException;
-
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.PropertyTest;
+
+import java.text.ParseException;
 
 /**
  * $Id$
@@ -70,7 +70,7 @@ public class MethodTest extends PropertyTest {
         suite.addTest(new MethodTest(Method.ADD, "ADD"));
         suite.addTest(new MethodTest(Method.CANCEL, "CANCEL"));
         suite.addTest(new MethodTest(Method.COUNTER, "COUNTER"));
-        suite.addTest(new MethodTest(Method.DECLINE_COUNTER, "DECLINE-COUNTER"));
+        suite.addTest(new MethodTest(Method.DECLINE_COUNTER, "DECLINECOUNTER"));
         suite.addTest(new MethodTest(Method.PUBLISH, "PUBLISH"));
         suite.addTest(new MethodTest(Method.REFRESH, "REFRESH"));
         suite.addTest(new MethodTest(Method.REPLY, "REPLY"));
