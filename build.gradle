@@ -68,13 +68,6 @@ dependencies {
         'org.ehcache:ehcache:3.4.0', 'com.sun.mail:javax.mail:1.5.4'
 }
 
-tasks.withType(JavaCompile).configureEach {
-    if (JavaVersion.current().isJava12Compatible()) {
-        // TODO: Remove when resolved https://github.com/google/error-prone/issues/1106
-        options.errorprone.disable("Finally")
-    }
-}
-
 jacocoTestReport {
     reports {
         xml.enabled true
