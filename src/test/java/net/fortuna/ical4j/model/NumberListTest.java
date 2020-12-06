@@ -109,6 +109,7 @@ public class NumberListTest extends TestCase {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getName() {
         return super.getName() + " [" + numberList + "]";
     }

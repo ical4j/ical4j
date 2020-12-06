@@ -196,6 +196,7 @@ public class RecurTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         originalDefault = TimeZone.getDefault();
     }
@@ -203,6 +204,7 @@ public class RecurTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         TimeZone.setDefault(originalDefault);
     }
