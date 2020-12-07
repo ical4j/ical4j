@@ -6,8 +6,8 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static net.fortuna.ical4j.model.Recur.Frequency.DAILY
-import static net.fortuna.ical4j.model.Recur.Frequency.SECONDLY
+import static Frequency.DAILY
+import static Frequency.SECONDLY
 
 class BySecondRuleTest extends Specification {
 

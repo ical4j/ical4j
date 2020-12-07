@@ -5,7 +5,7 @@ import net.fortuna.ical4j.model.NumberList
 import net.fortuna.ical4j.model.TemporalAdapter
 import spock.lang.Specification
 
-import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY
+import static Frequency.YEARLY
 
 class ByHourRuleTest extends Specification {
 

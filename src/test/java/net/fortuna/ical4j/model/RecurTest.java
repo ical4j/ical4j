@@ -33,11 +33,11 @@ package net.fortuna.ical4j.model;
 
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.util.TimeZones;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

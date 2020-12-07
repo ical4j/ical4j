@@ -8,8 +8,8 @@ import spock.lang.Unroll
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-import static net.fortuna.ical4j.model.Recur.Frequency.DAILY
-import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY
+import static Frequency.DAILY
+import static Frequency.YEARLY
 
 class ByWeekNoRuleTest extends Specification {
 

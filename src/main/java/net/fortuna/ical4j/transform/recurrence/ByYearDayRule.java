@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Recur.Frequency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +12,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static java.time.temporal.ChronoField.DAY_OF_YEAR;
-import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY;
+import static net.fortuna.ical4j.transform.recurrence.Frequency.YEARLY;
 
 /**
  * Applies BYYEARDAY rules specified in this Recur instance to the specified date list. If no BYYEARDAY rules are

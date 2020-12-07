@@ -1,7 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Recur.Frequency;
-
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -10,7 +8,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
-import static net.fortuna.ical4j.model.Recur.Frequency.*;
+import static net.fortuna.ical4j.transform.recurrence.Frequency.*;
 
 /**
  * Applies BYMINUTE rules specified in this Recur instance to the specified date list. If no BYMINUTE rules are

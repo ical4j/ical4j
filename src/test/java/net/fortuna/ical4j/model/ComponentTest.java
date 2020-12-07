@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
@@ -173,7 +174,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         // 10am-12pm for 7 days..
         component.add(new DtStart("20080601T100000Z"));
         component.add(new DtEnd("20080601T120000Z"));
-        Recur recur = new Recur.Builder().frequency(Recur.Frequency.DAILY).count(7).build();
+        Recur recur = new Recur.Builder().frequency(Frequency.DAILY).count(7).build();
         component.add(new RRule(recur));
         Set<Period<Instant>> expectedPeriods = new TreeSet<>();
         expectedPeriods.add(Period.parse("20080601T100000Z/PT2H"));
@@ -198,7 +199,7 @@ public class ComponentTest<T extends Temporal> extends TestCase {
         // weekly for 5 instances using DATE format and due date.
         component.add(new DtStart<>((LocalDate) TemporalAdapter.parse("20080601").getTemporal()));
         component.add(new Due<>((LocalDate) TemporalAdapter.parse("20080602").getTemporal()));
-        recur = new Recur.Builder().frequency(Recur.Frequency.WEEKLY).count(5).build();
+        recur = new Recur.Builder().frequency(Frequency.WEEKLY).count(5).build();
         component.add(new RRule(recur));
         Set<Period<LocalDate>> expectedPeriods2 = new TreeSet<>();
         expectedPeriods2.add(Period.parse("20080601/P1D"));

@@ -5,7 +5,7 @@ import net.fortuna.ical4j.model.NumberList
 import spock.lang.Shared
 import spock.lang.Specification
 
-import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY
+import static Frequency.YEARLY
 
 class ByYearDayRuleTest extends Specification {
 

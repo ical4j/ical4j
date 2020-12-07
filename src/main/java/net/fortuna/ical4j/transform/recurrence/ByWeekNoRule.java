@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Recur.Frequency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

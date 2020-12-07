@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Recur.Frequency;
 import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.transform.Transformer;
 

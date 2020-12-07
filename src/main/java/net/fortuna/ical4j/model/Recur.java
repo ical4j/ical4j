@@ -83,10 +83,6 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private static final String WKST = "WKST";
 
-    public enum Frequency {
-        SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY
-    }
-
     /**
      * Second frequency resolution.
      * @deprecated use {@link Frequency} instead.

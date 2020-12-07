@@ -37,6 +37,7 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.transform.recurrence.Frequency;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,7 +225,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         event.getProperties().getRequired(Property.DTSTART).add(tzParam);
 
         // add recurrence..
-        Recur<ZonedDateTime> recur = new Recur.Builder<ZonedDateTime>().frequency(Recur.Frequency.YEARLY).count(20)
+        Recur<ZonedDateTime> recur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.YEARLY).count(20)
                 .monthList(new NumberList("1")).monthDayList(new NumberList("26"))
                 .hourList(new NumberList("9")).minuteList(new NumberList("30")).build();
         event.add(new RRule<>(recur));

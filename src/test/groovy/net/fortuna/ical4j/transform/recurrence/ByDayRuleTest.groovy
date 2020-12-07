@@ -7,7 +7,7 @@ import spock.lang.Specification
 
 import java.time.DayOfWeek
 
-import static net.fortuna.ical4j.model.Recur.Frequency.WEEKLY
+import static Frequency.WEEKLY
 import static net.fortuna.ical4j.model.WeekDay.*
 
 class ByDayRuleTest extends Specification {

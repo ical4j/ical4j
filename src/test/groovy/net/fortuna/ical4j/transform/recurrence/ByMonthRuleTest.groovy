@@ -6,8 +6,8 @@ import net.fortuna.ical4j.model.TemporalAdapter
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static net.fortuna.ical4j.model.Recur.Frequency.DAILY
-import static net.fortuna.ical4j.model.Recur.Frequency.YEARLY
+import static Frequency.DAILY
+import static Frequency.YEARLY
 
 class ByMonthRuleTest extends Specification {
 

@@ -31,7 +31,7 @@
  */
 package net.fortuna.ical4j.model
 
-
+import net.fortuna.ical4j.transform.recurrence.Frequency
 import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -356,8 +356,8 @@ class RecurSpec extends Specification {
 
     def 'verify no-args constructor has no side-effects'() {
         expect:
-        new Recur(frequency: Recur.Frequency.WEEKLY) as String == 'FREQ=WEEKLY'
-        new Recur(frequency: Recur.Frequency.MONTHLY, interval: 3) as String == 'FREQ=MONTHLY;INTERVAL=3'
+        new Recur(frequency: Frequency.WEEKLY) as String == 'FREQ=WEEKLY'
+        new Recur(frequency: Frequency.MONTHLY, interval: 3) as String == 'FREQ=MONTHLY;INTERVAL=3'
     }
 
     def 'verify behaviour when parsing unexpected rule parts'() {
@@ -398,7 +398,7 @@ class RecurSpec extends Specification {
         when: 'populated'
         def until = TemporalAdapter.parse('20050307').temporal;
 
-        Recur recurDaily = builder.frequency(Recur.Frequency.DAILY).until(until)
+        Recur recurDaily = builder.frequency(Frequency.DAILY).until(until)
                 .dayList(new WeekDayList(MO, TU, WE, TH, FR))
                 .interval(1).weekStartDay(MO).build();
 
