@@ -88,11 +88,12 @@ class CalendarParserImplSpec extends Specification {
 		resource							| compatibilityHints
 		'/samples/valid/bhav23-1.ics'	| []
 		'/samples/invalid/bhav23-2.ics'	| [KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]
+		'/samples/valid/blankTzid.ics'  | []
 	}
 
 	def 'verify parsing empty lines'() {
 		setup:
-		String input = "BEGIN:VCALENDAR\r\n$contentLines\r\nEND:VCALENDAR"
+		String input = "BEGIN:VCALENDAR\r\n\r\n$contentLines\r\nEND:VCALENDAR"
 		compatibilityHints.each {
 			CompatibilityHints.setHintEnabled(it, true)
 		}
@@ -108,6 +109,7 @@ class CalendarParserImplSpec extends Specification {
 
 		where:
 		contentLines << ['''BEGIN:VEVENT
+
 CLASS:
 CREATED:20121015T070600Z
 DTSTART:20121018T020000Z
@@ -142,12 +144,15 @@ X-MS-OLK-CONFTYPE:0
 X-MICROSOFT-CDO-ATTENDEE-CRITICAL-CHANGE:20121015T070600Z
 X-MICROSOFT-CDO-OWNER-CRITICAL-CHANGE:20121015T070600Z
 BEGIN:VALARM
+
 ACTION:DISPLAY
 TRIGGER;VALUE=DURATION:-PT15M
 DESCRIPTION:REMINDER
 RELATED=START:-PT00H15M00S
 END:VALARM
-END:VEVENT''']
+
+END:VEVENT
+''']
 		compatibilityHints << [[KEY_RELAXED_UNFOLDING, KEY_RELAXED_PARSING]]
 	}
 }

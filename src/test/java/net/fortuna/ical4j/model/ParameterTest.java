@@ -88,6 +88,7 @@ public class ParameterTest extends TestCase {
 		
 		@SuppressWarnings("serial")
 		Parameter p = new Parameter("name") {
+			@Override
 			public String getValue() {
 				return "value";
 			}

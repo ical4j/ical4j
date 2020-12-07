@@ -19,7 +19,7 @@ class MethodSpec extends Specification {
         'ADD' | Method.ADD
         'CANCEL' | Method.CANCEL
         'COUNTER' | Method.COUNTER
-        'DECLINE-COUNTER' | Method.DECLINE_COUNTER
+        'DECLINECOUNTER' | Method.DECLINE_COUNTER
         'PUBLISH' | Method.PUBLISH
         'REFRESH' | Method.REFRESH
         'REPLY' | Method.REPLY

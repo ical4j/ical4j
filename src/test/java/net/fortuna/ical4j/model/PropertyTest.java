@@ -86,6 +86,7 @@ public class PropertyTest extends AbstractPropertyTest {
      * (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
@@ -112,13 +113,16 @@ public class PropertyTest extends AbstractPropertyTest {
 
         @SuppressWarnings("serial")
 		Property notEqual = new Property("notEqual", null) {
+            @Override
             public String getValue() {
                 return "";
             }
 
+            @Override
             public void setValue(String value) {
             }
 
+            @Override
             public void validate() throws ValidationException {
             }
 
@@ -189,6 +193,7 @@ public class PropertyTest extends AbstractPropertyTest {
 
         try {
             property.add(new Parameter("name") {
+                @Override
                 public String getValue() {
                     return null;
                 }
@@ -207,13 +212,16 @@ public class PropertyTest extends AbstractPropertyTest {
 
         @SuppressWarnings("serial")
 		Property property = new Property("name", null) {
+            @Override
             public String getValue() {
                 return "value";
             }
 
+            @Override
             public void setValue(String value) {
             }
 
+            @Override
             public void validate() throws ValidationException {
             }
 
@@ -225,13 +233,16 @@ public class PropertyTest extends AbstractPropertyTest {
 
         @SuppressWarnings("serial")
 		Property invalidProperty = new Property("name", null) {
+            @Override
             public String getValue() {
                 return "value";
             }
 
+            @Override
             public void setValue(String value) {
             }
 
+            @Override
             public void validate() throws ValidationException {
                 throw new ValidationException();
             }

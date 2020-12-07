@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.zone.ZoneRulesProvider;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -27,9 +28,10 @@ public class DefaultContentHandler implements ContentHandler {
 
     private PropertyBuilder propertyBuilder;
 
-    private ComponentBuilder<CalendarComponent> componentBuilder;
-
-    private ComponentBuilder<Component> subComponentBuilder;
+    /**
+     * The current component builders.
+     */
+    private final LinkedList<ComponentBuilder<CalendarComponent>> components = new LinkedList<>();
 
     private List<Property> calendarProperties;
 
@@ -52,10 +54,22 @@ public class DefaultContentHandler implements ContentHandler {
         this.componentFactorySupplier = componentFactorySupplier;
     }
 
+    public ComponentBuilder<CalendarComponent> getComponentBuilder() {
+        if (components.size() == 0) {
+            return null;
+        }
+        return components.peek();
+    }
+
+    public void endComponent() {
+        components.pop();
+    }
+
     @Override
     public void startCalendar() {
         calendarProperties = new ArrayList<>();
         calendarComponents = new ArrayList<>();
+        components.clear();
     }
 
     @Override
@@ -67,24 +81,31 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void startComponent(String name) {
-        if (componentBuilder != null) {
-            subComponentBuilder = new ComponentBuilder<>();
-            subComponentBuilder.factories(componentFactorySupplier.get()).name(name);
-        } else {
-            componentBuilder = new ComponentBuilder<>();
-            componentBuilder.factories(componentFactorySupplier.get()).name(name);
+        if (components.size() > 10) {
+            throw new RuntimeException("Components nested too deep");
         }
+
+        ComponentBuilder<CalendarComponent> componentBuilder =
+                new ComponentBuilder<>();
+        componentBuilder.factories(componentFactorySupplier.get()).name(name);
+        components.push(componentBuilder);
     }
 
     @Override
     public void endComponent(String name) {
-        assertComponent(componentBuilder);
+        assertComponent(getComponentBuilder());
 
-        if (subComponentBuilder != null) {
-            Component subComponent = subComponentBuilder.build();
-            componentBuilder.subComponent(subComponent);
+        final ComponentBuilder<CalendarComponent> componentBuilder =
+                getComponentBuilder();
 
-            subComponentBuilder = null;
+        DefaultContentHandler.this.endComponent();
+
+        final ComponentBuilder<CalendarComponent> parent =
+                getComponentBuilder();
+
+        if (parent != null) {
+            Component subComponent = componentBuilder.build();
+            parent.subComponent(subComponent);
         } else {
             CalendarComponent component = componentBuilder.build();
             calendarComponents.add(component);
@@ -92,8 +113,6 @@ public class DefaultContentHandler implements ContentHandler {
                 // register the timezone for use with iCalendar objects..
                 tzRegistry.register(new TimeZone((VTimeZone) component));
             }
-
-            componentBuilder = null;
         }
     }
 
@@ -115,12 +134,8 @@ public class DefaultContentHandler implements ContentHandler {
 
         // replace with a constant instance if applicable..
         property = Constants.forProperty(property);
-        if (componentBuilder != null) {
-            if (subComponentBuilder != null) {
-                subComponentBuilder.property(property);
-            } else {
-                componentBuilder.property(property);
-            }
+        if (getComponentBuilder() != null) {
+            getComponentBuilder().property(property);
         } else if (calendarProperties != null) {
             calendarProperties.add(property);
         }
