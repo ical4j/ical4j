@@ -14,7 +14,7 @@ class ByDayRuleTest extends Specification {
 
     def 'verify transformations by day'() {
         given: 'a BYDAY rule'
-        ByDayRule rule = [new WeekDayList(rulePart), frequency, DayOfWeek.SUNDAY]
+        ByDayRule rule = [new WeekDayList((WeekDay) rulePart), frequency, DayOfWeek.SUNDAY]
 
         and: 'a list of dates'
         def dates = []

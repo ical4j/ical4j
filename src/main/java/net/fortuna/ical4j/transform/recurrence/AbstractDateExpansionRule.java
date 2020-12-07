@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.transform.Transformer;
 
 import java.io.Serializable;
@@ -128,8 +127,7 @@ abstract class AbstractDateExpansionRule<T extends Temporal> implements Transfor
         if (date.isSupported(field)) {
             return date.get(field);
         } else {
-            ZonedDateTime zonedDateTime = new TemporalAdapter<>(date).toLocalTime();
-            return zonedDateTime.get(field);
+            return ZonedDateTime.from(date).get(field);
         }
     }
 
