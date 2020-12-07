@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.Recur.Frequency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,6 +96,6 @@ public class ByYearDayRule<T extends Temporal> extends AbstractDateExpansionRule
      */
     private void readObject(final java.io.ObjectInputStream stream) throws IOException, ClassNotFoundException {
         stream.defaultReadObject();
-        log = LoggerFactory.getLogger(Recur.class);
+        log = LoggerFactory.getLogger(ByYearDayRule.class);
     }
 }
