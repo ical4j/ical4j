@@ -37,6 +37,9 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.time.LocalDate
+import java.time.ZoneOffset
+
 @Slf4j
 class TimeZoneSpec extends Specification {
 
@@ -120,5 +123,27 @@ class TimeZoneSpec extends Specification {
 		'America/Santa_Isabel'	| 'America/Tijuana'
 		'Pacific/Johnston'		| 'Pacific/Honolulu'
 		'EST'					| 'EST'
+    }
+
+	@Unroll('#tzid')
+    def 'verify timezone offsets'() {
+        expect: 'the specified id has the expected offsets'
+        def tz = tzRegistry.getTimeZone(tzid)
+
+        and: 'the timezone id matches the specified id'
+        tz.rawOffset == expectedRawOffset
+
+		and: 'daylight offset as expected'
+		!tz.inDaylightTime(daylightDate) ||
+				tz.getOffset(daylightDate.time) == expectedDaylightOffset
+
+        where:
+		tzid					| expectedRawOffset	| expectedDaylightOffset	| daylightDate
+		'America/Sao_Paulo'		| -10800000			| -10800000					| Date.from(LocalDate.of(2020, 1, 1).atStartOfDay().toInstant(ZoneOffset.UTC))
+		'America/Sao_Paulo'		| -10800000			| -7200000					| Date.from(LocalDate.of(2018, 1, 1).atStartOfDay().toInstant(ZoneOffset.UTC))
+		'America/Campo_Grande'	| -14400000         | -14400000					| Date.from(LocalDate.of(2020, 1, 1).atStartOfDay().toInstant(ZoneOffset.UTC))
+		'America/Campo_Grande'	| -14400000         | -10800000					| Date.from(LocalDate.of(2018, 1, 1).atStartOfDay().toInstant(ZoneOffset.UTC))
+		'America/Cuiaba'		| -14400000         | -14400000					| Date.from(LocalDate.of(2020, 1, 1).atStartOfDay().toInstant(ZoneOffset.UTC))
+		'America/Cuiaba'		| -14400000         | -10800000					| Date.from(LocalDate.of(2018, 1, 1).atStartOfDay().toInstant(ZoneOffset.UTC))
     }
 }
