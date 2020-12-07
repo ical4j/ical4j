@@ -37,7 +37,7 @@ import java.time.format.DateTimeFormatter
 class DateTimeFormattingTest extends GroovyTestCase {
 
 	void testDateTimeFormatting() {
-		def df = DateTimeFormatter.ofPattern('h:mma')
+		def df = DateTimeFormatter.ofPattern('h:mma', Locale.US)
 		assert '3:00PM' == df.format(new ContentBuilder().dtstart('20090810T150000').date)
 	}
 }
