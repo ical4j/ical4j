@@ -57,9 +57,13 @@ public class ZoneRulesBuilder {
             TzOffsetTo offsetTo = observance.getProperties().getRequired(Property.TZOFFSETTO);
             DtStart<LocalDateTime> startDate = observance.getProperties().getRequired(Property.DTSTART);
 
-            if (rrule.isPresent()) {
+            // ignore invalid rules
+            if (rrule.isPresent() && !rrule.get().getRecur().getMonthList().isEmpty()) {
                 Month recurMonth = Month.of(rrule.get().getRecur().getMonthList().get(0));
                 int dayOfMonth = rrule.get().getRecur().getDayList().get(0).getOffset();
+                if (dayOfMonth == 0) {
+                    dayOfMonth = rrule.get().getRecur().getMonthDayList().get(0);
+                }
                 DayOfWeek dayOfWeek = WeekDay.getDayOfWeek(rrule.get().getRecur().getDayList().get(0));
                 LocalTime time = LocalTime.from(startDate.getDate());
                 boolean endOfDay = false;

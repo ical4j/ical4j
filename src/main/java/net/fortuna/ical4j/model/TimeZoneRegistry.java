@@ -34,6 +34,7 @@ package net.fortuna.ical4j.model;
 import java.time.ZoneId;
 import java.time.zone.ZoneRules;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,6 +55,7 @@ public interface TimeZoneRegistry {
     Map<String, String> ZONE_ALIASES = new ConcurrentHashMap<>();
 
     static ZoneId getGlobalZoneId(String tzId) {
+        Objects.requireNonNull(tzId, "tzId");
         // Ensure zone rules are loaded..
         Set<String> ids = ZoneId.getAvailableZoneIds();
         try {
