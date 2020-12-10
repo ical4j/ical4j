@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -25,8 +24,7 @@ public class Rfc5545TransformerTest {
     }
 
     @Test
-    public void shouldCorrectCalendarBody() throws IOException, ParserException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
+    public void shouldCorrectCalendarBody() throws IOException, ParserException {
 
         String[] calendarNames = { "yahoo1.txt", "yahoo2.txt", "outlook1.txt", "outlook2.txt", "apple.txt" };
         for (String calendarName : calendarNames) {
@@ -42,8 +40,7 @@ public class Rfc5545TransformerTest {
     }
 
     @Test
-    public void shouldCorrectMsSpecificTimeZones() throws IOException, ParserException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
+    public void shouldCorrectMsSpecificTimeZones() throws IOException, ParserException {
         String actuals[] = { "timezones/outlook1.txt", "timezones/outlook2.txt" };
         String expecteds[] = { "timezones/outlook1_expected.txt", "timezones/outlook2_expected.txt" };
 
