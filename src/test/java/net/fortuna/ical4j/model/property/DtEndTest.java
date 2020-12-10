@@ -87,10 +87,10 @@ public class DtEndTest extends PropertyTest {
 
         //
         ParameterList newParams;
-        newParams = (ParameterList) dtEnd.getParameters().replace(Value.DATE);
-        DtEnd<LocalDate> dtEndLocalDate = new DtEnd<>(newParams, dtEnd.getDate().toLocalDate());
+        DtEnd<LocalDate> dtEndLocalDate = new DtEnd<>(dtEnd.getDate().toLocalDate());
+        dtEndLocalDate.replace(Value.DATE);
         log.info(dtEndLocalDate.toString());
-        suite.addTest(new DtEndTest("testValidationException", dtEndLocalDate));
+        suite.addTest(new DtEndTest("testValidation", dtEndLocalDate));
 
         //
         dtEnd = new DtEnd<>(dtEnd.getParameters(), dtEnd.getDate());
@@ -104,10 +104,10 @@ public class DtEndTest extends PropertyTest {
         suite.addTest(new DtEndTest("testValidation", dtEndLocalDate));
 
         //
-        newParams = (ParameterList) dtEnd.getParameters().removeAll(Parameter.VALUE);
-        dtEnd = new DtEnd<>(newParams, ZonedDateTime.now());
+        dtEnd = new DtEnd<>(ZonedDateTime.now());
+        dtEnd.removeAll(Parameter.VALUE);
         log.info(dtEnd.toString());
-        suite.addTest(new DtEndTest("testValidationException", dtEnd));
+        suite.addTest(new DtEndTest("testValidation", dtEnd));
         
         // disable relaxed parsing after copying invalid properties..
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);

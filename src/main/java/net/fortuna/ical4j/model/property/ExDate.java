@@ -62,7 +62,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * @param aValue a value string for this component
      */
     public ExDate(final ParameterList aList, final String aValue) {
-        super(EXDATE, aList);
+        super(EXDATE, aList, Value.DATE_TIME);
         setValue(aValue);
     }
 
@@ -78,13 +78,14 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
      * @param dList a list of dates
      */
     public ExDate(final ParameterList aList, final DateList<T> dList) {
-        super(EXDATE, aList, dList);
+        super(EXDATE, aList, dList, Value.DATE_TIME);
     }
 
     /**
      * {@inheritDoc}
      */
     public final void validate() throws ValidationException {
+        super.validate();
 
         /*
          * ; the following are optional, ; but MUST NOT occur more than once (";" "VALUE" "=" ("DATE-TIME" / "DATE")) /

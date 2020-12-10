@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.CalendarDateFormat;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.parameter.Value;
 
 import java.time.Instant;
 
@@ -91,7 +92,7 @@ public class Created extends DateProperty<Instant> {
      * @param aValue a value string for this component
      */
     public Created(final String aValue) {
-        super(CREATED, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(CREATED, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
@@ -100,7 +101,7 @@ public class Created extends DateProperty<Instant> {
      * @param aValue a value string for this component
      */
     public Created(final ParameterList aList, final String aValue) {
-        super(CREATED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(CREATED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
@@ -108,7 +109,7 @@ public class Created extends DateProperty<Instant> {
      * @param aDate a date
      */
     public Created(final Instant aDate) {
-        super(CREATED, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(CREATED, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 
@@ -117,7 +118,7 @@ public class Created extends DateProperty<Instant> {
      * @param aDate a date
      */
     public Created(final ParameterList aList, final Instant aDate) {
-        super(CREATED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(CREATED, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 

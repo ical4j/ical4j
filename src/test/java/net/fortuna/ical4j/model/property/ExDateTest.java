@@ -37,12 +37,12 @@ import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -120,15 +120,15 @@ public class ExDateTest extends TestCase {
     /**
      * Allow date values by default if relaxed parsing enabled.
      */
-    public void testRelaxedParsing() throws DateTimeParseException {
+    public void testRelaxedValidation() {
+        ExDate<Instant> property = new ExDate<>(new ParameterList(), "20080315");
         try {
-            ExDate<Instant> property = new ExDate<>(new ParameterList(), "20080315");
-            property.getDates();
-            fail("Should throw DateTimeParseException");
-        } catch (DateTimeParseException pe) {
+            property.validate();
+            fail("Should throw ValidationException");
+        } catch (ValidationException pe) {
             LOG.trace("Caught exception: " + pe.getMessage());
         }
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING, true);
-        new ExDate(new ParameterList(), "20080315");
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, true);
+        new ExDate<>(new ParameterList(), "20080315").validate();
     }
 }

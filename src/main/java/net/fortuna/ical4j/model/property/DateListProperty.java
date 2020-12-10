@@ -35,8 +35,12 @@ import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.util.CompatibilityHints;
 import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ValidationException;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.List;
@@ -68,6 +72,8 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      */
     private static final long serialVersionUID = 5233773091972759919L;
 
+    private final Value defaultValueParam;
+
     private DateList<T> dates;
 
     private ZoneId timeZone;
@@ -83,8 +89,9 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      * @param name       the property name
      * @param parameters property parameters
      */
-    public DateListProperty(final String name, final ParameterList parameters) {
+    public DateListProperty(final String name, final ParameterList parameters, Value defaultValueParam) {
         super(name, parameters);
+        this.defaultValueParam = defaultValueParam;
     }
 
     /**
@@ -92,7 +99,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      * @param dates a list of initial dates for the property
      */
     public DateListProperty(final String name, final DateList<T> dates) {
-        this(name, new ParameterList(), dates);
+        this(name, new ParameterList(), dates, Value.DATE_TIME);
     }
 
     /**
@@ -100,9 +107,11 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
      * @param parameters property parameters
      * @param dates      a list of initial dates for the property
      */
-    public DateListProperty(final String name, final ParameterList parameters, final DateList<T> dates) {
+    public DateListProperty(final String name, final ParameterList parameters, final DateList<T> dates,
+                            Value defaultValueParam) {
         super(name, parameters);
         this.dates = dates;
+        this.defaultValueParam = defaultValueParam;
     }
 
     /**
@@ -165,6 +174,26 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
         }
         if (utc) {
             setParameters((ParameterList) getParameters().removeAll(Parameter.TZID));
+        }
+    }
+
+    @Override
+    public void validate() throws ValidationException {
+        if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            // Ensure date list is consistent with VALUE param..
+            if (Value.DATE.equals(getParameters().getFirst(Parameter.VALUE).orElse(defaultValueParam))) {
+                for (T t : dates.getDates()) {
+                    if (!(t instanceof LocalDate)) {
+                        throw new ValidationException("Mismatch between VALUE param and dates");
+                    }
+                }
+            } else {
+                for (T t : dates.getDates()) {
+                    if (t instanceof LocalDate) {
+                        throw new ValidationException("Mismatch between VALUE param and dates");
+                    }
+                }
+            }
         }
     }
 }

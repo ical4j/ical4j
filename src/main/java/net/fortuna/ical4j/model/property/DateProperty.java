@@ -80,6 +80,8 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
     private final CalendarDateFormat parseFormat;
 
+    private final Value defaultValueParam;
+
     private TemporalAdapter<T> date;
 
     private transient TimeZoneRegistry timeZoneRegistry;
@@ -97,24 +99,28 @@ public abstract class DateProperty<T extends Temporal> extends Property {
      */
     public DateProperty(final String name, final ParameterList parameters) {
 
-        this(name, parameters, CalendarDateFormat.DEFAULT_PARSE_FORMAT);
+        this(name, parameters, CalendarDateFormat.DEFAULT_PARSE_FORMAT, Value.DATE_TIME);
     }
 
-    public DateProperty(final String name, final ParameterList parameters, CalendarDateFormat parseFormat) {
+    public DateProperty(final String name, final ParameterList parameters, CalendarDateFormat parseFormat,
+                        Value defaultValueParam) {
+
         super(name, parameters);
         this.parseFormat = parseFormat;
+        this.defaultValueParam = defaultValueParam;
     }
 
     /**
      * @param name the property name
      */
     public DateProperty(final String name) {
-        this(name, CalendarDateFormat.DEFAULT_PARSE_FORMAT);
+        this(name, CalendarDateFormat.DEFAULT_PARSE_FORMAT, Value.DATE_TIME);
     }
 
-    public DateProperty(final String name, CalendarDateFormat parseFormat) {
+    public DateProperty(final String name, CalendarDateFormat parseFormat, Value defaultValueParam) {
         super(name);
         this.parseFormat = parseFormat;
+        this.defaultValueParam = defaultValueParam;
     }
 
     /**
@@ -233,16 +239,16 @@ public abstract class DateProperty<T extends Temporal> extends Property {
          * ; the following is optional, ; and MAY occur more than once (";" xparam)
          */
 
-        final Optional<Value> value = getParameters().getFirst(VALUE);
+        final Value value = (Value) getParameters().getFirst(VALUE).orElse(defaultValueParam);
 
         if (date != null) {
             if (date.getTemporal() instanceof LocalDate) {
-                if (value.isPresent() && !Value.DATE.equals(value.get())) {
-                    throw new ValidationException("VALUE parameter [" + value.get() + "] is invalid for DATE instance");
+                if (!Value.DATE.equals(value)) {
+                    throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE instance");
                 }
             } else {
-                if (value.isPresent() && !Value.DATE_TIME.equals(value.get())) {
-                    throw new ValidationException("VALUE parameter [" + value.get() + "] is invalid for DATE-TIME instance");
+                if (!Value.DATE_TIME.equals(value)) {
+                    throw new ValidationException("VALUE parameter [" + value + "] is invalid for DATE-TIME instance");
                 }
             }
         }

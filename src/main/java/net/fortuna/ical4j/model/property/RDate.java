@@ -147,7 +147,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param aValue a value string for this component
      */
     public RDate(final ParameterList aList, final String aValue) {
-        super(RDATE, aList);
+        super(RDATE, aList, Value.DATE_TIME);
         periods = null;
         setValue(aValue);
     }
@@ -169,7 +169,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param dates a list of dates
      */
     public RDate(final ParameterList aList, final DateList<T> dates) {
-        super(RDATE, aList, dates);
+        super(RDATE, aList, dates, Value.DATE_TIME);
         periods = null;
     }
 
@@ -190,7 +190,7 @@ public class RDate<T extends Temporal> extends DateListProperty<T> {
      * @param periods a list of periods
      */
     public RDate(final ParameterList aList, final List<Period<T>> periods) {
-        super(RDATE, aList, new DateList<>());
+        super(RDATE, aList, new DateList<>(), Value.DATE_TIME);
         this.periods = new PeriodList<>(periods);
     }
 

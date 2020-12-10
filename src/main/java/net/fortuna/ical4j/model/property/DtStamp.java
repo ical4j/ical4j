@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.CalendarDateFormat;
 import net.fortuna.ical4j.model.Content;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.PropertyFactory;
+import net.fortuna.ical4j.model.parameter.Value;
 
 import java.time.Instant;
 
@@ -107,7 +108,7 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
      * @param aValue a value string for this component
      */
     public DtStamp(final ParameterList aList, final String aValue) {
-        super(DTSTAMP, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(DTSTAMP, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setValue(aValue);
     }
 
@@ -115,7 +116,7 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
      * @param aDate a date representing a date-time
      */
     public DtStamp(final Instant aDate) {
-        super(DTSTAMP, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(DTSTAMP, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 
@@ -124,7 +125,7 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
      * @param aDate a date representing a date-time
      */
     public DtStamp(final ParameterList aList, final Instant aDate) {
-        super(DTSTAMP, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
+        super(DTSTAMP, aList, CalendarDateFormat.UTC_DATE_TIME_FORMAT, Value.DATE_TIME);
         setDate(aDate);
     }
 
