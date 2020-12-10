@@ -40,7 +40,10 @@ import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.transform.recurrence.Frequency;
-import net.fortuna.ical4j.util.*;
+import net.fortuna.ical4j.util.Calendars;
+import net.fortuna.ical4j.util.CompatibilityHints;
+import net.fortuna.ical4j.util.RandomUidGenerator;
+import net.fortuna.ical4j.util.UidGenerator;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -234,14 +237,11 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         ZonedDateTime queryStart = ZonedDateTime.now().withYear(2005).withMonth(4).withDayOfMonth(1)
                 .withHour(14).withMinute(47).withSecond(0).withNano(0);
 
-        ZonedDateTime queryEnd = ZonedDateTime.now().withYear(2005).withMonth(5).withDayOfMonth(1)
-                .withHour(7).withMinute(15).withSecond(0).withNano(0);
+        ZonedDateTime queryEnd = queryStart.withMonth(5).withHour(7).withMinute(15);
 
-        ZonedDateTime week1EndDate = ZonedDateTime.now().withYear(2005).withMonth(4).withDayOfMonth(8)
-                .withHour(11).withMinute(15).withSecond(0).withNano(0);
+        ZonedDateTime week1EndDate = queryStart.withDayOfMonth(8).withHour(11).withMinute(15);
 
-        ZonedDateTime week4StartDate = ZonedDateTime.now().withYear(2005).withMonth(4).withDayOfMonth(24)
-                .withHour(14).withMinute(47).withSecond(0).withNano(0);
+        ZonedDateTime week4StartDate = queryStart.withDayOfMonth(24).withHour(14).withMinute(47);
 
         // This range is monday to friday every three weeks, starting from
         // March 7th 2005, which means for our query dates we need
@@ -250,14 +250,9 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 //        PeriodList dailyPeriods = dailyWeekdayEvents.getConsumedTime(queryStart, queryEnd);
 //                                                      week1EndDate.getTime());
 //        dailyPeriods.addAll(dailyWeekdayEvents.getConsumedTime(week4Start, queryEnd));
+        ZonedDateTime expectedStartOfFirstRange = queryStart.withHour(9).withMinute(0);
+        ZonedDateTime expectedEndOfFirstRange = queryStart.withHour(17).withMinute(0);
 
-        java.util.Calendar expectedCal = java.util.Calendar.getInstance(TimeZone.getTimeZone(TimeZones.GMT_ID));
-        expectedCal.set(2005, java.util.Calendar.APRIL, 1, 9, 0, 0);
-        expectedCal.set(java.util.Calendar.MILLISECOND, 0);
-        Date expectedStartOfFirstRange = new DateTime(expectedCal.getTime().getTime());
-        expectedCal.set(2005, java.util.Calendar.APRIL, 1, 17, 0, 0);
-        expectedCal.set(java.util.Calendar.MILLISECOND, 0);
-        Date expectedEndOfFirstRange = new DateTime(expectedCal.getTime().getTime());
         assertNotNull(weeklyPeriods);
         assertTrue(weeklyPeriods.size() > 0);
         Period firstPeriod = (Period) weeklyPeriods.toArray()[0];
