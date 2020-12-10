@@ -355,13 +355,13 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         net.fortuna.ical4j.model.Calendar calendar = loadCalendar(resource);
 
-        LocalDate start = LocalDate.now();
-        LocalDate end = start.plusWeeks(4);
+        ZonedDateTime start = ZonedDateTime.now();
+        ZonedDateTime end = start.plusWeeks(4);
 
         //Date end = new Date(start.getTime() + (1000 * 60 * 60 * 24 * 7 * 4));
         calendar.getComponents().getAll().forEach(calendarComponent -> {
             if (calendarComponent instanceof VEvent) {
-                List<Period<LocalDate>> consumed = ((VEvent) calendarComponent).getConsumedTime(
+                List<Period<ZonedDateTime>> consumed = ((VEvent) calendarComponent).getConsumedTime(
                         new Period<>(start, end));
 
                 log.debug("Event [" + calendarComponent + "]");
@@ -415,8 +415,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
     public final void testEventEndDate() {
         LocalDate startDate = LocalDate.now();
         log.info("Start date: " + startDate);
-        VEvent event = new VEvent(startDate,
-                java.time.Duration.ofDays(3), "3 day event");
+        VEvent event = new VEvent(startDate, java.time.Period.ofDays(3), "3 day event");
         Temporal endDate = event.getEndDate().get().getDate();
         log.info("End date: " + endDate);
         assertEquals(startDate.plusDays(3), endDate);
@@ -445,16 +444,16 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         VEvent event1 = new VEvent(TemporalAdapter.parse("20050103T080000").getTemporal(),
                 java.time.Duration.ofMinutes(15), "Event 1");
 
-        Recur rRuleRecur = new Recur("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
-        RRule rRule = new RRule(rRuleRecur);
+        Recur<LocalDateTime> rRuleRecur = new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
+        RRule<LocalDateTime> rRule = new RRule<>(rRuleRecur);
         event1.add(rRule);
 
         ParameterList parameterList = new ParameterList(Collections.singletonList(Value.DATE));
-        ExDate exDate = new ExDate(parameterList, "20050106");
+        ExDate<LocalDateTime> exDate = new ExDate<>(parameterList, "20050106T000000");
         event1.add(exDate);
 
-        TemporalAdapter start = TemporalAdapter.parse("20050106");
-        TemporalAdapter end = TemporalAdapter.parse("20050107");
+        TemporalAdapter<LocalDateTime> start = TemporalAdapter.parse("20050106T000000");
+        TemporalAdapter<LocalDateTime> end = TemporalAdapter.parse("20050107T000000");
         List<Period<Temporal>> list = event1.getConsumedTime(new Period<>(start.getTemporal(), end.getTemporal()));
         assertTrue(list.isEmpty());
     }
@@ -470,10 +469,10 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
 
         VEvent event = calendar.getComponents().getRequired(Component.VEVENT);
 
-        LocalDate start = LocalDate.now().withYear(1997).withMonth(8).withDayOfMonth(2);
-        LocalDate end = start.withDayOfMonth(4);
+        ZonedDateTime start = ZonedDateTime.now().withYear(1997).withMonth(8).withDayOfMonth(2);
+        ZonedDateTime end = start.withDayOfMonth(4);
 
-        List<Period<LocalDate>> periods = event.getConsumedTime(new Period<>(start, end));
+        List<Period<ZonedDateTime>> periods = event.getConsumedTime(new Period<>(start, end));
         assertTrue(periods.isEmpty());
     }
 
@@ -529,35 +528,35 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
                 .withHour(17).withMinute(0).withSecond(0).withNano(0);
 
         // Do the recurrence until December 31st.
-        LocalDate until = LocalDate.now().withYear(2005).withMonth(12).withDayOfMonth(31);
+        ZonedDateTime until = ZonedDateTime.now().withYear(2005).withMonth(12).withDayOfMonth(31);
 
         // 9:00AM to 5:00PM Rule using weekly
-        Recur recurWeekly = new Recur.Builder().frequency(Frequency.WEEKLY).until(until)
+        Recur<ZonedDateTime> recurWeekly = new Recur.Builder<ZonedDateTime>().frequency(Frequency.WEEKLY).until(until)
             .dayList(new WeekDayList(MO, TU, WE, TH, FR))
             .interval(1).weekStartDay(MO).build();
-        RRule rruleWeekly = new RRule(recurWeekly);
+        RRule<ZonedDateTime> rruleWeekly = new RRule<>(recurWeekly);
 
         // 9:00AM to 5:00PM Rule using daily frequency
-        Recur recurDaily = new Recur.Builder().frequency(Frequency.DAILY).until(until)
+        Recur<ZonedDateTime> recurDaily = new Recur.Builder<ZonedDateTime>().frequency(Frequency.DAILY).until(until)
             .dayList(new WeekDayList(MO, TU, WE, TH, FR))
             .interval(1).weekStartDay(MO).build();
-        RRule rruleDaily = new RRule(recurDaily);
+        RRule<ZonedDateTime> rruleDaily = new RRule<>(recurDaily);
 
         // 9:00AM to 5:00PM Rule using monthly frequency
-        Recur recurMonthly = new Recur.Builder().frequency(Frequency.MONTHLY).until(until)
+        Recur<ZonedDateTime> recurMonthly = new Recur.Builder<ZonedDateTime>().frequency(Frequency.MONTHLY).until(until)
             .dayList(new WeekDayList(MO, TU, WE, TH, FR))
             .interval(1).weekStartDay(MO).build();
-        RRule rruleMonthly = new RRule(recurMonthly);
+        RRule<ZonedDateTime> rruleMonthly = new RRule<>(recurMonthly);
 
         Summary summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED WEEKLY");
 
         ParameterList tzParams = new ParameterList(Collections.singletonList(new TzId("Australia/Melbourne")));
 
         VEvent weekdayNineToFiveEvents = new VEvent().add(rruleWeekly).add(summary);
-        DtStart dtStart = new DtStart<>(tzParams, weekday9AM);
+        DtStart<ZonedDateTime> dtStart = new DtStart<>(tzParams, weekday9AM);
 //        dtStart.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.add(dtStart);
-        DtEnd dtEnd = new DtEnd<>(tzParams, weekday5PM);
+        DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd.getParameters().add(Value.DATE);
         weekdayNineToFiveEvents.add(dtEnd).add(uidGenerator.generateUid());
         // ensure event is valid..
@@ -566,10 +565,10 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED DAILY");
 
         VEvent dailyWeekdayEvents = new VEvent().add(rruleDaily).add(summary);
-        DtStart dtStart2 = new DtStart<>(tzParams, weekday9AM);
+        DtStart<ZonedDateTime> dtStart2 = new DtStart<>(tzParams, weekday9AM);
 //        dtStart2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.add(dtStart2);
-        DtEnd dtEnd2 = new DtEnd<>(tzParams, weekday5PM);
+        DtEnd<ZonedDateTime> dtEnd2 = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd2.getParameters().add(Value.DATE);
         dailyWeekdayEvents.add(dtEnd2).add(uidGenerator.generateUid());
         // ensure event is valid..
@@ -578,10 +577,10 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         summary = new Summary("TEST EVENTS THAT HAPPEN 9-5 MON-FRI DEFINED MONTHLY");
 
         VEvent monthlyWeekdayEvents = new VEvent().add(rruleMonthly).add(summary);
-        DtStart dtStart3 = new DtStart<>(tzParams, weekday9AM);
+        DtStart<ZonedDateTime> dtStart3 = new DtStart<>(tzParams, weekday9AM);
 //        dtStart3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.add(dtStart3);
-        DtEnd dtEnd3 = new DtEnd<>(tzParams, weekday5PM);
+        DtEnd<ZonedDateTime> dtEnd3 = new DtEnd<>(tzParams, weekday5PM);
 //        dtEnd3.getParameters().add(Value.DATE);
         monthlyWeekdayEvents.add(dtEnd3).add(uidGenerator.generateUid());
         // ensure event is valid..
@@ -593,9 +592,11 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         TestSuite suite = new TestSuite();
 
         //testCalculateRecurrenceSet..
-        LocalDateTime periodStart = (LocalDateTime) TemporalAdapter.parse("20050101T000000").getTemporal();
-        LocalDateTime periodEnd = (LocalDateTime) TemporalAdapter.parse("20051231T235959").getTemporal();
-        Period<LocalDateTime> period = new Period<>(periodStart, periodEnd);
+        ZonedDateTime periodStart = (ZonedDateTime) TemporalAdapter.parse("20050101T000000",
+                ZoneId.systemDefault()).getTemporal();
+        ZonedDateTime periodEnd = (ZonedDateTime) TemporalAdapter.parse("20051231T235959",
+                ZoneId.systemDefault()).getTemporal();
+        Period<ZonedDateTime> period = new Period<>(periodStart, periodEnd);
         suite.addTest(new VEventTest<>("testCalculateRecurrenceSetNotEmpty", weekdayNineToFiveEvents, period));
 
         //testGetOccurrence..
