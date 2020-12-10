@@ -31,19 +31,17 @@
  */
 package net.fortuna.ical4j.model.property;
 
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
-import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.CompatibilityHints;
-import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * $Id$
@@ -76,7 +74,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
 
     private DateList<T> dates;
 
-    private ZoneId timeZone;
+    private transient TimeZoneRegistry timeZoneRegistry;
 
     /**
      * @param name the property name
@@ -117,64 +115,43 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     /**
      * @return Returns the dates.
      */
+    @SuppressWarnings("unchecked")
     public final List<T> getDates() {
-        return dates.getDates();
+        Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
+        if (tzId.isPresent()) {
+            return dates.getDates().stream().map(date -> (T) TemporalAdapter.toLocalTime(
+                    date, tzId.get().toZoneId(timeZoneRegistry))).collect(Collectors.toList());
+        } else {
+            return dates.getDates();
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public void setValue(final String aValue) {
-        dates = DateList.parse(aValue);
+        Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
+        if (tzId.isPresent()) {
+            dates = DateList.parse(aValue, tzId.get(), timeZoneRegistry);
+        } else {
+            dates = DateList.parse(aValue);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     public String getValue() {
-        return Strings.valueOf(dates);
-    }
-
-    /**
-     * Sets the timezone associated with this property.
-     *
-     * @param timezone a timezone to associate with this property
-     */
-    public void setTimeZone(final ZoneId timezone) {
-        if (dates == null) {
-            throw new UnsupportedOperationException("TimeZone is not applicable to current value");
-        }
-        this.timeZone = timezone;
-        if (timezone != null) {
-            final net.fortuna.ical4j.model.parameter.TzId tzId = new net.fortuna.ical4j.model.parameter.TzId(timezone.getId());
-            setParameters((ParameterList) getParameters().replace(tzId));
+        Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
+        if (tzId.isPresent()) {
+            return dates.toString(tzId.get().toZoneId(timeZoneRegistry));
         } else {
-            // use setUtc() to reset timezone..
-            setUtc(false);
+            return dates.toString();
         }
     }
 
-    /**
-     * @return the timezone
-     */
-    public final ZoneId getTimeZone() {
-        return timeZone;
-    }
-
-    /**
-     * Resets the timezone associated with the property. If utc is true, any TZID parameters are removed and the Java
-     * timezone is updated to UTC time. If utc is false, TZID parameters are removed and the Java timezone is set to the
-     * default timezone (i.e. represents a "floating" local time)
-     *
-     * @param utc the UTC value
-     */
-    public final void setUtc(final boolean utc) {
-        if (dates == null) {
-            throw new UnsupportedOperationException("TimeZone is not applicable to current value");
-        }
-        if (utc) {
-            setParameters((ParameterList) getParameters().removeAll(Parameter.TZID));
-        }
+    public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
+        this.timeZoneRegistry = timeZoneRegistry;
     }
 
     @Override

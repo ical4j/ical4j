@@ -34,7 +34,7 @@ package net.fortuna.ical4j.model.property;
 import junit.framework.TestSuite;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyTest;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.parameter.TzId;
 
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -74,12 +74,6 @@ public class DateListPropertyTest extends PropertyTest {
     public void testCopy() throws URISyntaxException {
         Property copy = property.copy();
         assertEquals(property, copy);
-        if (property.getTimeZone() != null) {
-            assertEquals(property.getTimeZone(), ((DateListProperty) copy).getTimeZone());
-        }
-        else {
-            assertNull(((DateListProperty) copy).getTimeZone());
-        }
     }
 
     /**
@@ -92,7 +86,7 @@ public class DateListPropertyTest extends PropertyTest {
         suite.addTest(new DateListPropertyTest("testCopy", exZulu));
 
         ExDate exMelbourne = new ExDate();
-        exMelbourne.setTimeZone(TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne"));
+        exMelbourne.add(new TzId("Australia/Melbourne"));
         exMelbourne.setValue("20111212T000000");
 
         suite.addTest(new DateListPropertyTest("testCopy", exMelbourne));

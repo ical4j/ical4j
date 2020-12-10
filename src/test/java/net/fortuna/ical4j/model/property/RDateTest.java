@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property;
 
 import net.fortuna.ical4j.model.*;
+import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.util.Strings;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -85,7 +86,7 @@ public class RDateTest {
         }
         */
 
-        rDate.setTimeZone(timezone);
+        rDate.add(new TzId(timezone.getId()));
         assertEquals(timezone.getId(), rDate.getParameters().getFirst(Parameter.TZID).get().getValue());
     }
 

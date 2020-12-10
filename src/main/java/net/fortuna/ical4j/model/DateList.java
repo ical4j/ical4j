@@ -31,6 +31,8 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.parameter.TzId;
+
 import java.io.Serializable;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
@@ -101,6 +103,12 @@ public class DateList<T extends Temporal> implements Serializable {
         } else {
             return new DateList<>((List<T>) dates);
         }
+    }
+
+    public static <T extends Temporal> DateList<T> parse(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
+        List<Temporal> dates = Arrays.stream(value.split(",")).map(s -> TemporalAdapter.parse(s, tzId, timeZoneRegistry))
+                .map(TemporalAdapter::getTemporal).collect(Collectors.toList());
+        return new DateList<>((List<T>) dates);
     }
 
     @Override

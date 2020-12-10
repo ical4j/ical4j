@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
@@ -59,6 +60,9 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
                 if (property instanceof DateProperty) {
                     ((DateProperty<?>) property).setTimeZoneRegistry(timeZoneRegistry);
+                    property.setValue(value);
+                } else if (property instanceof DateListProperty) {
+                    ((DateListProperty<?>) property).setTimeZoneRegistry(timeZoneRegistry);
                     property.setValue(value);
                 }
             }
