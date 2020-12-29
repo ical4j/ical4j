@@ -166,10 +166,11 @@ public class TimeZoneRegistryImpl implements TimeZoneRegistry {
      */
     @Override
     public final TimeZone getTimeZone(final String id) {
-        Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
-
         TimeZone timezone = timezones.get(id);
         if (timezone == null) {
+            /* A blank TZID is only invalid if it is not declared under the
+             * TZID property in the BEGIN:TIMEZONE section. */
+            Validate.notBlank(id, "Invalid TimeZone ID: [%s]", id);
             timezone = DEFAULT_TIMEZONES.get(id);
             if (timezone == null) {
                 // if timezone not found with identifier, try loading an alias..

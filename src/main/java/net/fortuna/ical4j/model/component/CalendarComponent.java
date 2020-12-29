@@ -158,7 +158,7 @@ public abstract class CalendarComponent extends Component {
     }
 
     /**
-     * Apply validation for METHOD=DECLINE-COUNTER.
+     * Apply validation for METHOD=DECLINECOUNTER.
      * @throws ValidationException where the component does not comply with RFC2446
      * @deprecated
      */

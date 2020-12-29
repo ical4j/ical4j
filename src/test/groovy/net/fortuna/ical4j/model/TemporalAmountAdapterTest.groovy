@@ -56,8 +56,15 @@ class TemporalAmountAdapterTest extends Specification {
     }
 
     def 'test creation from  date range'() {
+        setup: 'Override default timezone for test consistency'
+        def originalTimezone = TimeZone.default
+        TimeZone.default = TimeZone.getTimeZone('Australia/Melbourne')
+
         expect:
         TemporalAmountAdapter.fromDateRange(new DateTime(start), new DateTime(end)).duration == expectedTemporalAmount
+
+        cleanup:
+        TimeZone.default = originalTimezone
 
         where:
         start   | end   | expectedTemporalAmount
