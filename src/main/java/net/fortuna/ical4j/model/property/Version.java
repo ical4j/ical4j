@@ -66,16 +66,19 @@ public class Version extends Property {
             super(new ParameterList(), value);
         }
 
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
 
+        @Override
         public void setMaxVersion(final String maxVersion) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
 
+        @Override
         public void setMinVersion(final String minVersion) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -170,6 +173,7 @@ public class Version extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         if (aValue.indexOf(';') >= 0) {
             this.minVersion = aValue.substring(0, aValue.indexOf(';') - 1);
@@ -182,6 +186,7 @@ public class Version extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         final StringBuilder b = new StringBuilder();
         if (getMinVersion() != null) {
@@ -227,6 +232,7 @@ public class Version extends Property {
             super(VERSION);
         }
 
+        @Override
         public Version createProperty(final ParameterList parameters, final String value) {
             Version version;
             if (VERSION_2_0.getValue().equals(value)) {
@@ -237,6 +243,7 @@ public class Version extends Property {
             return version;
         }
 
+        @Override
         public Version createProperty() {
             return new Version();
         }

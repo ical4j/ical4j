@@ -121,6 +121,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         // relax validation to avoid UID requirement..
@@ -135,6 +136,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         // relax validation to avoid UID requirement..
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);

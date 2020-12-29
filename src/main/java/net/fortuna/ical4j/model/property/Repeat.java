@@ -95,6 +95,7 @@ public class Repeat extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         count = Integer.parseInt(aValue);
     }
@@ -102,6 +103,7 @@ public class Repeat extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return String.valueOf(getCount());
     }
@@ -130,10 +132,12 @@ public class Repeat extends Property {
             super(REPEAT);
         }
 
+        @Override
         public Repeat createProperty(final ParameterList parameters, final String value) {
             return new Repeat(parameters, value);
         }
 
+        @Override
         public Repeat createProperty() {
             return new Repeat();
         }

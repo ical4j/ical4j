@@ -71,6 +71,7 @@ public class DateListPropertyTest extends PropertyTest {
     /**
      * 
      */
+    @Override
     public void testCopy() throws URISyntaxException {
         Property copy = property.copy();
         assertEquals(property, copy);

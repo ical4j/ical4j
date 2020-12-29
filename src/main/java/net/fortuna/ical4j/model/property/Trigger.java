@@ -250,6 +250,7 @@ public class Trigger extends DateProperty<Instant> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
         super.validate();
 
@@ -269,6 +270,7 @@ public class Trigger extends DateProperty<Instant> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         try {
             super.setValue(aValue);
@@ -283,6 +285,7 @@ public class Trigger extends DateProperty<Instant> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         if (duration != null) {
             return duration.toString();
@@ -293,6 +296,7 @@ public class Trigger extends DateProperty<Instant> {
     /**
      * @param dateTime The dateTime to set.
      */
+    @Override
     public void setDate(final Instant dateTime) {
         super.setDate(dateTime);
         duration = null;
@@ -322,10 +326,12 @@ public class Trigger extends DateProperty<Instant> {
             super(TRIGGER);
         }
 
+        @Override
         public Trigger createProperty(final ParameterList parameters, final String value) {
             return new Trigger(parameters, value);
         }
 
+        @Override
         public Trigger createProperty() {
             return new Trigger();
         }

@@ -84,6 +84,7 @@ public class TzName extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -91,6 +92,7 @@ public class TzName extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -112,10 +114,12 @@ public class TzName extends Property implements Escapable {
             super(TZNAME);
         }
 
+        @Override
         public TzName createProperty(final ParameterList parameters, final String value) {
             return new TzName(parameters, value);
         }
 
+        @Override
         public TzName createProperty() {
             return new TzName();
         }

@@ -135,6 +135,7 @@ public class TzId extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -142,6 +143,7 @@ public class TzId extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -163,10 +165,12 @@ public class TzId extends Property implements Escapable {
             super(TZID);
         }
 
+        @Override
         public TzId createProperty(final ParameterList parameters, final String value) {
             return new TzId(parameters, value);
         }
 
+        @Override
         public TzId createProperty() {
             return new TzId();
         }

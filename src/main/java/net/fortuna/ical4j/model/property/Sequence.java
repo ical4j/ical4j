@@ -185,6 +185,7 @@ public class Sequence extends Property implements Comparable<Sequence> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         sequenceNo = Integer.parseInt(aValue);
     }
@@ -192,6 +193,7 @@ public class Sequence extends Property implements Comparable<Sequence> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return String.valueOf(getSequenceNo());
     }
@@ -218,10 +220,12 @@ public class Sequence extends Property implements Comparable<Sequence> {
             super(SEQUENCE);
         }
 
+        @Override
         public Sequence createProperty(final ParameterList parameters, final String value) {
             return new Sequence(parameters, value);
         }
 
+        @Override
         public Sequence createProperty() {
             return new Sequence();
         }

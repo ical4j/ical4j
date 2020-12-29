@@ -56,6 +56,7 @@ public class ObservanceTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         observance = new Standard().add(new DtStart("16010101T030000"))
                 .add(new TzOffsetFrom("+0200"))

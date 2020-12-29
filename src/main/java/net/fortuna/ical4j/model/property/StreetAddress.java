@@ -77,6 +77,7 @@ public class StreetAddress extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -84,6 +85,7 @@ public class StreetAddress extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -105,10 +107,12 @@ public class StreetAddress extends Property implements Escapable {
             super(STREET_ADDRESS);
         }
 
+        @Override
         public StreetAddress createProperty(final ParameterList parameters, final String value) {
             return new StreetAddress(parameters, value);
         }
 
+        @Override
         public StreetAddress createProperty() {
             return new StreetAddress();
         }

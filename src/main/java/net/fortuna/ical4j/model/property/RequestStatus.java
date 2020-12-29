@@ -152,6 +152,7 @@ public class RequestStatus extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         String[] values = aValue.split(";");
         if (values.length > 0) {
@@ -168,6 +169,7 @@ public class RequestStatus extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         final StringBuilder b = new StringBuilder();
 
@@ -226,10 +228,12 @@ public class RequestStatus extends Property {
             super(REQUEST_STATUS);
         }
 
+        @Override
         public RequestStatus createProperty(final ParameterList parameters, final String value) {
             return new RequestStatus(parameters, value);
         }
 
+        @Override
         public RequestStatus createProperty() {
             return new RequestStatus();
         }

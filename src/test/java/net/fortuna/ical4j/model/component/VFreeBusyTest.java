@@ -137,6 +137,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      * 
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         // relax validation to avoid UID requirement..
@@ -152,6 +153,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
         super.tearDown();

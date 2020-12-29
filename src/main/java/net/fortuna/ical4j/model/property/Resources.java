@@ -105,6 +105,7 @@ public class Resources extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         resources = new TextList(aValue);
     }
@@ -112,6 +113,7 @@ public class Resources extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return resources.toString();
     }
@@ -133,10 +135,12 @@ public class Resources extends Property {
             super(RESOURCES);
         }
 
+        @Override
         public Resources createProperty(final ParameterList parameters, final String value) {
             return new Resources(parameters, value);
         }
 
+        @Override
         public Resources createProperty() {
             return new Resources();
         }

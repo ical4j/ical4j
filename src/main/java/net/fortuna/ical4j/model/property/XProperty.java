@@ -83,6 +83,7 @@ public class XProperty extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -90,6 +91,7 @@ public class XProperty extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -97,6 +99,7 @@ public class XProperty extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
         
         if (!CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)

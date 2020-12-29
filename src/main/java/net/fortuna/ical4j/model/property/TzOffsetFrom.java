@@ -119,6 +119,7 @@ public class TzOffsetFrom extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         offset = new ZoneOffsetAdapter(ZoneOffset.of(aValue));
     }
@@ -126,6 +127,7 @@ public class TzOffsetFrom extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         if (offset != null) {
             return offset.toString();
@@ -157,10 +159,12 @@ public class TzOffsetFrom extends Property {
             super(TZOFFSETFROM);
         }
 
+        @Override
         public TzOffsetFrom createProperty(final ParameterList parameters, final String value) {
             return new TzOffsetFrom(parameters, value);
         }
 
+        @Override
         public TzOffsetFrom createProperty() {
             return new TzOffsetFrom();
         }

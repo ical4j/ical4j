@@ -49,6 +49,7 @@ public class AltRepTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         CompatibilityHints.setHintEnabled(
@@ -56,7 +57,8 @@ public class AltRepTest extends TestCase {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_NOTES_COMPATIBILITY, false);
     }
-    
+
+    @Override
     protected void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_NOTES_COMPATIBILITY);

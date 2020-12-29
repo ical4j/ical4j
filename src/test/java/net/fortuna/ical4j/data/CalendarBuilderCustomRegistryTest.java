@@ -77,6 +77,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
         /**
          * {@inheritDoc}
          */
+        @Override
         public final String getValue() {
             return value;
         }
@@ -106,6 +107,7 @@ public class CalendarBuilderCustomRegistryTest extends TestCase {
                     return SCHEDULE_STATUS.equals(name);
                 }
 
+                @Override
                 public Parameter createParameter(final String value) throws URISyntaxException {
                     return new ScheduleStatus(value);
                 }

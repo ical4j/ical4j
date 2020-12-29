@@ -67,6 +67,7 @@ public class AttachTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         super.setUp();
         FileInputStream fin = new FileInputStream("etc/artwork/logo.png");

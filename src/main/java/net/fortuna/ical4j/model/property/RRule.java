@@ -106,6 +106,7 @@ public class RRule<T extends Temporal> extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         recur = new Recur<>(aValue);
     }
@@ -113,6 +114,7 @@ public class RRule<T extends Temporal> extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getRecur().toString();
     }
@@ -134,10 +136,12 @@ public class RRule<T extends Temporal> extends Property {
             super(RRULE);
         }
 
+        @Override
         public RRule<T> createProperty(final ParameterList parameters, final String value) {
             return new RRule<>(parameters, value);
         }
 
+        @Override
         public RRule<T> createProperty() {
             return new RRule<>();
         }

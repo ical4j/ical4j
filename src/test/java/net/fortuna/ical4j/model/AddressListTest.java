@@ -78,6 +78,7 @@ public class AddressListTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
     	for (int i = 0; i < compatibilityHints.length; i++) {
     		CompatibilityHints.setHintEnabled(compatibilityHints[i], true);
@@ -87,6 +88,7 @@ public class AddressListTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
     	for (int i = 0; i < compatibilityHints.length; i++) {
     		CompatibilityHints.clearHintEnabled(compatibilityHints[i]);
