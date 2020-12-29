@@ -91,6 +91,7 @@ public class Action extends Property {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -126,6 +127,7 @@ public class Action extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -133,6 +135,7 @@ public class Action extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -149,6 +152,7 @@ public class Action extends Property {
             super(ACTION);
         }
 
+        @Override
         public Action createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
@@ -170,6 +174,7 @@ public class Action extends Property {
             return action;
         }
 
+        @Override
         public Action createProperty() {
             return new Action();
         }
