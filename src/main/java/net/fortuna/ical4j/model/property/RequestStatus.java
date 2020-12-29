@@ -158,6 +158,7 @@ public class RequestStatus extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         final StringTokenizer t = new StringTokenizer(aValue, ";");
 
@@ -177,6 +178,7 @@ public class RequestStatus extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         final StringBuilder b = new StringBuilder();
 
@@ -230,11 +232,13 @@ public class RequestStatus extends Property {
             super(REQUEST_STATUS);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RequestStatus(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new RequestStatus();
         }
