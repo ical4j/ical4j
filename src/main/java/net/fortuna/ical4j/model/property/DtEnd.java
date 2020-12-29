@@ -201,11 +201,13 @@ public class DtEnd extends DateProperty {
             super(DTEND);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new DtEnd(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new DtEnd();
         }
