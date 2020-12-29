@@ -101,6 +101,7 @@ public class ExRule extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws ParseException {
         recur = new Recur(aValue);
     }
@@ -108,6 +109,7 @@ public class ExRule extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getRecur().toString();
     }
@@ -131,11 +133,13 @@ public class ExRule extends Property {
             super(EXRULE);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new ExRule(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new ExRule();
         }

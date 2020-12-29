@@ -164,6 +164,7 @@ public class FreeBusy extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
 
         /*
@@ -191,6 +192,7 @@ public class FreeBusy extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws ParseException {
         periods = new PeriodList(aValue);
     }
@@ -198,6 +200,7 @@ public class FreeBusy extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getPeriods().toString();
     }
@@ -209,11 +212,13 @@ public class FreeBusy extends Property {
             super(FREEBUSY);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new FreeBusy(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new FreeBusy();
         }

@@ -182,6 +182,7 @@ public class Duration extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         duration = TemporalAmountAdapter.parse(aValue);
     }
@@ -189,6 +190,7 @@ public class Duration extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return duration.toString();
     }
@@ -212,11 +214,13 @@ public class Duration extends Property {
             super(DURATION);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Duration(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new Duration();
         }
