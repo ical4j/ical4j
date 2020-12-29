@@ -8,7 +8,6 @@ import net.fortuna.ical4j.model.property.Uid;
 import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Support for operations applicable to a group of components. Typically this class is used to manage

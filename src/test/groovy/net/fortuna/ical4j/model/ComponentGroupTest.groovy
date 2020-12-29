@@ -80,7 +80,7 @@ class ComponentGroupTest extends Specification {
     }
 
     def "CalculateRecurrenceSet"() {
-        given: 'an event with 2 revisions'
+        given: 'an event with a revision'
         def components = new ComponentList<VEvent>([event, rev1])
 
         when: 'recurrence instances are calculated'
@@ -92,14 +92,14 @@ class ComponentGroupTest extends Specification {
     }
 
     def "CalculateRecurrenceSetWithException"() {
-        given: 'an event with 2 revisions'
+        given: 'an event with 2 revisions and instance override'
         def components = new ComponentList<VEvent>([event, rev1, rev2, rev3])
 
         when: 'recurrence instances are calculated'
         Period period = Period.parse '20101113/P3W'
         def recurrences = new ComponentGroup(components.all, uid).calculateRecurrenceSet(period)
 
-        then: 'the expected number of recurrences are returned'
-        recurrences.size() == event.calculateRecurrenceSet(period).size()
+        then: 'the instance override is removed from the recurrence set'
+        recurrences.size() == event.calculateRecurrenceSet(period).normalise().size() - 1
     }
 }
