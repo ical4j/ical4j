@@ -62,6 +62,7 @@ public class Language extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -73,6 +74,7 @@ public class Language extends Parameter {
             super(LANGUAGE);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             return new Language(value);
         }
