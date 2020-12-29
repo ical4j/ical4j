@@ -136,6 +136,7 @@ public class Location extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -143,6 +144,7 @@ public class Location extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -164,10 +166,12 @@ public class Location extends Property implements Escapable {
             super(LOCATION);
         }
 
+        @Override
         public Location createProperty(final ParameterList parameters, final String value) {
             return new Location(parameters, value);
         }
 
+        @Override
         public Location createProperty() {
             return new Location();
         }

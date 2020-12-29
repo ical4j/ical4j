@@ -95,6 +95,7 @@ public class PercentComplete extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         percentage = Integer.parseInt(aValue);
     }
@@ -102,6 +103,7 @@ public class PercentComplete extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return String.valueOf(getPercentage());
     }
@@ -116,6 +118,7 @@ public class PercentComplete extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
         if (percentage < 0 || percentage > 100) {
             throw new ValidationException(getName() + " with invalid value: " + percentage);
@@ -134,10 +137,12 @@ public class PercentComplete extends Property {
             super(PERCENT_COMPLETE);
         }
 
+        @Override
         public PercentComplete createProperty(final ParameterList parameters, final String value) {
             return new PercentComplete(parameters, value);
         }
 
+        @Override
         public PercentComplete createProperty() {
             return new PercentComplete();
         }

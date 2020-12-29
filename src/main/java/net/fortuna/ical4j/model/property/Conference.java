@@ -51,10 +51,12 @@ public class Conference extends Property {
             super(PROPERTY_NAME);
         }
 
+        @Override
         public Conference createProperty() {
             return new Conference();
         }
 
+        @Override
         public Conference createProperty(ParameterList parameters, String value) {
             Conference property = new Conference(parameters, value);
             return property;

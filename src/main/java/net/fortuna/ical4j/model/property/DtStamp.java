@@ -146,10 +146,12 @@ public class DtStamp extends DateProperty<Instant> implements Comparable<DtStamp
             super(DTSTAMP);
         }
 
+        @Override
         public DtStamp createProperty(final ParameterList parameters, final String value) {
             return new DtStamp(parameters, value);
         }
 
+        @Override
         public DtStamp createProperty() {
             return new DtStamp();
         }

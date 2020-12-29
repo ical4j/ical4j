@@ -62,6 +62,7 @@ public class Cn extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -73,6 +74,7 @@ public class Cn extends Parameter {
             super(CN);
         }
 
+        @Override
         public Cn createParameter(final String value) throws URISyntaxException {
             return new Cn(value);
         }

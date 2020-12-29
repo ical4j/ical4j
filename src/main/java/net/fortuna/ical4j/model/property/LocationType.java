@@ -110,6 +110,7 @@ public class LocationType extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         locationTypes = Collections.singletonList(aValue);
     }
@@ -124,6 +125,7 @@ public class LocationType extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return String.join(",", locationTypes);
     }
@@ -145,10 +147,12 @@ public class LocationType extends Property {
             super(LOCATION_TYPE);
         }
 
+        @Override
         public LocationType createProperty(final ParameterList parameters, final String value) {
             return new LocationType(parameters, value);
         }
 
+        @Override
         public LocationType createProperty() {
             return new LocationType();
         }

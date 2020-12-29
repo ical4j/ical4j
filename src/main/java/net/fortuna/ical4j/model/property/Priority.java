@@ -154,10 +154,12 @@ public class Priority extends Property {
             super(level);
         }
 
+        @Override
         public void setValue(final String aValue) {
             throwException();
         }
 
+        @Override
         public void setLevel(final int level) {
             throwException();
         }
@@ -241,6 +243,7 @@ public class Priority extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         level = Integer.parseInt(aValue);
     }
@@ -248,6 +251,7 @@ public class Priority extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return String.valueOf(getLevel());
     }
@@ -276,6 +280,7 @@ public class Priority extends Property {
             super(PRIORITY);
         }
 
+        @Override
         public Priority createProperty(final ParameterList parameters, final String value) {
             Priority priority;
             if (HIGH.getValue().equals(value)) {
@@ -295,6 +300,7 @@ public class Priority extends Property {
             return priority;
         }
 
+        @Override
         public Priority createProperty() {
             return new Priority();
         }

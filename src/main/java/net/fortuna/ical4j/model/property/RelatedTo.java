@@ -84,6 +84,7 @@ public class RelatedTo extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -91,6 +92,7 @@ public class RelatedTo extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -112,10 +114,12 @@ public class RelatedTo extends Property implements Escapable {
             super(RELATED_TO);
         }
 
+        @Override
         public RelatedTo createProperty(final ParameterList parameters, final String value) {
             return new RelatedTo(parameters, value);
         }
 
+        @Override
         public RelatedTo createProperty() {
             return new RelatedTo();
         }

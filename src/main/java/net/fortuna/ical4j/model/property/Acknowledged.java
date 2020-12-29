@@ -152,10 +152,12 @@ public class Acknowledged extends DateProperty<Instant> {
             super(ACKNOWLEDGED);
         }
 
+        @Override
         public Acknowledged createProperty(final ParameterList parameters, final String value) {
             return new Acknowledged(parameters, value);
         }
 
+        @Override
         public Acknowledged createProperty() {
             return new Acknowledged();
         }

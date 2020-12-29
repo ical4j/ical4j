@@ -205,6 +205,7 @@ public class Geo extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         final String latitudeString = aValue.substring(0, aValue.indexOf(';'));
         if (StringUtils.isNotBlank(latitudeString)) {
@@ -224,6 +225,7 @@ public class Geo extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getLatitude() + ";"
                 + getLongitude();
@@ -255,10 +257,12 @@ public class Geo extends Property {
             super(GEO);
         }
 
+        @Override
         public Geo createProperty(final ParameterList parameters, final String value) {
             return new Geo(parameters, value);
         }
 
+        @Override
         public Geo createProperty() {
             return new Geo();
         }

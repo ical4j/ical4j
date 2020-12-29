@@ -63,6 +63,7 @@ public class Vvenue extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -74,6 +75,7 @@ public class Vvenue extends Parameter {
             super(VVENUE);
         }
 
+        @Override
         public Vvenue createParameter(final String value)
                 throws URISyntaxException {
             return new Vvenue(value);

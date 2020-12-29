@@ -79,6 +79,7 @@ public class Dir extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getUri()));
     }
@@ -90,6 +91,7 @@ public class Dir extends Parameter {
             super(DIR);
         }
 
+        @Override
         public Dir createParameter(final String value) throws URISyntaxException {
             return new Dir(value);
         }

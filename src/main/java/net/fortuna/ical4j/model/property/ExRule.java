@@ -95,6 +95,7 @@ public class ExRule extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         recur = new Recur(aValue);
     }
@@ -102,6 +103,7 @@ public class ExRule extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getRecur().toString();
     }
@@ -130,10 +132,12 @@ public class ExRule extends Property {
             super(EXRULE);
         }
 
+        @Override
         public ExRule createProperty(final ParameterList parameters, final String value) {
             return new ExRule(parameters, value);
         }
 
+        @Override
         public ExRule createProperty() {
             return new ExRule();
         }

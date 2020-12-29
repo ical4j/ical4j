@@ -171,6 +171,7 @@ public class Attach extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
 
         /*
@@ -219,6 +220,7 @@ public class Attach extends Property {
      * @param aValue a string encoded binary or URI value
      * @throws URISyntaxException where the specified value is not a valid URI
      */
+    @Override
     public final void setValue(final String aValue) throws
             URISyntaxException {
 
@@ -248,6 +250,7 @@ public class Attach extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         if (getUri() != null) {
             return Uris.decode(Strings.valueOf(getUri()));
@@ -296,10 +299,12 @@ public class Attach extends Property {
             super(ATTACH);
         }
 
+        @Override
         public Attach createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
             return new Attach(parameters, value);
         }
 
+        @Override
         public Attach createProperty() {
             return new Attach();
         }

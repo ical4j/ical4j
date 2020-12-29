@@ -93,6 +93,7 @@ public class BusyType extends Property {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException("Cannot modify constant instances");
         }
@@ -151,6 +152,7 @@ public class BusyType extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -158,6 +160,7 @@ public class BusyType extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -179,6 +182,7 @@ public class BusyType extends Property {
             super(BUSYTYPE);
         }
 
+        @Override
         public BusyType createProperty(final ParameterList parameters, final String value) {
             BusyType busyType;
             if (BUSY.getValue().equals(value)) {
@@ -193,6 +197,7 @@ public class BusyType extends Property {
             return busyType;
         }
 
+        @Override
         public BusyType createProperty() {
             return new BusyType();
         }

@@ -129,6 +129,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
         if (tzId.isPresent()) {
@@ -141,6 +142,7 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getValue() {
         Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
         if (tzId.isPresent()) {

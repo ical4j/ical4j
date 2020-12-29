@@ -182,6 +182,7 @@ public class Organizer extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
 
         /*
@@ -211,6 +212,7 @@ public class Organizer extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws URISyntaxException {
         calAddress = Uris.create(aValue);
     }
@@ -218,6 +220,7 @@ public class Organizer extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getCalAddress()));
     }
@@ -241,10 +244,12 @@ public class Organizer extends Property {
             super(ORGANIZER);
         }
 
+        @Override
         public Organizer createProperty(final ParameterList parameters, final String value) throws URISyntaxException {
             return new Organizer(parameters, value);
         }
 
+        @Override
         public Organizer createProperty() {
             return new Organizer();
         }

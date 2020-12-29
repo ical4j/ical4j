@@ -62,6 +62,7 @@ public class Type extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -73,6 +74,7 @@ public class Type extends Parameter {
             super(TYPE);
         }
 
+        @Override
         public Type createParameter(final String value) throws URISyntaxException {
             return new Type(value);
         }

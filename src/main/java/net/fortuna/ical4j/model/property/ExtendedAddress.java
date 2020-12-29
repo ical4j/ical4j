@@ -77,6 +77,7 @@ public class ExtendedAddress extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -84,6 +85,7 @@ public class ExtendedAddress extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -105,10 +107,12 @@ public class ExtendedAddress extends Property implements Escapable {
             super(EXTENDED_ADDRESS);
         }
 
+        @Override
         public ExtendedAddress createProperty(final ParameterList parameters, final String value) {
             return new ExtendedAddress(parameters, value);
         }
 
+        @Override
         public ExtendedAddress createProperty() {
             return new ExtendedAddress();
         }

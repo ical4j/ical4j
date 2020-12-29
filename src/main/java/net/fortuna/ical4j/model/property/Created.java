@@ -134,10 +134,12 @@ public class Created extends DateProperty<Instant> {
             super(CREATED);
         }
 
+        @Override
         public Created createProperty(final ParameterList parameters, final String value) {
             return new Created(parameters, value);
         }
 
+        @Override
         public Created createProperty() {
             return new Created();
         }

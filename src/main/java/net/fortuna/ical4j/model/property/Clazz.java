@@ -137,6 +137,7 @@ public class Clazz extends Property {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -184,6 +185,7 @@ public class Clazz extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -191,6 +193,7 @@ public class Clazz extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -207,6 +210,7 @@ public class Clazz extends Property {
             super(CLASS);
         }
 
+        @Override
         public Clazz createProperty(final ParameterList parameters, final String value) {
             Clazz clazz;
             if (CONFIDENTIAL.getValue().equals(value)) {
@@ -223,6 +227,7 @@ public class Clazz extends Property {
             return clazz;
         }
 
+        @Override
         public Clazz createProperty() {
             return new Clazz();
         }

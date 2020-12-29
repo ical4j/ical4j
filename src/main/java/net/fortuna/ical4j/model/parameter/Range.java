@@ -88,6 +88,7 @@ public class Range extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -99,6 +100,7 @@ public class Range extends Parameter {
             super(RANGE);
         }
 
+        @Override
         public Range createParameter(final String value) throws URISyntaxException {
             Range parameter = new Range(value);
             if (Range.THISANDFUTURE.equals(parameter)) {

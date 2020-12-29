@@ -181,10 +181,12 @@ public class DtEnd<T extends Temporal> extends DateProperty<T> {
             super(DTEND);
         }
 
+        @Override
         public DtEnd<T> createProperty(final ParameterList parameters, final String value) {
             return new DtEnd<>(parameters, value);
         }
 
+        @Override
         public DtEnd<T> createProperty() {
             return new DtEnd<>();
         }

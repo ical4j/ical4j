@@ -80,6 +80,7 @@ public class Email extends Parameter {
             super(PARAMETER_NAME);
         }
 
+        @Override
         public Email createParameter(final String value) {
             try {
                 return new Email(value);

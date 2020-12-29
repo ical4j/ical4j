@@ -155,6 +155,7 @@ public class FreeBusy extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
 
         /*
@@ -177,6 +178,7 @@ public class FreeBusy extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         periods = PeriodList.parse(aValue, CalendarDateFormat.UTC_DATE_TIME_FORMAT);
     }
@@ -184,6 +186,7 @@ public class FreeBusy extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return periods.toString();
     }
@@ -200,10 +203,12 @@ public class FreeBusy extends Property {
             super(FREEBUSY);
         }
 
+        @Override
         public FreeBusy createProperty(final ParameterList parameters, final String value) {
             return new FreeBusy(parameters, value);
         }
 
+        @Override
         public FreeBusy createProperty() {
             return new FreeBusy();
         }

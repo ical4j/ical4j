@@ -138,6 +138,7 @@ public class Encoding extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -149,6 +150,7 @@ public class Encoding extends Parameter {
             super(ENCODING);
         }
 
+        @Override
         public Encoding createParameter(final String value) throws URISyntaxException {
             Encoding parameter = new Encoding(value);
             if (Encoding.EIGHT_BIT.equals(parameter)) {

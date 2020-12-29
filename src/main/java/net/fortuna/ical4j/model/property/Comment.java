@@ -86,6 +86,7 @@ public class Comment extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -93,6 +94,7 @@ public class Comment extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -114,10 +116,12 @@ public class Comment extends Property implements Escapable {
             super(COMMENT);
         }
 
+        @Override
         public Comment createProperty(final ParameterList parameters, final String value) {
             return new Comment(parameters, value);
         }
 
+        @Override
         public Comment createProperty() {
             return new Comment();
         }

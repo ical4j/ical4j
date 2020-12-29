@@ -51,10 +51,12 @@ public class Color extends Property {
             super(PROPERTY_NAME);
         }
 
+        @Override
         public Color createProperty() {
             return new Color();
         }
 
+        @Override
         public Color createProperty(ParameterList parameters, String value) {
             Color property = new Color(parameters, value);
             return property;

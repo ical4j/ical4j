@@ -77,6 +77,7 @@ public class Name extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -84,6 +85,7 @@ public class Name extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -105,10 +107,12 @@ public class Name extends Property implements Escapable {
             super(NAME);
         }
 
+        @Override
         public Name createProperty(final ParameterList parameters, final String value) {
             return new Name(parameters, value);
         }
 
+        @Override
         public Name createProperty() {
             return new Name();
         }

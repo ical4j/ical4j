@@ -177,6 +177,7 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
         super.validate();
 
@@ -204,10 +205,12 @@ public class RecurrenceId<T extends Temporal> extends DateProperty<T> {
             super(RECURRENCE_ID);
         }
 
+        @Override
         public RecurrenceId<T> createProperty(final ParameterList parameters, final String value) {
             return new RecurrenceId<>(parameters, value);
         }
 
+        @Override
         public RecurrenceId<T> createProperty() {
             return new RecurrenceId<>();
         }

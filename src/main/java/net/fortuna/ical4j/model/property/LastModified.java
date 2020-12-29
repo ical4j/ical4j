@@ -134,10 +134,12 @@ public class LastModified extends DateProperty<Instant> {
             super(LAST_MODIFIED);
         }
 
+        @Override
         public LastModified createProperty(final ParameterList parameters, final String value) {
             return new LastModified(parameters, value);
         }
 
+        @Override
         public LastModified createProperty() {
             return new LastModified();
         }

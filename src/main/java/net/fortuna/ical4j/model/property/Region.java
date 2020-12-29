@@ -84,6 +84,7 @@ public class Region extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -91,6 +92,7 @@ public class Region extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -112,10 +114,12 @@ public class Region extends Property implements Escapable {
             super(REGION);
         }
 
+        @Override
         public Region createProperty(final ParameterList parameters, final String value) {
             return new Region(parameters, value);
         }
 
+        @Override
         public Region createProperty() {
             return new Region();
         }

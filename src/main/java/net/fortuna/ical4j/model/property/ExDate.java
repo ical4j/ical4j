@@ -84,6 +84,7 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
         super.validate();
 
@@ -119,10 +120,12 @@ public class ExDate<T extends Temporal> extends DateListProperty<T> {
             super(EXDATE);
         }
 
+        @Override
         public ExDate<T> createProperty(final ParameterList parameters, final String value) {
             return new ExDate<>(parameters, value);
         }
 
+        @Override
         public ExDate<T> createProperty() {
             return new ExDate<>();
         }

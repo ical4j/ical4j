@@ -130,10 +130,12 @@ public class Completed extends DateProperty<Instant> {
             super(COMPLETED);
         }
 
+        @Override
         public Completed createProperty(final ParameterList parameters, final String value) {
             return new Completed(parameters, value);
         }
 
+        @Override
         public Completed createProperty() {
             return new Completed();
         }

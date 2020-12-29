@@ -97,6 +97,7 @@ public class CuType extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -108,6 +109,7 @@ public class CuType extends Parameter {
             super(CUTYPE);
         }
 
+        @Override
         public CuType createParameter(final String value) throws URISyntaxException {
             CuType parameter = new CuType(value);
             if (CuType.INDIVIDUAL.equals(parameter)) {

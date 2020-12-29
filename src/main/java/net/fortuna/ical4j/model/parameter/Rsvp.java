@@ -89,6 +89,7 @@ public class Rsvp extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         if (rsvp) {
             return VALUE_TRUE;
@@ -104,6 +105,7 @@ public class Rsvp extends Parameter {
             super(RSVP);
         }
 
+        @Override
         public Rsvp createParameter(final String value) throws URISyntaxException {
             Rsvp parameter = new Rsvp(value);
             if (Rsvp.TRUE.equals(parameter)) {
