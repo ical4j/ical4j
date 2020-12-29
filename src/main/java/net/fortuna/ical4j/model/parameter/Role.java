@@ -90,6 +90,7 @@ public class Role extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -101,6 +102,7 @@ public class Role extends Parameter {
             super(ROLE);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             Role parameter = new Role(value);
             if (Role.CHAIR.equals(parameter)) {
