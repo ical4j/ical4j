@@ -75,7 +75,8 @@ public class ComponentGroup<C extends Component> {
 
     /**
      * Calculate all recurring periods for the specified date range. This method will take all
-     * revisions into account when generating the set.
+     * revisions into account when generating the set. Component revisions with a RECURRENCE_ID property are
+     * processed last, as they override instances in the default recurrence set.
      *
      * @param period
      * @return
@@ -85,31 +86,31 @@ public class ComponentGroup<C extends Component> {
     public <T extends Temporal> List<Period<T>> calculateRecurrenceSet(final Period<T> period) {
         // Use set to exclude duplicates..
         Set<Period<T>> periods = new HashSet<>();
-        List<Component> replacements = new ArrayList<>();
+        List<Component> overrides = new ArrayList<>();
 
         for (Component component : getRevisions()) {
             if (component.getProperties().getFirst(Property.RECURRENCE_ID).isPresent()) {
-                replacements.add(component);
+                overrides.add(component);
             } else {
                 periods.addAll(component.calculateRecurrenceSet(period));
             }
         }
 
         List<Period<T>> finalPeriods = new ArrayList<>(periods);
-        replacements.forEach(component -> calculateReplacements(period, component, finalPeriods));
+        overrides.forEach(component -> {
+            try {
+                RecurrenceId<?> recurrenceId = component.getProperties().getRequired(Property.RECURRENCE_ID);
+                finalPeriods.removeIf(p -> p.getStart().equals(recurrenceId.getDate()));
+                component.calculateRecurrenceSet(period).stream()
+                        .filter(p -> p.getStart().equals(recurrenceId.getDate()))
+                        .forEach(finalPeriods::add);
+            } catch (ConstraintViolationException cve) {
+                // Should never reach as we previously determined existence of RECURRENCE_ID property..
+            }
+        });
 
         // Natural sort of final list..
         Collections.sort(finalPeriods);
         return finalPeriods;
-    }
-
-    private <T extends Temporal> void calculateReplacements(Period<T> period, Component component, List<Period<T>> finalPeriods) {
-        Optional<RecurrenceId<?>> recurrenceId = component.getProperties().getFirst(Property.RECURRENCE_ID);
-        if (recurrenceId.isPresent()) {
-            List<Period<T>> match = finalPeriods.stream().filter(p -> p.getStart().equals(recurrenceId.get().getDate()))
-                    .collect(Collectors.toList());
-            finalPeriods.removeAll(match);
-        }
-        finalPeriods.addAll(component.calculateRecurrenceSet(period));
     }
 }

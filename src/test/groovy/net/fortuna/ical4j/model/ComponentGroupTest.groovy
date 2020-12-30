@@ -100,6 +100,6 @@ class ComponentGroupTest extends Specification {
         def recurrences = new ComponentGroup(components.all, uid).calculateRecurrenceSet(period)
 
         then: 'the instance override is removed from the recurrence set'
-        recurrences.size() == event.calculateRecurrenceSet(period).normalise().size() - 1
+        recurrences.size() == event.calculateRecurrenceSet(period).size() - 1
     }
 }
