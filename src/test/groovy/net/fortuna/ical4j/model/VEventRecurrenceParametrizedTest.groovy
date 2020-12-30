@@ -27,7 +27,7 @@ class VEventRecurrenceParametrizedTest extends GroovyTestCase {
 		this.period = Period.parse(period)
 		this.exDates = exDates
 		this.expected = new PeriodList(periodFormat)
-		expectedString.each { this.expected.add(Period.parse(it)) }
+		expectedString.each { expected = expected.add(Period.parse(it)) }
 	}
 
 	@Parameterized.Parameters

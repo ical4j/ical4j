@@ -50,13 +50,13 @@ class VEventRecurrenceTest extends GroovyTestCase {
 		def dates = event.calculateRecurrenceSet(Period.parse('20101101T000000/20110101T000000'))
 		
 		def expected = new PeriodList<LocalDateTime>()
-		expected.add Period.parse('20101113T000000/P1D')
-		expected.add Period.parse('20101129T000000/P1D')
-		expected.add Period.parse('20101130T000000/P1D')
-		expected.add Period.parse('20101204T000000/P1D')
-		expected.add Period.parse('20101220T000000/P1D')
-		expected.add Period.parse('20101221T000000/P1D')
-		expected.add Period.parse('20101225T000000/P1D')
+			.add(Period.parse('20101113T000000/P1D'))
+			.add(Period.parse('20101129T000000/P1D'))
+			.add(Period.parse('20101130T000000/P1D'))
+			.add(Period.parse('20101204T000000/P1D'))
+			.add(Period.parse('20101220T000000/P1D'))
+			.add(Period.parse('20101221T000000/P1D'))
+			.add(Period.parse('20101225T000000/P1D'))
 		
 		println dates
 		assert dates == expected
@@ -71,7 +71,7 @@ class VEventRecurrenceTest extends GroovyTestCase {
 		}
 		def expectedStr = ['20101113/P1D', '20101130/P1D', '20101220/P1D', '20101221/P1D', '20101225/P1D'];
 		def expected = new PeriodList<LocalDate>()
-		expectedStr.each { expected.add(Period.parse(it)) }
+		expectedStr.each { expected = expected.add(Period.parse(it)) }
 
 		def actual = event.calculateRecurrenceSet(Period.parse('20101101/20110101'))
 

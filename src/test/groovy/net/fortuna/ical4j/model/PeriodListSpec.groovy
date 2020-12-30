@@ -57,16 +57,16 @@ class PeriodListSpec extends Specification {
          * assertNull("Removing null from a null set should return null", empty1.subtract(null)); assertNull("Removing
          * from a null set should return null", normalizer.subtractDateRanges(null, headSet));
          */
-        PeriodList<LocalDate> evenMonths = new PeriodList<>();
-        evenMonths.add(monthFebruary);
-        evenMonths.add(monthApril);
-        evenMonths.add(monthJune);
-        evenMonths.add(monthAugust);
-        evenMonths.add(monthOctober);
-        evenMonths.add(monthDecember);
+        PeriodList<LocalDate> evenMonths = new PeriodList<>()
+            .add(monthFebruary)
+            .add(monthApril)
+            .add(monthJune)
+            .add(monthAugust)
+            .add(monthOctober)
+            .add(monthDecember);
 
-        PeriodList<LocalDate> headSet = new PeriodList<>();
-        headSet.add(head1994);
+        PeriodList<LocalDate> headSet = new PeriodList<>()
+            .add(head1994);
 
         PeriodList<LocalDate> empty1 = new PeriodList<>();
         PeriodList<LocalDate> empty2 = new PeriodList<>();

@@ -398,8 +398,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testPeriodCount", requestFree, components, 1));
 
         // period should be from the start to the end date..
-        PeriodList<Instant> periods = new PeriodList<>(CalendarDateFormat.UTC_DATE_TIME_FORMAT);
-        periods.add(new Period<>(start, end));
+        PeriodList<Instant> periods = new PeriodList<Instant>(CalendarDateFormat.UTC_DATE_TIME_FORMAT)
+            .add(new Period<>(start, end));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", requestFree, components, periods));
 
         //testBusyTime..
@@ -418,8 +418,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
 //        suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.BUSY));
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
 
-        periods = new PeriodList<>(CalendarDateFormat.UTC_DATE_TIME_FORMAT);
-        periods.add(new Period<>((Instant) TemporalAdapter.parse("20050104T080000Z").getTemporal(),
+        periods = new PeriodList<Instant>(CalendarDateFormat.UTC_DATE_TIME_FORMAT)
+            .add(new Period<>((Instant) TemporalAdapter.parse("20050104T080000Z").getTemporal(),
                 java.time.Duration.parse("PT5H")));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
 
@@ -445,8 +445,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.FREE));
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
 
-        periods = new PeriodList<>(CalendarDateFormat.UTC_DATE_TIME_FORMAT);
-        periods.add(new Period<>(start, java.time.Duration.ofMinutes(30)));
+        periods = new PeriodList<Instant>(CalendarDateFormat.UTC_DATE_TIME_FORMAT)
+            .add(new Period<>(start, java.time.Duration.ofMinutes(30)));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
 
         //some components are not in range

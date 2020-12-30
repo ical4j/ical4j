@@ -191,16 +191,16 @@ public class PeriodListTest extends TestCase {
          * assertNull("Removing null from a null set should return null", empty1.subtract(null)); assertNull("Removing
          * from a null set should return null", normalizer.subtractDateRanges(null, headSet));
          */
-        PeriodList<LocalDate> evenMonths = new PeriodList<>();
-        evenMonths.add(monthFebruary);
-        evenMonths.add(monthApril);
-        evenMonths.add(monthJune);
-        evenMonths.add(monthAugust);
-        evenMonths.add(monthOctober);
-        evenMonths.add(monthDecember);
+        PeriodList<LocalDate> evenMonths = new PeriodList<LocalDate>()
+            .add(monthFebruary)
+            .add(monthApril)
+            .add(monthJune)
+            .add(monthAugust)
+            .add(monthOctober)
+            .add(monthDecember);
         
-        PeriodList<LocalDate> headSet = new PeriodList<>();
-        headSet.add(head1994);
+        PeriodList<LocalDate> headSet = new PeriodList<LocalDate>()
+            .add(head1994);
         
         PeriodList<LocalDate> empty1 = new PeriodList<>();
         PeriodList<LocalDate> empty2 = new PeriodList<>();
@@ -218,13 +218,14 @@ public class PeriodListTest extends TestCase {
     }
 
     public final void testPeriodListSort() {
-        PeriodList<LocalDate> periods = new PeriodList<>();
         LocalDate start = LocalDate.now();
         LocalDate end = start.withDayOfMonth(25);
-        periods.add(new Period<>(start, end));
-        periods.add(new Period<>(end, java.time.Duration.ofHours(2)));
-        periods.add(new Period<>(start, java.time.Duration.ofHours(2)));
-        periods.add(new Period<>(start, java.time.Duration.ofHours(1)));
+
+        PeriodList<LocalDate> periods = new PeriodList<LocalDate>()
+            .add(new Period<>(start, end))
+            .add(new Period<>(end, java.time.Duration.ofHours(2)))
+            .add(new Period<>(start, java.time.Duration.ofHours(2)))
+            .add(new Period<>(start, java.time.Duration.ofHours(1)));
 
         // log.info("Unsorted list: " + periods);
 
@@ -297,7 +298,7 @@ public class PeriodListTest extends TestCase {
             Instant start = Instant.now();
             Instant end = start.plusSeconds(ChronoUnit.DAYS.getDuration().getSeconds());
 
-            list.add(new Period<>(start, end));
+            list = list.add(new Period<>(start, end));
         }
         
         log.info("Timezone test - period list: [" + list + "]");
@@ -313,10 +314,11 @@ public class PeriodListTest extends TestCase {
      */
     public void testNormalise() {
         // test a list of periods consuming no time..
-        PeriodList<ZonedDateTime> periods = new PeriodList<>();
         ZonedDateTime start = ZonedDateTime.now();
-        periods.add(new Period<>(start, start));
-        periods.add(new Period<>(start, start));
+
+        PeriodList<ZonedDateTime> periods = new PeriodList<ZonedDateTime>()
+            .add(new Period<>(start, start))
+            .add(new Period<>(start, start));
         
         assertTrue(periods.normalise().getPeriods().isEmpty());
     }
