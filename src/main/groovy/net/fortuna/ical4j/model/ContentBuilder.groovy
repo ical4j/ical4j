@@ -111,7 +111,7 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('repeat', new DefaultPropertyFactory(klass: Repeat))
         registerFactory('requeststatus', new PropertyFactoryWrapper(RequestStatus, new RequestStatus.Factory()))
         registerFactory('resources', new DefaultPropertyFactory(klass: Resources))
-        registerFactory('rrule', new DefaultPropertyFactory(klass: RRule))
+        registerFactory('rrule', new PropertyFactoryWrapper(RRule, new RRule.Factory()))
         registerFactory('sequence', new DefaultPropertyFactory(klass: Sequence))
         registerFactory('status', new PropertyFactoryWrapper(Status, new Status.Factory()))
         registerFactory('streetaddress', new DefaultPropertyFactory(klass: StreetAddress))

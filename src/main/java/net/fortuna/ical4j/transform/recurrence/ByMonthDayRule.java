@@ -19,6 +19,9 @@ import static net.fortuna.ical4j.transform.recurrence.Frequency.YEARLY;
 /**
  * Applies BYMONTHDAY rules specified in this Recur instance to the specified date list. If no BYMONTHDAY rules are
  * specified the date list is returned unmodified.
+ *
+ * NOTE: For now BYMONTHDAY is not compatible with Instant temporal type. This is because this rule requires a
+ * year-month value which is not available from Instant temporal type.
  */
 public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> {
 
