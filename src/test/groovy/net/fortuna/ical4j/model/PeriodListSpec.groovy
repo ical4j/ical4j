@@ -57,7 +57,7 @@ class PeriodListSpec extends Specification {
          * assertNull("Removing null from a null set should return null", empty1.subtract(null)); assertNull("Removing
          * from a null set should return null", normalizer.subtractDateRanges(null, headSet));
          */
-        PeriodList<LocalDate> evenMonths = new PeriodList<>()
+        PeriodList<LocalDate> evenMonths = new PeriodList<>(CalendarDateFormat.DATE_FORMAT)
             .add(monthFebruary)
             .add(monthApril)
             .add(monthJune)
@@ -65,11 +65,11 @@ class PeriodListSpec extends Specification {
             .add(monthOctober)
             .add(monthDecember);
 
-        PeriodList<LocalDate> headSet = new PeriodList<>()
+        PeriodList<LocalDate> headSet = new PeriodList<>(CalendarDateFormat.DATE_FORMAT)
             .add(head1994);
 
-        PeriodList<LocalDate> empty1 = new PeriodList<>();
-        PeriodList<LocalDate> empty2 = new PeriodList<>();
+        PeriodList<LocalDate> empty1 = new PeriodList<>(CalendarDateFormat.DATE_FORMAT);
+        PeriodList<LocalDate> empty2 = new PeriodList<>(CalendarDateFormat.DATE_FORMAT);
 
     }
 

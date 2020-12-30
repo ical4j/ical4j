@@ -33,9 +33,6 @@ package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.component.VEvent
 
-import java.time.LocalDate
-import java.time.LocalDateTime
-
 class VEventRecurrenceTest extends GroovyTestCase {
 
 	void testCalculateRecurrenceSet() {
@@ -49,15 +46,16 @@ class VEventRecurrenceTest extends GroovyTestCase {
 		
 		def dates = event.calculateRecurrenceSet(Period.parse('20101101T000000/20110101T000000'))
 		
-		def expected = new PeriodList<LocalDateTime>()
-			.add(Period.parse('20101113T000000/P1D'))
-			.add(Period.parse('20101129T000000/P1D'))
-			.add(Period.parse('20101130T000000/P1D'))
-			.add(Period.parse('20101204T000000/P1D'))
-			.add(Period.parse('20101220T000000/P1D'))
-			.add(Period.parse('20101221T000000/P1D'))
-			.add(Period.parse('20101225T000000/P1D'))
-		
+		def expected = [
+				Period.parse('20101113T000000/P1D'),
+				Period.parse('20101129T000000/P1D'),
+				Period.parse('20101130T000000/P1D'),
+				Period.parse('20101204T000000/P1D'),
+				Period.parse('20101220T000000/P1D'),
+				Period.parse('20101221T000000/P1D'),
+				Period.parse('20101225T000000/P1D')
+		] as Set
+
 		println dates
 		assert dates == expected
 	}
@@ -70,8 +68,7 @@ class VEventRecurrenceTest extends GroovyTestCase {
 			exdate('20101129,20101204', parameters: parameters() { value('DATE') })
 		}
 		def expectedStr = ['20101113/P1D', '20101130/P1D', '20101220/P1D', '20101221/P1D', '20101225/P1D'];
-		def expected = new PeriodList<LocalDate>()
-		expectedStr.each { expected = expected.add(Period.parse(it)) }
+		def expected = expectedStr.collect {Period.parse(it) } as Set
 
 		def actual = event.calculateRecurrenceSet(Period.parse('20101101/20110101'))
 

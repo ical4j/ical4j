@@ -15,8 +15,7 @@ class ComponentSpec extends Specification {
             }
         }
         and: 'an expected list of periods'
-        TreeSet expectedPeriods = []
-        expectedPeriods.addAll(expectedResults.collect { Period.parse(it)})
+        def expectedPeriods = expectedResults.collect { Period.parse(it)} as Set
 
         expect: 'calculate recurrence set returns the expected results'
         component.calculateRecurrenceSet(period) == expectedPeriods

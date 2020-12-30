@@ -191,7 +191,7 @@ public class PeriodListTest extends TestCase {
          * assertNull("Removing null from a null set should return null", empty1.subtract(null)); assertNull("Removing
          * from a null set should return null", normalizer.subtractDateRanges(null, headSet));
          */
-        PeriodList<LocalDate> evenMonths = new PeriodList<LocalDate>()
+        PeriodList<LocalDate> evenMonths = new PeriodList<LocalDate>(CalendarDateFormat.DATE_FORMAT)
             .add(monthFebruary)
             .add(monthApril)
             .add(monthJune)
@@ -199,11 +199,11 @@ public class PeriodListTest extends TestCase {
             .add(monthOctober)
             .add(monthDecember);
         
-        PeriodList<LocalDate> headSet = new PeriodList<LocalDate>()
+        PeriodList<LocalDate> headSet = new PeriodList<LocalDate>(CalendarDateFormat.DATE_FORMAT)
             .add(head1994);
         
-        PeriodList<LocalDate> empty1 = new PeriodList<>();
-        PeriodList<LocalDate> empty2 = new PeriodList<>();
+        PeriodList<LocalDate> empty1 = new PeriodList<>(CalendarDateFormat.DATE_FORMAT);
+        PeriodList<LocalDate> empty2 = new PeriodList<>(CalendarDateFormat.DATE_FORMAT);
         
         suite.addTest(new PeriodListTest(evenMonths.subtract(null), evenMonths));
         suite.addTest(new PeriodListTest(empty1.subtract(empty2), empty1));
@@ -221,7 +221,7 @@ public class PeriodListTest extends TestCase {
         LocalDate start = LocalDate.now();
         LocalDate end = start.withDayOfMonth(25);
 
-        PeriodList<LocalDate> periods = new PeriodList<LocalDate>()
+        PeriodList<LocalDate> periods = new PeriodList<LocalDate>(CalendarDateFormat.DATE_FORMAT)
             .add(new Period<>(start, end))
             .add(new Period<>(end, java.time.Duration.ofHours(2)))
             .add(new Period<>(start, java.time.Duration.ofHours(2)))

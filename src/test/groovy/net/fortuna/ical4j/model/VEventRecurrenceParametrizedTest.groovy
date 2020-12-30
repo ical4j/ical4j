@@ -15,10 +15,10 @@ class VEventRecurrenceParametrizedTest extends GroovyTestCase {
 	String rule
 	Period period
 	String exDates
-	PeriodList expected
+	Set expected
 
 	VEventRecurrenceParametrizedTest(start, startParam, end, endParam, rule,
-									 period, exDates, expectedString, CalendarDateFormat periodFormat) {
+									 period, exDates, expectedString) {
 		this.start = start
 		this.startParam = startParam
 		this.end = end
@@ -26,8 +26,7 @@ class VEventRecurrenceParametrizedTest extends GroovyTestCase {
 		this.rule = rule
 		this.period = Period.parse(period)
 		this.exDates = exDates
-		this.expected = new PeriodList(periodFormat)
-		expectedString.each { expected = expected.add(Period.parse(it)) }
+		this.expected = expectedString.collect {Period.parse(it) } as Set
 	}
 
 	@Parameterized.Parameters
@@ -39,7 +38,7 @@ class VEventRecurrenceParametrizedTest extends GroovyTestCase {
 				 '20101101/20110101',
 				 null,
 				 ['20101113/P1D', '20101129/P1D', '20101130/P1D', '20101204/P1D',
-				  '20101220/P1D', '20101221/P1D', '20101225/P1D'], CalendarDateFormat.DATE_FORMAT],
+				  '20101220/P1D', '20101221/P1D', '20101225/P1D']],
 
 				['20101112', 'DATE',
 				 '20101113', 'DATE',
@@ -47,7 +46,7 @@ class VEventRecurrenceParametrizedTest extends GroovyTestCase {
 				 '20101101/20110101',
 				 null,
 				 ['20101113/P1D', '20101129/P1D', '20101130/P1D', '20101204/P1D',
-				  '20101220/P1D', '20101221/P1D', '20101225/P1D'], CalendarDateFormat.DATE_FORMAT],
+				  '20101220/P1D', '20101221/P1D', '20101225/P1D']],
 
 				['20170717', 'DATE',
 				 '20170718', 'DATE',
@@ -55,37 +54,35 @@ class VEventRecurrenceParametrizedTest extends GroovyTestCase {
 				 '20170717/20270717',
 				 '20101129,20101221',
 				 ['20190527/P1D', '20210524/P1D',
-				  '20230522/P1D'], CalendarDateFormat.DATE_FORMAT],
+				  '20230522/P1D']],
 
 				['20100831T061500Z', 'DATETIME',
 				 '20100831T064500Z', 'DATETIME',
 				 'FREQ=MONTHLY;UNTIL=20110101',
 				 '20100831T000000Z/20110131T000000Z',
 				 null,
-				 ['20100831T061500Z/PT30M', '20101031T061500Z/PT30M', '20101231T061500Z/PT30M'],
-				 CalendarDateFormat.UTC_DATE_TIME_FORMAT],
+				 ['20100831T061500Z/PT30M', '20101031T061500Z/PT30M', '20101231T061500Z/PT30M']],
 
 				['20100831T061500Z', 'DATETIME',
 				 '20100831T064500Z', 'DATETIME',
 				 'FREQ=MONTHLY;UNTIL=20110101',
 				 '20100831T000000Z/20110131T000000Z',
 				 '20101031T061500Z',
-				 ['20100831T061500Z/PT30M', '20101231T061500Z/PT30M'], CalendarDateFormat.UTC_DATE_TIME_FORMAT],
+				 ['20100831T061500Z/PT30M', '20101231T061500Z/PT30M']],
 
 				['20100831T061500Z', 'DATETIME',
 				 '20100831T064500Z', 'DATETIME',
 				 'FREQ=MONTHLY;UNTIL=20110101;BYMONTHDAY=31',
 				 '20100831T000000Z/20110131T000000Z',
 				 null,
-				 ['20100831T061500Z/PT30M', '20101031T061500Z/PT30M', '20101231T061500Z/PT30M'],
-				 CalendarDateFormat.UTC_DATE_TIME_FORMAT],
+				 ['20100831T061500Z/PT30M', '20101031T061500Z/PT30M', '20101231T061500Z/PT30M']],
 
 				['20100831T061500Z', 'DATETIME',
 				 '20100831T064500Z', 'DATETIME',
 				 'FREQ=MONTHLY;UNTIL=20110101;BYMONTHDAY=31',
 				 '20100831T000000Z/20110131T000000Z',
 				 '20100831T061500Z',
-				 ['20101031T061500Z/PT30M', '20101231T061500Z/PT30M'], CalendarDateFormat.UTC_DATE_TIME_FORMAT]
+				 ['20101031T061500Z/PT30M', '20101231T061500Z/PT30M']]
 
 		]*.toArray()
 	}
@@ -100,6 +97,6 @@ class VEventRecurrenceParametrizedTest extends GroovyTestCase {
 		}
 
 		def actual = event.calculateRecurrenceSet(period)
-		assert actual == expected.getPeriods()
+		assert actual == expected
 	}
 }
