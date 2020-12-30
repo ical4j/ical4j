@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.parameter.TzId;
 
 import java.io.Serializable;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.Temporal;
 import java.util.*;
@@ -52,19 +53,13 @@ public class DateList<T extends Temporal> implements Serializable {
 
 	private static final long serialVersionUID = -3700862452550012357L;
 
-    private final List<T> dates;
-
-    private final CalendarDateFormat dateFormat;
+    private final List<TemporalAdapter<T>> dates;
 
     /**
      * Default constructor.
      */
     public DateList() {
-        this(CalendarDateFormat.FLOATING_DATE_TIME_FORMAT);
-    }
-
-    public DateList(CalendarDateFormat dateFormat) {
-    	this(Collections.emptyList(), dateFormat);
+        this(Collections.emptyList());
     }
 
     /**
@@ -72,43 +67,30 @@ public class DateList<T extends Temporal> implements Serializable {
      * the dates in the specified list.
      * @param list a list of dates to include in the new list
      */
-    public DateList(final List<T> list) {
-        this(list, CalendarDateFormat.from(list));
-    }
-
-    public DateList(final List<T> list, CalendarDateFormat dateFormat) {
-        Objects.requireNonNull(dateFormat, "dateFormat");
-        this.dates = Collections.unmodifiableList(list);
-        this.dateFormat = dateFormat;
+    public DateList(final List<TemporalAdapter<T>> list) {
+        this.dates = list;
     }
 
     /**
      * Parse a string representation of a date/time list.
      *
      * @param value
-     * @param <T>
      * @return
      * @throws DateTimeParseException
      */
-    public static <T extends Temporal> DateList<T> parse(String value) {
-        return parse(value, null);
+    public static DateList<? extends Temporal> parse(String value) {
+        List<TemporalAdapter<Temporal>> dates = Arrays.stream(value.split(","))
+                .map(TemporalAdapter::parse)
+                .collect(Collectors.toList());
+
+        return new DateList<>(dates);
     }
 
-    public static <T extends Temporal> DateList<T> parse(String value, CalendarDateFormat calendarDateFormat) {
-        List<Temporal> dates = Arrays.stream(value.split(",")).map(TemporalAdapter::parse)
-                .map(TemporalAdapter::getTemporal).collect(Collectors.toList());
-
-        if (calendarDateFormat != null) {
-            return new DateList<>((List<T>) dates, calendarDateFormat);
-        } else {
-            return new DateList<>((List<T>) dates);
-        }
-    }
-
-    public static <T extends Temporal> DateList<T> parse(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
-        List<Temporal> dates = Arrays.stream(value.split(",")).map(s -> TemporalAdapter.parse(s, tzId, timeZoneRegistry))
-                .map(TemporalAdapter::getTemporal).collect(Collectors.toList());
-        return new DateList<>((List<T>) dates);
+    public static DateList<ZonedDateTime> parse(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
+        List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(","))
+                .map(s -> TemporalAdapter.parse(s, tzId, timeZoneRegistry))
+                .collect(Collectors.toList());
+        return new DateList<>(dates);
     }
 
     @Override
@@ -116,14 +98,14 @@ public class DateList<T extends Temporal> implements Serializable {
         if (dates.isEmpty()) {
             return "";
         }
-        return dates.stream().map(dateFormat::format).collect(Collectors.joining(","));
+        return dates.stream().map(TemporalAdapter::toString).collect(Collectors.joining(","));
     }
 
     public String toString(ZoneId zoneId) {
         if (dates.isEmpty()) {
             return "";
         }
-        return dates.stream().map(date -> dateFormat.format(date, zoneId)).collect(Collectors.joining(","));
+        return dates.stream().map(date -> date.toString(zoneId)).collect(Collectors.joining(","));
     }
 
     /**
@@ -135,19 +117,19 @@ public class DateList<T extends Temporal> implements Serializable {
      * @see List#add(java.lang.Object)
      */
     public final DateList<T> add(final T date) {
-        List<T> copy = new ArrayList<>(dates);
-        copy.add(date);
-        return new DateList<>(copy, dateFormat);
+        List<TemporalAdapter<T>> copy = new ArrayList<>(dates);
+        copy.add(new TemporalAdapter<T>(date));
+        return new DateList<>(copy);
     }
 
     public final DateList<T> addAll(Collection<? extends T> arg0) {
-        List<T> copy = new ArrayList<>(dates);
-        copy.addAll(arg0);
+        List<TemporalAdapter<T>> copy = new ArrayList<>(dates);
+        copy.addAll(arg0.stream().map(TemporalAdapter<T>::new).collect(Collectors.toList()));
         return new DateList<>(copy);
     }
 
     public List<T> getDates() {
-        return dates;
+        return dates.stream().map(TemporalAdapter::getTemporal).collect(Collectors.toList());
     }
 
     @Override
@@ -155,12 +137,11 @@ public class DateList<T extends Temporal> implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DateList<?> dateList = (DateList<?>) o;
-        return Objects.equals(dates, dateList.dates) &&
-                dateFormat.equals(dateList.dateFormat);
+        return Objects.equals(dates, dateList.dates);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dates, dateFormat);
+        return Objects.hash(dates);
     }
 }

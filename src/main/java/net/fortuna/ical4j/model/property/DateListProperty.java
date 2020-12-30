@@ -133,9 +133,9 @@ public abstract class DateListProperty<T extends Temporal> extends Property {
     public void setValue(final String aValue) {
         Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
         if (tzId.isPresent()) {
-            dates = DateList.parse(aValue, tzId.get(), timeZoneRegistry);
+            dates = (DateList<T>) DateList.parse(aValue, tzId.get(), timeZoneRegistry);
         } else {
-            dates = DateList.parse(aValue);
+            dates = (DateList<T>) DateList.parse(aValue);
         }
     }
 
