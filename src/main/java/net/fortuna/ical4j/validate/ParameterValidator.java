@@ -101,7 +101,7 @@ public final class ParameterValidator {
      * is found in the list of properties
      */
     public static void assertNone(final String paramName, final List<Parameter> parameters) throws ValidationException {
-        assertFalse(parameters1 -> parameters1.stream().anyMatch(p -> p.getName().equals(paramName)), ASSERT_NONE_MESSAGE, false,
+        assertFalse(parameters1 -> parameters1.parallelStream().anyMatch(p -> p.getName().equals(paramName)), ASSERT_NONE_MESSAGE, false,
                 parameters, paramName);
     }
 
@@ -111,7 +111,7 @@ public final class ParameterValidator {
      * @throws ValidationException where the assertion fails
      */
     public static void assertNullOrEqual(final Parameter param, final List<Parameter> parameters) throws ValidationException {
-        if (parameters.stream().anyMatch(p -> !p.getName().equals(param.getName()))) {
+        if (parameters.parallelStream().anyMatch(p -> !p.getName().equals(param.getName()))) {
             throw new ValidationException(ASSERT_NULL_OR_EQUAL_MESSAGE, new Object[] {param});
         }
     }

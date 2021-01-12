@@ -38,7 +38,7 @@ public class VEventValidator extends ComponentValidator<VEvent> {
         if (alarmsAllowed) {
             target.getAlarms().getAll().forEach(itipValidator::validate);
         } else {
-            Validator.assertFalse(input -> input.stream().anyMatch(c -> c.getName().equals(VALARM)),
+            Validator.assertFalse(input -> input.parallelStream().anyMatch(c -> c.getName().equals(VALARM)),
                     ASSERT_NONE_MESSAGE, false, target.getAlarms().getAll(), VALARM);
         }
     }

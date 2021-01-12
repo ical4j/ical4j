@@ -93,7 +93,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      */
     public NumberList(final String aString, int minValue, int maxValue, boolean allowsNegativeValues) {
     	this(minValue, maxValue, allowsNegativeValues);
-        addAll(Arrays.stream(aString.split(",")).map(Numbers::parseInt).collect(Collectors.toList()));
+        addAll(Arrays.stream(aString.split(",")).parallel().map(Numbers::parseInt).collect(Collectors.toList()));
     }
 
     /**
@@ -130,7 +130,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
 
     public static NumberList parse(String numberString) {
         NumberList retVal = new NumberList();
-        retVal.addAll(Arrays.stream(numberString.split(",")).map(Numbers::parseInt).collect(Collectors.toList()));
+        retVal.addAll(Arrays.stream(numberString.split(",")).parallel().map(Numbers::parseInt).collect(Collectors.toList()));
         return retVal;
     }
 }

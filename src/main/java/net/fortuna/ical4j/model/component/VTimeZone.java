@@ -340,9 +340,9 @@ public class VTimeZone extends CalendarComponent {
     @Override
     public VTimeZone copy() {
         return newFactory().createComponent(
-                new PropertyList(properties.getAll().stream()
+                new PropertyList(properties.getAll().parallelStream()
                         .map(Unchecked.function(Property::copy)).collect(Collectors.toList())),
-                new ComponentList<>(observances.getAll().stream()
+                new ComponentList<>(observances.getAll().parallelStream()
                         .map(Unchecked.function(Observance::copy)).collect(Collectors.toList())));
     }
 

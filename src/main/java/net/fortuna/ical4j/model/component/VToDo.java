@@ -537,9 +537,9 @@ public class VToDo extends CalendarComponent {
     @Override
     public VToDo copy() {
         return newFactory().createComponent(
-                new PropertyList(properties.getAll().stream()
+                new PropertyList(properties.getAll().parallelStream()
                         .map(Unchecked.function(Property::copy)).collect(Collectors.toList())),
-                new ComponentList<>(alarms.getAll().stream()
+                new ComponentList<>(alarms.getAll().parallelStream()
                         .map(Unchecked.function(VAlarm::copy)).collect(Collectors.toList())));
     }
 

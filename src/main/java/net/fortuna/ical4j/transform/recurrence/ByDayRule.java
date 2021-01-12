@@ -101,7 +101,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
             List<T> retVal = new ArrayList<>();
             for (int i = 1; i <= 7; i++) {
                 T candidate = withTemporalField(date, weekFields.dayOfWeek(), i);
-                if (dayList.stream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
+                if (dayList.parallelStream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
                     retVal.add(candidate);
                 }
             }
@@ -118,7 +118,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
             // construct a list of possible month days..
             for (int i = 1; i <= month.length(leapYear); i++) {
                 T candidate = withTemporalField(date, DAY_OF_MONTH, i);
-                if (dayList.stream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
+                if (dayList.parallelStream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
                     retVal.add(candidate);
                 }
             }
@@ -134,7 +134,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
             // construct a list of possible year days..
             for (int i = 1; i <= Year.of(year).length(); i++) {
                 T candidate = withTemporalField(date, DAY_OF_YEAR, i);
-                if (dayList.stream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
+                if (dayList.parallelStream().map(WeekDay::getDayOfWeek).anyMatch(calDay -> getDayOfWeek(candidate) == calDay)) {
                     retVal.add(candidate);
                 }
             }

@@ -99,7 +99,7 @@ public class PeriodList<T extends Temporal> implements Serializable {
     @SuppressWarnings("unchecked")
     public static <T extends Temporal> PeriodList<T> parse(final String aValue, CalendarDateFormat calendarDateFormat) {
         return (PeriodList<T>) new PeriodList<>(
-                Arrays.stream(aValue.split(",")).map(Period::parse).collect(Collectors.toList()),
+                Arrays.stream(aValue.split(",")).parallel().map(Period::parse).collect(Collectors.toList()),
                 calendarDateFormat);
     }
 

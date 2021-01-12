@@ -66,7 +66,7 @@ public class CalendarValidatorImpl implements Validator<Calendar>, ContentValida
 
         // validate properties..
         for (final Property property : target.getProperties().getAll()) {
-            boolean isCalendarProperty = calendarProperties.stream().anyMatch(calProp -> calProp.isInstance(property));
+            boolean isCalendarProperty = calendarProperties.parallelStream().anyMatch(calProp -> calProp.isInstance(property));
 
             if (!(property instanceof XProperty) && !isCalendarProperty) {
                 throw new ValidationException("Invalid property: " + property.getName());

@@ -15,7 +15,7 @@ public interface ContentValidator<T extends Content> {
     String ASSERT_ONE_OR_MORE_MESSAGE = "Content [{0}] must be specified at least once";
 
     default void assertNone(final String name, final List<T> content, boolean warn) throws ValidationException {
-        Validator.assertFalse(input -> input.stream().anyMatch(c -> c.getName().equals(name)),
+        Validator.assertFalse(input -> input.parallelStream().anyMatch(c -> c.getName().equals(name)),
                 ASSERT_NONE_MESSAGE, warn, content, name);
     }
 

@@ -325,7 +325,7 @@ public abstract class Component extends Content implements Serializable {
      * @return the component copy
      */
     public Component copy() {
-        return newFactory().createComponent(new PropertyList(properties.getAll().stream()
+        return newFactory().createComponent(new PropertyList(properties.getAll().parallelStream()
                 .map(Unchecked.function(Property::copy)).collect(Collectors.toList())));
     }
 
@@ -381,10 +381,10 @@ public abstract class Component extends Content implements Serializable {
         for (Property p : rDates) {
             Optional<Value> value = p.getParameters().getFirst(Parameter.VALUE);
             if (value.equals(Optional.of(Value.PERIOD))) {
-                recurrenceSet.addAll(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()).stream()
+                recurrenceSet.addAll(((RDate<T>) p).getPeriods().orElse(Collections.emptySet()).parallelStream()
                         .filter(period::intersects).collect(Collectors.toList()));
             } else {
-                recurrenceSet.addAll(((DateListProperty<T>) p).getDates().stream()
+                recurrenceSet.addAll(((DateListProperty<T>) p).getDates().parallelStream()
                         .filter(period::includes).map(d -> new Period<>(d, rDuration)).collect(Collectors.toList()));
             }
         }
@@ -396,7 +396,7 @@ public abstract class Component extends Content implements Serializable {
         // add recurrence rules..
         List<Property> rRules = getProperties(Property.RRULE);
         if (!rRules.isEmpty()) {
-            recurrenceSet.addAll(rRules.stream().map(r -> ((RRule) r).getRecur().getDates(start.get().getDate(),
+            recurrenceSet.addAll(rRules.parallelStream().map(r -> ((RRule) r).getRecur().getDates(start.get().getDate(),
                     startMinusDuration, period.getEnd())).flatMap(List<T>::stream)
                     .map(rruleDate -> new Period<T>(rruleDate, rDuration)).collect(Collectors.toList()));
         } else {

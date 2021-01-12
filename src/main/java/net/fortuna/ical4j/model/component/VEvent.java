@@ -753,9 +753,9 @@ public class VEvent extends CalendarComponent {
     @Override
     public VEvent copy() {
         return newFactory().createComponent(
-                new PropertyList(properties.getAll().stream()
+                new PropertyList(properties.getAll().parallelStream()
                         .map(Unchecked.function(Property::copy)).collect(Collectors.toList())),
-                new ComponentList<>(alarms.getAll().stream()
+                new ComponentList<>(alarms.getAll().parallelStream()
                         .map(Unchecked.function(VAlarm::copy)).collect(Collectors.toList())));
     }
 

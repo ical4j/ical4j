@@ -383,9 +383,9 @@ public class Calendar implements Serializable {
      */
     public final Calendar copy() {
         return new Calendar(
-                new PropertyList(properties.getAll().stream()
+                new PropertyList(properties.getAll().parallelStream()
                         .map(Unchecked.function(Property::copy)).collect(Collectors.toList())),
-                new ComponentList<>(components.getAll().stream()
+                new ComponentList<>(components.getAll().parallelStream()
                     .map(Unchecked.function(c -> (CalendarComponent) c.copy())).collect(Collectors.toList())));
     }
 

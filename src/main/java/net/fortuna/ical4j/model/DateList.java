@@ -80,7 +80,7 @@ public class DateList<T extends Temporal> implements Serializable {
      */
     public static DateList<? extends Temporal> parse(String value) {
         List<TemporalAdapter<Temporal>> dates = Arrays.stream(value.split(","))
-                .map(TemporalAdapter::parse)
+                .parallel().map(TemporalAdapter::parse)
                 .collect(Collectors.toList());
 
         return new DateList<>(dates);
@@ -88,7 +88,7 @@ public class DateList<T extends Temporal> implements Serializable {
 
     public static DateList<ZonedDateTime> parse(String value, TzId tzId, TimeZoneRegistry timeZoneRegistry) {
         List<TemporalAdapter<ZonedDateTime>> dates = Arrays.stream(value.split(","))
-                .map(s -> TemporalAdapter.parse(s, tzId, timeZoneRegistry))
+                .parallel().map(s -> TemporalAdapter.parse(s, tzId, timeZoneRegistry))
                 .collect(Collectors.toList());
         return new DateList<>(dates);
     }
