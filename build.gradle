@@ -167,8 +167,8 @@ uploadArchives {
                 // open source license
                 licenses {
                     license {
-                        name 'iCal4j - License'
-                        url 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE'
+                        name 'BSD-3-Clause'
+                        url 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE.txt'
                         distribution 'repo'
                     }
                 }
