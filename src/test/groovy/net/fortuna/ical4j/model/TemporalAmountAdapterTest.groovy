@@ -6,12 +6,16 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.time.Duration
+import java.time.LocalDateTime
 
 class TemporalAmountAdapterTest extends Specification {
 
     def "verify string representation"() {
+        setup: 'Set default seed date for test consistency'
+        def seed = LocalDateTime.parse("2021-04-01T00:00:00")
+
         expect:
-        new TemporalAmountAdapter(duration) as String == expectedValue
+        new TemporalAmountAdapter(duration).toString(seed) == expectedValue
 
         where:
         duration                    | expectedValue
