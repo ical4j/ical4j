@@ -28,7 +28,7 @@ class ComponentFactoryWrapper extends AbstractFactory {
     }
 
     void setChild(FactoryBuilderSupport build, Object parent, Object child) {
-        if (child instanceof Property) {
+        if (child instanceof Property || child instanceof Component) {
             parent.add(child)
         }
     }
