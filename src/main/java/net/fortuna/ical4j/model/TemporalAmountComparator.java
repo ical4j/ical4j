@@ -12,8 +12,8 @@ public class TemporalAmountComparator implements Comparator<TemporalAmount> {
         int result = 0;
         if (!o1.getClass().equals(o2.getClass())) {
 //            throw new UnsupportedOperationException("Unable to compare different Temporal types");
-            boolean o1datebased = o1.getUnits().parallelStream().anyMatch(TemporalUnit::isDateBased);
-            boolean o2datebased = o2.getUnits().parallelStream().anyMatch(TemporalUnit::isDateBased);
+            boolean o1datebased = o1.getUnits().stream().anyMatch(TemporalUnit::isDateBased);
+            boolean o2datebased = o2.getUnits().stream().anyMatch(TemporalUnit::isDateBased);
             if (o1datebased != o2datebased) {
                 if (o1datebased) {
                     result = Integer.MAX_VALUE;

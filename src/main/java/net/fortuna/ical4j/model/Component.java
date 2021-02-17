@@ -396,7 +396,7 @@ public abstract class Component extends Content implements Serializable {
         // add recurrence rules..
         List<Property> rRules = getProperties(Property.RRULE);
         if (!rRules.isEmpty()) {
-            recurrenceSet.addAll(rRules.parallelStream().map(r -> ((RRule) r).getRecur().getDates(start.get().getDate(),
+            recurrenceSet.addAll(rRules.stream().map(r -> ((RRule) r).getRecur().getDates(start.get().getDate(),
                     startMinusDuration, period.getEnd())).flatMap(List<T>::stream)
                     .map(rruleDate -> new Period<T>(rruleDate, rDuration)).collect(Collectors.toList()));
         } else {
