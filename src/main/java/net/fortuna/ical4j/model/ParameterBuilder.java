@@ -18,7 +18,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
 
     private String value;
 
-    public ParameterBuilder factories(List<ParameterFactory<?>> factories) {
+    public ParameterBuilder factories(List<ParameterFactory<? extends Parameter>> factories) {
         this.factories.addAll(factories);
         return this;
     }

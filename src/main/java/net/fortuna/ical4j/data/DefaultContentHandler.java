@@ -16,11 +16,11 @@ import java.util.function.Supplier;
 
 public class DefaultContentHandler implements ContentHandler {
 
-    private final Supplier<List<ParameterFactory<?>>> parameterFactorySupplier;
+    private final Supplier<List<ParameterFactory<? extends Parameter>>> parameterFactorySupplier;
 
-    private final Supplier<List<PropertyFactory<?>>> propertyFactorySupplier;
+    private final Supplier<List<PropertyFactory<? extends Property>>> propertyFactorySupplier;
 
-    private final Supplier<List<ComponentFactory<?>>> componentFactorySupplier;
+    private final Supplier<List<ComponentFactory<? extends Component>>> componentFactorySupplier;
 
     private final TimeZoneRegistry tzRegistry;
 

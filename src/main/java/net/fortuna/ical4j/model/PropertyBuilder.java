@@ -22,7 +22,7 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     private TimeZoneRegistry timeZoneRegistry;
 
-    public PropertyBuilder factories(List<PropertyFactory<?>> factories) {
+    public PropertyBuilder factories(List<PropertyFactory<? extends Property>> factories) {
         this.factories.addAll(factories);
         return this;
     }
