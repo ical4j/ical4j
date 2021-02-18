@@ -12,7 +12,6 @@ buildscript {
 plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.10.2'
     id "nebula.provided-base" version "3.0.3"
-    id "com.jfrog.bintray" version "1.8.4"
     id "net.ltgt.errorprone" version "1.2.1" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
     id 'org.javamodularity.moduleplugin' version '1.7.0' apply false
@@ -21,18 +20,12 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'groovy'
-apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 apply plugin: 'signing'
 apply plugin: 'pl.allegro.tech.build.axion-release'
 apply plugin: 'nebula.optional-base'
 apply from: 'gradle/dist.gradle'
-
-group = 'org.mnode.ical4j'
-description = '''
-A Java library for reading and writing iCalendar (*.ics) files
-'''
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -144,66 +137,20 @@ scmVersion {
         separator = '-'
     }
 }
+
+group = 'org.mnode.ical4j'
+description = '''
+A Java library for reading and writing iCalendar (*.ics) files
+'''
 version = scmVersion.version
 
 ext {
     isReleaseVersion = !version.endsWith("SNAPSHOT")
-
-    // sonatype credentials
-    sonatype_username = project.hasProperty('sonatype_username') ? project.getProperty('sonatype_username') : ''
-    sonatype_password = project.hasProperty('sonatype_password') ? project.getProperty('sonatype_password') : ''
-
-    // bintray credentials
-    bintray_user = project.hasProperty('bintray_user') ? project.getProperty('bintray_user') : ''
-    bintray_key = project.hasProperty('bintray_key') ? project.getProperty('bintray_key') : ''
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-            // artefact management
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: sonatype_username, password: sonatype_password)
-            }
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                authentication(userName: sonatype_username, password: sonatype_password)
-            }
-            // maven project model
-            pom.project {
-                name project.name
-                packaging 'jar'
-                description project.description
-                url 'http://ical4j.github.io'
-                // source code management
-                scm {
-                    url 'https://github.com/ical4j/ical4j'
-                    connection 'scm:git@github.com:ical4j/ical4j.git'
-                    developerConnection 'scm:git@github.com:ical4j/ical4j.git'
-                }
-                // open source license
-                licenses {
-                    license {
-                        name 'iCal4j - License'
-                        url 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE'
-                        distribution 'repo'
-                    }
-                }
-                // contributors
-                developers {
-                    developer {
-                        id 'fortuna'
-                        name 'Ben Fortuna'
-                    }
-                }
-            }
-        }
-    }
 }
 
 publishing {
     publications {
-        mavenArtifacts(MavenPublication) {
+        ical4j(MavenPublication) {
             from components.java
             artifact javadocJar
             artifact sourcesJar
@@ -228,20 +175,28 @@ publishing {
             }
         }
     }
+
     repositories {
         maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ical4j/ical4j")
+            name = "OSSRH"
+            url = !isReleaseVersion ? "https://oss.sonatype.org/content/repositories/snapshots/" : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
-                username = System.getenv("GPR_USERNAME")
-                password = System.getenv("GPR_TOKEN")
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
             }
         }
+//        maven {
+//            name = "GitHubPackages"
+//            url = uri("https://maven.pkg.github.com/ical4j/ical4j")
+//            credentials {
+//                username = System.getenv("GPR_USERNAME")
+//                password = System.getenv("GPR_TOKEN")
+//            }
+//        }
     }
 }
 
 signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
-//    sign configurations.archives
-    sign publishing.publications.mavenArtifacts
+    required { isReleaseVersion }
+    sign publishing.publications.ical4j
 }
