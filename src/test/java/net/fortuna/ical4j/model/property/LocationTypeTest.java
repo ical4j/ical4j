@@ -65,8 +65,8 @@ public class LocationTypeTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        LocationType type = new LocationType("value");
-        suite.addTest(new LocationTypeTest(type, "value"));
+        LocationType type = new LocationType("bus-station");
+        suite.addTest(new LocationTypeTest(type, "bus-station"));
         suite.addTest(new LocationTypeTest("testValidation", type));
         suite.addTest(new LocationTypeTest("testEquals", type));
         return suite;
