@@ -245,32 +245,3 @@ signing {
 //    sign configurations.archives
     sign publishing.publications.mavenArtifacts
 }
-
-bintray {
-    user = bintray_user
-    key = bintray_key
-    pkg {
-        repo = 'maven'
-        name = 'ical4j'
-        userOrg = 'ical4j'
-        licenses = ['BSD']
-        vcsUrl = 'https://github.com/ical4j/ical4j.git'
-        version {
-            name = scmVersion.version
-            desc = "iCal4j $scmVersion.version"
-            released  = new Date()
-            vcsTag = "ical4j-$scmVersion.version"
-            gpg {
-                sign = isReleaseVersion
-            }
-            mavenCentralSync {
-                sync = isReleaseVersion
-                user = sonatype_username //OSS user token: mandatory
-                password = sonatype_password //OSS user password: mandatory
-//                close = '0' //Optional property. By default the staging repository is closed and artifacts are released to Maven Central. You can optionally turn this behaviour off (by puting 0 as value) and release the version manually.
-            }
-        }
-    }
-//    configurations = ['archives']
-    publications = ['mavenArtifacts']
-}
