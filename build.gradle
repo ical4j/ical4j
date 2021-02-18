@@ -14,7 +14,7 @@ plugins {
     id "nebula.provided-base" version "3.0.3"
     id "com.jfrog.bintray" version "1.8.4"
     id "net.ltgt.errorprone" version "1.2.1" apply false
-    id "biz.aQute.bnd.builder" version "5.1.1"
+    id "biz.aQute.bnd.builder" version "$bndVersion"
     id 'org.javamodularity.moduleplugin' version '1.7.0' apply false
 }
 
@@ -39,11 +39,6 @@ targetCompatibility = 1.8
 
 //modularity.mixedJavaRelease 8
 
-ext {
-    slf4jVersion = '1.7.30'
-    groovyVersion = '3.0.4'
-}
-
 repositories {
     mavenCentral()
 }
@@ -53,33 +48,43 @@ dependencies {
 //    errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
 
     api "org.slf4j:slf4j-api:$slf4jVersion",
-            'commons-codec:commons-codec:1.14',
-            'org.apache.commons:commons-lang3:3.10',
-            'org.apache.commons:commons-collections4:4.4',
-            'org.threeten:threeten-extra:1.5.0',
-            'org.jooq:jool-java-8:0.9.14'
-    
+            "commons-codec:commons-codec:$commonsCodecVersion",
+            "org.apache.commons:commons-lang3:$commonsLangVersion",
+            "org.apache.commons:commons-collections4:$commonsCollectionsVersion",
+            "org.threeten:threeten-extra:$threetenExtraVersion",
+            "org.jooq:jool-java-8:$joolVersion"
+
+    // optional timezone caching..
     implementation 'javax.cache:cache-api:1.1.1', optional
+
+    // optional groovy DSL for calendar builder..
     implementation "org.codehaus.groovy:groovy:$groovyVersion", optional
-    implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion", optional
 
-    compileOnly 'biz.aQute.bnd:biz.aQute.bndlib:5.1.1'
+//    implementation "org.codehaus.groovy:groovy-dateutil:$groovyVersion", optional
 
-    testImplementation "org.codehaus.groovy:groovy:$groovyVersion",
-            "org.codehaus.groovy:groovy-xml:$groovyVersion",
-            "org.codehaus.groovy:groovy-test:$groovyVersion",
-        'org.spockframework:spock-core:2.0-M3-groovy-3.0',
-        'junit:junit:4.13',
-        'org.ccil.cowan.tagsoup:tagsoup:1.2.1',
-        "org.slf4j:slf4j-log4j12:$slf4jVersion",
-        'org.cache2k:cache2k-jcache:1.2.4.Final'
+    compileOnly "biz.aQute.bnd:biz.aQute.bndlib:$bndVersion"
+
+    testCompile "org.codehaus.groovy:groovy:$groovyVersion",
+            "org.slf4j:slf4j-log4j12:$slf4jVersion",
+            "org.ccil.cowan.tagsoup:tagsoup:$tagsoupVersion",
+            "org.cache2k:cache2k-jcache:$jcacheVersion",
+            "org.codehaus.groovy:groovy-xml:$groovyVersion"
+
+    // junit
+    testImplementation "junit:junit:$junitVersion"
+    
+    // groovy-test
+    testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
+    
+    // spock
+    testImplementation platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0"),
+            "org.spockframework:spock-core"
 }
 
 jacocoTestReport {
     reports {
         xml.enabled true
-        html.enabled project.hasProperty('jacoco_htmlReport') \
-                && 'true' == project.property('jacoco_htmlReport')
+        html.enabled 'true' == jacoco_htmlReport
     }
 }
 
@@ -98,13 +103,13 @@ task bundle(type: Bundle) {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    archiveClassifier = 'javadoc'
+    archiveClassifier.set('javadoc')
     from 'build/docs/javadoc'
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
-    archiveClassifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 jar.enabled = false

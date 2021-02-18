@@ -1,9 +1,20 @@
-systemProp.sonar.host.url=https://sonar.mnode.org
+slf4jVersion = 1.7.30
+commonsCodecVersion = 1.14
+commonsLangVersion = 3.10
+commonsCollectionsVersion = 4.4
+threetenExtraVersion = 1.5.0
+joolVersion = 0.9.14
+
+groovyVersion = 3.0.7
+bndVersion = 5.1.1
+tagsoupVersion = 1.2.1
+jcacheVersion = 1.2.4.Final
+junitVersion = 4.13
+
+jacoco_htmlReport = true
 
 sonatype_username=
 sonatype_password=
 
 bintray_user=
 bintray_key=
-
-jacoco_htmlReport = true
