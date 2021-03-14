@@ -92,6 +92,7 @@ public class FbType extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -103,6 +104,7 @@ public class FbType extends Parameter {
             super(FBTYPE);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             FbType parameter = new FbType(value);
             if (FbType.FREE.equals(parameter)) {

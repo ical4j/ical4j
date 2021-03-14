@@ -81,6 +81,7 @@ public class Feature extends Parameter {
             super(PARAMETER_NAME);
         }
 
+        @Override
         public Parameter createParameter(final String value) {
             return new Feature(value);
         }

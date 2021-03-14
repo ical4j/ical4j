@@ -113,6 +113,7 @@ public class Method extends Property {
             super(new ParameterList(true), value);
         }
 
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -148,6 +149,7 @@ public class Method extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -155,6 +157,7 @@ public class Method extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -171,6 +174,7 @@ public class Method extends Property {
             super(METHOD);
         }
 
+        @Override
         public Method createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
@@ -204,6 +208,7 @@ public class Method extends Property {
             return method;
         }
 
+        @Override
         public Method createProperty() {
             return new Method();
         }

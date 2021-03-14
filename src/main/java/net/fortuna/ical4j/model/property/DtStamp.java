@@ -146,11 +146,13 @@ public class DtStamp extends UtcProperty implements Comparable<DtStamp> {
             super(DTSTAMP);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new DtStamp(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new DtStamp();
         }

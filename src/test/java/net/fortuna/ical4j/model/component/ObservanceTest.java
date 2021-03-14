@@ -55,6 +55,7 @@ public class ObservanceTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         observance = new Standard();
         observance.getProperties().add(new DtStart("16010101T030000"));

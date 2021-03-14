@@ -98,7 +98,8 @@ public class StringsTest extends TestCase {
         assertTrue(Strings.PARAM_QUOTE_PATTERN.matcher(
                 "Pacific Time (US & Canada), Tijuana").find());
     }
-    
+
+    @Override
     public String getName() {
         if (testString != null) {
             return super.getName() + " [" + Strings.escape(testString) + "]";

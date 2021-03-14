@@ -77,6 +77,7 @@ public class CalScale extends Property {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -112,6 +113,7 @@ public class CalScale extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -119,6 +121,7 @@ public class CalScale extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -126,6 +129,7 @@ public class CalScale extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
         if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
             if (!GREGORIAN.getValue().equalsIgnoreCase(value)) {
@@ -145,6 +149,7 @@ public class CalScale extends Property {
             super(CALSCALE);
         }
 
+        @Override
         public CalScale createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
@@ -157,6 +162,7 @@ public class CalScale extends Property {
             return calScale;
         }
 
+        @Override
         public CalScale createProperty() {
             return new CalScale();
         }

@@ -59,6 +59,7 @@ public class IndexedComponentListTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#setUp()
      */
+    @Override
     protected void setUp() throws Exception {
         CalendarBuilder builder = new CalendarBuilder();
         calendar = builder.build(getClass().getResourceAsStream("/samples/valid/Australian_TV_Melbourne.ics"));

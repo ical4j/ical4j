@@ -219,6 +219,7 @@ public class Trigger extends UtcProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
         super.validate();
 
@@ -262,6 +263,7 @@ public class Trigger extends UtcProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         try {
             super.setValue(aValue);
@@ -275,6 +277,7 @@ public class Trigger extends UtcProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         if (duration != null) {
             return duration.toString();
@@ -285,6 +288,7 @@ public class Trigger extends UtcProperty {
     /**
      * @param dateTime The dateTime to set.
      */
+    @Override
     public final void setDateTime(final DateTime dateTime) {
         super.setDateTime(dateTime);
         duration = null;
@@ -310,11 +314,13 @@ public class Trigger extends UtcProperty {
             super(TRIGGER);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Trigger(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new Trigger();
         }

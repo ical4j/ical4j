@@ -89,6 +89,7 @@ public class ComponentTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION);
     }
@@ -149,6 +150,7 @@ public class ComponentTest extends TestCase {
         TestSuite suite = new TestSuite();
         
         Component component = new Component("test") {
+            @Override
             public void validate(boolean recurse) throws ValidationException {
             }
         };
@@ -156,6 +158,7 @@ public class ComponentTest extends TestCase {
                 java.time.Duration.ofDays(1)), new PeriodList()));
         
         component = new Component("test") {
+            @Override
             public void validate(boolean recurse) throws ValidationException {
             }
         };
@@ -176,6 +179,7 @@ public class ComponentTest extends TestCase {
                 java.time.Duration.ofDays(7)), expectedPeriods));
 
         component = new Component("test") {
+            @Override
             public void validate(boolean recurse) throws ValidationException {
             }
         };

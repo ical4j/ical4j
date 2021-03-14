@@ -55,6 +55,7 @@ public class OrganizerTest extends TestCase {
 
     private static Logger LOG = LoggerFactory.getLogger(OrganizerTest.class);
 
+    @Override
     protected void setUp() throws Exception {
         CompatibilityHints.setHintEnabled(
                 CompatibilityHints.KEY_RELAXED_PARSING, false);
@@ -63,6 +64,7 @@ public class OrganizerTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#tearDown()
      */
+    @Override
     protected void tearDown() throws Exception {
         CompatibilityHints.clearHintEnabled(CompatibilityHints.KEY_RELAXED_PARSING);
     }

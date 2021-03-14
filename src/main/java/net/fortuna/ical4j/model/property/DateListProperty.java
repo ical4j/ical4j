@@ -107,6 +107,7 @@ public abstract class DateListProperty extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) throws ParseException {
         dates = new DateList(aValue, getParameter(Parameter.VALUE),
                 timeZone);
@@ -115,6 +116,7 @@ public abstract class DateListProperty extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getValue() {
         return Strings.valueOf(dates);
     }
@@ -171,6 +173,7 @@ public abstract class DateListProperty extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final Property copy() throws IOException, URISyntaxException, ParseException {
         final Property copy = super.copy();
 

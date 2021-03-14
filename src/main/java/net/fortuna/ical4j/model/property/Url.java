@@ -136,6 +136,7 @@ public class Url extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) throws URISyntaxException {
         uri = Uris.create(aValue);
     }
@@ -143,6 +144,7 @@ public class Url extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getUri()));
     }
@@ -166,11 +168,13 @@ public class Url extends Property {
             super(URL);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Url(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new Url();
         }
