@@ -70,6 +70,11 @@ public class LocationTypeList implements Serializable, Iterable<String> {
         locationTypes.addAll(Arrays.asList(aValue.split(",")));
     }
 
+    public LocationTypeList(LocationType... locationTypes) {
+        this.locationTypes = Arrays.stream(locationTypes).map(LocationType::toString)
+                .collect(Collectors.toList());
+    }
+
     /**
      * {@inheritDoc}
      */

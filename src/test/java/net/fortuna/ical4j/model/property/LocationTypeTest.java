@@ -65,7 +65,7 @@ public class LocationTypeTest extends PropertyTest {
      */
     public static TestSuite suite() {
         TestSuite suite = new TestSuite();
-        LocationType type = new LocationType("bus-station");
+        LocationType type = new LocationType(net.fortuna.ical4j.model.LocationType.bus_station);
         suite.addTest(new LocationTypeTest(type, "bus-station"));
         suite.addTest(new LocationTypeTest("testValidation", type));
         suite.addTest(new LocationTypeTest("testEquals", type));
