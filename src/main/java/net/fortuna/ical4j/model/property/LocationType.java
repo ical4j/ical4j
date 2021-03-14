@@ -42,6 +42,7 @@ import net.fortuna.ical4j.validate.Validator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,7 +90,7 @@ public class LocationType extends Property {
 
     private static final long serialVersionUID = -3541686430899510312L;
 
-    private List<net.fortuna.ical4j.model.LocationType> locationTypes;
+    private List<String> locationTypes;
 
     private final Validator<LocationType> validator = new PropertyValidator<>(
             new ValidationRule<>(OneOrLess, LANGUAGE));
@@ -122,7 +123,7 @@ public class LocationType extends Property {
     /**
      * @param cList a list of locationTypes
      */
-    public LocationType(final List<net.fortuna.ical4j.model.LocationType> cList) {
+    public LocationType(final List<String> cList) {
         super(LOCATION_TYPE);
         locationTypes = cList;
     }
@@ -131,19 +132,21 @@ public class LocationType extends Property {
      * @param aList a list of parameters for this component
      * @param cList a list of locationTypes
      */
-    public LocationType(final ParameterList aList, final List<net.fortuna.ical4j.model.LocationType> cList) {
+    public LocationType(final ParameterList aList, final List<String> cList) {
         super(LOCATION_TYPE, aList);
         locationTypes = cList;
     }
 
     public LocationType(net.fortuna.ical4j.model.LocationType... locationTypes) {
-        super(LOCATION_TYPE, new ParameterList(), new Factory());
-        this.locationTypes = new LocationTypeList(locationTypes);
+        super(LOCATION_TYPE, new ParameterList());
+        this.locationTypes = Arrays.stream(locationTypes).map(net.fortuna.ical4j.model.LocationType::toString)
+                .collect(Collectors.toList());
     }
 
     public LocationType(ParameterList params, net.fortuna.ical4j.model.LocationType... locationTypes) {
-        super(LOCATION_TYPE, params, new Factory());
-        this.locationTypes = new LocationTypeList(locationTypes);
+        super(LOCATION_TYPE, params);
+        this.locationTypes = Arrays.stream(locationTypes).map(net.fortuna.ical4j.model.LocationType::toString)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -151,14 +154,13 @@ public class LocationType extends Property {
      */
     @Override
     public final void setValue(final String aValue) {
-        locationTypes = Arrays.stream(aValue.split(","))
-                .map(net.fortuna.ical4j.model.LocationType::from).collect(Collectors.toList());
+        locationTypes = Collections.singletonList(aValue);
     }
 
     /**
      * @return Returns the locationTypes.
      */
-    public final List<net.fortuna.ical4j.model.LocationType> getLocationTypes() {
+    public final List<String> getLocationTypes() {
         return locationTypes;
     }
 
@@ -167,9 +169,7 @@ public class LocationType extends Property {
      */
     @Override
     public final String getValue() {
-        return locationTypes.stream()
-                .map(net.fortuna.ical4j.model.LocationType::toString)
-                .collect(Collectors.joining(","));
+        return String.join(",", locationTypes);
     }
 
     @Override
