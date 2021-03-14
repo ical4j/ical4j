@@ -32,10 +32,9 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.CalendarComponent;
-import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.Method;
-import net.fortuna.ical4j.model.property.ProdId;
-import net.fortuna.ical4j.model.property.Version;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.model.property.*;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.AbstractCalendarValidatorFactory;
 import net.fortuna.ical4j.validate.ValidationException;
@@ -45,8 +44,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.jooq.lambda.Unchecked;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Optional;
+import java.nio.charset.Charset;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -390,6 +389,101 @@ public class Calendar implements Serializable {
     }
 
     /**
+     * Merge all properties and components from the specified calendar with this instance.
+     * Note that the merge process is not very sophisticated, and may result in invalid calendar
+     * data (e.g. multiple properties of a type that should only be specified once).
+     * @param c2 the second calendar to merge
+     * @return a Calendar instance containing all properties and components from both of the specified calendars
+     */
+    public Calendar merge(final Calendar c2) {
+        List<Property> mergedProperties = new ArrayList<>();
+        List<CalendarComponent> mergedComponents = new ArrayList<>();
+        mergedProperties.addAll(getProperties().getAll());
+        for (final Property p : c2.getProperties().getAll()) {
+            if (!mergedProperties.contains(p)) {
+                mergedProperties.add(p);
+            }
+        }
+        mergedComponents.addAll(getComponents().getAll());
+        for (final CalendarComponent c : c2.getComponents().getAll()) {
+            if (!mergedComponents.contains(c)) {
+                mergedComponents.add(c);
+            }
+        }
+        return new Calendar(new PropertyList(mergedProperties),
+                new ComponentList<>(mergedComponents));
+    }
+
+    /**
+     * Splits a calendar object into distinct calendar objects for unique identifiers (UID).
+     * @return an array of calendar objects
+     */
+    public Calendar[] split() {
+        // if calendar contains one component or less, or is composed entirely of timezone
+        // definitions, return the original calendar unmodified..
+        if (getComponents().getAll().size() <= 1
+                || getComponents().get(Component.VTIMEZONE).size() == getComponents().getAll().size()) {
+            return new Calendar[] {this};
+        }
+
+        final List<VTimeZone> timezoneList = getComponents(Component.VTIMEZONE);
+        final IndexedComponentList<VTimeZone> timezones = new IndexedComponentList<>(
+                timezoneList, Property.TZID);
+
+        final Map<Uid, Calendar> calendars = new HashMap<Uid, Calendar>();
+        for (final CalendarComponent c : getComponents().getAll()) {
+            if (c instanceof VTimeZone) {
+                continue;
+            }
+
+            final Optional<Uid> uid = c.getProperties().getFirst(Property.UID);
+            if (uid.isPresent()) {
+                Calendar uidCal = calendars.get(uid.get());
+                if (uidCal == null) {
+                    // remove METHOD property for split calendars..
+                    PropertyList splitProps = (PropertyList) getProperties().removeAll(Property.METHOD);
+                    uidCal = new Calendar(splitProps, new ComponentList<>());
+                    calendars.put(uid.get(), uidCal);
+                }
+
+                for (final Property p : c.getProperties().getAll()) {
+                    final Optional<TzId> tzid = p.getParameters().getFirst(Parameter.TZID);
+                    if (tzid.isPresent()) {
+                        final VTimeZone timezone = timezones.getComponent(tzid.get().getValue());
+                        if (!uidCal.getComponents().getAll().contains(timezone)) {
+                            uidCal.add(timezone);
+                        }
+                    }
+                }
+                uidCal.add(c);
+            }
+        }
+        return calendars.values().toArray(new Calendar[0]);
+    }
+
+    /**
+     * Returns a unique identifier as specified by components in the calendar instance.
+     * @return the UID property
+     * @throws ConstraintViolationException if zero or more than one unique identifier(s) is
+     * found in the specified calendar
+     */
+    public Uid getUid() throws ConstraintViolationException {
+        Uid uid = null;
+        for (final Component c : getComponents().getAll()) {
+            for (final Property foundUid : c.getProperties().get(Property.UID)) {
+                if (uid != null && !uid.equals(foundUid)) {
+                    throw new ConstraintViolationException("More than one UID found in calendar");
+                }
+                uid = (Uid) foundUid;
+            }
+        }
+        if (uid == null) {
+            throw new ConstraintViolationException("Calendar must specify a single unique identifier (UID)");
+        }
+        return uid;
+    }
+
+    /**
      * Returns the mandatory prodid property.
      * @return the PRODID property, or null if property doesn't exist
      * @deprecated use {@link Calendar#getProperty(String)}
@@ -427,6 +521,27 @@ public class Calendar implements Serializable {
     @Deprecated
     public final Optional<Method> getMethod() {
         return getProperty(Property.METHOD);
+    }
+
+    /**
+     * Returns an appropriate MIME Content-Type for the calendar object instance.
+     * @param charset an optional encoding
+     * @return a content type string
+     */
+    public String getContentType(Charset charset) {
+        final StringBuilder b = new StringBuilder("text/calendar");
+
+        final Optional<Method> method = getProperties().getFirst(Property.METHOD);
+        if (method.isPresent()) {
+            b.append("; method=");
+            b.append(method.get().getValue());
+        }
+
+        if (charset != null) {
+            b.append("; charset=");
+            b.append(charset);
+        }
+        return b.toString();
     }
 
     /**

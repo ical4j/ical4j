@@ -94,7 +94,9 @@ public final class Calendars {
      * @param c1 the first calendar to merge
      * @param c2 the second calendar to merge
      * @return a Calendar instance containing all properties and components from both of the specified calendars
+     * @deprecated @see {@link Calendar#merge(Calendar)}
      */
+    @Deprecated
     public static Calendar merge(final Calendar c1, final Calendar c2) {
         List<Property> mergedProperties = new ArrayList<>();
         List<CalendarComponent> mergedComponents = new ArrayList<>();
@@ -133,7 +135,9 @@ public final class Calendars {
      * identifers (UID).
      * @param calendar a calendar instance
      * @return an array of calendar objects
+     * @deprecated @see {@link Calendar#split()}
      */
+    @Deprecated
     public static Calendar[] split(final Calendar calendar) {
         // if calendar contains one component or less, or is composed entirely of timezone
         // definitions, return the original calendar unmodified..
@@ -182,7 +186,9 @@ public final class Calendars {
      * @param calendar a calendar instance
      * @return the UID property
      * @throws ConstraintViolationException if zero or more than one unique identifer is found in the specified calendar
+     * @deprecated @see {@link Calendar#getUid()}
      */
+    @Deprecated
     public static Uid getUid(final Calendar calendar) throws ConstraintViolationException {
         Uid uid = null;
         for (final Component c : calendar.getComponents().getAll()) {
@@ -204,7 +210,9 @@ public final class Calendars {
      * @param calendar a calendar instance
      * @param charset an optional encoding
      * @return a content type string
+     * @deprecated @see {@link Calendar#getContentType(Charset)}
      */
+    @Deprecated
     public static String getContentType(Calendar calendar, Charset charset) {
         final StringBuilder b = new StringBuilder("text/calendar");
         
