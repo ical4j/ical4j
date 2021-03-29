@@ -45,8 +45,103 @@ import java.util.*;
 
 /**
  * $Id$ [18-Apr-2004]
- * <p/>
- * Defines a recurrence.
+ *
+ * <pre>
+ *     3.3.10.  Recurrence Rule
+ *
+ *    Value Name:  RECUR
+ *
+ *    Purpose:  This value type is used to identify properties that contain
+ *       a recurrence rule specification.
+ *
+ *    Format Definition:  This value type is defined by the following
+ *       notation:
+ *
+ *        recur           = recur-rule-part *( ";" recur-rule-part )
+ *                        ;
+ *                        ; The rule parts are not ordered in any
+ *                        ; particular sequence.
+ *                        ;
+ *                        ; The FREQ rule part is REQUIRED,
+ *                        ; but MUST NOT occur more than once.
+ *                        ;
+ *                        ; The UNTIL or COUNT rule parts are OPTIONAL,
+ *                        ; but they MUST NOT occur in the same 'recur'.
+ *                        ;
+ *
+ *                        ; The other rule parts are OPTIONAL,
+ *                        ; but MUST NOT occur more than once.
+ *
+ *        recur-rule-part = ( "FREQ" "=" freq )
+ *                        / ( "UNTIL" "=" enddate )
+ *                        / ( "COUNT" "=" 1*DIGIT )
+ *                        / ( "INTERVAL" "=" 1*DIGIT )
+ *                        / ( "BYSECOND" "=" byseclist )
+ *                        / ( "BYMINUTE" "=" byminlist )
+ *                        / ( "BYHOUR" "=" byhrlist )
+ *                        / ( "BYDAY" "=" bywdaylist )
+ *                        / ( "BYMONTHDAY" "=" bymodaylist )
+ *                        / ( "BYYEARDAY" "=" byyrdaylist )
+ *                        / ( "BYWEEKNO" "=" bywknolist )
+ *                        / ( "BYMONTH" "=" bymolist )
+ *                        / ( "BYSETPOS" "=" bysplist )
+ *                        / ( "WKST" "=" weekday )
+ *
+ *        freq        = "SECONDLY" / "MINUTELY" / "HOURLY" / "DAILY"
+ *                    / "WEEKLY" / "MONTHLY" / "YEARLY"
+ *
+ *        enddate     = date / date-time
+ *
+ *        byseclist   = ( seconds *("," seconds) )
+ *
+ *        seconds     = 1*2DIGIT       ;0 to 60
+ *
+ *        byminlist   = ( minutes *("," minutes) )
+ *
+ *        minutes     = 1*2DIGIT       ;0 to 59
+ *
+ *        byhrlist    = ( hour *("," hour) )
+ *
+ *        hour        = 1*2DIGIT       ;0 to 23
+ *
+ *        bywdaylist  = ( weekdaynum *("," weekdaynum) )
+ *
+ *        weekdaynum  = [[plus / minus] ordwk] weekday
+ *
+ *        plus        = "+"
+ *
+ *        minus       = "-"
+ *
+ *        ordwk       = 1*2DIGIT       ;1 to 53
+ *
+ *        weekday     = "SU" / "MO" / "TU" / "WE" / "TH" / "FR" / "SA"
+ *        ;Corresponding to SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY,
+ *        ;FRIDAY, and SATURDAY days of the week.
+ *
+ *        bymodaylist = ( monthdaynum *("," monthdaynum) )
+ *
+ *        monthdaynum = [plus / minus] ordmoday
+ *
+ *        ordmoday    = 1*2DIGIT       ;1 to 31
+ *
+ *        byyrdaylist = ( yeardaynum *("," yeardaynum) )
+ *
+ *        yeardaynum  = [plus / minus] ordyrday
+ *
+ *        ordyrday    = 1*3DIGIT      ;1 to 366
+ *
+ *        bywknolist  = ( weeknum *("," weeknum) )
+ *
+ *        weeknum     = [plus / minus] ordwk
+ *
+ *        bymolist    = ( monthnum *("," monthnum) )
+ *
+ *        monthnum    = 1*2DIGIT       ;1 to 12
+ *
+ *        bysplist    = ( setposday *("," setposday) )
+ *
+ *        setposday   = yeardaynum
+ * </pre>
  *
  * @author Ben Fortuna
  * @version 2.0
