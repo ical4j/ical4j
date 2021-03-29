@@ -37,7 +37,6 @@ import junit.framework.TestSuite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
@@ -471,15 +470,15 @@ public class PeriodTest extends TestCase {
         // test subtraction contained by period..
 //        suite.addTest(new PeriodListTest(year1994.subtract(monthApril), 2));
 
-        ZoneId zoneId = TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne");
-        ZonedDateTime start = ((LocalDateTime) TemporalAdapter.parse("20081115T163800").getTemporal())
-                .atZone(zoneId);
-        suite.addTest(new PeriodTest("testGetEndTimeZone", new Period<>(start, java.time.Period.ofWeeks(1)),
-                zoneId));
+//        ZoneId zoneId = TimeZoneRegistry.getGlobalZoneId("Australia/Melbourne");
+//        ZonedDateTime start = ((LocalDateTime) TemporalAdapter.parse("20081115T163800").getTemporal())
+//                .atZone(zoneId);
+//        suite.addTest(new PeriodTest("testGetEndTimeZone", new Period<>(start, java.time.Period.ofWeeks(1)),
+//                zoneId));
         
-        start = start.withZoneSameInstant(ZoneId.of("UTC"));
-        suite.addTest(new PeriodTest("testGetEndIsUtc", new Period<>(start, java.time.Period.ofWeeks(1)),
-                true));
+//        start = start.withZoneSameInstant(ZoneId.of("UTC"));
+//        suite.addTest(new PeriodTest("testGetEndIsUtc", new Period<>(start, java.time.Period.ofWeeks(1)),
+//                true));
         
         // other tests..
         suite.addTest(new PeriodTest("testTimezone"));

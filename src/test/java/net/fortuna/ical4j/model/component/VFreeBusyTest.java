@@ -52,6 +52,7 @@ import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -59,7 +60,7 @@ import java.util.Optional;
  *
  * @author Ben Fortuna
  */
-public class VFreeBusyTest extends CalendarComponentTest {
+public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
 
     private static Logger log = LoggerFactory.getLogger(VFreeBusyTest.class);
 
@@ -77,7 +78,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
 
     private int expectedPeriodCount;
 
-    private PeriodList expectedPeriods;
+    private List<Period<T>> expectedPeriods;
 
     /**
      * @param testMethod
@@ -125,7 +126,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
      * @param components
      * @param expectedPeriods
      */
-    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList<CalendarComponent> components, PeriodList expectedPeriods) {
+    public VFreeBusyTest(String testMethod, VFreeBusy component, ComponentList<CalendarComponent> components, List<Period<T>> expectedPeriods) {
         super(testMethod, component);
         this.request = component;
         this.components = components;
@@ -321,11 +322,11 @@ public class VFreeBusyTest extends CalendarComponentTest {
     public void testPeriodCount() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
         Optional<FreeBusy> fb = result.getProperties().getFirst(Property.FREEBUSY);
-        assertTrue(fb.isPresent());
         if (expectedPeriodCount > 0) {
+            assertTrue(fb.isPresent());
             assertEquals(expectedPeriodCount, fb.get().getPeriods().size());
         } else {
-            assertNull(fb);
+            assertFalse(fb.isPresent());
         }
     }
 
@@ -398,8 +399,8 @@ public class VFreeBusyTest extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testPeriodCount", requestFree, components, 1));
 
         // period should be from the start to the end date..
-        PeriodList<Instant> periods = new PeriodList<Instant>(CalendarDateFormat.UTC_DATE_TIME_FORMAT)
-            .add(new Period<>(start, end));
+        List<Period<Instant>> periods = Collections.singletonList(new Period<>(start,
+                TemporalAmountAdapter.between(start, end).getDuration()));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", requestFree, components, periods));
 
         //testBusyTime..
@@ -418,8 +419,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
 //        suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.BUSY));
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
 
-        periods = new PeriodList<Instant>(CalendarDateFormat.UTC_DATE_TIME_FORMAT)
-            .add(new Period<>((Instant) TemporalAdapter.parse("20050104T080000Z").getTemporal(),
+        periods = Collections.singletonList(new Period<>((Instant) TemporalAdapter.parse("20050104T080000Z").getTemporal(),
                 java.time.Duration.parse("PT5H")));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
 
@@ -445,8 +445,7 @@ public class VFreeBusyTest extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.FREE));
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
 
-        periods = new PeriodList<Instant>(CalendarDateFormat.UTC_DATE_TIME_FORMAT)
-            .add(new Period<>(start, java.time.Duration.ofMinutes(30)));
+        periods = Collections.singletonList(new Period<>(start, java.time.Duration.ofMinutes(30)));
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", request, components, periods));
 
         //some components are not in range
