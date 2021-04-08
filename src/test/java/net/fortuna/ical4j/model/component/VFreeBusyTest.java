@@ -46,7 +46,6 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.Temporal;
@@ -272,8 +271,8 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         Calendar freeBusyTest = new Calendar();
 
         // add an event
-        LocalDate start = LocalDate.now();
-        LocalDate end = start.plusDays(1);
+        ZonedDateTime start = ZonedDateTime.now();
+        ZonedDateTime end = start.plusDays(1);
 
         VEvent dteEnd = new VEvent(start, end, "DATE END INCLUDED");
 
@@ -319,6 +318,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
     /**
      *
      */
+//    @Ignore("Recurrences with FREQ=WEEKLY not compatible with Instant temporal type currently")
     public void testPeriodCount() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
         Optional<FreeBusy> fb = result.getProperties().getFirst(Property.FREEBUSY);
@@ -333,6 +333,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
     /**
      *
      */
+//    @Ignore("Recurrences with FREQ=WEEKLY not compatible with Instant temporal type currently")
     public void testFreeBusyPeriods() {
         VFreeBusy result = new VFreeBusy(request, components.getAll());
         Optional<FreeBusy> fb = result.getProperties().getFirst(Property.FREEBUSY);
@@ -404,17 +405,17 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         suite.addTest(new VFreeBusyTest("testFreeBusyPeriods", requestFree, components, periods));
 
         //testBusyTime..
-        event1 = new VEvent(TemporalAdapter.parse("20050103T080000Z").getTemporal(),
+        event1 = new VEvent(TemporalAdapter.parse("20050103T080000", ZoneId.systemDefault()).getTemporal(),
                 java.time.Duration.ofHours(5), "Event 1");
         Recur<Instant> rRuleRecur = new Recur<>("FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         RRule<Instant> rRule = new RRule<>(rRuleRecur);
         event1.add(rRule);
         components = new ComponentList<>(Collections.singletonList(event1));
 
-        start = (Instant) TemporalAdapter.parse("20050104T110000Z").getTemporal();
-        Period<Instant> period = new Period<>(start, java.time.Duration.ofMinutes(30));
+        ZonedDateTime startZoned = TemporalAdapter.parse("20050104T110000", ZoneId.systemDefault()).getTemporal();
+        Period<ZonedDateTime> period = new Period<>(startZoned, java.time.Duration.ofMinutes(30));
 
-        VFreeBusy request = new VFreeBusy(period.getStart(), period.getEnd());
+        VFreeBusy request = new VFreeBusy(period.getStart().toInstant(), period.getEnd().toInstant());
         // FBTYPE is optional - defaults to BUSY..
 //        suite.addTest(new VFreeBusyTest("testFbType", request, components, FbType.BUSY));
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
@@ -428,7 +429,7 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
 //        assertEquals(new DateTime("20050104T1100000Z"), busy1.getStart());
 //        assertEquals("PT30M", busy1.getDuration().toString());
 
-        request = new VFreeBusy(period.getStart(), period.getEnd(), java.time.Period.ZERO);
+        request = new VFreeBusy(period.getStart().toInstant(), period.getEnd().toInstant(), java.time.Period.ZERO);
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 0));
 
         // anniversary-style events don't consume time..
@@ -456,9 +457,9 @@ public class VFreeBusyTest<T extends Temporal> extends CalendarComponentTest {
         VEvent e = new VEvent().add(dts).add(new Duration(java.time.Duration.parse("PT1H")))
                 .add(new RRule<>("FREQ=DAILY"));
         components = new ComponentList<>(Collections.singletonList(e));
-        period = new Period<>((Instant) TemporalAdapter.parse("20130124T110000Z").getTemporal(),
+        Period<Instant> periodInstant = new Period<>((Instant) TemporalAdapter.parse("20130124T110000Z").getTemporal(),
                 (Instant) TemporalAdapter.parse("20130125T110000Z").getTemporal());
-        request = new VFreeBusy(period.getStart(), period.getEnd());
+        request = new VFreeBusy(periodInstant.getStart(), periodInstant.getEnd());
         suite.addTest(new VFreeBusyTest("testPeriodCount", request, components, 1));
 
         return suite;

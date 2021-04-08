@@ -118,13 +118,13 @@ public class DateTimeTest extends TestCase {
             log.info("Exception occurred: " + pe.getMessage());
         }
 
-        try {
-            new DateTime("20000402T020000",
-                    registry.getTimeZone("America/Los_Angeles"));
-            fail("Should throw ParseException");
-        } catch (ParseException pe) {
-            log.info("Exception occurred: " + pe.getMessage());
-        }
+//        try {
+//            new DateTime("20000402T020000",
+//                    registry.getTimeZone("America/Los_Angeles"));
+//            fail("Should throw ParseException");
+//        } catch (ParseException pe) {
+//            log.info("Exception occurred: " + pe.getMessage());
+//        }
     }
 
     public void testRelaxed() throws Exception {

@@ -614,25 +614,26 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         UidGenerator ug = new RandomUidGenerator();
         Uid uid = ug.generateUid();
 
-        ParameterList startParams = new ParameterList(Collections.singletonList(new TzId(ZoneId.systemDefault().getId())));
-        DtStart<ZonedDateTime> start = new DtStart<>(startParams, ZonedDateTime.now());
+        ParameterList startParams = new ParameterList(Collections.singletonList(Value.DATE));
+        DtStart<LocalDate> start = new DtStart<>(startParams, LocalDate.now());
 
-        DtEnd<ZonedDateTime> end = new DtEnd<>(ZonedDateTime.now());
+        ParameterList endParams = new ParameterList(Collections.singletonList(Value.DATE));
+        DtEnd<LocalDate> end = new DtEnd<>(endParams, LocalDate.now());
         VEvent event = new VEvent().add(uid).add(start).add(end);
         suite.addTest(new VEventTest<>("testValidation", event));
 
         event = event.copy();
 //        start = (DtStart) event.getProperty(Property.DTSTART);
         startParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
-        start = new DtStart<>(startParams, ZonedDateTime.now());
-        event.replace(start);
+        DtStart<ZonedDateTime> newstart = new DtStart<>(startParams, ZonedDateTime.now());
+        event.replace(newstart);
         suite.addTest(new VEventTest<>("testValidationException", event));
 
         // test 1..
         event = event.copy();
         startParams = new ParameterList(Collections.singletonList(Value.DATE));
-        start = new DtStart<>(startParams, event.getProperties().getRequired(Property.DTSTART).getValue());
-        event.replace(start);
+        newstart = new DtStart<>(startParams, event.getProperties().getRequired(Property.DTSTART).getValue());
+        event.replace(newstart);
         suite.addTest(new VEventTest<>("testValidationException", event));
 
 //        event = (VEvent) event.copy();
@@ -648,7 +649,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
         start = new DtStart<>(startParams, event.getProperties().getRequired(Property.DTSTART).getValue());
         event.replace(start);
 
-        ParameterList endParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
+        endParams = new ParameterList(Collections.singletonList(Value.DATE_TIME));
         end = new DtEnd<>(endParams, event.getProperties().getRequired(Property.DTEND).getValue());
         event.replace(end);
         suite.addTest(new VEventTest<>("testValidationException", event));
