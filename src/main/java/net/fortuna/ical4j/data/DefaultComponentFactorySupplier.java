@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-class DefaultComponentFactorySupplier implements Supplier<List<ComponentFactory<? extends Component>>> {
+public class DefaultComponentFactorySupplier implements Supplier<List<ComponentFactory<? extends Component>>> {
 
     @Override
     public List<ComponentFactory<? extends Component>> get() {
