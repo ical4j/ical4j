@@ -224,8 +224,12 @@ public abstract class Observance extends Component {
             cal.setTime(date);
             cal.add(Calendar.YEAR, 10);
             onsetLimit = Dates.getInstance(cal.getTime(), Value.DATE_TIME);
-            final DateList recurrenceDates = rrule.getRecur().getDates(initialOnsetUTC,
-                    onsetLimit, Value.DATE_TIME);
+            final DateList recurrenceDates;
+            if (rrule.getRecur().getDayList().isEmpty()) {
+                recurrenceDates = rrule.getRecur().getDates(initialOnset, onsetLimit, Value.DATE_TIME);
+            } else {
+                recurrenceDates = rrule.getRecur().getDates(initialOnsetUTC, onsetLimit, Value.DATE_TIME);
+            }
             for (final Date recurDate : recurrenceDates) {
                 final DateTime rruleOnset = applyOffsetFrom((DateTime) recurDate);
                 if (!rruleOnset.after(date) && rruleOnset.after(onset)) {
