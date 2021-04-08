@@ -137,6 +137,7 @@ public class Summary extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         this.value = aValue;
     }
@@ -144,6 +145,7 @@ public class Summary extends Property implements Escapable {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -160,11 +162,13 @@ public class Summary extends Property implements Escapable {
             super(SUMMARY);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Summary(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new Summary();
         }

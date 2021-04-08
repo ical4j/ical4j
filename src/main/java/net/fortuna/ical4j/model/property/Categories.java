@@ -149,6 +149,7 @@ public class Categories extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void setValue(final String aValue) {
         categories = new TextList(aValue);
     }
@@ -163,6 +164,7 @@ public class Categories extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getCategories().toString();
     }
@@ -174,11 +176,13 @@ public class Categories extends Property {
             super(CATEGORIES);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new Categories(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new Categories();
         }

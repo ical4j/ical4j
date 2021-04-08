@@ -81,6 +81,7 @@ public class Related extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return value;
     }
@@ -92,6 +93,7 @@ public class Related extends Parameter {
             super(RELATED);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             Related parameter = new Related(value);
             if (Related.START.equals(parameter)) {

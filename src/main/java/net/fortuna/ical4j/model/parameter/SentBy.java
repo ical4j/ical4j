@@ -79,6 +79,7 @@ public class SentBy extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return Uris.decode(Strings.valueOf(getAddress()));
     }
@@ -90,6 +91,7 @@ public class SentBy extends Parameter {
             super(SENT_BY);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             return new SentBy(value);
         }

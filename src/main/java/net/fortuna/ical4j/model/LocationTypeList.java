@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -71,6 +72,11 @@ public class LocationTypeList implements Serializable, Iterable<String> {
         while (t.hasMoreTokens()) {
             locationTypes.add(t.nextToken());
         }
+    }
+
+    public LocationTypeList(LocationType... locationTypes) {
+        this.locationTypes = Arrays.stream(locationTypes).map(LocationType::toString)
+                .collect(Collectors.toList());
     }
 
     /**

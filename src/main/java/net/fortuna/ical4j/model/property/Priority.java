@@ -161,11 +161,13 @@ public class Priority extends Property {
             super(new ParameterList(true), level);
         }
 
+        @Override
         public void setValue(final String aValue) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
         }
 
+        @Override
         public void setLevel(final int level) {
             throw new UnsupportedOperationException(
                     "Cannot modify constant instances");
@@ -226,6 +228,7 @@ public class Priority extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public void setValue(final String aValue) {
         level = Integer.parseInt(aValue);
     }
@@ -233,6 +236,7 @@ public class Priority extends Property {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return String.valueOf(getLevel());
     }
@@ -256,6 +260,7 @@ public class Priority extends Property {
             super(PRIORITY);
         }
 
+        @Override
         public Priority createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
 
@@ -277,6 +282,7 @@ public class Priority extends Property {
             return priority;
         }
 
+        @Override
         public Priority createProperty() {
             return new Priority();
         }

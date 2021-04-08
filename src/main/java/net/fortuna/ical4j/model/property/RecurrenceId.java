@@ -205,6 +205,7 @@ public class RecurrenceId extends DateProperty {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final void validate() throws ValidationException {
         super.validate();
 
@@ -228,11 +229,13 @@ public class RecurrenceId extends DateProperty {
             super(RECURRENCE_ID);
         }
 
+        @Override
         public Property createProperty(final ParameterList parameters, final String value)
                 throws IOException, URISyntaxException, ParseException {
             return new RecurrenceId(parameters, value);
         }
 
+        @Override
         public Property createProperty() {
             return new RecurrenceId();
         }

@@ -91,6 +91,7 @@ public class DateTest extends TestCase {
     /* (non-Javadoc)
      * @see junit.framework.TestCase#getName()
      */
+    @Override
     public String getName() {
         return super.getName() + " [" + date.toString() + "]";
     }

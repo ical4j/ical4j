@@ -75,6 +75,7 @@ public class DelegatedFrom extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     public final String getValue() {
         return getDelegators().toString();
     }
@@ -82,6 +83,7 @@ public class DelegatedFrom extends Parameter {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected boolean isQuotable() {
         // override default behaviour as quoting is handled by the implementation..
         return false;
@@ -94,6 +96,7 @@ public class DelegatedFrom extends Parameter {
             super(DELEGATED_FROM);
         }
 
+        @Override
         public Parameter createParameter(final String value) throws URISyntaxException {
             return new DelegatedFrom(value);
         }

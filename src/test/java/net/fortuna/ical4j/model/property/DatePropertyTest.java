@@ -75,6 +75,7 @@ public class DatePropertyTest extends PropertyTest {
     /**
      * 
      */
+    @Override
     public void testCopy() throws IOException, URISyntaxException,
             ParseException {
         Property copy = property.copy();

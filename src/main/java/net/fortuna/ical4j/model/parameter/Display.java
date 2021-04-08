@@ -89,6 +89,7 @@ public class Display extends Parameter {
             super(PARAMETER_NAME);
         }
 
+        @Override
         public Parameter createParameter(final String value) {
             return new Display(value);
         }
