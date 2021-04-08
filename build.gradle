@@ -157,8 +157,8 @@ publishing {
                 scmNode.appendNode('developerConnection', 'scm:git@github.com:ical4j/ical4j.git')
 
                 def licenseNode = asNode().appendNode('licenses').appendNode('license')
-                licenseNode.appendNode('name', 'iCal4j - License')
-                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE')
+                licenseNode.appendNode('name', 'BSD-3-Clause')
+                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE.txt')
                 licenseNode.appendNode('distribution', 'repo')
 
                 def developerNode = asNode().appendNode('developers').appendNode('developer')
