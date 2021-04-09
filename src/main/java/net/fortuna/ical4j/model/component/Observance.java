@@ -156,16 +156,23 @@ public abstract class Observance extends Component {
      */
     public final Date getLatestOnset(final Date date) {
 
+        DateTime initialOnsetUTC;
+        // get first onset without adding TZFROM as this may lead to a day boundary
+        // change which would be incompatible with BYDAY RRULES
+        // we will have to add the offset to all cacheable onsets
+        try {
+            DtStart dtStart = (DtStart) getRequiredProperty(Property.DTSTART);
+            initialOnsetUTC = calculateOnset(dtStart.getDate());
+        } catch (ParseException | ConstraintViolationException e) {
+            Logger log = LoggerFactory.getLogger(Observance.class);
+            log.error("Unexpected error calculating initial onset", e);
+            // XXX: is this correct?
+//            return null;
+            initialOnsetUTC = new DateTime(new java.util.Date(0));
+        }
+
         if (initialOnset == null) {
-            try {
-                DtStart dtStart = (DtStart) getRequiredProperty(Property.DTSTART);
-                initialOnset = applyOffsetFrom(calculateOnset(dtStart.getDate()));
-            } catch (ParseException | ConstraintViolationException e) {
-                Logger log = LoggerFactory.getLogger(Observance.class);
-                log.error("Unexpected error calculating initial onset", e);
-                // XXX: is this correct?
-                return null;
-            }
+            initialOnset = applyOffsetFrom(initialOnsetUTC);
         }
 
         // observance not applicable if date is before the effective date of this observance..
@@ -178,18 +185,6 @@ public abstract class Observance extends Component {
         }
 
         Date onset = initialOnset;
-        Date initialOnsetUTC;
-        // get first onset without adding TZFROM as this may lead to a day boundary
-        // change which would be incompatible with BYDAY RRULES
-        // we will have to add the offset to all cacheable onsets
-        try {
-            initialOnsetUTC = calculateOnset(((DtStart) getProperty(Property.DTSTART)).getDate());
-        } catch (ParseException e) {
-            Logger log = LoggerFactory.getLogger(Observance.class);
-            log.error("Unexpected error calculating initial onset", e);
-            // XXX: is this correct?
-            return null;
-        }
         // collect all onsets for the purposes of caching..
         final DateList cacheableOnsets = new DateList();
         cacheableOnsets.setUtc(true);
@@ -224,8 +219,12 @@ public abstract class Observance extends Component {
             cal.setTime(date);
             cal.add(Calendar.YEAR, 10);
             onsetLimit = Dates.getInstance(cal.getTime(), Value.DATE_TIME);
-            final DateList recurrenceDates = rrule.getRecur().getDates(initialOnsetUTC,
-                    onsetLimit, Value.DATE_TIME);
+            final DateList recurrenceDates;
+            if (rrule.getRecur().getDayList().isEmpty()) {
+                recurrenceDates = rrule.getRecur().getDates(initialOnset, onsetLimit, Value.DATE_TIME);
+            } else {
+                recurrenceDates = rrule.getRecur().getDates(initialOnsetUTC, onsetLimit, Value.DATE_TIME);
+            }
             for (final Date recurDate : recurrenceDates) {
                 final DateTime rruleOnset = applyOffsetFrom((DateTime) recurDate);
                 if (!rruleOnset.after(date) && rruleOnset.after(onset)) {

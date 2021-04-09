@@ -374,10 +374,9 @@ public class Recur implements Serializable {
             return Frequency.WEEKLY;
         } else if (frequency == Frequency.MONTHLY || !getMonthList().isEmpty()) {
             return Frequency.MONTHLY;
-        } else if (frequency == Frequency.YEARLY) {
-            return Frequency.YEARLY;
+        } else {
+            return frequency;
         }
-        return null;
     }
 
     /**
