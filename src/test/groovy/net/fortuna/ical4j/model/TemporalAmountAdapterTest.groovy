@@ -6,12 +6,16 @@ import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.time.Duration
+import java.time.LocalDateTime
 
 class TemporalAmountAdapterTest extends Specification {
 
     def "verify string representation"() {
+        setup: 'Set default seed date for test consistency'
+        def seed = LocalDateTime.parse("2021-04-01T00:00:00")
+
         expect:
-        new TemporalAmountAdapter(duration) as String == expectedValue
+        new TemporalAmountAdapter(duration).toString(seed) == expectedValue
 
         where:
         duration                    | expectedValue
@@ -164,7 +168,7 @@ class TemporalAmountAdapterTest extends Specification {
 
     def 'extension module test: negative'() {
         expect:
-        -TemporalAmountAdapter.from(new Dur('P1D')).duration == TemporalAmountAdapter.from(new Dur('-P1D')).duration
+        TemporalAmountAdapter.from(-(new Dur('P1D'))).duration == TemporalAmountAdapter.from(new Dur('-P1D')).duration
     }
 
     def 'test hashcode equality'() {
@@ -181,9 +185,10 @@ class TemporalAmountAdapterTest extends Specification {
         adapter1.hashCode() == adapter2.hashCode()
     }
 
+    @Ignore
     def 'week period parsing and values'() {
-	given: 'a one week amount adapter'
-	TemporalAmountAdapter adapter1 = TemporalAmountAdapter.parse('P1W')
+        given: 'a one week amount adapter'
+        TemporalAmountAdapter adapter1 = TemporalAmountAdapter.parse('P1W')
 
         and: 'a negative one week identical period'
         TemporalAmountAdapter adapter2 = TemporalAmountAdapter.parse('-P1W')

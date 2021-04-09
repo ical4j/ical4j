@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id 'pl.allegro.tech.build.axion-release' version '1.10.2'
+    id 'pl.allegro.tech.build.axion-release' version '1.13.1'
     id "nebula.provided-base" version "3.0.3"
     id "net.ltgt.errorprone" version "1.2.1" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
@@ -64,14 +64,18 @@ dependencies {
             "org.codehaus.groovy:groovy-xml:$groovyVersion"
 
     // junit
-    testImplementation "junit:junit:$junitVersion"
-    
+    testImplementation 'org.junit.vintage:junit-vintage-engine:5.7.1'
+
     // groovy-test
     testImplementation "org.codehaus.groovy:groovy-test:$groovyVersion"
-    
+
     // spock
     testImplementation platform("org.spockframework:spock-bom:2.0-M4-groovy-3.0"),
             "org.spockframework:spock-core"
+}
+
+test {
+    useJUnitPlatform()
 }
 
 jacocoTestReport {
@@ -123,7 +127,7 @@ configurations {
 
 scmVersion {
     tag {
-        prefix = 'ical4j'
+        prefix = 'ical4j-'
         branchPrefix = ['ical4j-1.x-maintenance' : 'jdk14_ical4j']
         branchPrefix = ['ical4j-2.x-maintenance' : 'jdk7_ical4j']
     }
@@ -165,8 +169,8 @@ publishing {
                 scmNode.appendNode('developerConnection', 'scm:git@github.com:ical4j/ical4j.git')
 
                 def licenseNode = asNode().appendNode('licenses').appendNode('license')
-                licenseNode.appendNode('name', 'iCal4j - License')
-                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE')
+                licenseNode.appendNode('name', 'BSD-3-Clause')
+                licenseNode.appendNode('url', 'https://raw.githubusercontent.com/ical4j/ical4j/master/LICENSE.txt')
                 licenseNode.appendNode('distribution', 'repo')
 
                 def developerNode = asNode().appendNode('developers').appendNode('developer')

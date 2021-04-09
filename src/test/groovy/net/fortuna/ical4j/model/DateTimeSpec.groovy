@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model
 
+import net.fortuna.ical4j.model.component.VTimeZone
 import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
@@ -41,6 +42,8 @@ import java.text.ParseException
 class DateTimeSpec extends Specification {
 
     @Shared TimeZoneRegistry tzRegistry = TimeZoneRegistryFactory.instance.createRegistry()
+
+    @Shared ContentBuilder builder = []
 
     @Unroll
     def 'test date time initialisation with a standard timezone: #timezoneId'() {
@@ -62,31 +65,14 @@ class DateTimeSpec extends Specification {
         '20110326T090000'| 'Europe/Minsk'
     }
 
-    @Ignore
+//    @Ignore
     def 'test date time initialisation with a custom timezone'() {
         setup:
         def originalTimezone = TimeZone.default
         TimeZone.default = TimeZone.getTimeZone('Europe/London')
 
-        def vTimeZone = new ContentBuilder().vtimezone {
-            tzid 'Europe/London'
-            standard {
-                tzname 'GMT'
-                dtstart '19710101T020000'
-                tzoffsetfrom '+0100'
-                tzoffsetto '+0000'
-                rrule 'FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU'
-            }
-            daylight {
-                tzname 'BST'
-                dtstart '19710101T010000'
-                tzoffsetfrom '+0000'
-                tzoffsetto '+0100'
-                rrule 'FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU'
-            }
-        }
         println vTimeZone
-        def customTimezone = new TimeZone(vTimeZone)
+        def customTimezone = new TimeZone((VTimeZone) vTimeZone)
 
         expect:
         assert new DateTime(dateTimeString, customTimezone) as String == dateTimeString
@@ -95,7 +81,38 @@ class DateTimeSpec extends Specification {
         TimeZone.default = originalTimezone
 
         where:
-        dateTimeString << ['20110327T000000']
+        vTimeZone << [
+                builder.vtimezone {
+                    tzid 'Europe/London'
+                    standard {
+                        tzname 'GMT'
+                        dtstart '19710101T020000'
+                        tzoffsetfrom '+0100'
+                        tzoffsetto '+0000'
+                        rrule 'FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU'
+                    }
+                    daylight {
+                        tzname 'BST'
+                        dtstart '19710101T010000'
+                        tzoffsetfrom '+0000'
+                        tzoffsetto '+0100'
+                        rrule 'FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU'
+                    }
+                },
+                builder.vtimezone {
+                    tzid 'Europe/Amsterdam'
+                    standard {
+                        tzoffsetfrom '+0200'
+                        tzoffsetto '+0100'
+                    }
+                    daylight {
+                        tzoffsetfrom '+0100'
+                        tzoffsetto '+0200'
+                    }
+                }
+        ]
+
+        dateTimeString << ['20110327T000000', '20110327T000000']
     }
 
     @Ignore
