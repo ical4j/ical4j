@@ -1,13 +1,13 @@
 import aQute.bnd.gradle.Bundle
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
-    }
-}
+//buildscript {
+//    repositories {
+//        mavenCentral()
+//    }
+//    dependencies {
+//        classpath 'org.hidetake:gradle-ssh-plugin:2.10.1'
+//    }
+//}
 
 plugins {
     id 'pl.allegro.tech.build.axion-release' version '1.13.1'
@@ -23,9 +23,8 @@ apply plugin: 'groovy'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 apply plugin: 'signing'
-apply plugin: 'pl.allegro.tech.build.axion-release'
 apply plugin: 'nebula.optional-base'
-apply from: 'gradle/dist.gradle'
+//apply from: 'gradle/dist.gradle'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
