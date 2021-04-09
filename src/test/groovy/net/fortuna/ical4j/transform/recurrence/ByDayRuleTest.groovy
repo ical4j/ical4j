@@ -2,7 +2,6 @@ package net.fortuna.ical4j.transform.recurrence
 
 import net.fortuna.ical4j.model.*
 import net.fortuna.ical4j.model.component.VEvent
-import net.fortuna.ical4j.model.parameter.Value
 import net.fortuna.ical4j.model.property.CalScale
 import net.fortuna.ical4j.model.property.ExRule
 import net.fortuna.ical4j.model.property.RRule
@@ -11,9 +10,12 @@ import net.fortuna.ical4j.util.RandomUidGenerator
 import net.fortuna.ical4j.util.UidGenerator
 import spock.lang.Specification
 
+import java.time.DayOfWeek
+import java.time.Instant
 import java.util.stream.IntStream
 
-import static net.fortuna.ical4j.model.Recur.Frequency.WEEKLY
+import static net.fortuna.ical4j.model.WeekDay.*
+import static net.fortuna.ical4j.transform.recurrence.Frequency.WEEKLY
 
 class ByDayRuleTest extends Specification {
 
@@ -37,7 +39,7 @@ class ByDayRuleTest extends Specification {
 
         where:
         rulePart | frequency | dateStrings  | expectedResult
-        FR       | WEEKLY    | ['20150103'] | ['20150102']
+        FR | WEEKLY | ['20150103'] | ['20150102']
         [SU, MO] as WeekDay[] | WEEKLY    | ['20110306'] | ['20110306', '20110307']
     }
 
@@ -47,8 +49,8 @@ class ByDayRuleTest extends Specification {
         calendar.getProperties().add(Version.VERSION_2_0);
         calendar.getProperties().add(CalScale.GREGORIAN);
 
-        DateTime dateTime = new DateTime("20210104T130000Z");
-        VEvent e1 = new VEvent(dateTime, "even");
+        TemporalAdapter<Instant> dateTime = TemporalAdapter.parse("20210104T130000Z");
+        VEvent e1 = new VEvent(dateTime.temporal, "even");
         UidGenerator ug = new RandomUidGenerator();
         e1.getProperties().add(ug.generateUid());
 
@@ -60,10 +62,10 @@ class ByDayRuleTest extends Specification {
         hourList.add(16);
 
         Recur recur = new Recur.Builder()
-                .frequency(Recur.Frequency.MINUTELY)
+                .frequency(Frequency.MINUTELY)
                 .interval(15)
                 .hourList(hourList)
-                .dayList(new WeekDayList(WeekDay.WE))
+                .dayList(new WeekDayList(WE))
                 .build();
         e1.getProperties().add(new RRule(recur));
 
@@ -71,13 +73,13 @@ class ByDayRuleTest extends Specification {
         final NumberList hourExList = new NumberList();
         hourExList.add(16);
         Recur recurEx = new Recur.Builder()
-                .frequency(Recur.Frequency.MINUTELY)
+                .frequency(Frequency.MINUTELY)
                 .interval(15)
                 .hourList(hourExList)
                 .minuteList(numberList(30, 60))
                 .build();
         Recur recurEx2 = new Recur.Builder()
-                .frequency(Recur.Frequency.MINUTELY)
+                .frequency(Frequency.MINUTELY)
                 .interval(15)
                 .hourList(numberList(13, 14))
                 .minuteList(numberList(0, 30))
@@ -91,10 +93,10 @@ class ByDayRuleTest extends Specification {
 
         expect: 'dates are calculated successfully'
         System.out.println("--------------------------------------------------");
-        DateTime from = new DateTime("20200101T070000Z");
-        DateTime to = new DateTime("20210107T070000Z");
+        TemporalAdapter<Instant> from = TemporalAdapter.parse("20200101T070000Z");
+        TemporalAdapter<Instant> to = TemporalAdapter.parse("20210107T070000Z")
 
-        Period period = new Period(from, to);
+        Period period = new Period(from.temporal, to.temporal);
         for (Component c : calendar.getComponents("VEVENT")) {
             PeriodList list = c.calculateRecurrenceSet(period);
             for (Object po : list) {

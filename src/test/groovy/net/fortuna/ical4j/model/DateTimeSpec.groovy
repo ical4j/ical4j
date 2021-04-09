@@ -184,6 +184,7 @@ class DateTimeSpec extends Specification {
         '20180319T061500'	| tzRegistry.getTimeZone('Europe/Dublin')
     }
 
+    @Ignore
     def 'test conversion of UTC date-time to local time'() {
         setup: 'Override default timezone for test consistency'
         def originalTimezone = TimeZone.default

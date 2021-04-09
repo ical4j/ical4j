@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model
 
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Unroll
 
 import java.time.Instant
 import java.time.ZoneOffset
@@ -11,6 +12,7 @@ class ZoneRulesBuilderTest extends Specification {
     @Shared
     TimeZoneRegistry timeZoneRegistry = TimeZoneRegistryFactory.instance.createRegistry()
 
+    @Unroll
     def 'test build rules'() {
         expect: 'rule definitions match expected'
         def zonerules = new ZoneRulesBuilder().vTimeZone(timeZoneRegistry.getTimeZone(tzId).getVTimeZone()).build()
