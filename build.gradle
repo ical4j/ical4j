@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-    id 'pl.allegro.tech.build.axion-release' version '1.10.2'
+    id 'pl.allegro.tech.build.axion-release' version '1.13.1'
     id "nebula.provided-base" version "3.0.3"
     id "net.ltgt.errorprone" version "1.2.1" apply false
     id "biz.aQute.bnd.builder" version "$bndVersion"
@@ -124,7 +124,7 @@ configurations {
 
 scmVersion {
     tag {
-        prefix = 'ical4j'
+        prefix = 'ical4j-'
         branchPrefix = ['ical4j-1.x-maintenance' : 'jdk14_ical4j']
         branchPrefix = ['ical4j-2.x-maintenance' : 'jdk7_ical4j']
     }
