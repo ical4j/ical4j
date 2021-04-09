@@ -20,8 +20,9 @@ public interface ContentContainer<T extends Content> extends Serializable {
 
     List<T> getAll();
 
-    default List<T> get(String name) {
-        return getAll().stream().filter(c -> c.getName().equals(name)).collect(Collectors.toList());
+    @SuppressWarnings("unchecked")
+    default <R extends T> List<R> get(String name) {
+        return getAll().stream().filter(c -> c.getName().equals(name)).map(c -> (R) c).collect(Collectors.toList());
     }
 
     @SuppressWarnings("unchecked")
