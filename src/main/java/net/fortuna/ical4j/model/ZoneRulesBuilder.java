@@ -12,10 +12,7 @@ import java.time.zone.ZoneOffsetTransition;
 import java.time.zone.ZoneOffsetTransitionRule;
 import java.time.zone.ZoneOffsetTransitionRule.TimeDefinition;
 import java.time.zone.ZoneRules;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Construct a {@link java.time.zone.ZoneRules} instance from a {@link net.fortuna.ical4j.model.component.VTimeZone}.
@@ -49,8 +46,8 @@ public class ZoneRulesBuilder {
         return transitions;
     }
 
-    private List<ZoneOffsetTransitionRule> buildTransitionRules(List<Observance> observances, ZoneOffset standardOffset) throws ConstraintViolationException {
-        List<ZoneOffsetTransitionRule> transitionRules = new ArrayList<>();
+    private Set<ZoneOffsetTransitionRule> buildTransitionRules(List<Observance> observances, ZoneOffset standardOffset) throws ConstraintViolationException {
+        Set<ZoneOffsetTransitionRule> transitionRules = new HashSet<>();
         for (Observance observance : observances) {
             Optional<RRule<?>> rrule = observance.getProperties().getFirst(Property.RRULE);
             TzOffsetFrom offsetFrom = observance.getProperties().getRequired(Property.TZOFFSETFROM);
@@ -96,9 +93,9 @@ public class ZoneRulesBuilder {
         List<ZoneOffsetTransition> offsetTransitions = buildTransitions(
                 vTimeZone.getObservances().get(Observance.DAYLIGHT));
         Collections.sort(offsetTransitions);
-        List<ZoneOffsetTransitionRule> transitionRules = buildTransitionRules(
+        Set<ZoneOffsetTransitionRule> transitionRules = buildTransitionRules(
                 vTimeZone.getObservances().getAll(), standardOffset);
 
-        return ZoneRules.of(standardOffset, wallOffset, standardOffsetTransitions, offsetTransitions, transitionRules);
+        return ZoneRules.of(standardOffset, wallOffset, standardOffsetTransitions, offsetTransitions, new ArrayList<>(transitionRules));
     }
 }
