@@ -195,8 +195,8 @@ public class VAlarm extends CalendarComponent {
 
     private static final long serialVersionUID = -8193965477414653802L;
 
-    private final Map<Action, Validator> actionValidators = new HashMap<Action, Validator>();
-    {
+    private static final Map<Action, Validator> actionValidators = new HashMap<Action, Validator>();
+    static {
         actionValidators.put(Action.AUDIO, new ComponentValidator<VAlarm>(new ValidationRule(OneOrLess, ATTACH)));
         actionValidators.put(Action.DISPLAY, new ComponentValidator<VAlarm>(new ValidationRule(One, DESCRIPTION)));
         actionValidators.put(Action.EMAIL, new ComponentValidator<VAlarm>(new ValidationRule(One, DESCRIPTION, SUMMARY),
@@ -266,21 +266,21 @@ public class VAlarm extends CalendarComponent {
             PropertyValidator.assertOne(Property.DURATION, getProperties());
             PropertyValidator.assertOne(Property.REPEAT, getProperties());
         }
-        
+
         /*
          * ; the following is optional, ; and MAY occur more than once x-prop
          */
-        
+
         final Validator actionValidator = actionValidators.get(getAction());
         if (actionValidator != null) {
             actionValidator.validate(this);
         }
-        
+
         if (recurse) {
             validateProperties();
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
