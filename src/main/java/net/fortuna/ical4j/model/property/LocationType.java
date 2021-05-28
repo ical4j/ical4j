@@ -88,7 +88,7 @@ public class LocationType extends Property {
 
     private LocationTypeList locationTypes;
 
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
+    private static final Validator<Property> validator = new PropertyValidator(Arrays.asList(
             new ValidationRule(OneOrLess, LANGUAGE)));
     /**
      * Default constructor.

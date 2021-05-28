@@ -61,7 +61,7 @@ public class Resources extends Property {
 
     private TextList resources;
 
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
+    private static final Validator<Property> validator = new PropertyValidator(Arrays.asList(
             new ValidationRule(OneOrLess, ALTREP, LANGUAGE)));
 
     /**

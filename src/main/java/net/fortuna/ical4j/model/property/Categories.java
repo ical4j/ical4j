@@ -102,7 +102,7 @@ public class Categories extends Property {
 
     private TextList categories;
 
-    private Validator<Property> validator = new PropertyValidator(Arrays.asList(
+    private static final Validator<Property> validator = new PropertyValidator(Arrays.asList(
             new ValidationRule(OneOrLess, LANGUAGE)));
     /**
      * Default constructor.

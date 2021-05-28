@@ -107,7 +107,7 @@ public class Summary extends Property implements Escapable {
 
     private String value;
 
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
+    private static final Validator<Property> validator = new PropertyValidator(Arrays.asList(
             new ValidationRule(OneOrLess, ALTREP, LANGUAGE)));
 
     /**
