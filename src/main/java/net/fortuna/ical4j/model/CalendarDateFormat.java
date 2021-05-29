@@ -217,6 +217,9 @@ public class CalendarDateFormat implements Serializable {
     public static final CalendarDateFormat UTC_DATE_TIME_FORMAT = new CalendarDateFormat(
             "yyyyMMdd'T'HHmmss'Z'", new InstantTemporalQuery());
 
+    public static final CalendarDateFormat RELAXED_DATE_TIME_FORMAT = new CalendarDateFormat(
+            "yyyyMMdd'T'HHmmss[X]", new InstantTemporalQuery(), new LocalDateTimeTemporalQuery());
+
     /**
      * A formatter capable of parsing to multiple temporal types based on the input string.
      */
