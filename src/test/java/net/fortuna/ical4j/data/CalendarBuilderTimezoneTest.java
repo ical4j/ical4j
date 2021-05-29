@@ -152,7 +152,7 @@ public class CalendarBuilderTimezoneTest extends TestCase {
                 "BEGIN:VEVENT\n" +
                 "DTSTART;TZID=Europe/Amsterdam:20200503T173000\n" +
                 "DTEND;TZID=Europe/Amsterdam:20200503T200000\n" +
-                "DTSTAMP:20191006T163046\n" +
+                "DTSTAMP:20191006T163046Z\n" +
                 "CREATED:20190924T180719Z\n" +
                 "LAST-MODIFIED:20191006T154131Z\n" +
                 "SUMMARY:Test summary\n" +
@@ -161,7 +161,7 @@ public class CalendarBuilderTimezoneTest extends TestCase {
                 "BEGIN:VEVENT\n" +
                 "DTSTART;TZID=Europe/Amsterdam:20191006T190000\n" +
                 "DTEND;TZID=Europe/Amsterdam:20191006T203000\n" +
-                "DTSTAMP:20191006T163047\n" +
+                "DTSTAMP:20191006T163047Z\n" +
                 "CREATED:20190912T190803Z\n" +
                 "LAST-MODIFIED:20190918T193650Z\n" +
                 "SUMMARY:Second test summary\n" +
