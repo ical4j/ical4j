@@ -43,9 +43,9 @@ import net.fortuna.ical4j.validate.Validator;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
+import static java.util.Collections.singletonList;
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
@@ -88,7 +88,7 @@ public class RequestStatus extends Property {
 
     private String exData;
 
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
+    private static final Validator<Property> validator = new PropertyValidator(singletonList(
             new ValidationRule(OneOrLess, LANGUAGE)));
 
     /**
