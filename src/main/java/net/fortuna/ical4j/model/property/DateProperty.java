@@ -135,7 +135,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     public T getDate() {
         if (date != null) {
             Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
-            if (tzId.isPresent()) {
+            if (tzId.isPresent() && shouldApplyTimezone()) {
                 return (T) date.toLocalTime(tzId.get().toZoneId(timeZoneRegistry));
             } else {
                 return date.getTemporal();
@@ -199,7 +199,7 @@ public abstract class DateProperty<T extends Temporal> extends Property {
     @Override
     public String getValue() {
         Optional<TzId> tzId = getParameters().getFirst(Parameter.TZID);
-        if (tzId.isPresent()) {
+        if (tzId.isPresent() && shouldApplyTimezone()) {
             return date.toString(tzId.get().toZoneId(timeZoneRegistry));
         } else {
             return Strings.valueOf(date);
@@ -208,6 +208,11 @@ public abstract class DateProperty<T extends Temporal> extends Property {
 
     public void setTimeZoneRegistry(TimeZoneRegistry timeZoneRegistry) {
         this.timeZoneRegistry = timeZoneRegistry;
+    }
+
+    private boolean shouldApplyTimezone() {
+        Optional<Value> value = getParameters().getFirst(VALUE);
+        return !Optional.of(Value.DATE).equals(value);
     }
 
     /**
