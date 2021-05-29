@@ -112,8 +112,8 @@ public class VJournal extends CalendarComponent {
 
     private static final long serialVersionUID = -7635140949183238830L;
 
-    private final Map<Method, Validator<VJournal>> methodValidators = new HashMap<>();
-    {
+    private static final Map<Method, Validator<VJournal>> methodValidators = new HashMap<>();
+    static {
         methodValidators.put(Method.ADD, new ComponentValidator<VJournal>(new ValidationRule(One, DESCRIPTION, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, LAST_MODIFIED, STATUS, SUMMARY, URL),
                 new ValidationRule(None, ATTENDEE, RECURRENCE_ID)));

@@ -56,7 +56,7 @@ public class Country extends Property implements Escapable {
 
     private String value;
 
-    private final Validator<Country> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, ABBREV));
+    private static final Validator<Country> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, ABBREV));
     /**
      * Default constructor.
      */

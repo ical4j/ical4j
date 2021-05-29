@@ -106,7 +106,7 @@ public class Location extends Property implements Escapable {
 
     private String value;
 
-    private final Validator<Location> validator = new PropertyValidator<>(
+    private static final Validator<Location> validator = new PropertyValidator<>(
             new ValidationRule<>(OneOrLess, ALTREP, LANGUAGE, VVENUE));
 
     /**

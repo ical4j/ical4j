@@ -56,7 +56,7 @@ public class Tel extends Property implements Escapable {
 
     private String value;
 
-    private final Validator<Tel> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, TYPE));
+    private static final Validator<Tel> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, TYPE));
 
     /**
      * Default constructor.

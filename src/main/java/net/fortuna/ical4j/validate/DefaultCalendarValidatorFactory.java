@@ -10,6 +10,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  * Created by fortuna on 13/09/15.
  */
 public class DefaultCalendarValidatorFactory implements  CalendarValidatorFactory {
+
     @Override
     public Validator<Calendar> newInstance() {
         return new CalendarValidatorImpl(new ValidationRule<>(One, PRODID, VERSION),

@@ -208,8 +208,8 @@ public class VFreeBusy extends CalendarComponent {
 
     private static final long serialVersionUID = 1046534053331139832L;
 
-    private final Map<Method, Validator<VFreeBusy>> methodValidators = new HashMap<>();
-    {
+    private static final Map<Method, Validator<VFreeBusy>> methodValidators = new HashMap<>();
+    static {
         methodValidators.put(Method.PUBLISH, new ComponentValidator<VFreeBusy>(new ValidationRule(OneOrMore, FREEBUSY),
                 new ValidationRule(One, DTSTAMP, DTSTART, DTEND, ORGANIZER, UID),
                 new ValidationRule(OneOrLess, URL),
@@ -258,7 +258,7 @@ public class VFreeBusy extends CalendarComponent {
      */
     public VFreeBusy(final Temporal start, final Temporal end) {
         this();
-        
+
         // 4.8.2.4 Date/Time Start:
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
@@ -284,7 +284,7 @@ public class VFreeBusy extends CalendarComponent {
      */
     public VFreeBusy(final Instant start, final Instant end, final TemporalAmount duration) {
         this();
-        
+
         // 4.8.2.4 Date/Time Start:
         //
         //    Within the "VFREEBUSY" calendar component, this property defines the
@@ -375,13 +375,13 @@ public class VFreeBusy extends CalendarComponent {
      * empty period list).
      */
     private static class BusyTimeBuilder {
-        
+
         private Instant start;
-        
+
         private Instant end;
-        
+
         private List<CalendarComponent> components;
-        
+
         public BusyTimeBuilder start(Instant start) {
             this.start = start;
             return this;
@@ -396,7 +396,7 @@ public class VFreeBusy extends CalendarComponent {
             this.components = components;
             return this;
         }
-        
+
         public FreeBusy build() {
             // periods must be in UTC time for freebusy..
             final List<Period<Instant>> periods = getConsumedTime(components, new Period<>(start, end));
@@ -415,15 +415,15 @@ public class VFreeBusy extends CalendarComponent {
      * empty FREEBUSY property is returned (i.e. empty period list).
      */
     private static class FreeTimeBuilder {
-        
+
         private Instant start;
-        
+
         private Instant end;
         
         private TemporalAmount duration;
         
         private List<CalendarComponent> components;
-        
+
         public FreeTimeBuilder start(Instant start) {
             this.start = start;
             return this;
@@ -433,7 +433,7 @@ public class VFreeBusy extends CalendarComponent {
             this.end = end;
             return this;
         }
-        
+
         private FreeTimeBuilder duration(TemporalAmount duration) {
             this.duration = duration;
             return this;
@@ -443,7 +443,7 @@ public class VFreeBusy extends CalendarComponent {
             this.components = components;
             return this;
         }
-        
+
         public FreeBusy build() {
             final List<Period<Instant>> periods = getConsumedTime(components, new Period<>(start, end));
             final Interval interval = Interval.of(start, end);
@@ -483,7 +483,7 @@ public class VFreeBusy extends CalendarComponent {
      */
     private static <T extends Temporal> List<Period<T>> getConsumedTime(final List<CalendarComponent> components,
                                                                  final Period<T> range) {
-        
+
         List<Period<T>> periods = new ArrayList<>();
         // only events consume time..
         components.stream().filter(c -> c.getName().equals(Component.VEVENT)).forEach(

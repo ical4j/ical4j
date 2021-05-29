@@ -57,59 +57,59 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * $Id$ [Apr 5, 2004]
  *
  * Defines an iCalendar VTODO component.
- * 
+ *
  * <pre>
  *       4.6.2 To-do Component
- *  
+ *
  *          Component Name: VTODO
- *  
+ *
  *          Purpose: Provide a grouping of calendar properties that describe a
  *          to-do.
- *  
+ *
  *          Formal Definition: A &quot;VTODO&quot; calendar component is defined by the
  *          following notation:
- *  
+ *
  *            todoc      = &quot;BEGIN&quot; &quot;:&quot; &quot;VTODO&quot; CRLF
  *                         todoprop *alarmc
  *                         &quot;END&quot; &quot;:&quot; &quot;VTODO&quot; CRLF
- *  
+ *
  *            todoprop   = *(
- *  
+ *
  *                       ; the following are optional,
  *                       ; but MUST NOT occur more than once
- *  
+ *
  *                       class / completed / created / description / dtstamp /
  *                       dtstart / geo / last-mod / location / organizer /
  *                       percent / priority / recurid / seq / status /
  *                       summary / uid / url /
- *  
+ *
  *                       ; either 'due' or 'duration' may appear in
  *                       ; a 'todoprop', but 'due' and 'duration'
  *                       ; MUST NOT occur in the same 'todoprop'
- *  
+ *
  *                       due / duration /
- *  
+ *
  *                       ; the following are optional,
  *                       ; and MAY occur more than once
  *                       attach / attendee / categories / comment / contact /
  *                       exdate / exrule / rstatus / related / resources /
  *                       rdate / rrule / x-prop
- *  
+ *
  *                       )
  * </pre>
- * 
+ *
  * Example 1 - Creating a todo of two (2) hour duration starting tomorrow:
- * 
+ *
  * <pre><code>
  * java.util.Calendar cal = java.util.Calendar.getInstance();
  * // tomorrow..
  * cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
  * cal.set(java.util.Calendar.HOUR_OF_DAY, 11);
  * cal.set(java.util.Calendar.MINUTE, 00);
- * 
+ *
  * VToDo documentation = new VEvent(cal.getTime(), 1000 * 60 * 60 * 2,
  *         &quot;Document calendar component usage&quot;);
- * 
+ *
  * // add timezone information..
  * VTimeZone tz = VTimeZone.getDefault();
  * TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID)
@@ -117,15 +117,15 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * documentation.getProperties().getProperty(Property.DTSTART).getParameters()
  *         .add(tzParam);
  * </code></pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class VToDo extends CalendarComponent {
 
     private static final long serialVersionUID = -269658210065896668L;
 
-    private final Map<Method, Validator<VToDo>> methodValidators = new HashMap<>();
-    {
+    private static final Map<Method, Validator<VToDo>> methodValidators = new HashMap<>();
+    static {
         methodValidators.put(Method.ADD, new VToDoValidator(new ValidationRule(One, DTSTAMP, ORGANIZER, PRIORITY, SEQUENCE, SUMMARY, UID),
                 new ValidationRule(OneOrLess, CATEGORIES, CLASS, CREATED, DESCRIPTION, DTSTART, DUE, DURATION, GEO,
                         LAST_MODIFIED, LOCATION, PERCENT_COMPLETE, RESOURCES, STATUS, URL),
@@ -166,7 +166,7 @@ public class VToDo extends CalendarComponent {
                 new ValidationRule(None, REQUEST_STATUS)));
     }
 
-    private final Validator<VToDo> validator = new ComponentValidator<>(
+    private static final Validator<VToDo> validator = new ComponentValidator<>(
             new ValidationRule<>(One, true, UID, DTSTAMP),
             new ValidationRule<>(OneOrLess, CLASS, COMPLETED, CREATED, DESCRIPTION, DTSTAMP, DTSTART, GEO,
                     LAST_MODIFIED, LOCATION, ORGANIZER, PERCENT_COMPLETE, PRIORITY, RECURRENCE_ID, SEQUENCE, STATUS,

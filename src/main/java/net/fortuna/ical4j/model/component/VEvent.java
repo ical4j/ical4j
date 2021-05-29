@@ -59,61 +59,61 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * $Id$ [Apr 5, 2004]
  *
  * Defines an iCalendar VEVENT component.
- * 
+ *
  * <pre>
  *       4.6.1 Event Component
- *   
+ *
  *          Component Name: &quot;VEVENT&quot;
- *   
+ *
  *          Purpose: Provide a grouping of component properties that describe an
  *          event.
- *   
+ *
  *          Format Definition: A &quot;VEVENT&quot; calendar component is defined by the
  *          following notation:
- *   
+ *
  *            eventc     = &quot;BEGIN&quot; &quot;:&quot; &quot;VEVENT&quot; CRLF
  *                         eventprop *alarmc
  *                         &quot;END&quot; &quot;:&quot; &quot;VEVENT&quot; CRLF
- *   
+ *
  *            eventprop  = *(
- *   
+ *
  *                       ; the following are optional,
  *                       ; but MUST NOT occur more than once
- *   
+ *
  *                       class / created / description / dtstart / geo /
  *                       last-mod / location / organizer / priority /
  *                       dtstamp / seq / status / summary / transp /
  *                       uid / url / recurid /
- *   
+ *
  *                       ; either 'dtend' or 'duration' may appear in
  *                       ; a 'eventprop', but 'dtend' and 'duration'
  *                       ; MUST NOT occur in the same 'eventprop'
- *   
+ *
  *                       dtend / duration /
- *   
+ *
  *                       ; the following are optional,
  *                       ; and MAY occur more than once
- *   
+ *
  *                       attach / attendee / categories / comment /
  *                       contact / exdate / exrule / rstatus / related /
  *                       resources / rdate / rrule / x-prop
- *   
+ *
  *                       )
  * </pre>
- * 
+ *
  * Example 1 - Creating a new all-day event:
- * 
+ *
  * <pre><code>
  * java.util.Calendar cal = java.util.Calendar.getInstance();
  * cal.set(java.util.Calendar.MONTH, java.util.Calendar.DECEMBER);
  * cal.set(java.util.Calendar.DAY_OF_MONTH, 25);
- * 
+ *
  * VEvent christmas = new VEvent(cal.getTime(), &quot;Christmas Day&quot;);
- * 
+ *
  * // initialise as an all-day event..
  * christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(
  *         Value.DATE);
- * 
+ *
  * // add timezone information..
  * VTimeZone tz = VTimeZone.getDefault();
  * TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID)
@@ -121,18 +121,18 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * christmas.getProperties().getProperty(Property.DTSTART).getParameters().add(
  *         tzParam);
  * </code></pre>
- * 
+ *
  * Example 2 - Creating an event of one (1) hour duration:
- * 
+ *
  * <pre><code>
  * java.util.Calendar cal = java.util.Calendar.getInstance();
  * // tomorrow..
  * cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
  * cal.set(java.util.Calendar.HOUR_OF_DAY, 9);
  * cal.set(java.util.Calendar.MINUTE, 30);
- * 
+ *
  * VEvent meeting = new VEvent(cal.getTime(), 1000 * 60 * 60, &quot;Progress Meeting&quot;);
- * 
+ *
  * // add timezone information..
  * VTimeZone tz = VTimeZone.getDefault();
  * TzId tzParam = new TzId(tz.getProperties().getProperty(Property.TZID)
@@ -140,23 +140,23 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * meeting.getProperties().getProperty(Property.DTSTART).getParameters().add(
  *         tzParam);
  * </code></pre>
- * 
+ *
  * Example 3 - Retrieve a list of periods representing a recurring event in a specified range:
- * 
+ *
  * <pre><code>
  * Calendar weekday9AM = Calendar.getInstance();
  * weekday9AM.set(2005, Calendar.MARCH, 7, 9, 0, 0);
  * weekday9AM.set(Calendar.MILLISECOND, 0);
- * 
+ *
  * Calendar weekday5PM = Calendar.getInstance();
  * weekday5PM.set(2005, Calendar.MARCH, 7, 17, 0, 0);
  * weekday5PM.set(Calendar.MILLISECOND, 0);
- * 
+ *
  * // Do the recurrence until December 31st.
  * Calendar untilCal = Calendar.getInstance();
  * untilCal.set(2005, Calendar.DECEMBER, 31);
  * untilCal.set(Calendar.MILLISECOND, 0);
- * 
+ *
  * // 9:00AM to 5:00PM Rule
  * Recur recur = new Recur(Recur.WEEKLY, untilCal.getTime());
  * recur.getDayList().add(WeekDay.MO);
@@ -167,9 +167,9 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * recur.setInterval(3);
  * recur.setWeekStartDay(WeekDay.MO.getDay());
  * RRule rrule = new RRule(recur);
- * 
+ *
  * Summary summary = new Summary(&quot;TEST EVENTS THAT HAPPEN 9-5 MON-FRI&quot;);
- * 
+ *
  * weekdayNineToFiveEvents = new VEvent();
  * weekdayNineToFiveEvents.add(rrule);
  * weekdayNineToFiveEvents.add(summary);
@@ -184,21 +184,21 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.*;
  * Calendar queryEndDate = Calendar.getInstance();
  * queryEndDate.set(2005, Calendar.MAY, 1, 11, 15, 0);
  * queryEndDate.set(Calendar.MILLISECOND, 0);
- * 
+ *
  * // This range is monday to friday every three weeks, starting from
  * // March 7th 2005, which means for our query dates we need
  * // April 18th through to the 22nd.
  * PeriodList periods = weekdayNineToFiveEvents.getPeriods(queryStartDate
  *         .getTime(), queryEndDate.getTime());
  * </code></pre>
- * 
+ *
  * @author Ben Fortuna
  */
 public class VEvent extends CalendarComponent {
 
     private static final long serialVersionUID = 2547948989200697335L;
 
-    private final Map<Method, Validator<VEvent>> methodValidators = new HashMap<>();
+    private static final Map<Method, Validator<VEvent>> methodValidators = new HashMap<>();
     {
         methodValidators.put(Method.ADD, new VEventValidator(
                 new ValidationRule(One, DTSTAMP, DTSTART, ORGANIZER, SEQUENCE, SUMMARY, UID),
@@ -378,7 +378,7 @@ public class VEvent extends CalendarComponent {
 //                throw new ValidationException("Component ["
 //                        + component.getName() + "] may not occur in VEVENT");
 //            }
-//            
+//
 //            ((VAlarm) component).validate(recurse);
 //        }
 
@@ -416,7 +416,7 @@ public class VEvent extends CalendarComponent {
             if (start.isPresent()) {
                 final Optional<Parameter> startValue = start.get().getParameters().getFirst(Parameter.VALUE);
                 final Optional<Parameter> endValue = end.get().getParameters().getFirst(Parameter.VALUE);
-                
+
                 if (!startValue.equals(endValue)) {
                     throw new ValidationException("Property [" + DTEND
                             + "] must have the same [" + Parameter.VALUE
@@ -429,7 +429,7 @@ public class VEvent extends CalendarComponent {
          * ; the following are optional, ; and MAY occur more than once attach / attendee / categories / comment /
          * contact / exdate / exrule / rstatus / related / resources / rdate / rrule / x-prop
          */
-        
+
         if (recurse) {
             validateProperties();
         }
@@ -499,7 +499,7 @@ public class VEvent extends CalendarComponent {
      * occur on the specified date
      */
     public final <T extends Temporal> VEvent getOccurrence(final T date) {
-        
+
         final List<Period<T>> consumedTime = getConsumedTime(new Period<>(date, date));
         for (final Period<T> p : consumedTime) {
             if (p.getStart().equals(date)) {
@@ -510,7 +510,7 @@ public class VEvent extends CalendarComponent {
         }
         return null;
     }
-    
+
     /**
      * @return the optional access classification property for an event
      * @deprecated use {@link VEvent#getProperty(String)}

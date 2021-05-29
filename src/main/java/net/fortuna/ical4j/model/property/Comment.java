@@ -56,7 +56,7 @@ public class Comment extends Property implements Escapable {
 
     private String value;
 
-    private final Validator<Comment> validator = new PropertyValidator<>(
+    private static final Validator<Comment> validator = new PropertyValidator<>(
             new ValidationRule<>(OneOrLess, ALTREP, LANGUAGE));
 
     /**

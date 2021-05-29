@@ -39,6 +39,7 @@ import net.fortuna.ical4j.validate.Validator;
 
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static net.fortuna.ical4j.model.Parameter.ALTREP;
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
@@ -58,7 +59,7 @@ public class Resources extends Property {
 
     private TextList resources;
 
-    private final Validator<Resources> validator = new PropertyValidator<>(
+    private static final Validator<Resources> validator = new PropertyValidator<>(
             new ValidationRule<>(OneOrLess, ALTREP, LANGUAGE));
 
     /**

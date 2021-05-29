@@ -82,7 +82,7 @@ public class RequestStatus extends Property {
 
     private String exData;
 
-    private final Validator<RequestStatus> validator = new PropertyValidator<>(
+    private static final Validator<RequestStatus> validator = new PropertyValidator<>(
             new ValidationRule<>(OneOrLess, LANGUAGE));
 
     /**

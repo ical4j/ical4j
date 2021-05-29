@@ -14,7 +14,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
 
 public class VToDoValidator extends ComponentValidator<VToDo> {
 
-    private final Validator<VAlarm> itipValidator = new ComponentValidator<>(
+    private static final Validator<VAlarm> itipValidator = new ComponentValidator<>(
             new ValidationRule<>(One, ACTION, TRIGGER),
             new ValidationRule<>(OneOrLess, DESCRIPTION, DURATION, REPEAT, SUMMARY));
 

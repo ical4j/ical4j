@@ -55,7 +55,7 @@ public class TzName extends Property implements Escapable {
 
     private String value;
 
-    private final Validator<TzName> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, LANGUAGE));
+    private static final Validator<TzName> validator = new PropertyValidator<>(new ValidationRule<>(OneOrLess, LANGUAGE));
 
     /**
      * Default constructor.

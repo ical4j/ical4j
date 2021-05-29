@@ -46,6 +46,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
@@ -92,7 +93,7 @@ public class LocationType extends Property {
 
     private List<String> locationTypes;
 
-    private final Validator<LocationType> validator = new PropertyValidator<>(
+    private static final Validator<LocationType> validator = new PropertyValidator<>(
             new ValidationRule<>(OneOrLess, LANGUAGE));
 
     /**
