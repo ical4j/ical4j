@@ -41,15 +41,10 @@
 2. [Setup - Download and installation of iCal4j][Setup]
     - [System requirements - What is required to use iCal4j][System requirements]
     - [Release downloads - Where to get iCal4j][Release downloads]
-    - [Install with Maven]
-    - [Install with Gradle]
-3. [Usage - The iCal4j object model and how to use it][Usage]
-    - [Examples - common usage scenarios][Examples]
 4. [Reference - Specification][Reference]
     - [Specifications]
 5. [Configuration options][Configuration]
     - [Compatibility Hints]
-6. [Limitations - CUA compatibility, etc.][Limitations]
 7. [Development - Guide for contributing to the iCalj project][Development]
     - [Building with Gradle]
     - [Redistribution]
@@ -109,16 +104,6 @@ is used only to generate version information in the javadoc API documentation.
 ### Release Downloads
 
 * [Bintray Releases]
-
-### Install with Maven
-
-### Install with Gradle
-
-
-## Usage
-
-### Examples
-
 
 ## Reference
 
@@ -249,12 +234,7 @@ Microsoft Outlook also appears to provide quoted TZID parameter values, as follo
 #### Lotus Notes compatibility
 
     ical4j.compatibility.notes={true|false}
- 
 
-## Limitations
-
-
- 
 ## Development
 
 ### Building with Gradle
