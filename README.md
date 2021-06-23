@@ -7,6 +7,8 @@
 [RFC5545]: https://tools.ietf.org/html/rfc5545
 [RFC5546]: https://tools.ietf.org/html/rfc5546
 [RFC5547]: https://tools.ietf.org/html/rfc5547
+[RFC7953]: https://datatracker.ietf.org/doc/html/rfc7953
+[RFC7986]: https://datatracker.ietf.org/doc/html/rfc7986
 
 [Bintray Releases]: https://bintray.com/ical4j/maven/ical4j
 
@@ -120,13 +122,13 @@ is used only to generate version information in the javadoc API documentation.
 ### Examples
 
 
-## Reference
+## References
 
-### Specifications
-
-* [RFC5545] (Supersedes [RFC2445])
-* [RFC5546] (Supersedes [RFC2446])
-* [RFC5547] (Supersedes [RFC2447])
+* [RFC5545] - Internet Calendaring and Scheduling Core Object Specification (iCalendar)
+* [RFC5546] - iCalendar Transport-Independent Interoperability Protocol (iTIP)
+* [RFC5547] - iCalendar Message-Based Interoperability Protocol (iMIP)
+* [RFC7953] - Calendar Availability
+* [RFC7986] - New Properties for iCalendar
 
 ## Configuration
 
