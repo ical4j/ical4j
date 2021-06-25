@@ -36,10 +36,10 @@ package net.fortuna.ical4j.model;
  *
  * Created on 26/06/2005
  *
- * Implementors by definition require their string value to be converted to/from an escaped form when converting to/from
+ * Implementors by definition require their string value to be encoded/decoded when converting to/from
  * and iCalendar representation.
  * @author Ben Fortuna
  */
-public interface Escapable {
+public interface Encodable {
 
 }

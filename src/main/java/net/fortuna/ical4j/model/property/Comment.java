@@ -54,7 +54,7 @@ import static net.fortuna.ical4j.model.Parameter.LANGUAGE;
  *
  * @author benf
  */
-public class Comment extends Property implements Escapable {
+public class Comment extends Property implements Encodable {
 
     private static final long serialVersionUID = 7519125697719626308L;
 

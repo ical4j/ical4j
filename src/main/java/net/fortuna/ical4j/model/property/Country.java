@@ -55,7 +55,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  * @author benf
  * @author Mike Douglass
  */
-public class Country extends Property implements Escapable {
+public class Country extends Property implements Encodable {
 
     private static final long serialVersionUID = -8091183292558005452L;
 

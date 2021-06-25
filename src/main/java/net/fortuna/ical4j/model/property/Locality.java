@@ -48,7 +48,7 @@ import java.text.ParseException;
  * @author benf
  * @author Mike Douglass
  */
-public class Locality extends Property implements Escapable {
+public class Locality extends Property implements Encodable {
 
     private static final long serialVersionUID = -2324296161017475527L;
 

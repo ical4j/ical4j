@@ -101,7 +101,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class TzId extends Property implements Escapable {
+public class TzId extends Property implements Encodable {
 
     private static final long serialVersionUID = -522764921502407137L;
 

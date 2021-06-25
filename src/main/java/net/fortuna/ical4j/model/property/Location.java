@@ -105,7 +105,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  *
  * @author Ben Fortuna
  */
-public class Location extends Property implements Escapable {
+public class Location extends Property implements Encodable {
 
     private static final long serialVersionUID = 8651881536125682401L;
 
