@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.model;
 
-import net.fortuna.ical4j.util.Strings;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.StringDecoder;
@@ -15,19 +14,38 @@ public class PropertyCodec implements StringEncoder, StringDecoder {
 
     public static final PropertyCodec INSTANCE = new PropertyCodec();
 
-    private static final String ENCODED_NEWLINE = "\\n";
+    private static final String ENCODED_NEWLINE = "\\\\n";
 
-    private static final String ENCODED_BACKSLASH = "\\\\";
+    private static final String ENCODED_BACKSLASH = "\\\\\\\\";
 
-    private static final String ENCODED_QUOTE = "\\\"";
 
-    
+    // matches an unencoded backslash character..
+    private static final Pattern BACKSLASH_EX = Pattern.compile("\\\\");
+
+    // matches an unencoded newline character..
     private static final Pattern NEWLINE_EX = Pattern.compile("\n");
+
+    // matches an unencoded special character..
+    private static final Pattern SPECIALCHAR_EX = Pattern.compile("([,;\"])");
+
+    // matches an encoded backslash character..
+    private static final Pattern ENCODED_BACKSLASH_EX = Pattern.compile(ENCODED_BACKSLASH);
+
+    // matches an encoded newline character..
+    private static final Pattern ENCODED_NEWLINE_EX = Pattern.compile("(?<!\\\\)" + ENCODED_NEWLINE);
+
+    // matches an encoded special character..
+    private static final Pattern ENCODED_SPECIALCHAR_EX = Pattern.compile("\\\\([,;\"])");
 
     @Override
     public String decode(String source) throws DecoderException {
         if (source != null) {
-            return Strings.unescape(source);
+            String decoded = ENCODED_BACKSLASH_EX.matcher(
+                    ENCODED_NEWLINE_EX.matcher(
+                            ENCODED_SPECIALCHAR_EX.matcher(source).replaceAll("$1")
+                    ).replaceAll("\n")
+            ).replaceAll("\\\\");
+            return decoded;
         } else {
             throw new DecoderException("Input cannot be null");
         }
@@ -45,7 +63,13 @@ public class PropertyCodec implements StringEncoder, StringDecoder {
     @Override
     public String encode(String source) throws EncoderException {
         if (source != null) {
-            return Strings.escape(source);
+            // order is significant here as we don't want to double-encode backslash..
+            String encoded = SPECIALCHAR_EX.matcher(
+                    NEWLINE_EX.matcher(
+                            BACKSLASH_EX.matcher(source).replaceAll(ENCODED_BACKSLASH)
+                    ).replaceAll(ENCODED_NEWLINE)
+            ).replaceAll("\\\\$1");
+            return encoded;
         } else {
             throw new EncoderException("Input cannot be null");
         }

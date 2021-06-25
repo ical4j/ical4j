@@ -31,16 +31,16 @@ public class ParameterCodec implements StringEncoder, StringDecoder {
     private static final Pattern QUOTE_EX = Pattern.compile("\"");
 
     // matches an encoded caret character..
-    private static final Pattern ENCODED_CARET_EX = Pattern.compile(ENCODED_CARET
-            .replaceAll("\\^", "\\\\^"));
+    private static final Pattern ENCODED_CARET_EX = Pattern.compile(
+            ENCODED_CARET.replaceAll("\\^", "\\\\^"));
 
     // matches an encoded newline character..
-    private static final Pattern ENCODED_NEWLINE_EX = Pattern.compile(ENCODED_NEWLINE
-            .replaceAll("\\^", "\\\\^"));
+    private static final Pattern ENCODED_NEWLINE_EX = Pattern.compile(
+            ENCODED_NEWLINE.replaceAll("\\^", "\\\\^"));
 
     // matches an encoded quote character..
-    private static final Pattern ENCODED_QUOTE_EX = Pattern.compile(ENCODED_QUOTE
-            .replaceAll("\\^", "\\\\^"));
+    private static final Pattern ENCODED_QUOTE_EX = Pattern.compile(
+            ENCODED_QUOTE.replaceAll("\\^", "\\\\^"));
 
     // matches one or more characters that require a quoted value..
     public static final Pattern QUOTABLE_VALUE_EX = Pattern.compile("[:;,]|[^\\p{ASCII}]");
