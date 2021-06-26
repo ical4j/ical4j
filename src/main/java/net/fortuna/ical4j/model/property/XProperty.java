@@ -46,7 +46,7 @@ import net.fortuna.ical4j.validate.ValidationException;
  * Defines an extension property.
  * @author benfortuna
  */
-public class XProperty extends Property implements Escapable {
+public class XProperty extends Property implements Encodable {
 
     private static final long serialVersionUID = 2331763266954894541L;
 

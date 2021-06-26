@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 
@@ -46,7 +47,7 @@ import java.util.Set;
  *  ple.com/;group-id=1234
  *  </pre>
  */
-public class Feature extends Parameter {
+public class Feature extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 1L;
 

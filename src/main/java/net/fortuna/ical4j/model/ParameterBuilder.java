@@ -1,7 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.XParameter;
-import net.fortuna.ical4j.util.Strings;
+import org.apache.commons.codec.DecoderException;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class ParameterBuilder extends AbstractContentBuilder {
     }
 
     public ParameterBuilder value(String value) {
-        this.value = Strings.escapeNewline(value);
+        this.value = value;
         return this;
     }
 
@@ -39,19 +39,25 @@ public class ParameterBuilder extends AbstractContentBuilder {
      */
     public Parameter build() throws URISyntaxException {
         Parameter parameter = null;
+        String decodedValue;
+        try {
+            decodedValue = ParameterCodec.INSTANCE.decode(value);
+        } catch (DecoderException e) {
+            decodedValue = value;
+        }
         for (ParameterFactory<?> factory : factories) {
             if (factory.supports(name)) {
-                parameter = factory.createParameter(value);
+                parameter = factory.createParameter(decodedValue);
                 break;
             }
         }
 
         if (parameter == null) {
             if (isExperimentalName(name)) {
-                parameter = new XParameter(name, value);
+                parameter = new XParameter(name, decodedValue);
             }
             else if (allowIllegalNames()) {
-                parameter = new XParameter(name, value);
+                parameter = new XParameter(name, decodedValue);
             }
             else {
                 throw new IllegalArgumentException(String.format("Unsupported parameter name: %s", name));

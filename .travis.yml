@@ -23,7 +23,7 @@ after_success:
   - bash $HOME/etc/codecov.sh
 deploy:
   provider: script
-  script: ./gradlew -q -Prelease.customUsername=$GIT_USER -Prelease.customPassword=$GIT_PASSWORD -Prelease.disableChecks -Prelease.pushTagsOnly release && ./gradlew build bintrayUpload
+  script: ./gradlew -q -Prelease.customUsername=$GIT_USER -Prelease.customPassword=$GIT_PASSWORD -Prelease.disableChecks -Prelease.pushTagsOnly release && ./gradlew build publish
   on:
     branch: master
     jdk: openjdk8

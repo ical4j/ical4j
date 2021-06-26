@@ -86,15 +86,6 @@ public class DelegatedFrom extends Parameter {
         return AddressList.toString(delegators);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean isQuotable() {
-        // override default behaviour as quoting is handled by the implementation..
-        return false;
-    }
-
     public static class Factory extends Content.Factory implements ParameterFactory<DelegatedFrom> {
         private static final long serialVersionUID = 1L;
 

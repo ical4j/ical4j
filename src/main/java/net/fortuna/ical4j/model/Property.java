@@ -35,6 +35,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.util.Strings;
 import net.fortuna.ical4j.validate.ValidationException;
+import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -413,11 +414,15 @@ public abstract class Property extends Content {
             if (!valParam.isPresent() || valParam.get().equals(Value.TEXT)) {
                 needsEscape = true;
             }
-        } else if (this instanceof Escapable) {
+        } else if (this instanceof Encodable) {
             needsEscape = true;
         }
         if (needsEscape) {
-            buffer.append(Strings.escape(Strings.valueOf(getValue())));
+            try {
+                buffer.append(PropertyCodec.INSTANCE.encode(getValue()));
+            } catch (EncoderException e) {
+                e.printStackTrace();
+            }
         } else {
             buffer.append(Strings.valueOf(getValue()));
         }

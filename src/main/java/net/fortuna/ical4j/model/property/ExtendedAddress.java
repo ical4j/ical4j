@@ -44,7 +44,7 @@ import net.fortuna.ical4j.validate.ValidationException;
  * @author benf
  * @author Mike Douglass
  */
-public class ExtendedAddress extends Property implements Escapable {
+public class ExtendedAddress extends Property implements Encodable {
 
     private static final long serialVersionUID = 6506776332370144983L;
 

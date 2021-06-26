@@ -44,7 +44,7 @@ import net.fortuna.ical4j.validate.ValidationException;
  * @author benf
  * @author Mike Douglass
  */
-public class Postalcode extends Property implements Escapable {
+public class Postalcode extends Property implements Encodable {
 
     private static final long serialVersionUID = 1983456638722378724L;
 

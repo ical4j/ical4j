@@ -86,15 +86,6 @@ public class Member extends Parameter {
         return AddressList.toString(groups);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected boolean isQuotable() {
-        // override default behaviour as quoting is handled by the implementation..
-        return false;
-    }
-
     public static class Factory extends Content.Factory implements ParameterFactory<Member> {
         private static final long serialVersionUID = 1L;
 

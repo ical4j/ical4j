@@ -31,6 +31,10 @@
  */
 package net.fortuna.ical4j.util;
 
+import net.fortuna.ical4j.model.PropertyCodec;
+import org.apache.commons.codec.DecoderException;
+import org.apache.commons.codec.EncoderException;
+
 import java.net.URI;
 import java.util.regex.Pattern;
 
@@ -110,18 +114,7 @@ public final class Strings {
      * should be quoted.
      */
     public static final Pattern PARAM_QUOTE_PATTERN = Pattern.compile("[:;,]|[^\\p{ASCII}]");
-    
-    private static final Pattern ESCAPE_PUNCTUATION_PATTERN = Pattern.compile("([,;])");
-    private static final Pattern UNESCAPE_PUNCTUATION_PATTERN = Pattern.compile("\\\\([,;\"])");
-    
-    private static final Pattern ESCAPE_NEWLINE_PATTERN = Pattern.compile("\r?\n");
-    private static final Pattern UNESCAPE_NEWLINE_PATTERN = Pattern.compile("(?<!\\\\)\\\\n");
-    
-    private static final Pattern ESCAPE_BACKSLASH_PATTERN = Pattern.compile("\\\\");
-    private static final Pattern UNESCAPE_BACKSLASH_PATTERN = Pattern.compile("\\\\\\\\");
-    
-    
-    
+
     /**
      * A string used to denote the start (and end) of iCalendar content lines.
      */
@@ -171,7 +164,11 @@ public final class Strings {
      * string
      */
     public static String escape(final String aValue) {
-        return escapePunctuation(escapeNewline(escapeBackslash(aValue)));
+        try {
+            return PropertyCodec.INSTANCE.encode(aValue);
+        } catch (EncoderException e) {
+            return aValue;
+        }
     }
     
     /**
@@ -183,51 +180,13 @@ public final class Strings {
      * original form
      */
     public static String unescape(final String aValue) {
-        return unescapeBackslash(unescapeNewline(unescapePunctuation(aValue)));
+        try {
+            return PropertyCodec.INSTANCE.decode(aValue);
+        } catch (DecoderException e) {
+            return aValue;
+        }
     }
 
-    private static String escapePunctuation(String value) {
-        if (value != null) {
-            return ESCAPE_PUNCTUATION_PATTERN.matcher(value).replaceAll("\\\\$1");
-        }
-        return null;
-    }
-
-    private static String unescapePunctuation(String value) {
-        if (value != null) {
-            return UNESCAPE_PUNCTUATION_PATTERN.matcher(value).replaceAll("$1");
-        }
-        return null;
-    }
-
-    public static String escapeNewline(String value) {
-        if (value != null) {
-            return ESCAPE_NEWLINE_PATTERN.matcher(value).replaceAll("\\\\n");
-        }
-        return null;
-    }
-
-    private static String unescapeNewline(String value) {
-        if (value != null) {
-            return UNESCAPE_NEWLINE_PATTERN.matcher(value).replaceAll("\n");
-        }
-        return null;
-    }
-
-    private static String escapeBackslash(String value) {
-        if (value != null) {
-            return ESCAPE_BACKSLASH_PATTERN.matcher(value).replaceAll("\\\\\\\\");
-        }
-        return null;
-    }
-
-    private static String unescapeBackslash(String value) {
-        if (value != null) {
-            return UNESCAPE_BACKSLASH_PATTERN.matcher(value).replaceAll("\\\\");
-        }
-        return null;
-    }
-    
     /**
      * Wraps <code>java.lang.String.valueOf()</code> to return an empty string
      * where the specified object is null.

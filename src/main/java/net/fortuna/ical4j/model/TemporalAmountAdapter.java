@@ -66,7 +66,8 @@ public class TemporalAmountAdapter implements Serializable {
             long weeks = Math.abs(seed.until(adjustedSeed, ChronoUnit.WEEKS));
             retVal = String.format("P%dW", weeks);
         } else {
-            retVal = period.toString();
+            long days = Math.abs(seed.until(adjustedSeed, ChronoUnit.DAYS));
+            retVal = String.format("P%dD", days);
         }
         if (period.isNegative() && !retVal.startsWith("-")) {
             return "-" + retVal;

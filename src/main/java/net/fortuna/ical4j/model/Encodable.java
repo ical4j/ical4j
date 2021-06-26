@@ -29,56 +29,17 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model.parameter;
-
-import net.fortuna.ical4j.model.Content;
-import net.fortuna.ical4j.model.Encodable;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterFactory;
-import net.fortuna.ical4j.util.Strings;
-
-import java.net.URISyntaxException;
+package net.fortuna.ical4j.model;
 
 /**
- * $Id$ [18-Apr-2004]
- * <p/>
- * Defines a Common Name parameter.
+ * $Id$
  *
- * @author benfortuna
+ * Created on 26/06/2005
+ *
+ * Implementors by definition require their string value to be encoded/decoded when converting to/from
+ * and iCalendar representation.
+ * @author Ben Fortuna
  */
-public class Cn extends Parameter implements Encodable {
-
-    private static final long serialVersionUID = -8087119055007093293L;
-
-    private final String value;
-
-    /**
-     * @param aValue a string representation of a Common Name
-     */
-    public Cn(final String aValue) {
-        super(CN);
-        this.value = Strings.unquote(aValue);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public final String getValue() {
-        return value;
-    }
-
-    public static class Factory extends Content.Factory implements ParameterFactory<Cn> {
-        private static final long serialVersionUID = 1L;
-
-        public Factory() {
-            super(CN);
-        }
-
-        @Override
-        public Cn createParameter(final String value) throws URISyntaxException {
-            return new Cn(value);
-        }
-    }
+public interface Encodable {
 
 }

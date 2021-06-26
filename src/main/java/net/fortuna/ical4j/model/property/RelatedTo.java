@@ -49,7 +49,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  *
  * @author benf
  */
-public class RelatedTo extends Property implements Escapable {
+public class RelatedTo extends Property implements Encodable {
 
     private static final long serialVersionUID = -109375299147319752L;
 

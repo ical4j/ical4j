@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 
@@ -54,7 +55,7 @@ import java.util.Set;
  * mple.com/images/weather-cloudy.png
  * </pre>
  */
-public class Display extends Parameter {
+public class Display extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 1L;
 

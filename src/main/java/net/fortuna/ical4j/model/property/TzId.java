@@ -97,7 +97,7 @@ import net.fortuna.ical4j.validate.ValidationException;
  *
  * @author Ben Fortuna
  */
-public class TzId extends Property implements Escapable {
+public class TzId extends Property implements Encodable {
 
     private static final long serialVersionUID = -522764921502407137L;
 

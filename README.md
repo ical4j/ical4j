@@ -6,7 +6,10 @@
 
 [RFC5545]: https://tools.ietf.org/html/rfc5545
 [RFC5546]: https://tools.ietf.org/html/rfc5546
-[RFC5547]: https://tools.ietf.org/html/rfc5547
+[RFC6047]: https://datatracker.ietf.org/doc/html/rfc6047
+[RFC6868]: https://datatracker.ietf.org/doc/html/rfc6868
+[RFC7953]: https://datatracker.ietf.org/doc/html/rfc7953
+[RFC7986]: https://datatracker.ietf.org/doc/html/rfc7986
 
 [Bintray Releases]: https://bintray.com/ical4j/maven/ical4j
 
@@ -47,8 +50,7 @@
     - [Install with Gradle]
 3. [Usage - The iCal4j object model and how to use it][Usage]
     - [Examples - common usage scenarios][Examples]
-4. [Reference - Specification][Reference]
-    - [Specifications]
+4. [References][Reference]
 5. [Configuration options][Configuration]
     - [Compatibility Hints]
 6. [Limitations - CUA compatibility, etc.][Limitations]
@@ -139,13 +141,14 @@ You may also find the [Java Legacy Date-Time Code] web page useful.
 ### Examples
 
 
-## Reference
+## References
 
-### Specifications
-
-* [RFC5545] (Supersedes [RFC2445])
-* [RFC5546] (Supersedes [RFC2446])
-* [RFC5547] (Supersedes [RFC2447])
+* [RFC5545] - Internet Calendaring and Scheduling Core Object Specification (iCalendar)
+* [RFC5546] - iCalendar Transport-Independent Interoperability Protocol (iTIP)
+* [RFC6047] - iCalendar Message-Based Interoperability Protocol (iMIP)
+* [RFC6868] - Parameter Value Encoding in iCalendar and vCard
+* [RFC7953] - Calendar Availability
+* [RFC7986] - New Properties for iCalendar
 
 ## Configuration
 

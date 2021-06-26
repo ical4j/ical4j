@@ -49,7 +49,7 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  *
  * @author benf
  */
-public class TzName extends Property implements Escapable {
+public class TzName extends Property implements Encodable {
 
     private static final long serialVersionUID = -6930099834219160086L;
 

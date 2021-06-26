@@ -29,17 +29,37 @@
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package net.fortuna.ical4j.model;
+package net.fortuna.ical4j.model.component
+
+import net.fortuna.ical4j.model.PropertyList
 
 /**
- * $Id$
+ * @author fortuna
  *
- * Created on 26/06/2005
- *
- * Implementors by definition require their string value to be converted to/from an escaped form when converting to/from
- * and iCalendar representation.
- * @author Ben Fortuna
  */
-public interface Escapable {
+class VAvailabilityFactory extends AbstractComponentFactory{
 
+     Object newInstance(FactoryBuilderSupport builder, Object name, Object value, Map attributes) throws InstantiationException, IllegalAccessException {
+         VAvailability availability
+         if (FactoryBuilderSupport.checkValueIsType(value, name, VAvailability.class)) {
+             availability = (VAvailability) value
+         }
+         else {
+             availability = super.newInstance(builder, name, value, attributes)
+         }
+         return availability
+     }
+     
+     protected Object newInstance(PropertyList properties) {
+         return new VAvailability(properties)
+     }
+
+    void setChild(FactoryBuilderSupport build, Object parent, Object child) {
+        if (child instanceof Available) {
+            parent.available.add child
+        }
+        else {
+            super.setChild(build, parent, child)
+        }
+    }
 }

@@ -47,4 +47,23 @@ class CalendarBuilderSpec extends Specification {
         then: 'expect thrown exception'
         thrown(ParserException)
     }
+
+    def 'test parsing fidelity'() {
+        given: 'a calendar object string'
+        def input = '''BEGIN:VCALENDAR\r
+BEGIN:VEVENT\r
+DTSTAMP:20210618T114917Z\r
+BEGIN:VALARM\r
+TRIGGER:-P2D\r
+END:VALARM\r
+END:VEVENT\r
+END:VCALENDAR\r\n'''
+
+        when: 'string is parsed'
+        Calendar calendar = new CalendarBuilder().build(new StringReader(input))
+
+        then: 'output string matches input'
+        def output = calendar as String
+        output as String == input
+    }
 }

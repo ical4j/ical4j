@@ -3,7 +3,7 @@ package net.fortuna.ical4j.model;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.XProperty;
-import net.fortuna.ical4j.util.Strings;
+import org.apache.commons.codec.DecoderException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -51,11 +51,18 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     public Property build() throws IOException, URISyntaxException {
         Property property = null;
+        String decodedValue;
+        try {
+            decodedValue = PropertyCodec.INSTANCE.decode(value);
+        } catch (DecoderException e) {
+            decodedValue = value;
+        }
+
         for (PropertyFactory<?> factory : factories) {
             if (factory.supports(name)) {
                 property = factory.createProperty(new ParameterList(parameters), value);
-                if (property instanceof Escapable) {
-                    property.setValue(Strings.unescape(value));
+                if (property instanceof Encodable) {
+                    property.setValue(decodedValue);
                 }
 
                 if (property instanceof DateProperty) {

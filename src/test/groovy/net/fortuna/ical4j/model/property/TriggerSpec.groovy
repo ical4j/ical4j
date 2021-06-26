@@ -46,5 +46,19 @@ class TriggerSpec extends Specification {
 		value                                                             | expectedValue
 		Period.ZERO                                                       | 'P0D'
 		CalendarDateFormat.UTC_DATE_TIME_FORMAT.parse('20110131T012647Z') | '20110131T012647Z'
+		java.time.Duration.ofDays(2).negated() | '-P2D'
+		Period.ofDays(2).negated()             | '-P2D'
+	}
+
+	def 'verify trigger string parsing'() {
+		given: 'a parsed string value'
+		Trigger trigger = [[] as ParameterList, value]
+
+		expect: 'value is as expected'
+		trigger as String == expectedString
+
+		where:
+		value	| expectedString
+		'-P2D'  | 'TRIGGER:-P2D\r\n'
 	}
 }
