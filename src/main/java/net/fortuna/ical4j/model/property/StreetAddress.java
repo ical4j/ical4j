@@ -48,7 +48,7 @@ import java.text.ParseException;
  * @author benf
  * @author Mike Douglass
  */
-public class StreetAddress extends Property implements Escapable {
+public class StreetAddress extends Property implements Encodable {
 
     private static final long serialVersionUID = 6352997029056626656L;
 

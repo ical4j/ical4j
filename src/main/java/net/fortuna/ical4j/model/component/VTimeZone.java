@@ -125,8 +125,8 @@ public class VTimeZone extends CalendarComponent {
 
     private static final long serialVersionUID = 5629679741050917815L;
 
-    private final Validator itipValidator = new VTimeZoneValidator();
-    
+    private static final Validator itipValidator = new VTimeZoneValidator();
+
     private ComponentList<Observance> observances;
 
     /**

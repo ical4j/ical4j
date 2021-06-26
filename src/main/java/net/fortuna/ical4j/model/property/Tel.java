@@ -40,8 +40,8 @@ import net.fortuna.ical4j.validate.Validator;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Arrays;
 
+import static java.util.Collections.singletonList;
 import static net.fortuna.ical4j.model.Parameter.TYPE;
 import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLess;
 
@@ -55,13 +55,13 @@ import static net.fortuna.ical4j.validate.ValidationRule.ValidationType.OneOrLes
  * @author benf
  * @author Mike Douglass
  */
-public class Tel extends Property implements Escapable {
+public class Tel extends Property implements Encodable {
 
     private static final long serialVersionUID = 3159826142152932485L;
 
     private String value;
 
-    private final Validator<Property> validator = new PropertyValidator(Arrays.asList(
+    private static final Validator<Property> validator = new PropertyValidator(singletonList(
             new ValidationRule(OneOrLess, TYPE)));
 
     /**
