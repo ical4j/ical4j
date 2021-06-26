@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 
@@ -45,7 +46,7 @@ import javax.mail.internet.InternetAddress;
  *  n-1234@example.com
  * </pre>
  */
-public class Email extends Parameter {
+public class Email extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 1L;
 

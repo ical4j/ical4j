@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -85,7 +86,7 @@ import java.net.URISyntaxException;
  *
  * @author Ben Fortuna
  */
-public class Encoding extends Parameter {
+public class Encoding extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 7536336461076399077L;
 
