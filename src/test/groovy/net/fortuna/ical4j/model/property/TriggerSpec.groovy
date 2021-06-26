@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.property
 
 import net.fortuna.ical4j.model.CalendarDateFormat
+import net.fortuna.ical4j.model.ParameterList
 import spock.lang.Specification
 
 import java.time.Period
