@@ -423,24 +423,21 @@ public abstract class Property extends Content {
             buffer.append(getParameters());
         }
         buffer.append(':');
-        boolean needsEscape = false;
-        if (this instanceof XProperty) {
-            Value valParam = getParameter(Parameter.VALUE);
-            if (valParam == null || valParam.equals(Value.TEXT)) {
-                needsEscape = true;
-            }
+        String value;
+
+        if (this instanceof XProperty && getParameter(Parameter.VALUE) != null
+                && !Value.TEXT.equals(getParameter(Parameter.VALUE))) {
+            value = getValue();
         } else if (this instanceof Encodable) {
-            needsEscape = true;
-        }
-        if (needsEscape) {
             try {
-                buffer.append(PropertyCodec.INSTANCE.encode(getValue()));
+                value = PropertyCodec.INSTANCE.encode(getValue());
             } catch (EncoderException e) {
-                e.printStackTrace();
+                value = getValue();
             }
         } else {
-            buffer.append(Strings.valueOf(getValue()));
+            value = getValue();
         }
+        buffer.append(Strings.valueOf(value));
         buffer.append(Strings.LINE_SEPARATOR);
 
         return buffer.toString();
