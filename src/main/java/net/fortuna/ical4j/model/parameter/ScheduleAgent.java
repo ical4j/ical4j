@@ -32,6 +32,7 @@
 package net.fortuna.ical4j.model.parameter;
 
 import net.fortuna.ical4j.model.Content;
+import net.fortuna.ical4j.model.Encodable;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterFactory;
 import net.fortuna.ical4j.util.Strings;
@@ -43,7 +44,7 @@ import java.net.URISyntaxException;
  *
  * @author Mike Douglass
  */
-public class ScheduleAgent extends Parameter {
+public class ScheduleAgent extends Parameter implements Encodable {
 
     private static final long serialVersionUID = 4205758749959461020L;
 

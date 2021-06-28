@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.util.Strings;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -214,15 +215,17 @@ public abstract class Parameter extends Content {
         final StringBuilder b = new StringBuilder();
         b.append(getName());
         b.append('=');
+        String value;
         if (this instanceof Encodable) {
             try {
-                b.append(ParameterCodec.INSTANCE.encode(getValue()));
+                value = ParameterCodec.INSTANCE.encode(getValue());
             } catch (EncoderException e) {
-                e.printStackTrace();
+                value = getValue();
             }
         } else {
-            b.append(getValue());
+            value = getValue();
         }
+        b.append(Strings.valueOf(value));
         return b.toString();
     }
 
