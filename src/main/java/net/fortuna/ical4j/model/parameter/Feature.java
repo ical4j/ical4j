@@ -7,8 +7,8 @@ import net.fortuna.ical4j.model.ParameterFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * <pre>
@@ -71,7 +71,7 @@ public class Feature extends Parameter implements Encodable {
                 }
             }
         }
-        this.values = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(valueStrings)));
+        this.values = Collections.unmodifiableSet(new TreeSet<>(Arrays.asList(valueStrings)));
     }
 
     @Override
