@@ -25,6 +25,7 @@ class ByMonthDayRuleTest extends Specification {
         where:
         rulePart | frequency       | dates                  | expectedResult
         '1'      | YEARLY | [new Date('20150103')] | [new Date('20150101')]
+        '29'     | YEARLY           | [new Date('20150201')] | []
     }
 
     def 'verify transformations by day with skip forward'() {
