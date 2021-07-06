@@ -29,6 +29,11 @@ public class MonthList extends ArrayList<Month> {
         addAll(Arrays.stream(aString.split(",")).map(Month::parse).collect(Collectors.toList()));
     }
 
+    public MonthList(Collection<Month> values, ValueRange valueRange) {
+        this(valueRange);
+        addAll(values);
+    }
+
     @Override
     public final boolean add(final Month month) {
         if (!valueRange.isValidValue(month.getMonthOfYear())) {

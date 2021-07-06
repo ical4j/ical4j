@@ -102,6 +102,11 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
         addAll(Arrays.stream(aString.split(",")).map(Numbers::parseInt).collect(Collectors.toList()));
     }
 
+    public NumberList(Collection<Integer> values, ValueRange valueRange, boolean allowsNegativeValues) {
+        this(valueRange, allowsNegativeValues);
+        addAll(values);
+    }
+
     /**
      * @param aString a string representation of a number list
      * @param minValue the minimum allowable value

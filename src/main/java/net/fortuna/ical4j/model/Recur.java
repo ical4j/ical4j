@@ -1192,6 +1192,9 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         public Recur<T> build() {
+            Chronology chronology = rscale != null ? Chronology.of(rscale.getChronology())
+                    : Chronology.ofLocale(Locale.getDefault());
+
             Recur<T> recur = new Recur<>();
             recur.frequency = frequency;
             recur.rscale = rscale;
@@ -1202,31 +1205,31 @@ public class Recur<T extends Temporal> implements Serializable {
             recur.count = count;
             recur.interval = interval;
             if (secondList != null) {
-                recur.secondList.addAll(secondList);
+                recur.secondList = new NumberList(secondList, chronology.range(ChronoField.SECOND_OF_MINUTE), false);
             }
             if (minuteList != null) {
-                recur.minuteList.addAll(minuteList);
+                recur.minuteList = new NumberList(minuteList, chronology.range(ChronoField.MINUTE_OF_HOUR), false);
             }
             if (hourList != null) {
-                recur.hourList.addAll(hourList);
+                recur.hourList = new NumberList(hourList, chronology.range(ChronoField.HOUR_OF_DAY), false);
             }
             if (dayList != null) {
                 recur.dayList.addAll(dayList);
             }
             if (monthDayList != null) {
-                recur.monthDayList.addAll(monthDayList);
+                recur.monthDayList = new NumberList(monthDayList, chronology.range(ChronoField.DAY_OF_MONTH), true);
             }
             if (yearDayList != null) {
-                recur.yearDayList.addAll(yearDayList);
+                recur.yearDayList = new NumberList(yearDayList, chronology.range(ChronoField.DAY_OF_YEAR), true);
             }
             if (weekNoList != null) {
-                recur.weekNoList.addAll(weekNoList);
+                recur.weekNoList = new NumberList(weekNoList, chronology.range(ChronoField.ALIGNED_WEEK_OF_YEAR), true);
             }
             if (monthList != null) {
-                recur.monthList.addAll(monthList);
+                recur.monthList = new MonthList(monthList, chronology.range(ChronoField.MONTH_OF_YEAR));
             }
             if (setPosList != null) {
-                recur.setPosList.addAll(setPosList);
+                recur.setPosList = new NumberList(setPosList, chronology.range(ChronoField.DAY_OF_YEAR), true);
             }
             recur.weekStartDay = weekStartDay;
             recur.validateFrequency();
