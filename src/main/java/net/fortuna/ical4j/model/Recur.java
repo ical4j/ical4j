@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.chrono.Chronology;
+import java.time.temporal.ChronoField;
 import java.time.LocalDate;
 import java.time.temporal.*;
 import java.util.*;
@@ -182,6 +184,30 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private static final String SKIP = "SKIP";
 
+    public enum RScale {
+
+        JAPANESE("Japanese"),
+        BUDDHIST("ThaiBuddhist"),
+        ROC("Minguo"),
+        ISLAMIC("islamic"),
+        ISO8601("ISO"),
+
+        CHINESE("ISO"),
+        ETHIOPIC("Ethiopic"),
+        HEBREW("ISO"),
+        GREGORIAN("ISO");
+
+        private final String chronology;
+
+        RScale(String chronology) {
+            this.chronology = chronology;
+        }
+
+        public String getChronology() {
+            return chronology;
+        }
+    }
+
     public enum Skip {
         OMIT, BACKWARD, FORWARD;
     }
@@ -259,7 +285,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private TemporalAdapter<T> until;
 
-    private String rscale;
+    private RScale rscale;
 
     private Integer count;
 
@@ -302,6 +328,7 @@ public class Recur<T extends Temporal> implements Serializable {
      * @param aValue a string representation of a recurrence.
      */
     public Recur(final String aValue) {
+        Chronology chronology = Chronology.ofLocale(Locale.getDefault());
         Iterator<String> tokens = Arrays.asList(aValue.split("[;=]")).iterator();
         while (tokens.hasNext()) {
             final String token = tokens.next();
@@ -310,7 +337,8 @@ public class Recur<T extends Temporal> implements Serializable {
             } else if (SKIP.equals(token)) {
                 skip = Skip.valueOf(nextToken(tokens, token));
             } else if (RSCALE.equals(token)) {
-                rscale = nextToken(tokens, token);
+                rscale = RScale.valueOf(nextToken(tokens, token));
+                chronology = Chronology.of(rscale.getChronology());
             } else if (UNTIL.equals(token)) {
                 final String untilString = nextToken(tokens, token);
                 until = TemporalAdapter.parse(untilString);
@@ -320,22 +348,30 @@ public class Recur<T extends Temporal> implements Serializable {
                 interval = Integer.parseInt(nextToken(tokens, token));
             } else if (BYSECOND.equals(token)) {
                 secondList.addAll(NumberList.parse(nextToken(tokens, token)));
+                secondList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.SECOND_OF_MINUTE), false);
             } else if (BYMINUTE.equals(token)) {
                 minuteList.addAll(NumberList.parse(nextToken(tokens, token)));
+                minuteList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.MINUTE_OF_HOUR), false);
             } else if (BYHOUR.equals(token)) {
                 hourList.addAll(NumberList.parse(nextToken(tokens, token)));
+                hourList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.HOUR_OF_DAY), false);
             } else if (BYDAY.equals(token)) {
                 dayList.addAll(new WeekDayList(nextToken(tokens, token)));
             } else if (BYMONTHDAY.equals(token)) {
                 monthDayList.addAll(NumberList.parse(nextToken(tokens, token)));
+                monthDayList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_MONTH), true);
             } else if (BYYEARDAY.equals(token)) {
                 yearDayList.addAll(NumberList.parse(nextToken(tokens, token)));
+                yearDayList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_YEAR), true);
             } else if (BYWEEKNO.equals(token)) {
                 weekNoList.addAll(NumberList.parse(nextToken(tokens, token)));
+                weekNoList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.ALIGNED_WEEK_OF_YEAR), true);
             } else if (BYMONTH.equals(token)) {
                 monthList.addAll(new MonthList(nextToken(tokens, token), ValueRange.of(1, 12, 13)));
+                monthList = new MonthList(nextToken(tokens, token), chronology.range(ChronoField.MONTH_OF_YEAR));
             } else if (BYSETPOS.equals(token)) {
                 setPosList.addAll(NumberList.parse(nextToken(tokens, token)));
+                setPosList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_YEAR), true);
             } else if (WKST.equals(token)) {
                 weekStartDay = WeekDay.getWeekDay(WeekDay.Day.valueOf(nextToken(tokens, token)));
             } else {
@@ -1058,7 +1094,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
         private T until;
 
-        private String rscale;
+        private RScale rscale;
 
         private Integer count;
 
@@ -1099,7 +1135,7 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
-        public Builder rscale(String rscale) {
+        public Builder rscale(RScale rscale) {
             this.rscale = rscale;
             return this;
         }
@@ -1167,6 +1203,7 @@ public class Recur<T extends Temporal> implements Serializable {
         public Recur<T> build() {
             Recur<T> recur = new Recur<>();
             recur.frequency = frequency;
+            recur.rscale = rscale;
             recur.skip = skip;
             if (until != null) {
                 recur.until = new TemporalAdapter<T>(until);
