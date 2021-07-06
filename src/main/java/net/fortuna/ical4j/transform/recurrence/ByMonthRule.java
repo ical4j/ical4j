@@ -1,10 +1,7 @@
 package net.fortuna.ical4j.transform.recurrence;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.NumberList;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.Recur.Frequency;
-import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Dates;
 
@@ -20,15 +17,26 @@ import java.util.function.Function;
  */
 public class ByMonthRule extends AbstractDateExpansionRule {
 
-    private final NumberList monthList;
+    private final MonthList monthList;
 
-    public ByMonthRule(NumberList monthList, Frequency frequency) {
-        this(monthList, frequency, Optional.empty());
+    private final Recur.Skip skip;
+
+    public ByMonthRule(MonthList monthList, Frequency frequency) {
+        this(monthList, frequency, Recur.Skip.OMIT);
     }
 
-    public ByMonthRule(NumberList monthList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+    public ByMonthRule(MonthList monthList, Frequency frequency, Recur.Skip skip) {
+        this(monthList, frequency, Optional.empty(), skip);
+    }
+
+    public ByMonthRule(MonthList monthList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+        this(monthList, frequency, weekStartDay, Recur.Skip.OMIT);
+    }
+
+    public ByMonthRule(MonthList monthList, Frequency frequency, Optional<WeekDay.Day> weekStartDay, Recur.Skip skip) {
         super(frequency, weekStartDay);
         this.monthList = monthList;
+        this.skip = skip;
     }
 
     @Override
@@ -56,7 +64,7 @@ public class ByMonthRule extends AbstractDateExpansionRule {
         public Optional<Date> apply(Date date) {
             final Calendar cal = getCalendarInstance(date, true);
             // Java months are zero-based..
-            if (monthList.contains(cal.get(Calendar.MONTH) + 1)) {
+            if (monthList.contains(Month.valueOf(cal.get(Calendar.MONTH) + 1))) {
                 return Optional.of(date);
             }
             return Optional.empty();
@@ -76,12 +84,22 @@ public class ByMonthRule extends AbstractDateExpansionRule {
             List<Date> retVal = new ArrayList<>();
             final Calendar cal = getCalendarInstance(date, true);
             // construct a list of possible months..
-            monthList.forEach(month -> {
-                // Java months are zero-based..
+            for (Month month : monthList) {
+                if (month.isLeapMonth()) {
+                    if (skip == Recur.Skip.BACKWARD) {
+                        cal.roll(Calendar.MONTH, (month.getMonthOfYear() - 1) - cal.get(Calendar.MONTH));
+                    } else if (skip == Recur.Skip.FORWARD) {
+                        cal.roll(Calendar.MONTH, month.getMonthOfYear() - cal.get(Calendar.MONTH));
+                    } else {
+                        continue;
+                    }
+                } else {
+                    // Java months are zero-based..
 //                cal.set(Calendar.MONTH, month - 1);
-                cal.roll(Calendar.MONTH, (month - 1) - cal.get(Calendar.MONTH));
+                    cal.roll(Calendar.MONTH, (month.getMonthOfYear() - 1) - cal.get(Calendar.MONTH));
+                }
                 retVal.add(Dates.getInstance(getTime(date, cal), type));
-            });
+            }
             return retVal;
         }
     }
