@@ -49,7 +49,7 @@
     - [Install with Gradle]
 3. [Usage - The iCal4j object model and how to use it][Usage]
     - [Examples - common usage scenarios][Examples]
-4. [References][Reference]
+4. [References][References]
 5. [Configuration options][Configuration]
     - [Compatibility Hints]
 6. [Limitations - CUA compatibility, etc.][Limitations]
