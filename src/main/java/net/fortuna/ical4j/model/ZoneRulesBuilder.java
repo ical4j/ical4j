@@ -7,6 +7,7 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.TzOffsetFrom;
 import net.fortuna.ical4j.model.property.TzOffsetTo;
 
+import java.time.Month;
 import java.time.*;
 import java.time.zone.ZoneOffsetTransition;
 import java.time.zone.ZoneOffsetTransitionRule;
@@ -56,7 +57,7 @@ public class ZoneRulesBuilder {
 
             // ignore invalid rules
             if (rrule.isPresent() && !rrule.get().getRecur().getMonthList().isEmpty()) {
-                Month recurMonth = Month.of(rrule.get().getRecur().getMonthList().get(0));
+                Month recurMonth = java.time.Month.of(rrule.get().getRecur().getMonthList().get(0).getMonthOfYear());
                 int dayOfMonth = rrule.get().getRecur().getDayList().get(0).getOffset();
                 if (dayOfMonth == 0) {
                     dayOfMonth = rrule.get().getRecur().getMonthDayList().get(0);

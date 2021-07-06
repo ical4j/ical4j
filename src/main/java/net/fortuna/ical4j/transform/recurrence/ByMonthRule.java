@@ -1,5 +1,7 @@
 package net.fortuna.ical4j.transform.recurrence;
 
+import net.fortuna.ical4j.model.Month;
+
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +60,7 @@ public class ByMonthRule<T extends Temporal> extends AbstractDateExpansionRule<T
             List<T> retVal = new ArrayList<>();
             // construct a list of possible months..
             monthList.forEach(month -> {
-                T candidate = withTemporalField(date, MONTH_OF_YEAR, month);
+                T candidate = withTemporalField(date, MONTH_OF_YEAR, month.getMonthOfYear());
                 retVal.add(candidate);
             });
             return retVal;
