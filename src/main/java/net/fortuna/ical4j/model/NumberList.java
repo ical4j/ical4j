@@ -66,7 +66,7 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
      * @param allowsNegativeValues allow negative values, where abs(value) is within the specified range
      */
     public NumberList(ValueRange valueRange, boolean allowsNegativeValues) {
-        this.valueRange = valueRange;
+        this.range = valueRange;
         this.allowsNegativeValues = allowsNegativeValues;
     }
 
@@ -81,11 +81,6 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
     @Deprecated
     public NumberList(int minValue, int maxValue, boolean allowsNegativeValues) {
         this(ValueRange.of(minValue, maxValue), allowsNegativeValues);
-    }
-
-    public NumberList(ValueRange range, boolean allowsNegativeValues) {
-        this.range = range;
-        this.allowsNegativeValues = allowsNegativeValues;
     }
 
     /**
@@ -149,11 +144,11 @@ public class NumberList extends ArrayList<Integer> implements Serializable {
             throw new IllegalArgumentException("Negative value not allowed: " + negativeValue.get());
         }
 
-        Optional<? extends Integer> invalidValue = c.stream().filter(v -> !valueRange.isValidValue(Math.abs(v)))
+        Optional<? extends Integer> invalidValue = c.stream().filter(v -> !range.isValidValue(Math.abs(v)))
                 .findFirst();
         if (invalidValue.isPresent()) {
             throw new IllegalArgumentException(
-                    "Value not in range [" + valueRange + "]: " + invalidValue);
+                    "Value not in range [" + range + "]: " + invalidValue);
         }
         return super.addAll(c);
     }

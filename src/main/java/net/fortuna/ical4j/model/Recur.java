@@ -39,9 +39,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.time.chrono.Chronology;
-import java.time.temporal.ChronoField;
 import java.time.LocalDate;
+import java.time.chrono.Chronology;
 import java.time.temporal.*;
 import java.util.*;
 
@@ -291,23 +290,23 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private Integer interval;
 
-    private final List<Integer> secondList = new NumberList(ChronoField.SECOND_OF_MINUTE.range(), false);
+    private List<Integer> secondList = new NumberList(ChronoField.SECOND_OF_MINUTE.range(), false);
 
-    private final List<Integer> minuteList = new NumberList(ChronoField.MINUTE_OF_HOUR.range(), false);
+    private List<Integer> minuteList = new NumberList(ChronoField.MINUTE_OF_HOUR.range(), false);
 
-    private final List<Integer> hourList = new NumberList(ChronoField.HOUR_OF_DAY.range(), false);
+    private List<Integer> hourList = new NumberList(ChronoField.HOUR_OF_DAY.range(), false);
 
-    private final List<WeekDay> dayList = new WeekDayList();
+    private List<WeekDay> dayList = new WeekDayList();
 
-    private final List<Integer> monthDayList = new NumberList(ChronoField.DAY_OF_MONTH.range(), true);
+    private List<Integer> monthDayList = new NumberList(ChronoField.DAY_OF_MONTH.range(), true);
 
-    private final List<Integer> yearDayList = new NumberList(ChronoField.DAY_OF_YEAR.range(), true);
+    private List<Integer> yearDayList = new NumberList(ChronoField.DAY_OF_YEAR.range(), true);
 
-    private final List<Integer> weekNoList = new NumberList(WeekFields.ISO.weekOfWeekBasedYear().range(), true);
+    private List<Integer> weekNoList = new NumberList(WeekFields.ISO.weekOfWeekBasedYear().range(), true);
 
-    private final List<Month> monthList = new NumberList(ChronoField.MONTH_OF_YEAR.range(), false);
+    private List<Month> monthList = new MonthList(ChronoField.MONTH_OF_YEAR.range());
 
-    private final List<Integer> setPosList = new NumberList(1, 366, true);
+    private List<Integer> setPosList = new NumberList(ChronoField.DAY_OF_YEAR.range(), true);
 
     private WeekDay weekStartDay;
 
@@ -347,30 +346,22 @@ public class Recur<T extends Temporal> implements Serializable {
             } else if (INTERVAL.equals(token)) {
                 interval = Integer.parseInt(nextToken(tokens, token));
             } else if (BYSECOND.equals(token)) {
-                secondList.addAll(NumberList.parse(nextToken(tokens, token)));
                 secondList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.SECOND_OF_MINUTE), false);
             } else if (BYMINUTE.equals(token)) {
-                minuteList.addAll(NumberList.parse(nextToken(tokens, token)));
                 minuteList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.MINUTE_OF_HOUR), false);
             } else if (BYHOUR.equals(token)) {
-                hourList.addAll(NumberList.parse(nextToken(tokens, token)));
                 hourList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.HOUR_OF_DAY), false);
             } else if (BYDAY.equals(token)) {
                 dayList.addAll(new WeekDayList(nextToken(tokens, token)));
             } else if (BYMONTHDAY.equals(token)) {
-                monthDayList.addAll(NumberList.parse(nextToken(tokens, token)));
                 monthDayList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_MONTH), true);
             } else if (BYYEARDAY.equals(token)) {
-                yearDayList.addAll(NumberList.parse(nextToken(tokens, token)));
                 yearDayList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_YEAR), true);
             } else if (BYWEEKNO.equals(token)) {
-                weekNoList.addAll(NumberList.parse(nextToken(tokens, token)));
                 weekNoList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.ALIGNED_WEEK_OF_YEAR), true);
             } else if (BYMONTH.equals(token)) {
-                monthList.addAll(new MonthList(nextToken(tokens, token), ValueRange.of(1, 12, 13)));
                 monthList = new MonthList(nextToken(tokens, token), chronology.range(ChronoField.MONTH_OF_YEAR));
             } else if (BYSETPOS.equals(token)) {
-                setPosList.addAll(NumberList.parse(nextToken(tokens, token)));
                 setPosList = new NumberList(nextToken(tokens, token), chronology.range(ChronoField.DAY_OF_YEAR), true);
             } else if (WKST.equals(token)) {
                 weekStartDay = WeekDay.getWeekDay(WeekDay.Day.valueOf(nextToken(tokens, token)));
@@ -638,7 +629,7 @@ public class Recur<T extends Temporal> implements Serializable {
             b.append(';');
             b.append(BYMONTH);
             b.append('=');
-            b.append(NumberList.toString(monthList));
+            b.append(monthList);
         }
         if (!weekNoList.isEmpty()) {
             b.append(';');
