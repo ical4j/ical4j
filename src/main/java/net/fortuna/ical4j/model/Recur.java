@@ -397,7 +397,7 @@ public class Recur implements Serializable {
         }
         if (monthList != null) {
             transformers.put(BYMONTH, new ByMonthRule(monthList, frequency,
-                    Optional.ofNullable(weekStartDay)));
+                    Optional.ofNullable(weekStartDay), skip));
         } else {
             monthList = new MonthList(chronology.range(ChronoField.MONTH_OF_YEAR));
         }

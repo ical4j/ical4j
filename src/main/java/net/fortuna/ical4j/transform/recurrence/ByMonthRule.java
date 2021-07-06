@@ -19,13 +19,24 @@ public class ByMonthRule extends AbstractDateExpansionRule {
 
     private final MonthList monthList;
 
+    private final Recur.Skip skip;
+
     public ByMonthRule(MonthList monthList, Frequency frequency) {
-        this(monthList, frequency, Optional.empty());
+        this(monthList, frequency, Recur.Skip.OMIT);
+    }
+
+    public ByMonthRule(MonthList monthList, Frequency frequency, Recur.Skip skip) {
+        this(monthList, frequency, Optional.empty(), skip);
     }
 
     public ByMonthRule(MonthList monthList, Frequency frequency, Optional<WeekDay.Day> weekStartDay) {
+        this(monthList, frequency, weekStartDay, Recur.Skip.OMIT);
+    }
+
+    public ByMonthRule(MonthList monthList, Frequency frequency, Optional<WeekDay.Day> weekStartDay, Recur.Skip skip) {
         super(frequency, weekStartDay);
         this.monthList = monthList;
+        this.skip = skip;
     }
 
     @Override
@@ -73,12 +84,22 @@ public class ByMonthRule extends AbstractDateExpansionRule {
             List<Date> retVal = new ArrayList<>();
             final Calendar cal = getCalendarInstance(date, true);
             // construct a list of possible months..
-            monthList.forEach(month -> {
-                // Java months are zero-based..
+            for (Month month : monthList) {
+                if (month.isLeapMonth()) {
+                    if (skip == Recur.Skip.BACKWARD) {
+                        cal.roll(Calendar.MONTH, (month.getMonthOfYear() - 1) - cal.get(Calendar.MONTH));
+                    } else if (skip == Recur.Skip.FORWARD) {
+                        cal.roll(Calendar.MONTH, month.getMonthOfYear() - cal.get(Calendar.MONTH));
+                    } else {
+                        continue;
+                    }
+                } else {
+                    // Java months are zero-based..
 //                cal.set(Calendar.MONTH, month - 1);
-                cal.roll(Calendar.MONTH, (month.getMonthOfYear() - 1) - cal.get(Calendar.MONTH));
+                    cal.roll(Calendar.MONTH, (month.getMonthOfYear() - 1) - cal.get(Calendar.MONTH));
+                }
                 retVal.add(Dates.getInstance(getTime(date, cal), type));
-            });
+            }
             return retVal;
         }
     }
