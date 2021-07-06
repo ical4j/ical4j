@@ -10,6 +10,7 @@
 [RFC6868]: https://datatracker.ietf.org/doc/html/rfc6868
 [RFC7953]: https://datatracker.ietf.org/doc/html/rfc7953
 [RFC7986]: https://datatracker.ietf.org/doc/html/rfc7986
+[RFC7529]: https://datatracker.ietf.org/doc/html/rfc7529
 
 [Bintray Releases]: https://bintray.com/ical4j/maven/ical4j
 
@@ -130,6 +131,7 @@ is used only to generate version information in the javadoc API documentation.
 * [RFC6868] - Parameter Value Encoding in iCalendar and vCard
 * [RFC7953] - Calendar Availability
 * [RFC7986] - New Properties for iCalendar
+* [RFC7529] - Non-Gregorian Recurrence Rules in iCalendar
 
 ## Configuration
 
