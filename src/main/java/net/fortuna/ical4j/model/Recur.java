@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
+import java.time.temporal.ValueRange;
 import java.util.Calendar;
 import java.util.*;
 
@@ -86,8 +87,16 @@ public class Recur implements Serializable {
 
     private static final String WKST = "WKST";
 
+    private static final String RSCALE = "RSCALE";
+
+    private static final String SKIP = "SKIP";
+
     public enum Frequency {
         SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY;
+    }
+
+    public enum Skip {
+        OMIT, BACKWARD, FORWARD;
     }
 
     /**
@@ -157,7 +166,11 @@ public class Recur implements Serializable {
 
     private Frequency frequency;
 
+    private Skip skip;
+
     private Date until;
+
+    private String rscale;
 
     private Integer count;
 
@@ -177,7 +190,7 @@ public class Recur implements Serializable {
 
     private NumberList weekNoList;
 
-    private NumberList monthList;
+    private MonthList monthList;
 
     private NumberList setPosList;
 
@@ -217,6 +230,10 @@ public class Recur implements Serializable {
             final String token = tokens.next();
             if (FREQ.equals(token)) {
                 frequency = Frequency.valueOf(nextToken(tokens, token));
+            } else if (SKIP.equals(token)) {
+                skip = Skip.valueOf(nextToken(tokens, token));
+            } else if (RSCALE.equals(token)) {
+                rscale = nextToken(tokens, token);
             } else if (UNTIL.equals(token)) {
                 final String untilString = nextToken(tokens, token);
                 if (untilString != null && untilString.contains("T")) {
@@ -245,7 +262,7 @@ public class Recur implements Serializable {
             } else if (BYWEEKNO.equals(token)) {
                 weekNoList = new NumberList(nextToken(tokens, token), 1, 53, true);
             } else if (BYMONTH.equals(token)) {
-                monthList = new NumberList(nextToken(tokens, token), 1, 12, false);
+                monthList = new MonthList(nextToken(tokens, token), ValueRange.of(1, 12, 13));
             } else if (BYSETPOS.equals(token)) {
                 setPosList = new NumberList(nextToken(tokens, token), 1, 366, true);
             } else if (WKST.equals(token)) {
@@ -353,7 +370,7 @@ public class Recur implements Serializable {
             transformers.put(BYMONTH, new ByMonthRule(monthList, frequency,
                     Optional.ofNullable(weekStartDay)));
         } else {
-            monthList = new NumberList(1, 12, false);
+            monthList = new MonthList(ValueRange.of(1, 12, 13));
         }
         if (dayList != null) {
             transformers.put(BYDAY, new ByDayRule(dayList, deriveFilterType(), Optional.ofNullable(weekStartDay)));
@@ -425,7 +442,7 @@ public class Recur implements Serializable {
      *
      * @return Returns the monthList.
      */
-    public final NumberList getMonthList() {
+    public final MonthList getMonthList() {
         return monthList;
     }
 
@@ -491,6 +508,14 @@ public class Recur implements Serializable {
     }
 
     /**
+     *
+     * @return leap month skip behaviour.
+     */
+    public Skip getSkip() {
+        return skip;
+    }
+
+    /**
      * @return Returns the interval or -1 if the rule does not have an interval defined.
      */
     public final int getInterval() {
@@ -529,6 +554,12 @@ public class Recur implements Serializable {
     @Override
     public final String toString() {
         final StringBuilder b = new StringBuilder();
+        if (rscale != null) {
+            b.append(RSCALE);
+            b.append('=');
+            b.append(rscale);
+            b.append(';');
+        }
         b.append(FREQ);
         b.append('=');
         b.append(frequency);
@@ -610,6 +641,12 @@ public class Recur implements Serializable {
             b.append(BYSETPOS);
             b.append('=');
             b.append(setPosList);
+        }
+        if (skip != null) {
+            b.append(';');
+            b.append(SKIP);
+            b.append('=');
+            b.append(skip);
         }
         return b.toString();
     }
@@ -1065,7 +1102,11 @@ public class Recur implements Serializable {
 
         private Frequency frequency;
 
+        private Skip skip;
+
         private Date until;
+
+        private String rscale;
 
         private Integer count;
 
@@ -1085,7 +1126,7 @@ public class Recur implements Serializable {
 
         private NumberList weekNoList;
 
-        private NumberList monthList;
+        private MonthList monthList;
 
         private NumberList setPosList;
 
@@ -1096,8 +1137,18 @@ public class Recur implements Serializable {
             return this;
         }
 
+        public Builder skip(Skip skip) {
+            this.skip = skip;
+            return this;
+        }
+
         public Builder until(Date until) {
             this.until = until;
+            return this;
+        }
+
+        public Builder rscale(String rscale) {
+            this.rscale = rscale;
             return this;
         }
 
@@ -1146,7 +1197,7 @@ public class Recur implements Serializable {
             return this;
         }
 
-        public Builder monthList(NumberList monthList) {
+        public Builder monthList(MonthList monthList) {
             this.monthList = monthList;
             return this;
         }
@@ -1164,6 +1215,7 @@ public class Recur implements Serializable {
         public Recur build() {
             Recur recur = new Recur();
             recur.frequency = frequency;
+            recur.skip = skip;
             recur.until = until;
             recur.count = count;
             recur.interval = interval;
