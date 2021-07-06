@@ -10,6 +10,7 @@
 [RFC6868]: https://datatracker.ietf.org/doc/html/rfc6868
 [RFC7953]: https://datatracker.ietf.org/doc/html/rfc7953
 [RFC7986]: https://datatracker.ietf.org/doc/html/rfc7986
+[RFC7529]: https://datatracker.ietf.org/doc/html/rfc7529
 
 [Bintray Releases]: https://bintray.com/ical4j/maven/ical4j
 
@@ -48,7 +49,7 @@
     - [Install with Gradle]
 3. [Usage - The iCal4j object model and how to use it][Usage]
     - [Examples - common usage scenarios][Examples]
-4. [References][Reference]
+4. [References][References]
 5. [Configuration options][Configuration]
     - [Compatibility Hints]
 6. [Limitations - CUA compatibility, etc.][Limitations]
@@ -130,6 +131,7 @@ is used only to generate version information in the javadoc API documentation.
 * [RFC6868] - Parameter Value Encoding in iCalendar and vCard
 * [RFC7953] - Calendar Availability
 * [RFC7986] - New Properties for iCalendar
+* [RFC7529] - Non-Gregorian Recurrence Rules in iCalendar
 
 ## Configuration
 

@@ -333,7 +333,7 @@ public class RecurTest extends TestCase {
         testCal.set(Calendar.SECOND, 0);
         
         Recur recur = new Recur.Builder().frequency(Frequency.YEARLY).count(-1).interval(2)
-                .monthList(new NumberList("1")).dayList(new WeekDayList(SU))
+                .monthList(new MonthList("1")).dayList(new WeekDayList(SU))
                 .hourList(new NumberList("8,9")).minuteList(new NumberList("30")).build();
 
         Calendar cal = Calendar.getInstance();
@@ -468,12 +468,12 @@ public class RecurTest extends TestCase {
         
         // FREQ=YEARLY;COUNT=4;BYMONTH=2;BYMONTHDAY=3
         recur = new Recur.Builder().frequency(Frequency.YEARLY).count(4)
-                .monthList(new NumberList("2")).monthDayList(new NumberList("3")).build();
+                .monthList(new MonthList("2")).monthDayList(new NumberList("3")).build();
         getDates(rangeStart, rangeEnd, eventStart, recur);
         
         // FREQ=YEARLY;COUNT=4;BYMONTH=2;BYDAY=2SU
         recur = new Recur.Builder().frequency(Frequency.YEARLY).count(4)
-                .monthList(new NumberList("2")).dayList(new WeekDayList(new WeekDay(SU, 2))).build();
+                .monthList(new MonthList("2")).dayList(new WeekDayList(new WeekDay(SU, 2))).build();
         getDates(rangeStart, rangeEnd, eventStart, recur);
     }
     
