@@ -379,16 +379,20 @@ class RecurSpec extends Specification {
         recur.experimentalValues['X-BYMILLISECOND'] == '300'
     }
 
-    def 'verify handling empty rule parts'() {
+    def 'verify recur value string parsing'() {
         setup: 'parse recurrence rule'
-        def recur = new Recur(rule)
+        Recur recur = [rule]
 
         expect:
         recur as String == parsedString
 
         where:
-        rule							| parsedString
-        'FREQ=WEEKLY;BYDAY=;INTERVAL=1'	| 'FREQ=WEEKLY;INTERVAL=1'
+        rule							                                    | parsedString
+        'FREQ=WEEKLY;BYDAY=;INTERVAL=1'	                                    | 'FREQ=WEEKLY;INTERVAL=1'
+        'RSCALE=CHINESE;FREQ=YEARLY'	                                    | 'RSCALE=CHINESE;FREQ=YEARLY'
+        'RSCALE=ETHIOPIC;FREQ=MONTHLY;BYMONTH=13'	                        | 'RSCALE=ETHIOPIC;FREQ=MONTHLY;BYMONTH=13'
+        'RSCALE=HEBREW;FREQ=YEARLY;BYMONTH=5L;BYMONTHDAY=8;SKIP=FORWARD'	| 'RSCALE=HEBREW;FREQ=YEARLY;BYMONTH=5L;BYMONTHDAY=8;SKIP=FORWARD'
+        'RSCALE=GREGORIAN;FREQ=YEARLY;SKIP=FORWARD'	                        | 'RSCALE=GREGORIAN;FREQ=YEARLY;SKIP=FORWARD'
     }
 
     def 'test recur rule builder'() {

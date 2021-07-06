@@ -329,7 +329,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
          *     BYMINUTE=30
          */
         Recur<ZonedDateTime> recur = new Recur.Builder<ZonedDateTime>().frequency(Frequency.YEARLY).count(-1).interval(2)
-                .monthList(new NumberList("1")).dayList(new WeekDayList(SU))
+                .monthList(new MonthList("1")).dayList(new WeekDayList(SU))
                 .hourList(new NumberList("8,9")).minuteList(new NumberList("30")).build();
 
         ZonedDateTime seed = ZonedDateTime.of(1997, 2, 5,
@@ -462,12 +462,12 @@ public class RecurTest<T extends Temporal> extends TestCase {
         
         // FREQ=YEARLY;COUNT=4;BYMONTH=2;BYMONTHDAY=3
         recur = new Recur.Builder<T>().frequency(Frequency.YEARLY).count(4)
-                .monthList(new NumberList("2")).monthDayList(new NumberList("3")).build();
+                .monthList(new MonthList("2")).monthDayList(new NumberList("3")).build();
         assertEquals("FREQ=YEARLY;COUNT=4;BYMONTH=2;BYMONTHDAY=3", recur.toString());
         
         // FREQ=YEARLY;COUNT=4;BYMONTH=2;BYDAY=2SU
         recur = new Recur.Builder<T>().frequency(Frequency.YEARLY).count(4)
-                .monthList(new NumberList("2")).dayList(new WeekDayList(new WeekDay(SU, 2))).build();
+                .monthList(new MonthList("2")).dayList(new WeekDayList(new WeekDay(SU, 2))).build();
         assertEquals("FREQ=YEARLY;COUNT=4;BYMONTH=2;BYDAY=2SU", recur.toString());
     }
 

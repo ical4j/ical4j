@@ -1,7 +1,7 @@
 package net.fortuna.ical4j.transform.recurrence
 
 
-import net.fortuna.ical4j.model.NumberList
+import net.fortuna.ical4j.model.MonthList
 import net.fortuna.ical4j.model.TemporalAdapter
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -14,7 +14,7 @@ class ByMonthRuleTest extends Specification {
     @Unroll
     def 'verify transformations by month'() {
         given: 'a bymonth rule'
-        ByMonthRule rule = [new NumberList(byMonthPart), frequency]
+        ByMonthRule rule = [new MonthList(byMonthPart), frequency]
 
         expect: 'the rule transforms the dates correctly'
         rule.transform(dates) == expectedResult

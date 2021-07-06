@@ -178,6 +178,14 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private static final String WKST = "WKST";
 
+    private static final String RSCALE = "RSCALE";
+
+    private static final String SKIP = "SKIP";
+
+    public enum Skip {
+        OMIT, BACKWARD, FORWARD;
+    }
+
     /**
      * Second frequency resolution.
      * @deprecated use {@link Frequency} instead.
@@ -247,7 +255,11 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private Frequency frequency;
 
+    private Skip skip;
+
     private TemporalAdapter<T> until;
+
+    private String rscale;
 
     private Integer count;
 
@@ -267,7 +279,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
     private final List<Integer> weekNoList = new NumberList(WeekFields.ISO.weekOfWeekBasedYear().range(), true);
 
-    private final List<Integer> monthList = new NumberList(ChronoField.MONTH_OF_YEAR.range(), false);
+    private final List<Month> monthList = new NumberList(ChronoField.MONTH_OF_YEAR.range(), false);
 
     private final List<Integer> setPosList = new NumberList(1, 366, true);
 
@@ -295,6 +307,10 @@ public class Recur<T extends Temporal> implements Serializable {
             final String token = tokens.next();
             if (FREQ.equals(token)) {
                 frequency = Frequency.valueOf(nextToken(tokens, token));
+            } else if (SKIP.equals(token)) {
+                skip = Skip.valueOf(nextToken(tokens, token));
+            } else if (RSCALE.equals(token)) {
+                rscale = nextToken(tokens, token);
             } else if (UNTIL.equals(token)) {
                 final String untilString = nextToken(tokens, token);
                 until = TemporalAdapter.parse(untilString);
@@ -317,7 +333,7 @@ public class Recur<T extends Temporal> implements Serializable {
             } else if (BYWEEKNO.equals(token)) {
                 weekNoList.addAll(NumberList.parse(nextToken(tokens, token)));
             } else if (BYMONTH.equals(token)) {
-                monthList.addAll(NumberList.parse(nextToken(tokens, token)));
+                monthList.addAll(new MonthList(nextToken(tokens, token), ValueRange.of(1, 12, 13)));
             } else if (BYSETPOS.equals(token)) {
                 setPosList.addAll(NumberList.parse(nextToken(tokens, token)));
             } else if (WKST.equals(token)) {
@@ -439,7 +455,7 @@ public class Recur<T extends Temporal> implements Serializable {
      *
      * @return Returns the monthList.
      */
-    public final List<Integer> getMonthList() {
+    public final List<Month> getMonthList() {
         return monthList;
     }
 
@@ -505,6 +521,14 @@ public class Recur<T extends Temporal> implements Serializable {
     }
 
     /**
+     *
+     * @return leap month skip behaviour.
+     */
+    public Skip getSkip() {
+        return skip;
+    }
+
+    /**
      * @return Returns the interval or -1 if the rule does not have an interval defined.
      */
     public final int getInterval() {
@@ -540,6 +564,12 @@ public class Recur<T extends Temporal> implements Serializable {
     @Override
     public final String toString() {
         final StringBuilder b = new StringBuilder();
+        if (rscale != null) {
+            b.append(RSCALE);
+            b.append('=');
+            b.append(rscale);
+            b.append(';');
+        }
         b.append(FREQ);
         b.append('=');
         b.append(frequency);
@@ -621,6 +651,12 @@ public class Recur<T extends Temporal> implements Serializable {
             b.append(BYSETPOS);
             b.append('=');
             b.append(NumberList.toString(setPosList));
+        }
+        if (skip != null) {
+            b.append(';');
+            b.append(SKIP);
+            b.append('=');
+            b.append(skip);
         }
         return b.toString();
     }
@@ -1018,7 +1054,11 @@ public class Recur<T extends Temporal> implements Serializable {
 
         private Frequency frequency;
 
+        private Skip skip;
+
         private T until;
+
+        private String rscale;
 
         private Integer count;
 
@@ -1038,7 +1078,7 @@ public class Recur<T extends Temporal> implements Serializable {
 
         private List<Integer> weekNoList;
 
-        private List<Integer> monthList;
+        private List<Month> monthList;
 
         private List<Integer> setPosList;
 
@@ -1049,8 +1089,18 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
+        public Builder skip(Skip skip) {
+            this.skip = skip;
+            return this;
+        }
+
         public Builder<T> until(T until) {
             this.until = until;
+            return this;
+        }
+
+        public Builder rscale(String rscale) {
+            this.rscale = rscale;
             return this;
         }
 
@@ -1099,7 +1149,7 @@ public class Recur<T extends Temporal> implements Serializable {
             return this;
         }
 
-        public Builder<T> monthList(List<Integer> monthList) {
+        public Builder<T> monthList(List<Month> monthList) {
             this.monthList = monthList;
             return this;
         }
@@ -1117,6 +1167,7 @@ public class Recur<T extends Temporal> implements Serializable {
         public Recur<T> build() {
             Recur<T> recur = new Recur<>();
             recur.frequency = frequency;
+            recur.skip = skip;
             if (until != null) {
                 recur.until = new TemporalAdapter<T>(until);
             }
