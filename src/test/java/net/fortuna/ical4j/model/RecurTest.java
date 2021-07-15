@@ -871,19 +871,19 @@ public class RecurTest extends TestCase {
         recur = new Recur("FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYDAY=1SA");
         suite.addTest(new RecurTest(recur, new DateTime("20160507T090000"),
                 new DateTime("20110713T213022"), new DateTime("20260713T213022"),
-                Value.DATE_TIME, 122, 100));
+                Value.DATE_TIME, 123, 100));
 
         // check maxTime
         recur = new Recur("FREQ=WEEKLY;WKST=MO;INTERVAL=1;BYDAY=WE");
         suite.addTest(new RecurTest(recur, new DateTime("20160427T160000"),
                 new DateTime("20110713T213022"), new DateTime("20230713T213022"),
-                Value.DATE_TIME, 376, 100));
+                Value.DATE_TIME, 377, 100));
 
         // check maxTime
         recur = new Recur("FREQ=WEEKLY;WKST=MO;INTERVAL=1;BYDAY=TU");
         suite.addTest(new RecurTest(recur, new DateTime("20200324T200000"),
                 new DateTime("20110714T083812"), new DateTime("20230714T083812"),
-                Value.DATE_TIME, 172, 100));
+                Value.DATE_TIME, 173, 100));
 
         // rrule with bymonth, byday and bysetpos. Issue #39
         recur = new Recur("FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYMONTH=2,3,9,10;BYMONTHDAY=28,29,30,31;BYSETPOS=-1");
