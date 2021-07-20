@@ -31,6 +31,7 @@
  */
 package net.fortuna.ical4j.model
 
+import net.fortuna.ical4j.model.LocationType
 import net.fortuna.ical4j.model.component.*
 import net.fortuna.ical4j.model.parameter.*
 import net.fortuna.ical4j.model.property.*
@@ -67,6 +68,9 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('vtimezone', new VTimeZoneFactory())
         registerFactory('vtodo', new VToDoFactory())
         registerFactory('vvenue', new VVenueFactory())
+        registerFactory('vlocation', new VLocationFactory())
+        registerFactory('vresource', new VResourceFactory())
+        registerFactory('participant', new ParticipantFactory())
         registerFactory('xcomponent', new XComponentFactory())
     }
     
