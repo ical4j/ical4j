@@ -7,9 +7,9 @@ public interface ComponentFactory<T extends Component> {
 
     T createComponent();
 
-    T createComponent(PropertyList properties);
+    T createComponent(PropertyList<Property> properties);
 
-    T createComponent(PropertyList properties, ComponentList subComponents);
+    T createComponent(PropertyList<Property> properties, ComponentList<Component> subComponents);
 
     boolean supports(String name);
 }
