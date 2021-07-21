@@ -97,6 +97,8 @@ public class RecurTest<T extends Temporal> extends TestCase {
     
     private WeekDayList expectedDayList;
     
+    private long maxTime;
+
     /**
      * @param testMethod
      * @param recur
@@ -136,7 +138,22 @@ public class RecurTest<T extends Temporal> extends TestCase {
         this("testGetDatesCount", recur, seed, periodStart, periodEnd, value);
         this.expectedCount = expectedCount;
     }
-    
+
+    /**
+     * @param recur
+     * @param seed
+     * @param periodStart
+     * @param periodEnd
+     * @param value
+     * @param expectedCount
+     * @param maxTime
+     */
+    public RecurTest(Recur recur, Date seed, Date periodStart, Date periodEnd, Value value, int expectedCount, long maxTime) {
+        this("testGetDatesMaxTime", recur, seed, periodStart, periodEnd, value);
+        this.expectedCount = expectedCount;
+        this.maxTime = maxTime;
+    }
+
     /**
      * @param recur
      * @param seed
@@ -229,6 +246,22 @@ public class RecurTest<T extends Temporal> extends TestCase {
         // assertTrue("Date list exceeds expected count", dates.size() <= expectedCount);
     }
     
+    private static TimeZoneRegistry tzReg = TimeZoneRegistryFactory.getInstance().createRegistry();
+
+    public void testGetDatesMaxTime() {
+        DateTime start = new DateTime(seed);
+        start.setTimeZone(tzReg.getTimeZone("Europe/London"));
+        Period period = new Period(new DateTime(periodStart), new DateTime(periodEnd));
+
+        long t0 = System.currentTimeMillis();
+        DateList dates = recur.getDates(start, period, value);
+        long dt = System.currentTimeMillis() - t0;
+
+        String message = String.format("maxTime exceeded %dms", maxTime);
+        assertEquals(message, maxTime, Math.max(dt, maxTime));
+        assertEquals(expectedCount, dates.size());
+    }
+
     /**
      * 
      */
@@ -420,7 +453,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
      *      366 or -366 to -1. It MUST only be used in conjunction with another
      *      BYxxx rule part. For example "the last work day of the month" could
      *      be represented as:
-     *   
+     *
      *        RRULE:FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1
      * </pre>
      */
@@ -620,7 +653,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
         Recur<ZonedDateTime> rec = new Recur<>(s1);
         ZonedDateTime d1 = ZonedDateTime.now();
         ZonedDateTime d2 = d1.plusYears(1);
-         
+
         suite.addTest(new RecurTest<>("testGetDatesOrdering", rec, null, d1, d2, Value.DATE_TIME));
 
         // testMonthByDay..
@@ -645,14 +678,14 @@ public class RecurTest<T extends Temporal> extends TestCase {
         DtStart<ZonedDateTime> dtStart = new DtStart<>(tzParams, start);
         end = start.plusMonths(2);
         DtEnd<ZonedDateTime> dtEnd = new DtEnd<>(end);
-        
+
         suite.addTest(new RecurTest<>(recur, dtStart.getDate(), dtEnd.getDate(), Value.DATE_TIME,
                 TimeZoneRegistry.getGlobalZoneId("America/Los_Angeles")));
 
         // testFriday13Recur..
         rrule = "FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13";
         recur = new Recur<>(rrule);
-        
+
         start = ZonedDateTime.now().withYear(1997).withMonth(1).withDayOfMonth(1);
         end = start.withYear(2000);
 
@@ -766,7 +799,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
         periodEnd = TemporalAdapter.parse("20160123T120000", ZoneId.systemDefault());
         suite.addTest(new RecurTest<>(recur, seed.getTemporal(), periodStart.getTemporal(), periodEnd.getTemporal(),
                 Value.DATE_TIME, 3));
-        
+
         Recur<Instant> recurInstant = new Recur<>("FREQ=DAILY;COUNT=3;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR");
         TemporalAdapter<Instant> seedInstant = TemporalAdapter.parse("20131215T000000Z");
         TemporalAdapter<Instant> periodStartInstant = TemporalAdapter.parse("20131215T000000Z");
@@ -787,6 +820,30 @@ public class RecurTest<T extends Temporal> extends TestCase {
         periodEndInstant = TemporalAdapter.parse("20160301T000000Z");
         suite.addTest(new RecurTest<>(recurInstant, seedInstant.getTemporal(), periodStartInstant.getTemporal(),
                 periodEndInstant.getTemporal(), Value.DATE, 0));
+
+        // check maxTime
+        recur = new Recur("FREQ=WEEKLY;WKST=MO;UNTIL=20160901T230000;INTERVAL=1;BYDAY=TH");
+        suite.addTest(new RecurTest(recur, new DateTime("20160414T100000"),
+                new DateTime("20110713T213021"), new DateTime("20230713T213021"),
+                Value.DATE_TIME, 21, 100));
+
+        // check maxTime
+        recur = new Recur("FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYDAY=1SA");
+        suite.addTest(new RecurTest(recur, new DateTime("20160507T090000"),
+                new DateTime("20110713T213022"), new DateTime("20260713T213022"),
+                Value.DATE_TIME, 123, 100));
+
+        // check maxTime
+        recur = new Recur("FREQ=WEEKLY;WKST=MO;INTERVAL=1;BYDAY=WE");
+        suite.addTest(new RecurTest(recur, new DateTime("20160427T160000"),
+                new DateTime("20110713T213022"), new DateTime("20230713T213022"),
+                Value.DATE_TIME, 377, 100));
+
+        // check maxTime
+        recur = new Recur("FREQ=WEEKLY;WKST=MO;INTERVAL=1;BYDAY=TU");
+        suite.addTest(new RecurTest(recur, new DateTime("20200324T200000"),
+                new DateTime("20110714T083812"), new DateTime("20230714T083812"),
+                Value.DATE_TIME, 173, 100));
 
         // rrule with bymonth, byday and bysetpos. Issue #39
         recur = new Recur<>("FREQ=MONTHLY;WKST=MO;INTERVAL=1;BYMONTH=2,3,9,10;BYMONTHDAY=28,29,30,31;BYSETPOS=-1");

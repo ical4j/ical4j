@@ -7,7 +7,7 @@ public interface ComponentFactory<T extends Component> {
 
     T createComponent();
 
-    T createComponent(PropertyList properties);
+    T createComponent(PropertyList<Property> properties);
 
     T createComponent(PropertyList properties, ComponentList<? extends Component> subComponents);
 
