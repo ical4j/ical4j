@@ -22,9 +22,9 @@ class ParticipantFactoryTest extends Specification {
 
         then: 'result is as expected'
         participant.properties.uid[0].value == '1'
-        participant.locations.size() == 1
-        participant.locations[0].properties.uid[0].value == '11'
-        participant.resources.size() == 1
-        participant.resources[0].properties.uid[0].value == '12'
+        participant.locations.all.size() == 1
+        participant.locations.all[0].properties.uid[0].value == '11'
+        participant.resources.all.size() == 1
+        participant.resources.all[0].properties.uid[0].value == '12'
     }
 }

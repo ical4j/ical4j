@@ -9,13 +9,18 @@ public class VLocation extends Component {
         super(VLOCATION);
     }
 
-    public VLocation(PropertyList<Property> p) {
+    public VLocation(PropertyList p) {
         super(VLOCATION, p);
     }
 
     @Override
     public void validate(boolean recurse) throws ValidationException {
         
+    }
+
+    @Override
+    protected ComponentFactory<VLocation> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VLocation> {
@@ -30,12 +35,12 @@ public class VLocation extends Component {
         }
 
         @Override
-        public VLocation createComponent(PropertyList<Property> properties) {
+        public VLocation createComponent(PropertyList properties) {
             return new VLocation(properties);
         }
 
         @Override
-        public VLocation createComponent(PropertyList<Property> properties, ComponentList<Component> subComponents) {
+        public VLocation createComponent(PropertyList properties, ComponentList<? extends Component> subComponents) {
             throw new UnsupportedOperationException(String.format("%s does not support sub-components", VLOCATION));
         }
     }

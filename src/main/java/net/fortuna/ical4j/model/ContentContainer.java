@@ -22,12 +22,12 @@ public interface ContentContainer<T extends Content> extends Serializable {
 
     @SuppressWarnings("unchecked")
     default <R extends T> List<R> get(String name) {
-        return getAll().stream().filter(c -> c.getName().equals(name)).map(c -> (R) c).collect(Collectors.toList());
+        return getAll().stream().filter(c -> c.getName().equalsIgnoreCase(name)).map(c -> (R) c).collect(Collectors.toList());
     }
 
     @SuppressWarnings("unchecked")
     default <R extends T> Optional<R> getFirst(String name) {
-        return (Optional<R>) getAll().stream().filter(c -> c.getName().equals(name)).findFirst();
+        return (Optional<R>) getAll().stream().filter(c -> c.getName().equalsIgnoreCase(name)).findFirst();
     }
 
     @SuppressWarnings("unchecked")

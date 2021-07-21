@@ -67,10 +67,22 @@ public class ByMonthRule<T extends Temporal> extends AbstractDateExpansionRule<T
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
             // construct a list of possible months..
-            monthList.forEach(month -> {
-                T candidate = withTemporalField(date, MONTH_OF_YEAR, month.getMonthOfYear());
+            for (Month month : monthList) {
+                T candidate;
+                if (month.isLeapMonth()) {
+                    if (skip == Recur.Skip.BACKWARD) {
+                        candidate = withTemporalField(date, MONTH_OF_YEAR, month.getMonthOfYear());
+                    } else if (skip == Recur.Skip.FORWARD) {
+                        //TODO: also skip forward if actual leap month is detected for current year..
+                        candidate = withTemporalField(date, MONTH_OF_YEAR, month.getMonthOfYear() + 1);
+                    } else {
+                        continue;
+                    }
+                } else {
+                    candidate = withTemporalField(date, MONTH_OF_YEAR, month.getMonthOfYear());
+                }
                 retVal.add(candidate);
-            });
+            }
             return retVal;
         }
     }

@@ -113,7 +113,7 @@ public class ByDayRule<T extends Temporal> extends AbstractDateExpansionRule<T> 
         @Override
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
-            Month month = Month.of(getMonth(date));
+            Month month = Month.of(getMonth(date).getMonthOfYear());
             boolean leapYear = Year.isLeap(getYear(date));
             // construct a list of possible month days..
             for (int i = 1; i <= month.length(leapYear); i++) {

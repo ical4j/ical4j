@@ -68,9 +68,9 @@ class ContentBuilder extends FactoryBuilderSupport {
         registerFactory('vtimezone', new ComponentFactoryWrapper(VTimeZone, new VTimeZone.Factory()))
         registerFactory('vtodo', new ComponentFactoryWrapper(VToDo, new VToDo.Factory()))
         registerFactory('vvenue', new ComponentFactoryWrapper(VVenue, new VVenue.Factory()))
-        registerFactory('vlocation', new VLocationFactory())
-        registerFactory('vresource', new VResourceFactory())
-        registerFactory('participant', new ParticipantFactory())
+        registerFactory('vlocation', new ComponentFactoryWrapper(VLocation, new VLocation.Factory()))
+        registerFactory('vresource', new ComponentFactoryWrapper(VResource, new VResource.Factory()))
+        registerFactory('participant', new ComponentFactoryWrapper(Participant, new Participant.Factory()))
         registerFactory('xcomponent', new XComponentFactory())
     }
     

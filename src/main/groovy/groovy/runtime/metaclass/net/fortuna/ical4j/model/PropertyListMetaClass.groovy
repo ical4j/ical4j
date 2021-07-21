@@ -15,6 +15,6 @@ class PropertyListMetaClass extends DelegatingMetaClass {
         if (hasProperty(object, property)) {
             return super.getProperty(object, property)
         }
-        return object.getProperties(property)
+        return object.get(property)
     }
 }

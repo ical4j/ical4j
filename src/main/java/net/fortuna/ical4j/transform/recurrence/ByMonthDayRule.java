@@ -5,7 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.Month;
 import java.time.YearMonth;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -74,9 +76,9 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
         public List<T> apply(T date) {
             List<T> retVal = new ArrayList<>();
             // construct a list of possible month days..
-            final YearMonth yearMonth = YearMonth.of(getYear(date), getMonth(date));
+            final YearMonth yearMonth = YearMonth.of(getYear(date), getMonth(date).getMonthOfYear());
             for (final int monthDay : monthDayList) {
-                if (!yearMonth.isValidDay(Math.abs(monthDay))) {
+                if (Month.from(date).maxLength() < Math.abs(monthDay)) {
                     if (log.isTraceEnabled()) {
                         log.trace("Invalid day of month: " + monthDay);
                     }
@@ -84,7 +86,18 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
                 }
                 T candidate;
                 if (monthDay > 0) {
-                    candidate = withTemporalField(date, DAY_OF_MONTH, monthDay);
+                    // monthDay is possible in a leap year, but this isn't one..
+                    if (yearMonth.lengthOfMonth() < monthDay) {
+                        if (skip == Recur.Skip.BACKWARD) {
+                            candidate = withTemporalField(date, DAY_OF_MONTH, yearMonth.lengthOfMonth());
+                        } else if (skip == Recur.Skip.FORWARD) {
+                            candidate = withTemporalField((T) date.plus(1, ChronoUnit.MONTHS), DAY_OF_MONTH, 1);
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        candidate = withTemporalField(date, DAY_OF_MONTH, monthDay);
+                    }
                 } else {
                     candidate = withTemporalField(date, DAY_OF_MONTH, yearMonth.lengthOfMonth() + 1 + monthDay);
                 }

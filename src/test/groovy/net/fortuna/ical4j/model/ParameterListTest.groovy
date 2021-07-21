@@ -10,7 +10,7 @@ class ParameterListTest extends Specification {
         ParameterList list = []
 
         when: 'a parameter is appended with the left shift operator'
-        list << Value.BINARY
+        list = list << Value.BINARY
 
         then: 'it is added to the list'
         list.value[0] == Value.BINARY
@@ -21,7 +21,7 @@ class ParameterListTest extends Specification {
         ParameterList list = []
 
         when: 'another parameter list is appended with the left shift operator'
-        list << new ParameterList() << Value.BINARY
+        list = list << new ParameterList() << Value.BINARY
 
         then: 'it is added to the list'
         list.value[0] == Value.BINARY

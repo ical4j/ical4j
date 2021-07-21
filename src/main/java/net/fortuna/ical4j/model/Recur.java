@@ -915,7 +915,7 @@ public class Recur<T extends Temporal> implements Serializable {
         List<T> dates = new ArrayList<>();
         dates.add(date);
         if (!monthList.isEmpty()) {
-            dates = new ByMonthRule<T>(monthList, frequency).transform(dates);
+            dates = new ByMonthRule<T>(monthList, frequency, skip).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTH processing: " + dates);
@@ -939,7 +939,7 @@ public class Recur<T extends Temporal> implements Serializable {
         }
 
         if (!monthDayList.isEmpty()) {
-            dates = new ByMonthDayRule<T>(monthDayList, frequency).transform(dates);
+            dates = new ByMonthDayRule<T>(monthDayList, frequency, skip).transform(dates);
             // debugging..
             if (log.isDebugEnabled()) {
                 log.debug("Dates after BYMONTHDAY processing: " + dates);

@@ -1,5 +1,6 @@
 package net.fortuna.ical4j.transform.recurrence;
 
+import net.fortuna.ical4j.model.Month;
 import net.fortuna.ical4j.transform.Transformer;
 
 import java.io.Serializable;
@@ -115,8 +116,8 @@ abstract class AbstractDateExpansionRule<T extends Temporal> implements Transfor
         return getTemporalField(date, DAY_OF_YEAR);
     }
 
-    int getMonth(T date) {
-        return getTemporalField(date, MONTH_OF_YEAR);
+    Month getMonth(T date) {
+        return Month.valueOf(getTemporalField(date, MONTH_OF_YEAR));
     }
 
     int getYear(T date) {

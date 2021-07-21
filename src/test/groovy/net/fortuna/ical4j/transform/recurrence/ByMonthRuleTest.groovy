@@ -1,12 +1,9 @@
 package net.fortuna.ical4j.transform.recurrence
 
-import net.fortuna.ical4j.model.Date
-import net.fortuna.ical4j.model.DateList
-import net.fortuna.ical4j.model.DateTime
+
 import net.fortuna.ical4j.model.MonthList
 import net.fortuna.ical4j.model.Recur
 import net.fortuna.ical4j.model.TemporalAdapter
-import net.fortuna.ical4j.model.parameter.Value
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -50,10 +47,10 @@ class ByMonthRuleTest extends Specification {
         '1,2'       | YEARLY    | [ThaiBuddhistDate.of(2012, 1, 1)] | [ThaiBuddhistDate.of(2012, 1, 1), ThaiBuddhistDate.of(2012, 2, 1)]
         '1,2'       | YEARLY    | [MinguoDate.of(2012, 1, 1)]       | [MinguoDate.of(2012, 1, 1), MinguoDate.of(2012, 2, 1)]
         '1,2'       | YEARLY    | [HijrahDate.of(1400, 1, 1)]       | [HijrahDate.of(1400, 1, 1), HijrahDate.of(1400, 2, 1)]
-        '2'         | YEARLY | [TemporalAdapter.parse("20200229T000000").temporal] | Value.DATE_TIME | [TemporalAdapter.parse("20200229T000000")]
-        '10,12'         | YEARLY | [TemporalAdapter.parse("20181010")]        | Value.DATE      | [TemporalAdapter.parse("20181010"), TemporalAdapter.parse("20181210")]
-        '10,12'         | DAILY | [TemporalAdapter.parse("20181010"), TemporalAdapter.parse("20181110"), TemporalAdapter.parse("20181210")]            | Value.DATE      | [TemporalAdapter.parse("20181010"), TemporalAdapter.parse("20181210")]
-        '5L'        | YEARLY    | [TemporalAdapter.parse('20150103')]            | Value.DATE                        | []
+        '2'         | YEARLY    | [TemporalAdapter.parse("20200229T000000").temporal] | [TemporalAdapter.parse("20200229T000000").temporal]
+        '10,12'     | YEARLY    | [TemporalAdapter.parse("20181010").temporal]        | [TemporalAdapter.parse("20181010").temporal, TemporalAdapter.parse("20181210").temporal]
+        '10,12'     | DAILY     | [TemporalAdapter.parse("20181010").temporal, TemporalAdapter.parse("20181110").temporal, TemporalAdapter.parse("20181210").temporal]            | [TemporalAdapter.parse("20181010").temporal, TemporalAdapter.parse("20181210").temporal]
+        '5L'        | YEARLY    | [TemporalAdapter.parse('20150103').temporal]            | []
     }
 
     def 'verify transformations by month with skip backward'() {
@@ -61,15 +58,14 @@ class ByMonthRuleTest extends Specification {
         ByMonthRule rule = [new MonthList(byMonthPart), frequency, Recur.Skip.BACKWARD]
 
         and: 'a list of dates'
-        DateList dateList = [valueType]
-        dateList.addAll(dates)
+        def dateList = dates.collect {TemporalAdapter.parse(it).temporal}
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dateList) == expectedResult
+        rule.transform(dateList).collect { d -> new TemporalAdapter<>(d) as String} == expectedResult
 
         where:
-        byMonthPart | frequency | dates                             | valueType                         | expectedResult
-        '5L'        | YEARLY    | [new Date('20150103')]            | Value.DATE                        | [new Date('20150503')]
+        byMonthPart | frequency | dates         | expectedResult
+        '5L'        | YEARLY    | ['20150103']  | ['20150503']
     }
 
     def 'verify transformations by month with skip forward'() {
@@ -77,14 +73,13 @@ class ByMonthRuleTest extends Specification {
         ByMonthRule rule = [new MonthList(byMonthPart), frequency, Recur.Skip.FORWARD]
 
         and: 'a list of dates'
-        DateList dateList = [valueType]
-        dateList.addAll(dates)
+        def dateList = dates.collect {TemporalAdapter.parse(it).temporal}
 
         expect: 'the rule transforms the dates correctly'
-        rule.transform(dateList) == expectedResult
+        rule.transform(dateList).collect { d -> new TemporalAdapter<>(d) as String} == expectedResult
 
         where:
-        byMonthPart | frequency | dates                             | valueType     | expectedResult
-        '5L'        | YEARLY    | [new Date('20150103')]            | Value.DATE    | [new Date('20150603')]
+        byMonthPart | frequency | dates         | expectedResult
+        '5L'        | YEARLY    | ['20150103']  | ['20150603']
     }
 }

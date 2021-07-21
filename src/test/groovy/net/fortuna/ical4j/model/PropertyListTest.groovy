@@ -11,7 +11,7 @@ class PropertyListTest extends Specification {
         PropertyList list = []
 
         when: 'a property is appended with the left shift operator'
-        list << CalScale.GREGORIAN
+        list = list << CalScale.GREGORIAN
 
         then: 'it is added to the list'
         list.calscale[0] == CalScale.GREGORIAN
@@ -22,7 +22,7 @@ class PropertyListTest extends Specification {
         PropertyList list = []
 
         when: 'another property list is appended with the left shift operator'
-        list << new PropertyList() << CalScale.GREGORIAN
+        list = list << new PropertyList() << CalScale.GREGORIAN
 
         then: 'it is added to the list'
         list.calscale[0] == CalScale.GREGORIAN

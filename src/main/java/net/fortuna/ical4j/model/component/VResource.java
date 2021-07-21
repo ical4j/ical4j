@@ -9,13 +9,18 @@ public class VResource extends Component {
         super(VRESOURCE);
     }
 
-    public VResource(PropertyList<Property> p) {
+    public VResource(PropertyList p) {
         super(VRESOURCE, p);
     }
 
     @Override
     public void validate(boolean recurse) throws ValidationException {
         
+    }
+
+    @Override
+    protected ComponentFactory<VResource> newFactory() {
+        return new Factory();
     }
 
     public static class Factory extends Content.Factory implements ComponentFactory<VResource> {
@@ -30,12 +35,12 @@ public class VResource extends Component {
         }
 
         @Override
-        public VResource createComponent(PropertyList<Property> properties) {
+        public VResource createComponent(PropertyList properties) {
             return new VResource(properties);
         }
 
         @Override
-        public VResource createComponent(PropertyList<Property> properties, ComponentList<Component> subComponents) {
+        public VResource createComponent(PropertyList properties, ComponentList<? extends Component> subComponents) {
             throw new UnsupportedOperationException(String.format("%s does not support sub-components", VRESOURCE));
         }
     }

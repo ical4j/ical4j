@@ -8,26 +8,26 @@ import java.util.stream.Collectors;
 
 public class Participant extends Component {
 
-    private final ComponentList<VLocation> locations;
+    private ComponentList<VLocation> locations;
 
-    private final ComponentList<VResource> resources;
+    private ComponentList<VResource> resources;
 
     public Participant() {
-        this(new PropertyList<>());
+        this(new PropertyList());
     }
 
-    public Participant(PropertyList<Property> p) {
+    public Participant(PropertyList p) {
         super(PARTICIPANT, p);
         this.locations = new ComponentList<>();
         this.resources = new ComponentList<>();
     }
 
-    public Participant(PropertyList<Property> p, final ComponentList<Component> subComponents) {
+    public Participant(PropertyList p, final ComponentList<? extends Component> subComponents) {
         super(PARTICIPANT, p);
-        this.locations = new ComponentList<>(subComponents.stream()
+        this.locations = new ComponentList<>(subComponents.getAll().stream()
                 .filter(c -> c.getName().equals(VLOCATION)).map(c -> (VLocation) c)
                 .collect(Collectors.toList()));
-        this.resources = new ComponentList<>(subComponents.stream()
+        this.resources = new ComponentList<>(subComponents.getAll().stream()
                 .filter(c -> c.getName().equals(VRESOURCE)).map(c -> (VResource) c)
                 .collect(Collectors.toList()));
     }
@@ -38,6 +38,14 @@ public class Participant extends Component {
 
     public ComponentList<VResource> getResources() {
         return resources;
+    }
+
+    public void add(VLocation location) {
+        this.locations = (ComponentList<VLocation>) locations.add(location);
+    }
+
+    public void add(VResource resource) {
+        this.resources = (ComponentList<VResource>) resources.add(resource);
     }
 
     @Override
@@ -54,6 +62,11 @@ public class Participant extends Component {
                 END + ':' + getName() + Strings.LINE_SEPARATOR;
     }
 
+    @Override
+    protected ComponentFactory<Participant> newFactory() {
+        return new Factory();
+    }
+
     public static class Factory extends Content.Factory implements ComponentFactory<Participant> {
 
         public Factory() {
@@ -66,12 +79,12 @@ public class Participant extends Component {
         }
 
         @Override
-        public Participant createComponent(PropertyList<Property> properties) {
+        public Participant createComponent(PropertyList properties) {
             return new Participant(properties);
         }
 
         @Override
-        public Participant createComponent(PropertyList<Property> properties, ComponentList<Component> subComponents) {
+        public Participant createComponent(PropertyList properties, ComponentList<? extends Component> subComponents) {
             return new Participant(properties, subComponents);
         }
     }
