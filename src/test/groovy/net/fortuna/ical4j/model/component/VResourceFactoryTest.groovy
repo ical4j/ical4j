@@ -15,6 +15,6 @@ class VResourceFactoryTest extends Specification {
         }
 
         then: 'result is as expected'
-        resource.getProperty('UID').value == '1'
+        resource.properties.uid[0].value == '1'
     }
 }

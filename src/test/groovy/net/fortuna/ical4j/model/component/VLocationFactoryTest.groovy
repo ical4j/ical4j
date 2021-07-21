@@ -15,6 +15,6 @@ class VLocationFactoryTest extends Specification {
         }
 
         then: 'result is as expected'
-        location.getProperty('UID').value == '1'
+        location.properties.uid[0].value == '1'
     }
 }
