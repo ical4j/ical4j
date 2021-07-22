@@ -99,7 +99,18 @@ public class ByMonthDayRule<T extends Temporal> extends AbstractDateExpansionRul
                         candidate = withTemporalField(date, DAY_OF_MONTH, monthDay);
                     }
                 } else {
-                    candidate = withTemporalField(date, DAY_OF_MONTH, yearMonth.lengthOfMonth() + 1 + monthDay);
+                    if (-yearMonth.lengthOfMonth() > monthDay) {
+                        if (skip == Recur.Skip.BACKWARD) {
+                            Temporal adjustedDate = date.minus(1, ChronoUnit.MONTHS);
+                            candidate = withTemporalField((T) adjustedDate, DAY_OF_MONTH, YearMonth.from(adjustedDate).lengthOfMonth());
+                        } else if (skip == Recur.Skip.FORWARD) {
+                            candidate = withTemporalField(date, DAY_OF_MONTH, -yearMonth.lengthOfMonth());
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        candidate = withTemporalField(date, DAY_OF_MONTH, yearMonth.lengthOfMonth() + 1 + monthDay);
+                    }
                 }
                 retVal.add(candidate);
             }
