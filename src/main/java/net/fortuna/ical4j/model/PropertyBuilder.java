@@ -7,7 +7,7 @@ import org.apache.commons.codec.DecoderException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

@@ -15,8 +15,6 @@ import java.util.function.Consumer;
 
 public class DefaultContentHandler implements ContentHandler {
 
-    private final Supplier<List<ParameterFactory<? extends Parameter>>> parameterFactorySupplier;
-
     private final ContentHandlerContext context;
 
     private final TimeZoneRegistry tzRegistry;
@@ -146,7 +144,8 @@ public class DefaultContentHandler implements ContentHandler {
             Parameter parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
                     .name(name).value(value).build();
 
-        propertyBuilder.parameter(parameter);
+            propertyBuilder.parameter(parameter);
+        }
     }
 
     private void assertComponent(ComponentBuilder<?> component) {

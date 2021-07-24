@@ -2,6 +2,7 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.XComponent;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
