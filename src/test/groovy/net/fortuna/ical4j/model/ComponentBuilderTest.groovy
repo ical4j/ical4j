@@ -7,10 +7,10 @@ class ComponentBuilderTest extends Specification {
 
     def 'test build component'() {
         given: 'a component builder instance'
-        ComponentBuilder builder = []
+        ComponentBuilder builder = [Arrays.asList(new VEvent.Factory())]
 
         and: 'builder is initialised'
-        builder.factories(Arrays.asList(new VEvent.Factory())).name('vevent')
+        builder.name('vevent')
 
         when: 'build method called'
         Component c = builder.build()
@@ -21,10 +21,10 @@ class ComponentBuilderTest extends Specification {
 
     def 'test build invalid component'() {
         given: 'a component builder instance'
-        ComponentBuilder builder = []
+        ComponentBuilder builder = [Arrays.asList(new VEvent.Factory())]
 
         and: 'builder is initialised'
-        builder.factories(Arrays.asList(new VEvent.Factory())).name('vtodo')
+        builder.name('vtodo')
 
         when: 'build method called'
         Component c = builder.build()
