@@ -1,11 +1,13 @@
 package net.fortuna.ical4j.transform.recurrence;
 
 import net.fortuna.ical4j.model.Month;
+import net.fortuna.ical4j.model.TemporalAdapter;
 import net.fortuna.ical4j.transform.Transformer;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.Serializable;
 import java.time.DayOfWeek;
-import java.time.ZonedDateTime;
+import java.time.ZoneId;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalField;
 import java.util.List;
@@ -127,9 +129,10 @@ abstract class AbstractDateExpansionRule<T extends Temporal> implements Transfor
     private int getTemporalField(T date, TemporalField field) {
         if (date.isSupported(field)) {
             return date.get(field);
-        } else {
-            return ZonedDateTime.from(date).get(field);
+        } else if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+            return TemporalAdapter.toLocalTime(date, ZoneId.systemDefault()).get(field);
         }
+        throw new IllegalArgumentException("Invalid temporal type for this rule");
     }
 
     @SuppressWarnings("unchecked")

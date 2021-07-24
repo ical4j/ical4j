@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model
 
 import net.fortuna.ical4j.model.property.Version
+import net.fortuna.ical4j.util.CompatibilityHints
 import spock.lang.Specification
 
 class PropertyBuilderTest extends Specification {
@@ -25,6 +26,9 @@ class PropertyBuilderTest extends Specification {
 
         and: 'builder is initialised'
         builder.name('dtend').value('20150403')
+
+        and: 'relaxed validation is disabled'
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, false)
 
         when: 'build method called'
         Property p = builder.build()

@@ -157,7 +157,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         }
 
         // Test exclusion of particular dates..
-        Calendar exCal = Calendars.load(PeriodRuleTest.class.getResource("/samples/invalid/friday13.ics"));
+        Calendar exCal = Calendars.load(PeriodRuleTest.class.getResource("/samples/valid/friday13.ics"));
         ZonedDateTime startDt = ZonedDateTime.now().withYear(1997).withMonth(9).withDayOfMonth(2)
                 .withHour(9).withMinute(0).withSecond(0);
         period = new Period<>(startDt, java.time.Period.ofWeeks(1));
@@ -165,7 +165,7 @@ public class PeriodRuleTest extends FilterTest<CalendarComponent> {
         suite.addTest(new PeriodRuleTest("testFilteredIsEmpty", filter, exCal.getComponents().getAll()));
 
         // Test exclusion of particular date patterns..
-        exCal = Calendars.load(PeriodRuleTest.class.getResource("/samples/invalid/friday13-NOT.ics"));
+        exCal = Calendars.load(PeriodRuleTest.class.getResource("/samples/valid/friday13-NOT.ics"));
         period = new Period<>(startDt, java.time.Period.ofWeeks(52));
         filter = new Filter<>(new PeriodRule<>(period));
         suite.addTest(new PeriodRuleTest("testFilteredIsNotEmpty", filter, exCal.getComponents().getAll()));

@@ -285,7 +285,7 @@ public class RecurTest<T extends Temporal> extends TestCase {
         }
 
         dates.forEach(date -> {
-            cal.setTime(Date.from(Instant.from(date)));
+            cal.setTime(Date.from(TemporalAdapter.toLocalTime(date, ZoneId.systemDefault()).toInstant()));
             assertEquals(expectedCalendarValue, cal.get(calendarField));
         });
     }

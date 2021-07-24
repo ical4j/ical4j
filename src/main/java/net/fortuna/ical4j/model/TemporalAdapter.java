@@ -1,6 +1,7 @@
 package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.parameter.TzId;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import java.io.Serializable;
 import java.time.*;
@@ -96,8 +97,18 @@ public class TemporalAdapter<T extends Temporal> implements Serializable {
             synchronized (valueString) {
                 if (temporal == null) {
                     if (tzId != null) {
-                        temporal = (T) CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(valueString,
-                                tzId.toZoneId(timeZoneRegistry));
+                        try {
+                            temporal = (T) CalendarDateFormat.FLOATING_DATE_TIME_FORMAT.parse(valueString,
+                                    tzId.toZoneId(timeZoneRegistry));
+                        } catch (DateTimeParseException e) {
+                            // TZID specified for non-floating date-time. If relaxed validation enabled fall back
+                            // to default parser and ignore TZID..
+                            if (CompatibilityHints.isHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION)) {
+                                temporal = (T) CalendarDateFormat.DEFAULT_PARSE_FORMAT.parse(valueString);
+                            } else {
+                                throw e;
+                            }
+                        }
                     } else {
                         temporal = (T) CalendarDateFormat.DEFAULT_PARSE_FORMAT.parse(valueString);
                     }

@@ -44,6 +44,7 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.NoSuchFileException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -231,7 +232,7 @@ public class CalendarsTest extends TestCase {
 
         calendar = Calendars.load(CalendarsTest.class.getResource("/samples/valid/OZMovies.ics"));
         suite.addTest(new CalendarsTest("testGetContentType", calendar, null, "text/calendar; method=PUBLISH"));
-        suite.addTest(new CalendarsTest("testGetContentType", calendar, Charset.forName("US-ASCII"), "text/calendar; method=PUBLISH; charset=US-ASCII"));
+        suite.addTest(new CalendarsTest("testGetContentType", calendar, StandardCharsets.US_ASCII, "text/calendar; method=PUBLISH; charset=US-ASCII"));
         suite.addTest(new CalendarsTest("testShouldSerializeDeserializeCorrectly",
                 Calendars.load(CalendarsTest.class.getResource("/samples/valid/Australian32Holidays.ics")), -1));
         

@@ -466,7 +466,7 @@ public class VEventTest<T extends Temporal> extends CalendarComponentTest {
      * @throws ParseException
      */
     public void testGetConsumedTimeWithExDate2() throws IOException, ParserException, ConstraintViolationException {
-        InputStream in = getClass().getResourceAsStream("/samples/invalid/friday13.ics");
+        InputStream in = getClass().getResourceAsStream("/samples/valid/friday13.ics");
         net.fortuna.ical4j.model.Calendar calendar = new CalendarBuilder().build(in);
 
         VEvent event = calendar.getComponents().getRequired(Component.VEVENT);
