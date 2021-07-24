@@ -127,7 +127,7 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void startProperty(String name) {
-        propertyBuilder = new PropertyBuilder().factories(propertyFactorySupplier.get()).name(name);
+        propertyBuilder = new PropertyBuilder(propertyFactorySupplier.get()).name(name);
         propertyHasTzId = false;
     }
 

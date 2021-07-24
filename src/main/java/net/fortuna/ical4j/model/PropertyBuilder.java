@@ -6,12 +6,19 @@ import org.apache.commons.codec.DecoderException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * Provides a configurable builder for creating {@link Property} instances from {@link String} values.
+ *
+ * You can specify an arbitrary list of supported property factories, and a list of property names to ignore.
+ */
 public class PropertyBuilder extends AbstractContentBuilder {
 
-    private List<PropertyFactory<?>> factories = new ArrayList<>();
+    private final List<PropertyFactory<?>> factories;
+
+    private final List<String> ignoredNames;
 
     private String name;
 
@@ -19,9 +26,17 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     private ParameterList parameters = new ParameterList();
 
-    public PropertyBuilder factories(List<PropertyFactory<?>> factories) {
-        this.factories.addAll(factories);
-        return this;
+    public PropertyBuilder() {
+        this(Collections.emptyList(), Collections.emptyList());
+    }
+
+    public PropertyBuilder(List<PropertyFactory<?>> factories) {
+        this(factories, Collections.emptyList());
+    }
+
+    public PropertyBuilder(List<PropertyFactory<?>> factories, List<String> ignoredNames) {
+        this.factories = factories;
+        this.ignoredNames = ignoredNames;
     }
 
     public PropertyBuilder name(String name) {
@@ -42,6 +57,9 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public Property build() throws ParseException, IOException, URISyntaxException {
+        if (ignoredNames.contains(name)) {
+            throw new IllegalArgumentException("Unsupported property name: " + name);
+        }
         Property property = null;
         String decodedValue;
         try {
