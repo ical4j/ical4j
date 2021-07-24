@@ -79,6 +79,7 @@ public abstract class Observance extends Component {
     private DateTime[] onsetsDates;
     //    private Map onsets = new TreeMap();
     private Date initialOnset = null;
+    private DateTime initialOnsetUTC = null;
 
     /**
      * Used for parsing times in a UTC date-time representation.
@@ -156,19 +157,20 @@ public abstract class Observance extends Component {
      */
     public final Date getLatestOnset(final Date date) {
 
-        DateTime initialOnsetUTC;
         // get first onset without adding TZFROM as this may lead to a day boundary
         // change which would be incompatible with BYDAY RRULES
         // we will have to add the offset to all cacheable onsets
-        try {
-            DtStart dtStart = (DtStart) getRequiredProperty(Property.DTSTART);
-            initialOnsetUTC = calculateOnset(dtStart.getDate());
-        } catch (ParseException | ConstraintViolationException e) {
-            Logger log = LoggerFactory.getLogger(Observance.class);
-            log.error("Unexpected error calculating initial onset", e);
-            // XXX: is this correct?
-//            return null;
-            initialOnsetUTC = new DateTime(new java.util.Date(0));
+        if (initialOnsetUTC == null) {
+            try {
+                DtStart dtStart = (DtStart) getRequiredProperty(Property.DTSTART);
+                initialOnsetUTC = calculateOnset(dtStart.getDate());
+            } catch (ParseException | ConstraintViolationException e) {
+                Logger log = LoggerFactory.getLogger(Observance.class);
+                log.error("Unexpected error calculating initial onset", e);
+                // XXX: is this correct?
+    //            return null;
+                initialOnsetUTC = new DateTime(new java.util.Date(0));
+            }
         }
 
         if (initialOnset == null) {
