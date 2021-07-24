@@ -11,9 +11,12 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory
 class FeatureTest extends AbstractBuilderTest {
 
     def setup() {
+        ContentHandlerContext contentHandlerContext = new ContentHandlerContext()
+                .withParameterFactorySupplier(new ServiceLoaderParameterFactorySupplier())
+                .withPropertyFactorySupplier(new ServiceLoaderPropertyFactorySupplier())
+                .withComponentFactorySupplier(new ServiceLoaderComponentFactorySupplier())
         builder = new CalendarBuilder(CalendarParserFactory.getInstance().get(),
-                new ServiceLoaderParameterFactorySupplier(), new ServiceLoaderPropertyFactorySupplier(),
-                new ServiceLoaderComponentFactorySupplier(), TimeZoneRegistryFactory.getInstance().createRegistry());
+                contentHandlerContext, TimeZoneRegistryFactory.getInstance().createRegistry());
     }
 
     def 'assert value stored correctly'() {

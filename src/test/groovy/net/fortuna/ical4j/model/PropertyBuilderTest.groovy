@@ -33,20 +33,6 @@ class PropertyBuilderTest extends Specification {
         thrown(IllegalArgumentException)
     }
 
-    def 'test build ignored property'() {
-        given: 'a property builder instance'
-        PropertyBuilder builder = [[], ['DTEND']]
-
-        and: 'builder is initialised'
-        builder.name('DTEND').value('20150403')
-
-        when: 'build method called'
-        Property p = builder.build()
-
-        then: 'an exception is thrown'
-        thrown(IllegalArgumentException)
-    }
-
     def 'test build encoded property'() {
         given: 'a property builder instance'
         PropertyBuilder builder = []

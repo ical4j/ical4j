@@ -18,8 +18,6 @@ public class PropertyBuilder extends AbstractContentBuilder {
 
     private final List<PropertyFactory<?>> factories;
 
-    private final List<String> ignoredNames;
-
     private String name;
 
     private String value;
@@ -27,16 +25,11 @@ public class PropertyBuilder extends AbstractContentBuilder {
     private ParameterList parameters = new ParameterList();
 
     public PropertyBuilder() {
-        this(Collections.emptyList(), Collections.emptyList());
+        this(Collections.emptyList());
     }
 
     public PropertyBuilder(List<PropertyFactory<?>> factories) {
-        this(factories, Collections.emptyList());
-    }
-
-    public PropertyBuilder(List<PropertyFactory<?>> factories, List<String> ignoredNames) {
         this.factories = factories;
-        this.ignoredNames = ignoredNames;
     }
 
     public PropertyBuilder name(String name) {
@@ -57,9 +50,6 @@ public class PropertyBuilder extends AbstractContentBuilder {
     }
 
     public Property build() throws ParseException, IOException, URISyntaxException {
-        if (ignoredNames.contains(name)) {
-            throw new IllegalArgumentException("Unsupported property name: " + name);
-        }
         Property property = null;
         String decodedValue;
         try {
