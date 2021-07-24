@@ -94,9 +94,8 @@ public class DefaultContentHandler implements ContentHandler {
             throw new RuntimeException("Components nested too deep");
         }
 
-        ComponentBuilder<CalendarComponent> componentBuilder =
-                new ComponentBuilder<>();
-        componentBuilder.factories(componentFactorySupplier.get()).name(name);
+        ComponentBuilder<CalendarComponent> componentBuilder = new ComponentBuilder<>(componentFactorySupplier.get());
+        componentBuilder.name(name);
         components.push(componentBuilder);
     }
 
@@ -159,7 +158,7 @@ public class DefaultContentHandler implements ContentHandler {
     public void parameter(String name, String value) throws URISyntaxException {
         assertProperty(propertyBuilder);
 
-        Parameter parameter = new ParameterBuilder().factories(parameterFactorySupplier.get())
+        Parameter parameter = new ParameterBuilder(parameterFactorySupplier.get())
                 .name(name).value(value).build();
 
         if (parameter instanceof TzId && tzRegistry != null) {

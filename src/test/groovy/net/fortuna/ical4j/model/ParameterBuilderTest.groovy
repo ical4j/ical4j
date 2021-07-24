@@ -13,10 +13,10 @@ class ParameterBuilderTest extends Specification {
 
     def 'test build parameter'() {
         given: 'a parameter builder instance'
-        ParameterBuilder builder = []
+        ParameterBuilder builder = [Arrays.asList(new Value.Factory())]
 
         and: 'builder is initialised'
-        builder.factories(Arrays.asList(new Value.Factory())).name('value').value("test")
+        builder.name('value').value("test")
 
         when: 'build method called'
         Parameter p = builder.build()
@@ -27,10 +27,10 @@ class ParameterBuilderTest extends Specification {
 
     def 'test build invalid parameter'() {
         given: 'a parameter builder instance'
-        ParameterBuilder builder = []
+        ParameterBuilder builder = [Arrays.asList(new Value.Factory())]
 
         and: 'builder is initialised'
-        builder.factories(Arrays.asList(new Value.Factory())).name('type')
+        builder.name('type')
 
         when: 'build method called'
         Parameter p = builder.build()
