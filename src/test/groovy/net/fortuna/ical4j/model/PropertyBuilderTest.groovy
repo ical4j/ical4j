@@ -1,6 +1,5 @@
 package net.fortuna.ical4j.model
 
-
 import net.fortuna.ical4j.model.property.Version
 import spock.lang.Ignore
 import spock.lang.Specification
@@ -34,5 +33,19 @@ class PropertyBuilderTest extends Specification {
 
         then: 'an exception is thrown'
         thrown(IllegalArgumentException)
+    }
+
+    def 'test build encoded property'() {
+        given: 'a property builder instance'
+        PropertyBuilder builder = []
+
+        and: 'builder is initialised'
+        builder.name('X-MICROSOFT-LOCATIONS').value('[{\\"DisplayName\\":\\"Microsoft Teams Meeting\\"\\, \\"LocationCode\\":\\"013454\\"}]')
+
+        when: 'build method called'
+        Property p = builder.build()
+
+        then: 'resulting property is initialised accordingly'
+        p.value == '[{"DisplayName":"Microsoft Teams Meeting", "LocationCode":"013454"}]'
     }
 }

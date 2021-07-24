@@ -53,9 +53,6 @@ public class PropertyBuilder extends AbstractContentBuilder {
         for (PropertyFactory<?> factory : factories) {
             if (factory.supports(name)) {
                 property = factory.createProperty(parameters, value);
-                if (property instanceof Encodable) {
-                    property.setValue(decodedValue);
-                }
             }
         }
 
@@ -67,6 +64,10 @@ public class PropertyBuilder extends AbstractContentBuilder {
             } else {
                 throw new IllegalArgumentException("Illegal property [" + name + "]");
             }
+        }
+
+        if (property instanceof Encodable) {
+            property.setValue(decodedValue);
         }
 
         return property;
