@@ -2,12 +2,12 @@ package net.fortuna.ical4j.model;
 
 import net.fortuna.ical4j.model.component.XComponent;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ComponentBuilder<T extends Component> extends AbstractContentBuilder {
 
-    private final List<ComponentFactory<?>> factories = new ArrayList<>();
+    private final List<ComponentFactory<?>> factories;
 
     private String name;
 
@@ -15,9 +15,12 @@ public class ComponentBuilder<T extends Component> extends AbstractContentBuilde
 
     private final List<Component> subComponents = new ArrayList<>();
 
-    public ComponentBuilder<?> factories(List<ComponentFactory<? extends Component>> factories) {
-        this.factories.addAll(factories);
-        return this;
+    public ComponentBuilder() {
+        this(Collections.emptyList());
+    }
+
+    public ComponentBuilder(List<ComponentFactory<?>> factories) {
+        this.factories = factories;
     }
 
     public ComponentBuilder<?> name(String name) {

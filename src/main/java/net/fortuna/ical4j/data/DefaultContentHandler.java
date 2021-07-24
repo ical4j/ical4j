@@ -12,15 +12,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class DefaultContentHandler implements ContentHandler {
 
     private final Supplier<List<ParameterFactory<? extends Parameter>>> parameterFactorySupplier;
 
-    private final Supplier<List<PropertyFactory<? extends Property>>> propertyFactorySupplier;
-
-    private final Supplier<List<ComponentFactory<? extends Component>>> componentFactorySupplier;
+    private final ContentHandlerContext context;
 
     private final TimeZoneRegistry tzRegistry;
 
@@ -38,20 +35,15 @@ public class DefaultContentHandler implements ContentHandler {
     private List<CalendarComponent> calendarComponents;
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry) {
-        this(consumer, tzRegistry, new DefaultParameterFactorySupplier(), new DefaultPropertyFactorySupplier(),
-                new DefaultComponentFactorySupplier());
+        this(consumer, tzRegistry, new ContentHandlerContext());
     }
 
     public DefaultContentHandler(Consumer<Calendar> consumer, TimeZoneRegistry tzRegistry,
-                                 Supplier<List<ParameterFactory<?>>> parameterFactorySupplier,
-                                 Supplier<List<PropertyFactory<?>>> propertyFactorySupplier,
-                                 Supplier<List<ComponentFactory<?>>> componentFactorySupplier) {
+                                 ContentHandlerContext context) {
 
         this.consumer = consumer;
         this.tzRegistry = tzRegistry;
-        this.parameterFactorySupplier = parameterFactorySupplier;
-        this.propertyFactorySupplier = propertyFactorySupplier;
-        this.componentFactorySupplier = componentFactorySupplier;
+        this.context = context;
     }
 
     public ComponentBuilder<CalendarComponent> getComponentBuilder() {
@@ -85,9 +77,9 @@ public class DefaultContentHandler implements ContentHandler {
             throw new RuntimeException("Components nested too deep");
         }
 
-        ComponentBuilder<CalendarComponent> componentBuilder =
-                new ComponentBuilder<>();
-        componentBuilder.factories(componentFactorySupplier.get()).name(name);
+        ComponentBuilder<CalendarComponent> componentBuilder = new ComponentBuilder<>(
+                context.getComponentFactorySupplier().get());
+        componentBuilder.name(name);
         components.push(componentBuilder);
     }
 
@@ -118,35 +110,41 @@ public class DefaultContentHandler implements ContentHandler {
 
     @Override
     public void startProperty(String name) {
-        propertyBuilder = new PropertyBuilder().factories(propertyFactorySupplier.get())
-                .name(name).timeZoneRegistry(tzRegistry);
+        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
+            propertyBuilder = new PropertyBuilder(context.getPropertyFactorySupplier().get()).name(name).timeZoneRegistry(tzRegistry);
+        } else {
+            propertyBuilder = null;
+        }
     }
 
     @Override
     public void propertyValue(String value) {
-        propertyBuilder.value(value);
+        if (propertyBuilder != null) {
+            propertyBuilder.value(value);
+        }
     }
 
     @Override
     public void endProperty(String name) throws URISyntaxException, IOException {
-        assertProperty(propertyBuilder);
-        Property property = propertyBuilder.build();
+        if (!context.getIgnoredPropertyNames().contains(name.toUpperCase())) {
+            assertProperty(propertyBuilder);
+            Property property = propertyBuilder.build();
 
-        // replace with a constant instance if applicable..
-        property = Constants.forProperty(property);
-        if (getComponentBuilder() != null) {
-            getComponentBuilder().property(property);
-        } else if (calendarProperties != null) {
-            calendarProperties.add(property);
+            // replace with a constant instance if applicable..
+            property = Constants.forProperty(property);
+            if (getComponentBuilder() != null) {
+                getComponentBuilder().property(property);
+            } else if (calendarProperties != null) {
+                calendarProperties.add(property);
+            }
         }
     }
 
     @Override
     public void parameter(String name, String value) throws URISyntaxException {
-        assertProperty(propertyBuilder);
-
-        Parameter parameter = new ParameterBuilder().factories(parameterFactorySupplier.get())
-                .name(name).value(value).build();
+        if (propertyBuilder != null) {
+            Parameter parameter = new ParameterBuilder(context.getParameterFactorySupplier().get())
+                    .name(name).value(value).build();
 
         propertyBuilder.parameter(parameter);
     }
