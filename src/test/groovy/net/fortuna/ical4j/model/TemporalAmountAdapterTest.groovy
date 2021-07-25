@@ -7,6 +7,7 @@ import spock.lang.Unroll
 
 import java.time.Duration
 import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 
 class TemporalAmountAdapterTest extends Specification {
 
@@ -45,6 +46,8 @@ class TemporalAmountAdapterTest extends Specification {
         where:
         stringValue     | expectedDuration
         "P"             | java.time.Period.ZERO
+        "PT"            | java.time.Period.ZERO
+        "P90M"          | Duration.of(90, ChronoUnit.MINUTES)
     }
 
     def 'verify temporalamount creation'() {
