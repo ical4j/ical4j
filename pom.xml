@@ -89,8 +89,8 @@
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>1.4</source>
-					<target>1.4</target>
+					<source>1.6</source>
+					<target>1.6</target>
 					<testExcludes>
 						<exclude>**/RegexTestHarness.java</exclude>
 					</testExcludes>
@@ -125,7 +125,7 @@
 		<groupId>com.atlassian.maven.plugins</groupId>
 		<artifactId>maven-clover2-plugin</artifactId>
 		<configuration>
-			<jdk>1.4</jdk>
+			<jdk>1.6</jdk>
 		</configuration>
 	</plugin>
             
@@ -325,7 +325,7 @@
                 <artifactId>maven-pmd-plugin</artifactId>
                 <configuration>
                     <linkXref>true</linkXref>
-                    <targetJdk>1.4</targetJdk>
+                    <targetJdk>1.6</targetJdk>
                     <rulesets>
                         <ruleset>${project.build.directory}/mnode-tools/pmd/mnode_ruleset.xml</ruleset>
                     </rulesets>
