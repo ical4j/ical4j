@@ -134,6 +134,8 @@ public class TemporalAmountAdapter implements Serializable {
         }
         else if (value.matches("([+-])?P.*(W|D)")) {
             retVal = java.time.Period.parse(value);
+        } else if (value.matches("P([+-]?[0-9]*[MHS])+")) {
+            retVal = java.time.Duration.parse("PT" + value.substring(1));
         } else {
             retVal = java.time.Duration.parse(value);
         }
