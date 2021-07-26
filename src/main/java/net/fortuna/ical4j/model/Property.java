@@ -55,7 +55,7 @@ import java.text.ParseException;
  *         <p/>
  *         $Id$ [Apr 5, 2004]
  */
-public abstract class Property extends Content {
+public abstract class Property extends Content implements Comparable<Property> {
 
     private static final long serialVersionUID = 7048785558435608687L;
 
@@ -534,5 +534,10 @@ public abstract class Property extends Content {
         // Deep copy parameter list..
         final ParameterList params = new ParameterList(getParameters(), false);
         return factory.createProperty(params, getValue());
+    }
+
+    @Override
+    public int compareTo(Property o) {
+        return getValue().compareTo(o.getValue());
     }
 }

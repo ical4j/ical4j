@@ -83,7 +83,7 @@ import java.text.ParseException;
  *
  * @author Ben Fortuna
  */
-public class DtStamp extends UtcProperty implements Comparable<DtStamp> {
+public class DtStamp extends UtcProperty {
 
     private static final long serialVersionUID = 7581197869433744070L;
 
@@ -132,11 +132,6 @@ public class DtStamp extends UtcProperty implements Comparable<DtStamp> {
         // time must be in UTC..
         aDate.setUtc(true);
         setDate(aDate);
-    }
-
-    @Override
-    public int compareTo(DtStamp o) {
-        return getDate().compareTo(o.getDate());
     }
 
     public static class Factory extends Content.Factory implements PropertyFactory {
