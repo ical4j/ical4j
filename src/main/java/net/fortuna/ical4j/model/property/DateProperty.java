@@ -291,4 +291,12 @@ public abstract class DateProperty extends Property {
 
         return copy;
     }
+
+    @Override
+    public int compareTo(Property o) {
+        if (o instanceof DateProperty) {
+            return getDate().compareTo(((DateProperty) o).getDate());
+        }
+        return super.compareTo(o);
+    }
 }
