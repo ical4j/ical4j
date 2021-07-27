@@ -31,6 +31,13 @@
  */
 package net.fortuna.ical4j.model;
 
+import net.fortuna.ical4j.model.parameter.Value;
+import net.fortuna.ical4j.model.property.*;
+import net.fortuna.ical4j.util.Strings;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URISyntaxException;
@@ -38,20 +45,6 @@ import java.text.ParseException;
 import java.time.temporal.TemporalAmount;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.ExDate;
-import net.fortuna.ical4j.model.property.ExRule;
-import net.fortuna.ical4j.model.property.RDate;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.util.Strings;
-import net.fortuna.ical4j.validate.ValidationException;
 
 /**
  * $Id$ [Apr 5, 2004]
@@ -74,6 +67,21 @@ public abstract class Component implements Serializable {
      * Component end token.
      */
     public static final String END = "END";
+
+    /**
+     * Component token.
+     */
+    public static final String PARTICIPANT = "PARTICIPANT";
+
+    /**
+     * Component token.
+     */
+    public static final String VLOCATION = "VLOCATION";
+
+    /**
+     * Component token.
+     */
+    public static final String VRESOURCE = "VRESOURCE";
 
     /**
      * Component token.

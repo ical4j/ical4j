@@ -26,7 +26,6 @@ net.fortuna.ical4j.model.property.Geo$Factory
 net.fortuna.ical4j.model.property.LastModified$Factory
 net.fortuna.ical4j.model.property.Locality$Factory
 net.fortuna.ical4j.model.property.Location$Factory
-net.fortuna.ical4j.model.property.LocationType$Factory
 net.fortuna.ical4j.model.property.Method$Factory
 net.fortuna.ical4j.model.property.Name$Factory
 net.fortuna.ical4j.model.property.Organizer$Factory
@@ -57,9 +56,19 @@ net.fortuna.ical4j.model.property.TzUrl$Factory
 net.fortuna.ical4j.model.property.Uid$Factory
 net.fortuna.ical4j.model.property.Url$Factory
 net.fortuna.ical4j.model.property.Version$Factory
+
 #RFC7986
 net.fortuna.ical4j.model.property.Color$Factory
 net.fortuna.ical4j.model.property.Conference$Factory
 net.fortuna.ical4j.model.property.Image$Factory
+net.fortuna.ical4j.model.property.Name$Factory
 net.fortuna.ical4j.model.property.RefreshInterval$Factory
 net.fortuna.ical4j.model.property.Source$Factory
+
+#Eventpub
+net.fortuna.ical4j.model.property.CalendarAddress$Factory
+net.fortuna.ical4j.model.property.LocationType$Factory
+net.fortuna.ical4j.model.property.ParticipantType$Factory
+net.fortuna.ical4j.model.property.ResourceType$Factory
+net.fortuna.ical4j.model.property.StructuredData$Factory
+net.fortuna.ical4j.model.property.StyledDescription$Factory
