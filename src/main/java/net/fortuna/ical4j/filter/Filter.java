@@ -53,7 +53,10 @@ import java.util.function.Predicate;
  * your code to use explicit constructors.
  *
  * @author Ben Fortuna
+ *
+ * @deprecated Most of the functionality of this class can now be achieved via lambda expressions.
  */
+@Deprecated
 public class Filter<T> {
 
     /**
