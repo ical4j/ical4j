@@ -31,9 +31,9 @@
  */
 package net.fortuna.ical4j.filter;
 
-import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
 
 import java.util.function.Predicate;
 
@@ -46,47 +46,25 @@ import java.util.function.Predicate;
  * matching only on the value of the property.
  * @author Ben Fortuna
  */
-public class HasPropertyRule<T extends Component> implements Predicate<T> {
+public class ParameterEqualToRule implements Predicate<Property> {
 
-    private Property property;
+    private final String parameterName;
 
-    private boolean matchEquals;
+    private final Object value;
 
-    /**
-     * Constructs a new instance with the specified property. Ignores any parameters matching only on the value of the
-     * property.
-     * @param property a property instance to check for
-     */
-    public HasPropertyRule(final Property property) {
-        this(property, false);
+    public ParameterEqualToRule(String parameterName, Object value) {
+        this.parameterName = parameterName;
+        this.value = value;
     }
 
-    /**
-     * Constructs a new instance with the specified property.
-     * @param property the property to match
-     * @param matchEquals if true, matches must contain an identical property (as indicated by
-     * <code>Property.equals()</code>
-     */
-    public HasPropertyRule(final Property property, final boolean matchEquals) {
-        this.property = property;
-        this.matchEquals = matchEquals;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public final boolean test(final Component component) {
-        boolean match = false;
-        final PropertyList<Property> properties = component.getProperties(property.getName());
-        for (final Property p : properties) {
-            if (matchEquals && property.equals(p)) {
-                match = true;
-            }
-            else if (property.getValue().equals(p.getValue())) {
-                match = true;
+    public final boolean test(final Property property) {
+        final ParameterList parameters = property.getParameters(parameterName);
+        for (final Parameter p : parameters) {
+            if (value.equals(p.getValue())) {
+                return true;
             }
         }
-        return match;
+        return false;
     }
 }
